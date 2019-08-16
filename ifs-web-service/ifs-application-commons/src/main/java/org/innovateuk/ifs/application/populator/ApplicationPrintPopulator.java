@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.populator.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -142,7 +141,6 @@ public class ApplicationPrintPopulator {
                 applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
         );
         model.addAttribute("isApplicant", true);
-        model.addAttribute("vatTotal",  organisationFinanceOverview.getTotalCosts().multiply(BigDecimal.valueOf(0.2)));
         model.addAttribute("isVatRegistered", isVatRegistered(organisationFinances));
     }
 

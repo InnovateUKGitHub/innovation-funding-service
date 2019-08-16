@@ -182,7 +182,7 @@
                             th:text="${#numbers.formatInteger(row.other, 0, 'DEFAULT')}">0</td>
                         <td th:if="${breakdown.hasVat}"
                             class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.vat, 0, 'DEFAULT')}">
+                            th:text="${#numbers.formatInteger(row.vat, 0, 'DEFAULT')}">0</td>
                     </tr>
                     <tr class="govuk-table__row" th:if="${breakdown.collaborativeProject}">
                         <th class="govuk-table__header" scope="row">Total</th>

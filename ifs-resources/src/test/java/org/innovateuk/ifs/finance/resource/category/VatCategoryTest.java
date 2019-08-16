@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 public class VatCategoryTest {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private VatCategory vatCategory;
+    private VatCostCategory vatCategory;
 
     @Before
     public void setUp() throws Exception {

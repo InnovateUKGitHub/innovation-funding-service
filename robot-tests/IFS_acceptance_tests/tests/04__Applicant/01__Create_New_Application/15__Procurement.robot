@@ -42,7 +42,7 @@ Applicant fills in project costs with VAT
     When the user checks the VAT calculations
     Then the user enters the project location
     And the user fills in the organisation information  ${appl_name}  ${SMALL_ORGANISATION_SIZE}
-    And the user clicks the button/link                 link = Application overview
+    And the user clicks the button/link                 link = Back to application overview
     And the user should see the element                 jQuery = li:contains("Your project finances") > .task-status-complete
 
 Applicant submits the application
@@ -198,7 +198,7 @@ the user checks the VAT calculations
     the user selects the radio button              vatForm.registered  true
     the user should see the element                jQuery = #vatRegistered-totals div:contains("Total VAT") ~ div:contains("£12,140") ~ div:contains("project costs") ~ div:contains("72,839")
     the user clicks the button/link                jQuery = button:contains("Mark as complete")
-    the user clicks the button/link                link = Application overview
+    the user clicks the button/link                link = Back to application overview
     the user clicks the button/link                link = Review and submit
     the user expands the section                   Funding breakdown
     the user should see the element                jQuery = th:contains("Total VAT")

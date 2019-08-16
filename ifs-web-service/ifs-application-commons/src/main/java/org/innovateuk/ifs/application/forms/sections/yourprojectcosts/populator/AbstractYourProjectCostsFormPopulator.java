@@ -7,7 +7,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.util.HashMap;
@@ -162,7 +162,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
     }
 
      private VatForm vat(BaseFinanceResource finance) {
-        VatCategory costCategory = (VatCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+        VatCostCategory costCategory = (VatCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
          if (costCategory != null) {
              Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));;
             return new VatForm(vat);

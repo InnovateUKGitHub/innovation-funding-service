@@ -1,15 +1,18 @@
 package org.innovateuk.ifs.finance.resource.category;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.Vat;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class VatCategory implements FinanceRowCostCategory {
+public class VatCostCategory implements FinanceRowCostCategory {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
     private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal totalCostsWithoutVat = BigDecimal.ZERO;
 
     @Override
     public List<FinanceRowItem> getCosts() {
@@ -23,10 +26,12 @@ public class VatCategory implements FinanceRowCostCategory {
 
     @Override
     public void calculateTotal() {
-        total = costs.stream()
-                .filter(c -> c.getTotal()!=null)
-                .map(c -> c.getTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        Optional<Vat> vat = costs.stream().findAny().map(Vat.class::cast);
+        if (vat.map(Vat::getRegistered).orElse(false)) {
+            total = totalCostsWithoutVat.multiply(vat.get().getRate());
+        } else {
+            total = BigDecimal.ZERO;
+        }
     }
 
     @Override
@@ -38,11 +43,15 @@ public class VatCategory implements FinanceRowCostCategory {
 
     @Override
     public boolean excludeFromTotalCost() {
-        return true;
+        return false;
     }
 
     @Override
     public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
+    }
+
+    public void setTotalCostsWithoutVat(BigDecimal totalCostsWithoutVat) {
+        this.totalCostsWithoutVat = totalCostsWithoutVat;
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
         @JsonSubTypes.Type(value=OtherFundingCostCategory.class, name="otherFundingCostCategory"),
         @JsonSubTypes.Type(value=OverheadCostCategory.class, name="overheadCostCategory"),
         @JsonSubTypes.Type(value=GrantClaimCategory.class, name="grantClaimCategory"),
-        @JsonSubTypes.Type(value=VatCategory.class, name="vatCategory")
+        @JsonSubTypes.Type(value=VatCostCategory.class, name="vatCategory")
 })
 public interface FinanceRowCostCategory {
     public List<FinanceRowItem> getCosts();
