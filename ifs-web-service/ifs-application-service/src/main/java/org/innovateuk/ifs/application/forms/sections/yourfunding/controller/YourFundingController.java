@@ -164,14 +164,12 @@ public class YourFundingController {
     }
 
     @PostMapping(params = "edit")
-    public String edit(Model model,
-                       UserResource user,
+    public String edit(UserResource user,
                        @PathVariable long applicationId,
                        @PathVariable long sectionId,
-                       @PathVariable long organisationId,
-                       @ModelAttribute("form") YourFundingPercentageForm form) {
+                       @PathVariable long organisationId) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return String.format("redirect:/application/%s/form/your-funding/%s", applicationId, sectionId);
+        return String.format("redirect:/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 
     @PostMapping(params = "add_cost")
