@@ -49,13 +49,13 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void resendEmailVerificationNotification() throws Exception {
+    public void resendEmailVerificationNotification() {
         service.resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER);
         verify(userRestService, only()).resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER);
     }
 
     @Test(expected = Test.None.class /* No exception expected here even though the mock returns an ObjectNotFoundException. We don't want to reveal that an email address was not recognised. */)
-    public void resendEmailVerificationNotification_notExists() throws Exception {
+    public void resendEmailVerificationNotification_notExists() {
         // Try sending the verification link to an email address which doesn't exist for a user
         final String email = "i-dont-exist@me.com";
 
@@ -64,7 +64,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test(expected = GeneralUnexpectedErrorException.class)
-    public void resendEmailVerificationNotification_otherError() throws Exception {
+    public void resendEmailVerificationNotification_otherError() {
         // Try sending the verification link to an email address that exists but cause another error to occur
 
         service.resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR);
@@ -72,7 +72,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void userHasApplicationForCompetition() throws Exception {
+    public void userHasApplicationForCompetition() {
         Long userId = 1L;
         Long competitionId = 2L;
         Boolean expected = true;
