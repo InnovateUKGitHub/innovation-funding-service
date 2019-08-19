@@ -568,7 +568,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 71, "validation.finance.grant.claim.percentage.max", 70));
+                fieldError("percentage", 71, "validation.finance.grant.claim.percentage.max", 70));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -587,7 +587,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -621,7 +621,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 61, "validation.finance.grant.claim.percentage.max", 60));
+                fieldError("percentage", 61, "validation.finance.grant.claim.percentage.max", 60));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -641,7 +641,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -675,7 +675,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 51, "validation.finance.grant.claim.percentage.max", 50));
+                fieldError("percentage", 51, "validation.finance.grant.claim.percentage.max", 50));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -696,7 +696,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }

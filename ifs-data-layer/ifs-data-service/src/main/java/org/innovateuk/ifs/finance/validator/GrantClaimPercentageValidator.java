@@ -31,7 +31,7 @@ public class GrantClaimPercentageValidator implements Validator {
         GrantClaimPercentage response = (GrantClaimPercentage) target;
 
         if(response.getPercentage() == null) {
-            rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
+            rejectValue(errors, "percentage", "org.hibernate.validator.constraints.NotBlank.message");
             return;
         }
 
@@ -39,14 +39,14 @@ public class GrantClaimPercentageValidator implements Validator {
         ApplicationFinance applicationFinance = ((ApplicationFinanceRow)cost).getTarget();
         Integer max = applicationFinance.getMaximumFundingLevel();
         if (max == null) {
-            rejectValue(errors, "grantClaimPercentage", "validation.grantClaimPercentage.maximum.not.defined");
+            rejectValue(errors, "percentage", "validation.grantClaimPercentage.maximum.not.defined");
             return;
         }
 
         if (response.getPercentage() > max) {
-            rejectValue(errors, "grantClaimPercentage", "validation.finance.grant.claim.percentage.max", max);
+            rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
         } else if(response.getPercentage() < 0) {
-            rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.higher", 0);
+            rejectValue(errors, "percentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }
 
