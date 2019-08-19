@@ -178,8 +178,9 @@ public abstract class BaseFinanceResource {
 
     @JsonIgnore
     public BigDecimal getTotalContribution() {
-        return getTotalOtherFunding()
+        BigDecimal totalFunding = getTotalOtherFunding()
                 .add(getTotalFundingSought());
+        return getTotal().subtract(totalFunding);
     }
 
     @JsonIgnore
