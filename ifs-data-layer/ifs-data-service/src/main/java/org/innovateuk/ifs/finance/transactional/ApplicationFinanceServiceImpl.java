@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABO
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class FinanceServiceImpl extends BaseTransactionalService implements FinanceService {
+public class ApplicationFinanceServiceImpl extends BaseTransactionalService implements ApplicationFinanceService {
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
