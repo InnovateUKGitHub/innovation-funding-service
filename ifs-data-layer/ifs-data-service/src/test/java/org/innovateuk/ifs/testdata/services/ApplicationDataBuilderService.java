@@ -228,7 +228,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             List<ApplicationQuestionResponseData> questionResponseData,
             List<ApplicationFinanceData> financeData) {
 
-        if (applicationLine.submittedDate != null) {
+        if (applicationLine.markQuestionsComplete) {
             forEachWithIndex(questionResponseData, (i, response) -> {
                 boolean lastElement = i == questionResponseData.size() - 1;
                 questionResponseDataBuilder.
@@ -254,9 +254,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.
                 withExistingApplication(applicationData).
-                markApplicationDetailsComplete(applicationLine.markDetailsComplete).
-                markApplicationTeamComplete(applicationLine.markDetailsComplete).
-                markResearchCategoryComplete(applicationLine.markDetailsComplete);
+                markApplicationDetailsComplete(applicationLine.markQuestionsComplete).
+                markApplicationTeamComplete(applicationLine.markQuestionsComplete).
+                markResearchCategoryComplete(applicationLine.markQuestionsComplete);
         if (applicationLine.submittedDate != null) {
             applicationBuilder = applicationBuilder.submitApplication();
         }

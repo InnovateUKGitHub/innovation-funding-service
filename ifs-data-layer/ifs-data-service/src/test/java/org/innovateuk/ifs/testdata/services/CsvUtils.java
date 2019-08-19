@@ -348,7 +348,7 @@ public class CsvUtils {
         public String researchCategory;
         public String innovationArea;
         public boolean resubmission;
-        public boolean markDetailsComplete;
+        public boolean markQuestionsComplete;
         public String ineligibleReason;
 
         private ApplicationLine(List<String> line) {
@@ -368,7 +368,7 @@ public class CsvUtils {
             researchCategory = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
-            markDetailsComplete = nullableBoolean(line.get(i++));
+            markQuestionsComplete = nullableBoolean(line.get(i++));
             ineligibleReason = nullable(line.get(i++));
         }
     }
