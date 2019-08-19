@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.service;
 
-import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -39,48 +38,57 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
     @Test
     public void getOrganisationType() {
-        Long userId = 2L;
-        Long applicationId = 3L;
-        Long organisationId = 4L;
-        Long organisationType = 2L;
-        ProcessRoleResource processRole = new ProcessRoleResource();
-        processRole.setOrganisationId(organisationId);
-        OrganisationResource organisation = new OrganisationResource();
-        organisation.setOrganisationType(organisationType);
-        when(userRestService.findProcessRole(userId, applicationId)).thenReturn(restSuccess(processRole));
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        Long returnedOrganisationType = service.getOrganisationType(userId, applicationId);
+        UserResource user = newUserResource().withId(2L).build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationTypeName(BUSINESS.name())
+                .withOrganisationType(BUSINESS.getId())
+                .withId(4L)
+                .build();
+        ProcessRoleResource processRole = newProcessRoleResource()
+                .withUser(user)
+                .withApplication(3L)
+                .withOrganisation(organisation.getId())
+                .build();
 
-        assertEquals(organisationType, returnedOrganisationType);
+        when(userRestService.findProcessRole(user.getId(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+
+        Long returnedOrganisationType = service.getOrganisationType(user.getId(), processRole.getApplicationId());
+
+        assertEquals(organisation.getOrganisationType(), returnedOrganisationType);
     }
 
     @Test
     public void returnNullOrganisationType() {
-        Long userId = 2L;
-        Long applicationId = 3L;
-        ProcessRoleResource processRole = new ProcessRoleResource();
-        when(userRestService.findProcessRole(userId, applicationId)).thenReturn(restSuccess(processRole));
+
+        UserResource user = newUserResource().withId(2L).build();
+        ProcessRoleResource processRole = newProcessRoleResource()
+                .withApplication(3L)
+                .withUser(user)
+                .build();
+
+        when(userRestService.findProcessRole(user.getId(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
         when(organisationRestService.getOrganisationById(null)).thenReturn(null);
 
-        Long returnedOrganisationType = service.getOrganisationType(userId, applicationId);
+        Long returnedOrganisationType = service.getOrganisationType(user.getId(), processRole.getApplicationId());
 
         assertNull(returnedOrganisationType);
     }
 
     @Test
     public void getOrganisationForUser() {
-        Long userId = 2L;
-        Long organisationId = 4L;
-        ProcessRoleResource roleWithUser = new ProcessRoleResource();
-        roleWithUser.setUser(userId);
-        roleWithUser.setOrganisationId(organisationId);
-        ProcessRoleResource roleWithoutUser = new ProcessRoleResource();
-        roleWithoutUser.setUser(3L);
-        OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        Optional<OrganisationResource> result = service.getOrganisationForUser(userId, Lists.newArrayList(roleWithUser, roleWithoutUser));
+        UserResource user = newUserResource().withId(2L).build();
+        OrganisationResource organisation = newOrganisationResource().withId(4L).build();
+        ProcessRoleResource roleWithUser = newProcessRoleResource()
+                .withUser(user)
+                .withOrganisation(organisation.getId())
+                .build();
+
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+
+        Optional<OrganisationResource> result = service.getOrganisationForUser(user.getId(), singletonList(roleWithUser));
 
         assertEquals(organisation, result.get());
     }
@@ -130,7 +138,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
         when(organisationRestService.getOrganisationById(academicOrganisation.getId())).thenReturn(restSuccess(academicOrganisation));
 
-        SortedSet<OrganisationResource> result= service.getAcademicOrganisations(sortedAcademicOrganisation);
+        SortedSet<OrganisationResource> result = service.getAcademicOrganisations(sortedAcademicOrganisation);
 
         assertEquals(result.first(), academicOrganisation);
     }
@@ -160,7 +168,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
         UserResource user = newUserResource().build();
         OrganisationResource leadOrganisation = newOrganisationResource().withId(3L).build();
-
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withApplication(123L)
                 .withUser(user)
