@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator;
 
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.LabourForm;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.OverheadForm;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -60,6 +57,9 @@ public class YourProjectCostsFormValidator {
             case OVERHEADS:
                 validateOverhead(form.getOverhead(), validationHandler);
                 break;
+            case PROCUREMENT_OVERHEADS:
+                validateRows(form.getProcurementOverheadRows(),"procurementOverheadRows[%s].", validationHandler);
+                break;
             case CAPITAL_USAGE:
                 validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
                 break;
@@ -75,6 +75,8 @@ public class YourProjectCostsFormValidator {
             case TRAVEL:
                 validateRows(form.getTravelRows(), "travelRows[%s].", validationHandler);
                 break;
+            case VAT:
+                validateVat(form.getVatForm(), validationHandler);
         }
     }
 
@@ -104,6 +106,12 @@ public class YourProjectCostsFormValidator {
         validateRows(labour.getRows(), "labour.rows[%s].", validationHandler);
     }
 
+    private void validateVat(VatForm vatForm, ValidationHandler validationHandler) {
+        if (vatForm == null) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("vatForm.registered", null, "validation.yourProjectCostsForm.vatRegistered.required")));
+        }
+    }
+
     private ErrorToObjectErrorConverter toFieldErrorWithPath(String path) {
         return e -> {
             if (e.isFieldError()) {
@@ -116,7 +124,7 @@ public class YourProjectCostsFormValidator {
     private <R extends AbstractCostRowForm> void validateRows(Map<String, R> rows, String path, ValidationHandler validationHandler) {
         rows.forEach((id, row) -> {
             if (!(id.startsWith(UNSAVED_ROW_PREFIX) && row.isBlank())) {
-                validateForm(row, validationHandler,  path, id);
+                validateForm(row, validationHandler, path, id);
             }
         });
     }

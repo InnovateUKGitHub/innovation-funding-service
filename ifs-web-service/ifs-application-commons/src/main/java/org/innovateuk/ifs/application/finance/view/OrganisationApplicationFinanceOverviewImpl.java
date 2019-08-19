@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.finance.view;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -64,9 +65,9 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
         return null;
     }
 
-    public Map<FinanceRowType, BigDecimal> getTotalPerType() {
+    public Map<FinanceRowType, BigDecimal> getTotalPerType(CompetitionResource competition) {
         Map<FinanceRowType, BigDecimal> totalPerType = new EnumMap<>(FinanceRowType.class);
-        for (FinanceRowType costType : FinanceRowType.values()) {
+        for (FinanceRowType costType : competition.getFinanceRowTypes()) {
             BigDecimal typeTotal = applicationFinances.stream()
                     .filter(o -> o.getFinanceOrganisationDetails(costType) != null)
                     .map(o -> o.getFinanceOrganisationDetails(costType).getTotal())
@@ -80,6 +81,12 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
     public BigDecimal getTotal() {
         return applicationFinances.stream()
                 .map(ApplicationFinanceResource::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getTotalCosts() {
+        return applicationFinances.stream()
+                .map(ApplicationFinanceResource::getTotalCosts)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

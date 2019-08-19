@@ -61,7 +61,7 @@ public class AbstractYourProjectCostsSaverTest {
 
         LabourForm labourForm = new LabourForm();
         labourForm.setWorkingDaysPerYear(365);
-        LabourRowForm labourRow =  new LabourRowForm();
+        LabourRowForm labourRow = new LabourRowForm();
         labourRow.setGross(new BigDecimal(123));
         labourForm.setRows(asMap(UNSAVED_ROW_PREFIX, labourRow));
         form.setLabour(labourForm);
@@ -91,6 +91,10 @@ public class AbstractYourProjectCostsSaverTest {
         otherRow.setEstimate(new BigDecimal(123));
         form.setOtherRows(asMap(UNSAVED_ROW_PREFIX, otherRow));
 
+        VatForm vat = new VatForm();
+        vat.setRegistered(false);
+        form.setVatForm(vat);
+
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.create(any())).thenReturn(restSuccess(mockResponse));
@@ -114,10 +118,10 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService).create(isA(SubContractingCost.class));
         verify(financeRowRestService).create(isA(TravelCost.class));
         verify(financeRowRestService).create(isA(OtherCost.class));
+        verify(financeRowRestService).update(isA(Vat.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);
     }
-
 
 }

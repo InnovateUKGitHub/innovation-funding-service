@@ -93,6 +93,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
             case FINANCE:
             case GRANT_CLAIM_AMOUNT:
                 return new ExcludedCostCategory();
+            case VAT:
+                return new VatCategory();
             default:
                 return new DefaultCostCategory();
         }

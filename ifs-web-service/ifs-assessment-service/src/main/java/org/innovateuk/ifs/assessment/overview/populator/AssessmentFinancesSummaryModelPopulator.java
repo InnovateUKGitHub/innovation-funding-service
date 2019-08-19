@@ -23,6 +23,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -101,7 +102,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         addFinanceSections(competition.getId(), model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
-        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
+        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType(competition));
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         model.addAttribute("organisationFinances", organisationFinances);
         model.addAttribute("academicFileEntries", organisationFinanceOverview.getAcademicOrganisationFileEntries());
@@ -110,6 +111,20 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess());
         model.addAttribute("currentCompetition", competition);
+        model.addAttribute("vatTotal",  organisationFinanceOverview.getTotal().multiply(BigDecimal.valueOf(0.2)));
+        model.addAttribute("isVatRegistered", isVatRegistered(organisationFinances));
+    }
+
+    private boolean isVatRegistered(Map<Long, BaseFinanceResource> organisationFinances) {
+        Optional<BaseFinanceResource> financeResource = organisationFinances.values()
+                .stream()
+                .findFirst();
+
+        if (financeResource.isPresent()) {
+            return financeResource.get().isVatRegistered();
+        }
+
+        return false;
     }
 
     private void addFinanceSections(Long competitionId, Model model) {

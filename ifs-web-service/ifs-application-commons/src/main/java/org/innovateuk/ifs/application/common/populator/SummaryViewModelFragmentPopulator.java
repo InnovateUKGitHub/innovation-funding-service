@@ -159,7 +159,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                 hasFinanceSection,
                 financeSectionId,
                 applicationFinanceSummaryViewModelPopulator.populate(applicationId, user),
-                applicationFundingBreakdownViewModelPopulator.populate(applicationId, user),
+                applicationFundingBreakdownViewModelPopulator.populate(applicationId, user, competition),
                 applicationResearchParticipationViewModelPopulator.populate(applicationId),
                 getCompletedDetails(application, userOrganisation),
                 getFormInputViewModel(sectionQuestions, applicantId, application, competition),

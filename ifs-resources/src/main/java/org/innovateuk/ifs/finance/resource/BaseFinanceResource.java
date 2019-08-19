@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
+import org.innovateuk.ifs.finance.resource.cost.Vat;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import java.util.Map;
  * Application finance resource holds the organisation's finance resources for an target
  */
 public abstract class BaseFinanceResource {
+
+    public static final BigDecimal VAT_RATE = BigDecimal.valueOf(1.2);
 
     protected Long id;
     protected Long organisation;
@@ -109,7 +112,7 @@ public abstract class BaseFinanceResource {
     }
 
     @JsonIgnore
-    public BigDecimal getTotal() {
+    public BigDecimal getTotalCosts() {
         if (financeOrganisationDetails == null) {
             return BigDecimal.ZERO;
         }
@@ -187,5 +190,27 @@ public abstract class BaseFinanceResource {
     public BigDecimal getTotalOtherFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
+    }
+
+    @JsonIgnore
+    public BigDecimal getTotal() {
+        if (isVatRegistered()) {
+            return getTotalCosts().multiply(VAT_RATE);
+        }
+        return getTotalCosts();
+    }
+
+    public boolean isVatRegistered() {
+        if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {
+            FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.VAT);
+            Vat vat = financeRowCostCategory.getCosts().stream()
+                    .findAny()
+                    .filter(c -> c instanceof Vat)
+                    .map(c -> (Vat) c)
+                    .orElse(null);
+            return vat == null ? false : vat.getRegistered() == null ? false : vat.getRegistered();
+        } else {
+            return false;
+        }
     }
 }

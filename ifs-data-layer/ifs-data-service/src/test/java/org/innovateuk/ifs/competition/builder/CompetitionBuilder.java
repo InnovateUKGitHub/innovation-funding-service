@@ -39,6 +39,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public static CompetitionBuilder newCompetition() {
         return new CompetitionBuilder(emptyList()).
                 with(uniqueIds()).
+                withFundingType(FundingType.GRANT).
                 with(idBasedNames("Competition ")).
                 with(competition -> {
                     GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();

@@ -14,14 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.initialiseFinanceTypes;
 
 /**
  * Service that can create Competition template copies
@@ -40,7 +39,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Autowired
     private CompetitionRepository competitionRepository;
-
+    
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         Optional<CompetitionType> competitionType = competitionTypeRepository.findById(competitionTypeId);
@@ -71,51 +70,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         Competition competitionWithFinances = initialiseFinanceTypes(populatedCompetition);
 
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competitionWithFinances));
-    }
-
-    private Competition initialiseFinanceTypes(Competition competition) {
-        switch (competition.getFundingType()) {
-            case GRANT:
-                competition.getFinanceRowTypes().addAll(EnumSet.of(
-                        LABOUR,
-                        OVERHEADS,
-                        MATERIALS,
-                        CAPITAL_USAGE,
-                        SUBCONTRACTING_COSTS,
-                        TRAVEL,
-                        OTHER_COSTS,
-                        FINANCE,
-                        OTHER_FUNDING
-                ));
-                break;
-            case LOAN:
-                competition.getFinanceRowTypes().addAll(EnumSet.of(
-                        LABOUR,
-                        OVERHEADS,
-                        MATERIALS,
-                        CAPITAL_USAGE,
-                        SUBCONTRACTING_COSTS,
-                        TRAVEL,
-                        OTHER_COSTS,
-                        GRANT_CLAIM_AMOUNT,
-                        OTHER_FUNDING
-                ));
-                break;
-            case PROCUREMENT:
-                competition.getFinanceRowTypes().addAll(EnumSet.of(
-                        LABOUR,
-                        PROCUREMENT_OVERHEADS,
-                        MATERIALS,
-                        CAPITAL_USAGE,
-                        SUBCONTRACTING_COSTS,
-                        TRAVEL,
-                        OTHER_COSTS,
-                        FINANCE,
-                        OTHER_FUNDING
-                ));
-                break;
-        }
-        return competition;
     }
 
     private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
