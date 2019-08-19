@@ -43,8 +43,6 @@ ext.ZIPKIN_ADDRESS="zipkin-"+project.properties['openshiftEnv']+".apps."+project
 ext.IFS_LIVE_PROJECTS_LANDING_PAGE_URL="https://" + project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']+"/live-projects-landing-page"
 ext.IFS_EARLY_METRICS_URL="https://" + project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']+"/early-metrics"
 
-ext.IFS_EARLY_METRICS_URL="https://" + project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']+"/early-metrics"
-
 ext.FILE_UPLOAD_CLAIM="file-upload-claim"
 
 ext.DB_NAME="ifs"
