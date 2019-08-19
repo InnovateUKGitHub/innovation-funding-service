@@ -34,7 +34,8 @@ public final class CompetitionInitialiser {
                 TRAVEL,
                 OTHER_COSTS,
                 GRANT_CLAIM_AMOUNT,
-                OTHER_FUNDING
+                OTHER_FUNDING,
+                YOUR_FINANCE
         ));
     }
 
@@ -49,7 +50,8 @@ public final class CompetitionInitialiser {
                 OTHER_COSTS,
                 FINANCE,
                 OTHER_FUNDING,
-                VAT
+                VAT,
+                YOUR_FINANCE
         ));
     }
 
