@@ -7,8 +7,8 @@ import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.security.*;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
-import org.innovateuk.ifs.finance.transactional.FinanceServiceImpl;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceServiceImpl;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
-public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceService> {
+public class ApplicationFinanceServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFinanceService> {
 
     private static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
@@ -195,7 +195,7 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
     }
 
     @Override
-    protected Class<? extends FinanceService> getClassUnderTest() {
-        return FinanceServiceImpl.class;
+    protected Class<? extends ApplicationFinanceService> getClassUnderTest() {
+        return ApplicationFinanceServiceImpl.class;
     }
 }

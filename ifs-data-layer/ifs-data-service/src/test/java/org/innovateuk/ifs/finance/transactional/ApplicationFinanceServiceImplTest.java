@@ -39,11 +39,11 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.ne
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceImpl> {
+public class ApplicationFinanceServiceImplTest extends BaseServiceUnitTest<ApplicationFinanceServiceImpl> {
 
     @Override
-    protected FinanceServiceImpl supplyServiceUnderTest() {
-        return new FinanceServiceImpl();
+    protected ApplicationFinanceServiceImpl supplyServiceUnderTest() {
+        return new ApplicationFinanceServiceImpl();
     }
 
     @Mock

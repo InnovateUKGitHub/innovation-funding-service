@@ -34,7 +34,7 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
@@ -195,7 +195,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
     protected ProjectDocumentsMapper projectDocumentsMapper;
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
-    protected FinanceService financeService;
+    protected ApplicationFinanceService financeService;
     protected GrantOfferLetterService grantOfferLetterService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
@@ -249,7 +249,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
         monitoringOfficerService = serviceLocator.getBean(LegacyMonitoringOfficerService.class);
         financeRowCostsService = serviceLocator.getBean(ApplicationFinanceRowService.class);
-        financeService = serviceLocator.getBean(FinanceService.class);
+        financeService = serviceLocator.getBean(ApplicationFinanceService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
         sectionStatusService = serviceLocator.getBean(SectionStatusService.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);

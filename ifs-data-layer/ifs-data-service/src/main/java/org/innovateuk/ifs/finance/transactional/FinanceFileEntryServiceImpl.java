@@ -43,7 +43,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
     private ApplicationFinanceMapper applicationFinanceMapper;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Override
     @Transactional
