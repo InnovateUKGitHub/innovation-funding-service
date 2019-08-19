@@ -102,7 +102,6 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
         GrantClaimPercentage that = (GrantClaimPercentage) o;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
                 .append(id, that.id)
                 .append(percentage, that.percentage)
                 .append(getTargetId(), that.getTargetId())
@@ -112,7 +111,6 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
                 .append(id)
                 .append(percentage)
                 .append(getTargetId())
