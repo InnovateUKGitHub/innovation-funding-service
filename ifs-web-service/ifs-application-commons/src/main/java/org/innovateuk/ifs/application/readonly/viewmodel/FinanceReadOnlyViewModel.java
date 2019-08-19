@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 
 public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
 
@@ -15,7 +15,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final boolean collaborativeProject;
     private final boolean open;
 
-    public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean collaborativeProject, boolean open) {
+    public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean collaborativeProject) {
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
         this.financeSectionId = financeSectionId;
@@ -23,7 +23,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.collaborativeProject = collaborativeProject;
-        this.open = open;
+        this.open = !applicationFinanceSummaryViewModel.isReadOnly();
     }
 
     public long getApplicationId() {
@@ -70,7 +70,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
 
     @Override
     public boolean isComplete() {
-        return getApplicationFinanceSummaryViewModel().getYourFinancesCompleteForAllOrganisations() ;
+        return getApplicationFinanceSummaryViewModel().isAllFinancesComplete() ;
     }
 
     @Override

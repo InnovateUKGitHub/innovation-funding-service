@@ -111,6 +111,18 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
     }
 
     @Test
+    public void testUpdateCostOnApplicationFinanceId() {
+        final Long applicationFinanceId = 1L;
+        final ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.updateApplicationFinance(applicationFinanceId, applicationFinanceResource),
+                () -> verify(applicationFinanceRules)
+                        .consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void testFinanceTotals() {
         final Long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());

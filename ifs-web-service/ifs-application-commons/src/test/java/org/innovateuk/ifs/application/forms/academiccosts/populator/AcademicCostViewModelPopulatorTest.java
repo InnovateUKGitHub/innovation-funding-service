@@ -69,7 +69,7 @@ public class AcademicCostViewModelPopulatorTest extends BaseServiceUnitTest<Acad
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(asList(SECTION_ID));
-        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
+        when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
         AcademicCostViewModel viewModel = service.populate(ORGANISATION_ID, APPLICATION_ID, SECTION_ID, true);
 

@@ -2,8 +2,11 @@ package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
@@ -17,15 +20,18 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -38,7 +44,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class FinanceServiceImpl extends BaseTransactionalService implements FinanceService {
-
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
@@ -55,14 +60,24 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     @Autowired
     private ProjectFinanceHandler projectFinanceHandler;
 
+    @Autowired
+    private FileEntryRepository fileEntryRepository;
+
+    @Autowired
+    private OrganisationService organisationService;
+
     @Override
-    public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, final Long organisationId) {
-        return find(applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId), notFoundError(ApplicationFinance.class, applicationId, organisationId)).
-                andOnSuccessReturn(finance -> applicationFinanceMapper.mapToResource(finance));
+    @Transactional
+    public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(long applicationId, long organisationId) {
+        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if (finance == null) {
+            return createApplicationFinance(applicationId, organisationId);
+        }
+        return serviceSuccess(applicationFinanceMapper.mapToResource(finance));
     }
 
     @Override
-    public ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId) {
+    public ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(long applicationId) {
         return find(applicationFinanceRepository.findByApplicationId(applicationId), notFoundError(ApplicationFinance.class, applicationId)).andOnSuccessReturn(applicationFinances -> {
             List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
             if (applicationFinances != null) {
@@ -73,42 +88,109 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     @Override
-    public ServiceResult<Double> getResearchParticipationPercentage(Long applicationId) {
+    public ServiceResult<Double> getResearchParticipationPercentage(long applicationId) {
         return getResearchPercentage(applicationId).andOnSuccessReturn(BigDecimal::doubleValue);
     }
 
     @Override
-    public ServiceResult<Double> getResearchParticipationPercentageFromProject(Long projectId) {
+    public ServiceResult<Double> getResearchParticipationPercentageFromProject(long projectId) {
         return getResearchPercentageFromProject(projectId).andOnSuccessReturn(BigDecimal::doubleValue);
     }
 
     @Override
-    public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
+    public ServiceResult<List<ApplicationFinanceResource>> financeTotals(long applicationId) {
         return getFinanceTotals(applicationId);
     }
 
     @Override
-    public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
+    public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(long applicationFinanceId) {
         return find(applicationFinance(applicationFinanceId)).andOnSuccess(finance -> serviceSuccess(applicationFinanceMapper.mapToResource(finance)));
     }
 
     @Override
-    public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
+    @Transactional
+    public ServiceResult<ApplicationFinanceResource> financeDetails(long applicationId, long organisationId) {
+        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if (finance == null) {
+            return createApplicationFinance(applicationId, organisationId);
+        }
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
         return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
     }
 
     @Override
-    public ServiceResult<List<ApplicationFinanceResource>> financeDetails(Long applicationId) {
+    public ServiceResult<List<ApplicationFinanceResource>> financeDetails(long applicationId) {
         return find(applicationFinanceHandler.getApplicationFinances(applicationId), notFoundError(ApplicationFinance.class, applicationId));
     }
 
-    @Override
-    public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
-        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
+    private ServiceResult<ApplicationFinanceResource> createApplicationFinance(long applicationId, long organisationId) {
+        if (organisationExists(applicationId, organisationId)) {
+            return getOpenApplication(applicationId).andOnSuccess(application ->
+                    find(organisation(organisationId)).andOnSuccess(organisation -> {
+                        ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
+                        initialize(applicationFinance);
+                        return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
+                    })
+            );
+        }
+        throw new IFSRuntimeException("organisations doesn't exist on application");
+    }
 
+    private boolean organisationExists(long applicationId, long organisationId) {
+        return organisationService.findByApplicationId(applicationId)
+                .getOptionalSuccessObject()
+                .map(organisations -> organisations.stream().anyMatch(org -> org.getId().equals(organisationId)))
+                .orElse(false);
+    }
+
+
+    @Override
+    @Transactional
+    public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
+        return getOpenApplication(applicationFinance.getApplication()).andOnSuccess(app ->
+                find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
+                    if (applicationFinance.getOrganisationSize() != null) {
+                        dbFinance.setOrganisationSize(applicationFinance.getOrganisationSize());
+                    }
+                    if (applicationFinance.getWorkPostcode() != null) {
+                        dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
+                    }
+                    Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
+                    dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
+                    dbFinance = applicationFinanceRepository.save(dbFinance);
+                    return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
+                })
+        );
+    }
+
+    /**
+     * There are some objects that need a default value, and an instance to use in the form,
+     * so there are some objects that need to be created before loading the form.
+     */
+    private void initialize(ApplicationFinance applicationFinance) {
+        OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
+
+        for (FinanceRowType costType : applicationFinance.getApplication().getCompetition().getFinanceRowTypes()) {
+            organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
+        }
+    }
+
+    private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
+        if (fileEntryId == null || fileEntryId == 0L) {
+            applicationFinance.setFinanceFileEntry(null);
+        } else {
+            Optional<FileEntry> fileEntry = fileEntryRepository.findById(fileEntryId);
+            if (fileEntry.isPresent()) {
+                applicationFinance.setFinanceFileEntry(fileEntry.get());
+            }
+        }
+        return applicationFinance;
+    }
+
+    @Override
+    public ServiceResult<Boolean> organisationSeeksFunding(long projectId, long applicationId, long organisationId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
-                applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
+              applicationId, organisationId);
 
         if(applicationFinance != null) {
             OrganisationType organisationType = organisationRepository.findById(organisationId).get().getOrganisationType();
@@ -154,7 +236,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     private ServiceResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId) {
-        return find(applicationFinanceHandler.getApplicationTotals(applicationId), notFoundError(ApplicationFinance.class, applicationId));
+        return serviceSuccess(applicationFinanceHandler.getApplicationTotals(applicationId));
     }
 
     private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(ApplicationFinanceResourceId applicationFinanceResourceId) {

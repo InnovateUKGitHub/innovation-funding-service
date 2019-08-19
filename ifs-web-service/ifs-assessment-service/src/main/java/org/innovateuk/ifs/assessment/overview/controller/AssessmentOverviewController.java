@@ -75,8 +75,8 @@ public class AssessmentOverviewController {
     }
 
     @GetMapping("/finances")
-    public String getFinancesSummary(Model model, @PathVariable("assessmentId") long assessmentId) {
-        model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model));
+    public String getFinancesSummary(Model model, @PathVariable("assessmentId") long assessmentId, UserResource user) {
+        model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, user));
         return "assessment/application-finances-summary";
     }
 

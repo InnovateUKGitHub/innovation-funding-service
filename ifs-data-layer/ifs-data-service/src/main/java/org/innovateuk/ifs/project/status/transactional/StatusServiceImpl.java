@@ -274,7 +274,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
+    private boolean isOrganisationSeekingFunding(long projectId, long applicationId, long organisationId) {
         Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
         return result.orElse(false);
     }
@@ -648,7 +648,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates createBankDetailStatus(Long projectId, Long applicationId, Long organisationId, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
-        } else if (!isSeekingFunding(projectId, applicationId, organisationId)) {
+        } else if (!isOrganisationSeekingFunding(projectId, applicationId, organisationId)) {
             return NOT_REQUIRED;
         } else if (COMPLETE.equals(financeContactStatus)) {
             return ACTION_REQUIRED;
@@ -657,11 +657,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private boolean isSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        return financeService.organisationSeeksFunding(projectId, applicationId, organisationId)
-                .getOptionalSuccessObject()
-                .orElse(false);
-    }
 
     private ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, boolean isAwaitingResponse) {
         PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());

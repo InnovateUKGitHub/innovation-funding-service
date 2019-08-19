@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
@@ -8,9 +9,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -36,9 +37,6 @@ public class ApplicationFinanceController {
 
     @Value("${ifs.data.service.file.storage.applicationfinance.valid.media.types}")
     private List<String> validMediaTypesForApplicationFinance;
-
-    @Autowired
-    private ApplicationFinanceRowService financeRowCostsService;
 
     @Autowired
     private FinanceService financeService;
@@ -71,15 +69,13 @@ public class ApplicationFinanceController {
     public RestResult<Double> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
         return financeService.getResearchParticipationPercentage(applicationId).toGetResponse();
     }
-
+    @ZeroDowntime(description = "remove this", reference = "IFS-6342")
     @PostMapping("/add/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> createApplicationFinance(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
-
-        return financeRowCostsService.createApplicationFinance(new ApplicationFinanceResourceId(applicationId, organisationId)).toPostCreateResponse();
+        return restSuccess(new ApplicationFinanceResource());
     }
-
     @GetMapping("/get-by-id/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
         return financeService.getApplicationFinanceById(applicationFinanceId).toGetResponse();
@@ -87,7 +83,7 @@ public class ApplicationFinanceController {
 
     @PostMapping("/update/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
-        return financeRowCostsService.updateApplicationFinance(applicationFinanceId, applicationFinance).toPostWithBodyResponse();
+        return financeService.updateApplicationFinance(applicationFinanceId, applicationFinance).toPostWithBodyResponse();
     }
 
     @GetMapping("/finance-details/{applicationId}/{organisationId}")

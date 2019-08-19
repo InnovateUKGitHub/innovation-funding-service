@@ -31,11 +31,11 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_FUNDING_APPLICANT", description = "Applicants can all fill out the Your Funding section of the application.")
 public class YourFundingController {
-    private static final String VIEW = "application/your-funding";
+    private static final String VIEW = "application/sections/your-funding/your-funding";
 
     @Autowired
     private YourFundingFormPopulator formPopulator;
@@ -55,35 +55,21 @@ public class YourFundingController {
     @Autowired
     private YourFundingFormValidator yourFundingFormValidator;
 
-    @GetMapping("/{applicantOrganisationId}")
-    @SecuredBySpring(value = "MANAGEMENT_VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project Finances'")
-    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @GetMapping
+    @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project finances'")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     public String managementViewYourFunding(Model model,
                                             UserResource user,
                                             @PathVariable long applicationId,
                                             @PathVariable long sectionId,
-                                            @PathVariable long applicantOrganisationId,
+                                            @PathVariable long organisationId,
                                             @ModelAttribute("form") YourFundingForm form) {
-
-        YourFundingViewModel viewModel = viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId);
-        model.addAttribute("model", viewModel);
-        formPopulator.populateForm(form, applicationId, user, Optional.of(applicantOrganisationId));
-        return VIEW;
-    }
-
-    @GetMapping
-    public String viewYourFunding(Model model,
-                                  UserResource user,
-                                  @PathVariable long applicationId,
-                                  @PathVariable long sectionId,
-                                  @ModelAttribute("form") YourFundingForm form) {
-
-        YourFundingViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, user);
+        YourFundingViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
         model.addAttribute("model", viewModel);
         if (viewModel.isFundingSectionLocked()) {
             return VIEW;
         }
-        formPopulator.populateForm(form, applicationId, user, Optional.empty());
+        formPopulator.populateForm(form, applicationId, organisationId);
         return VIEW;
     }
 
@@ -101,10 +87,11 @@ public class YourFundingController {
     public String edit(Model model,
                        UserResource user,
                        @PathVariable long applicationId,
+                       @PathVariable long organisationId,
                        @PathVariable long sectionId,
                        @ModelAttribute("form") YourFundingForm form) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return String.format("redirect:/application/%s/form/your-funding/%s", applicationId, sectionId);
+        return String.format("redirect:/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 
     @PostMapping(params = "complete")
@@ -112,11 +99,12 @@ public class YourFundingController {
                            UserResource user,
                            @PathVariable long applicationId,
                            @PathVariable long sectionId,
+                           @PathVariable long organisationId,
                            @ModelAttribute("form") YourFundingForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
-        Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, user);
+        Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, organisationId, user);
         yourFundingFormValidator.validate(form, bindingResult, user, applicationId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(applicationId, form, user));
@@ -133,10 +121,11 @@ public class YourFundingController {
                                         UserResource user,
                                         @PathVariable long applicationId,
                                         @PathVariable long sectionId,
+                                        @PathVariable long organisationId,
                                         @ModelAttribute("form") YourFundingForm form) {
 
         saver.addOtherFundingRow(form);
-        return viewYourFunding(model, applicationId, sectionId, user);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
     }
 
     @PostMapping(params = "remove_cost")
@@ -144,11 +133,12 @@ public class YourFundingController {
                                            UserResource user,
                                            @PathVariable long applicationId,
                                            @PathVariable long sectionId,
+                                           @PathVariable long organisationId,
                                            @ModelAttribute("form") YourFundingForm form,
                                            @RequestParam("remove_cost") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
-        return viewYourFunding(model, applicationId, sectionId, user);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
     }
 
     @PostMapping("auto-save")
@@ -189,8 +179,8 @@ public class YourFundingController {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
     }
 
-    private String viewYourFunding(Model model, long applicationId, long sectionId, UserResource user) {
-        YourFundingViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, user);
+    private String viewYourFunding(Model model, long applicationId, long sectionId, long organisationId, UserResource user) {
+        YourFundingViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
         model.addAttribute("model", viewModel);
         return VIEW;
     }
