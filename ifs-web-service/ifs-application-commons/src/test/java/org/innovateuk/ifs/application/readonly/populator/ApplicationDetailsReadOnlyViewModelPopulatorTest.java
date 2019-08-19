@@ -16,6 +16,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
@@ -52,9 +53,9 @@ public class ApplicationDetailsReadOnlyViewModelPopulatorTest {
                 .withShortName("Application details")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList());
 
-        ApplicationDetailsReadOnlyViewModel viewModel = populator.populate(question, data);
+        ApplicationDetailsReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 
         assertEquals("Application name", viewModel.getApplicationName());
         assertEquals("Competition name", viewModel.getCompetitionName());

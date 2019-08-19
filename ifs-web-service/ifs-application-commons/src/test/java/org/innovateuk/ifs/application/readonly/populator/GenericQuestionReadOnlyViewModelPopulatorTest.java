@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -19,12 +22,14 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GenericQuestionReadOnlyViewModelPopulatorTest {
@@ -46,16 +51,29 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build();
         FormInputResource textarea = newFormInputResource()
                 .withType(FormInputType.TEXTAREA)
+                .withScope(FormInputScope.APPLICATION)
                 .withQuestion(question.getId())
                 .build();
         FormInputResource appendix = newFormInputResource()
                 .withType(FormInputType.FILEUPLOAD)
+                .withScope(FormInputScope.APPLICATION)
                 .withQuestion(question.getId())
                 .build();
         FormInputResource templateDocument = newFormInputResource()
                 .withType(FormInputType.TEMPLATE_DOCUMENT)
+                .withScope(FormInputScope.APPLICATION)
                 .withQuestion(question.getId())
                 .withDescription("Document Title")
+                .build();
+        FormInputResource feedback = newFormInputResource()
+                .withType(FormInputType.TEXTAREA)
+                .withScope(FormInputScope.ASSESSMENT)
+                .withQuestion(question.getId())
+                .build();
+        FormInputResource score = newFormInputResource()
+                .withType(FormInputType.ASSESSOR_SCORE)
+                .withScope(FormInputScope.ASSESSMENT)
+                .withQuestion(question.getId())
                 .build();
         FormInputResponseResource textareaResponse = newFormInputResponseResource()
                 .withFormInputs(textarea.getId())
@@ -69,11 +87,18 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withFormInputs(templateDocument.getId())
                 .withFileName("template.pdf")
                 .build();
+        AssessorFormInputResponseResource feedbackResponse = newAssessorFormInputResponseResource()
+                .withFormInput(feedback.getId())
+                .withValue("Feedback")
+                .build();
+        AssessorFormInputResponseResource scoreResponse = newAssessorFormInputResponseResource()
+                .withFormInput(score.getId())
+                .withValue("1")
+                .build();
 
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse, templateDocumentResponse), emptyList(), asList(feedbackResponse, scoreResponse));
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), asList(textarea, appendix, templateDocument), asList(textareaResponse, appendixResponse, templateDocumentResponse), emptyList());
-
-        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data);
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
 
         assertEquals("Some text", viewModel.getAnswer());
         assertEquals("Appendix.pdf", viewModel.getAppendixFilename());
@@ -88,5 +113,9 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         assertEquals(question.getId(), (Long) viewModel.getQuestionId());
         assertFalse(viewModel.isComplete());
         assertFalse(viewModel.isLead());
+
+        assertTrue(viewModel.hasAssessorResponse());
+        assertEquals("Feedback", viewModel.getFeedback());
+        assertEquals("1", viewModel.getScore());
     }
 }

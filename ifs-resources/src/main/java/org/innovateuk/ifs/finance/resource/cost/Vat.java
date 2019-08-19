@@ -1,18 +1,15 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Vat extends AbstractFinanceRowItem {
     private Long id;
-    private String name;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     private Boolean registered;
+
+    private BigDecimal rate;
 
     public Vat() {
         this(null);
@@ -20,28 +17,18 @@ public class Vat extends AbstractFinanceRowItem {
 
     public Vat(Long targetId) {
         super(targetId);
-        this.name = getCostType().getType();
     }
 
-    public Vat(Long id, Boolean registered, Long targetId) {
+    public Vat(Long id, Boolean registered, BigDecimal rate, Long targetId) {
         this(targetId);
         this.id = id;
-        this.name = getCostType().getType();
         this.registered = registered;
+        this.rate = rate;
     }
 
     @Override
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Boolean getRegistered() {
@@ -78,35 +65,11 @@ public class Vat extends AbstractFinanceRowItem {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Vat that = (Vat) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(name, that.name)
-                .append(registered, that.registered)
-                .isEquals();
+    public String getName(){
+        return getCostType().getName();
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .append(registered)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("name", name)
-                .append("registered", registered)
-                .toString();
+    public BigDecimal getRate() {
+        return rate;
     }
 }

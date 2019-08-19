@@ -128,7 +128,6 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(model().attribute("isApplicant", false))
                 .andExpect(view().name("assessment/application-summary")).andDo(MockMvcResultHandlers.print());
     }
 
@@ -164,7 +163,6 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
-                .andExpect(model().attribute("isApplicant", false))
                 .andExpect(model().hasNoErrors())
                 .andExpect(view().name("assessment/application-summary"));
     }

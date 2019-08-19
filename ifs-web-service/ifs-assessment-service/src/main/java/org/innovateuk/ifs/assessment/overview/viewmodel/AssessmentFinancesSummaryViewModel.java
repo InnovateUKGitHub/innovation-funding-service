@@ -2,6 +2,8 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 /**
@@ -9,22 +11,24 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
  */
 public class AssessmentFinancesSummaryViewModel {
 
-    private long assessmentId;
-    private long applicationId;
-    private String applicationName;
-    private long daysLeft;
-    private long daysLeftPercentage;
-    private boolean collaborativeProject;
-    private FundingType fundingType;
+    private final long assessmentId;
+    private final long applicationId;
+    private final String applicationName;
+    private final long daysLeft;
+    private final long daysLeftPercentage;
+    private final FundingType fundingType;
+    private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
+    private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
 
-    public AssessmentFinancesSummaryViewModel(long assessmentId, long applicationId, String applicationName, long daysLeft, long daysLeftPercentage, boolean collaborativeProject, FundingType fundingType) {
+    public AssessmentFinancesSummaryViewModel(long assessmentId, long applicationId, String applicationName, long daysLeft, long daysLeftPercentage, FundingType fundingType, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
-        this.collaborativeProject = collaborativeProject;
         this.fundingType = fundingType;
+        this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
+        this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
     }
 
     public long getAssessmentId() {
@@ -51,8 +55,12 @@ public class AssessmentFinancesSummaryViewModel {
         return fundingType;
     }
 
-    public boolean isCollaborativeProject() {
-        return collaborativeProject;
+    public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
+        return applicationFinanceSummaryViewModel;
+    }
+
+    public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
+        return applicationFundingBreakdownViewModel;
     }
 
     @Override
@@ -68,9 +76,10 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(applicationId, that.applicationId)
                 .append(daysLeft, that.daysLeft)
                 .append(daysLeftPercentage, that.daysLeftPercentage)
-                .append(collaborativeProject, that.collaborativeProject)
                 .append(applicationName, that.applicationName)
                 .append(fundingType, that.fundingType)
+                .append(applicationFinanceSummaryViewModel, that.applicationFinanceSummaryViewModel)
+                .append(applicationFundingBreakdownViewModel, that.applicationFundingBreakdownViewModel)
                 .isEquals();
     }
 
@@ -82,8 +91,9 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(applicationName)
                 .append(daysLeft)
                 .append(daysLeftPercentage)
-                .append(collaborativeProject)
                 .append(fundingType)
+                .append(applicationFinanceSummaryViewModel)
+                .append(applicationFundingBreakdownViewModel)
                 .toHashCode();
     }
 }
