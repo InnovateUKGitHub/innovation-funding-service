@@ -3,7 +3,7 @@ SELECT @comp_id := id FROM competition WHERE name = 'Internet of Things';
 SELECT @app_id := id FROM application WHERE competition = @comp_id AND name = 'Sensing & Control network using the lighting infrastructure';
 SELECT @project_id := id FROM project WHERE application_id = @app_id;
 SELECT @finance_section_id := id FROM section WHERE competition_id = @comp_id AND parent_section_id IS NULL AND name ='Finances';
-SELECT @your_finance_section_id := id FROM section WHERE competition_id = @comp_id AND parent_section_id = @finance_section_id AND name ='Your finances';
+SELECT @your_finance_section_id := id FROM section WHERE competition_id = @comp_id AND parent_section_id = @finance_section_id AND name ='Your project finances';
 SELECT @your_organisation_section_id := id FROM section WHERE competition_id = @comp_id AND parent_section_id = @your_finance_section_id AND name ='Your organisation';
 SELECT @question_id := id FROM question WHERE section_id = @your_organisation_section_id;
 SELECT * FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id IN (24,25,26,27,28);
