@@ -37,7 +37,7 @@ SELECT @comp_id_2 := id FROM competition WHERE name = 'Rolling stock future deve
 SELECT @app_id_2 := id FROM application WHERE competition = @comp_id_2 AND name = 'High-speed rail and its effects on air quality';
 SELECT @project_id_2 := id FROM project WHERE application_id = @app_id_2;
 SELECT @finance_section_id_2 := id FROM section WHERE competition_id = @comp_id_2 AND parent_section_id IS NULL AND name ='Finances';
-SELECT @your_finance_section_id_2 := id FROM section WHERE competition_id = @comp_id_2 AND parent_section_id = @finance_section_id_2 AND name ='Your finances';
+SELECT @your_finance_section_id_2 := id FROM section WHERE competition_id = @comp_id_2 AND parent_section_id = @finance_section_id_2 AND name ='Your project finances';
 SELECT @your_organisation_section_id_2 := id FROM section WHERE competition_id = @comp_id_2 AND parent_section_id = @your_finance_section_id_2 AND name ='Your organisation';
 SELECT @question_id_2 := id FROM question WHERE section_id = @your_organisation_section_id_2;
 SELECT @user_id_2 := id FROM user WHERE email = 'ralph.young@ooba.example.com';
