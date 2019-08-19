@@ -249,7 +249,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         boolean incomplete = false;
         boolean started = false;
         for (Organisation organisation : project.getOrganisations()) {
-            if (isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
+            if (isOrganisationSeekingFunding(project.getApplication().getId(), organisation.getId())) {
                 Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
                 ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
                 ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
@@ -274,8 +274,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+    private boolean isOrganisationSeekingFunding(long applicationId, long organisationId) {
+        Optional<Boolean> result = financeService.organisationSeeksFunding(applicationId, organisationId).getOptionalSuccessObject();
         return result.orElse(false);
     }
 

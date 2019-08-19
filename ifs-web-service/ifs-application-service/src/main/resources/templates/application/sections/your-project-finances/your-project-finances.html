@@ -65,7 +65,7 @@
                             <strong>&pound;<th:block th:text="${#numbers.formatInteger(model.costs, 0, 'DEFAULT')}"/></strong>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <th:block th:text="${model.claimPercentage}+'%'"/>
+                            <th:block th:text="|${model.claimPercentage}%|"/>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:text="${#numbers.formatInteger(model.fundingSought, 0, 'DEFAULT')}"/>

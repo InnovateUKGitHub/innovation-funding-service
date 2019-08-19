@@ -68,7 +68,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, final Long organisationId) {
+    public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(long applicationId, long organisationId) {
         ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         if (finance == null) {
             return createApplicationFinance(applicationId, organisationId);
@@ -77,7 +77,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     @Override
-    public ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId) {
+    public ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(long applicationId) {
         return find(applicationFinanceRepository.findByApplicationId(applicationId), notFoundError(ApplicationFinance.class, applicationId)).andOnSuccessReturn(applicationFinances -> {
             List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
             if (applicationFinances != null) {
@@ -88,28 +88,28 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     @Override
-    public ServiceResult<Double> getResearchParticipationPercentage(Long applicationId) {
+    public ServiceResult<Double> getResearchParticipationPercentage(long applicationId) {
         return getResearchPercentage(applicationId).andOnSuccessReturn(BigDecimal::doubleValue);
     }
 
     @Override
-    public ServiceResult<Double> getResearchParticipationPercentageFromProject(Long projectId) {
+    public ServiceResult<Double> getResearchParticipationPercentageFromProject(long projectId) {
         return getResearchPercentageFromProject(projectId).andOnSuccessReturn(BigDecimal::doubleValue);
     }
 
     @Override
-    public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
+    public ServiceResult<List<ApplicationFinanceResource>> financeTotals(long applicationId) {
         return getFinanceTotals(applicationId);
     }
 
     @Override
-    public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
+    public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(long applicationFinanceId) {
         return find(applicationFinance(applicationFinanceId)).andOnSuccess(finance -> serviceSuccess(applicationFinanceMapper.mapToResource(finance)));
     }
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
+    public ServiceResult<ApplicationFinanceResource> financeDetails(long applicationId, long organisationId) {
         ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         if (finance == null) {
             return createApplicationFinance(applicationId, organisationId);
@@ -119,7 +119,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     @Override
-    public ServiceResult<List<ApplicationFinanceResource>> financeDetails(Long applicationId) {
+    public ServiceResult<List<ApplicationFinanceResource>> financeDetails(long applicationId) {
         return find(applicationFinanceHandler.getApplicationFinances(applicationId), notFoundError(ApplicationFinance.class, applicationId));
     }
 
@@ -127,10 +127,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
         if (organisationExists(applicationId, organisationId)) {
             return getOpenApplication(applicationId).andOnSuccess(application ->
                     find(organisation(organisationId)).andOnSuccess(organisation -> {
-
-                        ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
-
-                        applicationFinance = applicationFinanceRepository.save(applicationFinance);
+                        ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
                         initialize(applicationFinance);
                         return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
                     })
@@ -149,7 +146,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
+    public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
         return getOpenApplication(applicationFinance.getApplication()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
                     if (applicationFinance.getOrganisationSize() != null) {
@@ -191,11 +188,9 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     @Override
-    public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
-        ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
-
+    public ServiceResult<Boolean> organisationSeeksFunding(long applicationId, long organisationId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
-                applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
+              applicationId, organisationId);
 
         if(applicationFinance != null) {
             OrganisationType organisationType = organisationRepository.findById(organisationId).get().getOrganisationType();
