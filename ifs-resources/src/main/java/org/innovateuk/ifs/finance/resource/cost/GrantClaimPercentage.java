@@ -89,7 +89,8 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
         }
         return total.multiply(new BigDecimal(percentage))
                 .divide(new BigDecimal(100))
-                .subtract(otherFunding);
+                .subtract(otherFunding)
+                .max(BigDecimal.ZERO);
     }
 
     @Override
@@ -104,6 +105,7 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
                 .appendSuper(super.equals(o))
                 .append(id, that.id)
                 .append(percentage, that.percentage)
+                .append(getTargetId(), that.getTargetId())
                 .isEquals();
     }
 
@@ -113,6 +115,7 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
                 .appendSuper(super.hashCode())
                 .append(id)
                 .append(percentage)
+                .append(getTargetId())
                 .toHashCode();
     }
 }

@@ -154,14 +154,16 @@ public abstract class BaseFinanceResource {
         if (grantClaim == null) {
             return BigDecimal.ZERO;
         }
-        return grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding());
+        return grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
+                .max(BigDecimal.ZERO);
     }
 
     @JsonIgnore
     public BigDecimal getTotalContribution() {
         BigDecimal totalFunding = getTotalOtherFunding()
                 .add(getTotalFundingSought());
-        return getTotal().subtract(totalFunding);
+        return getTotal().subtract(totalFunding)
+                .max(BigDecimal.ZERO);
     }
 
     @JsonIgnore

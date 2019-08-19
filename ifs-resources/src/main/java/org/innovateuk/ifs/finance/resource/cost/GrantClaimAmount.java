@@ -80,7 +80,8 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
 
     @Override
     public BigDecimal calculateFundingSought(BigDecimal total, BigDecimal totalOtherFunding) {
-        return amount == null ? BigDecimal.ZERO : amount;
+        return (amount == null ? BigDecimal.ZERO : amount)
+                .max(BigDecimal.ZERO);
     }
 
     @Override
