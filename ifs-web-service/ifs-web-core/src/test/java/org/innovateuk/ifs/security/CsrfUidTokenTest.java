@@ -18,7 +18,7 @@ public class CsrfUidTokenTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void test_getToken() throws Exception {
+    public void test_getToken() {
         final String nonce = "add3fc58-0c7c-410d-9223-15a1153dcd8b";
         final String uId = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
         final String timestampAsString = "2016-04-20T14:23:47.241Z";
@@ -30,7 +30,7 @@ public class CsrfUidTokenTest {
     }
 
     @Test
-    public void test_parse() throws Exception {
+    public void test_parse() {
         final String nonce = "add3fc58-0c7c-410d-9223-15a1153dcd8b";
         final String uId = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
         final String timestampAsString = "2016-04-20T14:23:47.241Z";
@@ -44,7 +44,7 @@ public class CsrfUidTokenTest {
     }
 
     @Test
-    public void test_parse_malformed() throws Exception {
+    public void test_parse_malformed() {
         final String valid = "add3fc58-0c7c-410d-9223-15a1153dcd8b_5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de_2016-04-20T14:23:47.241Z";
         // remove the date to create a malformed token
         final String malformed = valid.substring(0, valid.lastIndexOf("_"));
@@ -54,14 +54,14 @@ public class CsrfUidTokenTest {
     }
 
     @Test
-    public void test_parse_empty() throws Exception {
+    public void test_parse_empty() {
         thrown.expect(CsrfException.class);
         thrown.expectMessage("Could not parse blank CSRF token.");
         CsrfUidToken.parse("");
     }
 
     @Test
-    public void test_parse_null() throws Exception {
+    public void test_parse_null() {
         thrown.expect(CsrfException.class);
         thrown.expectMessage("Could not parse blank CSRF token.");
         CsrfUidToken.parse(null);

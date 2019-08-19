@@ -26,7 +26,7 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
     protected ProcessRoleService supplyServiceUnderTest() { return new ProcessRoleServiceImpl(); }
 
     @Test
-    public void testFindAssignableProcessRoles() throws Exception {
+    public void findAssignableProcessRoles() throws Exception {
         Long applicationId = 1L;
         List<ProcessRoleResource> resources = Lists.newArrayList(new ProcessRoleResource());
         RestResult<ProcessRoleResource[]> restResult = restSuccess(resources.toArray(new ProcessRoleResource[resources.size()]));
@@ -41,7 +41,7 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
     }
 
     @Test
-    public void testGetById() throws Exception {
+    public void getById() throws Exception {
         Long id = 1L;
         ProcessRoleResource resource = new ProcessRoleResource();
         RestResult<ProcessRoleResource> restResult = restSuccess(resource);
