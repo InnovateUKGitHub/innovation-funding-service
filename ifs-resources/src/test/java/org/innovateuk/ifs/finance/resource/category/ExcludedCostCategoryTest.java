@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -22,13 +22,11 @@ public class ExcludedCostCategoryTest {
     @Before
     public void setUp() throws Exception {
 
-        FinanceRowItem grantClaim = newGrantClaim().withGrantClaimPercentage(10).build();
-        FinanceRowItem grantClaim2 = newGrantClaim().withGrantClaimPercentage(20).build();
+        FinanceRowItem grantClaim = newGrantClaimPercentage().withGrantClaimPercentage(10).build();
 
         costs.add(grantClaim);
-        costs.add(grantClaim2);
 
-        grantClaimCategory = newGrantClaimCostCategory().withCosts(asList(grantClaim, grantClaim2)).build();
+        grantClaimCategory = newGrantClaimCostCategory().withCosts(asList(grantClaim)).build();
     }
 
     @Test
@@ -41,13 +39,13 @@ public class ExcludedCostCategoryTest {
     public void getTotal() {
 
         grantClaimCategory.calculateTotal();
-        assertEquals(new BigDecimal(30), grantClaimCategory.getTotal());
+        assertEquals(BigDecimal.ZERO, grantClaimCategory.getTotal());
     }
 
     @Test
     public void addCost() {
 
-        FinanceRowItem grantClaim3 = newGrantClaim().withGrantClaimPercentage(30).build();
+        FinanceRowItem grantClaim3 = newGrantClaimPercentage().withGrantClaimPercentage(30).build();
         costs.add(grantClaim3);
         grantClaimCategory.addCost(grantClaim3);
 

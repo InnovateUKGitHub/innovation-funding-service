@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class GrantClaimCostBuilder extends AbstractCostBuilder<GrantClaimPercentage, GrantClaimCostBuilder> {
@@ -19,7 +18,7 @@ public class GrantClaimCostBuilder extends AbstractCostBuilder<GrantClaimPercent
         return withArray((v, cost) -> cost.setPercentage(v), value);
     }
 
-    public static GrantClaimCostBuilder newGrantClaim() {
+    public static GrantClaimCostBuilder newGrantClaimPercentage() {
         return new GrantClaimCostBuilder(emptyList()).with(uniqueIds());
     }
 

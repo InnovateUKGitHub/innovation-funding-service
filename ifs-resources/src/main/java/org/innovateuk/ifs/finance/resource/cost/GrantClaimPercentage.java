@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
@@ -87,5 +90,29 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
         return total.multiply(new BigDecimal(percentage))
                 .divide(new BigDecimal(100))
                 .subtract(otherFunding);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GrantClaimPercentage that = (GrantClaimPercentage) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(id, that.id)
+                .append(percentage, that.percentage)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(id)
+                .append(percentage)
+                .toHashCode();
     }
 }

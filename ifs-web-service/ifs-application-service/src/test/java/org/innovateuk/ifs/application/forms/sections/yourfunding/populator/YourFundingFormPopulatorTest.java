@@ -32,7 +32,7 @@ import static org.apache.commons.collections.ListUtils.union;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
@@ -80,7 +80,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     public void setup() {
         super.setup();
 
-        grantClaim = newGrantClaim()
+        grantClaim = newGrantClaimPercentage()
                 .withGrantClaimPercentage(100)
                 .build();
 

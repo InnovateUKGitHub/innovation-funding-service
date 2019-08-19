@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.Vat;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
@@ -51,7 +51,6 @@ public class BaseFinanceResourceTest {
 
     @Test
     public void getTotalCosts() {
-
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
@@ -74,23 +73,23 @@ public class BaseFinanceResourceTest {
 
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
+                        newGrantClaimPercentage().
                                 withGrantClaimPercentage(30).
                                 build(1)).
                         build());
 
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
-        GrantClaim grantClaim = baseFinanceResource.getGrantClaim();
+        GrantClaimPercentage grantClaim = (GrantClaimPercentage) baseFinanceResource.getGrantClaim();
 
-        assertEquals(grantClaim.getGrantClaimPercentage(), Integer.valueOf(30));
+        assertEquals(grantClaim.getPercentage(), Integer.valueOf(30));
     }
 
     @Test
     public void getGrantClaimPercentage() {
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
+                        newGrantClaimPercentage().
                                 withGrantClaimPercentage(30).
                                 build(1)).
                         withTotal(BigDecimal.valueOf(30)).
@@ -121,8 +120,8 @@ public class BaseFinanceResourceTest {
                         withTotal(BigDecimal.valueOf(100)).
                         build(),
                 FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
-                                withGrantClaimPercentage(30).
+                        newGrantClaimPercentage().
+                                withGrantClaimPercentage(50).
                                 build(1)).
                         withTotal(BigDecimal.valueOf(50)).
                         build());
@@ -146,8 +145,8 @@ public class BaseFinanceResourceTest {
                         withTotal(BigDecimal.valueOf(100)).
                         build(),
                 FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
-                                withGrantClaimPercentage(30).
+                        newGrantClaimPercentage().
+                                withGrantClaimPercentage(50).
                                 build(1)).
                         withTotal(BigDecimal.valueOf(50)).
                         build());
