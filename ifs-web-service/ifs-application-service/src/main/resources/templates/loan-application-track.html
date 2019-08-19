@@ -33,13 +33,9 @@
             <div class="govuk-panel__body govuk-!-font-size-19">
                 Application number: <span th:text="${currentApplication.id}"/><br/>
                 You completed part A on
-                <th:block th:if="${currentApplication.submittedDate}">
-                    <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
+                    <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"/>
                     at
-                    <th:block
-                        th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}"/>.
-                </th:block>
-                <br/>
+                    <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}"/>.
                 <div class="govuk-!-margin-top-6">
                     <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}"
                        class="govuk-link govuk-!-margin-right-6">View part A</a>
@@ -128,13 +124,8 @@
 
             <h3 class="govuk-heading-m">Give us feedback</h3>
 
-            <div>
-                <p class="govuk-body">You can give feedback to help us improve this service. This should take no more
-                    than 2
-                    minutes.</p>
-                <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}"
-                   class="govuk-button">Give us feedback</a>
-            </div>
+            <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
+            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}" class="govuk-button">Give us feedback</a>
 
             <p class="govuk-body govuk-!-margin-bottom-6">
                 <a class="govuk-link" th:href="@{/applicant/dashboard}">Finish without feedback</a>
