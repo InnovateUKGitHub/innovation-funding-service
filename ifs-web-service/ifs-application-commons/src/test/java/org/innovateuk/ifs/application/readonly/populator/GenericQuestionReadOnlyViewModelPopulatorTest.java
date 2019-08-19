@@ -131,7 +131,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         assertEquals("Document Title", viewModel.getTemplateDocumentTitle());
 
         assertEquals("1. Question", viewModel.getName());
-        assertEquals(application.getId(), (Long) viewxModel.getApplicationId());
+        assertEquals(application.getId(), (Long) viewModel.getApplicationId());
         assertEquals(question.getId(), (Long) viewModel.getQuestionId());
         assertFalse(viewModel.isComplete());
         assertFalse(viewModel.isLead());
