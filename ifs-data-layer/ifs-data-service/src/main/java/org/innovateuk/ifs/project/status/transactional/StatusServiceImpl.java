@@ -249,7 +249,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         boolean incomplete = false;
         boolean started = false;
         for (Organisation organisation : project.getOrganisations()) {
-            if (isOrganisationSeekingFunding(project.getApplication().getId(), organisation.getId())) {
+            if (isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
                 Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
                 ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
                 ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
@@ -274,8 +274,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private boolean isOrganisationSeekingFunding(long applicationId, long organisationId) {
-        Optional<Boolean> result = financeService.organisationSeeksFunding(applicationId, organisationId).getOptionalSuccessObject();
+    private boolean isOrganisationSeekingFunding(long projectId, long applicationId, long organisationId) {
+        Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
         return result.orElse(false);
     }
 
@@ -648,7 +648,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates createBankDetailStatus(Long projectId, Long applicationId, Long organisationId, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
-        } else if (!isOrganisationSeekingFunding(applicationId, organisationId)) {
+        } else if (!isOrganisationSeekingFunding(projectId, applicationId, organisationId)) {
             return NOT_REQUIRED;
         } else if (COMPLETE.equals(financeContactStatus)) {
             return ACTION_REQUIRED;
