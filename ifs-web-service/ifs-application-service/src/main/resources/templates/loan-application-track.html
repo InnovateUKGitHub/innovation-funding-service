@@ -32,13 +32,12 @@
             <h2 class="govuk-panel__title">Part A: Innovation Funding Service application</h2>
             <div class="govuk-panel__body govuk-!-font-size-19">
                 Application number: <span th:text="${currentApplication.id}"/><br/>
-                Your completed part A on
+                You completed part A on
                 <th:block th:if="${currentApplication.submittedDate}">
                     <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
                     at
                     <th:block
-                        th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}"/>
-                    .
+                        th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}"/>.
                 </th:block>
                 <br/>
                 <div class="govuk-!-margin-top-6">
@@ -53,7 +52,7 @@
 
             <h2 class="govuk-heading-l">What happens next?</h2>
 
-            <h3 class="govuk-heading-m">We will email you to confirm submission of part A.</h3>
+            <p class="govuk-body">We will email you to confirm submission of part A.</p>
             <p class="govuk-body">Applicants that progress to the next stage will go through detailed credit
                 analysis and may be offered an innovation loan. They will need to set up their project within the
                 Innovation Funding Service. An applicant is successful only when they complete project setup and are
@@ -126,6 +125,8 @@
                 credit committee.</p>
             <p class="govuk-body">All assessed applications will receive feedback on parts A and B. There will be no
                 further feedback and no further discussion on the application.</p>
+
+            <h3 class="govuk-heading-m">Give us feedback</h3>
 
             <div class="govuk-!-margin-top-6">
                 <p class="govuk-body">You can give feedback to help us improve this service. This should take no more
