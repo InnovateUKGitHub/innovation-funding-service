@@ -150,7 +150,6 @@ public class IndustrialCostFinanceHandlerTest {
 
         vat = new Vat(applicationFinance.getId());
         vat.setRegistered(false);
-        vat.setName("vat");
         vatCost = handler.toApplicationDomain(vat);
         vatCost.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow)vatCost);

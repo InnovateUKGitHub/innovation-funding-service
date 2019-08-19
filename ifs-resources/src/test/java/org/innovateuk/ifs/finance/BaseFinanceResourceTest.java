@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
@@ -31,41 +30,6 @@ public class BaseFinanceResourceTest {
     @Before
     public void setUp() throws Exception {
         baseFinanceResource = Mockito.mock(BaseFinanceResource.class, Mockito.CALLS_REAL_METHODS);
-    }
-
-    @Test
-    public void getTotalCosts_NoFinanceDetailsReturnsZero() {
-        BigDecimal totalCost = baseFinanceResource.getTotalCosts();
-        assertEquals(totalCost, BigDecimal.ZERO);
-    }
-
-    @Test
-    public void getTotalCosts_NullTotalReturnsZero() {
-        Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
-
-        baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
-
-        BigDecimal totalCost = baseFinanceResource.getTotalCosts();
-        assertEquals(totalCost, BigDecimal.ZERO);
-    }
-
-    @Test
-    public void getTotalCosts() {
-        Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
-                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
-                        newLabourCost().
-                                withGrossEmployeeCost(new BigDecimal("10000000"), BigDecimal.ZERO).
-                                withDescription("Developers", WORKING_DAYS_PER_YEAR).
-                                withLabourDays(100, 200).
-                                withTotal(BigDecimal.valueOf(100)).
-                                build(2)).
-                        withTotal(BigDecimal.valueOf(100)).
-                        build());
-
-        baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
-
-        BigDecimal totalCost = baseFinanceResource.getTotalCosts();
-        assertEquals(totalCost, BigDecimal.valueOf(100));
     }
 
     @Test
@@ -161,6 +125,7 @@ public class BaseFinanceResourceTest {
 
         Vat vat = newVATCost()
                 .withRegistered(false)
+                .withRate(new BigDecimal("0.2"))
                 .build();
 
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
@@ -186,6 +151,7 @@ public class BaseFinanceResourceTest {
 
         Vat vat = newVATCost()
                 .withRegistered(true)
+                .withRate(new BigDecimal("0.2"))
                 .build();
 
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
@@ -198,12 +164,12 @@ public class BaseFinanceResourceTest {
                                 build(2)).
                         withTotal(BigDecimal.valueOf(100)).
                         build(),
-                FinanceRowType.VAT,  newVATCategory().withCosts(singletonList(vat)).build());
+                FinanceRowType.VAT,  newVATCategory().withCosts(singletonList(vat)).withTotal(new BigDecimal("20")).build());
 
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
         BigDecimal totalCost = baseFinanceResource.getTotal();
-        assertEquals(totalCost, BigDecimal.valueOf(120.0));
+        assertEquals(totalCost, new BigDecimal("120"));
     }
 
     @Test

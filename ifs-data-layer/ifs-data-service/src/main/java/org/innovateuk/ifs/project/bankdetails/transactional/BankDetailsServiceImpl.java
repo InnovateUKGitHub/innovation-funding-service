@@ -41,7 +41,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.Short.parseShort;
@@ -149,7 +148,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org) {
 
-        if (!isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), org.getId())) {
+        if (!isOrganisationSeekingFunding(project.getApplication().getId(), org.getId())) {
             return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
         }
 
@@ -165,9 +164,10 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                 andOnSuccessReturn(bankDetails -> bankDetailsMapper.mapToResource(bankDetails));
     }
 
-    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
-        return result.map(Boolean::booleanValue).orElse(false);
+    private boolean isOrganisationSeekingFunding(long applicationId, long organisationId) {
+        return financeService.organisationSeeksFunding(applicationId, organisationId)
+                .getOptionalSuccessObject()
+                .orElse(false);
     }
 
     private Address toExperianAddressFormat(AddressResource addressResource) {

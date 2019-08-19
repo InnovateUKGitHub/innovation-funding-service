@@ -282,7 +282,7 @@ public class OrganisationFinanceController {
                     if (finance.getOrganisationSize() != organisationSize) {
 
                         finance.setOrganisationSize(organisationSize);
-                        ServiceResult<ApplicationFinanceResource> updateSizeResult = financeRowCostsService.updateApplicationFinance(finance.getId(), finance);
+                        ServiceResult<ApplicationFinanceResource> updateSizeResult = financeService.updateApplicationFinance(finance.getId(), finance);
 
                         long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
                         handleOrganisationSizeChange(finance, competitionId, userId);

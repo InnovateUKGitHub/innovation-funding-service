@@ -121,7 +121,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             applicationFinance.setOrganisationSize(organsationSize);
 
-            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
 
@@ -134,7 +134,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             applicationFinance.setWorkPostcode(workPostcode);
 
-            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
 

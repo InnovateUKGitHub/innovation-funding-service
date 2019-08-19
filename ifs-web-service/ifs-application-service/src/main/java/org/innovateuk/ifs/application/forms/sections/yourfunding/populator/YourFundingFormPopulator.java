@@ -7,19 +7,16 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundin
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -41,10 +38,9 @@ public class YourFundingFormPopulator {
     @Autowired
     private ApplicationService applicationService;
 
-    public AbstractYourFundingForm populateForm(long applicationId, UserResource user, Optional<Long> organisationId) {
+    public AbstractYourFundingForm populateForm(long applicationId, long organisationId) {
 
-        OrganisationResource organisation = organisationId.map(organisationRestService::getOrganisationById).map(RestResult::getSuccess)
-                .orElseGet(() -> organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess());
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
 
         AbstractYourFundingForm form = getForm(finance);

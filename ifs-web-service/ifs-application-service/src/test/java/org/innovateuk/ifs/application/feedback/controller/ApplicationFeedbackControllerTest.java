@@ -3,10 +3,10 @@ package org.innovateuk.ifs.application.feedback.controller;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -63,15 +63,13 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
     @Spy
     @InjectMocks
+    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
+
+    @Mock
     private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
 
-    @Spy
-    @InjectMocks
+    @Mock
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
 
     @Mock
     private ApplicantRestService applicantRestService;

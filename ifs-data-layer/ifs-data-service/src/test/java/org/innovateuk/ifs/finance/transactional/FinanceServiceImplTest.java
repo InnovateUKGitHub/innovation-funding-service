@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -66,7 +67,8 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
     @Mock
     private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
 
-
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
     @Test
     public void findApplicationFinanceByApplicationIdAndOrganisation() {
 
@@ -160,4 +162,5 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
 
         assertEquals(existingFinances, result.getSuccess());
     }
+
 }

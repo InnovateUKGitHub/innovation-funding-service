@@ -12,11 +12,14 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.Map.Entry;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.VAT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -60,9 +63,18 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
     protected Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
         FinanceRowCostCategory labourFinanceRowCostCategory = costCategories.get(FinanceRowType.LABOUR);
         OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(FinanceRowType.OVERHEADS);
+        VatCostCategory vatCategory = (VatCostCategory) costCategories.get(FinanceRowType.VAT);
         if (overheadCategory != null && labourFinanceRowCostCategory != null) {
             overheadCategory.setLabourCostTotal(labourFinanceRowCostCategory.getTotal());
             overheadCategory.calculateTotal();
+        }
+        if (vatCategory != null) {
+            vatCategory.setTotalCostsWithoutVat(costCategories.entrySet().stream()
+                    .filter(entry -> !entry.getKey().equals(VAT) && !entry.getValue().excludeFromTotalCost())
+                    .map(Entry::getValue)
+                    .map(FinanceRowCostCategory::getTotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add));
+            vatCategory.calculateTotal();
         }
         return costCategories;
     }
@@ -94,7 +106,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
             case GRANT_CLAIM_AMOUNT:
                 return new ExcludedCostCategory();
             case VAT:
-                return new VatCategory();
+                return new VatCostCategory();
             default:
                 return new DefaultCostCategory();
         }

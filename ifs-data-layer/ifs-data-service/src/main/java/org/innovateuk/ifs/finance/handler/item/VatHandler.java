@@ -35,23 +35,23 @@ public class VatHandler extends FinanceRowHandler<Vat> {
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new Vat(cost.getId(), cost.getItem() == null ? null : Boolean.valueOf(cost.getItem()), cost.getTarget().getId());
+        return new Vat(cost.getId(), cost.getItem() == null ? null : Boolean.valueOf(cost.getItem()), cost.getCost(), cost.getTarget().getId());
     }
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(Vat vat) {
-        return new ApplicationFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, BigDecimal.ZERO, null, vat.getCostType());
+        return new ApplicationFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, vat.getRate(), null, vat.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(Vat vat) {
-        return new ProjectFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, BigDecimal.ZERO, null, vat.getCostType());
+        return new ProjectFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, vat.getRate(), null, vat.getCostType());
     }
 
     @Override
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(toApplicationDomain(new Vat(applicationFinance.getId())));
+        costs.add(toApplicationDomain(new Vat(null, null, new BigDecimal("0.2"), applicationFinance.getId())));
         return costs;
     }
 }

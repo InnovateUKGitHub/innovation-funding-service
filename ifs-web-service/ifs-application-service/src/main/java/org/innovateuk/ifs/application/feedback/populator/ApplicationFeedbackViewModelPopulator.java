@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.application.feedback.populator;
 
-import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackViewModel;
 import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.finance.populator.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -105,7 +105,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
-        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId, user, competition);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId, user);
 
         long applicationTermsQuestion = sectionService.getTermsAndConditionsSection(application.getCompetition()).getQuestions().get(0);
 

@@ -18,7 +18,6 @@ import java.util.Map;
  */
 public abstract class BaseFinanceResource {
 
-    public static final BigDecimal VAT_RATE = BigDecimal.valueOf(1.2);
 
     protected Long id;
     protected Long organisation;
@@ -112,27 +111,6 @@ public abstract class BaseFinanceResource {
     }
 
     @JsonIgnore
-    public BigDecimal getTotalCosts() {
-        if (financeOrganisationDetails == null) {
-            return BigDecimal.ZERO;
-        }
-
-        BigDecimal total = financeOrganisationDetails.entrySet().stream()
-                .filter(cat -> cat != null &&
-                        cat.getValue() != null &&
-                        cat.getValue().getTotal() != null)
-                .filter(cat -> !cat.getValue().excludeFromTotalCost())
-                .map(cat -> cat.getValue().getTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        if (total == null) {
-            return BigDecimal.ZERO;
-        }
-
-        return total;
-    }
-
-    @JsonIgnore
     public GrantClaim getGrantClaim() {
         if (financeOrganisationDetails != null) {
             FinanceRowCostCategory grantClaimPercentageCostCategory = financeOrganisationDetails.get(FinanceRowType.FINANCE);
@@ -194,10 +172,23 @@ public abstract class BaseFinanceResource {
 
     @JsonIgnore
     public BigDecimal getTotal() {
-        if (isVatRegistered()) {
-            return getTotalCosts().multiply(VAT_RATE);
+        if (financeOrganisationDetails == null) {
+            return BigDecimal.ZERO;
         }
-        return getTotalCosts();
+
+        BigDecimal total = financeOrganisationDetails.entrySet().stream()
+                .filter(cat -> cat != null &&
+                        cat.getValue() != null &&
+                        cat.getValue().getTotal() != null)
+                .filter(cat -> !cat.getValue().excludeFromTotalCost())
+                .map(cat -> cat.getValue().getTotal())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (total == null) {
+            return BigDecimal.ZERO;
+        }
+
+        return total;
     }
 
     public boolean isVatRegistered() {

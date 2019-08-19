@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -112,7 +112,7 @@ public class YourProjectCostsAutosaver {
 
     private Optional<Long> autosaveVAT(String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
         finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
-        VatCategory category = (VatCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+        VatCostCategory category = (VatCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
         Vat vat = (Vat) category.getCosts().get(0);
         vat.setRegistered(Boolean.valueOf(value));
         financeRowRestService.update(vat);
