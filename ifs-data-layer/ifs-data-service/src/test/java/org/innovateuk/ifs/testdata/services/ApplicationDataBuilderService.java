@@ -103,7 +103,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             return simpleMap(responseBuilders, BaseBuilder::build);
         }
         // otherwise provide a default set of marked as complete questions if the application is to be submitted
-        else if (applicationLine.submittedDate != null) {
+        else if (applicationLine.markQuestionsComplete || applicationLine.submittedDate != null) {
 
             Long competitionId = applicationData.getCompetition().getId();
 
