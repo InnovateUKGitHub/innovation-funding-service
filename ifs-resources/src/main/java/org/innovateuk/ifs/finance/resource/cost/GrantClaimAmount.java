@@ -64,7 +64,7 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
 
     @Override
     public void reset() {
-        amount = null;
+        // The grant claim amount doesn't get reset by research cat or organisation size.
     }
 
     @Override

@@ -41,7 +41,7 @@ public class GrantClaimValidatorTest {
 
     @Test
 	public void testNullClaimPercentageError() {
-		claim.setGrantClaimPercentage(null);
+		claim.setPercentage(null);
 
 		validator.validate(claim, bindingResult);
 
@@ -61,7 +61,7 @@ public class GrantClaimValidatorTest {
 
 	@Test
 	public void testMinimumError() {
-		claim.setGrantClaimPercentage(-1);
+		claim.setPercentage(-1);
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
 		when(applicationFinance.getMaximumFundingLevel()).thenReturn(100);
@@ -74,7 +74,7 @@ public class GrantClaimValidatorTest {
 
 	@Test
 	public void testMaximumError() {
-		claim.setGrantClaimPercentage(50);
+		claim.setPercentage(50);
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
 		when(applicationFinance.getMaximumFundingLevel()).thenReturn(30);
@@ -86,7 +86,7 @@ public class GrantClaimValidatorTest {
 
 	@Test
 	public void testSuccess() {
-		claim.setGrantClaimPercentage(100);
+		claim.setPercentage(100);
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
 		when(applicationFinance.getMaximumFundingLevel()).thenReturn(100);
