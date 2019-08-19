@@ -188,7 +188,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     @Override
-    public ServiceResult<Boolean> organisationSeeksFunding(long applicationId, long organisationId) {
+    public ServiceResult<Boolean> organisationSeeksFunding(long projectId, long applicationId, long organisationId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
               applicationId, organisationId);
 

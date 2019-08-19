@@ -148,7 +148,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org) {
 
-        if (!isOrganisationSeekingFunding(project.getApplication().getId(), org.getId())) {
+        if (!isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), org.getId())) {
             return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
         }
 
@@ -164,8 +164,8 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                 andOnSuccessReturn(bankDetails -> bankDetailsMapper.mapToResource(bankDetails));
     }
 
-    private boolean isOrganisationSeekingFunding(long applicationId, long organisationId) {
-        return financeService.organisationSeeksFunding(applicationId, organisationId)
+    private boolean isOrganisationSeekingFunding(long projectId, long applicationId, long organisationId) {
+        return financeService.organisationSeeksFunding(projectId, applicationId, organisationId)
                 .getOptionalSuccessObject()
                 .orElse(false);
     }
