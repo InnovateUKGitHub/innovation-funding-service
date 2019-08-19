@@ -759,7 +759,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public void setGrantClaimMaximums(List<GrantClaimMaximum> grantClaimMaximums) {
-        this.grantClaimMaximums = grantClaimMaximums;
+        this.grantClaimMaximums.clear();
+        if (grantClaimMaximums != null) {
+            this.grantClaimMaximums.addAll(grantClaimMaximums);
+        }
     }
 
     public GrantTermsAndConditions getTermsAndConditions() {
