@@ -44,6 +44,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
 import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.*;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -277,7 +278,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         Application application = newApplication().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Organisation organisation = newOrganisation().build();
-        OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource = new OrganisationFinancesWithoutGrowthTableResource();
+        OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource = newOrganisationFinancesWithoutGrowthTableResource().build();
         User loggedInUser = newUser().build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
 
