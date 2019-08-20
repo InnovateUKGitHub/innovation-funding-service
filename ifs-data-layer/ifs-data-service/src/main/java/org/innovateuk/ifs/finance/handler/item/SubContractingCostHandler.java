@@ -5,10 +5,13 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.SUBCONTRACTING_COSTS;
 
 /**
  * Handles the subcontracting costs, i.e. converts the costs to be stored into the database
@@ -32,6 +35,11 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     @Override
     public FinanceRowItem toResource(FinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
+    }
+
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return SUBCONTRACTING_COSTS;
     }
 
     private FinanceRowItem buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){

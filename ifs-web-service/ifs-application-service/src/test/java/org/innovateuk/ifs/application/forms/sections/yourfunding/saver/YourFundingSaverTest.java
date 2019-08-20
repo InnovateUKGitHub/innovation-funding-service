@@ -2,13 +2,12 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
@@ -26,6 +25,7 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.for
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
@@ -55,7 +55,6 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
     @Test
     public void save() {
-        long otherFundingQuestionId = 2L;
         OrganisationResource organisation = newOrganisationResource().build();
         UserResource user = newUserResource().build();
         OtherFunding otherFunding = newOtherFunding()
@@ -65,7 +64,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         ApplicationFinanceResource finance = newApplicationFinanceResource()
                 .withFinanceOrganisationDetails(asMap(
                 FinanceRowType.FINANCE,  newGrantClaimCostCategory()
-                    .withCosts(asList(new GrantClaim(1L)))
+                    .withCosts(newGrantClaimPercentage().build(1))
                     .build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory()
                     .withCosts(asList(otherFunding))
@@ -77,11 +76,10 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         when(organisationRestService.getByUserAndApplicationId(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(organisation));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
 
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setRequestingFunding(true);
         form.setGrantClaimPercentage(100);
 
-        form.setOtherFundingQuestionId(otherFundingQuestionId);
         form.setOtherFunding(true);
 
         OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123), finance.getId()));
@@ -95,14 +93,13 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
         service.save(APPLICATION_ID, form, user);
 
-        GrantClaim expectedGrantClaim = new GrantClaim(finance.getGrantClaim().getId(), 100, finance.getId());
-        verify(financeRowRestService).update(expectedGrantClaim);
+        verify(financeRowRestService).update(finance.getGrantClaim());
 
         OtherFunding expectedOtherFundingSet = new OtherFunding(finance.getId());
         expectedOtherFundingSet.setId(otherFunding.getId());
         expectedOtherFundingSet.setOtherPublicFunding("Yes");
         expectedOtherFundingSet.setFundingSource(OtherFundingCostCategory.OTHER_FUNDING);
-        verify(financeRowRestService).update(expectedGrantClaim);
+        verify(financeRowRestService).update(expectedOtherFundingSet);
 
         OtherFunding expectedEmptyRow = new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123), finance.getId());
         verify(financeRowRestService).create(expectedEmptyRow);
@@ -115,7 +112,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
     @Test
     public void removeOtherFundingRowForm() {
         String rowId = "12";
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(asMap(rowId, new OtherFundingRowForm()));
 
         service.removeOtherFundingRowForm(form, rowId);
@@ -126,11 +123,13 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
     @Test
     public void addOtherFundingRow() {
-        YourFundingForm form = new YourFundingForm();
+        YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
 
         service.addOtherFundingRow(form);
 
         assertTrue(form.getOtherFundingRows().keySet().stream().anyMatch(key -> key.startsWith(UNSAVED_ROW_PREFIX)));
     }
+
+    //TODO Test saving your funding amount.
 }

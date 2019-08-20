@@ -6,43 +6,45 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.finance.validator.GrantClaimValidator;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
+import org.innovateuk.ifs.finance.validator.GrantClaimPercentageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.groups.Default;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 
 /**
  * Handles the grant claims, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
 @Component
-public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
+public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPercentage> {
     public static final String GRANT_CLAIM = "Grant Claim";
     public static final String COST_KEY = "grant-claim";
 
     @Autowired
-    private GrantClaimValidator grantClaimValidator;
+    private GrantClaimPercentageValidator grantClaimValidator;
 
     @Override
-    public void validate(GrantClaim grantClaim, BindingResult bindingResult) {
+    public void validate(GrantClaimPercentage grantClaim, BindingResult bindingResult) {
         super.validate(grantClaim, bindingResult, Default.class);
         grantClaimValidator.validate(grantClaim, bindingResult);
     }
 
     @Override
-    public ApplicationFinanceRow toApplicationDomain(GrantClaim grantClaim) {
-        return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,grantClaim.getCostType());
+    public ApplicationFinanceRow toApplicationDomain(GrantClaimPercentage grantClaim) {
+        return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getPercentage(), grantClaim.getTotal(), null, grantClaim.getCostType());
     }
 
     @Override
-    public ProjectFinanceRow toProjectDomain(GrantClaim costItem) {
-        return new ProjectFinanceRow(costItem.getId(), COST_KEY, "", GRANT_CLAIM, costItem.getGrantClaimPercentage(), BigDecimal.ZERO, null,costItem.getCostType());
+    public ProjectFinanceRow toProjectDomain(GrantClaimPercentage grantClaim) {
+        return new ProjectFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getPercentage(), grantClaim.getTotal(), null, grantClaim.getCostType());
     }
 
     @Override
@@ -50,8 +52,13 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
         return buildRowItem(cost);
     }
 
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return FINANCE;
+    }
+
     private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new GrantClaim(cost.getId(), cost.getQuantity(), cost.getTarget().getId());
+        return new GrantClaimPercentage(cost.getId(), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override
@@ -63,11 +70,11 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
 
     private ApplicationFinanceRow initializeFundingLevel(ApplicationFinance applicationFinance) {
         Competition competition = applicationFinance.getApplication().getCompetition();
-        GrantClaim costItem = new GrantClaim(applicationFinance.getId());
+        GrantClaimPercentage costItem = new GrantClaimPercentage(applicationFinance.getId());
         if (competition.isFullyFunded()) {
-            costItem.setGrantClaimPercentage(100);
+            costItem.setPercentage(100);
         } else {
-            costItem.setGrantClaimPercentage(null);
+            costItem.setPercentage(null);
         }
         return toApplicationDomain(costItem);
     }

@@ -13,7 +13,8 @@ public abstract class AbstractFinanceRowCostCategoryBuilder<T extends FinanceRow
         super(newMultiActions);
     }
 
-    public S withCosts(List<? extends FinanceRowItem>... costs) {
+    @SafeVarargs
+    public final S withCosts(List<? extends FinanceRowItem>... costs) {
         return withArray((cost, financeRow) -> cost.forEach(financeRow::addCost), costs);
     }
 }

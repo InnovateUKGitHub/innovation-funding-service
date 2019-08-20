@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
-import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,4 +98,5 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private boolean competitionIsNotInSetupState(Competition competition) {
         return !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP);
     }
+
 }
