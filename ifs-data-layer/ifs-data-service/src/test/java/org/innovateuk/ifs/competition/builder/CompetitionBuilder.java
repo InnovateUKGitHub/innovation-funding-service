@@ -39,6 +39,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public static CompetitionBuilder newCompetition() {
         return new CompetitionBuilder(emptyList()).
                 with(uniqueIds()).
+                withFundingType(FundingType.GRANT).
                 with(idBasedNames("Competition ")).
                 with(competition -> {
                     GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
@@ -178,8 +179,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     @SafeVarargs
-    public final CompetitionBuilder withGrantClaimMaximums(List<GrantClaimMaximum>... grantClaimMaximums) {
-        return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
+    public final CompetitionBuilder withGrantClaimMaximums(List<GrantClaimMaximum>... grantClaimMaximumses) {
+        return withArray((grantClaimMaximums, c) -> c.setGrantClaimMaximums(grantClaimMaximums), grantClaimMaximumses);
     }
 
     @SafeVarargs

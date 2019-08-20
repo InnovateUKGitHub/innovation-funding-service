@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
-import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -78,9 +78,9 @@ public class FinanceReadOnlyViewModelPopulatorTest {
         when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(singletonList(financeSection)));
         when(applicationFinanceSummaryViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFinanceSummaryViewModel);
         when(applicationResearchParticipationViewModelPopulator.populate(application.getId())).thenReturn(applicationResearchParticipationViewModel);
-        when(applicationFundingBreakdownViewModelPopulator.populate(application.getId(), user, competition)).thenReturn(applicationFundingBreakdownViewModel);
+        when(applicationFundingBreakdownViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFundingBreakdownViewModel);
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, empty(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
         FinanceReadOnlyViewModel viewModel = populator.populate(data);
 

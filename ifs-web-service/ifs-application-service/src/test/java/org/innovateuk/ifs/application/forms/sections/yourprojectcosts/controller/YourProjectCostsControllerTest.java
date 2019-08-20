@@ -47,7 +47,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     private static final long SECTION_ID = 2L;
     private static final long PROCESS_ROLE_ID = 3L;
     private static final long ORGANISATION_ID = 4L;
-    private static final String VIEW = "application/your-project-costs";
+    private static final String VIEW = "application/sections/your-project-costs/your-project-costs";
 
     @Mock
     private ApplicationYourProjectCostsFormPopulator formPopulator;

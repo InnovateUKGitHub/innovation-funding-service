@@ -14,7 +14,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -137,7 +137,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private FinanceCheckQueriesService financeCheckQueriesServiceMock;
 
     @Mock
-    private FinanceService financeServiceMock;
+    private ApplicationFinanceService financeServiceMock;
 
     @Mock
     private OrganisationRepository organisationRepositoryMock;

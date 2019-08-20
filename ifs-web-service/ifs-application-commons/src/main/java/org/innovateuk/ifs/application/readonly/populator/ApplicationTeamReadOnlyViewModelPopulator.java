@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamReadOnlyViewModel;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -21,7 +22,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     }
 
     @Override
-    public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data) {
+    public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         return new ApplicationTeamReadOnlyViewModel(applicationSummaryRestService.getApplicationTeam(data.getApplication().getId()).getSuccess(), data, question);
     }
 

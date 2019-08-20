@@ -248,7 +248,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public void setSections(List<Section> sections) {
-        this.sections = sections;
+        this.sections.clear();
+        if (sections != null) {
+            this.sections.addAll(sections);
+        }
     }
 
     public void setQuestions(List<Question> questions) {
@@ -631,6 +634,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         return displayDate(getStartDate(), CompetitionResource.START_DATE_FORMAT);
     }
 
+    public String submissionDateDisplay() {
+        return displayDate(getEndDate(), DateTimeFormatter.ofPattern("d MMMM yyyy"));
+    }
+
     private String displayDate(ZonedDateTime date, DateTimeFormatter formatter) {
         if (date != null) {
             return toUkTimeZone(date).format(formatter);
@@ -752,7 +759,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public void setGrantClaimMaximums(List<GrantClaimMaximum> grantClaimMaximums) {
-        this.grantClaimMaximums = grantClaimMaximums;
+        this.grantClaimMaximums.clear();
+        if (grantClaimMaximums != null) {
+            this.grantClaimMaximums.addAll(grantClaimMaximums);
+        }
     }
 
     public GrantTermsAndConditions getTermsAndConditions() {

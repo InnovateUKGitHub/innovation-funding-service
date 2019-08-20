@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +12,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsBuilder.newGrantTermsAndConditions;
+import static org.junit.Assert.assertEquals;
 
 public class GrantTermsAndConditionsRepositoryIntegrationTest extends
         BaseRepositoryIntegrationTest<GrantTermsAndConditionsRepository> {
@@ -75,4 +77,10 @@ public class GrantTermsAndConditionsRepositoryIntegrationTest extends
 
     }
 
+    @Test
+    public void getLatestForFundingType() {
+        assertEquals(FundingType.LOAN.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.LOAN).getName());
+        assertEquals(FundingType.PROCUREMENT.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.PROCUREMENT).getName());
+        assertEquals(FundingType.GRANT.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.GRANT).getName());
+    }
 }

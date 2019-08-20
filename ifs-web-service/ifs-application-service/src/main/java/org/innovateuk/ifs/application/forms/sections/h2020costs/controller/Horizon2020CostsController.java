@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the horizon 2020 costs section of the application.")
 public class Horizon2020CostsController extends AsyncAdaptor {
-    private static final String VIEW = "application/horizon-2020-costs";
+    private static final String VIEW = "application/sections/your-project-costs/horizon-2020-costs";
 
     @Autowired
     private Horizon2020CostsFormPopulator formPopulator;

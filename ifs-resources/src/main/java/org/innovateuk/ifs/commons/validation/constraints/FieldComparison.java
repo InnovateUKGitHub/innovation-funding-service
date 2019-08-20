@@ -26,10 +26,4 @@ public @interface FieldComparison {
     String firstField();
     String secondField();
     Class<?> predicate();
-
-    @Target({TYPE})
-    @Retention(RUNTIME)
-    @interface List {
-        FieldComparison[] value();
-    }
 }

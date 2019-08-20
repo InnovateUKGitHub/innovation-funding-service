@@ -89,7 +89,7 @@ the applicant sees state aid information
     the user clicks the button/link      link = Your organisation
     the user should see the element      link = eligible for state aid
     the user clicks the button/link      link = Your project finances
-    the user clicks the button/link      link = Application overview
+    the user clicks the button/link      link = Back to application overview
 
 Custom suite teardown
     Close browser and delete emails

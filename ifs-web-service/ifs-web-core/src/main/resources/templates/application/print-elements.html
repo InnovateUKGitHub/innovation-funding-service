@@ -281,7 +281,7 @@
                     th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                 </td>
                 <td th:if="${financeTotalPerType.containsKey(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}" class="govuk-table__cell govuk-table__cell--numeric"
-                    th:with="financeTotal = ${vatTotal}"
+                    th:with="financeTotal = ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}"
                     th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}">
                 </td>
             </tr>

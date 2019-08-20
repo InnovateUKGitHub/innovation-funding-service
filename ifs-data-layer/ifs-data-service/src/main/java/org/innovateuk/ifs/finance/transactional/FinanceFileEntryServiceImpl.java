@@ -40,13 +40,10 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
-    private ApplicationFinanceRowService financeRowCostsService;
-
-    @Autowired
     private ApplicationFinanceMapper applicationFinanceMapper;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Override
     @Transactional
@@ -91,7 +88,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
         Application application = applicationFinanceRepository.findById(applicationFinanceResource.getId()).get().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app -> {
             applicationFinanceResource.setFinanceFileEntry(null);
-            return financeRowCostsService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
+            return financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
         });
     }
 
@@ -102,7 +99,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
 
         if (applicationFinanceResource != null) {
             applicationFinanceResource.setFinanceFileEntry(fileEntry.getId());
-            financeRowCostsService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
+            financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
         }
 
         return fileEntryMapper.mapToResource(fileEntry);
