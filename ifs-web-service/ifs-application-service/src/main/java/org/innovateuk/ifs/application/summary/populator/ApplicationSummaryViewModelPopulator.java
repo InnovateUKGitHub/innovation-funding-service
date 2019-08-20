@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.summary.populator;
 
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -17,13 +18,17 @@ import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySetting
 public class ApplicationSummaryViewModelPopulator {
 
     @Autowired
-    private ApplicationReadOnlyViewModelPopulator applicationSummaryViewModelPopulator;
+    private ApplicationReadOnlyViewModelPopulator applicationReadOnlyViewModelPopulator;
 
     @Autowired
     private ProjectService projectService;
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, boolean support) {
-        ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings());
+        ApplicationReadOnlySettings settings = defaultSettings();
+        if (support) {
+            settings.setIncludeStatuses(true);
+        }
+        ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
         return new ApplicationSummaryViewModel(applicationReadOnlyViewModel,
                                                application,
                                                competition,
@@ -34,5 +39,4 @@ public class ApplicationSummaryViewModelPopulator {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         return project != null && project.isWithdrawn();
     }
-
 }

@@ -30,18 +30,18 @@ public class CommonYourFinancesViewModelPopulatorTest {
     private long organisationId = 5432L;
     private long sectionId = 1234L;
 
-    private Consumer<CommonYourFinancesViewModel> expectViewModelIsComplete = model -> assertThat(model.isComplete()).isTrue();
-    private Consumer<CommonYourFinancesViewModel> expectViewModelIsOpen = model -> assertThat(model.isOpen()).isTrue();
-    private Consumer<CommonYourFinancesViewModel> expectViewModelIsReadonly = model -> assertThat(model.isReadOnly()).isTrue();
+    private Consumer<CommonYourProjectFinancesViewModel> expectViewModelIsComplete = model -> assertThat(model.isComplete()).isTrue();
+    private Consumer<CommonYourProjectFinancesViewModel> expectViewModelIsOpen = model -> assertThat(model.isOpen()).isTrue();
+    private Consumer<CommonYourProjectFinancesViewModel> expectViewModelIsReadonly = model -> assertThat(model.isReadOnly()).isTrue();
 
-    private Consumer<CommonYourFinancesViewModel> expectViewModelIsIncomplete = model -> assertThat(model.isComplete()).isFalse();
-    private Consumer<CommonYourFinancesViewModel> expectViewModelIsClosed = model -> assertThat(model.isOpen()).isFalse();
-    private Consumer<CommonYourFinancesViewModel> expectViewModelIsEditable = model -> assertThat(model.isReadOnly()).isFalse();
+    private Consumer<CommonYourProjectFinancesViewModel> expectViewModelIsIncomplete = model -> assertThat(model.isComplete()).isFalse();
+    private Consumer<CommonYourProjectFinancesViewModel> expectViewModelIsClosed = model -> assertThat(model.isOpen()).isFalse();
+    private Consumer<CommonYourProjectFinancesViewModel> expectViewModelIsEditable = model -> assertThat(model.isReadOnly()).isFalse();
 
-    private Consumer<CommonYourFinancesViewModel> expectedExternalUserFinanceUrl = model ->
+    private Consumer<CommonYourProjectFinancesViewModel> expectedExternalUserFinanceUrl = model ->
             assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE");
 
-    private Consumer<CommonYourFinancesViewModel> expectedInternalUserFinanceUrl = model ->
+    private Consumer<CommonYourProjectFinancesViewModel> expectedInternalUserFinanceUrl = model ->
             assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE/" + organisationId);
 
     @InjectMocks
@@ -157,7 +157,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
             List<Long> sectionsMarkedAsComplete,
             ApplicationState applicationState,
             CompetitionStatus competitionStatus,
-            Consumer<CommonYourFinancesViewModel>... conditionalAssertions) {
+            Consumer<CommonYourProjectFinancesViewModel>... conditionalAssertions) {
 
         CompetitionResource competition = newCompetitionResource().
                 withCompetitionStatus(competitionStatus).
@@ -174,7 +174,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(sectionServiceMock.getCompleted(application.getId(), organisationId)).thenReturn(sectionsMarkedAsComplete);
 
-        CommonYourFinancesViewModel viewModel = populator.populate(organisationId, application.getId(), sectionId, internalUser);
+        CommonYourProjectFinancesViewModel viewModel = populator.populate(organisationId, application.getId(), sectionId, internalUser);
 
         assertThat(viewModel.getApplicationId()).isEqualTo(application.getId());
         assertThat(viewModel.getApplicationName()).isEqualTo(application.getName());

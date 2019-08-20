@@ -118,7 +118,7 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
 
             applicationFinance.setWorkPostcode(workPostcode);
 
-            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
 

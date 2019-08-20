@@ -16,18 +16,26 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <th:block th:with="applicationName=${#strings.isEmpty(model.summaryViewModel.currentApplication.name)} ? #{ifs.application.no_title} : ${model.summaryViewModel.currentApplication.name}">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application summary',subTitle=${model.summaryViewModel.currentApplication.name},size='govuk-heading-xl'" />
+        <th:block th:with="applicationName=${model.applicationName}">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application summary',subTitle=${model.applicationName},size='govuk-heading-xl'" />
         </th:block>
-
-        <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              method="post" enctype="multipart/form-data"
-              th:object="${form}" class="form-serialize-js section-overview">
             <h2 class="govuk-heading-m">Details</h2>
-            <th:block ifs:global="${model.feedbackViewModel}">
-                <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
-            </th:block>
-        </form>
+
+            //todo app deatils header
+
+            <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
+
+            <section th:if="${model.assessment != null}">
+                <h2 class="govuk-heading-m govuk-!-margin-top-6">Feedback summary</h2>
+                <h3 class="govuk-heading-s">Do you believe that this application is suitable for funding?</h3>
+                <p class="govuk-body" th:if="${model.assessment.getFundingDecision().getFundingConfirmation()}">Yes</p>
+                <p class="govuk-body" th:if="!${model.assessment.getFundingDecision().getFundingConfirmation()}">No</p>
+                <h3 class="govuk-heading-s">Your feedback</h3>
+                <p class="govuk-body" th:text="${model.assessment.getFundingDecision().getFeedback()}">Feedback text</p>
+                <h3 class="govuk-heading-s">Other comments</h3>
+                <p class="govuk-body" th:text="${model.assessment.getFundingDecision().getComment()}">Feedback text</p>
+            </section>
+
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

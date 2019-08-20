@@ -15,7 +15,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableRe
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -73,7 +73,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
     @Mock
     private ApplicationService applicationService;
     @Mock
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
     @Mock
     private ApplicationFinanceRowService financeRowCostsService;
     @Mock

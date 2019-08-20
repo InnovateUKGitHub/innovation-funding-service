@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -59,9 +60,9 @@ public class GrantTransferDetailsReadOnlyPopulatorTest {
                 .withProjectCoordinator(true)
                 .build()));
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
-        GrantTransferDetailsReadOnlyViewModel viewModel = populator.populate(question, data);
+        GrantTransferDetailsReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 
         assertEquals(viewModel.getActionType(), actionTypeResource);
         assertEquals(viewModel.getFundingContribution(), BigDecimal.TEN);

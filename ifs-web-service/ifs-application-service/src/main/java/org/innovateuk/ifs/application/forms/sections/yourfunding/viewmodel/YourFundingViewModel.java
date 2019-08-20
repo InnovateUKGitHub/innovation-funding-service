@@ -5,6 +5,8 @@ public class YourFundingViewModel {
 
     private final long sectionId;
 
+    private final long organisationId;
+
     private final long competitionId;
 
     private final boolean complete;
@@ -31,9 +33,10 @@ public class YourFundingViewModel {
 
     private final String financesUrl;
 
-    public YourFundingViewModel(long applicationId, long sectionId, long competitionId, boolean complete, boolean open, boolean leadApplicant, boolean business, String applicationName, boolean fundingSectionLocked, boolean researchCategoryRequired, boolean yourOrganisationRequired, Long researchCategoryQuestionId, long yourOrganisationSectionId, Integer maximumFundingLevel, String financesUrl) {
+    public YourFundingViewModel(long applicationId, long sectionId, long organisationId, long competitionId, boolean complete, boolean open, boolean leadApplicant, boolean business, String applicationName, boolean fundingSectionLocked, boolean researchCategoryRequired, boolean yourOrganisationRequired, Long researchCategoryQuestionId, long yourOrganisationSectionId, Integer maximumFundingLevel, String financesUrl) {
         this.applicationId = applicationId;
         this.sectionId = sectionId;
+        this.organisationId = organisationId;
         this.competitionId = competitionId;
         this.complete = complete;
         this.open = open;
@@ -55,6 +58,10 @@ public class YourFundingViewModel {
 
     public long getSectionId() {
         return sectionId;
+    }
+
+    public long getOrganisationId() {
+        return organisationId;
     }
 
     public long getCompetitionId() {

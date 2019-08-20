@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -40,7 +40,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
     private QuestionStatusService questionStatusServiceMock;
 
     @Mock
-    private FinanceService financeServiceMock;
+    private ApplicationFinanceService financeServiceMock;
 
     @Test
     public void getCompletedSectionsMap() {

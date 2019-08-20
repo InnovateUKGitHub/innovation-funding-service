@@ -17,7 +17,6 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -48,8 +47,7 @@ import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipa
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the Your project costs section of the application.")
 public class YourProjectCostsController extends AsyncAdaptor {
-
-    private static final String VIEW = "application/your-project-costs";
+    private static final String VIEW = "application/sections/your-project-costs/your-project-costs";
 
     @Autowired
     private ApplicationYourProjectCostsFormPopulator formPopulator;

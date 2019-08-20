@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,12 +29,13 @@ import java.util.Optional;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -74,7 +76,7 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         long questionId = 2L;
 
         QuestionResource previousQuestion = newQuestionResource().withId(1L).withShortName("previous").build();
-        QuestionResource questionResource = newQuestionResource().withId(questionId).build();
+        QuestionResource questionResource = newQuestionResource().withId(questionId).withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT).build();
         QuestionResource nextQuestion = newQuestionResource().withId(3L).withShortName("next").build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(PROJECT_SETUP).build();
         List<FormInputResponseResource> responseResources = newFormInputResponseResource().build(2);
@@ -94,8 +96,8 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
         when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
-        when(formInputRestService.getByQuestionId(questionId)).thenReturn(restSuccess(formInputs));
-        when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(restSuccess(responseResources));
+        when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionResource.getId())).thenReturn(restSuccess(responseResources));
+        when(formInputRestService.getByQuestionId(questionResource.getId())).thenReturn(restSuccess(formInputs));
         when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
         when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
                 .thenReturn(restSuccess(aggregateResource));
@@ -104,6 +106,60 @@ public class ApplicationQuestionFeedbackControllerTest extends BaseControllerMoc
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-assessor-feedback"))
                 .andExpect(model().attribute("model", expectedModel));
+    }
+
+    @Test
+    public void applicationAssessorQuestionFeedback_ResearchCategory() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        QuestionResource previousQuestion = newQuestionResource().withId(1L).withShortName("previous").build();
+        QuestionResource questionResource = newQuestionResource().withId(questionId).withQuestionSetupType(QuestionSetupType.RESEARCH_CATEGORY).build();
+        QuestionResource nextQuestion = newQuestionResource().withId(3L).withShortName("next").build();
+        List<FormInputResource> formInputs = newFormInputResource().build(2);
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(applicationId)
+                .withResearchCategory(newResearchCategoryResource().withName("research")
+                        .build())
+                .withCompetitionStatus(PROJECT_SETUP)
+                .build();
+        List<FormInputResponseResource> responseResources = newFormInputResponseResource().withValue(applicationResource.getResearchCategory().getName()).build(1);
+        AssessmentFeedbackAggregateResource aggregateResource = newAssessmentFeedbackAggregateResource().build();
+        NavigationViewModel expectedNavigation = new NavigationViewModel();
+        expectedNavigation.setNextText("next");
+        expectedNavigation.setNextUrl("/application/1/question/3/feedback");
+        expectedNavigation.setPreviousText("previous");
+        expectedNavigation.setPreviousUrl("/application/1/question/1/feedback");
+
+        when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
+        when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
+        when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
+        when(formInputRestService.getByQuestionId(questionResource.getId())).thenReturn(restSuccess(formInputs));
+        when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
+                .thenReturn(restSuccess(aggregateResource));
+
+        mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-assessor-feedback"));
+    }
+
+    @Test
+    public void applicationAssessorQuestionFeedback_ApplicationTeam() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        QuestionResource questionResource = newQuestionResource().withId(questionId).withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(PROJECT_SETUP).build();
+
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
+        when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
+
+        mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/team", applicationId, questionId)));
     }
 
     @Test

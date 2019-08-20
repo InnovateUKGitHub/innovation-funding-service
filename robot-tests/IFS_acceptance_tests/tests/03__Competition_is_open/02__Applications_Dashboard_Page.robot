@@ -134,7 +134,7 @@ Comp admin should be able to view but not edit the finances for every partner
     [Tags]
     Given the user navigates to the page             ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link             jQuery = button:contains("Finances summary")
-    Then the user should not see the element         link = your finances
+    Then the user should not see the element         link = your project finances
     And the user should see the element              jQuery = h2:contains("Finances summary")
     And the user should see the element              jQuery = h2:contains("Funding breakdown")
     And the finance summary calculations should be correct

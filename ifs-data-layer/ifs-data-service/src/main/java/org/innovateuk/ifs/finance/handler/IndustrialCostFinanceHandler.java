@@ -13,9 +13,12 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.Map.Entry;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.VAT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -46,19 +49,22 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     private OtherFundingHandler otherFundingHandler;
 
+    private VatHandler vatHandler;
+
     public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                             ProjectFinanceRowRepository projectFinanceRowRepository,
-                                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                             QuestionService questionService,
-                                             ApplicationFinanceRepository applicationFinanceRepository,
-                                             ProjectFinanceRepository projectFinanceRepository,
-                                             LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
-                                             MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
-                                             OverheadsHandler overheadsHandler,
-                                             SubContractingCostHandler subContractingCostHandler,
-                                             TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                             OtherFundingHandler otherFundingHandler,
-                                             ProcurementsOverheadsHandler procurementsOverheadsHandler) {
+                                        ProjectFinanceRowRepository projectFinanceRowRepository,
+                                        FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                        QuestionService questionService,
+                                        ApplicationFinanceRepository applicationFinanceRepository,
+                                        ProjectFinanceRepository projectFinanceRepository,
+                                        LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
+                                        MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
+                                        OverheadsHandler overheadsHandler,
+                                        SubContractingCostHandler subContractingCostHandler,
+                                        TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
+                                        OtherFundingHandler otherFundingHandler,
+                                        ProcurementsOverheadsHandler procurementsOverheadsHandler,
+                                        VatHandler vatHandler) {
         super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
         this.labourCostHandler = labourCostHandler;
         this.capitalUsageHandler = capitalUsageHandler;
@@ -69,6 +75,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         this.travelCostHandler = travelCostHandler;
         this.grantClaimHandler = grantClaimHandler;
         this.otherFundingHandler = otherFundingHandler;
+        this.vatHandler = vatHandler;
         this.procurementsOverheadsHandler = procurementsOverheadsHandler;
     }
 
@@ -98,9 +105,18 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
     protected Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
         FinanceRowCostCategory labourFinanceRowCostCategory = costCategories.get(FinanceRowType.LABOUR);
         OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(FinanceRowType.OVERHEADS);
+        VatCostCategory vatCategory = (VatCostCategory) costCategories.get(FinanceRowType.VAT);
         if (overheadCategory != null && labourFinanceRowCostCategory != null) {
             overheadCategory.setLabourCostTotal(labourFinanceRowCostCategory.getTotal());
             overheadCategory.calculateTotal();
+        }
+        if (vatCategory != null) {
+            vatCategory.setTotalCostsWithoutVat(costCategories.entrySet().stream()
+                    .filter(entry -> !entry.getKey().equals(VAT) && !entry.getValue().excludeFromTotalCost())
+                    .map(Entry::getValue)
+                    .map(FinanceRowCostCategory::getTotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add));
+            vatCategory.calculateTotal();
         }
         return costCategories;
     }
@@ -144,6 +160,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
             case OTHER_FUNDING:
                 handler = otherFundingHandler;
                 break;
+            case VAT:
+                handler = vatHandler;
+                break;
         }
         if (handler != null) {
             return handler;
@@ -162,6 +181,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
                 return new OverheadCostCategory();
             case FINANCE:
                 return new GrantClaimCategory();
+            case VAT:
+                return new VatCostCategory();
             default:
                 return new DefaultCostCategory();
         }
