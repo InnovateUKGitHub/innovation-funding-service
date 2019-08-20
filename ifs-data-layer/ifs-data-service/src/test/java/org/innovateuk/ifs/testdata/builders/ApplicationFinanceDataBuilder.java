@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
@@ -74,7 +73,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         return doAsUser(data -> {
 
             ApplicationFinanceResource applicationFinance =
-                    financeRowCostsService.createApplicationFinance(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
+                    financeService.financeDetails(data.getApplication().getId(), data.getOrganisation().getId()).
                             getSuccess();
 
             IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
@@ -90,7 +89,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         return doAsUser(data -> {
 
             ApplicationFinanceResource applicationFinance =
-                    financeRowCostsService.createApplicationFinance(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
+                    financeService.financeDetails(data.getApplication().getId(), data.getOrganisation().getId()).
                             getSuccess();
 
             AcademicCostDataBuilder baseFinanceBuilder = newAcademicCostData(serviceLocator).

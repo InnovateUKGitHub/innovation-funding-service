@@ -12,6 +12,8 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -27,6 +29,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -39,39 +42,43 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 @Component
 public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
+    @Autowired
     private ApplicationRestService applicationRestService;
 
+    @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
     private FormInputRestService formInputRestService;
 
+    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
 
+    @Autowired
     private SectionRestService sectionRestService;
 
+    @Autowired
     private QuestionRestService questionRestService;
 
+    @Autowired
     private FinanceReadOnlyViewModelPopulator financeSummaryViewModelPopulator;
 
+    @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
+    @Autowired
     private OrganisationRestService organisationRestService;
 
+    @Autowired
     private UserRestService userRestService;
+
+    @Autowired
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
-    public ApplicationReadOnlyViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, FormInputRestService formInputRestService, FormInputResponseRestService formInputResponseRestService, SectionRestService sectionRestService, QuestionRestService questionRestService, FinanceReadOnlyViewModelPopulator financeSummaryViewModelPopulator, QuestionStatusRestService questionStatusRestService, OrganisationRestService organisationRestService, UserRestService userRestService, List<QuestionReadOnlyViewModelPopulator<?>> populators) {
-        this.applicationRestService = applicationRestService;
-        this.competitionRestService = competitionRestService;
-        this.formInputRestService = formInputRestService;
-        this.formInputResponseRestService = formInputResponseRestService;
-        this.sectionRestService = sectionRestService;
-        this.questionRestService = questionRestService;
-        this.financeSummaryViewModelPopulator = financeSummaryViewModelPopulator;
-        this.questionStatusRestService = questionStatusRestService;
-        this.organisationRestService = organisationRestService;
-        this.userRestService = userRestService;
+    @Autowired
+    public void setPopulatorMap(List<QuestionReadOnlyViewModelPopulator<?>> populators) {
         this.populatorMap = new HashMap<>();
         populators.forEach(populator ->
                 populator.questionTypes().forEach(type -> populatorMap.put(type, populator)));
@@ -90,7 +97,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<QuestionStatusResource>> questionStatusesFuture = async(() -> getQuestionStatuses(application, user, settings));
         Future<List<SectionResource>> sectionsFuture = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
         Future<Optional<ProcessRoleResource>> processRoleFuture = async(() -> getProcessRole(application, user, settings));
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRoleFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture));
+        Future<List<AssessorFormInputResponseResource>> assessorResponseFuture = async(() -> getAssessmentResponses(settings));
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRoleFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
 
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
@@ -101,7 +109,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
         return new ApplicationReadOnlyViewModel(settings, sectionViews);
     }
-
 
     private ApplicationSectionReadOnlyViewModel sectionView(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         if (!section.getChildSections().isEmpty()) {
@@ -123,7 +130,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     public ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         if (populatorMap.containsKey(question.getQuestionSetupType())) {
-            return populatorMap.get(question.getQuestionSetupType()).populate(question, data);
+            return populatorMap.get(question.getQuestionSetupType()).populate(question, data, settings);
         } else {
             throw new IFSRuntimeException("Populator not found for question type: " + question.getQuestionSetupType().name());
         }
@@ -137,13 +144,20 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();
     }
 
-
     private Optional<ProcessRoleResource> getProcessRole(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
         if (!settings.isIncludeQuestionLinks()) {
             return Optional.empty();
         }
         return userRestService.findProcessRole(user.getId(), application.getId()).getOptionalSuccessObject();
     }
+
+    private List<AssessorFormInputResponseResource> getAssessmentResponses(ApplicationReadOnlySettings settings) {
+        if (!settings.isIncludeAssessment()) {
+            return emptyList();
+        }
+        return assessorFormInputResponseRestService.getAllAssessorFormInputResponses(settings.getAssessmentId()).getSuccess();
+    }
+
 
 
 }

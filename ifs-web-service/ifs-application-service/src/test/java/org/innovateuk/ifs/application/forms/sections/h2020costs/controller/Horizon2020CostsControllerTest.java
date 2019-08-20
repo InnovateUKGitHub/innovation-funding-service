@@ -38,7 +38,7 @@ public class Horizon2020CostsControllerTest extends AbstractAsyncWaitMockMVCTest
     private static final long SECTION_ID = 2L;
     private static final long PROCESS_ROLE_ID = 3L;
     private static final long ORGANISATION_ID = 4L;
-    private static final String VIEW = "application/horizon-2020-costs";
+    private static final String VIEW = "application/sections/your-project-costs/horizon-2020-costs";
 
     @Mock
     private Horizon2020CostsFormPopulator formPopulator;

@@ -24,13 +24,19 @@ public class AssessQuestionFeedbackViewModel {
     private AssessmentFeedbackAggregateResource aggregateResource;
     private NavigationViewModel navigation;
 
-    public AssessQuestionFeedbackViewModel(ApplicationResource application, QuestionResource question, List<FormInputResponseResource> responses, List<FormInputResource> inputs, AssessmentFeedbackAggregateResource aggregateResource, NavigationViewModel navigation) {
+    public AssessQuestionFeedbackViewModel(ApplicationResource application,
+                                           QuestionResource question,
+                                           List<FormInputResponseResource> responses,
+                                           List<FormInputResource> inputs,
+                                           AssessmentFeedbackAggregateResource aggregateResource,
+                                           NavigationViewModel navigationViewModel
+    ) {
         this.application = application;
         this.question = question;
         this.responses = responses;
         this.inputs = inputs;
         this.aggregateResource = aggregateResource;
-        this.navigation = navigation;
+        this.navigation = navigationViewModel;
     }
 
     public ApplicationResource getApplication() {

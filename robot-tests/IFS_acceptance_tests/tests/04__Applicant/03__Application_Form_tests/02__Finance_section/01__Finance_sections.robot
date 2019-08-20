@@ -9,7 +9,7 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...
 ...               INFUND-2961: ‘Working days per year’ in Labour Costs do not default to 232.
 ...
-...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
+...               INFUND-7522:  Create 'Your project finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
 ...
 ...               INFUND-8355: Project finance team - overheads
 ...
@@ -57,7 +57,7 @@ User pressing back button should get the correct version of the page
     [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
-    And The user clicks the button/link     link = Your finances
+    And The user clicks the button/link     link = Your project finances
     And the user clicks the button/link     link = Your project costs
     Then the user should see the element    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows

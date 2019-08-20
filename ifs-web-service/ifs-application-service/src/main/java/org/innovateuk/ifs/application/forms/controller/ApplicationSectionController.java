@@ -1,50 +1,27 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
-import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
-import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.application.ApplicationUrlHelper;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.SectionRestService;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.SECTION_URL;
 
 /**
  * This controller will handle all submit requests that are related to the application form.
@@ -53,235 +30,75 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandato
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 public class ApplicationSectionController {
 
-    private static final Log LOG = LogFactory.getLog(ApplicationSectionController.class);
-    private static final List<Role> APPLICANT_AND_COLLABORATOR_ROLES = asList(Role.LEADAPPLICANT, Role.COLLABORATOR);
-
-    @Autowired
-    private ApplicantRestService applicantRestService;
-
-    @Autowired
-    private ApplicationNavigationPopulator applicationNavigationPopulator;
-
-    @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private ApplicationRedirectionService applicationRedirectionService;
-
-    @Autowired
-    private ApplicationSectionSaver applicationSaver;
-
     @Autowired
     private UserRestService userRestService;
 
     @Autowired
-    private SectionService sectionService;
+    private ApplicationUrlHelper applicationUrlHelper;
 
     @Autowired
-    private FinanceUtil financeUtil;
-
-    private Map<SectionType, AbstractSectionPopulator> sectionPopulators;
+    private SectionRestService sectionRestService;
 
     @Autowired
-    private void setPopulators(List<AbstractSectionPopulator> populators) {
-        sectionPopulators = populators.stream().collect(toMap(AbstractSectionPopulator::getSectionType, Function.identity()));
-    }
+    private ApplicationRestService applicationRestService;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
-    @GetMapping("/{sectionType}/{applicantOrganisationId}")
-    public String redirectToSectionManagement(@PathVariable("sectionType") SectionType type,
-                                              @PathVariable(APPLICATION_ID) Long applicationId,
-                                              @PathVariable long applicantOrganisationId) {
-        return applicationRedirectionService.redirectToSection(type, applicationId) + "/" + applicantOrganisationId;
+    @GetMapping("/{sectionType}/{organisationId}")
+    public String redirectToSectionManagement(@PathVariable SectionType sectionType,
+                                              @PathVariable long applicationId,
+                                              @PathVariable long organisationId) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        List<SectionResource> sections = sectionRestService.getSectionsByCompetitionIdAndType(application.getCompetition(), sectionType).getSuccess();
+        if (sections.size() == 1) {
+            return redirect(applicationId, sections.get(0), organisationId);
+        }
+        return "redirect:/application/" + applicationId;
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
-    public String redirectToSection(@PathVariable("sectionType") SectionType type,
-                                    @PathVariable(APPLICATION_ID) Long applicationId) {
-        return applicationRedirectionService.redirectToSection(type, applicationId);
+    public String redirectToSection(@PathVariable SectionType sectionType,
+                                    @PathVariable long applicationId,
+                                    UserResource user) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        List<SectionResource> sections = sectionRestService.getSectionsByCompetitionIdAndType(application.getCompetition(), sectionType).getSuccess();
+        if (sections.size() == 1) {
+            return redirect(applicationId, sections.get(0), user);
+        }
+        return "redirect:/application/" + applicationId;
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping(SECTION_URL + "{sectionId}")
-    public String applicationFormWithOpenSection(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
-                                                 BindingResult bindingResult,
-                                                 Model model,
-                                                 @PathVariable(APPLICATION_ID) final Long applicationId,
-                                                 @PathVariable("sectionId") final Long sectionId,
-                                                 UserResource user) {
-
-        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-
-        long organisationId = applicantSection.getCurrentApplicant().getOrganisation().getId();
-        long competitionId = applicantSection.getCompetition().getId();
-
-        switch (applicantSection.getSection().getType()) {
-            case FUNDING_FINANCES:
-                return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
-            case PROJECT_COST_FINANCES:
-                if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
-                    return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
-                } else if (applicantSection.getCompetition().isH2020()) {
-                    return String.format("redirect:/application/%d/form/horizon-2020-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
-                } else {
-                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
-                }
-            case PROJECT_LOCATION:
-                return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
-                        applicationId, organisationId, sectionId);
-            case ORGANISATION_FINANCES:
-                return String.format("redirect:/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
-                        applicationId, competitionId, organisationId, sectionId);
-            default:
-                populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, false);
-                return APPLICATION_FORM;
-        }
+    public String getSectionApplicant(@PathVariable long applicationId,
+                                      @PathVariable long sectionId,
+                                      UserResource user) {
+        SectionResource section = sectionRestService.getById(sectionId).getSuccess();
+        return redirect(applicationId, section, user);
     }
 
-    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
+    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your project Finances'")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
-    @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
-    public String applicationFormWithOpenSectionForInternalUser(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
-                                                                BindingResult bindingResult,
-                                                                Model model,
-                                                                @PathVariable(APPLICATION_ID) final Long applicationId,
-                                                                @PathVariable("sectionId") final Long sectionId,
-                                                                @PathVariable("applicantOrganisationId") final Long applicantOrganisationId,
-                                                                UserResource user,
-                                                                @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                                                @RequestParam MultiValueMap<String, String> queryParams) {
-
-        SectionResource section = sectionService.getById(sectionId);
-
-        switch (section.getType()) {
-            case FUNDING_FINANCES:
-                return String.format("redirect:/application/%d/form/your-funding/%d/%d", applicationId, sectionId,
-                        applicantOrganisationId);
-            case PROJECT_COST_FINANCES: {
-
-                ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
-
-                if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
-                    return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, applicantOrganisationId, sectionId);
-                } else {
-                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, applicantOrganisationId, sectionId);
-                }
-            }
-            case PROJECT_LOCATION: {
-                return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
-                        applicationId, applicantOrganisationId, sectionId);
-            }
-            case ORGANISATION_FINANCES: {
-
-                ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
-
-                long organisationId = applicantSection.getCurrentApplicant().getOrganisation().getId();
-                long competitionId = applicantSection.getCompetition().getId();
-
-                return String.format("redirect:/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
-                        applicationId, competitionId, organisationId, sectionId);
-            }
-            default:
-
-                ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
-
-                return populateGenericApplicationFormSectionForInternalUser(
-                        form, bindingResult, model, applicantOrganisationId, applicantSection, user);
-        }
+    @GetMapping(SECTION_URL + "{sectionId}/{organisationId}")
+    public String getSectionInternalUser(@PathVariable long applicationId,
+                                         @PathVariable long sectionId,
+                                         @PathVariable long organisationId) {
+        SectionResource section = sectionRestService.getById(sectionId).getSuccess();
+        return redirect(applicationId, section, organisationId);
     }
 
-    private ApplicantSectionResource getApplicantSectionForInternalUser(@PathVariable(APPLICATION_ID) Long applicationId, @PathVariable("sectionId") Long sectionId, @PathVariable("applicantOrganisationId") Long applicantOrganisationId) {
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
-
-        ProcessRoleResource arbitraryProcessRole = simpleFindFirstMandatory(processRoles, pr ->
-                APPLICANT_AND_COLLABORATOR_ROLES.contains(pr.getRole()) && pr.getOrganisationId().equals(applicantOrganisationId));
-
-        return applicantRestService.getSection(arbitraryProcessRole.getUser(), applicationId, sectionId);
+    private String redirect(long applicationId, SectionResource section, UserResource user) {
+        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        return redirect(applicationId, section, role.getOrganisationId());
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping(SECTION_URL + "{sectionId}")
-    public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-                                        BindingResult bindingResult, ValidationHandler validationHandler,
-                                        Model model,
-                                        @PathVariable(APPLICATION_ID) final Long applicationId,
-                                        @PathVariable("sectionId") final Long sectionId,
-                                        UserResource user,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response) {
-
-        logSaveApplicationBindingErrors(validationHandler);
-
-        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-
-        model.addAttribute("form", form);
-
-        Map<String, String[]> params = request.getParameterMap();
-
-        ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(
-                applicantSection.getApplication(),
-                form,
-                sectionId,
-                user.getId(),
-                request,
-                response);
-
-        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-            questionService.assignQuestion(applicationId, user, request);
-            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-        }
-
-        if (!isSaveAndReturnRequest(params) && saveApplicationErrors.hasErrors()) {
-            validationHandler.addAnyErrors(saveApplicationErrors);
-            populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, false);
-            return APPLICATION_FORM;
-        } else {
-            return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));
-        }
-    }
-
-    private void populateGenericApplicationFormSection(Model model,
-                                                       ApplicationForm form,
-                                                       BindingResult bindingResult,
-                                                       ApplicantSectionResource applicantSection,
-                                                       boolean readOnly,
-                                                       Optional<Long> applicantOrganisationId,
-                                                       boolean readOnlyAllApplicantApplicationFinances,
-                                                       boolean isSupport) {
-        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection(), applicantOrganisationId, isSupport);
-        model.addAttribute("model", sectionViewModel);
-        model.addAttribute("form", form);
-    }
-
-    private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {
-        if (LOG.isDebugEnabled())
-            validationHandler.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-    }
-
-    private String populateGenericApplicationFormSectionForInternalUser(
-            ApplicationForm form,
-            BindingResult bindingResult,
-            Model model,
-            Long applicantOrganisationId,
-            ApplicantSectionResource applicantSection,
-            UserResource user) {
-
-        boolean isSupport = user.hasRole(SUPPORT);
-        populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, true,
-                Optional.of(applicantOrganisationId), true, isSupport);
-
-        return APPLICATION_FORM;
+    private String redirect(long applicationId, SectionResource section, long organisationId) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        return applicationUrlHelper.getSectionUrl(section.getType(), section.getId(), applicationId, organisationId, application.getCompetition())
+                .map(url -> "redirect:" + url)
+                .orElseThrow(ObjectNotFoundException::new);
     }
 }

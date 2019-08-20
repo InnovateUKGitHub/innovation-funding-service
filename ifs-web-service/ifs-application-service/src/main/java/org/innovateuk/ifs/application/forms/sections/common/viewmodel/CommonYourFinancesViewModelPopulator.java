@@ -33,7 +33,7 @@ public class CommonYourFinancesViewModelPopulator {
         this.sectionService = sectionService;
     }
 
-    public CommonYourFinancesViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
+    public CommonYourProjectFinancesViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
@@ -45,7 +45,7 @@ public class CommonYourFinancesViewModelPopulator {
 
         boolean open = !internalUser && application.isOpen() && competition.isOpen();
 
-        return new CommonYourFinancesViewModel(
+        return new CommonYourProjectFinancesViewModel(
                 getYourFinancesUrl(applicationId, organisationId, internalUser),
                 application.getName(),
                 applicationId,

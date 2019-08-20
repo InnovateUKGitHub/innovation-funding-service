@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -95,34 +94,6 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
                     verify(applicationFinanceRules)
                             .internalUserCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
-    }
-
-    @Test
-    public void testAddCostOnApplicationFinanceResourceId() {
-        final Long applicationId = 1L;
-        final Long organisationId = 2L;
-        final ApplicationFinanceResourceId applicationFinanceId = new ApplicationFinanceResourceId(applicationId, organisationId);
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.createApplicationFinance(applicationFinanceId),
-                () -> {
-                    verify(applicationFinanceRules)
-                            .consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                    verify(applicationFinanceRules)
-                            .internalUserCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                });
-    }
-
-    @Test
-    public void testUpdateCostOnApplicationFinanceId() {
-        final Long applicationFinanceId = 1L;
-        final ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.updateApplicationFinance(applicationFinanceId, applicationFinanceResource),
-                () -> verify(applicationFinanceRules)
-                        .consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class))
-        );
     }
 
     @Test

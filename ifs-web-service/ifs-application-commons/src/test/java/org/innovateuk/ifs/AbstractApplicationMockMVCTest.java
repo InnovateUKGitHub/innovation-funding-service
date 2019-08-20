@@ -2,9 +2,6 @@ package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -84,17 +81,11 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     @Mock
     protected ProcessRoleService processRoleService;
     @Mock
-    protected DefaultFinanceModelManager defaultFinanceModelManager;
-    @Mock
     protected FormInputRestService formInputRestService;
-    @Mock
-    protected FinanceViewHandlerProvider financeViewHandlerProvider;
     @Mock
     protected FinanceService financeService;
     @Mock
     protected ApplicationFinanceRestService applicationFinanceRestService;
-    @Mock
-    protected DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
     protected UserService userService;
     @Mock
@@ -193,6 +184,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withIncludeJesForm(true)
                 .build();
 
+        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
                 .getId());
 
@@ -270,7 +263,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withPriority(5).withType(SectionType.GENERAL).build();
         SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).withPriority(6).withType
                 (SectionType.GENERAL).build();
-        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withPriority(7).withType
+        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your project finances")).withPriority(7).withType
                 (SectionType.FINANCE).build();
         SectionResource sectionResource8 = sectionResourceBuilder.with(id(8L)).with(name("Your project costs"))
                 .withPriority(8).withType(SectionType.PROJECT_COST_FINANCES).withParentSection(sectionResource7.getId()).build();
@@ -585,8 +578,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn
                 (applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeViewHandlerProvider.getFinanceFormHandler(competitionResource, 1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, 1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupQuestionStatus(ApplicationResource application) {

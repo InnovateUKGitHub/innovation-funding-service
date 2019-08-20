@@ -135,7 +135,7 @@ Complete the org size section
     [Arguments]  ${applicationName}
     the user navigates to the page                      ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link                     link = ${applicationName}
-    the user clicks the button/link                     link = Your finances
+    the user clicks the button/link                     link = Your project finances
     the user clicks the button/link                     link = Your organisation
     ${orgSizeReadonly} =   Run Keyword And Return Status    Element Should Be Visible   jQuery = button:contains("Edit")
     Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery = button:contains("Edit")
@@ -145,7 +145,7 @@ Complete the org size section
     the user selects the checkbox                       stateAidAgreed
     Set Focus To Element                                jQuery = button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery = button:contains("Mark as complete")
-    run keyword and ignore error without screenshots    the user clicks the button/link    link = Your finances
+    run keyword and ignore error without screenshots    the user clicks the button/link    link = Your project finances
 
 the user adds more rows in other funding
     the user clicks the button/link         jQuery = button:contains("Add another source of funding")

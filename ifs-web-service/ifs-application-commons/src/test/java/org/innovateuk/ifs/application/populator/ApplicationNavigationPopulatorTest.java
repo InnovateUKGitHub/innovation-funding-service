@@ -120,7 +120,7 @@ public class ApplicationNavigationPopulatorTest {
         target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/FINANCE"));
-        verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
+        verify(model).addAttribute(eq("backTitle"), contains("Your project finances"));
     }
 
     @Test
@@ -250,7 +250,7 @@ public class ApplicationNavigationPopulatorTest {
         target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/section/33/22"));
-        verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
+        verify(model).addAttribute(eq("backTitle"), contains("Your project finances"));
     }
 
     private void setupApplicationOpen(Long applicationId) {

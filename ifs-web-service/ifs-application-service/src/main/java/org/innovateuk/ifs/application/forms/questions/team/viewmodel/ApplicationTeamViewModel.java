@@ -14,7 +14,15 @@ public class ApplicationTeamViewModel {
     private final boolean open;
     private final boolean complete;
 
-    public ApplicationTeamViewModel(long applicationId, String applicationName, long questionId, List<ApplicationTeamOrganisationViewModel> organisations, long loggedInUserId, boolean leadApplicant, boolean collaborationLevelSingle, boolean open, boolean complete) {
+    public ApplicationTeamViewModel(long applicationId,
+                                    String applicationName,
+                                    long questionId,
+                                    List<ApplicationTeamOrganisationViewModel> organisations,
+                                    long loggedInUserId,
+                                    boolean leadApplicant,
+                                    boolean collaborationLevelSingle,
+                                    boolean open,
+                                    boolean complete) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.questionId = questionId;

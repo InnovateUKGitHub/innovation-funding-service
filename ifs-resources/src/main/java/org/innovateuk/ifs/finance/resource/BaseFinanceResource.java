@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.Vat;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import java.util.Map;
  * Application finance resource holds the organisation's finance resources for an target
  */
 public abstract class BaseFinanceResource {
+
 
     protected Long id;
     protected Long organisation;
@@ -105,26 +108,6 @@ public abstract class BaseFinanceResource {
         }
     }
 
-    public BigDecimal getTotal() {
-        if (financeOrganisationDetails == null) {
-            return BigDecimal.ZERO;
-        }
-
-        BigDecimal total = financeOrganisationDetails.entrySet().stream()
-                .filter(cat -> cat != null &&
-                        cat.getValue() != null &&
-                        cat.getValue().getTotal() != null)
-                .filter(cat -> !cat.getValue().excludeFromTotalCost())
-                .map(cat -> cat.getValue().getTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        if (total == null) {
-            return BigDecimal.ZERO;
-        }
-
-        return total;
-    }
-
     public GrantClaim getGrantClaim() {
         if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.FINANCE)) {
             FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.FINANCE);
@@ -165,5 +148,40 @@ public abstract class BaseFinanceResource {
     public BigDecimal getTotalOtherFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
+    }
+
+    @JsonIgnore
+    public BigDecimal getTotal() {
+        if (financeOrganisationDetails == null) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal total = financeOrganisationDetails.entrySet().stream()
+                .filter(cat -> cat != null &&
+                        cat.getValue() != null &&
+                        cat.getValue().getTotal() != null)
+                .filter(cat -> !cat.getValue().excludeFromTotalCost())
+                .map(cat -> cat.getValue().getTotal())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (total == null) {
+            return BigDecimal.ZERO;
+        }
+
+        return total;
+    }
+
+    public boolean isVatRegistered() {
+        if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {
+            FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.VAT);
+            Vat vat = financeRowCostCategory.getCosts().stream()
+                    .findAny()
+                    .filter(c -> c instanceof Vat)
+                    .map(c -> (Vat) c)
+                    .orElse(null);
+            return vat == null ? false : vat.getRegistered() == null ? false : vat.getRegistered();
+        } else {
+            return false;
+        }
     }
 }

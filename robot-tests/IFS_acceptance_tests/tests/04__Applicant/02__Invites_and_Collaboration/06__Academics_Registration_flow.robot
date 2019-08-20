@@ -36,7 +36,7 @@ Accept invitation as academic
     And the user clicks the button/link                 jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     And Logging in and Error Checking                   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  ${correct_password}
     When the user clicks the button/link                link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    And the user clicks the button/link                 link = Your finances
+    And the user clicks the button/link                 link = Your project finances
     Then the user should see the element                link = Your project costs
     And the user should not see the element             link = Your organisation
     When the user clicks the button/link                link = Your project costs

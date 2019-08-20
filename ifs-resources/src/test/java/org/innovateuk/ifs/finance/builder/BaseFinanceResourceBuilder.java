@@ -26,6 +26,8 @@ import static org.innovateuk.ifs.finance.builder.OverheadBuilder.newOverhead;
 import static org.innovateuk.ifs.finance.builder.OverheadCostCategoryBuilder.newOverheadCostCategory;
 import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
 import static org.innovateuk.ifs.finance.builder.TravelCostBuilder.newTravelCost;
+import static org.innovateuk.ifs.finance.builder.VATCategoryBuilder.newVATCategory;
+import static org.innovateuk.ifs.finance.builder.VATCostBuilder.newVATCost;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -124,7 +126,14 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withDescription("Something", "Else").
                                 withCost(new BigDecimal("100"), new BigDecimal("300")).
                                 build(2))
-                        .build()));
+                        .build(),
+                FinanceRowType.VAT, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                        .build(2))
+                        .build())
+        );
     }
 
     public S withAcademicCosts() {
