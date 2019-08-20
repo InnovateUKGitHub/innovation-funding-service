@@ -145,7 +145,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withChildSections(Collections.emptyList(), Collections.singletonList(1L))
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
                 .build(2);
-        List<AssessorFormInputResponseResource> assessorFormInputResponseResources = newAssessorFormInputResponseResource().build(1);
+        List<AssessorFormInputResponseResource> assessorFormInputResponseResources = newAssessorFormInputResponseResource().withQuestion(1L).build(1);
         ProcessRoleResource processRole = newProcessRoleResource().build();
 
         ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, Optional.of(processRole), questions, formInputs, responses, questionStatuses, assessorFormInputResponseResources);
