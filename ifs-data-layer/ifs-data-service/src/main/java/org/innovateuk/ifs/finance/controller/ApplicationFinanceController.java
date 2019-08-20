@@ -10,7 +10,7 @@ import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,7 @@ public class ApplicationFinanceController {
     private List<String> validMediaTypesForApplicationFinance;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Autowired
     private FinanceFileEntryService financeFileEntryService;

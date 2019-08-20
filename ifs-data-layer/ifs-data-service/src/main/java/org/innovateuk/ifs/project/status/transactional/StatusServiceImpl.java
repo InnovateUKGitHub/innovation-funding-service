@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -114,7 +114,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;

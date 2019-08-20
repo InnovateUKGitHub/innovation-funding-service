@@ -15,7 +15,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableRe
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -71,7 +71,7 @@ public class OrganisationFinanceController {
     private FormInputService formInputService;
     private FormInputResponseService formInputResponseService;
     private ApplicationService applicationService;
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
     private ApplicationFinanceRowService financeRowCostsService;
     private OrganisationService organisationService;
     private AuthenticationHelper authenticationHelper;
@@ -87,7 +87,7 @@ public class OrganisationFinanceController {
             FormInputService formInputService,
             FormInputResponseService formInputResponseService,
             ApplicationService applicationService,
-            FinanceService financeService,
+            ApplicationFinanceService financeService,
             ApplicationFinanceRowService financeRowCostsService,
             OrganisationService organisationService,
             AuthenticationHelper authenticationHelper,
