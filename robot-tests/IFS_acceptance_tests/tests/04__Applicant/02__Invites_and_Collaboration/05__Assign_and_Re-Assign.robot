@@ -227,7 +227,7 @@ The question is disabled on the summary page for other collaborators
     [Tags]
     Given the user navigates to the page     ${SUMMARY_URL}
     When the user expands the section        Public description
-    Then the user should see the element     jQuery = label:contains("Public description") ~ .textarea-wrapped .readonly
+    Then the user should see the element     jQuery = label:contains("Public description") ~ p.wysiwyg-styles
     And the user should not see the element  jQuery = button:contains("Assign to lead for review")
 
 Lead applicant should be able to remove the partner organisation

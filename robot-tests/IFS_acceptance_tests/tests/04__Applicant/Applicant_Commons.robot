@@ -86,7 +86,7 @@ the user marks the finances as complete
     Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
-    the user clicks the button/link  link = Application overview
+    the user clicks the button/link  link = Back to application overview
     the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
 
 the user fills the procurement project costs

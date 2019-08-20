@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -152,7 +152,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     private CompletableFuture<ValidationMessages> saveVat(VatForm vatForm, BaseFinanceResource finance) {
         return async(() -> {
             ValidationMessages messages = new ValidationMessages();
-            VatCategory vatCategory = (VatCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
+            VatCostCategory vatCategory = (VatCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
             Vat vatCost = (Vat) vatCategory.getCosts().stream().findFirst().get();
 
             vatCost.setRegistered(vatForm.getRegistered());

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.feedback.viewmodel;
 
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

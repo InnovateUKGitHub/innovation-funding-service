@@ -14,7 +14,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -173,7 +173,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     private ProjectUserMapper projectUserMapperMock;
 
     @Mock
-    private FinanceService financeServiceMock;
+    private ApplicationFinanceService financeServiceMock;
 
     @Mock
     private ProjectUsersHelper projectUsersHelperMock;
@@ -519,7 +519,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       true,
                                                       SETUP);
 
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -566,7 +566,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -611,7 +611,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -661,7 +661,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -708,7 +708,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(Optional.empty());
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(projectId)).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -747,7 +747,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       false,
                                                       SETUP);
 
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
         ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
@@ -787,7 +787,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -832,7 +832,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(false);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrg)));
 
@@ -875,7 +875,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -918,7 +918,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
 
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -959,7 +959,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1000,7 +1000,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       false,
                                                       SETUP);
         project.setProjectDocuments(docs);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1028,7 +1028,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       SETUP);
         project.setProjectDocuments(docs);
         project.setApplication(application);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1056,7 +1056,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       SETUP);
         project.setProjectDocuments(docs);
         project.setApplication(application);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1084,7 +1084,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       SETUP);
         project.setProjectDocuments(docs);
         project.setApplication(application);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1113,7 +1113,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -1144,7 +1144,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(singletonList(partnerOrganisationResource)));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -1178,7 +1178,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(new BankDetails());
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1225,7 +1225,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId2)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1268,7 +1268,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1384,7 +1384,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         // Status shown to support user when MO is set is COMPLETE
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(project.getId())).thenReturn(serviceSuccess(monitoringOfficer));

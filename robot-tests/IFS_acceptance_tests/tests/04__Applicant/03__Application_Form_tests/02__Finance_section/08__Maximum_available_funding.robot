@@ -32,7 +32,7 @@ Maximum funding level available for lead business
     Then the user should see the element                     jQuery = span:contains("The maximum you can enter is 45%")
     And the user selects the radio button                    otherFunding  false
     And the user clicks the button/link                      jQuery = a:contains("Your project finances")
-    [Teardown]  the user clicks the button/link              link = Application overview
+    [Teardown]  the user clicks the button/link              link = Back to application overview
 
 Lead applicant invites a Charity member
     [Documentation]    IFS-338
@@ -74,7 +74,7 @@ Maximum funding level available for RTO lead
     And the correct funding displayed for lead RTO applicant                Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}
     And the correct funding displayed for lead RTO applicant                Industrial research  ${LARGE_ORGANISATION_SIZE}
     And the user marks your funding section as complete
-    [Teardown]  the user clicks the button/link                             link = Application overview
+    [Teardown]  the user clicks the button/link                             link = Back to application overview
 
 Editing research category does not reset your funding
     [Documentation]  IFS-4127
@@ -83,7 +83,7 @@ Editing research category does not reset your funding
     And the user edits the organisation size     ${SMALL_ORGANISATION_SIZE}
     And The user clicks the button/link          link = Your project finances
     Then the user should see the element         jQuery = li:contains("Your funding") .task-status-complete
-    [Teardown]  the user clicks the button/link  link = Application overview
+    [Teardown]  the user clicks the button/link  link = Back to application overview
 
 Lead RTO applicant invites a Charity member
     [Documentation]    IFS-338
@@ -184,7 +184,7 @@ the business user fills in the project costs
 the user edits the research category
     [Arguments]   ${research_category}
     the user clicks the button/link     jQuery = a:contains("Your project finances")
-    the user clicks the button/link     link = Application overview
+    the user clicks the button/link     link = Back to application overview
     the user clicks the button/link     link = Research category
     the user clicks the button/link     jQuery = button:contains("Edit")
     the user clicks the button twice    jQuery = label[for^="researchCategory"]:contains("${research_category}")
