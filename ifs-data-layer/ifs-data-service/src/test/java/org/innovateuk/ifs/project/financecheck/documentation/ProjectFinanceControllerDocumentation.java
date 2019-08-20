@@ -259,7 +259,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newOtherCost().
                                 withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
-                                withName("direct_costs", "exceptions_costs").
+                                withDescription("direct_costs", "exceptions_costs").
                                 build(2)).
                         build(),
                 FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(

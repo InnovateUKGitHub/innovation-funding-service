@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -32,6 +33,7 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     }
 
     @Override
+    @JsonIgnore
     public BigDecimal getTotal() {
         if (percentage == null) {
             return null;
@@ -48,21 +50,25 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     }
 
     @Override
+    @JsonIgnore
     public String getName() {
         return getCostType().getType();
     }
 
     @Override
+    @JsonIgnore
     public boolean isEmpty() {
         return false;
     }
 
     @Override
+    @JsonIgnore
     public int getMinRows() {
         return 0;
     }
 
     @Override
+    @JsonIgnore
     public FinanceRowType getCostType() {
         return FinanceRowType.FINANCE;
     }
@@ -78,6 +84,7 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     }
 
     @Override
+    @JsonIgnore
     public boolean isRequestingFunding() {
         return percentage != null && !percentage.equals(0);
     }

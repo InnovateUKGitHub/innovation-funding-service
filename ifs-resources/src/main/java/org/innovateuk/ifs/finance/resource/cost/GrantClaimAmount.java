@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -43,21 +45,25 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
     }
 
     @Override
+    @JsonIgnore
     public String getName() {
         return getCostType().getType();
     }
 
     @Override
+    @JsonIgnore
     public boolean isEmpty() {
         return false;
     }
 
     @Override
+    @JsonIgnore
     public int getMinRows() {
         return 0;
     }
 
     @Override
+    @JsonIgnore
     public FinanceRowType getCostType() {
         return FinanceRowType.GRANT_CLAIM_AMOUNT;
     }
@@ -85,6 +91,7 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
     }
 
     @Override
+    @JsonIgnore
     public boolean isRequestingFunding() {
         return amount != null && !amount.equals(BigDecimal.ZERO);
     }

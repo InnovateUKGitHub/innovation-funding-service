@@ -66,6 +66,8 @@ public class IndustrialCostFinanceHandlerTest {
     @Spy
     private GrantClaimPercentageHandler grantClaimHandler;
     @Spy
+    private GrantClaimAmountHandler grantClaimAmountHandler;
+    @Spy
     private OtherFundingHandler otherFundingHandler;
     @Spy
     private VatHandler vatHandler;
@@ -89,6 +91,10 @@ public class IndustrialCostFinanceHandlerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        handler.setFinanceRowHandlers(asList(labourCostHandler, capitalUsageHandler, materialsHandler, otherCostHandler,
+                overheadsHandler, subContractingCostHandler, travelCostHandler, grantClaimAmountHandler, grantClaimHandler,
+                otherFundingHandler, vatHandler));
+
         when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
 
         competition = newCompetition()
