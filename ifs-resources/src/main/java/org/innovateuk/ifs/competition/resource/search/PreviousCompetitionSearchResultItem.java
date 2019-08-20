@@ -6,28 +6,32 @@ import java.util.Set;
 
 public class PreviousCompetitionSearchResultItem extends AbstractCompetitionSearchResultItem {
 
-    private Integer applications;
-    private Integer projects;
-    private Integer completeProjects;
+    private final int applications;
+    private final int projects;
+    private final int completeProjects;
 
-    private PreviousCompetitionSearchResultItem() {} //for jackson
+    private PreviousCompetitionSearchResultItem() {
+        applications = 0;
+        projects = 0;
+        completeProjects = 0;
+    }
 
-    public PreviousCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames, Integer applications, Integer projects, Integer completeProjects) {
+    public PreviousCompetitionSearchResultItem(long id, String name, CompetitionStatus competitionStatus, String competitionTypeName, Set<String> innovationAreaNames, int applications, int projects, int completeProjects) {
         super(id, name, competitionStatus, competitionTypeName, innovationAreaNames);
         this.applications = applications;
         this.projects = projects;
         this.completeProjects = completeProjects;
     }
 
-    public Integer getApplications() {
+    public int getApplications() {
         return applications;
     }
 
-    public Integer getProjects() {
+    public int getProjects() {
         return projects;
     }
 
-    public Integer getCompleteProjects() {
+    public int getCompleteProjects() {
         return completeProjects;
     }
 }
