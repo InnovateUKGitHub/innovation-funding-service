@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.application.finance.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -43,19 +41,6 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Autowired
     private ApplicationService applicationService;
-
-    @Override
-    public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
-        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
-
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
-
-        if(processRole.getOrganisationId()!=null && competitionResource.isOpen()) {
-            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisationId()).getSuccess();
-        }
-        return null;
-    }
 
     @Override
     public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {

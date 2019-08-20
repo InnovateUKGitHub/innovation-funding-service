@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -24,6 +25,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -49,6 +51,9 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
+
+    @Value("${ifs.early.metrics.url}")
+    private String earlyMetricsUrl;
 
     @Override
     @Transactional(readOnly = true)
@@ -151,12 +156,29 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     Notification notification;
                     if (competition.isH2020()) {
                         notification = horizon2020GrantTransferNotification(from, to, application);
+                    } else if (LOAN.equals(competition.getFundingType())) {
+                        notification = loanApplicationSubmitNotification(from, to, application, competition);
                     } else {
                         notification = applicationSubmitNotification(from, to, application, competition);
                     }
 
                     return notificationService.sendNotificationWithFlush(notification, EMAIL);
                 });
+    }
+
+    private Notification loanApplicationSubmitNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationName", application.getName());
+        notificationArguments.put("competitionName", competition.getName());
+        notificationArguments.put("compCloseDate", competition.submissionDateDisplay());
+        notificationArguments.put("earlyMetricsUrl", earlyMetricsUrl);
+
+        return new Notification(
+                from,
+                singletonList(to),
+                Notifications.LOANS_APPLICATION_SUBMITTED,
+                notificationArguments
+        );
     }
 
     private Notification horizon2020GrantTransferNotification(NotificationSource from, NotificationTarget to, Application application) {
@@ -190,6 +212,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         HORIZON_2020_APPLICATION_SUBMITTED,
-        APPLICATION_INELIGIBLE
+        APPLICATION_INELIGIBLE,
+        LOANS_APPLICATION_SUBMITTED;
     }
 }

@@ -4,9 +4,6 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
@@ -15,16 +12,11 @@ import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.populator.section.YourProjectFinancesSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.section.YourProjectFinancesSectionViewModel;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,11 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,20 +38,14 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -75,23 +57,13 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Spy
     @InjectMocks
-    private OpenSectionModelPopulator openSectionModel;
-
-    @Spy
-    @InjectMocks
     private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
 
     @Mock
     private OverheadFileSaver overheadFileSaver;
 
     @Mock
-    private DefaultFinanceFormHandler defaultFinanceFormHandler;
-
-    @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
-
-    @Mock
-    private YourProjectFinancesSectionPopulator yourFinancesSectionPopulator;
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
@@ -108,9 +80,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Mock
     private ApplicationQuestionSaver applicationSaver;
-
-    @Mock
-    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     private ApplicationResearchCategoryModelPopulator applicationResearchCategoryModelPopulator;
@@ -152,7 +121,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
         when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisations.get(0)));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
-        when(financeViewHandlerProvider.getFinanceFormHandler(any(), anyLong())).thenReturn(defaultFinanceFormHandler);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
@@ -160,12 +128,6 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(emptyList());
         when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(emptyList());
-        when(yourFinancesSectionPopulator.populate(any(), any(), any(), any(), any(), any(), any())).thenReturn(new YourProjectFinancesSectionViewModel(null, null, null, false, Optional.empty(), false));
-
-        FinanceViewModel financeViewModel = new FinanceViewModel();
-        financeViewModel.setOrganisationGrantClaimPercentage(76);
-
-        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
         when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(Optional.class)))
                 .thenReturn(new ValidationMessages());
     }
@@ -192,87 +154,5 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         verify(applicationSaver, times(1)).saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(Optional.class));
 
         mockMvc.perform(get("/application/1/form/question/edit/21")).andExpect(status().isOk());
-    }
-
-    @Test
-    public void questionSubmit() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        mockMvc.perform(
-                post("/application/1/form/question/1")
-                        .param("formInput[1]", "Some Value...")
-
-        )
-                .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void questionSubmitEdit() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        mockMvc.perform(
-                post("/application/1/form/question/1")
-                        .param(EDIT_QUESTION, "1_2")
-        )
-                .andExpect(view().name("application-form"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), isNull(), any(Optional.class), any(Boolean.class));
-    }
-
-    @Test
-    public void questionSubmitAssign() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        mockMvc.perform(
-                post("/application/1/form/question/1")
-                        .param(ASSIGN_QUESTION_PARAM, "1_2")
-
-        )
-                .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void questionSubmitMarkAsCompleteQuestion() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        mockMvc.perform(
-                post("/application/1/form/question/1")
-                        .param(MARK_AS_COMPLETE, "1")
-        ).andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void questionSubmitSaveElement() throws Exception {
-        ApplicationResource application = applications.get(0);
-
-        when(applicationService.getById(application.getId())).thenReturn(application);
-
-        mockMvc.perform(post("/application/1/form/question/1"))
-                .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void applicationDetailsFormSubmit_incorrectFileType() throws Exception {
-        long formInputId = 2L;
-        String fileError = "file error";
-        MockMultipartFile file = new MockMultipartFile("formInput[" + formInputId +"]", "filename.txt", "text/plain", "someText".getBytes());
-
-        long fileQuestionId = 31L;
-        ValidationMessages validationMessages = new ValidationMessages();
-        validationMessages.addError(fieldError("formInput[" + formInputId + "]", new Error(fileError, UNSUPPORTED_MEDIA_TYPE)));
-        when(applicationSaver.saveApplicationForm(anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), any(Optional.class)))
-                .thenReturn(validationMessages);
-
-        MvcResult result = mockMvc.perform(
-            fileUpload("/application/{applicationId}/form/question/{questionId}", application.getId(), fileQuestionId)
-                        .file(file)
-                        .param("upload_file", "")
-        ).andReturn();
-
-        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
-        assertEquals(fileError, bindingResult.getFieldError("formInput[" + formInputId + "]").getCode());
     }
 }

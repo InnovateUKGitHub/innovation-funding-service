@@ -39,7 +39,6 @@ public class IfSThymeleafDialect extends AbstractDialect implements IExpressionO
         Set<IProcessor> processors = new HashSet<>();
         processors.add(new EnhancedUtextProcessor(TemplateMode.HTML, dialectPrefix));
         processors.add(new NonZeroValueProcessor(dialectPrefix));
-        processors.add(new FieldsToGlobalProcessor(TemplateMode.HTML, dialectPrefix));
         return processors;
     }
 }

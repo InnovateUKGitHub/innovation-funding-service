@@ -5,10 +5,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +32,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     private ApplicationResource application;
 
     @Mock
-    private FinanceService financeServiceMock;
+    private ApplicationFinanceService financeServiceMock;
 
     @Mock
     private FinanceFileEntryService financeFileEntryServiceMock;
@@ -111,17 +110,6 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(get("/applicationfinance/find-by-application/{applicationId}", "wrong"))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void addShouldReturnApplicationByApplicationIdAndOrganisationId() throws Exception {
-
-        when(financeRowCostsServiceMock.createApplicationFinance(any(ApplicationFinanceResourceId.class))).thenReturn(serviceSuccess(applicationFinanceResource));
-
-        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
-                .andExpect(status().isCreated());
-
-        verify(financeRowCostsServiceMock, times(1)).createApplicationFinance(any(ApplicationFinanceResourceId.class));
     }
 
     @Test

@@ -17,7 +17,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -82,7 +82,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     private ApplicationFinanceRowService financeRowCostsService;
 
     @Mock
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Mock
     private ProcessRoleRepository processRoleRepository;

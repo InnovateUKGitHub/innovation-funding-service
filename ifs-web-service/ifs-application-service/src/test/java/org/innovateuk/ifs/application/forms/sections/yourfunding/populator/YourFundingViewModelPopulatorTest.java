@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.ManagementYourFundingViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
@@ -16,6 +15,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -126,7 +126,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourOrgSection.getId()));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(finance));
 
-        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, user);
+        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, applicant.getOrganisation().getId(), user);
 
         assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
         assertEquals(viewModel.getApplicationName(), "Name");
@@ -148,7 +148,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .withCompetition(competitionId)
                 .build()));
 
-        ManagementYourFundingViewModel viewModel = service.populateManagement(APPLICATION_ID, SECTION_ID, organisationId);
+        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
 
         assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
