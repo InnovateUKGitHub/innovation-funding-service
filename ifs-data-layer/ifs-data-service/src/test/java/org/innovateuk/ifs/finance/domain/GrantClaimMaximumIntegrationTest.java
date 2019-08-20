@@ -188,7 +188,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         return financeBuilderWithoutCosts.
                                 withIndustrialCosts(costBuilder -> costBuilder.
                                         withOrganisationSize(organisationSize.orElse(null)).
-                                        withGrantClaim(0));
+                                        withGrantClaim(100));
                     }
 
                 }).
