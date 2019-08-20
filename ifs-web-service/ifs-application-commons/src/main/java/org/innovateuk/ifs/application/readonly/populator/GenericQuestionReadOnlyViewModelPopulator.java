@@ -89,8 +89,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         if (data.getApplicantProcessRole().isPresent()) {
             return String.format("/application/%d/form/question/%d/forminput/%d/download", data.getApplication().getId(), question.getId(), formInputId);
         } else if (authenticatedUser.hasRole(Role.ASSESSOR) && settings.isIncludeAssessment()) {
-            long assessmentId = data.getQuestionToAssessorResponse().entries().iterator().next().getValue().getAssessment();
-            return String.format("/assessment/%d/application/%d/formInput/%d/download", assessmentId, data.getApplication().getId(), formInputId);
+            return String.format("/assessment/%d/application/%d/formInput/%d/download", settings.getAssessmentId(), data.getApplication().getId(), formInputId);
         } else {
             return String.format("/management/competition/%d/application/%d/forminput/%d/download", data.getCompetition().getId(), data.getApplication().getId(), formInputId);
         }
