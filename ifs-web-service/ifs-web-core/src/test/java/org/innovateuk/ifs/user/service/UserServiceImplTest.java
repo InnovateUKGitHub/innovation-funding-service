@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -13,7 +14,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
+import static com.google.common.base.Optional.of;
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
@@ -23,8 +26,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.Mockito.*;
@@ -39,9 +41,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Mock
     private UserRestService userRestService;
 
+    private Role roleResource;
     private Long applicationId;
     private UserResource leadUser;
-    private UserResource collaborator;
     private ApplicationResource application;
     private List<ProcessRoleResource> processRoles;
 
@@ -51,7 +53,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         applicationId = 123L;
         leadUser = newUserResource().withId(87L).build();
-        collaborator = newUserResource().withId(34L).build();
+        UserResource collaborator = newUserResource().withId(34L).build();
 
         application = new ApplicationResource();
         application.setId(applicationId);
@@ -62,7 +64,6 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
                 .withRole(LEADAPPLICANT, COLLABORATOR)
                 .withOrganisation(13L, 24L)
                 .build(2);
-
 
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER))).thenReturn(restSuccess());
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError()));
@@ -114,7 +115,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole() {
         Long userId = 1L;
-        Role roleResource = COMP_ADMIN;
+        roleResource = COMP_ADMIN;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))
@@ -128,7 +129,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole_wrongRole() {
         Long userId = 1L;
-        Role roleResource = Role.FINANCE_CONTACT;
+        roleResource = Role.FINANCE_CONTACT;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))
@@ -183,5 +184,56 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         Long result = service.getUserOrganisationId(leadUser.getId(), applicationId);
 
         assertEquals(processRoles.get(0).getOrganisationId(), result);
+    }
+
+    @Test
+    public void createUserForOrganisation() {
+        when(userRestService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
+        ServiceResult<UserResource> result = service.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void createLeadApplicantForOrganisationWithCompetitionId() {
+        when(userRestService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
+        ServiceResult<UserResource> result = service.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void createOrganisationUser() {
+        when(userRestService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
+        ServiceResult<UserResource> result = service.createOrganisationUser(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void updateDetails() {
+        when(userRestService.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
+        ServiceResult<UserResource> result = service.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void sendPasswordResetNotification() {
+        String email = "bill@Email.com";
+        service.sendPasswordResetNotification(email);
+
+        verify(userRestService).sendPasswordResetNotification(email);
+    }
+
+    @Test
+    public void findUserByEmail() {
+        String email = "bill@Email.com";
+        UserResource user = newUserResource().withEmail(email).build();
+        when(userRestService.findUserByEmail(email)).thenReturn(restSuccess(user));
+        Optional<UserResource> result = service.findUserByEmail(email);
+
+        assertEquals(user, result.get());
+        verify(userRestService).findUserByEmail(email);
     }
 }
