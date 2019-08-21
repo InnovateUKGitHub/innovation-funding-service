@@ -258,7 +258,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .thenReturn(newCompetition().withId(4L).build());
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
                 .thenReturn(Optional.empty());
-        when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.LOAN)).thenReturn(loanTermsAndConditions);
+        when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.LOAN)).thenReturn(Optional.of(loanTermsAndConditions));
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
         assertTrue(result.isSuccess());
@@ -308,7 +308,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .thenReturn(newCompetition().withId(4L).build());
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
                 .thenReturn(Optional.empty());
-        when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.PROCUREMENT)).thenReturn(procurementTermsAndConditions);
+        when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.PROCUREMENT)).thenReturn(Optional.of(procurementTermsAndConditions));
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
         assertTrue(result.isSuccess());
