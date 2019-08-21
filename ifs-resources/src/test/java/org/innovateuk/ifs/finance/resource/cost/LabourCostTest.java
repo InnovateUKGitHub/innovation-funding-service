@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -91,5 +92,17 @@ public class LabourCostTest {
     public void setRoleTest() {
         labourCost.setRole("Developer");
         assertEquals("Developer", labourCost.getRole());
+    }
+
+    @Test
+    public void getName() {
+        String name = "Rob Garner";
+        labourCost.setName(name);
+        assertEquals(name, labourCost.getName());
+    }
+
+    @Test
+    public void getCostType() {
+        assertEquals(LABOUR, labourCost.getCostType());
     }
 }
