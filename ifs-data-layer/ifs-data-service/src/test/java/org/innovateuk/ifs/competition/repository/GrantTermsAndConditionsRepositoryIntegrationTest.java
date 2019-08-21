@@ -79,8 +79,8 @@ public class GrantTermsAndConditionsRepositoryIntegrationTest extends
 
     @Test
     public void getLatestForFundingType() {
-        assertEquals(FundingType.LOAN.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.LOAN).get().getName());
-        assertEquals(FundingType.PROCUREMENT.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.PROCUREMENT).get().getName());
-        assertEquals(FundingType.GRANT.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.GRANT).get().getName());
+        assertEquals(FundingType.LOAN.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.LOAN).getName());
+        assertEquals(FundingType.PROCUREMENT.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.PROCUREMENT).getName());
+        assertEquals(FundingType.GRANT.getDefaultTermsName(), repository.getLatestForFundingType(FundingType.GRANT).getName());
     }
 }

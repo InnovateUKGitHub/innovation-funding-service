@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository for GrantTermsAndConditions
@@ -25,9 +24,9 @@ public interface GrantTermsAndConditionsRepository extends CrudRepository<GrantT
     @Query(FIND_LATEST_VERSION)
     List<GrantTermsAndConditions> findLatestVersions();
 
-    Optional<GrantTermsAndConditions> findFirstByNameOrderByVersionDesc(String name);
+    GrantTermsAndConditions findFirstByNameOrderByVersionDesc(String name);
 
-    default Optional<GrantTermsAndConditions> getLatestForFundingType(FundingType type) {
+    default GrantTermsAndConditions getLatestForFundingType(FundingType type) {
         return findFirstByNameOrderByVersionDesc(type.getDefaultTermsName());
     }
 }
