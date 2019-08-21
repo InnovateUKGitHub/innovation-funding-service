@@ -73,11 +73,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         copyTemplatePropertiesToCompetition(template, competition);
 
-//         Web test data will cause these to be null
-        if (competition.getFundingType() != null) {
-            overrideTermsAndConditionsForNonGrantCompetitions(competition);
-            initialiseFinanceTypes(competition);
-        }
+        overrideTermsAndConditionsForNonGrantCompetitions(competition);
+        initialiseFinanceTypes(competition);
 
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
     }
