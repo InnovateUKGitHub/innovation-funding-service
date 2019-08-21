@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
-import static org.innovateuk.ifs.file.util.FileFunctions.*;
+import static org.innovateuk.ifs.util.FileFunctions.*;
 import static org.junit.Assert.*;
 
 /**

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.util;
+package org.innovateuk.ifs.util;
 
 
 import java.math.BigDecimal;

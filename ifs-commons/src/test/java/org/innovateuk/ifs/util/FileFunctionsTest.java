@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.file.util;
+package org.innovateuk.ifs.util;
 
 import org.junit.Test;
 
