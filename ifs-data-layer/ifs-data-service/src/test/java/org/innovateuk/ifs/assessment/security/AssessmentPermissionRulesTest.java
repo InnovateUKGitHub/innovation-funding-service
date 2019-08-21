@@ -113,8 +113,8 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         when(reviewRepository.existsByParticipantUserIdAndTargetIdAndActivityStateNot(assessorUser.getId(), assessments.get(SUBMITTED).getApplication(), ReviewState.WITHDRAWN)).thenReturn(true);
         when(reviewRepository.existsByParticipantUserIdAndTargetIdAndActivityStateNot(otherUser.getId(), assessments.get(SUBMITTED).getApplication(), ReviewState.WITHDRAWN)).thenReturn(false);
 
-        assertTrue(rules.userCanReadAssessment(assessments.get(SUBMITTED), assessorUser));
-        assertFalse(rules.userCanReadAssessment(assessments.get(SUBMITTED), otherUser));
+        assertTrue(rules.userIsPanelAssessor(assessments.get(SUBMITTED), assessorUser));
+        assertFalse(rules.userIsPanelAssessor(assessments.get(SUBMITTED), otherUser));
     }
 
     @Test

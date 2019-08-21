@@ -42,7 +42,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
         return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
-    @PermissionRule(value = "READ", description = "Assessors can directly read Assessments that ")
+    @PermissionRule(value = "READ", description = "Assessors can directly read Assessments that are in panel")
     public boolean userIsPanelAssessor(AssessmentResource assessment, UserResource user) {
         Long assessmentUser = processRoleRepository.findById(assessment.getProcessRole()).get().getUser().getId();
         return user.getId().equals(assessmentUser) &&
