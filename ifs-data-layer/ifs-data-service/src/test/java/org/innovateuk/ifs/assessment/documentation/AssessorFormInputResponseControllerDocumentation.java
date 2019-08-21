@@ -1,4 +1,4 @@
-AssessorFormInputResponseServiceSecurityTest.java:61:package org.innovateuk.ifs.assessment.documentation;
+package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessorFormInputResponseController;
