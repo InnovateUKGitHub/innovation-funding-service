@@ -9,6 +9,9 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 public final class CompetitionInitialiser {
 
     public static Competition initialiseFinanceTypes(Competition competition) {
+        if (competition.getFundingType() == null) {
+            return competition;
+        }
         switch (competition.getFundingType()) {
             case GRANT:
                 addGrantFinanceTypes(competition);
