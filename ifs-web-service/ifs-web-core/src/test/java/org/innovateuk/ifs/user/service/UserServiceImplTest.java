@@ -1,14 +1,19 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
@@ -16,8 +21,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
@@ -122,4 +128,61 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
     }
+
+    @Test
+    public void isLeadApplicant() {
+
+        Long applicationId = 123L;
+        UserResource userResource = newUserResource()
+                .withId(87L)
+                .build();
+        UserResource userResource2 = newUserResource()
+                .withId(34L)
+                .build();
+        List<ProcessRoleResource> processRoles = newProcessRoleResource()
+                .withApplication(applicationId)
+                .withUser(userResource, userResource2)
+                .withRole(LEADAPPLICANT, COLLABORATOR)
+                .withOrganisation(13L, 24L)
+                .build(2);
+        ApplicationResource application = new ApplicationResource();
+        application.setId(applicationId);
+
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+
+        assertTrue(service.isLeadApplicant(userResource.getId(), application));
+    }
+
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
