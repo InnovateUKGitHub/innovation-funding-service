@@ -72,14 +72,18 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
         copyTemplatePropertiesToCompetition(template, competition);
-        overrideTermsAndConditionsForNonGrantCompetitions(competition);
-        initialiseFinanceTypes(competition);
+
+//         Web test data will cause these to be null
+        if (competition.getFundingType() != null) {
+            overrideTermsAndConditionsForNonGrantCompetitions(competition);
+            initialiseFinanceTypes(competition);
+        }
 
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
     }
 
     private void overrideTermsAndConditionsForNonGrantCompetitions(Competition populatedCompetition) {
-        if (populatedCompetition.getFundingType() != null || populatedCompetition.getFundingType() != FundingType.GRANT) {
+        if (populatedCompetition.getFundingType() != FundingType.GRANT) {
             GrantTermsAndConditions grantTermsAndConditions =
                     grantTermsAndConditionsRepository.getLatestForFundingType(populatedCompetition.getFundingType());
             populatedCompetition.setTermsAndConditions(grantTermsAndConditions);
