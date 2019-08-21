@@ -26,11 +26,6 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
     }
 
     @Override
-    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long applicationId) {
-        return getWithRestResult(format("%s/panel/%s", assessorFormInputResponseRestUrl, applicationId), assessorFormInputResponseResourceListType());
-    }
-
-    @Override
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
         return getWithRestResult(format("%s/assessment/%s/question/%s", assessorFormInputResponseRestUrl, assessmentId, questionId), assessorFormInputResponseResourceListType());
     }
@@ -59,10 +54,5 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
     @Override
     public RestResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
         return getWithRestResult(format("%s/assessment/%s/details", assessorFormInputResponseRestUrl, assessmentId), AssessmentDetailsResource.class);
-    }
-
-    @Override
-    public RestResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(long assessmentId) {
-        return getWithRestResult(format("%s/panel/%s/details", assessorFormInputResponseRestUrl, assessmentId), AssessmentDetailsResource.class);
     }
 }
