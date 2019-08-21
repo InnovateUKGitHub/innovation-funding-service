@@ -65,12 +65,15 @@
                                 <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
                             </th:block>
                         </dl>
+                        <th:block th:if="${model.support}">
+                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application progress</h2>
+                            <div th:include="fragments/elements :: progress-indicator"
+                                 th:with="percentage=${model.application.completion.intValue()},size='medium'" class="govuk-!-margin-top-6"/>
+                        </th:block>
                     </div>
                 </div>
 
-                <th:block th:with="supportUserAndSummaryPage = ${model.support}">
-                    <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
-                </th:block>
+                <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>

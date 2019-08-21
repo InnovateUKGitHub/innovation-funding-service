@@ -17,14 +17,14 @@
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row" th:each="app : ${applications}">
-                <th:block th:if="${model.isSupport()}">
+                <th:block th:if="${model.support && model.isInProgress(app)}">
                     <td class="govuk-table__cell">
                         <a th:href="'/application/' + ${app.id} + '/summary'"
                            th:text="${app.id}"
                            class="govuk-link"></a>
                     </td>
                 </th:block>
-                <th:block th:unless="${model.isSupport()}">
+                <th:block th:unless="${model.support && model.isInProgress(app)}">
                     <td class="govuk-table__cell">
                         <a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}"
                            th:text="${app.id}" class="govuk-link"></a>

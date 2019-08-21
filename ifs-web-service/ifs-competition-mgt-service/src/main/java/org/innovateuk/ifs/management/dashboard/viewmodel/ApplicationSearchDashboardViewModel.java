@@ -56,6 +56,9 @@ public class ApplicationSearchDashboardViewModel {
         return isSupport;
     }
 
+    public boolean isInProgress(ApplicationResource application) {
+        return !application.isSubmitted();
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
