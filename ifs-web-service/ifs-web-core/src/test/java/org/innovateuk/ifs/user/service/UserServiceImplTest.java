@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -40,9 +39,30 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Mock
     private UserRestService userRestService;
 
+    private Long applicationId;
+    private UserResource leadUser;
+    private UserResource collaborator;
+    private ApplicationResource application;
+    private List<ProcessRoleResource> processRoles;
+
     @Before
     public void setUp() {
         super.setup();
+
+        applicationId = 123L;
+        leadUser = newUserResource().withId(87L).build();
+        collaborator = newUserResource().withId(34L).build();
+
+        application = new ApplicationResource();
+        application.setId(applicationId);
+
+        processRoles = newProcessRoleResource()
+                .withApplication(applicationId)
+                .withUser(leadUser, collaborator)
+                .withRole(LEADAPPLICANT, COLLABORATOR)
+                .withOrganisation(13L, 24L)
+                .build(2);
+
 
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER))).thenReturn(restSuccess());
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError()));
@@ -131,70 +151,19 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void isLeadApplicant() {
-        Long applicationId = 123L;
-        UserResource userResource = newUserResource()
-                .withId(87L)
-                .build();
-        UserResource userResource2 = newUserResource()
-                .withId(34L)
-                .build();
-        List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withApplication(applicationId)
-                .withUser(userResource, userResource2)
-                .withRole(LEADAPPLICANT, COLLABORATOR)
-                .withOrganisation(13L, 24L)
-                .build(2);
-        ApplicationResource application = new ApplicationResource();
-        application.setId(applicationId);
-
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
-
-        assertTrue(service.isLeadApplicant(userResource.getId(), application));
+        assertTrue(service.isLeadApplicant(leadUser.getId(), application));
     }
 
     @Test
     public void getLeadApplicantProcessRole() {
-        Long applicationId = 123L;
-        UserResource userResource = newUserResource()
-                .withId(87L)
-                .build();
-        UserResource userResource2 = newUserResource()
-                .withId(34L)
-                .build();
-        List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withApplication(applicationId)
-                .withUser(userResource, userResource2)
-                .withRole(LEADAPPLICANT, COLLABORATOR)
-                .withOrganisation(13L, 24L)
-                .build(2);
-        ApplicationResource application = new ApplicationResource();
-        application.setId(applicationId);
-
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
-
         assertEquals(processRoles.get(0), service.getLeadApplicantProcessRole(applicationId));
     }
 
     @Test
     public void getOrganisationProcessRoles() {
-        Long applicationId = 123L;
-        UserResource userResource = newUserResource()
-                .withId(87L)
-                .build();
-        UserResource userResource2 = newUserResource()
-                .withId(34L)
-                .build();
-        List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withApplication(applicationId)
-                .withUser(userResource, userResource2)
-                .withRole(LEADAPPLICANT, COLLABORATOR)
-                .withOrganisation(13L, 24L)
-                .build(2);
-        ApplicationResource application = new ApplicationResource();
-        application.setId(applicationId);
-
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
-
         List<ProcessRoleResource> result = service.getOrganisationProcessRoles(application, 13L);
 
         assertEquals(singletonList(processRoles.get(0)), result);
@@ -202,24 +171,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void getLeadPartnerOrganisationProcessRoles() {
-        Long applicationId = 123L;
-        UserResource userResource = newUserResource()
-                .withId(87L)
-                .build();
-        UserResource userResource2 = newUserResource()
-                .withId(34L)
-                .build();
-        List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withApplication(applicationId)
-                .withUser(userResource, userResource2)
-                .withRole(LEADAPPLICANT, COLLABORATOR)
-                .withOrganisation(13L, 24L)
-                .build(2);
-        ApplicationResource application = new ApplicationResource();
-        application.setId(applicationId);
-
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
-
         List<ProcessRoleResource> result = service.getLeadPartnerOrganisationProcessRoles(application);
 
         assertEquals(singletonList(processRoles.get(0)), result);
@@ -227,28 +179,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void getUserOrganisationId() {
-        Long applicationId = 123L;
-        UserResource userResource = newUserResource()
-                .withId(87L)
-                .build();
-        UserResource userResource2 = newUserResource()
-                .withId(34L)
-                .build();
-        List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withApplication(applicationId)
-                .withUser(userResource, userResource2)
-                .withRole(LEADAPPLICANT, COLLABORATOR)
-                .withOrganisation(13L, 24L)
-                .build(2);
-        ApplicationResource application = new ApplicationResource();
-        application.setId(applicationId);
-
-        when(userRestService.findProcessRole(userResource.getId(), applicationId)).thenReturn(restSuccess(processRoles.get(0)));
-
-        Long result = service.getUserOrganisationId(userResource.getId(), applicationId);
+        when(userRestService.findProcessRole(leadUser.getId(), applicationId)).thenReturn(restSuccess(processRoles.get(0)));
+        Long result = service.getUserOrganisationId(leadUser.getId(), applicationId);
 
         assertEquals(processRoles.get(0).getOrganisationId(), result);
     }
-
-
 }
