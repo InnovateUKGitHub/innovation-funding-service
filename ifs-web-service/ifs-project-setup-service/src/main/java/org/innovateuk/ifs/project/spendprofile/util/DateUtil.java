@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.util;
+package org.innovateuk.ifs.project.spendprofile.util;
 
 import java.time.Instant;
 import java.time.LocalDate;

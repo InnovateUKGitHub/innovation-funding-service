@@ -23,7 +23,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.util.MathFunctions.percentage;
+import static org.innovateuk.ifs.application.util.MathFunctions.percentage;
 
 /**
  * Service for retrieving and updating an {@Application}s progress percentage number.
