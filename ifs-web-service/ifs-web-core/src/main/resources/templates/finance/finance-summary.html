@@ -77,8 +77,8 @@
                         <strong>&pound;<th:block th:text="${#numbers.formatInteger(row.costs, 0, 'DEFAULT')}" /></strong>
                     </td>
                     <th:block th:with="fundingLevel=|${row.claimPercentage}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${model.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${model.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
                     </th:block>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>

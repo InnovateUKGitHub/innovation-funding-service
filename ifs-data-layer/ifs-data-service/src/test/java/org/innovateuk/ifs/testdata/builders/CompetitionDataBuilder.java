@@ -205,7 +205,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withApplicationFormFromTemplate() {
 
         return asCompAdmin(data -> {
-
+            
             CompetitionResource competition = data.getCompetition();
 
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), competition.getCompetitionType()).
