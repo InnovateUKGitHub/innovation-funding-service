@@ -80,9 +80,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     private void overrideTermsAndConditionsForNonGrantCompetitions(Competition populatedCompetition) {
         if (populatedCompetition.getFundingType() == null || populatedCompetition.getFundingType() != FundingType.GRANT) {
-            GrantTermsAndConditions grantTermsAndConditions =
+            Optional<GrantTermsAndConditions> grantTermsAndConditions =
                     grantTermsAndConditionsRepository.getLatestForFundingType(populatedCompetition.getFundingType());
-            populatedCompetition.setTermsAndConditions(grantTermsAndConditions);
+            grantTermsAndConditions.ifPresent(competition -> populatedCompetition.setTermsAndConditions(grantTermsAndConditions.get()));
         }
     }
 
