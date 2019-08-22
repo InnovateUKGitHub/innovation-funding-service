@@ -43,11 +43,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isAssessorForApplication(applicationResource, user);
     }
 
-    @PermissionRule(value = "READ_ASSESSMENT_SCORE", description = "The assessor can see the assessment scores for applications they assess")
-    public boolean assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(final ApplicationResource applicationResource, UserResource user) {
-        return isAssessorForApplication(applicationResource, user);
-    }
-
     private boolean isAssessorForApplication(ApplicationResource applicationResource, UserResource user) {
         return isAssessor(applicationResource.getId(), user) || isPanelAssessor(applicationResource.getId(), user) || isInterviewAssessor(applicationResource.getId(), user);
     }

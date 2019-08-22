@@ -18,6 +18,7 @@ import java.util.List;
  */
 public interface ReviewRepository extends ProcessRepository<Review>, PagingAndSortingRepository<Review, Long> {
     List<Review> findByTargetCompetitionIdAndActivityState(long competitionId, ReviewState state);
+    boolean existsByParticipantUserIdAndTargetIdAndActivityStateNot(long userId, long targetId, ReviewState state);
     boolean existsByParticipantUserAndTargetAndActivityStateNot(User user, Application target, ReviewState state);
     boolean existsByTargetCompetitionIdAndActivityState(long competitionId, ReviewState backingState);
 
