@@ -59,6 +59,11 @@
             <stringProp name="Argument.value">${__P(longer_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="org_id" elementType="Argument">
+            <stringProp name="Argument.name">org_id</stringProp>
+            <stringProp name="Argument.value">57</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -3295,7 +3300,7 @@
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="User Config" enabled="true">
         <stringProp name="filename">${users_csv}</stringProp>
         <stringProp name="fileEncoding"></stringProp>
-        <stringProp name="variableNames">username,password,application_name,org_id</stringProp>
+        <stringProp name="variableNames">username</stringProp>
         <stringProp name="delimiter">,</stringProp>
         <boolProp name="quotedData">true</boolProp>
         <boolProp name="recycle">true</boolProp>
