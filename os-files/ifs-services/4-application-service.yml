@@ -67,6 +67,8 @@ items:
             value: "300"
           - name: IFS_LIVE_PROJECTS_LANDING_PAGE_URL
             value: "${IFS_LIVE_PROJECTS_LANDING_PAGE_URL}"
+          - name: IFS_EARLY_METRICS_URL
+            value: "${IFS_EARLY_METRICS_URL}"
           ports:
           - containerPort: 8080
           resources:
