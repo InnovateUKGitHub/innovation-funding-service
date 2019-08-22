@@ -33,7 +33,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     }
 
     @Test
-    public void getAllAssessorFormInputResponses() throws Exception {
+    public void getAllAssessorFormInputResponses() {
         List<AssessorFormInputResponseResource> expected = Stream.of(1, 2, 3).map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
 
         long assessmentId = 1L;
@@ -44,18 +44,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     }
 
     @Test
-    public void getAllAssessorFormInputResponsesForPanel() throws Exception {
-        List<AssessorFormInputResponseResource> expected = Stream.of(1, 2, 3).map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
-
-        long assessmentId = 1L;
-
-        setupGetWithRestResultExpectations(format("%s/panel/%s", assessorFormInputResponseRestUrl, assessmentId), assessorFormInputResponseResourceListType(), expected, OK);
-        List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponsesForPanel(assessmentId).getSuccess();
-        assertSame(expected, response);
-    }
-
-    @Test
-    public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
+    public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() {
         List<AssessorFormInputResponseResource> expected = Stream.of(1, 2, 3).map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
 
         long assessmentId = 1L;
@@ -67,7 +56,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     }
 
     @Test
-    public void updateFormInputResponse() throws Exception {
+    public void updateFormInputResponse() {
         long assessmentId = 1L;
         long formInputId = 2L;
         String value = "Response";
@@ -86,7 +75,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     }
 
     @Test
-    public void updateFormInputResponses() throws Exception {
+    public void updateFormInputResponses() {
         AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
                 newAssessorFormInputResponseResource()
                         .with(id(null))
