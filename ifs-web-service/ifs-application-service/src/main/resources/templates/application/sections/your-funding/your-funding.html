@@ -86,7 +86,7 @@
                             </legend>
                             <span class="govuk-hint">The amount you apply for must reflect the funding amount available for this competition.</span>
                             <label class="govuk-label govuk-!-font-weight-bold" for="amount">
-                                Funding amount (&pound;)
+                                Funding sought (&pound;)
                             </label>
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('amount')}" th:text="${err}" />
                             <input id="amount"
