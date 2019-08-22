@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -100,7 +100,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     private BigDecimal percentDivisor = new BigDecimal("100");
 
