@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.innovateuk.ifs.file.util.FileFunctions.pathElementsToFile;
+import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

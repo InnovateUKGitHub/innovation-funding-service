@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.file.util.FileFunctions.pathElementsToFile;
+import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
 
 /**
  * A strategy for storing files in a single folder with no hierarchy
