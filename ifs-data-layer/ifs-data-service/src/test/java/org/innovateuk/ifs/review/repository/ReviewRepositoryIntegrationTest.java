@@ -96,6 +96,38 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
     }
 
     @Test
+    public void existsByParticipantUserIdAndTargetIdAndActivityStateNot() {
+        User user = newUser()
+                .with(id(null))
+                .withUid("foo")
+                .build();
+
+        userRepository.save(user);
+
+        Application application = newApplication().with(id(null)).build();
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withUser(user)
+                .withApplication(application)
+                .withRole(Role.PANEL_ASSESSOR)
+                .build();
+        processRoleRepository.save(processRole);
+
+        Review review =
+                newReview()
+                        .with(id(null))
+                        .withParticipant(processRole)
+                        .withTarget(application)
+                        .build();
+        review.setProcessState(CREATED);
+        repository.save(review);
+
+        assertTrue(repository.existsByParticipantUserIdAndTargetIdAndActivityStateNot(user.getId(), application.getId(), ReviewState.WITHDRAWN));
+    }
+
+    @Test
     public void existsByParticipantUserAndTarget_notExists() {
         User user = newUser()
                 .with(id(null))

@@ -53,17 +53,6 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     }
 
     @Test
-    public void getAllAssessorFormInputResponsesForPanel() {
-        long applicationId = 2L;
-
-        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.getAllAssessorFormInputResponsesForPanel(applicationId),
-                () -> verify(applicationPermissionRules).assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(isA(ApplicationResource.class), isA(UserResource.class))
-        );
-    }
-
-    @Test
     public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() {
         Long assessmentId = 1L;
         Long questionId = 3L;
