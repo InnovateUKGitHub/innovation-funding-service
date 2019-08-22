@@ -12,7 +12,6 @@ modules:
       longer_pause_deviation : 15000
       server_url : "${server_url}"
       authorisation_url : "${authorisation_url}"
-      users_csv : "${data_path}user_data.csv"
       competitions_csv : "${data_path}competition_data.csv"
       invites_csv : "${data_path}invite_data.csv"
       assessor_csv : "${data_path}assessor_data.csv"
@@ -41,8 +40,6 @@ execution:
       eu-west-2: 1
       europe-west2-a: 1
     concurrency: ${applicant_users}
-    files:
-      - jmeter/Representative/user_data.csv
 
   - scenario: registration_users
     iterations: 1

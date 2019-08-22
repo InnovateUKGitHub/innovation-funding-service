@@ -18,11 +18,6 @@
       <hashTree/>
       <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments">
-          <elementProp name="users_csv" elementType="Argument">
-            <stringProp name="Argument.name">users_csv</stringProp>
-            <stringProp name="Argument.value">${__P(users_csv)}</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
           <elementProp name="competitions_csv" elementType="Argument">
             <stringProp name="Argument.name">competitions_csv</stringProp>
             <stringProp name="Argument.value">${__P(competitions_csv)}</stringProp>
@@ -61,7 +56,7 @@
           </elementProp>
           <elementProp name="org_id" elementType="Argument">
             <stringProp name="Argument.name">org_id</stringProp>
-            <stringProp name="Argument.value">57</stringProp>
+            <stringProp name="Argument.value">21</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -76,7 +71,7 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${__P(server_url)}</stringProp>
+        <stringProp name="HTTPSampler.domain">ifs.local-dev</stringProp>
         <stringProp name="HTTPSampler.port"></stringProp>
         <stringProp name="HTTPSampler.protocol">https</stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -219,8 +214,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">30000</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">120000</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
@@ -245,6 +240,15 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="User number counter" enabled="true">
+            <stringProp name="CounterConfig.start">1</stringProp>
+            <stringProp name="CounterConfig.end">100</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">user_number</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
           <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="true">
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">posturi</stringProp>
@@ -261,7 +265,7 @@
               <elementProp name="j_username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">j_username</stringProp>
-                <stringProp name="Argument.value">${username}</stringProp>
+                <stringProp name="Argument.value">perf.applicant${user_number}@example.com</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -285,7 +289,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">https://${__P(authorisation_url)}${posturi}</stringProp>
+          <stringProp name="HTTPSampler.path">https://auth.local-dev:9443${posturi}</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -3297,18 +3301,6 @@
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="User Config" enabled="true">
-        <stringProp name="filename">${users_csv}</stringProp>
-        <stringProp name="fileEncoding"></stringProp>
-        <stringProp name="variableNames">username</stringProp>
-        <stringProp name="delimiter">,</stringProp>
-        <boolProp name="quotedData">true</boolProp>
-        <boolProp name="recycle">true</boolProp>
-        <boolProp name="stopThread">false</boolProp>
-        <stringProp name="shareMode">shareMode.all</stringProp>
-        <boolProp name="ignoreFirstLine">false</boolProp>
-      </CSVDataSet>
-      <hashTree/>
       <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
         <collectionProp name="Asserion.test_strings">
           <stringProp name="-218476159">2[0-9]+</stringProp>
