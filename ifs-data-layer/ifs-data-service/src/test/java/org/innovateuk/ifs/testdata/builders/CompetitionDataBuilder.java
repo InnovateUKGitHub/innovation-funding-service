@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -35,7 +34,6 @@ import static java.util.Collections.emptySet;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -267,10 +265,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS));
     }
 
-    public CompetitionDataBuilder sendFundingDecisions(Pair<String, FundingDecision>... fundingDecisions) {
-        return sendFundingDecisions(asList(fundingDecisions));
-    }
-
     public CompetitionDataBuilder sendFundingDecisions(List<Pair<String, FundingDecision>> fundingDecisions) {
         return asCompAdmin(data -> {
 
@@ -429,15 +423,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             data.addOriginalMilestone(milestone);
         });
-    }
-
-    public CompetitionDataBuilder withApplications(UnaryOperator<ApplicationDataBuilder>... applicationDataBuilders) {
-        return withApplications(asList(applicationDataBuilders));
-    }
-
-    public CompetitionDataBuilder withApplications(List<UnaryOperator<ApplicationDataBuilder>> applicationDataBuilders) {
-        return with(data -> applicationDataBuilders.forEach(fn ->
-            testService.doWithinTransaction(() -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build())));
     }
 
     public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, String projectSize, List<String> keywords, boolean inviteOnly) {

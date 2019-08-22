@@ -10,7 +10,7 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 Resource        ../../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
-${comp_name}         Procurement competition
+${comp_name}         Procurement AT Comp
 ${appl_name}         Procurement app
 
 *** Test Cases ***
