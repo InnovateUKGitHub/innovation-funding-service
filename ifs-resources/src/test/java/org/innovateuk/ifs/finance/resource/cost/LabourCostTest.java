@@ -33,11 +33,11 @@ public class LabourCostTest {
 
     @Test
     public void labourCostShouldReturnCorrectBaseAttributesTest() {
-        assert (labourCost.getId().equals(id));
-        assert (labourCost.getRole().equals(role));
-        assert (labourCost.getGrossEmployeeCost().equals(grossEmployeeCost));
-        assert (labourCost.getLabourDays().equals(labourDays));
-        assert (labourCost.getDescription().equals(description));
+        assertEquals (id, labourCost.getId());
+        assertEquals (role, labourCost.getRole());
+        assertEquals (grossEmployeeCost, labourCost.getGrossEmployeeCost());
+        assertEquals (labourDays, labourCost.getLabourDays());
+        assertEquals (description, labourCost.getDescription());
     }
 
     @Test
