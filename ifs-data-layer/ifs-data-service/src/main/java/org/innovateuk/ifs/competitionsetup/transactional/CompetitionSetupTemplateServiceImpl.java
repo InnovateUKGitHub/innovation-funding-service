@@ -72,6 +72,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
         copyTemplatePropertiesToCompetition(template, competition);
+
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
         initialiseFinanceTypes(competition);
 
