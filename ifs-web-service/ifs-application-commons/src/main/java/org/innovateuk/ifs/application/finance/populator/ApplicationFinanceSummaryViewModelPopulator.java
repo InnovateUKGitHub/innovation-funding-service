@@ -102,6 +102,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
     private Collection<FinanceSummaryTableRow> pendingOrganisations(long applicationId) {
         return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
+                .filter(ApplicationInviteResource::isInviteNameConfirmed)
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
                 .map(FinanceSummaryTableRow::pendingOrganisation)
