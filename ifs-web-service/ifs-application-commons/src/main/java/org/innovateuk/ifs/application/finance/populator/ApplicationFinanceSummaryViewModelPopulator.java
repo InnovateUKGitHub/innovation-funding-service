@@ -27,7 +27,6 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 
-import static java.util.Collections.emptyMap;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -73,12 +72,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
-        Map<Long, Set<Long>> completedSections;
-        if (open) {
-            completedSections = sectionStatusRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
-        } else {
-            completedSections = emptyMap();
-        }
+
+        Map<Long, Set<Long>> completedSections = sectionStatusRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
+        
         long leadOrganisationId = leadOrganisationId(processRoles);
         SectionResource financeSection = getFinanceSection(competition.getId());
 
