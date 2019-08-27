@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -118,6 +119,23 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("application-track"));
+    }
+
+    @Test
+    public void loanApplicationTrack() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(LOAN)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competition.getId())
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("loan-application-track"));
     }
 
     @Test
