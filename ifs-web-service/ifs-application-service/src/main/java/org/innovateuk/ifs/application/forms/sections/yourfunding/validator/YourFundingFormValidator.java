@@ -95,9 +95,9 @@ public class YourFundingFormValidator {
         }
     }
     private void validateYourFundingAmountForm(YourFundingAmountForm form, Errors errors, UserResource user, long applicationId) {
-        ValidationUtils.rejectIfEmpty(errors, "amount", "validation.field.must.not.be.blank");
-            if (form.getAmount().compareTo(BigDecimal.ONE) < 0) {
-            errors.rejectValue( "amount", "validation.field.max.value.or.higher", new String[]{"1"}, "");
+        ValidationUtils.rejectIfEmpty(errors, "amount", "validation.finance.funding.sought.required");
+        if (form.getAmount() != null && form.getAmount().compareTo(BigDecimal.ONE) < 0) {
+            errors.rejectValue( "amount", "validation.finance.funding.sought.min");
         }
     }
     private void validateYourFundingPercentageForm(YourFundingPercentageForm form, Errors errors, UserResource user, long applicationId) {

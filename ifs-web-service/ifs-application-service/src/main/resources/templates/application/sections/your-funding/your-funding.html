@@ -92,10 +92,11 @@
                             <input id="amount"
                                    type="number"
                                    class="govuk-input govuk-input--width-10"
-                                   required="required"
+                                   required="required"YourFundingFormValidator
                                    min="1"
                                    th:errorclass="govuk-input--error"
-                                   th:field="*{amount}" />
+                                   th:field="*{amount}"
+                                   th:attr="data-required-errormessage=#{validation.finance.funding.sought.required},data-min-errormessage=#{validation.finance.funding.sought.min}"/>
                         </fieldset>
                     </div>
 
