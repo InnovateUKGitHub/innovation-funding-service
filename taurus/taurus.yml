@@ -66,14 +66,14 @@ execution:
       europe-west2-a: 1
     concurrency: ${comp_management_users}
 
-  - scenario: assessor_users
-    iterations: 1
-    locations:
-      eu-west-2: 1
-      europe-west2-a: 1
-    concurrency: ${assessor_users}
-    files:
-      - jmeter/Representative/assessor_data.csv
+#  - scenario: assessor_users
+#    iterations: 1
+#    locations:
+#      eu-west-2: 1
+#      europe-west2-a: 1
+#    concurrency: ${assessor_users}
+#    files:
+#      - jmeter/Representative/assessor_data.csv
 
 scenarios:
   invite_users:
@@ -86,8 +86,8 @@ scenarios:
     script: taurus/front_door.jmx
   competition_management:
     script: taurus/competition_management.jmx
-  assessor_users:
-    script: taurus/assessor.jmx
+#  assessor_users:
+#    script: taurus/assessor.jmx
 
 reporting:
   - module: passfail
