@@ -75,6 +75,7 @@ public class ApplicationFinanceSummaryViewModel {
 
     public boolean isUsersFinancesIncomplete() {
         return rows.stream()
+                .filter(row -> row.getOrganisationId() != null)
                 .anyMatch(row -> row.getOrganisationId().equals(currentUsersOrganisationId) && !row.isComplete());
     }
 

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 @Component
@@ -132,7 +133,11 @@ public class YourFundingViewModelPopulator {
                                            boolean yourOrganisationRequired) {
         boolean fieldsRequired = researchCategoryRequired || yourOrganisationRequired;
         return fieldsRequired && isCompetitionOpen(section) && isOrganisationTypeBusiness(section) &&
-                !isMaximumFundingLevelOverridden(section);
+                !isMaximumFundingLevelOverridden(section) && !competitionIsLoanType(section);
+    }
+
+    private boolean competitionIsLoanType(ApplicantSectionResource section) {
+        return LOAN.equals(section.getCompetition().getFundingType());
     }
 
     private boolean isCompetitionOpen(ApplicantSectionResource section) {

@@ -14,7 +14,7 @@
                         </th:block>
                     </ul>
                     <p class="govuk-body"
-                       th:if="${summary.usersFinancesIncomplete}">
+                       th:if="${summary.isUsersFinancesIncomplete()}">
                         <a th:href="@{/application/{id}/form/{sectionType}(id=${summary.applicationId},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
                            class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
                     <p class="govuk-body">This application cannot be submitted unless your project finances have been marked as complete by all partners.</p>
