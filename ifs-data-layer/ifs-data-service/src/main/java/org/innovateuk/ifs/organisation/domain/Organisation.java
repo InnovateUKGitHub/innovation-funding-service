@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -118,6 +119,10 @@ public class Organisation {
 
     public OrganisationType getOrganisationType() {
         return organisationType;
+    }
+
+    public OrganisationTypeEnum getOrganisationTypeEnum() {
+        return OrganisationTypeEnum.getFromId(getOrganisationType().getId());
     }
 
     public void setOrganisationType(OrganisationType organisationType) {

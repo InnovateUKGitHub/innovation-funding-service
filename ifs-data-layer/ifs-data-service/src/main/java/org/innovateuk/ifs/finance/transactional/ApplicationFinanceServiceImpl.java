@@ -201,7 +201,7 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
                 //TODO: IFS-3822 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setFinanceDetails.  We should find a better way to handle this.
                 ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
                 setFinanceDetails(organisationType, applicationFinanceResource, applicationFinance.getApplication().getCompetition());
-                return serviceSuccess(applicationFinanceResource.getGrantClaimPercentage() != null && applicationFinanceResource.getGrantClaimPercentage() > 0);
+                return serviceSuccess(applicationFinanceResource.getGrantClaimPercentage() > 0);
             }
         } else {
             return serviceFailure(new Error(PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST, asList(applicationId, organisationId)));

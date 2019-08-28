@@ -6,18 +6,18 @@ import org.junit.Test;
 public class GrantClaimTest {
     private Long id;
     private Integer grantClaimPercentage;
-    private GrantClaim grantClaim;
+    private GrantClaimPercentage grantClaim;
 
     @Before
     public void setUp() throws Exception {
         id = 0L;
         grantClaimPercentage = 30;
-        grantClaim = new GrantClaim(id, grantClaimPercentage, 1L);
+        grantClaim = new GrantClaimPercentage(id, grantClaimPercentage, 1L);
     }
 
     @Test
     public void grantClaimShouldReturnCorrectBaseAttributesTest() throws Exception {
         assert(grantClaim.getId().equals(id));
-        assert(grantClaim.getGrantClaimPercentage().equals(grantClaimPercentage));
+        assert(grantClaim.getPercentage().equals(grantClaimPercentage));
     }
 }

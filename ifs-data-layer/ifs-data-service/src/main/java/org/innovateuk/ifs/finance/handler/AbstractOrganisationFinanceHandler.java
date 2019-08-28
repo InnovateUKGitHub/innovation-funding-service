@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -22,32 +23,24 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public abstract class AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
     private static final Log LOG = LogFactory.getLog(AbstractOrganisationFinanceHandler.class);
 
+    @Autowired
     protected QuestionService questionService;
 
+    @Autowired
     protected ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Autowired
     protected ProjectFinanceRepository projectFinanceRepository;
 
+    @Autowired
     protected ApplicationFinanceRowRepository applicationFinanceRowRepository;
 
+    @Autowired
     protected ProjectFinanceRowRepository projectFinanceRowRepository;
 
+    @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
 
-
-    public AbstractOrganisationFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                              ProjectFinanceRowRepository projectFinanceRowRepository,
-                                              FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                              QuestionService questionService,
-                                              ApplicationFinanceRepository applicationFinanceRepository,
-                                              ProjectFinanceRepository projectFinanceRepository) {
-        this.applicationFinanceRowRepository = applicationFinanceRowRepository;
-        this.projectFinanceRowRepository = projectFinanceRowRepository;
-        this.financeRowMetaFieldRepository = financeRowMetaFieldRepository;
-        this.questionService = questionService;
-        this.applicationFinanceRepository = applicationFinanceRepository;
-        this.projectFinanceRepository = projectFinanceRepository;
-    }
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {

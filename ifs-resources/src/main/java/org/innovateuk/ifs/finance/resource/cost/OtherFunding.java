@@ -19,15 +19,12 @@ public class OtherFunding extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal fundingAmount;
 
-    private String name;
-
     private OtherFunding() {
         this(null);
     }
 
     public OtherFunding(Long targetId) {
         super(targetId);
-        this.name = getCostType().getType();
     }
 
     public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount, Long targetId) {
@@ -73,7 +70,7 @@ public class OtherFunding extends AbstractFinanceRowItem {
 
     @Override
     public String getName() {
-        return name;
+        return getCostType().getType();
     }
 
     @Override
@@ -111,10 +108,6 @@ public class OtherFunding extends AbstractFinanceRowItem {
         this.fundingAmount = fundingAmount;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -129,7 +122,6 @@ public class OtherFunding extends AbstractFinanceRowItem {
                 .append(fundingSource, that.fundingSource)
                 .append(securedDate, that.securedDate)
                 .append(fundingAmount, that.fundingAmount)
-                .append(name, that.name)
                 .isEquals();
     }
 
@@ -141,7 +133,6 @@ public class OtherFunding extends AbstractFinanceRowItem {
                 .append(fundingSource)
                 .append(securedDate)
                 .append(fundingAmount)
-                .append(name)
                 .toHashCode();
     }
 
@@ -153,7 +144,6 @@ public class OtherFunding extends AbstractFinanceRowItem {
                 .append("fundingSource", fundingSource)
                 .append("securedDate", securedDate)
                 .append("fundingAmount", fundingAmount)
-                .append("name", name)
                 .toString();
     }
 }

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
  * to manage {@link FinanceRow} related data.
  */
 @RestController
-@ZeroDowntime(reference = "IFS-6274", description = "Delete old request mappings")
 @RequestMapping({"/cost", "/application-finance-row"})
 public class ApplicationFinanceRowController {
 
@@ -31,7 +29,7 @@ public class ApplicationFinanceRowController {
         return applicationFinanceRowService.get(id).toGetResponse();
     }
 
-    @PostMapping({"/add-with-response/{applicationFinanceId}", ""})
+    @PostMapping()
     public RestResult<FinanceRowItem> create(@RequestBody final FinanceRowItem financeRowItem) {
         return applicationFinanceRowService.create(financeRowItem.getTargetId(), financeRowItem).toPostCreateResponse();
     }
@@ -40,7 +38,7 @@ public class ApplicationFinanceRowController {
      * Save the updated FinanceRowItem and if there are validation messages, return those (but still save)
      * @return ValidationMessages resource object to store validation messages about invalid user input.
      */
-    @PutMapping({"/update/{id}", "/{id}"})
+    @PutMapping("/{id}")
     public RestResult<ValidationMessages> update(@PathVariable final long id, @RequestBody final FinanceRowItem financeRowItem) {
         RestResult<FinanceRowItem> updateResult = applicationFinanceRowService.update(id, financeRowItem).toGetResponse();
         if(updateResult.isFailure()){
@@ -52,7 +50,7 @@ public class ApplicationFinanceRowController {
         }
     }
 
-    @DeleteMapping({"/delete/{id}", "/{id}"})
+    @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable final long id) {
         return applicationFinanceRowService.delete(id).toDeleteResponse();
     }

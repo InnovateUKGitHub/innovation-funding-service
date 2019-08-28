@@ -68,7 +68,6 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     @Override
-
     public Long getId() {
         return id;
     }
