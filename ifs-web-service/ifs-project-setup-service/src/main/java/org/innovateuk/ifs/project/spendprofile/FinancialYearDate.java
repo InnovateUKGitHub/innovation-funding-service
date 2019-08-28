@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.util;
+package org.innovateuk.ifs.project.spendprofile;
 
 import java.util.Calendar;
 import java.util.Date;
