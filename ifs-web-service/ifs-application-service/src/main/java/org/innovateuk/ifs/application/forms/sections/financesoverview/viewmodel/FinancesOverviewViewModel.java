@@ -2,6 +2,9 @@ package org.innovateuk.ifs.application.forms.sections.financesoverview.viewmodel
 
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 
 public class FinancesOverviewViewModel {
 
@@ -9,16 +12,20 @@ public class FinancesOverviewViewModel {
     private final String applicationName;
     private final Double researchParticipationPercentage;
     private final Integer maxResearchRatio;
-    private final boolean procurement;
+    private final FundingType fundingType;
+    private final String hint;
+    private final String fundingRules;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
 
-    public FinancesOverviewViewModel(long applicationId, String applicationName, Double researchParticipationPercentage, Integer maxResearchRatio, boolean procurement, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+    public FinancesOverviewViewModel(long applicationId, String applicationName, Double researchParticipationPercentage, Integer maxResearchRatio, FundingType fundingType, String hint, String fundingRules, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.researchParticipationPercentage = researchParticipationPercentage;
         this.maxResearchRatio = maxResearchRatio;
-        this.procurement = procurement;
+        this.fundingType = fundingType;
+        this.hint = hint;
+        this.fundingRules = fundingRules;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
     }
@@ -39,8 +46,12 @@ public class FinancesOverviewViewModel {
         return maxResearchRatio;
     }
 
-    public boolean isProcurement() {
-        return procurement;
+    public String getHint() {
+        return hint;
+    }
+
+    public String getFundingRules() {
+        return fundingRules;
     }
 
     public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
@@ -49,6 +60,14 @@ public class FinancesOverviewViewModel {
 
     public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
         return applicationFundingBreakdownViewModel;
+    }
+
+    public boolean isProcurement() {
+        return PROCUREMENT.equals(fundingType);
+    }
+
+    public boolean hasFundingRules() {
+        return fundingRules != null;
     }
 
 }
