@@ -197,9 +197,9 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         CompetitionSearchResult response = service.findPreviousCompetitions(page, size).getSuccess();
 
         assertEquals((long) competitionId, response.getContent().get(0).getId());
-        assertEquals((Integer) 1, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getApplications());
-        assertEquals((Integer) 2, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getProjects());
-        assertEquals((Integer) 3, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getCompleteProjects());
+        assertEquals(1, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getApplications());
+        assertEquals(2, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getProjects());
+        assertEquals(3, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getCompleteProjects());
     }
 
     @Test
