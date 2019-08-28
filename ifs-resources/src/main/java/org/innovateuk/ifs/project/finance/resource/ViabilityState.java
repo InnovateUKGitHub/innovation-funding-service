@@ -13,16 +13,19 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 public enum ViabilityState implements ProcessState, IdentifiableEnum {
 
-    REVIEW(21, State.NOT_VERIFIED),
-    NOT_APPLICABLE(22, State.NOT_APPLICABLE),
-    APPROVED(23, State.ACCEPTED);
+    REVIEW(21, State.NOT_VERIFIED, Viability.REVIEW),
+    NOT_APPLICABLE(22, State.NOT_APPLICABLE, Viability.NOT_APPLICABLE),
+    APPROVED(23, State.ACCEPTED, Viability.APPROVED),
+    COMPLETED_OFFLINE(54, State.COMPLETED_OFFLINE, Viability.COMPLETED_OFFLINE);
 
     private final long id;
     private final State backingState;
+    private final Viability viability;
 
-    ViabilityState(long id, State backingState) {
+    ViabilityState(long id, State backingState, Viability viability) {
         this.id = id;
         this.backingState = backingState;
+        this.viability = viability;
     }
 
     @Override
@@ -41,6 +44,10 @@ public enum ViabilityState implements ProcessState, IdentifiableEnum {
 
     public static ViabilityState fromState(State state) {
         return ProcessState.fromState(ViabilityState.values(), state);
+    }
+
+    public Viability getViability() {
+        return viability;
     }
 
     @Override
