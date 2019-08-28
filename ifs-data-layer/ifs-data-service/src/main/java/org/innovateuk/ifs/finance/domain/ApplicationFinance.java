@@ -35,10 +35,9 @@ public class ApplicationFinance extends Finance {
     public ApplicationFinance() {
     }
 
-    public ApplicationFinance(Application application, Organisation organisation, String workPostcode) {
+    public ApplicationFinance(Application application, Organisation organisation) {
         super(organisation);
         this.application = application;
-        this.workPostcode = workPostcode;
     }
 
     @JsonIgnore
