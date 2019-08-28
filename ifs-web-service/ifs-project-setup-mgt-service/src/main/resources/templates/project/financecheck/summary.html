@@ -93,7 +93,7 @@
                         <th:block th:if="${orgDetails.isLead()}"> (Lead)</th:block>
                     </th>
                     <td class="govuk-table__cell aligncentre">
-                        <a th:if="${!orgDetails.viability.notApplicable}"
+                        <a th:unless="${orgDetails.viability.notApplicable}"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                            th:classappend="${'viability-' + status.index}"

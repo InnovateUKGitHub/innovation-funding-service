@@ -172,6 +172,7 @@ public class FinanceCheckSummaryResource {
 
         List<Viability> relevantStatuses = asList(
                 Viability.APPROVED,
+                Viability.COMPLETED_OFFLINE,
                 Viability.NOT_APPLICABLE);
 
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
