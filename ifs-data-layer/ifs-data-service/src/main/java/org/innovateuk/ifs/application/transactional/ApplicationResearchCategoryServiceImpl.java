@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -151,8 +150,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(
                 application.getCompetition().getId()).getSuccess();
 
-        return !application.getCompetition().isFullyFunded()
-                && organisation.getOrganisationType().equals(BUSINESS.getId())
-                && !maximumFundingLevelOverridden;
+        return !application.getCompetition()
+                .isMaximumFundingLevelConstant(organisation.getOrganisationTypeEnum(), maximumFundingLevelOverridden);
     }
 }

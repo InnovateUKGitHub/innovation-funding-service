@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition extends AuditableEntity implements ProcessActivity {
+public class Competition extends AuditableEntity implements ProcessActivity, ApplicationConfiguration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
