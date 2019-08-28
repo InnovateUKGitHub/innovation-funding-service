@@ -16,7 +16,6 @@ import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -26,11 +25,11 @@ import java.util.Map;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.AcademicCostBuilder.newAcademicCost;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
-import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.*;
@@ -60,9 +59,6 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
     private ProjectFinanceRowService projectFinanceRowServiceMock;
 
     @Mock
-    private FinanceUtil financeUtilMock;
-
-    @Mock
     private CompetitionService competitionServiceMock;
 
     @Test
@@ -73,7 +69,9 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 withCompetition(2L).
                 build();
 
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .build();
 
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
 
@@ -113,7 +111,6 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
-        when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType())).thenReturn(false);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());
@@ -141,27 +138,26 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
     @Test
     public void testGenerateSpendProfileForAcademicOrganisation() {
-
         ProjectResource project = newProjectResource().
                 withDuration(10L).
                 withCompetition(2L).
                 build();
 
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .build();
 
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
 
         Map<FinanceRowType, FinanceRowCostCategory> finances = asMap(
-                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
-                        newLabourCost().
-                                withGrossEmployeeCost(new BigDecimal("10000"), new BigDecimal("5100"), new BigDecimal("600"), BigDecimal.ZERO).
-                                withDescription("Developers", "Testers", "Something else", WORKING_DAYS_PER_YEAR).
-                                withLabourDays(100, 120, 120, 250).
-                                withName(DIRECTLY_INCURRED_STAFF.getFinanceRowName(), DIRECTLY_INCURRED_STAFF.getFinanceRowName(), INDIRECT_COSTS_STAFF.getFinanceRowName()).
-                                build(4)).
+                FinanceRowType.LABOUR, newDefaultCostCategory().withCosts(
+                        newAcademicCost().
+                                withCost(new BigDecimal("6448"), new BigDecimal("288")).
+                                withName(DIRECTLY_INCURRED_STAFF.getFinanceRowName(), INDIRECT_COSTS_STAFF.getFinanceRowName()).
+                                build(2)).
                         build(),
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
-                        newOtherCost().
+                        newAcademicCost().
                                 withCost(new BigDecimal("33"), new BigDecimal("98")).
                                 withName(DIRECTLY_INCURRED_OTHER_COSTS.getFinanceRowName(), INDIRECT_COSTS_OTHER_COSTS.getFinanceRowName()).
                                 build(2)).
@@ -194,7 +190,6 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
-        when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType())).thenReturn(true);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());

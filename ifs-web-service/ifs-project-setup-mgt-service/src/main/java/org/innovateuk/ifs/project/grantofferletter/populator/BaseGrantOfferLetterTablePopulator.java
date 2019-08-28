@@ -4,8 +4,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -16,11 +14,8 @@ import java.util.Objects;
  **/
 public abstract class BaseGrantOfferLetterTablePopulator {
 
-    @Autowired
-    private FinanceUtil financeUtil;
-
     protected boolean isAcademic(OrganisationResource organisation, CompetitionResource competition) {
-        return financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType());
+        return competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
     }
 
     protected BigDecimal calculateEligibleTotalFromFinances(Collection<ProjectFinanceResource> finances) {

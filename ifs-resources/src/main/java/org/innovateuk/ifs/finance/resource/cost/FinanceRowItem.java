@@ -13,7 +13,8 @@ import java.math.BigDecimal;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = AcademicCost.class, name = "academic"),
         @JsonSubTypes.Type(value = CapitalUsage.class, name = "capitalUsage"),
-        @JsonSubTypes.Type(value = GrantClaim.class, name = "grantClaim"),
+        @JsonSubTypes.Type(value = GrantClaimPercentage.class, name = "grantClaim"),
+        @JsonSubTypes.Type(value = GrantClaimAmount.class, name = "grantClaimAmount"),
         @JsonSubTypes.Type(value = LabourCost.class, name = "labourCost"),
         @JsonSubTypes.Type(value = Materials.class, name = "materials"),
         @JsonSubTypes.Type(value = ProcurementOverhead.class, name = "procurementOverhead"),

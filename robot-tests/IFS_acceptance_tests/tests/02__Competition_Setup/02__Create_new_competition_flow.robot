@@ -695,7 +695,7 @@ Innovation leads can be added to a competition
 User deletes the competition
     [Documentation]  IFS-1084
     [Tags]  HappyPath
-    Given the user navigates to the page        ${CA_UpcomingComp}
+    Given the comp admin creates competition
     And The user clicks the button/link         link = No competition title defined
     When the user clicks the button/link        link = Delete competition
     And the user clicks the button/link         css = .delete-modal button[type="submit"]
@@ -899,6 +899,11 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
+
+the comp admin creates competition
+    the user navigates to the page        ${CA_UpcomingComp}
+    the user clicks the button/link       link = Create competition
+    the user navigates to the page        ${CA_UpcomingComp}
 
 Custom suite teardown
     The user closes the browser

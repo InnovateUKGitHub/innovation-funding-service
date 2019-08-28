@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.EligibilityDocs.eligibilityResourceFields;
 import static org.innovateuk.ifs.documentation.ViabilityDocs.viabilityResourceFields;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
@@ -235,7 +235,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                                 build(2)).
                         build(),
                 FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
+                        newGrantClaimPercentage().
                                 withGrantClaimPercentage(30).
                                 build(1)).
                         build(),
@@ -259,11 +259,11 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newOtherCost().
                                 withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
-                                withName("direct_costs", "exceptions_costs").
+                                withDescription("direct_costs", "exceptions_costs").
                                 build(2)).
                         build(),
                 FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
+                        newGrantClaimPercentage().
                                 withGrantClaimPercentage(100).
                                 build(1)).
                         build(),

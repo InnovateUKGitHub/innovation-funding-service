@@ -1,36 +1,20 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.form;
 
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class YourFundingForm {
-    private Boolean requestingFunding;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAIM_AMOUNT;
 
-    private Integer grantClaimPercentage;
+public abstract class AbstractYourFundingForm {
 
     private Boolean otherFunding;
 
     private Map<String, OtherFundingRowForm> otherFundingRows = new LinkedHashMap<>();
-
-    private long otherFundingQuestionId;
-
-    public Boolean getRequestingFunding() {
-        return requestingFunding;
-    }
-
-    public void setRequestingFunding(Boolean requestingFunding) {
-        this.requestingFunding = requestingFunding;
-    }
-
-    public Integer getGrantClaimPercentage() {
-        return grantClaimPercentage;
-    }
-
-    public void setGrantClaimPercentage(Integer grantClaimPercentage) {
-        this.grantClaimPercentage = grantClaimPercentage;
-    }
 
     public Boolean getOtherFunding() {
         return otherFunding;
@@ -48,14 +32,6 @@ public class YourFundingForm {
         this.otherFundingRows = otherFundingRows;
     }
 
-    public long getOtherFundingQuestionId() {
-        return otherFundingQuestionId;
-    }
-
-    public void setOtherFundingQuestionId(long otherFundingQuestionId) {
-        this.otherFundingQuestionId = otherFundingQuestionId;
-    }
-
     public BigDecimal getOtherFundingTotal() {
         return otherFundingRows == null ? BigDecimal.ZERO :
                 otherFundingRows.entrySet().stream()
@@ -63,5 +39,14 @@ public class YourFundingForm {
                         .map(OtherFundingRowForm::getFundingAmount)
                         .filter(Objects::nonNull)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    protected abstract FinanceRowType financeType();
+
+    public boolean isFundingPercentage() {
+        return FINANCE.equals(financeType());
+    }
+    public boolean isFundingAmount() {
+        return GRANT_CLAIM_AMOUNT.equals(financeType());
     }
 }

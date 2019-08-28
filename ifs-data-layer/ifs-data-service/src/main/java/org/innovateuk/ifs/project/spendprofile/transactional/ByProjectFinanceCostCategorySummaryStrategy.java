@@ -15,7 +15,6 @@ import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -48,9 +47,6 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
     @Autowired
-    private FinanceUtil financeUtil;
-
-    @Autowired
     private OrganisationService organisationService;
 
     @Autowired
@@ -68,7 +64,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private ServiceResult<SpendProfileCostCategorySummaries> createCostCategorySummariesWithCostCategoryType(
             Long projectId, Long organisationId, ProjectResource project, OrganisationResource organisation, ProjectFinanceResource finances) {
         CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
-        boolean useAcademicFinances = financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType());
+        boolean useAcademicFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
 
         return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(
                 costCategoryType ->

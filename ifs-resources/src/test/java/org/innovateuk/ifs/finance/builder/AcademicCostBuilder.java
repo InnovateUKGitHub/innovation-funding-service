@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 public class AcademicCostBuilder extends BaseBuilder<AcademicCost, AcademicCostBuilder> {
 
     public static AcademicCostBuilder newAcademicCost() {
-        return new AcademicCostBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("AcademicCost "));
+        return new AcademicCostBuilder(emptyList()).with(uniqueIds());
     }
 
     public AcademicCostBuilder withId(Long... value) {
