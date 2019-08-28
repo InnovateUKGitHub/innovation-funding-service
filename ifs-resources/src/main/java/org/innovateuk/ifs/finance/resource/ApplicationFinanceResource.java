@@ -7,7 +7,7 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
 
     private Long financeFileEntry;
     private Integer maximumFundingLevel;
-
+    private String workPostcode;
 
     public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
 
@@ -28,9 +28,8 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
     public ApplicationFinanceResource(long id,
                                       long organisation,
                                       long application,
-                                      OrganisationSize organisationSize,
-                                      String projectLocation) {
-        super(id, organisation, application, organisationSize, projectLocation);
+                                      OrganisationSize organisationSize) {
+        super(id, organisation, application, organisationSize);
     }
 
     public Long getFinanceFileEntry() {
@@ -57,4 +56,11 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         this.maximumFundingLevel = maximumFundingLevel;
     }
 
+    public String getWorkPostcode() {
+        return workPostcode;
+    }
+
+    public void setWorkPostcode(String workPostcode) {
+        this.workPostcode = workPostcode;
+    }
 }
