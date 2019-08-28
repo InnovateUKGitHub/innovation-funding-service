@@ -694,6 +694,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
     }
 
+    @Override
     public boolean isH2020() {
         return ofNullable(competitionType)
                 .map(CompetitionType::getName)
@@ -701,6 +702,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 .orElse(false);
     }
 
+    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
