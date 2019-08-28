@@ -1005,7 +1005,7 @@
               </elementProp>
               <elementProp name="name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">${application_name}</stringProp>
+                <stringProp name="Argument.value">Performance Application</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">name</stringProp>
@@ -1052,12 +1052,12 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">innovationArea.name</stringProp>
               </elementProp>
-              <elementProp name="application.resubmission" elementType="HTTPArgument">
+              <elementProp name="resubmission" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">false</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">application.resubmission</stringProp>
+                <stringProp name="Argument.name">resubmission</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -1095,7 +1095,7 @@
               </elementProp>
               <elementProp name="name" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">${application_name}</stringProp>
+                <stringProp name="Argument.value">Performance Application</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">name</stringProp>
@@ -1142,12 +1142,12 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">innovationArea.name</stringProp>
               </elementProp>
-              <elementProp name="application.resubmission" elementType="HTTPArgument">
+              <elementProp name="resubmission" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">false</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">application.resubmission</stringProp>
+                <stringProp name="Argument.name">resubmission</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
