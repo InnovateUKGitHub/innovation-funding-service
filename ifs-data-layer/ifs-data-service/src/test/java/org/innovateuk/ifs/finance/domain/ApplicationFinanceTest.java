@@ -11,18 +11,20 @@ public class ApplicationFinanceTest {
     private ApplicationFinance applicationFinance;
     private Organisation organisation;
     private Application application;
+    private String workPostcode;
 
     @Before
     public void setUp() {
         organisation = new Organisation("Worth Internet Systems");
         application = new Application();
-        applicationFinance = new ApplicationFinance(application, organisation);
+        workPostcode = new ApplicationFinance().getWorkPostcode();
+        applicationFinance = new ApplicationFinance(application, organisation, workPostcode);
     }
 
     @Test
     public void constructorsShouldCreateInstancesOnValidInput() {
         new ApplicationFinance();
-        new ApplicationFinance(application, organisation);
+        new ApplicationFinance(application, organisation, workPostcode);
     }
 
     @Test

@@ -15,6 +15,7 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
 
         if (applicationFinance != null && applicationFinance.getFinanceFileEntry() != null) {
             this.financeFileEntry = applicationFinance.getFinanceFileEntry();
+            this.workPostcode = applicationFinance.getWorkPostcode();
         }
     }
 
@@ -28,8 +29,10 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
     public ApplicationFinanceResource(long id,
                                       long organisation,
                                       long application,
-                                      OrganisationSize organisationSize) {
+                                      OrganisationSize organisationSize,
+                                      String workPostcode) {
         super(id, organisation, application, organisationSize);
+        this.workPostcode = workPostcode;
     }
 
     public Long getFinanceFileEntry() {

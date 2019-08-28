@@ -127,7 +127,7 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
         if (organisationExists(applicationId, organisationId)) {
             return getOpenApplication(applicationId).andOnSuccess(application ->
                     find(organisation(organisationId)).andOnSuccess(organisation -> {
-                        ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
+                        ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation, new ApplicationFinance().getWorkPostcode()));
                         initialize(applicationFinance);
                         return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
                     })
