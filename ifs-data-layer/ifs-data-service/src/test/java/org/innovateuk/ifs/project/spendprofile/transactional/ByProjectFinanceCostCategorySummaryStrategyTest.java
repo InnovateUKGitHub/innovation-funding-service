@@ -16,7 +16,6 @@ import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -60,9 +59,6 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
     private ProjectFinanceRowService projectFinanceRowServiceMock;
 
     @Mock
-    private FinanceUtil financeUtilMock;
-
-    @Mock
     private CompetitionService competitionServiceMock;
 
     @Test
@@ -73,7 +69,9 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 withCompetition(2L).
                 build();
 
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .build();
 
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
 
@@ -113,7 +111,6 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
-        when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType())).thenReturn(false);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());
@@ -141,13 +138,14 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
     @Test
     public void testGenerateSpendProfileForAcademicOrganisation() {
-
         ProjectResource project = newProjectResource().
                 withDuration(10L).
                 withCompetition(2L).
                 build();
 
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .build();
 
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
 
@@ -192,7 +190,6 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
-        when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType())).thenReturn(true);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());

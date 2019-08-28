@@ -6,7 +6,6 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
@@ -72,17 +71,13 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
-        return buildRowItem(cost);
+    public Overhead toResource(FinanceRow cost) {
+        return new Overhead(cost.getId(), OverheadRateType.valueOf(cost.getItem()), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override
     public FinanceRowType getFinanceRowType() {
         return OVERHEADS;
-    }
-
-    private FinanceRowItem buildRowItem(FinanceRow cost) {
-        return new Overhead(cost.getId(), OverheadRateType.valueOf(cost.getItem()), cost.getQuantity(), cost.getTarget().getId());
     }
 
     private void validateFilePresent(Overhead overhead, BindingResult bindingResult) {

@@ -11,8 +11,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,8 +27,6 @@ import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantC
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -38,6 +34,7 @@ import static org.mockito.Mockito.*;
 
 public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> {
     private static final long APPLICATION_ID = 1L;
+    private static final long ORGANISATION_ID = 2L;
 
     @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -55,8 +52,6 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
     @Test
     public void save() {
-        OrganisationResource organisation = newOrganisationResource().build();
-        UserResource user = newUserResource().build();
         OtherFunding otherFunding = newOtherFunding()
                 .withFundingSource(OtherFundingCostCategory.OTHER_FUNDING)
                 .withOtherPublicFunding("No")
@@ -73,8 +68,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.create(any())).thenReturn(restSuccess(mock(FinanceRowItem.class)));
-        when(organisationRestService.getByUserAndApplicationId(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(organisation));
-        when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
+        when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
 
         YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setRequestingFunding(true);
@@ -91,7 +85,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
                 "20", existingRow
                 ));
 
-        service.save(APPLICATION_ID, form, user);
+        service.save(APPLICATION_ID, form, ORGANISATION_ID);
 
         verify(financeRowRestService).update(finance.getGrantClaim());
 

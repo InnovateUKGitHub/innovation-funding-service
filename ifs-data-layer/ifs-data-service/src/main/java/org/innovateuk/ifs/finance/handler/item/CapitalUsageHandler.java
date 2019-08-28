@@ -36,7 +36,7 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
+    public CapitalUsage toResource(FinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
     }
 
@@ -45,7 +45,7 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
         return CAPITAL_USAGE;
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){
+    private CapitalUsage buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){
         String existing = "";
         BigDecimal residualValue = BigDecimal.ZERO;
         Integer utilisation = 0;

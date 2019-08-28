@@ -47,9 +47,8 @@ public class YourFundingSaver {
     @Autowired
     private ApplicationFinanceRowRestService financeRowRestService;
 
-    public ServiceResult<Void> save(long applicationId, YourFundingAmountForm form, UserResource user) {
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
+    public ServiceResult<Void> save(long applicationId, YourFundingAmountForm form, long organisationId) {
+        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         ValidationMessages messages = new ValidationMessages();
 
@@ -66,9 +65,9 @@ public class YourFundingSaver {
         }
 
     }
-    public ServiceResult<Void> save(long applicationId, YourFundingPercentageForm form, UserResource user) {
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
+
+    public ServiceResult<Void> save(long applicationId, YourFundingPercentageForm form, long organisationId) {
+        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         ValidationMessages messages = new ValidationMessages();
 

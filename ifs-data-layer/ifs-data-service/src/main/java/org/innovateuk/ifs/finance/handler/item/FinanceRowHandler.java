@@ -22,7 +22,7 @@ public abstract class FinanceRowHandler<T extends FinanceRowItem> {
 
     public abstract ProjectFinanceRow toProjectDomain(T costItem);
 
-    public abstract FinanceRowItem toResource(FinanceRow cost);
+    public abstract T toResource(FinanceRow cost);
 
     public abstract FinanceRowType getFinanceRowType();
 
@@ -30,7 +30,7 @@ public abstract class FinanceRowHandler<T extends FinanceRowItem> {
         ValidationUtil.isValid(bindingResult, costItem, (Class<?>[]) null);
     }
 
-    protected void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult, Class<?>... classes) {
+    protected void validate(@NotNull T costItem, @NotNull BindingResult bindingResult, Class<?>... classes) {
         ValidationUtil.isValid(bindingResult, costItem, classes);
     }
 

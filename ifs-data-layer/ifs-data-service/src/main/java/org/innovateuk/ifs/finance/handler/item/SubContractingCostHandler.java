@@ -33,7 +33,7 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
+    public SubContractingCost toResource(FinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
     }
 
@@ -42,7 +42,7 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
         return SUBCONTRACTING_COSTS;
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){
+    private SubContractingCost buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){
         String country = "";
         for(FinanceRowMetaValue costValue : financeRowMetaValues) {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle().equals(COST_FIELD_COUNTRY)) {

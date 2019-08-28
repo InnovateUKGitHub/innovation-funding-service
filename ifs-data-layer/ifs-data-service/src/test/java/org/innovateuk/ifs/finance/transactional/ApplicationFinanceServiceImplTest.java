@@ -32,8 +32,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler.COST_KEY;
-import static org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler.GRANT_CLAIM;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.junit.Assert.*;
@@ -142,7 +140,7 @@ public class ApplicationFinanceServiceImplTest extends BaseServiceUnitTest<Appli
 
         when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(costs);
 
-        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance, null)));
+        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, "", "", "", 20, BigDecimal.ZERO, applicationFinance, null)));
 
         ServiceResult<Boolean> result = service.organisationSeeksFunding(projectId, applicationId, organisationId);
 

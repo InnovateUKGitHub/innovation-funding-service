@@ -4,7 +4,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 
@@ -22,8 +21,7 @@ public interface ApplicationConfiguration {
 
     default boolean isMaximumFundingLevelConstant(OrganisationTypeEnum organisationType, boolean maximumFundingLevelOverridden) {
         return LOAN.equals(getFundingType()) ||
-                PROCUREMENT.equals(getFundingType()) ||
-                isH2020() ||
+                isFullyFunded() ||
                 !BUSINESS.equals(organisationType) ||
                 maximumFundingLevelOverridden;
     }

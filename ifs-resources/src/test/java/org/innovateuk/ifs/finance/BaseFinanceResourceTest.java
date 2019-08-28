@@ -67,11 +67,6 @@ public class BaseFinanceResourceTest {
     }
 
     @Test
-    public void getTotalFundingSought_NoGrantPercentageReturnsZero() {
-        assertEquals(baseFinanceResource.getTotalFundingSought(), BigDecimal.ZERO);
-    }
-
-    @Test
     public void getTotalFundingSought() {
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.handler.item;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.ProcurementOverhead;
 import org.springframework.stereotype.Component;
@@ -37,16 +36,12 @@ public class ProcurementsOverheadsHandler extends FinanceRowHandler<ProcurementO
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
-        return buildRowItem(cost);
+    public ProcurementOverhead toResource(FinanceRow cost) {
+        return new ProcurementOverhead(cost.getTarget().getId(), cost.getId(), cost.getQuantity(), cost.getCost(), cost.getItem(), cost.getName());
     }
 
     @Override
     public FinanceRowType getFinanceRowType() {
         return PROCUREMENT_OVERHEADS;
-    }
-
-    private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new ProcurementOverhead(cost.getTarget().getId(), cost.getId(), cost.getQuantity(), cost.getCost(), cost.getItem(), cost.getName());
     }
 }

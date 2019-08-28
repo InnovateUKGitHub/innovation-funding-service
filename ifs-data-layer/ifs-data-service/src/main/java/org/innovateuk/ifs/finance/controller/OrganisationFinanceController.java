@@ -306,10 +306,8 @@ public class OrganisationFinanceController {
 
     private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
         GrantClaim grantClaim = applicationFinance.getGrantClaim();
-        if (grantClaim != null) {
-            grantClaim.reset();
-            financeRowCostsService.update(grantClaim.getId(), grantClaim).getSuccess();
-        }
+        grantClaim.reset();
+        financeRowCostsService.update(grantClaim.getId(), grantClaim).getSuccess();
     }
 
     private ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, YearMonth financialYearEnd) {
