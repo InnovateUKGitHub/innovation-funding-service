@@ -179,6 +179,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         Optional<Organisation> leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId());
 
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
+
         ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project, process.getProcessState());
 
         return new ProjectStatusResource(
@@ -245,6 +246,13 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project, ProjectState processState) {
+
+        // Loan competitions will not have bank details so return complete
+        Competition competition = project.getApplication().getCompetition();
+        if (competition.isLoan()) {
+            return COMPLETE;
+        }
+
         // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
         boolean started = false;
