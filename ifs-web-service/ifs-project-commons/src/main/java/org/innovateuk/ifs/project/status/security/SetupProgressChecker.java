@@ -33,10 +33,6 @@ class SetupProgressChecker {
         return COMPLETE.equals(projectStatus.getBankDetailsStatus());
     }
 
-    public boolean isBankDetailsRequired() {
-        return !NOT_REQUIRED.equals(projectStatus.getBankDetailsStatus());
-    }
-
     public boolean isBankDetailsActionRequired() {
         return ACTION_REQUIRED.equals(projectStatus.getBankDetailsStatus());
     }
