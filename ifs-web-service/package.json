@@ -3,16 +3,8 @@
     "accessible-autocomplete": "^1.6.2",
     "compass-importer": "^0.4.1",
     "cryptiles": "^4.1.2",
-    "eslint": "^4.19.1",
     "files-exist": "^1.1.0",
     "govuk-frontend": "^2.13.0",
-    "gulp": "^4.0.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-replace": "^1.0.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-sass-lint": "^1.4.0",
-    "gulp-standard": "^11.0.0",
-    "gulp-uglify": "^3.0.0",
     "html5shiv": "^3.7.3",
     "http-proxy-agent": "^2.1.0",
     "jquery": "^1.12.4",
@@ -24,7 +16,15 @@
     "tablesorter": "^2.31.1"
   },
   "devDependencies": {
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-replace": "^1.0.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-sass-lint": "^1.4.0",
+    "gulp-standard": "^11.0.0",
+    "gulp-uglify": "^3.0.0",
+    "eslint": "^4.19.1"
   },
   "engines": {
     "node": "^8.11.1"
