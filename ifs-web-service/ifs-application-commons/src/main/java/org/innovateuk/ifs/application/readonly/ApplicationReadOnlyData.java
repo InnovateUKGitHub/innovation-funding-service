@@ -28,7 +28,7 @@ public class ApplicationReadOnlyData {
 
     private final CompetitionResource competition;
     private final ApplicationResource application;
-    private final UserResource modelUser;
+    private final UserResource user;
     private final Optional<ProcessRoleResource> applicantProcessRole;
 
     private final Map<Long, QuestionResource> questionIdToQuestion;
@@ -41,10 +41,10 @@ public class ApplicationReadOnlyData {
     private final Multimap<Long, AssessorFormInputResponseResource> questionToAssessorResponse;
 
 
-    public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition, UserResource modelUser, Optional<ProcessRoleResource> applicantProcessRole, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses, List<QuestionStatusResource> questionStatuses, List<AssessorFormInputResponseResource> assessorResponses) {
+    public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition, UserResource user, Optional<ProcessRoleResource> applicantProcessRole, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses, List<QuestionStatusResource> questionStatuses, List<AssessorFormInputResponseResource> assessorResponses) {
         this.application = application;
         this.competition = competition;
-        this.modelUser = modelUser;
+        this.user = user;
         this.applicantProcessRole = applicantProcessRole;
 
         this.questionIdToQuestion = questions.stream()
@@ -68,8 +68,8 @@ public class ApplicationReadOnlyData {
         return application;
     }
 
-    public UserResource getModelUser() {
-        return modelUser;
+    public UserResource getUser() {
+        return user;
     }
 
     public CompetitionResource getCompetition() {
@@ -111,7 +111,7 @@ public class ApplicationReadOnlyData {
         return new EqualsBuilder()
                 .append(competition, that.competition)
                 .append(application, that.application)
-                .append(modelUser, that.modelUser)
+                .append(user, that.user)
                 .append(applicantProcessRole, that.applicantProcessRole)
                 .append(questionIdToQuestion, that.questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs, that.questionIdToApplicationFormInputs)
@@ -126,7 +126,7 @@ public class ApplicationReadOnlyData {
         return new HashCodeBuilder(17, 37)
                 .append(competition)
                 .append(application)
-                .append(modelUser)
+                .append(user)
                 .append(applicantProcessRole)
                 .append(questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs)

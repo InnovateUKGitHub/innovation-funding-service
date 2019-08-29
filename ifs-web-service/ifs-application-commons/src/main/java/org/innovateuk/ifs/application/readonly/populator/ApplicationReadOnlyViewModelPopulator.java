@@ -23,9 +23,9 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -144,8 +144,13 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         if (!settings.isIncludeStatuses()) {
             return emptyList();
         }
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
-        return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();
+        long organisationId;
+        if (user.hasRole(Role.APPLICANT)) {
+            organisationId = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess().getId();
+        } else {
+            organisationId = application.getLeadOrganisationId();
+        }
+        return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisationId).getSuccess();
     }
 
     private List<AssessorFormInputResponseResource> getAssessmentResponses(ApplicationReadOnlySettings settings) {

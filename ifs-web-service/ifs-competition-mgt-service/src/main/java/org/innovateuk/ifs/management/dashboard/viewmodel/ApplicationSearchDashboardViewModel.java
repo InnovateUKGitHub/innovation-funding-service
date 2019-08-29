@@ -21,14 +21,11 @@ public class ApplicationSearchDashboardViewModel {
 
     private final String searchString;
 
-    private final boolean isSupport;
-
-    public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, Pagination applicationPagination, String searchString, boolean isSupport) {
+    public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, Pagination applicationPagination, String searchString) {
         this.applications = applications;
         this.applicationCount = applicationCount;
         this.applicationPagination = applicationPagination;
         this.searchString = searchString;
-        this.isSupport = isSupport;
     }
 
     public List<ApplicationResource> getApplications() {
@@ -52,10 +49,6 @@ public class ApplicationSearchDashboardViewModel {
         return StringUtils.isNotBlank(searchString);
     }
 
-    public boolean isSupport() {
-        return isSupport;
-    }
-
     public boolean isInProgress(ApplicationResource application) {
         return !application.isSubmitted();
     }
@@ -72,7 +65,6 @@ public class ApplicationSearchDashboardViewModel {
                 .append(applications, viewModel.applications)
                 .append(applicationPagination, viewModel.applicationPagination)
                 .append(searchString, viewModel.searchString)
-                .append(isSupport, viewModel.isSupport)
                 .isEquals();
     }
 
@@ -83,7 +75,6 @@ public class ApplicationSearchDashboardViewModel {
                 .append(applicationCount)
                 .append(applicationPagination)
                 .append(searchString)
-                .append(isSupport)
                 .toHashCode();
     }
 }

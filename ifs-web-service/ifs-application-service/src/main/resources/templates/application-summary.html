@@ -11,8 +11,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:if="${model.support}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='All Applications',linkUrl=@{/management/competition/{competitionId}/applications/all(competitionId=${model.competition.id})}"/>
-            <th:block th:unless="${model.support}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, dynamicBackLink=${true}"/>
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, dynamicBackLink=${true}"/>
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block>
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${model.application.name},size='govuk-heading-xl'" />
@@ -65,11 +64,6 @@
                                 <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
                             </th:block>
                         </dl>
-                        <th:block th:if="${model.support}">
-                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application progress</h2>
-                            <div th:include="fragments/elements :: progress-indicator"
-                                 th:with="percentage=${model.application.completion.intValue()},size='medium'" class="govuk-!-margin-top-6"/>
-                        </th:block>
                     </div>
                 </div>
 
