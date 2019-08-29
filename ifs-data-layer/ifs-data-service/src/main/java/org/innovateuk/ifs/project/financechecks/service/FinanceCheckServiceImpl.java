@@ -160,22 +160,15 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
 
-        return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
-
-            financeService.financeDetails(application.getId(), organisationId).
-                    andOnSuccessReturn(applicationFinanceResource -> {
-
-                        BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage());
-                        BigDecimal fundingSought = projectFinance.getTotal().multiply(grantPercentage).divide(percentDivisor);
-                        return new FinanceCheckEligibilityResource(project.getId(),
+        return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
+                        new FinanceCheckEligibilityResource(project.getId(),
                                 organisationId,
                                 application.getDurationInMonths(),
                                 projectFinance.getTotal(),
-                                grantPercentage,
-                                fundingSought,
+                                BigDecimal.valueOf(projectFinance.getGrantClaimPercentage()),
+                                projectFinance.getTotalFundingSought(),
                                 projectFinance.getTotalOtherFunding(),
-                                projectFinance.getTotal().subtract(fundingSought).subtract(projectFinance.getTotalOtherFunding()));
-                    })
+                                projectFinance.getTotalContribution())
         );
     }
 
