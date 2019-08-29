@@ -11,7 +11,6 @@ import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -51,12 +50,7 @@ public abstract class RootUnitTestMocksTest extends BaseTest {
     protected FileTemplateRenderer rendererMock;
 
     @Mock
-    protected FinanceUtil financeUtilMock;
-
-
-    @Mock
     protected LoggedInUserSupplier loggedInUserSupplierMock;
-
 
     @Before
     public void setupMockInjection() {

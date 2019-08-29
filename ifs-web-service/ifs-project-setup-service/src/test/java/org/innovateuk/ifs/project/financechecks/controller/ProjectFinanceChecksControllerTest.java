@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.financechecks.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -32,7 +32,6 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -92,9 +91,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     @Mock
     private UserAuthenticationService userAuthenticationService;
-
-    @Mock
-    private FinanceUtil financeUtil;
 
     @Mock
     private FinanceChecksEligibilityProjectCostsFormPopulator formPopulator;

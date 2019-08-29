@@ -20,7 +20,6 @@ import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileView
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.status.StatusService;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -73,9 +72,6 @@ public class ProjectSpendProfileController {
     @Autowired
     @Qualifier("spendProfileCostValidator")
     private SpendProfileCostValidator spendProfileCostValidator;
-
-    @Autowired
-    private FinanceUtil financeUtil;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -296,7 +292,7 @@ public class ProjectSpendProfileController {
 
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition, organisationResource.getOrganisationType());
+        boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisationResource.getOrganisationTypeEnum());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
 

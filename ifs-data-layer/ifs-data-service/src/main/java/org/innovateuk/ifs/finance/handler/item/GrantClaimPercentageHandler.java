@@ -5,7 +5,6 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.validator.GrantClaimPercentageValidator;
@@ -25,8 +24,8 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
  */
 @Component
 public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPercentage> {
-    public static final String GRANT_CLAIM = "Grant Claim";
-    public static final String COST_KEY = "grant-claim";
+    private static final String GRANT_CLAIM = "Grant Claim";
+    private static final String COST_KEY = "grant-claim";
 
     @Autowired
     private GrantClaimPercentageValidator grantClaimValidator;
@@ -48,17 +47,13 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
-        return buildRowItem(cost);
+    public GrantClaimPercentage toResource(FinanceRow cost) {
+        return new GrantClaimPercentage(cost.getId(), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override
     public FinanceRowType getFinanceRowType() {
         return FINANCE;
-    }
-
-    private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new GrantClaimPercentage(cost.getId(), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override

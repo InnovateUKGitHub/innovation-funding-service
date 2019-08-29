@@ -1,4 +1,4 @@
--- Update new finance row type
+-- IFS-6207 Update new finance row type
 
 ALTER TABLE finance_row MODIFY COLUMN type enum (
     'LABOUR',

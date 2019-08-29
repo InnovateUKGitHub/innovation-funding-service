@@ -140,20 +140,14 @@ public abstract class BaseFinanceResource {
     }
 
     @JsonIgnore
-    public Integer getGrantClaimPercentage() {
+    public int getGrantClaimPercentage() {
         GrantClaim grantClaim = getGrantClaim();
-        if (grantClaim == null) {
-            return 0;
-        }
         return grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
     }
 
     @JsonIgnore
     public BigDecimal getTotalFundingSought() {
         GrantClaim grantClaim = getGrantClaim();
-        if (grantClaim == null) {
-            return BigDecimal.ZERO;
-        }
         return grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
                 .max(BigDecimal.ZERO);
     }
@@ -193,6 +187,7 @@ public abstract class BaseFinanceResource {
         return total;
     }
 
+    @JsonIgnore
     public boolean isVatRegistered() {
         if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {
             FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.VAT);
