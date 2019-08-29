@@ -35,10 +35,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyListOf;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -117,8 +114,6 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
         assertEquals("sector", viewModel.getInnovationSector());
         assertEquals(false, viewModel.isCompetitionCanHaveProjects());
         assertEquals(true, viewModel.isIfsAdmin());
-        assertEquals(statusResource, viewModel.getCompetitionProjectsStatusResource());
-        assertNotNull(viewModel.getStatusPermissions());
     }
 
     @Test

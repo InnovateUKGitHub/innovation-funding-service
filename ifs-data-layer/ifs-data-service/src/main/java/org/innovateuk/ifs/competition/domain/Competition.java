@@ -15,7 +15,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.project.internal.ProjectSetupColumn;
+import org.innovateuk.ifs.project.internal.ProjectSetupStages;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -163,11 +163,11 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     @Enumerated(EnumType.STRING)
     private Set<FinanceRowType> financeRowTypes = new HashSet<>();
 
-    @ElementCollection(targetClass = ProjectSetupColumn.class)
+    @ElementCollection(targetClass = ProjectSetupStages.class)
     @JoinTable(name = "competition_project_setup_columns", joinColumns = @JoinColumn(name = "competition_id"))
     @Column(name = "project_setup_column", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Set<ProjectSetupColumn> projectSetupColumns = new LinkedHashSet<>();
+    private Set<ProjectSetupStages> projectSetupStages = new LinkedHashSet<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionTermsFileEntryId", referencedColumnName = "id")
@@ -234,12 +234,12 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         this.financeRowTypes = financeRowTypes;
     }
 
-    public Set<ProjectSetupColumn> getProjectSetupColumns() {
-        return projectSetupColumns;
+    public Set<ProjectSetupStages> getProjectSetupStages() {
+        return projectSetupStages;
     }
 
-    public void setProjectSetupColumns(Set<ProjectSetupColumn> projectSetupColumns) {
-        this.projectSetupColumns = projectSetupColumns;
+    public void setProjectSetupStages(Set<ProjectSetupStages> projectSetupStages) {
+        this.projectSetupStages = projectSetupStages;
     }
 
     public List<Section> getSections() {

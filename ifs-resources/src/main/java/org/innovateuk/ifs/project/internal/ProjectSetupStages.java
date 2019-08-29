@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.internal;
 
-public enum ProjectSetupColumn {
+public enum ProjectSetupStages {
     PROJECT_DETAILS("Project details"),
     PROJECT_TEAM("Project team"),
     DOCUMENTS("Documents"),
@@ -12,7 +12,7 @@ public enum ProjectSetupColumn {
 
     private String columnName;
 
-    ProjectSetupColumn(String columnName) {
+    ProjectSetupStages(String columnName) {
         this.columnName = columnName;
     }
 

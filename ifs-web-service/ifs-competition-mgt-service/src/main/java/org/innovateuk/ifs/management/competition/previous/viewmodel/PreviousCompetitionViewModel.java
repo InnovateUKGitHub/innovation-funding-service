@@ -4,16 +4,13 @@ import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
-import org.innovateuk.ifs.project.status.security.StatusPermission;
-import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusTableViewModel;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
-public class PreviousCompetitionViewModel implements CompetitionStatusTableViewModel {
+public class PreviousCompetitionViewModel {
 
     private final long competitionId;
     private final String competitionName;
@@ -26,9 +23,8 @@ public class PreviousCompetitionViewModel implements CompetitionStatusTableViewM
 
     private final List<PreviousApplicationResource> applications;
     private final CompetitionProjectsStatusResource competitionProjectsStatusResource;
-    private Map<Long, StatusPermission> statusPermissions;
 
-    public PreviousCompetitionViewModel(CompetitionResource competition, List<PreviousApplicationResource> applications, CompetitionProjectsStatusResource competitionProjectsStatusResource, Map<Long, StatusPermission> statusPermissions, boolean ifsAdmin) {
+    public PreviousCompetitionViewModel(CompetitionResource competition, List<PreviousApplicationResource> applications, CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean ifsAdmin) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.competitionType = competition.getCompetitionTypeName();
@@ -38,7 +34,6 @@ public class PreviousCompetitionViewModel implements CompetitionStatusTableViewM
         this.competitionCanHaveProjects = CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage());
         this.applications = applications;
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
-        this.statusPermissions = statusPermissions;
         this.ifsAdmin = ifsAdmin;
     }
 
@@ -78,23 +73,8 @@ public class PreviousCompetitionViewModel implements CompetitionStatusTableViewM
         return competitionCanHaveProjects;
     }
 
-    @Override
     public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
         return competitionProjectsStatusResource;
     }
 
-    @Override
-    public Map<Long, StatusPermission> getStatusPermissions() {
-        return statusPermissions;
-    }
-
-    @Override
-    public boolean isCanExportBankDetails() {
-        return false;
-    }
-
-    @Override
-    public String getEmptyTableText() {
-        return "There are currently no completed projects in this competition.";
-    }
 }

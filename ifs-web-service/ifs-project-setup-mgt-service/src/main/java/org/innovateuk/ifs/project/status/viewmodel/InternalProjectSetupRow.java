@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
-import org.innovateuk.ifs.project.internal.ProjectSetupColumn;
+import org.innovateuk.ifs.project.internal.ProjectSetupStages;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.util.Map;
@@ -15,9 +15,9 @@ public class InternalProjectSetupRow {
     private String projectLeadOrganisationName;
     private Long projectId;
 
-    private Map<ProjectSetupColumn, InternalProjectSetupCell> states;
+    private Map<ProjectSetupStages, InternalProjectSetupCell> states;
 
-    public InternalProjectSetupRow(String projectName, Long applicationNumber, ProjectState projectState, int numberOfPartners, long competitionId, String projectLeadOrganisationName, Long projectId, Map<ProjectSetupColumn, InternalProjectSetupCell> states) {
+    public InternalProjectSetupRow(String projectName, Long applicationNumber, ProjectState projectState, int numberOfPartners, long competitionId, String projectLeadOrganisationName, Long projectId, Map<ProjectSetupStages, InternalProjectSetupCell> states) {
         this.projectName = projectName;
         this.applicationNumber = applicationNumber;
         this.projectState = projectState;
@@ -56,7 +56,7 @@ public class InternalProjectSetupRow {
         return projectId;
     }
 
-    public Map<ProjectSetupColumn, InternalProjectSetupCell> getStates() {
+    public Map<ProjectSetupStages, InternalProjectSetupCell> getStates() {
         return states;
     }
 }

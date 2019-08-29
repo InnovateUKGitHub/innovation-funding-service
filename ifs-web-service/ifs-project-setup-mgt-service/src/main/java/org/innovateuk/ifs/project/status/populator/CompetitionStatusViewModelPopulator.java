@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.project.internal.ProjectSetupColumn;
+import org.innovateuk.ifs.project.internal.ProjectSetupStages;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
@@ -22,8 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.project.internal.ProjectSetupColumn.*;
-import static org.innovateuk.ifs.project.status.security.StatusHelper.projectStatusPermissions;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStages.*;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
@@ -56,18 +55,19 @@ public class CompetitionStatusViewModelPopulator {
         long pendingSpendProfilesCount = hasProjectFinanceRole ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess() : 0;
         CompetitionProjectsStatusResource competitionProjectsStatus = statusRestService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).getSuccess();
 
-        List<InternalProjectSetupRow> internalProjectSetupRows = getProjectRows(competitionProjectsStatus, competition.getProjectSetupColumns(), user);
+        List<InternalProjectSetupRow> internalProjectSetupRows = getProjectRows(competitionProjectsStatus, competition.getProjectSetupStages(), user);
 
-        return new CompetitionStatusViewModel(competitionProjectsStatus,
+        return new CompetitionStatusViewModel(
+                competitionId,
+                competition.getName(),
                 hasProjectFinanceRole,
-                projectStatusPermissions(user, competitionProjectsStatus),
                 openQueryCount,
                 pendingSpendProfilesCount,
                 applicationSearchString,
                 internalProjectSetupRows);
     }
 
-    private List<InternalProjectSetupRow> getProjectRows(CompetitionProjectsStatusResource competitionProjectsStatus, Set<ProjectSetupColumn> columns, UserResource user) {
+    private List<InternalProjectSetupRow> getProjectRows(CompetitionProjectsStatusResource competitionProjectsStatus, Set<ProjectSetupStages> columns, UserResource user) {
         return competitionProjectsStatus.getProjectStatusResources().stream()
                 .map(status -> new InternalProjectSetupRow(
                         status.getProjectTitle(),
@@ -81,8 +81,8 @@ public class CompetitionStatusViewModelPopulator {
                 )).collect(Collectors.toList());
     }
 
-    private Map<ProjectSetupColumn, InternalProjectSetupCell> getProjectActivityStatesMap(ProjectStatusResource status, Set<ProjectSetupColumn> columns, UserResource user, long competitionId) {
-        Map<ProjectSetupColumn, InternalProjectSetupCell> activityStates = new LinkedHashMap<>();
+    private Map<ProjectSetupStages, InternalProjectSetupCell> getProjectActivityStatesMap(ProjectStatusResource status, Set<ProjectSetupStages> columns, UserResource user, long competitionId) {
+        Map<ProjectSetupStages, InternalProjectSetupCell> activityStates = new LinkedHashMap<>();
 
         SetupSectionInternalUser setupSectionInternalUser = new SetupSectionInternalUser(status);
 

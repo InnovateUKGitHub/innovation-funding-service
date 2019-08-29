@@ -2,11 +2,11 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="status-table(model)">
-    <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
+    <th:block th:if="${#lists.isEmpty(model.rows) && param.applicationSearchString == null}">
         <p class="govuk-body" th:text="${model.emptyTableText}"></p>
     </th:block>
 
-    <th:block th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
+    <th:block th:unless="${#lists.isEmpty(model.rows)}">
         <div class="table-overflow">
             <table id="table-project-status" class="govuk-table icon-table">
                 <thead class="govuk-table__head">

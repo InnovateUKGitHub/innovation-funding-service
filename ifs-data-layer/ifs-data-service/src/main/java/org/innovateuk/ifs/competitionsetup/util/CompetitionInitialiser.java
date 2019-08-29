@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import java.util.EnumSet;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
-import static org.innovateuk.ifs.project.internal.ProjectSetupColumn.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStages.*;
 
 public final class CompetitionInitialiser {
 
@@ -76,7 +76,7 @@ public final class CompetitionInitialiser {
     }
 
     private static void addDefaultProjectSetupColumns(Competition competition) {
-        competition.getProjectSetupColumns().addAll(EnumSet.of(
+        competition.getProjectSetupStages().addAll(EnumSet.of(
                 PROJECT_DETAILS,
                 PROJECT_TEAM,
                 DOCUMENTS,
@@ -89,7 +89,7 @@ public final class CompetitionInitialiser {
     }
 
     private static void addLoanProjectSetupColumns(Competition competition) {
-        competition.getProjectSetupColumns().addAll(EnumSet.of(
+        competition.getProjectSetupStages().addAll(EnumSet.of(
                 PROJECT_DETAILS,
                 PROJECT_TEAM,
                 DOCUMENTS,
