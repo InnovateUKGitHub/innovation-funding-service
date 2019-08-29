@@ -17,14 +17,13 @@ public class ApplicationFinanceTest {
     public void setUp() {
         organisation = new Organisation("Worth Internet Systems");
         application = new Application();
-        workPostcode = new ApplicationFinance().getWorkPostcode();
-        applicationFinance = new ApplicationFinance(application, organisation, workPostcode);
+        applicationFinance = new ApplicationFinance(application, organisation);
     }
 
     @Test
     public void constructorsShouldCreateInstancesOnValidInput() {
         new ApplicationFinance();
-        new ApplicationFinance(application, organisation, workPostcode);
+        new ApplicationFinance(application, organisation);
     }
 
     @Test

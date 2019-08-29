@@ -32,9 +32,9 @@ public class ApplicationResourceTest {
         competition.setId(1L);
 
         applicationFinances = new ArrayList<>();
-        applicationFinances.add(new ApplicationFinance(null, null, null));
-        applicationFinances.add(new ApplicationFinance(null, null, null));
-        applicationFinances.add(new ApplicationFinance(null, null, null));
+        applicationFinances.add(new ApplicationFinance(null, null));
+        applicationFinances.add(new ApplicationFinance(null, null));
+        applicationFinances.add(new ApplicationFinance(null, null));
 
         processRoles = newProcessRole().build(3);
 
