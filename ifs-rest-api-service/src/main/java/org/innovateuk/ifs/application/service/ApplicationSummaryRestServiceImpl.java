@@ -157,6 +157,11 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
     }
 
     @Override
+    public RestResult<ApplicationTeamResource> getApplicationTeam(long applicationId) {
+        return getWithRestResult(applicationSummaryRestUrl + "/application-team/" + applicationId, ApplicationTeamResource.class);
+    }
+
+    @Override
     public RestResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId) {
         return getWithRestResult(String.format("%s/find-by-competition/%d/previous", applicationSummaryRestUrl, competitionId), previousApplicationResourceListType());
     }
