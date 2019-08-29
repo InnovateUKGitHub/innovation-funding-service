@@ -33,9 +33,11 @@ public class ApplicationReadOnlyData {
 
     private final Map<Long, QuestionResource> questionIdToQuestion;
     private final Multimap<Long, FormInputResource> questionIdToApplicationFormInputs;
-    private final Map<Long, FormInputResource> formInputIdToAsessorFormInput;
+    private final Map<Long, FormInputResource> formInputIdToAssessorFormInput;
     private final Map<Long, FormInputResponseResource> formInputIdToFormInputResponses;
+    /* only included if ApplicationReadOnlySettings for isIncludeStatuses is set. */
     private final Multimap<Long, QuestionStatusResource> questionToQuestionStatus;
+    /* only included if ApplicationReadOnlySettings for assessmentId is set. */
     private final Multimap<Long, AssessorFormInputResponseResource> questionToAssessorResponse;
 
 
@@ -49,7 +51,7 @@ public class ApplicationReadOnlyData {
                 .collect(toMap(QuestionResource::getId, Function.identity()));
         this.questionIdToApplicationFormInputs = Multimaps.index(formInputs.stream().filter(input -> APPLICATION.equals(input.getScope())).collect(Collectors.toSet()),
                 FormInputResource::getQuestion);
-        this.formInputIdToAsessorFormInput = formInputs.stream()
+        this.formInputIdToAssessorFormInput = formInputs.stream()
                 .filter(input -> ASSESSMENT.equals(input.getScope()))
                 .collect(toMap(FormInputResource::getId, Function.identity()));
         this.formInputIdToFormInputResponses = formInputResponses.stream()
@@ -82,8 +84,8 @@ public class ApplicationReadOnlyData {
         return formInputIdToFormInputResponses;
     }
 
-    public Map<Long, FormInputResource> getFormInputIdToAsessorFormInput() {
-        return formInputIdToAsessorFormInput;
+    public Map<Long, FormInputResource> getFormInputIdToAssessorFormInput() {
+        return formInputIdToAssessorFormInput;
     }
 
     public Multimap<Long, QuestionStatusResource> getQuestionToQuestionStatus() {

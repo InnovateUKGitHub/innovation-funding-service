@@ -60,12 +60,12 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
             feedback = responses.flatMap(resps ->
                     resps.stream()
-                            .filter(resp -> data.getFormInputIdToAsessorFormInput().get(resp.getFormInput()).getType().equals(TEXTAREA))
+                            .filter(resp -> data.getFormInputIdToAssessorFormInput().get(resp.getFormInput()).getType().equals(TEXTAREA))
                             .findAny());
 
             score = responses.flatMap(resps ->
                     resps.stream()
-                            .filter(resp -> data.getFormInputIdToAsessorFormInput().get(resp.getFormInput()).getType().equals(ASSESSOR_SCORE))
+                            .filter(resp -> data.getFormInputIdToAssessorFormInput().get(resp.getFormInput()).getType().equals(ASSESSOR_SCORE))
                             .findAny());
         }
 

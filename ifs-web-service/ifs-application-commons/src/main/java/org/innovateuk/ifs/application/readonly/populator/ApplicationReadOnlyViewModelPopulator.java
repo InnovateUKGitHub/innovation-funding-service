@@ -136,19 +136,16 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         }
     }
 
+    private Optional<ProcessRoleResource> getProcessRole(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
+        return userRestService.findProcessRole(user.getId(), application.getId()).getOptionalSuccessObject();
+    }
+
     private List<QuestionStatusResource> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
         if (!settings.isIncludeStatuses()) {
             return emptyList();
         }
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
         return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();
-    }
-
-    private Optional<ProcessRoleResource> getProcessRole(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
-        if (!settings.isIncludeQuestionLinks()) {
-            return Optional.empty();
-        }
-        return userRestService.findProcessRole(user.getId(), application.getId()).getOptionalSuccessObject();
     }
 
     private List<AssessorFormInputResponseResource> getAssessmentResponses(ApplicationReadOnlySettings settings) {
