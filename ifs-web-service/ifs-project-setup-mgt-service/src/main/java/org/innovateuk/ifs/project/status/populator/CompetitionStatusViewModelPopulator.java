@@ -4,12 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.internal.ProjectSetupColumn;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
-import org.innovateuk.ifs.project.status.viewmodel.InternalProjectSetupColumn;
+import org.innovateuk.ifs.project.status.viewmodel.InternalProjectSetupCell;
 import org.innovateuk.ifs.project.status.viewmodel.InternalProjectSetupRow;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,11 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.project.internal.ProjectSetupColumn.*;
 import static org.innovateuk.ifs.project.status.security.StatusHelper.projectStatusPermissions;
-import static org.innovateuk.ifs.project.status.viewmodel.InternalProjectSetupColumn.*;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
@@ -55,8 +56,7 @@ public class CompetitionStatusViewModelPopulator {
         long pendingSpendProfilesCount = hasProjectFinanceRole ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess() : 0;
         CompetitionProjectsStatusResource competitionProjectsStatus = statusRestService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).getSuccess();
 
-        List<InternalProjectSetupColumn> columns = asList(PROJECT_DETAILS, PROJECT_TEAM, DOCUMENTS, MONITORING_OFFICER, FINANCE_CHECKS, SPEND_PROFILE);
-        List<InternalProjectSetupRow> internalProjectSetupRows = getProjectRows(competitionProjectsStatus, columns);
+        List<InternalProjectSetupRow> internalProjectSetupRows = getProjectRows(competitionProjectsStatus, competition.getProjectSetupColumns(), user);
 
         return new CompetitionStatusViewModel(competitionProjectsStatus,
                 hasProjectFinanceRole,
@@ -64,13 +64,10 @@ public class CompetitionStatusViewModelPopulator {
                 openQueryCount,
                 pendingSpendProfilesCount,
                 applicationSearchString,
-                !competition.isLoan(),
-//                asList(InternalProjectSetupColumn.values()),
-                columns,
                 internalProjectSetupRows);
     }
 
-    private List<InternalProjectSetupRow> getProjectRows(CompetitionProjectsStatusResource competitionProjectsStatus, List<InternalProjectSetupColumn> columns) {
+    private List<InternalProjectSetupRow> getProjectRows(CompetitionProjectsStatusResource competitionProjectsStatus, Set<ProjectSetupColumn> columns, UserResource user) {
         return competitionProjectsStatus.getProjectStatusResources().stream()
                 .map(status -> new InternalProjectSetupRow(
                         status.getProjectTitle(),
@@ -80,39 +77,80 @@ public class CompetitionStatusViewModelPopulator {
                         competitionProjectsStatus.getCompetitionNumber(),
                         status.getProjectLeadOrganisationName(),
                         status.getProjectNumber(),
-                        getProjectActivityStatesMap(status, columns)
+                        getProjectActivityStatesMap(status, columns, user, competitionProjectsStatus.getCompetitionNumber())
                 )).collect(Collectors.toList());
     }
 
-    private Map<String, ProjectActivityStates> getProjectActivityStatesMap(ProjectStatusResource status, List<InternalProjectSetupColumn> columns) {
-        Map<String, ProjectActivityStates> activityStates = new LinkedHashMap<>();
+    private Map<ProjectSetupColumn, InternalProjectSetupCell> getProjectActivityStatesMap(ProjectStatusResource status, Set<ProjectSetupColumn> columns, UserResource user, long competitionId) {
+        Map<ProjectSetupColumn, InternalProjectSetupCell> activityStates = new LinkedHashMap<>();
+
+        SetupSectionInternalUser setupSectionInternalUser = new SetupSectionInternalUser(status);
 
         if (columns.contains(PROJECT_DETAILS)) {
-            activityStates.put("project-details", status.getProjectDetailsStatus());
+            activityStates.put(PROJECT_DETAILS,
+                    new InternalProjectSetupCell(
+                            status.getProjectDetailsStatus(),
+                            String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/details"),
+                            setupSectionInternalUser.canAccessProjectDetailsSection(user)
+                    ));
         }
         if (columns.contains(PROJECT_TEAM)) {
-            activityStates.put("project-team", status.getProjectTeamStatus());
+            activityStates.put(PROJECT_TEAM,
+                    new InternalProjectSetupCell(
+                            status.getProjectTeamStatus(),
+                            String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/team"),
+                            setupSectionInternalUser.canAccessProjectDetailsSection(user)
+                    ));
         }
         if (columns.contains(DOCUMENTS)) {
-            activityStates.put("documents", status.getDocumentsStatus());
+            activityStates.put(DOCUMENTS,
+                    new InternalProjectSetupCell(
+                            status.getDocumentsStatus(),
+                            String.format("/project-setup-management/project/" + status.getProjectNumber() + "/document/all"),
+                            setupSectionInternalUser.canAccessDocumentsSection(user)
+                    ));
         }
         if (columns.contains(MONITORING_OFFICER)) {
-            activityStates.put("MO", status.getMonitoringOfficerStatus());
+            activityStates.put(MONITORING_OFFICER,
+                    new InternalProjectSetupCell(
+                            status.getMonitoringOfficerStatus(),
+                            String.format("/project-setup-management/project/" + status.getProjectNumber() + "/monitoring-officer"),
+                            setupSectionInternalUser.canAccessMonitoringOfficerSection(user)
+                    ));
         }
         if (columns.contains(BANK_DETAILS)) {
-            activityStates.put("bank-details", status.getBankDetailsStatus());
+            activityStates.put(BANK_DETAILS,
+                    new InternalProjectSetupCell(
+                            status.getBankDetailsStatus(),
+                            String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/review-all-bank-details"),
+                            setupSectionInternalUser.canAccessBankDetailsSection(user)
+                    ));
         }
         if (columns.contains(FINANCE_CHECKS)) {
-            activityStates.put("finance-checks", status.getFinanceChecksStatus());
+            activityStates.put(FINANCE_CHECKS,
+                    new InternalProjectSetupCell(
+                            status.getFinanceChecksStatus(),
+                            String.format("/project-setup-management/project/" + status.getProjectNumber() + "/finance-check"),
+                            setupSectionInternalUser.canAccessFinanceChecksSection(user)
+                    ));
         }
         if (columns.contains(SPEND_PROFILE)) {
-            activityStates.put("spend-profile", status.getSpendProfileStatus());
+            activityStates.put(SPEND_PROFILE,
+                    new InternalProjectSetupCell(
+                            status.getSpendProfileStatus(),
+                            String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/spend-profile/approval"),
+                            setupSectionInternalUser.canAccessSpendProfileSection(user)
+                    ));
         }
         if (columns.contains(GRANT_OFFER_LETTER)) {
-            activityStates.put("GOL", status.getGrantOfferLetterStatus());
+            activityStates.put(GRANT_OFFER_LETTER,
+                    new InternalProjectSetupCell(
+                            status.getGrantOfferLetterStatus(),
+                            String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/grant-offer-letter/send'"),
+                            setupSectionInternalUser.canAccessGrantOfferLetterSection(user)
+                    ));
         }
 
         return activityStates;
     }
-
 }

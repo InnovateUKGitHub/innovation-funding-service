@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.internal.ProjectSetupColumn;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -106,6 +107,7 @@ public class CompetitionResource {
     private CompetitionCompletionStage completionStage;
     private FundingType fundingType;
     private Set<FinanceRowType> financeRowTypes;
+    private Set<ProjectSetupColumn> projectSetupColumns;
     private FileEntryResource competitionTerms;
 
     public CompetitionResource() {
@@ -191,6 +193,14 @@ public class CompetitionResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
+    }
+
+    public Set<ProjectSetupColumn> getProjectSetupColumns() {
+        return projectSetupColumns;
+    }
+
+    public void setProjectSetupColumns(Set<ProjectSetupColumn> projectSetupColumns) {
+        this.projectSetupColumns = projectSetupColumns;
     }
 
     public Set<FinanceRowType> getFinanceRowTypes() {

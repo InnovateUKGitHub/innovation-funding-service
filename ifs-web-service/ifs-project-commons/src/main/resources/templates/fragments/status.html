@@ -13,7 +13,7 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Project</th>
                     <th:block th:each="column : ${model.columns}">
-                        <th class="govuk-table__header status" scope="col" th:text="${column.name}">column name</th>
+                        <th class="govuk-table__header status" scope="col" th:text="${column.columnName}">column name</th>
                     </th:block>
                 </tr>
                 </thead>
@@ -49,7 +49,7 @@
                     </th>
 
                     <th:block th:each="state : ${row.states}">
-                        <th:block th:insert="fragments/status :: project-status-table(${state.getValue().toString()}, ${state.getKey()}, ${row.getProjectState().isActive()})" th:with="url=${'/project-setup-management/competition/' + row.competitionId + '/project/' + row.projectId + '/details'}" />
+                        <th:block th:insert="fragments/status :: project-status-table(${state.getValue().getProjectActivityState().toString()}, ${state.getKey().columnName}, ${row.getProjectState().isActive()})" th:with="access=${state.getValue().isCanBeAccessed()},url=${state.getValue().getUrl()}" />
                     </th:block>
                 </tr>
                 </tbody>
@@ -61,28 +61,28 @@
 <th:block th:fragment="project-status-table(status, columnType, isActive)">
     <th:block th:switch="${status}">
         <td th:case="'VIEW'" class="govuk-table__cell status">
-            <th:block th:if="${url}">
+            <th:block th:if="${access}">
                 <a th:href="${url}" class="govuk-link">View</a>
             </th:block>
         </td>
         <td th:case="'COMPLETE'" class="govuk-table__cell status ok">
-            <th:block th:if="${url}">
+            <th:block th:if="${access}">
                 <a th:href="${url}" class="govuk-link">
                     <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
                 </a>
             </th:block>
-            <th:block th:unless="${url}">
+            <th:block th:unless="${access}">
                 <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
             </th:block>
         </td>
         <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
-            <th:block th:if="${url}">
+            <th:block th:if="${access}">
                 <a th:href="${url}" class="govuk-link">
                     <th:block th:if="${columnType == 'MO'}">Assign</th:block>
                     <th:block th:unless="${columnType == 'MO'}">Review</th:block>
                 </a>
             </th:block>
-            <th:block th:unless="${url}">
+            <th:block th:unless="${access}">
                 <th:block th:if="${columnType == 'MO'}">Assign</th:block>
                 <th:block th:unless="${columnType == 'MO'}">Review</th:block>
             </th:block>
@@ -94,20 +94,20 @@
             <span class="govuk-visually-hidden">Not required for this partner</span>
         </td>
         <td th:case="'PENDING'" class="govuk-table__cell status waiting">
-            <th:block th:if="${url}">
+            <th:block th:if="${access}">
                 <a th:href="${url}" class="govuk-link">
                     <span th:text="${columnType == 'project-details' or columnType == 'project-team' or not isActive ? 'Incomplete' : 'Pending'}">Incomplete</span>
                 </a>
             </th:block>
-            <th:block th:unless="${url}">
+            <th:block th:unless="${access}">
                 <span th:text="${columnType == 'project-details' or columnType == 'project-team' or not isActive ? 'Incomplete' : 'Pending'}">Incomplete</span>
             </th:block>
         </td>
         <td th:case="'REJECTED'" class="govuk-table__cell status rejected">
-            <th:block th:if="${url}">
+            <th:block th:if="${access}">
                 <a th:href="${url}" class="govuk-link">Rejected</a>
             </th:block>
-            <th:block th:unless="${url}">Rejected</th:block>
+            <th:block th:unless="${access}">Rejected</th:block>
         </td>
         <td th:case="*" class="govuk-table__cell"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>

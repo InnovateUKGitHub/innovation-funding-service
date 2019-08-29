@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import java.util.EnumSet;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupColumn.*;
 
 public final class CompetitionInitialiser {
 
@@ -15,12 +16,15 @@ public final class CompetitionInitialiser {
         switch (competition.getFundingType()) {
             case GRANT:
                 addGrantFinanceTypes(competition);
+                addDefaultProjectSetupColumns(competition);
                 break;
             case LOAN:
                 addLoanFinanceTypes(competition);
+                addLoanProjectSetupColumns(competition);
                 break;
             case PROCUREMENT:
                 addProcurementFinanceTypes(competition);
+                addDefaultProjectSetupColumns(competition);
             default:
                 break;
         }
@@ -68,6 +72,30 @@ public final class CompetitionInitialiser {
                 FINANCE,
                 OTHER_FUNDING,
                 YOUR_FINANCE
+        ));
+    }
+
+    private static void addDefaultProjectSetupColumns(Competition competition) {
+        competition.getProjectSetupColumns().addAll(EnumSet.of(
+                PROJECT_DETAILS,
+                PROJECT_TEAM,
+                DOCUMENTS,
+                MONITORING_OFFICER,
+                BANK_DETAILS,
+                FINANCE_CHECKS,
+                SPEND_PROFILE,
+                GRANT_OFFER_LETTER
+        ));
+    }
+
+    private static void addLoanProjectSetupColumns(Competition competition) {
+        competition.getProjectSetupColumns().addAll(EnumSet.of(
+                PROJECT_DETAILS,
+                PROJECT_TEAM,
+                DOCUMENTS,
+                MONITORING_OFFICER,
+                FINANCE_CHECKS,
+                SPEND_PROFILE
         ));
     }
 }
