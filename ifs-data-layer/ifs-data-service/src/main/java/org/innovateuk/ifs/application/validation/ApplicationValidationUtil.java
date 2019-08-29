@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationResearchMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
@@ -47,6 +48,9 @@ public class ApplicationValidationUtil {
 
     @Autowired
     private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
+
+    @Autowired
+    private ApplicationDetailsMarkAsCompleteValidator applicationDetailsMarkAsCompleteValidator;
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
@@ -118,12 +122,24 @@ public class ApplicationValidationUtil {
             }
         } else if (question.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
             validationMessages.addAll(isApplicationTeamValid(application, question));
+        } else if (question.getQuestionSetupType() == QuestionSetupType.APPLICATION_DETAILS) {
+            validationMessages.addAll(isApplicationDetailsValid(application, question));
         } else if (question.getQuestionSetupType() == QuestionSetupType.RESEARCH_CATEGORY) {
             validationMessages.addAll(isResearchCategoryValid(application, question));
         } else {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isSingleStatusFormInputValid(application, formInput));
             }
+        }
+        return validationMessages;
+    }
+
+    private List<ValidationMessages> isApplicationDetailsValid(Application application, Question question) {
+        List<ValidationMessages> validationMessages = new ArrayList<>();
+
+        BindingResult bindingResult = addValidation(application, applicationDetailsMarkAsCompleteValidator);
+        if (bindingResult.hasErrors()) {
+            validationMessages.add(new ValidationMessages(question.getId(), bindingResult));
         }
         return validationMessages;
     }

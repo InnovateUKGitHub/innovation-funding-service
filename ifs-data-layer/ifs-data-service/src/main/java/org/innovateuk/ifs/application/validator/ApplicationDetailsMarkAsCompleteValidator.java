@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -16,6 +18,8 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
  * Validates the inputs in the application details, if valid on the markAsComplete action
  *
  */
+
+@Component
 public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
     private static final Log LOG = LogFactory.getLog(ApplicationDetailsMarkAsCompleteValidator.class);
 
@@ -57,6 +61,13 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
                     competition.getMinProjectDuration(),
                     competition.getMaxProjectDuration()
             );
+        }
+
+        if (competition.getFundingType().equals(FundingType.PROCUREMENT)) {
+            LOG.debug("MarkAsComplete application details validation message for competition Referral Source, company age, company primary focus: " + application.getName());
+            rejectValue(errors, "competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
+            rejectValue(errors, "companyAge", "validation.application.procurement.companyage.required");
+            rejectValue(errors, "companyPrimaryFocus", "validation.application.procurement.companyprimaryfocus.required");
         }
 
         if (!applicationInnovationAreaIsInCorrectState(application)) {
