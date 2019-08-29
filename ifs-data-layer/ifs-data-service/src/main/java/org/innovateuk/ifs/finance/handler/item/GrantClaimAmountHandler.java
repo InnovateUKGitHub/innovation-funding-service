@@ -4,7 +4,6 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
 import org.springframework.stereotype.Component;
@@ -22,8 +21,8 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAI
  */
 @Component
 public class GrantClaimAmountHandler extends FinanceRowHandler<GrantClaimAmount> {
-    public static final String GRANT_CLAIM = "Grant Claim Amount";
-    public static final String COST_KEY = "grant-claim-amount";
+    private static final String GRANT_CLAIM = "Grant Claim Amount";
+    private static final String COST_KEY = "grant-claim-amount";
 
     @Override
     public void validate(GrantClaimAmount grantClaim, BindingResult bindingResult) {
@@ -41,17 +40,13 @@ public class GrantClaimAmountHandler extends FinanceRowHandler<GrantClaimAmount>
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
-        return buildRowItem(cost);
+    public GrantClaimAmount toResource(FinanceRow cost) {
+        return new GrantClaimAmount(cost.getId(), cost.getCost(), cost.getTarget().getId());
     }
 
     @Override
     public FinanceRowType getFinanceRowType() {
         return GRANT_CLAIM_AMOUNT;
-    }
-
-    private FinanceRowItem buildRowItem(FinanceRow cost) {
-        return new GrantClaimAmount(cost.getId(), cost.getCost(), cost.getTarget().getId());
     }
 
     @Override

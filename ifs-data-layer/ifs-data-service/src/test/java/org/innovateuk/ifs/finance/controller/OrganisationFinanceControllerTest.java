@@ -97,21 +97,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
 
     @Override
     protected OrganisationFinanceController supplyControllerUnderTest() {
-        return new OrganisationFinanceController(
-                competitionService,
-                questionService,
-                formInputService,
-                formInputResponseService,
-                applicationService,
-                financeService,
-                financeRowCostsService,
-                organisationService,
-                authenticationHelper,
-                grantClaimMaximumService,
-                sectionService,
-                usersRolesService,
-                sectionStatusService
-        );
+        return new OrganisationFinanceController();
     }
 
     @Test

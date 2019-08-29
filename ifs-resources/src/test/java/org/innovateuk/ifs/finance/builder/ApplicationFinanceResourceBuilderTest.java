@@ -11,6 +11,6 @@ public class ApplicationFinanceResourceBuilderTest {
     @Test
     public void testSetGrantClaimPercentage() {
         ApplicationFinanceResource finance = newApplicationFinanceResource().withGrantClaimPercentage(25).build();
-        assertEquals(Integer.valueOf(25), finance.getGrantClaimPercentage());
+        assertEquals(25, finance.getGrantClaimPercentage());
     }
 }

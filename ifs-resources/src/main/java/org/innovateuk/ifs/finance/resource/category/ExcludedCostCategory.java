@@ -3,8 +3,8 @@ package org.innovateuk.ifs.finance.resource.category;
 import java.math.BigDecimal;
 
 /**
- * {@code DefaultCostCategory} implementation for {@link FinanceRowCostCategory}.
- * Default representation for costs and defaults to summing up the costs.
+ * {@code ExcludedCostCategory} implementation for {@link FinanceRowCostCategory}.
+ * Same configuration as {@code DefaultCostCategory} but the total doesn't count towards the total costs.
  */
 public class ExcludedCostCategory extends DefaultCostCategory {
     @Override

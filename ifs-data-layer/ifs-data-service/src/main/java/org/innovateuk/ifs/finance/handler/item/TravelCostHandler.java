@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.handler.item;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.springframework.stereotype.Component;
@@ -38,16 +37,12 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
-        return buildRowItem(cost);
+    public TravelCost toResource(FinanceRow cost) {
+        return new TravelCost(cost.getId(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override
     public FinanceRowType getFinanceRowType() {
         return TRAVEL;
-    }
-
-    private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new TravelCost(cost.getId(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getTarget().getId());
     }
 }

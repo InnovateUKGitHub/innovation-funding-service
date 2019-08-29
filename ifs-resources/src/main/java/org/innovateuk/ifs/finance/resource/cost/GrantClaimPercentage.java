@@ -79,8 +79,8 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     }
 
     @Override
-    public Integer calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
-        return percentage;
+    public int calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
+        return percentage == null ? 0 : percentage;
     }
 
     @Override

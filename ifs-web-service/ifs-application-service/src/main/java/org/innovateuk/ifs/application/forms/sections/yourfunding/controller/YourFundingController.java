@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 @Controller
@@ -85,7 +86,7 @@ public class YourFundingController {
                                   @PathVariable long sectionId,
                                   @PathVariable long organisationId,
                                   @ModelAttribute("form") YourFundingPercentageForm form) {
-        saver.save(applicationId, form, user);
+        saver.save(applicationId, form, organisationId);
         return redirectToYourFinances(applicationId);
     }
 
@@ -96,7 +97,7 @@ public class YourFundingController {
                                   @PathVariable long sectionId,
                                   @PathVariable long organisationId,
                                   @ModelAttribute("form") YourFundingAmountForm form) {
-        saver.save(applicationId, form, user);
+        saver.save(applicationId, form, organisationId);
         return redirectToYourFinances(applicationId);
     }
 
@@ -117,7 +118,7 @@ public class YourFundingController {
                 form,
                 bindingResult,
                 validationHandler,
-                (f) -> saver.save(applicationId, f, user));
+                f -> saver.save(applicationId, f, organisationId));
     }
 
 
@@ -138,7 +139,7 @@ public class YourFundingController {
                 form,
                 bindingResult,
                 validationHandler,
-                (f) -> saver.save(applicationId, f, user));
+                f -> saver.save(applicationId, f, organisationId));
     }
 
     private <FormType extends AbstractYourFundingForm> String complete(Model model,
@@ -169,7 +170,7 @@ public class YourFundingController {
                        @PathVariable long sectionId,
                        @PathVariable long organisationId) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return String.format("redirect:/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId);
+        return format("redirect:/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 
     @PostMapping(params = "add_cost")

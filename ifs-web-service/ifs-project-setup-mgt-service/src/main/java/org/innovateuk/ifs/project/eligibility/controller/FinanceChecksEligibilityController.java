@@ -33,7 +33,6 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.AjaxResult;
@@ -78,9 +77,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     private ProjectFinanceService projectFinanceService;
 
     @Autowired
-    private FinanceUtil financeUtil;
-
-    @Autowired
     private FinanceService financeService;
 
     @Autowired
@@ -122,7 +118,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             boolean eligibilityApproved = eligibility.get().getEligibility() == EligibilityState.APPROVED;
 
             FileDetailsViewModel jesFileDetailsViewModel = null;
-            boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition.get(), organisation.get().getOrganisationType());
+            boolean isUsingJesFinances = competition.get().applicantShouldUseJesFinances(organisation.get().getOrganisationTypeEnum());
             if (!isUsingJesFinances) {
                 model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType, competition.get().getFinanceRowTypes()));
                 if (form == null) {

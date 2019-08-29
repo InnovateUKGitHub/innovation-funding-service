@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.handler.item;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.springframework.stereotype.Component;
@@ -37,16 +36,12 @@ public class MaterialsHandler extends FinanceRowHandler<Materials> {
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
-        return buildRowItem(cost);
+    public Materials toResource(FinanceRow cost) {
+        return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override
     public FinanceRowType getFinanceRowType() {
         return MATERIALS;
-    }
-
-    private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity(), cost.getTarget().getId());
     }
 }

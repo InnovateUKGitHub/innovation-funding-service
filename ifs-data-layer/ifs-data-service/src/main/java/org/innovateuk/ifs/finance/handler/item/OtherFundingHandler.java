@@ -49,7 +49,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
+    public OtherFunding toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
@@ -58,7 +58,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         return OTHER_FUNDING;
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost) {
+    private OtherFunding buildRowItem(FinanceRow cost) {
         if (OTHER_FUNDING_NAME.equals(cost.getDescription())) {
             return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), null, cost.getCost(), cost.getTarget().getId());
         }
