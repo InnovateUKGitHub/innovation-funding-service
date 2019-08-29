@@ -37,7 +37,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -145,11 +144,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Mock
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
     @Mock
     private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
-
-    @Spy
-    private FinanceUtil financeUtil;
 
     @Mock
     private YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator;

@@ -31,11 +31,9 @@ public class OtherFundingCostCategoryTest {
         otherFunding = newOtherFunding()
                 .withOtherPublicFunding("Yes")
                 .withFundingSource(OTHER_FUNDING)
-                .withName("Lottery")
                 .build();
 
         otherPublicFunding = newOtherFunding()
-                .withName("Lottery")
                 .withFundingAmount(BigDecimal.valueOf(30000))
                 .build();
 
@@ -96,7 +94,6 @@ public class OtherFundingCostCategoryTest {
     public void addCost() {
 
         FinanceRowItem otherFunding2 = newOtherFunding()
-                .withName("Savings")
                 .withFundingAmount(new BigDecimal(5000))
                 .build();
         costs.add(otherFunding2);

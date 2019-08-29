@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmo
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +21,7 @@ public class YourProjectFinancesViewModel {
     private final BigDecimal fundingSought;
     private final BigDecimal otherFunding;
     private final BigDecimal contribution;
+    private final boolean fundingLevelFirst;
 
     private final List<YourFinancesRowViewModel> rows;
 
@@ -34,6 +36,7 @@ public class YourProjectFinancesViewModel {
         this.fundingSought = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalFundingSought).orElse(BigDecimal.ZERO);
         this.otherFunding = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO);
         this.contribution = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
+        this.fundingLevelFirst = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
         this.rows = rows;
     }
 
@@ -57,7 +60,6 @@ public class YourProjectFinancesViewModel {
         return fullyFunded;
     }
 
-
     public BigDecimal getCosts() {
         return costs;
     }
@@ -77,6 +79,15 @@ public class YourProjectFinancesViewModel {
     public BigDecimal getContribution() {
         return contribution;
     }
+
+    public boolean isFundingLevelFirst() {
+        return fundingLevelFirst;
+    }
+
+    public boolean isFundingSoughtFirst() {
+        return !isFundingLevelFirst();
+    }
+
 
     public List<YourFinancesRowViewModel> getRows() {
         return rows;

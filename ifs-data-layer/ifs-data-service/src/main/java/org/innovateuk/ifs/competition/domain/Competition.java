@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
  * Competition defines database relations and a model to use client side and server side.
  */
 @Entity
-public class Competition extends AuditableEntity implements ProcessActivity {
+public class Competition extends AuditableEntity implements ProcessActivity, ApplicationConfiguration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -709,6 +709,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
     }
 
+    @Override
     public boolean isH2020() {
         return ofNullable(competitionType)
                 .map(CompetitionType::getName)
@@ -716,6 +717,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                 .orElse(false);
     }
 
+    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || FundingType.PROCUREMENT.equals(fundingType);

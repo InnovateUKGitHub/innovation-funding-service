@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 @Rollback
 public class ApplicationFinanceRowControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationFinanceRowController> {
 
-    private GrantClaim grantClaim;
+    private GrantClaimPercentage grantClaim;
     private Materials materials;
     private LabourCost labourCost;
     private LabourCost labourCostDaysPerYear;
@@ -79,7 +79,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         grandClaimCost = applicationFinanceRowRepository.findById(48L).get();
         applicationFinance = ((ApplicationFinanceRow) grandClaimCost).getTarget();
 
-        grantClaim = (GrantClaim) controller.get(48L).getSuccess();
+        grantClaim = (GrantClaimPercentage) controller.get(48L).getSuccess();
         materials = (Materials) controller.get(12L).getSuccess();
         labourCost = (LabourCost) controller.get(4L).getSuccess();
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccess();
@@ -547,7 +547,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
     public void testValidationGrantClaimUpdateSmallOrganisationSize(){
 
         assertEquals(SMALL, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(55);
+        grantClaim.setPercentage(55);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
@@ -559,7 +559,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
     public void testValidationGrantClaimUpdateSmallOrganisationSizeHigherValue(){
 
         assertEquals(SMALL, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(71);
+        grantClaim.setPercentage(71);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
@@ -568,7 +568,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 71, "validation.finance.grant.claim.percentage.max", 70));
+                fieldError("percentage", 71, "validation.finance.grant.claim.percentage.max", 70));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -578,7 +578,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
     public void testValidationGrantClaimUpdateSmallOrganisationSizeNegativeValue() {
 
         assertEquals(SMALL, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(-1);
+        grantClaim.setPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
@@ -587,7 +587,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -612,7 +612,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
         applicationFinance.setOrganisationSize(MEDIUM);
         assertEquals(MEDIUM, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(61);
+        grantClaim.setPercentage(61);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
@@ -621,7 +621,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 61, "validation.finance.grant.claim.percentage.max", 60));
+                fieldError("percentage", 61, "validation.finance.grant.claim.percentage.max", 60));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -632,7 +632,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
         applicationFinance.setOrganisationSize(MEDIUM);
         assertEquals(MEDIUM, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(-1);
+        grantClaim.setPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
@@ -641,7 +641,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -654,7 +654,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
         applicationFinance.setOrganisationSize(LARGE);
         assertEquals(LARGE, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(45);
+        grantClaim.setPercentage(45);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
@@ -667,7 +667,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
         applicationFinance.setOrganisationSize(LARGE);
         assertEquals(LARGE, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(51);
+        grantClaim.setPercentage(51);
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
@@ -675,7 +675,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", 51, "validation.finance.grant.claim.percentage.max", 50));
+                fieldError("percentage", 51, "validation.finance.grant.claim.percentage.max", 50));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -686,7 +686,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
         applicationFinance.setOrganisationSize(LARGE);
         assertEquals(LARGE, applicationFinance.getOrganisationSize());
-        grantClaim.setGrantClaimPercentage(-1);
+        grantClaim.setPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
@@ -696,7 +696,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("grantClaimPercentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }

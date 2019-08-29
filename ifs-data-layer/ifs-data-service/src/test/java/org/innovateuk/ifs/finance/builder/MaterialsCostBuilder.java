@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class MaterialsCostBuilder extends AbstractCostBuilder<Materials, MaterialsCostBuilder> {
@@ -29,7 +28,7 @@ public class MaterialsCostBuilder extends AbstractCostBuilder<Materials, Materia
     }
 
     public static MaterialsCostBuilder newMaterials() {
-        return new MaterialsCostBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Material "));
+        return new MaterialsCostBuilder(emptyList()).with(uniqueIds());
     }
 
     private MaterialsCostBuilder(List<BiConsumer<Integer, Materials>> multiActions) {

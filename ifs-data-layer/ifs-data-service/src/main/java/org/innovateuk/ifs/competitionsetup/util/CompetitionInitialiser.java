@@ -40,8 +40,9 @@ public final class CompetitionInitialiser {
                 SUBCONTRACTING_COSTS,
                 TRAVEL,
                 OTHER_COSTS,
-                FINANCE,
-                OTHER_FUNDING
+                GRANT_CLAIM_AMOUNT,
+                OTHER_FUNDING,
+                YOUR_FINANCE
         ));
     }
 
@@ -56,7 +57,8 @@ public final class CompetitionInitialiser {
                 OTHER_COSTS,
                 FINANCE,
                 OTHER_FUNDING,
-                VAT
+                VAT,
+                YOUR_FINANCE
         ));
     }
 
