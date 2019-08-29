@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
@@ -127,6 +128,7 @@ public class ApplicationPrintPopulator {
                 fileEntryRestService,
                 applicationId
         );
+        boolean fundingLevelFirst = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
 
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType(competition));
@@ -136,6 +138,8 @@ public class ApplicationPrintPopulator {
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
+        model.addAttribute("fundingLevelFirst", fundingLevelFirst);
+        model.addAttribute("fundingSoughtFirst", !fundingLevelFirst);
         model.addAttribute(
                 "researchParticipationPercentage",
                 applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
