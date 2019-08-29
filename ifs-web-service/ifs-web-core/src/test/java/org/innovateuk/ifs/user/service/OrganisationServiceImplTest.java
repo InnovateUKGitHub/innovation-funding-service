@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class OrganisationServiceImplTest extends BaseServiceUnitTest<OrganisationService> {
 
@@ -41,7 +41,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
     @Before
     public void setUp() {
-
         user = newUserResource().withId(2L).build();
     }
 
@@ -64,6 +63,10 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
         Long returnedOrganisationType = service.getOrganisationType(user.getId(), processRole.getApplicationId());
 
+        verify(userRestService, times(1)).findProcessRole(user.getId(), processRole.getApplicationId());
+        verify(organisationRestService, times(1)).getOrganisationById(organisation.getId());
+        verifyNoMoreInteractions(userRestService);
+        verifyNoMoreInteractions(organisationRestService);
         assertEquals(organisation.getOrganisationType(), returnedOrganisationType);
     }
 
@@ -80,6 +83,9 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
         Long returnedOrganisationType = service.getOrganisationType(user.getId(), processRole.getApplicationId());
 
+        verify(userRestService, times(1)).findProcessRole(user.getId(), processRole.getApplicationId());
+        verifyZeroInteractions(organisationRestService);
+        verifyNoMoreInteractions(userRestService);
         assertNull(returnedOrganisationType);
     }
 
@@ -93,9 +99,10 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
                 .build();
 
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
-
         Optional<OrganisationResource> result = service.getOrganisationForUser(user.getId(), singletonList(roleWithUser));
 
+        verify(organisationRestService, times(1)).getOrganisationById(organisation.getId());
+        verifyNoMoreInteractions(organisationRestService);
         assertEquals(organisation, result.get());
     }
 
@@ -119,6 +126,10 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
         SortedSet<OrganisationResource> sortedProcessRoles = service.getApplicationOrganisations(processRoleResources);
 
+        verify(organisationRestService, times(1)).getOrganisationById(leadOrganisation.getId());
+        verify(organisationRestService, times(1)).getOrganisationById(collaborator1.getId());
+        verify(organisationRestService, times(1)).getOrganisationById(collaborator2.getId());
+        verifyNoMoreInteractions(organisationRestService);
         assertEquals(sortedProcessRoles.first(), collaborator2);
         assertEquals(sortedProcessRoles.last(), collaborator1);
     }
@@ -138,15 +149,13 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
                 .build();
 
         SortedSet<OrganisationResource> sortedAcademicOrganisation = new TreeSet<>(Comparator.comparingLong(OrganisationResource::getId));
-        sortedAcademicOrganisation.add(leadOrganisation);
         sortedAcademicOrganisation.add(academicOrganisation);
-
-        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
-        when(organisationRestService.getOrganisationById(academicOrganisation.getId())).thenReturn(restSuccess(academicOrganisation));
+        sortedAcademicOrganisation.add(leadOrganisation);
 
         SortedSet<OrganisationResource> result = service.getAcademicOrganisations(sortedAcademicOrganisation);
 
-        assertEquals(result.first(), academicOrganisation);
+        assertEquals(academicOrganisation, result.first());
+        assertEquals(1, result.size());
     }
 
     @Test
@@ -166,6 +175,8 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
         Optional<OrganisationResource> result = service.getApplicationLeadOrganisation(processRoleResources);
 
+        verify(organisationRestService, times(1)).getOrganisationById(leadOrganisation.getId());
+        verifyNoMoreInteractions(organisationRestService);
         assertEquals(leadOrganisation, result.get());
     }
 
@@ -185,6 +196,8 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
         OrganisationResource result = service.getLeadOrganisation(processRole.getApplicationId(), singletonList(leadOrganisation));
 
+        verify(userService, times(1)).getLeadApplicantProcessRole(processRole.getApplicationId());
+        verifyNoMoreInteractions(userService);
         assertEquals(leadOrganisation, result);
     }
 }

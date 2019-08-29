@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
-import static com.google.common.base.Optional.of;
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
@@ -167,6 +166,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         List<ProcessRoleResource> result = service.getOrganisationProcessRoles(application, 13L);
 
+        verify(userRestService, times(1)).findProcessRole(applicationId);
+        verifyNoMoreInteractions(userRestService);
         assertEquals(singletonList(processRoles.get(0)), result);
     }
 
@@ -175,6 +176,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         List<ProcessRoleResource> result = service.getLeadPartnerOrganisationProcessRoles(application);
 
+        verify(userRestService, times(2)).findProcessRole(applicationId);
+        verifyNoMoreInteractions(userRestService);
         assertEquals(singletonList(processRoles.get(0)), result);
     }
 
@@ -183,6 +186,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.findProcessRole(leadUser.getId(), applicationId)).thenReturn(restSuccess(processRoles.get(0)));
         Long result = service.getUserOrganisationId(leadUser.getId(), applicationId);
 
+        verify(userRestService, times(1)).findProcessRole(leadUser.getId(), applicationId);
+        verifyNoMoreInteractions(userRestService);
         assertEquals(processRoles.get(0).getOrganisationId(), result);
     }
 
@@ -191,6 +196,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
         ServiceResult<UserResource> result = service.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
 
+        verify(userRestService, times(1)).createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
+        verifyNoMoreInteractions(userRestService);
         assertTrue(result.isSuccess());
     }
 
@@ -199,6 +206,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
         ServiceResult<UserResource> result = service.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
 
+        verify(userRestService, times(1)).createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
+        verifyNoMoreInteractions(userRestService);
         assertTrue(result.isSuccess());
     }
 
@@ -207,6 +216,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
         ServiceResult<UserResource> result = service.createOrganisationUser(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
 
+        verify(userRestService, times(1)).createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
+        verifyNoMoreInteractions(userRestService);
         assertTrue(result.isSuccess());
     }
 
@@ -215,6 +226,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
         ServiceResult<UserResource> result = service.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
 
+        verify(userRestService, times(1)).updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+        verifyNoMoreInteractions(userRestService);
         assertTrue(result.isSuccess());
     }
 
@@ -233,7 +246,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.findUserByEmail(email)).thenReturn(restSuccess(user));
         Optional<UserResource> result = service.findUserByEmail(email);
 
-        assertEquals(user, result.get());
         verify(userRestService).findUserByEmail(email);
+        verifyNoMoreInteractions(userRestService);
+        assertEquals(user, result.get());
     }
 }

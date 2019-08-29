@@ -12,8 +12,7 @@ import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing FormInputServiceImpl and its interactions with its mock rest service.
@@ -35,8 +34,10 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
         when(userRestService.findAssignableProcessRoles(applicationId)).thenReturn(arrayFuture);
 
         Future<List<ProcessRoleResource>> returnedResponse = service.findAssignableProcessRoles(applicationId);
-
         List<ProcessRoleResource> actualResources = returnedResponse.get();
+
+        verify(userRestService, times(1)).findAssignableProcessRoles(applicationId);
+        verifyNoMoreInteractions(userRestService);
         assertEquals(resources, actualResources);
     }
 
@@ -50,8 +51,10 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
         when(userRestService.findProcessRoleById(id)).thenReturn(future);
 
         Future<ProcessRoleResource> returnedResponse = service.getById(id);
-
         ProcessRoleResource actualResources = returnedResponse.get();
+
+        verify(userRestService, times(1)).findProcessRoleById(id);
+        verifyNoMoreInteractions(userRestService);
         assertEquals(resource, actualResources);
     }
 }
