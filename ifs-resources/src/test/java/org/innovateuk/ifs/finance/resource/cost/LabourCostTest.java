@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -32,7 +31,7 @@ public class LabourCostTest {
     }
 
     @Test
-    public void labourCostShouldReturnCorrectBaseAttributesTest() {
+    public void labourCostShouldReturnCorrectBaseAttributes() {
         assertEquals(id, labourCost.getId());
         assertEquals(role, labourCost.getRole());
         assertEquals(grossEmployeeCost, labourCost.getGrossEmployeeCost());
@@ -41,7 +40,7 @@ public class LabourCostTest {
     }
 
     @Test
-    public void getRateTest() {
+    public void getRate() {
         Integer workingDaysPerYear = 232;
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);
         BigDecimal expected = new BigDecimal(215.51724).setScale(5, BigDecimal.ROUND_HALF_EVEN);
@@ -49,14 +48,14 @@ public class LabourCostTest {
     }
 
     @Test
-    public void rateNullLabourDaysTest() {
+    public void rateNullLabourDays() {
         Integer workingDaysPerYear = null;
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);
         assertNull(ratePerDay);
     }
 
     @Test
-    public void rateWithDivisionByZeroLabourDaysTest() {
+    public void rateWithDivisionByZeroLabourDays() {
         int workingDaysPerYear = 0;
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);
         assertEquals(BigDecimal.ZERO, ratePerDay);
@@ -71,7 +70,7 @@ public class LabourCostTest {
     }
 
     @Test
-    public void getLabourCostTotalTest() {
+    public void getLabourCostTotal() {
         Integer workingDaysPerYear = 232;
         BigDecimal totalLabourCost = labourCost.getTotal(workingDaysPerYear);
         BigDecimal expected = new BigDecimal(36206.89632).setScale(5, BigDecimal.ROUND_HALF_EVEN);
@@ -81,28 +80,10 @@ public class LabourCostTest {
     }
 
     @Test
-    public void getLabourCostTotalWithoutLabourDaysTest() {
+    public void getLabourCostTotalWithoutLabourDays() {
         Integer workingDaysPerYear = 232;
         labourCost.setLabourDays(null);
         BigDecimal totalLabourCost = labourCost.getTotal(workingDaysPerYear);
         assertEquals(BigDecimal.ZERO, totalLabourCost);
-    }
-
-    @Test
-    public void setRoleTest() {
-        labourCost.setRole("Developer");
-        assertEquals("Developer", labourCost.getRole());
-    }
-
-    @Test
-    public void getName() {
-        String name = "Rob Garner";
-        labourCost.setName(name);
-        assertEquals(name, labourCost.getName());
-    }
-
-    @Test
-    public void getCostType() {
-        assertEquals(LABOUR, labourCost.getCostType());
     }
 }

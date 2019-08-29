@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -31,15 +32,22 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     @Mock
     private UserService userService;
 
+    private UserResource user;
+
     @Override
     protected OrganisationService supplyServiceUnderTest() {
         return new OrganisationServiceImpl(organisationRestService, userRestService, userService);
     }
 
+    @Before
+    public void setUp() {
+
+        user = newUserResource().withId(2L).build();
+    }
+
     @Test
     public void getOrganisationType() {
 
-        UserResource user = newUserResource().withId(2L).build();
         OrganisationResource organisation = newOrganisationResource()
                 .withOrganisationTypeName(BUSINESS.name())
                 .withOrganisationType(BUSINESS.getId())
@@ -62,7 +70,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     @Test
     public void returnNullOrganisationType() {
 
-        UserResource user = newUserResource().withId(2L).build();
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withApplication(3L)
                 .withUser(user)
@@ -79,7 +86,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     @Test
     public void getOrganisationForUser() {
 
-        UserResource user = newUserResource().withId(2L).build();
         OrganisationResource organisation = newOrganisationResource().withId(4L).build();
         ProcessRoleResource roleWithUser = newProcessRoleResource()
                 .withUser(user)
@@ -166,7 +172,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     @Test
     public void getLeadOrganisation() {
 
-        UserResource user = newUserResource().build();
         OrganisationResource leadOrganisation = newOrganisationResource().withId(3L).build();
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withApplication(123L)
