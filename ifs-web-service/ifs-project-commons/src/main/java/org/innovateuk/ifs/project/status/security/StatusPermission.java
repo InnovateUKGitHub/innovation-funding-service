@@ -67,4 +67,5 @@ public class StatusPermission {
     public Boolean getCanAccessGrantOfferLetterSend() { return canAccessGrantOfferLetterSend; }
 
     public ProjectActivityStates getGrantOfferLetterActivityStatus() { return grantOfferLetterActivityState; }
+
 }

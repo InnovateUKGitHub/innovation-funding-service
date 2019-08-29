@@ -250,7 +250,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         // Loan competitions will not have bank details so return complete
         Competition competition = project.getApplication().getCompetition();
         if (competition.isLoan()) {
-            return COMPLETE;
+            return NOT_REQUIRED;
         }
 
         // Show flag when there is any organisation awaiting approval.
