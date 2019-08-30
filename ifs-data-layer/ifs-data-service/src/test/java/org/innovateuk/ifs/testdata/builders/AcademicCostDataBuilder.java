@@ -93,8 +93,8 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
     }
 
     public AcademicCostDataBuilder withGrantClaim(Integer grantClaim) {
-        return updateCostItem(GrantClaim.class, FinanceRowType.FINANCE, existingCost -> {
-            existingCost.setGrantClaimPercentage(grantClaim);
+        return updateCostItem(GrantClaimPercentage.class, FinanceRowType.FINANCE, existingCost -> {
+            existingCost.setPercentage(grantClaim);
             financeRowCostsService.update(existingCost.getId(), existingCost);
         });
     }

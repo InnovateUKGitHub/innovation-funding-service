@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummar
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 
 public class FinancesOverviewViewModel {
@@ -64,6 +65,10 @@ public class FinancesOverviewViewModel {
 
     public boolean isProcurement() {
         return PROCUREMENT.equals(fundingType);
+    }
+
+    public boolean isLoan() {
+        return LOAN.equals(fundingType);
     }
 
     public boolean hasFundingRules() {

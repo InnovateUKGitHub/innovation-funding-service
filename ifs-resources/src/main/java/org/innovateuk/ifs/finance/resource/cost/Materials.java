@@ -20,8 +20,6 @@ public class Materials extends AbstractFinanceRowItem {
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
 
-    private String name;
-
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
@@ -38,7 +36,6 @@ public class Materials extends AbstractFinanceRowItem {
 
     public Materials(Long targetId) {
         super(targetId);
-        this.name = getCostType().getType();
     }
 
     public Materials(Long id, String item, BigDecimal cost, Integer quantity, Long targetId) {
@@ -95,7 +92,7 @@ public class Materials extends AbstractFinanceRowItem {
 
     @Override
     public String getName() {
-        return this.name;
+        return this.getCostType().getType();
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -84,9 +85,11 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         rows.addAll(pendingOrganisations(applicationId));
 
-        return new ApplicationFinanceSummaryViewModel(applicationId, rows, !open, application.isCollaborativeProject(),
-                currentApplicantRole.map(ProcessRoleResource::getOrganisationId).orElse(null),
-                competition.getCollaborationLevel());
+        return new ApplicationFinanceSummaryViewModel(applicationId, rows, !open,
+                application.isCollaborativeProject(),
+                competition.getCollaborationLevel(),
+                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
+                currentApplicantRole.map(ProcessRoleResource::getOrganisationId).orElse(null));
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {

@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -25,7 +24,7 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
-public class CompetitionResource {
+public class CompetitionResource implements ApplicationConfiguration {
 
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
     public static final String H2020_TYPE_NAME = "Horizon 2020";
@@ -759,11 +758,6 @@ public class CompetitionResource {
 
     public void setIncludeJesForm(Boolean includeJesForm) {
         this.includeJesForm = includeJesForm;
-    }
-
-    @JsonIgnore
-    public boolean showJesFinances(long organisationType) {
-        return includeJesForm && OrganisationTypeEnum.isResearch(organisationType);
     }
 
     public CompetitionCompletionStage getCompletionStage() {
