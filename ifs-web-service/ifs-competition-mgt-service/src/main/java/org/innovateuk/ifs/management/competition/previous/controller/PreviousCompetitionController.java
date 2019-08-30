@@ -3,11 +3,14 @@ package org.innovateuk.ifs.management.competition.previous.controller;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.internal.InternalProjectSetupRow;
+import org.innovateuk.ifs.internal.populator.InternalProjectSetupRowPopulator;
 import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousCompetitionViewModel;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 
@@ -43,17 +48,23 @@ public class PreviousCompetitionController {
     @Autowired
     private StatusRestService statusRestService;
 
+    @Autowired
+    private InternalProjectSetupRowPopulator internalProjectSetupRowPopulator;
+
     @GetMapping
     public String viewPreviousCompetition(@PathVariable long competitionId,
                                           Model model,
                                           UserResource user) {
 
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = statusRestService.getPreviousCompetitionStatus(competitionId).getSuccess();
-        model.addAttribute("model",  new PreviousCompetitionViewModel(
-            competitionRestService.getCompetitionById(competitionId).getSuccess(),
-            applicationSummaryRestService.getPreviousApplications(competitionId).getSuccess(),
-            competitionProjectsStatusResource,
-            user.hasRole(Role.IFS_ADMINISTRATOR))
+        List<ProjectStatusResource> projectStatusResources = statusRestService.getPreviousCompetitionStatus(competitionId).getSuccess();
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        List<InternalProjectSetupRow> internalProjectSetupRows = internalProjectSetupRowPopulator.populate(projectStatusResources, competitionResource, user);
+
+        model.addAttribute("model", new PreviousCompetitionViewModel(
+                competitionResource,
+                applicationSummaryRestService.getPreviousApplications(competitionId).getSuccess(),
+                internalProjectSetupRows,
+                user.hasRole(Role.IFS_ADMINISTRATOR))
         );
         return "competition/previous";
     }

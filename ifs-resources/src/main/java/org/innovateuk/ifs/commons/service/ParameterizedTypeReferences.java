@@ -38,6 +38,7 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmen
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
@@ -247,6 +248,11 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ProjectResource>> projectResourceListType() {
         return new ParameterizedTypeReference<List<ProjectResource>>() {
+        };
+    }
+
+    public static ParameterizedTypeReference<List<ProjectStatusResource>> projectStatusResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectStatusResource>>() {
         };
     }
 

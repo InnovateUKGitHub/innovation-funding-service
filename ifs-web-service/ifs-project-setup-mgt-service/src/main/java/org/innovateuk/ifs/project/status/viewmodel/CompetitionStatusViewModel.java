@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
+import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.project.internal.ProjectSetupStages;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class CompetitionStatusViewModel {
     private long competitionId;
     private String competitionName;
     private boolean showTabs;
+    private boolean canExportBankDetails;
     private long openQueryCount;
     private long pendingSpendProfilesCount;
     private String applicationSearchString;
@@ -29,6 +31,7 @@ public class CompetitionStatusViewModel {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.showTabs = hasProjectFinanceRole;
+        this.canExportBankDetails = hasProjectFinanceRole;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
         this.applicationSearchString = applicationSearchString;
@@ -68,5 +71,9 @@ public class CompetitionStatusViewModel {
 
     private Set<ProjectSetupStages> getOrderedProjectSetupColumns(List<InternalProjectSetupRow> internalProjectSetupRows) {
         return internalProjectSetupRows.get(0).getStates().keySet();
+    }
+
+    public boolean isCanExportBankDetails() {
+        return canExportBankDetails;
     }
 }

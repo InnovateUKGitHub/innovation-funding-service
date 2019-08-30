@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.status.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
@@ -41,7 +40,6 @@ import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfi
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -63,7 +61,6 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
@@ -75,7 +72,6 @@ import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_STATES;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * This service wraps the business logic around the statuses of Project(s).
@@ -129,26 +125,17 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private FinanceCheckService financeCheckService;
 
     @Override
-    public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(long competitionId, String applicationSearchString) {
-        return getCompetitionStatus(competitionId, () -> projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString));
+    public ServiceResult<List<ProjectStatusResource>> getCompetitionStatus(long competitionId, String applicationSearchString) {
+        return serviceSuccess(getProjectStatuses(() -> projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)));
     }
 
     @Override
-    public ServiceResult<CompetitionProjectsStatusResource> getPreviousCompetitionStatus(long competitionId) {
-        return getCompetitionStatus(competitionId, () -> projectRepository.findByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, COMPLETED_STATES));
+    public ServiceResult<List<ProjectStatusResource>> getPreviousCompetitionStatus(long competitionId) {
+        return serviceSuccess(getProjectStatuses(() -> projectRepository.findByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, COMPLETED_STATES)));
     }
 
-    private ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(long competitionId, Supplier<List<Project>> projectSupplier) {
-        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
-                .andOnSuccessReturn(competition -> {
-                    List<Project> projects = projectSupplier.get();
-                    List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
-                    return new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatuses);
-                });
-    }
-
-    private List<ProjectStatusResource> projectStatuses(List<Project> projects) {
-        return projects.stream()
+    private List<ProjectStatusResource> getProjectStatuses(Supplier<List<Project>> projectSupplier) {
+        return projectSupplier.get().stream()
                 .map(this::getProjectStatusResourceByProject)
                 .sorted(comparing(ProjectStatusResource::getApplicationNumber))
                 .collect(Collectors.toList());

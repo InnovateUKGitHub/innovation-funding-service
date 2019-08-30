@@ -3,10 +3,12 @@ package org.innovateuk.ifs.management.competition.previous.viewmodel;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import org.innovateuk.ifs.internal.InternalProjectSetupRow;
+import org.innovateuk.ifs.project.internal.ProjectSetupStages;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
@@ -20,11 +22,14 @@ public class PreviousCompetitionViewModel {
     private final String innovationSector;
     private final boolean ifsAdmin;
     private final boolean competitionCanHaveProjects;
-
     private final List<PreviousApplicationResource> applications;
-    private final CompetitionProjectsStatusResource competitionProjectsStatusResource;
+    private final List<InternalProjectSetupRow> rows;
+    private final Set<ProjectSetupStages> columns;
 
-    public PreviousCompetitionViewModel(CompetitionResource competition, List<PreviousApplicationResource> applications, CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean ifsAdmin) {
+    public PreviousCompetitionViewModel(CompetitionResource competition,
+                                        List<PreviousApplicationResource> applications,
+                                        List<InternalProjectSetupRow> rows,
+                                        boolean ifsAdmin) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.competitionType = competition.getCompetitionTypeName();
@@ -33,7 +38,8 @@ public class PreviousCompetitionViewModel {
         this.innovationSector = competition.getInnovationSectorName();
         this.competitionCanHaveProjects = CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage());
         this.applications = applications;
-        this.competitionProjectsStatusResource = competitionProjectsStatusResource;
+        this.rows = rows;
+        this.columns = competition.getProjectSetupStages();
         this.ifsAdmin = ifsAdmin;
     }
 
@@ -73,8 +79,11 @@ public class PreviousCompetitionViewModel {
         return competitionCanHaveProjects;
     }
 
-    public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
-        return competitionProjectsStatusResource;
+    public List<InternalProjectSetupRow> getRows() {
+        return rows;
     }
 
+    public Set<ProjectSetupStages> getColumns() {
+        return columns;
+    }
 }

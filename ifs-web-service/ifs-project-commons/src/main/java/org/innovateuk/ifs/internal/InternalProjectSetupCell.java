@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.status.viewmodel;
+package org.innovateuk.ifs.internal;
 
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.sections.SectionAccess;
