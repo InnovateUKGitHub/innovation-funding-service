@@ -27,6 +27,8 @@ import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 
 @Component
@@ -49,7 +51,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
                 .collect(toList());
         List<InviteOrganisationResource> inviteOrganisationResources = emptyList();
-        if (data.getApplicantProcessRole().isPresent()) {
+        if (showInvites(data)) {
             inviteOrganisationResources = inviteRestService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
         }
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(data.getApplication().getId()).getSuccess();
@@ -70,6 +72,11 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
 
         return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels);
 
+    }
+
+    private boolean showInvites(ApplicationReadOnlyData data) {
+        return data.getApplicantProcessRole().isPresent()
+                || data.getUser().hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR);
     }
 
     private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite) {
