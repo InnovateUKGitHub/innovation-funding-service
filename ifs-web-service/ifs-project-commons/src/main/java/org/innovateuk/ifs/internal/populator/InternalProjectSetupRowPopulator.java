@@ -76,7 +76,7 @@ public class InternalProjectSetupRowPopulator {
             activityStates.put(BANK_DETAILS,
                     new InternalProjectSetupCell(
                             status.getBankDetailsStatus(),
-                            String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/review-all-bank-details"),
+                            String.format("/project-setup-management/project/" + status.getProjectNumber() + "/review-all-bank-details"),
                             setupSectionInternalUser.canAccessBankDetailsSection(user)
                     ));
         }
