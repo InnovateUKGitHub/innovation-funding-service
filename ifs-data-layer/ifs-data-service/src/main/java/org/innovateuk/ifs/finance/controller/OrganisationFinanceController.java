@@ -254,7 +254,7 @@ public class OrganisationFinanceController {
     }
 
     private ServiceResult<Void> updateOrganisationSize(long applicationId, long competitionId, long organisationId, OrganisationSize organisationSize) {
-        return financeService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).
+        return financeService.financeDetails(applicationId, organisationId).
                 andOnSuccess(finance -> {
                     if (finance.getOrganisationSize() != organisationSize) {
 
