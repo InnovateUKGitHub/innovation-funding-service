@@ -24,7 +24,7 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-2994 New Stakeholder role and permissions
 ...
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
-Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
+Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -32,14 +32,13 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${ineligibleApplication}  Living with Virtual Reality
-${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${application_ids["${ineligibleApplication}"]}
+${ineligibleApplicationNumber}    ${application_ids['${ineligibleApplication}']}
+${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${ineligibleApplicationNumber}
 ${ineligibleApplications}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
 ${ineligibleMessage}  On checking your application we found that it did not meet these requirements.
 # ${IN_ASSESSMENT_COMPETITION} is the Sustainable living models for the future
 ${submittedApplication}           Living with Digital Rights Management
 ${submittedApplicationNumber}     ${application_ids['${submittedApplication}']}
-${ineligibleApplication}          Ineligible Vlogging
-${ineligibleApplicationNumber}    ${application_ids['${ineligibleApplication}']}
 
 *** Test Cases ***
 A non submitted application cannot be marked as ineligible
@@ -55,7 +54,7 @@ Ineligigle button is shown on submitted applications
     [Documentation]    INFUND-7370
     [Tags]
     Given the user should see the element  jQuery = td:contains("${ineligibleApplication}") ~ td:contains("Submitted")
-    When the user clicks the button/link   link = ${application_ids["${ineligibleApplication}"]}
+    When the user clicks the button/link   link = ${ineligibleApplicationNumber}
     Then the user should see the element   jQuery = .govuk-details__summary:contains("Mark application as ineligible")
 
 Clicking the ineligible button
@@ -100,6 +99,15 @@ Filter ineligible applications
     [Setup]  log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${ineligibleApplications}
     Then the user filters ineligible applications
+
+Support user should see the inelibible application with reason
+    [Documentation]  IFS-6152
+    Given log in as a different user     &{support_user_credentials}
+    When the user enters text to a text field     id = searchQuery   ${ineligibleApplicationNumber}
+    And the user clicks the button/link        id = searchsubmit
+    And the user clicks the button/link       link = ${ineligibleApplicationNumber}
+    Then the user should see the element      jQuery = h2:contains("Removed by") ~ p:contains("Ian Cooper, ${today}")
+    And the user should see the element       jQuery = h2:contains("Reason for removal") ~ p:contains("This is the reason of why this application is ineligible")
 
 The Administrator should see the ineligible applications in unsuccessful list but he cannot reinstate it
     [Documentation]  IFS-1458 IFS-1459 IFS-50
@@ -206,3 +214,8 @@ the user inform applicant their application is ineligible
     And the user should see the element       jQuery = p:contains("${ineligibleMessage}")
     And the user clicks the button/link       jQuery = button:contains("Send")
     Then the user should see the element      jQuery = td:contains("${ineligibleApplication}") ~ td span:contains("Informed")
+
+Custom Suite Setup
+    The user logs-in in new browser  &{Comp_admin1_credentials}
+    ${today} =  get today
+    set suite variable  ${today}
