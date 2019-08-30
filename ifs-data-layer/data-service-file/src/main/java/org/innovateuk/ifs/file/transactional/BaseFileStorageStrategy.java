@@ -22,8 +22,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
-import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
-import static org.innovateuk.ifs.util.FileFunctions.pathElementsToPath;
+import static org.innovateuk.ifs.file.util.FileFunctions.pathElementsToFile;
+import static org.innovateuk.ifs.file.util.FileFunctions.pathElementsToPath;
 
 /**
  * Represents a component that, given a FileEntry to store, decides how best to store it and stores it on the filesystem.

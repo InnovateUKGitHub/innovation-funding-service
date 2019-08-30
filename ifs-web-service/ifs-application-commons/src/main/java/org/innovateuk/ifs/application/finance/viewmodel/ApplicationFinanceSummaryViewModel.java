@@ -18,16 +18,18 @@ public class ApplicationFinanceSummaryViewModel {
     private final boolean readOnly;
     private final boolean collaborativeProject;
     private final CollaborationLevel collaborationLevel;
+    private final boolean fundingLevelFirst;
 
     private final Long currentUsersOrganisationId;
 
-    public ApplicationFinanceSummaryViewModel(long applicationId, List<FinanceSummaryTableRow> rows, boolean readOnly, boolean collaborativeProject, Long currentUsersOrganisationId, CollaborationLevel collaborationLevel) {
+    public ApplicationFinanceSummaryViewModel(long applicationId, List<FinanceSummaryTableRow> rows, boolean readOnly, boolean collaborativeProject, CollaborationLevel collaborationLevel, boolean fundingLevelFirst, Long currentUsersOrganisationId) {
         this.applicationId = applicationId;
         this.rows = rows;
         this.readOnly = readOnly;
         this.collaborativeProject = collaborativeProject;
-        this.currentUsersOrganisationId = currentUsersOrganisationId;
         this.collaborationLevel = collaborationLevel;
+        this.fundingLevelFirst = fundingLevelFirst;
+        this.currentUsersOrganisationId = currentUsersOrganisationId;
     }
 
     public long getApplicationId() {
@@ -46,8 +48,16 @@ public class ApplicationFinanceSummaryViewModel {
         return collaborativeProject;
     }
 
+    public boolean isFundingLevelFirst() {
+        return fundingLevelFirst;
+    }
+
     public Long getCurrentUsersOrganisationId() {
         return currentUsersOrganisationId;
+    }
+
+    public boolean isFundingSoughtFirst() {
+        return !isFundingLevelFirst();
     }
 
     public boolean isAllFinancesComplete() {
@@ -65,6 +75,7 @@ public class ApplicationFinanceSummaryViewModel {
 
     public boolean isUsersFinancesIncomplete() {
         return rows.stream()
+                .filter(row -> row.getOrganisationId() != null)
                 .anyMatch(row -> row.getOrganisationId().equals(currentUsersOrganisationId) && !row.isComplete());
     }
 
@@ -102,6 +113,7 @@ public class ApplicationFinanceSummaryViewModel {
         return CollaborationLevel.COLLABORATIVE.equals(collaborationLevel)
                 && !atLeastTwoCompleteOrganisationFinances();
     }
+
     private boolean atLeastTwoCompleteOrganisationFinances() {
         return rows.stream().filter(FinanceSummaryTableRow::isComplete)
                 .count() > 1;

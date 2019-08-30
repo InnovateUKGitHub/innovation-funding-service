@@ -3,11 +3,13 @@ package org.innovateuk.ifs.finance.handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.handler.item.*;
-import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler;
+import org.innovateuk.ifs.finance.handler.item.JESCostHandler;
+import org.innovateuk.ifs.finance.handler.item.OtherFundingHandler;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
@@ -23,25 +25,14 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUND
 public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
     private static final Log LOG = LogFactory.getLog(JesFinanceHandler.class);
 
-    private GrantClaimHandler grantClaimHandler;
+    @Autowired
+    private GrantClaimPercentageHandler grantClaimHandler;
 
+    @Autowired
     private OtherFundingHandler otherFundingHandler;
 
+    @Autowired
     private JESCostHandler jesCostHandler;
-
-    public JesFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                             ProjectFinanceRowRepository projectFinanceRowRepository,
-                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                             QuestionService questionService,
-                             ApplicationFinanceRepository applicationFinanceRepository,
-                             ProjectFinanceRepository projectFinanceRepository,
-                             GrantClaimHandler grantClaimHandler, OtherFundingHandler otherFundingHandler,
-                             JESCostHandler jesCostHandler) {
-        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
-        this.grantClaimHandler = grantClaimHandler;
-        this.otherFundingHandler = otherFundingHandler;
-        this.jesCostHandler = jesCostHandler;
-    }
 
     @Override
     protected boolean initialiseCostTypeSupported(FinanceRowType costType) {
@@ -56,7 +47,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
             FinanceRowCostCategory financeRowCostCategory;
             switch (costType) {
                 case FINANCE:
-                    financeRowCostCategory = new GrantClaimCategory();
+                    financeRowCostCategory = new ExcludedCostCategory();
                     break;
                 case OTHER_FUNDING:
                     financeRowCostCategory = new OtherFundingCostCategory();

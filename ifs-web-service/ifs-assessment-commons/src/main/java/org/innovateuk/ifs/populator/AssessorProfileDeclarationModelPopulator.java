@@ -4,7 +4,6 @@ import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.profile.populator.AssessorProfileDeclarationBasePopulator;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserResource;

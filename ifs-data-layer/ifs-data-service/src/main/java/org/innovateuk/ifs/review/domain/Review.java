@@ -45,7 +45,7 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
     @Deprecated
     public Review(Application application, ProcessRole processRole) {
         if (!application.getId().equals(processRole.getApplicationId())) {
-            throw new IllegalArgumentException("application.id must equal processRole.id");
+            throw new IllegalArgumentException("application.id must equal processRole.applicationId");
         }
         this.participant = processRole;
         this.target = application;

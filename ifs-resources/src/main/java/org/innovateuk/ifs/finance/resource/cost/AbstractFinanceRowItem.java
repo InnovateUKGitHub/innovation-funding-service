@@ -14,7 +14,7 @@ public abstract class AbstractFinanceRowItem implements FinanceRowItem {
     }
 
     @Override
-    public BigDecimal totalDiff(FinanceRowItem other){
+    public BigDecimal totalDiff(FinanceRowItem other) {
         BigDecimal thisRate = getTotal() == null ? BigDecimal.ZERO : getTotal();
         BigDecimal otherRate = other.getTotal() == null ? BigDecimal.ZERO : other.getTotal();
         return thisRate.subtract(otherRate);

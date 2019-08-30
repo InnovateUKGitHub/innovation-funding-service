@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -283,19 +282,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             data.setApplication(applicationData.getApplication());
             data.setCompetition(applicationData.getCompetition());
             data.setLeadApplicant(applicationData.getLeadApplicant());
-        });
-    }
-
-    public ApplicationDataBuilder withExistingApplication(String title) {
-        return asCompAdmin(data -> {
-            testService.doWithinTransaction(() -> {
-                Application applicationFromRepository = applicationRepository.findByName(title).get(0);
-                long applicationId = applicationFromRepository.getId();
-                ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
-                data.setApplication(application);
-                data.setCompetition(competitionService.getCompetitionById(application.getCompetition()).getSuccess());
-                data.setLeadApplicant(userService.findByEmail(applicationFromRepository.getLeadApplicant().getEmail()).getSuccess());
-            });
         });
     }
 

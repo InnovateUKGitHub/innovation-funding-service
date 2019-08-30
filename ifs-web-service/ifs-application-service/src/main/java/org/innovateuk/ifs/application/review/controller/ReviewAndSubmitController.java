@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,6 +58,9 @@ public class ReviewAndSubmitController {
     private UserRestService userRestService;
     @Autowired
     private QuestionRestService questionRestService;
+
+    @Value("${ifs.early.metrics.url}")
+    private String earlyMetricsUrl;
 
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
@@ -202,9 +206,19 @@ public class ReviewAndSubmitController {
         model.addAttribute("completedQuestionsPercentage", application.getCompletion());
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
+        model.addAttribute("earlyMetricsUrl", earlyMetricsUrl);
 
-        return competition.isH2020() ?
-                "h2020-grant-transfer-track" : "application-track";
+        return getTrackingPage(competition);
+    }
+
+    private String getTrackingPage(CompetitionResource competition) {
+        if (competition.isH2020()) {
+            return "h2020-grant-transfer-track";
+        } else if (competition.isLoan()) {
+            return "loan-application-track";
+        } else {
+            return "application-track";
+        }
     }
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {

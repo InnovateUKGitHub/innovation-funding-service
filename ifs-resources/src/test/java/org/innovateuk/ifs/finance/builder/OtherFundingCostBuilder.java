@@ -17,10 +17,6 @@ public class OtherFundingCostBuilder extends BaseBuilder<OtherFunding, OtherFund
         return withArraySetFieldByReflection("id", id);
     }
 
-    public OtherFundingCostBuilder withName(String... value) {
-        return withArray((v, cost) -> cost.setName(v), value);
-    }
-
     public OtherFundingCostBuilder withOtherPublicFunding(String... value) {
         return withArray((v, cost) -> cost.setOtherPublicFunding(v), value);
     }
@@ -39,7 +35,7 @@ public class OtherFundingCostBuilder extends BaseBuilder<OtherFunding, OtherFund
     }
 
     public static OtherFundingCostBuilder newOtherFunding() {
-        return new OtherFundingCostBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Other Funding "));
+        return new OtherFundingCostBuilder(emptyList()).with(uniqueIds());
     }
 
     private OtherFundingCostBuilder(List<BiConsumer<Integer, OtherFunding>> multiActions) {

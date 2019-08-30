@@ -72,6 +72,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
         copyTemplatePropertiesToCompetition(template, competition);
+
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
         initialiseFinanceTypes(competition);
 
@@ -112,4 +113,5 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private boolean competitionIsNotInSetupState(Competition competition) {
         return !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP);
     }
+
 }

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
+import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.IndustrialCostData;
@@ -48,7 +49,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withOtherFunding(String fundingSource, LocalDate dateSecured, BigDecimal fundingAmount) {
-        return updateCostItem(OtherFunding.class, FinanceRowType.OTHER_FUNDING, "Other funding", existingCost -> {
+        return updateCostItem(OtherFunding.class, FinanceRowType.OTHER_FUNDING, row -> OtherFundingCostCategory.OTHER_FUNDING.equals(row.getFundingSource()), existingCost -> {
             existingCost.setOtherPublicFunding("Yes");
             financeRowCostsService.update(existingCost.getId(), existingCost);
         }).addCostItem("Other funding", (finance) -> {
@@ -61,8 +62,8 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withGrantClaim(Integer grantClaim) {
-        return updateCostItem(GrantClaim.class, FinanceRowType.FINANCE, existingCost -> {
-            existingCost.setGrantClaimPercentage(grantClaim);
+        return updateCostItem(GrantClaimPercentage.class, FinanceRowType.FINANCE, existingCost -> {
+            existingCost.setPercentage(grantClaim);
             financeRowCostsService.update(existingCost.getId(), existingCost);
         });
     }
@@ -151,7 +152,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
-        return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, FinanceRowType.OVERHEADS.getName(), existingCost -> {
+        return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate, existingCost.getTargetId());
             financeRowCostsService.update(existingCost.getId(), updated);
         });
@@ -159,10 +160,6 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
     private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn) {
         return updateCostItem(clazz, financeRowType, c -> true, updateFn);
-    }
-
-    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, String financeRowName, Consumer<T> updateFn) {
-        return updateCostItem(clazz, financeRowType, c -> financeRowName.equals(c.getName()), updateFn);
     }
 
     private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Predicate<T> filterFn, Consumer<T> updateFn) {
