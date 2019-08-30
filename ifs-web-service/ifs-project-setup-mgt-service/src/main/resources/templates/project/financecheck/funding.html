@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Change funding sought'" />
+</head>
+<body class="govuk-template__body competition-management project-management finance-checks-overview">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance overview',linkUrl=@{/project/{projectId}/finance-check-overview(projectId=${model.projectId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Change funding sought',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+            </div>
+        </div>
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
+              enctype="multipart/form-data" novalidate="novalidate">
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Partner</span></th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Current funding sought (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">New funding sought (&pound;)</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <th:block th:each="partner : ${model.partners}">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">
+                                <strong th:text="${partner.name}">Organisation Name</strong>
+                            </th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(partner.currentFunding,1,'DEFAULT')}" /></strong></td>
+                            <td class="govuk-table__cell govuk-form-group" th:with="path=${'partners[__${partner.id}__]'}" >
+                                <label th:for="__${path}__.funding">
+                                    <span class="govuk-visually-hidden">New funding sought</span>
+                                </label>
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('{__${path}__.funding}')}" th:text="${err}">Error</span>
+                                <input type="number"
+                                       class="govuk-input"
+                                       th:id="__${path}__.funding"
+                                       th:field="*{__${path}__.funding}"
+                                       th:errorclass="govuk-input--error"
+                                       placeholder="0"
+                                       required="required"
+                                       min="1"
+                                       max="9999999999999999999"
+                                       data-field-errormessage="This field can only accept whole numbers.">
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <button class="govuk-button">Save and return to finances</button>
+        </form>
+
+
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

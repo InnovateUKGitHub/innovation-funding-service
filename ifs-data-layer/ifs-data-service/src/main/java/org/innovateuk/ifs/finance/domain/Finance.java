@@ -72,4 +72,8 @@ public abstract class Finance {
     public void setWorkPostcode(String workPostcode) {
         this.workPostcode = workPostcode;
     }
+
+    public String getOrganisationName() {
+        return organisation.getName();
+    }
 }
