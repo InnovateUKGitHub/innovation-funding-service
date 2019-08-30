@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class LoggedInUserMethodArgumentResolverTest {
@@ -81,6 +81,9 @@ public class LoggedInUserMethodArgumentResolverTest {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(userResource);
 
         UserResource loggedInUser = (UserResource) loggedInUserMethodArgumentResolver.resolveArgument(userResourceParameter, modelAndViewContainer, webRequest, webDataBinderFactory);
+
+        verify(userAuthenticationService, times(1)).getAuthenticatedUser(isA(HttpServletRequest.class));
+        verifyNoMoreInteractions(userAuthenticationService);
         assertEquals("Steve", loggedInUser.getFirstName());
     }
 
