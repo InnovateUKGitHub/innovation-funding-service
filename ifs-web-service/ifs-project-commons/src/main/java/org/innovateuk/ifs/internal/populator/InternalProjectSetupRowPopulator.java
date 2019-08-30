@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStages.*;
 
 @Component
@@ -39,6 +40,10 @@ public class InternalProjectSetupRowPopulator {
         Map<ProjectSetupStages, InternalProjectSetupCell> activityStates = new LinkedHashMap<>();
 
         SetupSectionInternalUser setupSectionInternalUser = new SetupSectionInternalUser(status);
+
+        if (isEmpty(columns)) {
+            return activityStates;
+        }
 
         if (columns.contains(PROJECT_DETAILS)) {
             activityStates.put(PROJECT_DETAILS,

@@ -27,8 +27,9 @@ public class CompetitionInitialiserTest {
                 SUBCONTRACTING_COSTS,
                 TRAVEL,
                 OTHER_COSTS,
-                FINANCE,
-                OTHER_FUNDING
+                GRANT_CLAIM_AMOUNT,
+                OTHER_FUNDING,
+                YOUR_FINANCE
         )));
 
         assertTrue(competitionWithFinanceTypes.getProjectSetupStages().containsAll(EnumSet.of(

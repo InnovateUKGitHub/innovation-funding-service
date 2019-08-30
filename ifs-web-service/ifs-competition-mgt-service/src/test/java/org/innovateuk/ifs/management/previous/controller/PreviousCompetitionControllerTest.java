@@ -8,15 +8,19 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.internal.populator.InternalProjectSetupRowPopulator;
 import org.innovateuk.ifs.management.competition.previous.controller.PreviousCompetitionController;
-import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousCompetitionViewModel;
+import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousBaseCompetitionViewModel;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.ZonedDateTime;
@@ -26,7 +30,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
@@ -58,6 +61,10 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
     @Mock
     private StatusRestService statusRestService;
 
+    @InjectMocks
+    @Spy
+    private InternalProjectSetupRowPopulator internalProjectSetupRowPopulator;
+
     @Test
     public void viewPreviousCompetition() throws Exception {
         long competitionId = 1L;
@@ -73,10 +80,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .build();
 
-        CompetitionProjectsStatusResource statusResource = newCompetitionProjectsStatusResource().
-                withCompetitionName("ABC").
-                withCompetitionNumber(competitionId).
-                withProjectStatusResources(newProjectStatusResource().
+        List<ProjectStatusResource> statusResource = newProjectStatusResource().
                         withProjectNumber(1L, 2L, 3L).
                         withApplicationNumber(1L, 2L, 3L).
                         withProjectTitles("Project ABC", "Project PMQ", "Project XYZ").
@@ -90,8 +94,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                         withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
                         withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
                         withProjectState(LIVE).
-                        build(3)).
-                build();
+                        build(3);
 
         List<PreviousApplicationResource> previousApplications = newPreviousApplicationResource().build(1);
 
@@ -103,7 +106,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .andExpect(view().name("competition/previous"))
                 .andReturn();
 
-        PreviousCompetitionViewModel viewModel = (PreviousCompetitionViewModel) result.getModelAndView().getModel().get("model");
+        PreviousBaseCompetitionViewModel viewModel = (PreviousBaseCompetitionViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals("competition", viewModel.getCompetitionName());

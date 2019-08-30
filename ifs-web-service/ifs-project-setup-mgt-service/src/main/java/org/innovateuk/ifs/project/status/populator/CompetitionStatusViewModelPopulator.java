@@ -52,9 +52,7 @@ public class CompetitionStatusViewModelPopulator {
 
         List<InternalProjectSetupRow> internalProjectSetupRows = internalProjectSetupRowPopulator.populate(projectStatusResources, competition, user);
 
-        return new CompetitionStatusViewModel(
-                competitionId,
-                competition.getName(),
+        return new CompetitionStatusViewModel(competition,
                 hasProjectFinanceRole,
                 openQueryCount,
                 pendingSpendProfilesCount,

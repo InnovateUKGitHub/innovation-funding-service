@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -67,7 +68,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         requestParameters(
                                 parameterWithName("applicationSearchString").description("The filter to search by application number.")
                         ),
-                        responseFields(projectStatusResourceFields)
+                        responseFields(fieldWithPath("[]").description("List of project statuses"))
+                                .andWithPrefix("[].", projectStatusResourceFields)
                 ));
     }
 
@@ -94,11 +96,13 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
 
         mockMvc.perform(get("/project/previous/competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(content().json(toJson(projectStatusResources)))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition for which project status details are being requested")
                         ),
-                        responseFields(projectStatusResourceFields)
+                        responseFields(fieldWithPath("[]").description("List of project statuses"))
+                                .andWithPrefix("[].", projectStatusResourceFields)
                 ));
     }
 
