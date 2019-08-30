@@ -213,7 +213,7 @@ the correct funding is displayed to academic user
     Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user clicks the button twice      jQuery = label:contains("Bath Spa")
     ...                              AND                     the user clicks the button/link       jQuery = .govuk-button:contains("Save and continue")
     the user clicks the button/link   link = Your project finances
-    the user should see the element   jQuery = td:contains(" 0%")
+    the user should see the element   jQuery = td:contains("0%")
 
 the academic user marks your project costs as complete
     the user clicks the button/link        link = Your project costs

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,9 +15,6 @@ import static java.lang.String.format;
 
 @Component
 public class ApplicationUrlHelper {
-
-    @Autowired
-    private FinanceUtil financeUtil;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -55,7 +51,7 @@ public class ApplicationUrlHelper {
             case PROJECT_COST_FINANCES:
                 CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
                 OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-                if (financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType())) {
+                if (competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
                     return Optional.of(String.format("/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId));
                 } else if (competition.isH2020()) {
                     return Optional.of(String.format("/application/%d/form/horizon-2020-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId));

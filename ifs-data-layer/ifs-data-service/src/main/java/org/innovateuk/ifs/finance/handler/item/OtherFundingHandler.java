@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.validator.OtherFundingValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +49,16 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
+    public OtherFunding toResource(FinanceRow cost) {
         return buildRowItem(cost);
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost) {
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return OTHER_FUNDING;
+    }
+
+    private OtherFunding buildRowItem(FinanceRow cost) {
         if (OTHER_FUNDING_NAME.equals(cost.getDescription())) {
             return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), null, cost.getCost(), cost.getTarget().getId());
         }

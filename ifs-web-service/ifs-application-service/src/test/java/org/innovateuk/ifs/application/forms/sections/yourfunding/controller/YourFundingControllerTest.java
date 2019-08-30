@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.YourFundingSaver;
@@ -72,7 +72,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(formPopulator).populateForm(any(YourFundingForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID));
+        verify(formPopulator).populateForm(eq(APPLICATION_ID), eq(ORGANISATION_ID));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
     @Test
     public void saveYourFunding() throws Exception {
-        when(saver.save(eq(APPLICATION_ID), any(), eq(getLoggedInUser()))).thenReturn(serviceSuccess());
+        when(saver.save(eq(APPLICATION_ID), any(YourFundingPercentageForm.class), eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -122,18 +122,19 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
     @Test
     public void complete() throws Exception {
-        when(saver.save(eq(APPLICATION_ID), any(), eq(getLoggedInUser()))).thenReturn(serviceSuccess());
+        when(saver.save(eq(APPLICATION_ID), any(YourFundingPercentageForm.class),  eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(noErrors()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("complete", "true"))
+                .param("complete", "true")
+                .param("grantClaimPercentage", "100"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
 
-        verify(saver).save(eq(APPLICATION_ID), any(), eq(getLoggedInUser()));
+        verify(saver).save(eq(APPLICATION_ID), any(YourFundingPercentageForm.class),  eq(ORGANISATION_ID));
         verify(sectionStatusRestService).markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
     }
 
@@ -148,7 +149,8 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("complete", "true"))
+                .param("complete", "true")
+                .param("grantClaimPercentage", "100"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
@@ -220,7 +222,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         row.setCostId(Long.valueOf(rowId));
 
         doAnswer((invocation) -> {
-            YourFundingForm form = (YourFundingForm) invocation.getArguments()[0];
+            YourFundingPercentageForm form = (YourFundingPercentageForm) invocation.getArguments()[0];
             form.getOtherFundingRows().put(rowId, row);
             return null;
         }).when(saver).addOtherFundingRow(any());

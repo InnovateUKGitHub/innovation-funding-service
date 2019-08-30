@@ -23,7 +23,6 @@ import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepositor
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -47,6 +46,7 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newPro
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
@@ -75,9 +75,6 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
     @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
-
-    @Mock
-    private FinanceUtil financeUtilMock;
 
     @Mock
     private ProjectFinanceRepository projectFinanceRepositoryMock;
@@ -111,7 +108,9 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        competition = newCompetitionResource().build();
+        competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .build();
 
         costCategories = newCostCategory().withName("Cat1", "Cat2").build(2);
 
@@ -178,7 +177,8 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
     @Test
     public void testCreateFinanceChecksFiguresWhenOrganisationIsUsingJesFinances() {
-        when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType().getId())).thenReturn(true);
+        organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build());
+
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
         when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
@@ -217,9 +217,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
         assertTrue(result.isSuccess());
 
-
         verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
-        verifyZeroInteractions(financeUtilMock);
 
         assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
 

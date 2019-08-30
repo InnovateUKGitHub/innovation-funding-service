@@ -4,7 +4,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Vat;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -24,13 +24,15 @@ public class VatHandler extends FinanceRowHandler<Vat> {
     }
 
     @Override
-    public FinanceRowItem toResource(FinanceRow cost) {
-        return buildRowItem(cost);
-    }
-
-    private FinanceRowItem buildRowItem(FinanceRow cost){
+    public Vat toResource(FinanceRow cost) {
         return new Vat(cost.getId(), cost.getItem() == null ? null : Boolean.valueOf(cost.getItem()), cost.getCost(), cost.getTarget().getId());
     }
+
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return FinanceRowType.VAT;
+    }
+
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(Vat vat) {

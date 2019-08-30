@@ -157,7 +157,4 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         }
         return assessorFormInputResponseRestService.getAllAssessorFormInputResponses(settings.getAssessmentId()).getSuccess();
     }
-
-
-
 }
