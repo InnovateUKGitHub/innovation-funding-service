@@ -301,10 +301,10 @@ public class OrganisationFinanceController {
 
         Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
 
-        resetFundingLevel(applicationFinance, financeQuestion.getId());
+        resetFundingLevel(applicationFinance);
     }
 
-    private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
+    private void resetFundingLevel(ApplicationFinanceResource applicationFinance) {
         GrantClaim grantClaim = applicationFinance.getGrantClaim();
         grantClaim.reset();
         financeRowCostsService.update(grantClaim.getId(), grantClaim).getSuccess();
@@ -312,11 +312,6 @@ public class OrganisationFinanceController {
 
     private ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, YearMonth financialYearEnd) {
         return updateYearMonthValueForFormInput(applicationId, competitionId, userId, financialYearEnd, FormInputType.FINANCIAL_YEAR_END);
-    }
-
-    private ServiceResult<Boolean> isIncludingGrowthTable(long competitionId) {
-        return competitionService.getCompetitionById(competitionId).
-                andOnSuccessReturn(competition -> TRUE.equals(competition.getIncludeProjectGrowthTable()));
     }
 
     private ServiceResult<YearMonth> getFinancialYearEnd(long applicationId, long competitionId, long organisationId) {
