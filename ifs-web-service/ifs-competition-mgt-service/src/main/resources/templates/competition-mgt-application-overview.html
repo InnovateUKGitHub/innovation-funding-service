@@ -5,7 +5,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.application.id}: ${applicationName} - Application overview|,hasFormErrors=${#fields.hasErrors('${ineligibleForm.*}')}" />
 </head>
 
-<body class="govuk-template__body app-summary competition-management" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">
+<body class="govuk-template__body app-summary" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">
 
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
