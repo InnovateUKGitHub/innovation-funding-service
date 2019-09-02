@@ -635,45 +635,17 @@
     </th:block>
 </th:block>
 
+<!--/* Only change is valid for grant claims */-->
 <th:block th:fragment="finance">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <tr th:class="${changePair.submitted.grantClaimPercentage != changePair.changed.grantClaimPercentage} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
-            <td class="govuk-table__cell" rowspan="1" th:text="${typeOfChange}"></td>
-            <td class="govuk-table__cell" rowspan="1" th:text="${rowTypeName}"></td>
-            <th class="govuk-table__header" scope="row">Funding level</th>
-            <td class="govuk-table__cell" th:text="${changePair.submitted.grantClaimPercentage + '%'}"></td>
-            <td th:text="${changePair.changed.grantClaimPercentage + '%'}" colspan="2" th:class="${changePair.submitted.grantClaimPercentage!= changePair.changed.grantClaimPercentage} ? 'govuk-table\_\_cell item-changed' : 'govuk-table\_\_cell'"></td>
-        </tr>
-
-        <tr class="govuk-table__row change-row" th:with="difference=${changePair.changed.grantClaimPercentage - changePair.submitted.grantClaimPercentage}">
-            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6"></td>
-        </tr>
+        <p class="govuk-body" th:text="|Submitted funding level: ${changePair.submitted.percentage}%|"></p>
+        <p class="govuk-body govuk-!-font-weight-bold" th:text="|Changed funding level: ${changePair.changed.percentage}%|"></p>
     </th:block>
-
-    <th:block th:if="${typeOfChange == 'New'}">
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell" rowspan="1" th:text="${typeOfChange}"></td>
-            <td class="govuk-table__cell" rowspan="1" th:text="${rowTypeName}"></td>
-            <th class="govuk-table__header" scope="row">Funding level</th>
-            <td class="govuk-table__cell"></td>
-            <td class="govuk-table__cell"th:text="${changePair.changed.grantClaimPercentage + '%'}" colspan="2"></td>
-        </tr>
-        <tr class="govuk-table__row change-row">
-            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.grantClaimPercentage,0, 'DEFAULT')}" colspan="6"></td>
-        </tr>
-    </th:block>
-
-    <th:block th:if="${typeOfChange == 'Remove'}">
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell" rowspan="1" th:text="${typeOfChange}"></td>
-            <td class="govuk-table__cell" rowspan="1" th:text="${rowTypeName}"></td>
-            <th class="govuk-table__header" scope="row">Funding level</th>
-            <td class="govuk-table__cell" th:text="${changePair.submitted.grantClaimPercentage + '%'}"></td>
-            <td class="govuk-table__cell" colspan="2"></td>
-        </tr>
-        <tr class="govuk-table__row change-row">
-            <td class="govuk-table__cell--numeric" th:text="|-${#numbers.formatInteger(changePair.submitted.grantClaimPercentage,0, 'DEFAULT')}|" colspan="6"></td>
-        </tr>
+</th:block>
+<th:block th:fragment="grant_claim_amount">
+    <th:block th:if="${typeOfChange == 'Change'}">
+        <p class="govuk-body" th:text="|Submitted funding sought: £${changePair.submitted.amount}|"></p>
+        <p class="govuk-body govuk-!-font-weight-bold" th:text="|Changed funding sought: £${changePair.changed.amount}|"></p>
     </th:block>
 </th:block>
 
