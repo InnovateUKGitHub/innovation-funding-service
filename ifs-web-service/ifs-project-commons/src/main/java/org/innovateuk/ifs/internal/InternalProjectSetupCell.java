@@ -1,17 +1,20 @@
 package org.innovateuk.ifs.internal;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.sections.SectionAccess;
+
+import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 
 public class InternalProjectSetupCell {
     private final ProjectActivityStates projectActivityState;
     private final String url;
-    private final SectionAccess canBeAccessed;
+    private final Boolean canBeAccessed;
 
     public InternalProjectSetupCell(ProjectActivityStates projectActivityState, String url, SectionAccess canBeAccessed) {
         this.projectActivityState = projectActivityState;
         this.url = url;
-        this.canBeAccessed = canBeAccessed;
+        this.canBeAccessed = canBeAccessed == ACCESSIBLE;
     }
 
     public ProjectActivityStates getProjectActivityState() {
@@ -22,7 +25,7 @@ public class InternalProjectSetupCell {
         return url;
     }
 
-    public SectionAccess isCanBeAccessed() {
+    public Boolean isCanBeAccessed() {
         return canBeAccessed;
     }
 }

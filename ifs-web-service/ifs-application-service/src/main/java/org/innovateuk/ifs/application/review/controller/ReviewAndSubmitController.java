@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.review.controller;
 
+import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -65,7 +67,9 @@ public class ReviewAndSubmitController {
     @PreAuthorize("hasAnyAuthority('applicant')")
     @GetMapping("/{applicationId}/review-and-submit")
     @AsyncMethod
-    public String reviewAndSubmit(@PathVariable long applicationId,
+    public String reviewAndSubmit(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationSubmitForm applicationSubmitForm,
+                                  BindingResult bindingResult,
+                                  @PathVariable long applicationId,
                                   Model model,
                                   UserResource user) {
         model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user));
@@ -76,7 +80,9 @@ public class ReviewAndSubmitController {
     @SecuredBySpring(value = "APPLICATION_SUBMIT", description = "Applicants can submit their applications.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/review-and-submit")
-    public String submitApplication(@PathVariable long applicationId,
+    public String submitApplication(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationSubmitForm applicationSubmitForm,
+                                    BindingResult bindingResult,
+                                    @PathVariable long applicationId,
                                     RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("termsAgreed", true);
@@ -147,6 +153,7 @@ public class ReviewAndSubmitController {
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(@PathVariable long applicationId,
                                            @ModelAttribute("termsAgreed") Boolean termsAgreed,
+                                           @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
                                            Model model) {
         if (!TRUE.equals(termsAgreed)) {
             return format("redirect:/application/%d/summary", applicationId);
@@ -159,6 +166,8 @@ public class ReviewAndSubmitController {
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/confirm-submit")
     public String applicationSubmit(Model model,
+                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
+                                    @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable("applicationId") long applicationId,
                                     UserResource user,
@@ -173,7 +182,7 @@ public class ReviewAndSubmitController {
 
         RestResult<Void> updateResult = applicationRestService.updateApplicationState(applicationId, SUBMITTED);
 
-        Supplier<String> failureView = () -> applicationConfirmSubmit(applicationId, true, model);
+        Supplier<String> failureView = () -> applicationConfirmSubmit(applicationId, true, form, model);
 
         return validationHandler.addAnyErrors(updateResult)
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%d/track", applicationId));
