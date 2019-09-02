@@ -178,12 +178,11 @@ User should have access to all the sections
     And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
 
 The user must select the Terms and Conditions they want Applicants to accept
-    [Documentation]  IFS-3086
+    [Documentation]  IFS-3086  IFS-6205
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When The user clicks the button/link     jQuery = label:contains("Advanced")
+    When the user should see the element     link = Loans
     And the user clicks the button/link      jQuery = button:contains("Done")
-    Then the user should see the element     link = Advanced Propulsion Centre (APC)
     And the user clicks the button/link      link = Competition setup
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
