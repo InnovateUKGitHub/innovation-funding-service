@@ -11,7 +11,6 @@ public class ApplicationFinanceTest {
     private ApplicationFinance applicationFinance;
     private Organisation organisation;
     private Application application;
-    private String workPostcode;
 
     @Before
     public void setUp() {
