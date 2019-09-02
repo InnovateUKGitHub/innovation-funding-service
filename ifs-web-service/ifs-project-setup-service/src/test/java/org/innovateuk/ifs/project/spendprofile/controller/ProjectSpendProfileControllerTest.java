@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
@@ -62,6 +63,7 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -150,6 +152,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
@@ -169,6 +172,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
+        assertTrue(expectedViewModel.isIncludeFinancialYearTable());
+
     }
 
     @Test
@@ -187,6 +192,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
@@ -224,6 +230,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -338,6 +345,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
@@ -418,6 +426,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
@@ -521,6 +530,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -734,6 +744,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);

@@ -280,7 +280,7 @@
                 </div>
                 <div class="flex-table-after"></div>
             </div>
-            <div class="govuk-width-container">
+            <div class="govuk-width-container" th:if="${model.includeFinancialYearTable}">
                 <h2 class="govuk-heading-m">Project costs for financial year</h2>
                 <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
                 <table class="govuk-table govuk-!-margin-bottom-6 govuk-!-width-one-half">
