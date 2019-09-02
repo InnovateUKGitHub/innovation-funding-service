@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckOverviewViewModel;
 import org.innovateuk.ifs.project.ProjectService;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -30,6 +32,7 @@ import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuil
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckOverviewResourceBuilder.newFinanceCheckOverviewResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -59,7 +62,10 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
     public void views() throws Exception {
         long projectId = 123L;
         long organisationId = 456L;
-        CompetitionResource competition = newCompetitionResource().withFundingType(FundingType.GRANT).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.LOAN)
+                .withFinanceRowTypes(EnumSet.of(FinanceRowType.GRANT_CLAIM_AMOUNT))
+                .build();
 
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource()
                 .withOrganisationName("EGGS", "Ludlow", "Empire").withLeadOrganisation(false, false, true).withProject(projectId).build(3);
@@ -71,7 +77,7 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         ProjectResource projectResource = newProjectResource().withCompetition(competition.getId()).build();
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competition));
-
+        when(financeCheckServiceMock.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(newFinanceCheckSummaryResource().build()));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check-overview")).
                 andExpect(view().name("project/financecheck/overview")).
                 andReturn();
