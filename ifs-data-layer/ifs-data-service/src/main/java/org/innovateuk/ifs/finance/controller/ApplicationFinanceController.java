@@ -69,13 +69,6 @@ public class ApplicationFinanceController {
     public RestResult<Double> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
         return financeService.getResearchParticipationPercentage(applicationId).toGetResponse();
     }
-    @ZeroDowntime(description = "remove this", reference = "IFS-6342")
-    @PostMapping("/add/{applicationId}/{organisationId}")
-    public RestResult<ApplicationFinanceResource> createApplicationFinance(
-            @PathVariable("applicationId") final Long applicationId,
-            @PathVariable("organisationId") final Long organisationId) {
-        return restSuccess(new ApplicationFinanceResource());
-    }
     @GetMapping("/get-by-id/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
         return financeService.getApplicationFinanceById(applicationFinanceId).toGetResponse();
