@@ -5,7 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.controller.ProjectFinanceRowController;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     public void getCostItem() throws Exception{
         String url = BASE_URL + "/{id}";
 
-        when(projectFinanceRowServiceMock.get(123L)).thenReturn(serviceSuccess(new GrantClaim(1L)));
+        when(projectFinanceRowServiceMock.get(123L)).thenReturn(serviceSuccess(new GrantClaimPercentage(1L)));
 
         mockMvc.perform(get(url, 123L)
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -58,7 +58,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     @Test
     public void updateCostItem() throws Exception {
 
-        GrantClaim costItem = new GrantClaim(1L);
+        GrantClaimPercentage costItem = new GrantClaimPercentage(1L);
         when(projectFinanceRowServiceMock.update(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
         when(validationUtil.validateProjectCostItem(isA(FinanceRowItem.class))).thenReturn(new ValidationMessages());
         mockMvc.perform(put(BASE_URL + "/{id}", "123")

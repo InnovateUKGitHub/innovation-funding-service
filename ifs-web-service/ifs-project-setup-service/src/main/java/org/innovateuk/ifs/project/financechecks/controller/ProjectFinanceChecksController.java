@@ -43,7 +43,6 @@ import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -123,9 +122,6 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private EncryptedCookieService cookieUtil;
-
-    @Autowired
-    private FinanceUtil financeUtil;
 
     @Autowired
     private UserRestService userRestService;
@@ -391,7 +387,7 @@ public class ProjectFinanceChecksController {
                 FinanceChecksQueryConstraints.MAX_QUERY_WORDS,
                 FinanceChecksQueryConstraints.MAX_QUERY_CHARACTERS,
                 queryId,
-                PROJECT_FINANCE_CHECKS_BASE_URL, financeUtil.isUsingJesFinances(competition, organisationResource.getOrganisationType()));
+                PROJECT_FINANCE_CHECKS_BASE_URL, competition.applicantShouldUseJesFinances(organisationResource.getOrganisationTypeEnum()));
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {

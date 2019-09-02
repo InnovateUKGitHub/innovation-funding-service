@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -101,6 +102,11 @@ public class OrganisationResource {
 
     public void setOrganisationTypeDescription(String organisationTypeDescription) {
         this.organisationTypeDescription = organisationTypeDescription;
+    }
+
+    @JsonIgnore
+    public OrganisationTypeEnum getOrganisationTypeEnum() {
+        return OrganisationTypeEnum.getFromId(organisationType);
     }
 
     @Override

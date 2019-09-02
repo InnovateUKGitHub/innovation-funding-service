@@ -48,7 +48,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
     }
 
     @Test
-    public void createErrorModelAndViewWithStatus() throws Exception {
+    public void createErrorModelAndViewWithStatus() {
         Exception exception = new IFSRuntimeException();
         List<Object> arguments = asList("arg 1", "arg 2");
         httpServletRequest.setRequestURI("/test.html");
@@ -74,7 +74,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
     }
 
     @Test
-    public void createErrorModelAndViewWithStatusAndView() throws Exception {
+    public void createErrorModelAndViewWithStatusAndView() {
         Exception exception = new IFSRuntimeException();
         List<Object> arguments = asList("arg 1", "arg 2");
         httpServletRequest.setRequestURI("/test.html");
@@ -100,7 +100,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
     }
 
     @Test
-    public void createErrorModelAndViewWithStatusAndView_withoutDebug() throws Exception {
+    public void createErrorModelAndViewWithStatusAndView_withoutDebug() {
         Exception exception = new IFSRuntimeException();
         List<Object> arguments = asList("arg 1", "arg 2");
         httpServletRequest.setRequestURI("/test.html");
@@ -125,7 +125,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
     }
 
     @Test
-    public void createErrorModelAndViewWithTitleAndMessage() throws Exception {
+    public void createErrorModelAndViewWithTitleAndMessage() {
         Exception exception = new IFSRuntimeException();
         List<Object> arguments = asList("arg 1", "arg 2");
         httpServletRequest.setRequestURI("/test.html");
@@ -152,7 +152,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
     }
 
     @Test
-    public void createErrorModelAndViewWithUrlTitleAndMessage() throws Exception {
+    public void createErrorModelAndViewWithUrlTitleAndMessage() {
         Exception exception = new IFSRuntimeException();
         List<Object> arguments = asList("arg 1", "arg 2");
         httpServletRequest.setRequestURI("/test.html");
@@ -179,7 +179,7 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
     }
 
     @Test
-    public void createErrorModelAndViewWithUrlTitleMessageAndView() throws Exception {
+    public void createErrorModelAndViewWithUrlTitleMessageAndView() {
         Exception exception = new IFSRuntimeException();
         List<Object> arguments = asList("arg 1", "arg 2");
         httpServletRequest.setRequestURI("/test.html");

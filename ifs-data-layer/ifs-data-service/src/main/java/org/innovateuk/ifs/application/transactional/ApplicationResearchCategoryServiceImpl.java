@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
@@ -31,7 +32,6 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -135,9 +135,10 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
                 .getOptionalSuccessObject()
                 .ifPresent(applicationFinanceResources ->
                         applicationFinanceResources.forEach(applicationFinance -> {
-                            if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
-                                applicationFinance.getGrantClaim().setGrantClaimPercentage(null);
-                                financeRowCostsService.update(applicationFinance.getGrantClaim().getId(), applicationFinance.getGrantClaim());
+                            GrantClaim grantClaim = applicationFinance.getGrantClaim();
+                            if (grantClaim != null && financeQuestion.isPresent()) {
+                                grantClaim.reset();
+                                financeRowCostsService.update(grantClaim.getId(), grantClaim);
                             }
                         })
                 );
@@ -149,8 +150,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(
                 application.getCompetition().getId()).getSuccess();
 
-        return !application.getCompetition().isFullyFunded()
-                && organisation.getOrganisationType().equals(BUSINESS.getId())
-                && !maximumFundingLevelOverridden;
+        return !application.getCompetition()
+                .isMaximumFundingLevelConstant(organisation.getOrganisationTypeEnum(), maximumFundingLevelOverridden);
     }
 }

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -17,8 +16,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
  * This RestController exposes CRUD operations to manage {@link ProjectFinanceRow} related data.
  */
 @RestController
-@ZeroDowntime(reference = "IFS-6274", description = "Delete old request mappings")
-@RequestMapping({"/cost/project", "project-finance-row"})
+@RequestMapping("project-finance-row")
 public class ProjectFinanceRowController {
 
     @Autowired
@@ -27,7 +25,7 @@ public class ProjectFinanceRowController {
     @Autowired
     private FinanceValidationUtil validationUtil;
 
-    @PostMapping({"/add-with-response/{financeId}", ""})
+    @PostMapping
     public RestResult<FinanceRowItem> addWithResponse(@RequestBody final FinanceRowItem financeRowItem) {
         return projectFinanceRowService.create(financeRowItem).toPostCreateResponse();
     }
@@ -41,7 +39,7 @@ public class ProjectFinanceRowController {
      * Save the updated FinanceRowItem in project finances and if there are validation messages, return those (but still save)
      * @return ValidationMessages resource object to store validation messages about invalid user input.
      */
-    @PutMapping({"/update/{id}", "/{id}"})
+    @PutMapping("/{id}")
     public RestResult<ValidationMessages> update(@PathVariable final long id, @RequestBody final FinanceRowItem financeRowItem) {
         ValidationMessages validationMessages = validationUtil.validateProjectCostItem(financeRowItem);
         if(!validationMessages.hasErrors()){
@@ -53,7 +51,7 @@ public class ProjectFinanceRowController {
         return restSuccess(validationMessages);
     }
 
-    @DeleteMapping({"/delete/{costId}", "/{id}"})
+    @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable final long id) {
         return projectFinanceRowService.delete(id).toDeleteResponse();
     }

@@ -22,6 +22,7 @@ public class ApplicationInviteResourceDocs {
             fieldWithPath("applicationName").description("Application name of the invite resource"),
             fieldWithPath("inviteOrganisation").description("Invite organisation of the invite resource"),
             fieldWithPath("inviteOrganisationName").description("Invite organisation name of the invite resource"),
+            fieldWithPath("inviteNameConfirmed").description("Has the name of the organisation on the invite been confirmed"),
             fieldWithPath("inviteOrganisationNameConfirmed").description("Invite organisation name confirmed of the invite resource"),
             fieldWithPath("hash").description("Hash of the invite resource"),
             fieldWithPath("status").description("Status of the invite resource"),

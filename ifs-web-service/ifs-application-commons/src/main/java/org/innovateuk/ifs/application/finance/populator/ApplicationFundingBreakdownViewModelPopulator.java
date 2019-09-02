@@ -108,6 +108,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
     private Collection<BreakdownTableRow> pendingOrganisations(long applicationId) {
         return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
+                .filter(ApplicationInviteResource::isInviteNameConfirmed)
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
                 .map(BreakdownTableRow::pendingOrganisation)
