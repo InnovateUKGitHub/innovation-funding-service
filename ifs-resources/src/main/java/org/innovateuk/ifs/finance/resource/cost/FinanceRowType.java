@@ -20,10 +20,11 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     SUBCONTRACTING_COSTS("subcontracting", "Subcontracting", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     TRAVEL("travel", "Travel and subsistence", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     OTHER_COSTS("other_costs", "Other costs", singletonList(INCLUDE_IN_SPEND_PROFILE)),
-    YOUR_FINANCE("your_finance"),
-    FINANCE("finance", "Finance"),
+    YOUR_FINANCE("your_finance"), // Only used for TSB Reference in Je-S finances.
+    FINANCE("finance", "Finance"), // Grant claim percentage
+    GRANT_CLAIM_AMOUNT("grant_claim_amount", "Finance"),
     OTHER_FUNDING("other_funding", "Other Funding"),
-    ACADEMIC("academic"),
+    ACADEMIC("academic"), //TODO Remove IFS-6350
     VAT("vat");
 
     enum FinanceRowOptions {
@@ -71,13 +72,6 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return simpleFindFirst(
                 FinanceRowType.values(),
                 frt -> frt.getName().equals(name)
-        );
-    }
-
-    public static Optional<FinanceRowType> getByTypeName(String typeName) {
-        return simpleFindFirst(
-                FinanceRowType.values(),
-                frt -> frt.getType().equals(typeName)
         );
     }
 }

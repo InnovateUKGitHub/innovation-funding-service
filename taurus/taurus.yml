@@ -12,7 +12,6 @@ modules:
       longer_pause_deviation : 15000
       server_url : "${server_url}"
       authorisation_url : "${authorisation_url}"
-      users_csv : "${data_path}user_data.csv"
       competitions_csv : "${data_path}competition_data.csv"
       invites_csv : "${data_path}invite_data.csv"
       assessor_csv : "${data_path}assessor_data.csv"
@@ -41,8 +40,6 @@ execution:
       eu-west-2: 1
       europe-west2-a: 1
     concurrency: ${applicant_users}
-    files:
-      - jmeter/Representative/user_data.csv
 
   - scenario: registration_users
     iterations: 1
@@ -69,14 +66,14 @@ execution:
       europe-west2-a: 1
     concurrency: ${comp_management_users}
 
-  - scenario: assessor_users
-    iterations: 1
-    locations:
-      eu-west-2: 1
-      europe-west2-a: 1
-    concurrency: ${assessor_users}
-    files:
-      - jmeter/Representative/assessor_data.csv
+#  - scenario: assessor_users
+#    iterations: 1
+#    locations:
+#      eu-west-2: 1
+#      europe-west2-a: 1
+#    concurrency: ${assessor_users}
+#    files:
+#      - jmeter/Representative/assessor_data.csv
 
 scenarios:
   invite_users:
@@ -89,8 +86,8 @@ scenarios:
     script: taurus/front_door.jmx
   competition_management:
     script: taurus/competition_management.jmx
-  assessor_users:
-    script: taurus/assessor.jmx
+#  assessor_users:
+#    script: taurus/assessor.jmx
 
 reporting:
   - module: passfail

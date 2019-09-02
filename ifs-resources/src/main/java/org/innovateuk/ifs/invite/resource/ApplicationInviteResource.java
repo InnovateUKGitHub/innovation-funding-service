@@ -191,12 +191,16 @@ public class ApplicationInviteResource extends InviteResource {
         return inviteOrganisationNameConfirmed;
     }
 
+    public boolean isInviteNameConfirmed() {
+        return StringUtils.isBlank(getInviteOrganisationNameConfirmed());
+    }
+
     public void setInviteOrganisationNameConfirmed(String inviteOrganisationNameConfirmed) {
         this.inviteOrganisationNameConfirmed = inviteOrganisationNameConfirmed;
     }
 
     public String getInviteOrganisationNameConfirmedSafe() {
-        return StringUtils.isBlank(getInviteOrganisationNameConfirmed()) ? getInviteOrganisationName() : getInviteOrganisationNameConfirmed();
+        return isInviteNameConfirmed() ? getInviteOrganisationName() : getInviteOrganisationNameConfirmed();
     }
 
     public ZonedDateTime getSentOn() {

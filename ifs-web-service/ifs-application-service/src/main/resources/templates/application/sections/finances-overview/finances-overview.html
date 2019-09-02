@@ -16,11 +16,16 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Your funding',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+                  th:with="pageTitle='Finances overview',subTitle=${model.applicationName},size='govuk-heading-xl'" />
 
-        <h2 class="govuk-heading-m">Funding rules for this competition</h2>
+        <p class="hint govuk-body-l" th:text="${model.hint}">hint-text</p>
 
-        <div class="govuk-!-margin-bottom-6 govuk-!-padding-top-2 govuk-!-padding-bottom-0"
+        <th:block th:if="${model.hasFundingRules()}">
+            <h2 class="govuk-heading-m">Funding rules for this competition</h2>
+            <div class="govuk-body wysiwyg-styles" ifs:utext="${model.fundingRules}"></div>
+        </th:block>
+
+        <div th:unless="${model.loan}" class="govuk-!-margin-bottom-6 govuk-!-padding-top-2 govuk-!-padding-bottom-0"
              th:classappend="${model.researchParticipationPercentage &gt; model.maxResearchRatio} ? 'eligibility warning' : 'eligibility'">
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>

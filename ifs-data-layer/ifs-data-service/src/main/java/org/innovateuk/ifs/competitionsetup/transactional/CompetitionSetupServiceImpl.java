@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -167,24 +166,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             competitionResource, final Long existingInnovationLeadId) {
 
         return deleteExistingInnovationLead(competitionId, existingInnovationLeadId)
-                .andOnSuccess(() -> attachCorrectTermsAndConditions(competitionResource))
                 .andOnSuccess(() -> save(competitionId, competitionResource))
                 .andOnSuccess(this::saveInnovationLead);
-    }
-
-    private ServiceResult<Void> attachCorrectTermsAndConditions(CompetitionResource competitionResource) {
-
-        Long competitionTypeId = competitionResource.getCompetitionType();
-
-        // it is possible during autosave for this competition type to not yet be selected.  Therefore we need a null check
-        // here
-        if (competitionTypeId != null) {
-            CompetitionType competitionTypeSelected = competitionTypeRepository.findById(competitionTypeId).orElse(null);
-            GrantTermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
-            competitionResource.setTermsAndConditions(termsAndConditionsMapper.mapToResource(termsAndConditions));
-        }
-
-        return serviceSuccess();
     }
 
     private ServiceResult<Void> deleteExistingInnovationLead(Long competitionId, Long existingInnovationLeadId) {

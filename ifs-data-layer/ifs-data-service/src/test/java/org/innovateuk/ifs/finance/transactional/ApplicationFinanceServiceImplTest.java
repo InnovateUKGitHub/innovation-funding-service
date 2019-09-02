@@ -15,8 +15,6 @@ import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -24,7 +22,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -32,8 +32,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.handler.item.GrantClaimHandler.COST_KEY;
-import static org.innovateuk.ifs.finance.handler.item.GrantClaimHandler.GRANT_CLAIM;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.junit.Assert.*;
@@ -117,7 +115,7 @@ public class ApplicationFinanceServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void organisationSeeksFunding(){
+    public void organisationSeeksFunding() {
         Long competitionId = 1L;
         Long applicationId = 1L;
         Long organisationId = 1L;
@@ -133,22 +131,22 @@ public class ApplicationFinanceServiceImplTest extends BaseServiceUnitTest<Appli
         ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).build();
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(applicationFinance);
 
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withOrganisation(organisationId).withGrantClaimPercentage(20).build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withOrganisation(organisationId)
+                .withGrantClaimPercentage(20).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinance)).thenReturn(applicationFinanceResource);
 
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competitionId, organisation.getOrganisationType().getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
-        Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
+        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(applicationFinanceResource.getFinanceOrganisationDetails());
 
-        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(costs);
-
-        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance, null)));
+        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, "", "", "", 20, BigDecimal.ZERO, applicationFinance, null)));
 
         ServiceResult<Boolean> result = service.organisationSeeksFunding(projectId, applicationId, organisationId);
 
         assertTrue(result.isSuccess());
 
-        assertFalse(result.getSuccess());
+        assertTrue(result.getSuccess());
     }
 
     @Test
