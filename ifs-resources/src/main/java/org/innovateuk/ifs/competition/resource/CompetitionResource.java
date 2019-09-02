@@ -6,8 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.project.internal.ProjectSetupStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -40,6 +39,8 @@ public class CompetitionResource implements ApplicationConfiguration {
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
     private List<CompetitionDocumentResource> competitionDocuments = new ArrayList<>();
+    private List<ProjectSetupStage> projectSetupStages = new ArrayList<>();
+
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
@@ -107,7 +108,6 @@ public class CompetitionResource implements ApplicationConfiguration {
     private CompetitionCompletionStage completionStage;
     private FundingType fundingType;
     private Set<FinanceRowType> financeRowTypes;
-    private Set<ProjectSetupStages> projectSetupStages;
     private FileEntryResource competitionTerms;
 
     public CompetitionResource() {
@@ -195,11 +195,11 @@ public class CompetitionResource implements ApplicationConfiguration {
         this.competitionStatus = competitionStatus;
     }
 
-    public Set<ProjectSetupStages> getProjectSetupStages() {
+    public List<ProjectSetupStage> getProjectSetupStages() {
         return projectSetupStages;
     }
 
-    public void setProjectSetupStages(Set<ProjectSetupStages> projectSetupStages) {
+    public void setProjectSetupStages(List<ProjectSetupStage> projectSetupStages) {
         this.projectSetupStages = projectSetupStages;
     }
 

@@ -9,7 +9,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.initialiseFinanceTypes;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
-import static org.innovateuk.ifs.project.internal.ProjectSetupStages.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 import static org.junit.Assert.assertTrue;
 
 public class CompetitionInitialiserTest {

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.internal.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupCell;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
-import org.innovateuk.ifs.project.internal.ProjectSetupStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -12,11 +12,10 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
-import static org.innovateuk.ifs.project.internal.ProjectSetupStages.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 @Component
 public class InternalProjectSetupRowPopulator {
@@ -36,8 +35,8 @@ public class InternalProjectSetupRowPopulator {
                 )).collect(Collectors.toList());
     }
 
-    private Map<ProjectSetupStages, InternalProjectSetupCell> getProjectActivityStatesMap(ProjectStatusResource status, Set<ProjectSetupStages> columns, UserResource user, long competitionId) {
-        Map<ProjectSetupStages, InternalProjectSetupCell> activityStates = new LinkedHashMap<>();
+    private Map<ProjectSetupStage, InternalProjectSetupCell> getProjectActivityStatesMap(ProjectStatusResource status, List<ProjectSetupStage> columns, UserResource user, long competitionId) {
+        Map<ProjectSetupStage, InternalProjectSetupCell> activityStates = new LinkedHashMap<>();
 
         SetupSectionInternalUser setupSectionInternalUser = new SetupSectionInternalUser(status);
 

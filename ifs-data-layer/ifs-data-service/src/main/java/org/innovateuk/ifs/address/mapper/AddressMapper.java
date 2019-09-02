@@ -7,14 +7,14 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.mapstruct.Mapper;
 
-import static org.mapstruct.ReportingPolicy.WARN;
+import static org.mapstruct.ReportingPolicy.IGNORE;
 
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
         OrganisationAddressMapper.class
     },
-    unmappedTargetPolicy = WARN
+    unmappedTargetPolicy = IGNORE
 )
 public abstract class AddressMapper  extends BaseMapper<Address, AddressResource, Long> {
 

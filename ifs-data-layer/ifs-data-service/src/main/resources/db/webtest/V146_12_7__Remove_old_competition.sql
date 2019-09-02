@@ -30,7 +30,7 @@ delete from section where competition_id in (1,2,3,4,5,6,7,8,9);
 
 delete from competition_finance_row_types where competition_id in (1,2,3,4,5,6,7,8,9);
 
--- delete from competition_project_setup_columns where competition_id in (1,2,3,4,5,6,7,8,9);
+delete from project_stages where competition_id in (1,2,3,4,5,6,7,8,9);
 
 delete from milestone where competition_id in (1,2,3,4,5,6,7,8,9);
 

@@ -12,6 +12,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import static org.mapstruct.ReportingPolicy.IGNORE;
+
 @Mapper(
    componentModel = "spring",
    uses = {
@@ -19,6 +21,7 @@ import org.mapstruct.Mappings;
           OrganisationMapper.class,
           UserMapper.class
    }
+        , unmappedTargetPolicy = IGNORE
 )
 public abstract class ProjectUserInviteMapper extends BaseMapper<ProjectUserInvite, ProjectUserInviteResource, Long> {
 

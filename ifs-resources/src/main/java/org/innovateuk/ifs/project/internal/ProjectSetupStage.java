@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.internal;
 
-public enum ProjectSetupStages {
+public enum ProjectSetupStage {
     PROJECT_DETAILS("Project details", "project-details"),
     PROJECT_TEAM("Project team", "project-team"),
     DOCUMENTS("Documents", "documents"),
@@ -11,11 +11,11 @@ public enum ProjectSetupStages {
     GRANT_OFFER_LETTER("GOL", "grant-offer-letter");
 
     private String columnName;
-    private String columntype;
+    private String columnType;
 
-    ProjectSetupStages(String columnName, String columntype) {
+    ProjectSetupStage(String columnName, String columnType) {
         this.columnName = columnName;
-        this.columntype = columntype;
+        this.columnType = columnType;
     }
 
     public String getColumnName() {
@@ -26,11 +26,11 @@ public enum ProjectSetupStages {
         this.columnName = columnName;
     }
 
-    public String getColumntype() {
-        return columntype;
+    public String getColumnType() {
+        return columnType;
     }
 
-    public void setColumntype(String columntype) {
-        this.columntype = columntype;
+    public void setColumnType(String columnType) {
+        this.columnType = columnType;
     }
 }

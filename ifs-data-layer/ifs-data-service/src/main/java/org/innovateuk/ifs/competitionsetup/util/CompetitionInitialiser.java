@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.competitionsetup.util;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import java.util.EnumSet;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
-import static org.innovateuk.ifs.project.internal.ProjectSetupStages.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 public final class CompetitionInitialiser {
 
@@ -78,26 +82,37 @@ public final class CompetitionInitialiser {
     }
 
     private static void addDefaultProjectSetupColumns(Competition competition) {
-        competition.getProjectSetupStages().addAll(EnumSet.of(
-                PROJECT_DETAILS,
-                PROJECT_TEAM,
-                DOCUMENTS,
-                MONITORING_OFFICER,
-                BANK_DETAILS,
-                FINANCE_CHECKS,
-                SPEND_PROFILE,
-                GRANT_OFFER_LETTER
-        ));
+
+        List<ProjectStages> stages = asList(
+                createProjectSetupStage(competition, PROJECT_DETAILS, 1),
+                createProjectSetupStage(competition, PROJECT_TEAM, 2),
+                createProjectSetupStage(competition, DOCUMENTS, 3),
+                createProjectSetupStage(competition, MONITORING_OFFICER, 4),
+                createProjectSetupStage(competition, BANK_DETAILS, 5),
+                createProjectSetupStage(competition, FINANCE_CHECKS, 6),
+                createProjectSetupStage(competition, SPEND_PROFILE, 7),
+                createProjectSetupStage(competition, GRANT_OFFER_LETTER, 8)
+        );
+
+        competition.setProjectStages(stages);
+
     }
 
     private static void addLoanProjectSetupColumns(Competition competition) {
-        competition.getProjectSetupStages().addAll(EnumSet.of(
-                PROJECT_DETAILS,
-                PROJECT_TEAM,
-                DOCUMENTS,
-                MONITORING_OFFICER,
-                FINANCE_CHECKS,
-                SPEND_PROFILE
-        ));
+
+        List<ProjectStages> stages = asList(
+                createProjectSetupStage(competition, PROJECT_DETAILS, 1),
+                createProjectSetupStage(competition, PROJECT_TEAM, 2),
+                createProjectSetupStage(competition, DOCUMENTS, 3),
+                createProjectSetupStage(competition, MONITORING_OFFICER, 4),
+                createProjectSetupStage(competition, FINANCE_CHECKS, 5),
+                createProjectSetupStage(competition, SPEND_PROFILE, 6)
+        );
+
+        competition.setProjectStages(stages);
+    }
+
+    private static ProjectStages createProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage, long priorty) {
+        return new ProjectStages(competition, projectSetupStage, priorty);
     }
 }

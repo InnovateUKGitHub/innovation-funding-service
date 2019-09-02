@@ -15,7 +15,8 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.project.internal.ProjectSetupStages;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -163,11 +164,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Enumerated(EnumType.STRING)
     private Set<FinanceRowType> financeRowTypes = new HashSet<>();
 
-    @ElementCollection(targetClass = ProjectSetupStages.class)
-    @JoinTable(name = "competition_project_setup_columns", joinColumns = @JoinColumn(name = "competition_id"))
-    @Column(name = "project_setup_column", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Set<ProjectSetupStages> projectSetupStages = new LinkedHashSet<>();
+    @OrderBy("priority ASC")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectStages> projectStages = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionTermsFileEntryId", referencedColumnName = "id")
@@ -234,12 +233,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.financeRowTypes = financeRowTypes;
     }
 
-    public Set<ProjectSetupStages> getProjectSetupStages() {
-        return projectSetupStages;
+    public List<ProjectStages> getProjectStages() {
+        return projectStages;
     }
 
-    public void setProjectSetupStages(Set<ProjectSetupStages> projectSetupStages) {
-        this.projectSetupStages = projectSetupStages;
+    public void setProjectStages(List<ProjectStages> projectStages) {
+        this.projectStages = projectStages;
     }
 
     public List<Section> getSections() {
@@ -880,5 +879,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public Optional<FileEntry> getCompetitionTerms() {
         return ofNullable(competitionTerms);
+    }
+
+    public List<ProjectSetupStage> getProjectSetupStages() {
+        return projectStages.stream().map(ProjectStages::getProjectSetupStage).collect(Collectors.toList());
     }
 }

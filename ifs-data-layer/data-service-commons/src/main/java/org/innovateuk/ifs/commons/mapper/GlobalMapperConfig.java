@@ -2,11 +2,12 @@ package org.innovateuk.ifs.commons.mapper;
 
 import org.mapstruct.MapperConfig;
 import org.mapstruct.NullValueMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+
+import static org.mapstruct.ReportingPolicy.IGNORE;
 
 @MapperConfig(
     componentModel = "spring",
-    unmappedTargetPolicy = ReportingPolicy.ERROR,
+    unmappedTargetPolicy = IGNORE,
     nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT
 )
 public interface GlobalMapperConfig {
