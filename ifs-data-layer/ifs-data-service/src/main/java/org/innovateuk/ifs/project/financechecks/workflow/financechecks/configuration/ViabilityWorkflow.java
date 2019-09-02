@@ -14,7 +14,6 @@ import org.springframework.statemachine.config.builders.StateMachineStateConfigu
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
 import java.util.EnumSet;
-import java.util.function.Predicate;
 
 import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.*;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.*;
@@ -26,8 +25,8 @@ import static org.innovateuk.ifs.project.finance.resource.ViabilityState.*;
 @EnableStateMachineFactory(name = "viabilityStateMachineFactory")
 public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilityState, ViabilityEvent> {
 
-    private static Predicate<StateContext<ViabilityState, ViabilityEvent>> isLoan() {
-        return   context -> ((PartnerOrganisation) context.getMessageHeader("target"))
+    private static boolean isLoan(StateContext<ViabilityState, ViabilityEvent> context) {
+        return   ((PartnerOrganisation) context.getMessageHeader("target"))
                         .getProject()
                         .getApplication()
                         .getCompetition()
@@ -43,7 +42,8 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
     public void configure(StateMachineStateConfigurer<ViabilityState, ViabilityEvent> states) throws Exception {
         states.withStates()
                 .initial(REVIEW)
-                .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED))
+                .states(EnumSet.of(REVIEW, NOT_APPLICABLE))
+                .choice(COMPLETE_OFFLINE_DECISION)
                 .end(APPROVED)
                 .end(COMPLETED_OFFLINE);
     }
@@ -54,14 +54,12 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
                 .withExternal()
                     .source(REVIEW)
                     .event(PROJECT_CREATED)
-                    .target(REVIEW)
-                    .guard(ctx -> isLoan().negate().test(ctx))
+                    .target(COMPLETE_OFFLINE_DECISION)
                     .and()
-                .withExternal()
-                    .source(REVIEW)
-                    .event(PROJECT_CREATED)
-                    .guard(ctx -> isLoan().test(ctx))
-                    .target(COMPLETED_OFFLINE)
+                .withChoice()
+                    .source(COMPLETE_OFFLINE_DECISION)
+                    .first(COMPLETED_OFFLINE, ViabilityWorkflow::isLoan)
+                    .last(REVIEW)
                     .and()
                 .withExternal()
                     .source(REVIEW)
