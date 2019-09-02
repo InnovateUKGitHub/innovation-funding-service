@@ -9,7 +9,6 @@ import java.util.List;
 public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewModel {
 
     private boolean showTabs;
-    private boolean canExportBankDetails;
     private long openQueryCount;
     private long pendingSpendProfilesCount;
     private String applicationSearchString;
@@ -20,9 +19,8 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
                                       long pendingSpendProfilesCount,
                                       String applicationSearchString,
                                       List<InternalProjectSetupRow> rows) {
-        super(competition.getId(), competition.getName(), competition.getProjectSetupStages(), rows);
+        super(competition.getId(), competition.getName(), competition.getProjectSetupStages(), rows, hasProjectFinanceRole);
         this.showTabs = hasProjectFinanceRole;
-        this.canExportBankDetails = hasProjectFinanceRole;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
         this.applicationSearchString = applicationSearchString;
@@ -38,7 +36,4 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
         return applicationSearchString;
     }
 
-    public boolean isCanExportBankDetails() {
-        return canExportBankDetails;
-    }
 }

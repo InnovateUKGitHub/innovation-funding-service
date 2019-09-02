@@ -97,7 +97,7 @@ public class InternalProjectSetupRowPopulator {
             activityStates.put(SPEND_PROFILE,
                     new InternalProjectSetupCell(
                             status.getSpendProfileStatus(),
-                            String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/spend-profile/approval"),
+                            String.format("/project-setup-management/project/" + status.getProjectNumber() + "/spend-profile/approval"),
                             setupSectionInternalUser.canAccessSpendProfileSection(user)
                     ));
         }
@@ -105,7 +105,7 @@ public class InternalProjectSetupRowPopulator {
             activityStates.put(GRANT_OFFER_LETTER,
                     new InternalProjectSetupCell(
                             status.getGrantOfferLetterStatus(),
-                            String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/grant-offer-letter/send'"),
+                            String.format("/project-setup-management/project/" + status.getProjectNumber() + "/grant-offer-letter/send'"),
                             setupSectionInternalUser.canAccessGrantOfferLetterSection(user)
                     ));
         }

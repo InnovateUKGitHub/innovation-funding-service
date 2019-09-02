@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/previous")
@@ -64,6 +65,7 @@ public class PreviousCompetitionController {
                 competitionResource,
                 applicationSummaryRestService.getPreviousApplications(competitionId).getSuccess(),
                 internalProjectSetupRows,
+                user.hasRole(PROJECT_FINANCE),
                 user.hasRole(Role.IFS_ADMINISTRATOR))
         );
         return "competition/previous";

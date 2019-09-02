@@ -12,12 +12,14 @@ public abstract class BaseCompetitionStatusTableViewModel {
     private final String competitionName;
     private final Set<ProjectSetupStages> columns;
     private final List<InternalProjectSetupRow> rows;
+    private boolean canExportBankDetails;
 
-    public BaseCompetitionStatusTableViewModel(long competitionId, String competitionName, Set<ProjectSetupStages> columns, List<InternalProjectSetupRow> rows) {
+    public BaseCompetitionStatusTableViewModel(long competitionId, String competitionName, Set<ProjectSetupStages> columns, List<InternalProjectSetupRow> rows,  boolean canExportBankDetails) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.columns = columns;
         this.rows = rows;
+        this.canExportBankDetails = canExportBankDetails;
     }
 
     public String getEmptyTableText() {
@@ -38,5 +40,9 @@ public abstract class BaseCompetitionStatusTableViewModel {
 
     public List<InternalProjectSetupRow> getRows() {
         return rows;
+    }
+
+    public boolean isCanExportBankDetails() {
+        return canExportBankDetails;
     }
 }
