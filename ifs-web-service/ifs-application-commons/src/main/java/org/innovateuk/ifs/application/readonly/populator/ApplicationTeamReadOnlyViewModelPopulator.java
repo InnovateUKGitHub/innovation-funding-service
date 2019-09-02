@@ -43,7 +43,6 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     @Autowired
     private OrganisationRestService organisationRestService;
 
-
     @Override
     public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(data.getApplication().getId()).getSuccess()
