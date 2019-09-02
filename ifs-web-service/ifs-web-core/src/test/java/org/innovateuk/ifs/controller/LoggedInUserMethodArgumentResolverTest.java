@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class LoggedInUserMethodArgumentResolverTest {
@@ -49,21 +49,21 @@ public class LoggedInUserMethodArgumentResolverTest {
     }
 
     @Test
-    public void supportsParameter_shouldSupportUserResource () throws Exception {
+    public void supportsParameter_shouldSupportUserResource() {
         MethodParameter userResourceParameter = new MethodParameter(testMethod, 0);
 
         assertTrue(loggedInUserMethodArgumentResolver.supportsParameter(userResourceParameter));
     }
 
     @Test
-    public void supportsParameter_shouldNotSupportAnotherType () throws Exception {
+    public void supportsParameter_shouldNotSupportAnotherType() {
         MethodParameter notAUserResourceParameter = new MethodParameter(testMethod, 1);
 
         assertFalse(loggedInUserMethodArgumentResolver.supportsParameter(notAUserResourceParameter));
     }
 
     @Test
-    public void supportsParameter_shouldNotSupportModelAttributedUserResource () throws Exception {
+    public void supportsParameter_shouldNotSupportModelAttributedUserResource() {
         MethodParameter modelAttributeResourceParameter = new MethodParameter(testMethod, 2);
 
         assertFalse(loggedInUserMethodArgumentResolver.supportsParameter(modelAttributeResourceParameter));
@@ -73,7 +73,7 @@ public class LoggedInUserMethodArgumentResolverTest {
     public void resolveArgument_shouldReturnUserResource() throws Exception {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.addParameter("uid", "123");
-        NativeWebRequest webRequest=new ServletWebRequest(mockRequest);
+        NativeWebRequest webRequest = new ServletWebRequest(mockRequest);
 
         MethodParameter userResourceParameter = new MethodParameter(testMethod, 0);
         UserResource userResource = newUserResource().withFirstName("Steve").build();
@@ -81,6 +81,9 @@ public class LoggedInUserMethodArgumentResolverTest {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(userResource);
 
         UserResource loggedInUser = (UserResource) loggedInUserMethodArgumentResolver.resolveArgument(userResourceParameter, modelAndViewContainer, webRequest, webDataBinderFactory);
+
+        verify(userAuthenticationService, times(1)).getAuthenticatedUser(isA(HttpServletRequest.class));
+        verifyNoMoreInteractions(userAuthenticationService);
         assertEquals("Steve", loggedInUser.getFirstName());
     }
 
@@ -94,5 +97,6 @@ public class LoggedInUserMethodArgumentResolverTest {
         }
     }
 
-    public class NotAUserResource { }
+    private class NotAUserResource {
+    }
 }

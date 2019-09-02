@@ -232,7 +232,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
         when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
+        when(financeService.financeDetails(application.getId(), organisation.getId()))
                 .thenReturn(serviceSuccess(applicationFinanceResource));
 
         getQuestionAndFormInputResponsesWithDescription(competition.getId(), FormInputType.FINANCIAL_YEAR_END, ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION);
@@ -271,7 +271,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
         when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
+        when(financeService.financeDetails(application.getId(), organisation.getId()))
                 .thenReturn(serviceSuccess(applicationFinanceResource));
 
         getQuestionAndFormInputResponses(competition.getId(), FormInputType.ORGANISATION_TURNOVER);
