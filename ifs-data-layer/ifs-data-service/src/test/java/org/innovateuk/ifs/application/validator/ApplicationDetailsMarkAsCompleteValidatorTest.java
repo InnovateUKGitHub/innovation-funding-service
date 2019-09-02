@@ -31,7 +31,6 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
     private Validator validator;
     private BindingResult bindingResult;
-    private Application application;
     private Application validApplication;
     private Application invalidApplication;
     private Application validProcurementApplication;
