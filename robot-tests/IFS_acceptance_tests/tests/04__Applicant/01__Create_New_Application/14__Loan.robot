@@ -38,6 +38,7 @@ Loan application submission
     [Documentation]  IFS-6237  IFS-6238
     Given the user submits the loan application
     And the user should see the element   jQuery = h2:contains("Part A: Innovation Funding Service application")
+    #TODO
     #the user clicks the button/link           link = startup high growth index survey
     #the user should be on the right page.  Update once we have this link
     When the user clicks the button/link  link = View part A
