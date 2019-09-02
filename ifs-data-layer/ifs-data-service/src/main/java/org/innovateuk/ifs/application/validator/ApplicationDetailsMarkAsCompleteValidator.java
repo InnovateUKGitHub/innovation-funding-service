@@ -64,10 +64,20 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
         }
 
         if (competition.getFundingType().equals(FundingType.PROCUREMENT)) {
-            LOG.debug("MarkAsComplete application details validation message for competition Referral Source, company age, company primary focus: " + application.getName());
-            rejectValue(errors, "competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
-            rejectValue(errors, "companyAge", "validation.application.procurement.companyage.required");
-            rejectValue(errors, "companyPrimaryFocus", "validation.application.procurement.companyprimaryfocus.required");
+            if (StringUtils.isEmpty(application.getCompetitionReferralSource())) {
+                LOG.debug("MarkAsComplete application details validation message for competition Referral Source: " + application.getName());
+                rejectValue(errors, "competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
+            }
+
+            if (StringUtils.isEmpty(application.getCompanyAge())) {
+                LOG.debug("MarkAsComplete application details validation message for company age: " + application.getName());
+                rejectValue(errors, "companyAge", "validation.application.procurement.companyage.required");
+            }
+
+            if (StringUtils.isEmpty(application.getCompanyPrimaryFocus())) {
+                LOG.debug("MarkAsComplete application details validation message for company primary focus: " + application.getName());
+                rejectValue(errors, "companyPrimaryFocus", "validation.application.procurement.companyprimaryfocus.required");
+            }
         }
 
         if (!applicationInnovationAreaIsInCorrectState(application)) {
