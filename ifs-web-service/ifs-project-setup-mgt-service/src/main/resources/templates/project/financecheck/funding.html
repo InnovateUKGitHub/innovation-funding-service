@@ -26,7 +26,7 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Partner</span></th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric">Current funding sought (&pound;)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">New funding sought (&pound;)</th>
+                        <th scope="col" class="govuk-table__header">New funding sought (&pound;)</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -42,7 +42,7 @@
                                 </label>
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('{__${path}__.funding}')}" th:text="${err}">Error</span>
                                 <input type="number"
-                                       class="govuk-input"
+                                       class="govuk-input govuk-input--width-5"
                                        th:id="__${path}__.funding"
                                        th:field="*{__${path}__.funding}"
                                        th:errorclass="govuk-input--error"
