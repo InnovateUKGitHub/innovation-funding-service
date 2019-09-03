@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -16,6 +17,7 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
  * Validates the inputs in the application details, if valid on the markAsComplete action
  *
  */
+@Component
 public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
     private static final Log LOG = LogFactory.getLog(ApplicationDetailsMarkAsCompleteValidator.class);
 

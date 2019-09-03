@@ -16,8 +16,10 @@ import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -32,11 +34,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.EnumUtils.isValidEnum;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
@@ -97,7 +102,8 @@ public class ApplicationDetailsController {
     }
 
     @PostMapping("/auto-save")
-    public @ResponseBody JsonNode autoSaveAndReturn(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
+    public @ResponseBody
+    JsonNode autoSaveAndReturn(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
                                BindingResult bindingResult,
                                Model model,
                                @PathVariable long applicationId,
@@ -110,11 +116,11 @@ public class ApplicationDetailsController {
 
     @GetMapping(params = "show-errors")
     public String showErrors(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
-                                             BindingResult bindingResult,
-                                             Model model,
-                                             @PathVariable long applicationId,
-                                             @PathVariable long questionId,
-                                             UserResource user) {
+                             BindingResult bindingResult,
+                             Model model,
+                             @PathVariable long applicationId,
+                             @PathVariable long questionId,
+                             UserResource user) {
         String view = viewDetails(form, bindingResult, model, applicationId, questionId, user);
         validator.validate(form, bindingResult);
         return view;
@@ -124,28 +130,40 @@ public class ApplicationDetailsController {
     @PostMapping(params = "mark_as_complete")
     public String markAsComplete(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) @Valid ApplicationDetailsForm form,
                                  BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
                                  Model model,
                                  @PathVariable long applicationId,
                                  @PathVariable long questionId,
                                  UserResource user) {
-        if (bindingResult.hasErrors()) {
-            form.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
-            return viewDetails(form, bindingResult, model, applicationId, questionId, user);
-        }
-        saveDetails(form, applicationId);
-        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-        questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
+        Supplier<String> failureView = () -> viewDetailsPage(form, bindingResult, model, applicationId, questionId, user);
 
-        return format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ServiceResult<Void> result = saveDetails(form, applicationId);
+
+            return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () -> {
+                        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+                        questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
+                        return format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
+                    });
+        });
+    }
+
+    private String viewDetailsPage(ApplicationDetailsForm form,
+                                   BindingResult bindingResult,
+                                   Model model, long applicationId,
+                                   long questionId, UserResource user) {
+        form.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
+        return viewDetails(form, bindingResult, model, applicationId, questionId, user);
     }
 
     @PostMapping(params = "change_innovation_area")
     public String changeInnovationArea(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
-                                 BindingResult bindingResult,
-                                 Model model,
-                                 @PathVariable long applicationId,
-                                 @PathVariable long questionId,
-                                 UserResource user) {
+                                       BindingResult bindingResult,
+                                       Model model,
+                                       @PathVariable long applicationId,
+                                       @PathVariable long questionId,
+                                       UserResource user) {
         saveDetails(form, applicationId);
 
         return String.format("redirect:/application/%d/form/question/%d/innovation-area", applicationId, questionId);
@@ -164,7 +182,7 @@ public class ApplicationDetailsController {
         return viewDetails(form, bindingResult, model, applicationId, questionId, user);
     }
 
-    private void saveDetails(ApplicationDetailsForm form, long applicationId) {
+    private ServiceResult<Void> saveDetails(ApplicationDetailsForm form, long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
         application.setName(form.getName());
         application.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
@@ -181,7 +199,7 @@ public class ApplicationDetailsController {
         if (isValidEnum(CompanyPrimaryFocus.class, form.getCompanyPrimaryFocus())) {
             application.setCompanyPrimaryFocus(CompanyPrimaryFocus.valueOf(form.getCompanyPrimaryFocus()));
         }
-        applicationService.save(application);
+        return applicationService.save(application);
     }
 
 }
