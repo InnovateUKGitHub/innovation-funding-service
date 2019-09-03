@@ -3,6 +3,7 @@ package org.innovateuk.ifs.internal.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupCell;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
@@ -104,8 +105,8 @@ public class InternalProjectSetupRowPopulator {
             activityStates.put(GRANT_OFFER_LETTER,
                     new InternalProjectSetupCell(
                             status.getGrantOfferLetterStatus(),
-                            String.format("/project-setup-management/project/" + status.getProjectNumber() + "/grant-offer-letter/send'"),
-                            setupSectionInternalUser.canAccessGrantOfferLetterSection(user)
+                            String.format("/project-setup-management/project/" + status.getProjectNumber() + "/grant-offer-letter/send"),
+                            setupSectionInternalUser.canAccessGrantOfferLetterSendSection(user)
                     ));
         }
 

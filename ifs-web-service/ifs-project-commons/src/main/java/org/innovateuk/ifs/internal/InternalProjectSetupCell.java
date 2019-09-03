@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.internal;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.sections.SectionAccess;
 
