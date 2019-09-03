@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.status.viewmodel.SectionAccessList;
 import org.innovateuk.ifs.project.status.viewmodel.SectionStatusList;
+import org.innovateuk.ifs.project.status.viewmodel.SetupStatusStageViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 
@@ -55,47 +58,146 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private CompetitionRestService competitionRestService;
-    
-    public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId,
-                                                                     UserResource loggedInUser) {
 
-        CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
+    @Autowired
+    private SetupSectionStatus sectionStatus;
 
+    public SetupStatusViewModel populateViewModel(long projectId,
+                                                  UserResource loggedInUser) {
+        ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        boolean  monitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
 
-        CompletableFuture<OrganisationResource> organisationRequest =
-                awaitAll(projectRequest).thenApply(project ->
-                        loggedInUser.getId().equals(project.getMonitoringOfficerUser()) ?
-                            projectService.getLeadOrganisation(projectId) :
-                            projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
+        List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
+                .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer))
+                .collect(toList());
 
-        CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
-        CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application ->
-                competitionRestService.getCompetitionById(application.getCompetition()).getSuccess());
-        CompletableFuture<BasicDetails> basicDetailsRequest = awaitAll(projectRequest, competitionRequest, organisationRequest).thenApply(BasicDetails::new);
-
-        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(projectId, Optional.empty()));
-        CompletableFuture<Boolean> isProjectManagerRequest = async(() -> projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false));
-        CompletableFuture<Optional<MonitoringOfficerResource>> monitoringOfficerRequest = async(() -> monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject());
-        CompletableFuture<List<OrganisationResource>> partnerOrganisationsRequest = async(() -> projectService.getPartnerOrganisationsForProject(projectId));
-
-        return awaitAll(basicDetailsRequest, teamStatusRequest, monitoringOfficerRequest, isProjectManagerRequest, partnerOrganisationsRequest).thenApply(futureResults -> {
-
-            BasicDetails basicDetails = basicDetailsRequest.get();
-
-            ProjectTeamStatusResource teamStatus = teamStatusRequest.get();
-            Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRequest.get();
-            boolean isProjectManager = isProjectManagerRequest.get();
-            List<OrganisationResource> partnerOrganisations = partnerOrganisationsRequest.get();
-
-            return getSetupStatusViewModel(
-                    basicDetails,
-                    teamStatus,
-                    monitoringOfficer,
-                    isProjectManager,
-                    partnerOrganisations,
-                    loggedInUser.getId().equals(projectRequest.get().getMonitoringOfficerUser()));
-        });
+        return new SetupStatusViewModel(
+                project,
+                monitoringOfficer,
+                stages);
     }
+
+    private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer) {
+        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(project.getId(), Optional.empty()));
+        CompletableFuture<OrganisationResource> organisationRequest = async(() -> monitoringOfficer ?
+                                projectService.getLeadOrganisation(project.getId()) :
+                                projectRestService.getOrganisationByProjectAndUser(project.getId(), user.getId()).getSuccess());
+
+        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(resolve(teamStatusRequest));
+        boolean projectComplete = project.getProjectState().isLive();
+        boolean isLeadPartner = isLeadPartner(resolve(teamStatusRequest), resolve(organisationRequest));
+        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
+        ProjectPartnerStatusResource ownOrganisation = resolve(teamStatusRequest).getPartnerStatusForOrganisation(resolve(organisationRequest).getId()).get();
+        switch (stage) {
+            case PROJECT_DETAILS:
+                boolean isProjectDetailsProcessCompleted =
+                        isLeadPartner ?
+                                checkLeadPartnerProjectDetailsProcessCompleted(resolve(teamStatusRequest))
+                                : partnerProjectDetailsComplete(statusAccessor, resolve(organisationRequest), partnerProjectLocationRequired);
+                boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(resolve(teamStatusRequest),
+                        partnerProjectLocationRequired);
+                return new SetupStatusStageViewModel(stage.getColumnName(),
+                        projectComplete ? "Confirm the proposed start date and location of the project."
+                            : "The proposed start date and location of the project.",
+                        projectComplete? String.format("/project/%d/details", project.getId())
+                            : String.format("/project/%d/readonly", project.getId()),
+                        sectionStatus.projectDetailsSectionStatus(
+                                isProjectDetailsProcessCompleted,
+                                awaitingProjectDetailsActionFromOtherPartners,
+                                isLeadPartner),
+                        statusAccessor.canAccessProjectDetailsSection(resolve(organisationRequest))
+                    );
+            case PROJECT_TEAM:
+                return new SetupStatusStageViewModel(stage.getColumnName(),
+                        projectComplete ? "Add people to your project."
+                                : "The people on your project.",
+                        projectComplete ? String.format("/project/%d/team", project.getId())
+                                : String.format("/project/%d/readonly", project.getId()),
+                        sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus()),
+                        statusAccessor.canAccessProjectTeamSection(resolve(organisationRequest))
+                    );
+            case DOCUMENTS:
+                boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
+                List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(project.getId());
+                boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
+                return new SetupStatusStageViewModel(stage.getColumnName(),
+                        isProjectManager ? "You must upload supporting documents to be reviewed."
+                                : "The Project Manager must upload supporting documents to be reviewed.",
+                        String.format("/project/%d/document/all", project.getId()),
+                        sectionStatus.documentsSectionStatus(
+                                isProjectManager,
+                                getCompetitionDocuments(
+                                        competition,
+                                        collaborationAgreementRequired
+                                ),
+                                project.getProjectDocuments()
+                        ),
+                        statusAccessor.canAccessDocumentsSection(resolve(organisationRequest))
+                );
+            case MONITORING_OFFICER:
+                Optional<MonitoringOfficerResource> maybeMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
+                boolean isProjectDetailsSubmitted = COMPLETE.equals(resolve(teamStatusRequest).getLeadPartnerStatus().getProjectDetailsStatus());
+                boolean requiredProjectDetailsForMonitoringOfficerComplete =
+                        requiredProjectDetailsForMonitoringOfficerComplete(partnerProjectLocationRequired,
+                                isProjectDetailsSubmitted,
+                                resolve(teamStatusRequest));
+                return new SetupStatusStageViewModel("Monitoring Officer",
+                        maybeMonitoringOfficer.isPresent() ? String.format("Your Monitoring Officer for this project is %s", maybeMonitoringOfficer.get().getFullName())
+                                : "We will assign the project a Monitoring Officer.",
+                        projectComplete ? String.format("/project/%d/monitoring-officer", project.getId())
+                                : String.format("/project/%d/monitoring-officer/readonly", project.getId()),
+                        sectionStatus.monitoringOfficerSectionStatus(maybeMonitoringOfficer.isPresent(),
+                                requiredProjectDetailsForMonitoringOfficerComplete),
+                        statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest), partnerProjectLocationRequired)
+                );
+            case BANK_DETAILS:
+                SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest));
+                return new SetupStatusStageViewModel(stage.getColumnName(),
+                        "We need bank details for those partners eligible for funding.",
+                        projectComplete ? String.format("/project/%d/bank-details", project.getId())
+                                : String.format("/project/%d/bank-details/readonly", project.getId()),
+                        sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
+                        bankDetailsAccess
+                );
+            case FINANCE_CHECKS:
+                SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
+                return new SetupStatusStageViewModel(stage.getColumnName(),
+                       "We will review your financial information.",
+                        String.format("/project/%d/finance-checks", project.getId()),
+                        sectionStatus.financeChecksSectionStatus(
+                                ownOrganisation.getFinanceChecksStatus(),
+                                financeChecksAccess
+                        ),
+                        financeChecksAccess
+                );
+            case SPEND_PROFILE:
+                return new SetupStatusStageViewModel(stage.getColumnName(),
+                        "Once we have approved your project finances you can change your project spend profile.",
+                        String.format("/project/%d/spend-profile", project.getId()),
+                        sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus()),
+                        statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
+                );
+            case GRANT_OFFER_LETTER:
+                return new SetupStatusStageViewModel("Grant offer letter",
+                        "Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.",
+                        String.format("/project/%d/offer", project.getId()),
+                        sectionStatus.grantOfferLetterSectionStatus(
+                                ownOrganisation.getGrantOfferLetterStatus(),
+                                isLeadPartner
+                        ),
+                        statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
+                );
+        }
+        return new SetupStatusStageViewModel(stage.getColumnName(),"","", SectionStatus.EMPTY, SectionAccess.ACCESSIBLE);
+    }
+
+
+
+
+
+
+
 
     private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails,
                                                          ProjectTeamStatusResource teamStatus,
@@ -103,6 +205,17 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                          boolean isProjectManager,
                                                          List<OrganisationResource> partnerOrganisations,
                                                          boolean isMonitoringOfficer) {
+
+
+//        CompletableFuture<OrganisationResource> organisationRequest =
+//                awaitAll(projectRequest).thenApply(project ->
+//                        loggedInUser.getId().equals(project.getMonitoringOfficerUser()) ?
+//                                projectService.getLeadOrganisation(projectId) :
+//                                projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
+//        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(projectId, Optional.empty()));
+//        CompletableFuture<Boolean> isProjectManagerRequest = async(() -> projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false));
+//        CompletableFuture<Optional<MonitoringOfficerResource>> monitoringOfficerRequest = async(() -> monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject());
+//        CompletableFuture<List<OrganisationResource>> partnerOrganisationsRequest = async(() -> projectService.getPartnerOrganisationsForProject(projectId));
 
         boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
 
@@ -114,19 +227,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         boolean leadPartner = isLeadPartner(teamStatus, basicDetails.getOrganisation());
         boolean projectDocuments = basicDetails.getCompetition().getCompetitionDocuments().size() > 0;
 
-        return new SetupStatusViewModel(
-                basicDetails.getProject(),
-                basicDetails.getCompetition(),
-                monitoringOfficer,
-                basicDetails.getOrganisation(),
-                leadPartner,
-                sectionAccesses,
-                sectionStatuses,
-                collaborationAgreementRequired,
-                projectDocuments,
-                isProjectManager,
-                pendingQueries,
-                isMonitoringOfficer);
+    return null;
     }
 
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails,
@@ -165,7 +266,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                                    isProjectDetailsSubmitted,
                                                                    teamStatus);
 
-        SetupSectionStatus sectionStatus = new SetupSectionStatus();
 
         SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(
                 isProjectDetailsProcessCompleted,
@@ -297,21 +397,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
     }
 
-    /**
-     * Simple class to bunch and contain some of the basic information gathered from the top-level API calls to improve
-     * readability of the code
-     */
     private class BasicDetails {
-
         private ProjectResource project;
         private CompetitionResource competition;
+        private ApplicationResource application;
         private OrganisationResource organisation;
-
-        public BasicDetails(ProjectResource project, CompetitionResource competition, OrganisationResource organisation) {
-            this.project = project;
-            this.competition = competition;
-            this.organisation = organisation;
-        }
 
         public ProjectResource getProject() {
             return project;
@@ -319,6 +409,10 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         public CompetitionResource getCompetition() {
             return competition;
+        }
+
+        public ApplicationResource getApplication() {
+            return application;
         }
 
         public OrganisationResource getOrganisation() {
