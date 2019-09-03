@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.application.resource.CompanyAge.ESTABLISHED_1_T
 import static org.innovateuk.ifs.application.resource.CompanyPrimaryFocus.AEROSPACE_AND_DEFENCE;
 import static org.innovateuk.ifs.application.resource.CompetitionReferralSource.BUSINESS_CONTACT;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -37,9 +38,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<ApplicationDetailsController> {
 
@@ -181,7 +180,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
         when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
         when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
-        when(applicationService.save(any(ApplicationResource.class))).thenReturn(null);
+        when(applicationService.save(any(ApplicationResource.class))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(newProcessRoleResource().build()));
         when(questionStatusRestService.markAsComplete(anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
 
