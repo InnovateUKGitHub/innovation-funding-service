@@ -32,7 +32,7 @@ public class ApplicationDetailsForm {
     private LocalDate startDate;
 
     @NotNull
-    @Range(min = 1, max = 36, message = "{validation.project.duration.range.invalid}")
+    @Range(min = 1, message = "{validation.project.duration.range.invalid}")
     private Long durationInMonths;
 
     @NotNull(message = "{validation.application.must.indicate.resubmission.or.not}")
