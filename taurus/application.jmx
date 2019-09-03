@@ -1430,7 +1430,7 @@
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">application/${application_id}/form/your-organisation/competition/33/organisation/${org_id}/section/${your_org}/without-growth-table</stringProp>
+          <stringProp name="HTTPSampler.path">application/${application_id}/form/your-organisation/competition/${competition_id}/organisation/${org_id}/section/${your_org}/without-growth-table</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1541,7 +1541,7 @@
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">application/${application_id}/form/your-organisation/competition/33/organisation/${org_id}/section/${your_org}/with-growth-table</stringProp>
+          <stringProp name="HTTPSampler.path">application/${application_id}/form/your-organisation/competition/${competition_id}/organisation/${org_id}/section/${your_org}/with-growth-table</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1859,7 +1859,7 @@
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">application/${application_id}/form/your-organisation/competition/33/organisation/${org_id}/section/${your_org}/with-growth-table</stringProp>
+          <stringProp name="HTTPSampler.path">application/${application_id}/form/your-organisation/competition/${competition_id}/organisation/${org_id}/section/${your_org}/with-growth-table</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
