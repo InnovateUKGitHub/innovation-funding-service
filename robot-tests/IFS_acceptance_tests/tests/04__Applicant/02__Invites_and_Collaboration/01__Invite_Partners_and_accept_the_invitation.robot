@@ -143,12 +143,13 @@ The Lead's inputs should not be visible in other application invites
     [Tags]
     Then the user should not see the element  css = li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
 
-Supprot user shoould the pending invite on application team
+Supprot user should the pending invite on application team
     [Documentation]  IFS-6152
     Given log in as a different user       &{support_user_credentials}
     And the user navigates to the page     ${server}/management/competition/${openCompetitionBusinessRTO}/applications/all
     ${applicationId} =  get application id by name   ${application_name}
     When the user clicks the button/link   link = ${applicationId}
+    Then the user navigates to the page    ${server}/management/competition/${openCompetitionBusinessRTO}/application/${applicationId}
     And the user clicks the button/link    id = accordion-questions-heading-1
     Then the user should see the element   jQuery = td:contains("Adrian Booth (Pending for")
 
