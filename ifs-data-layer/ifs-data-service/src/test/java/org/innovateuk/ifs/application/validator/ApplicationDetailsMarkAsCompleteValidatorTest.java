@@ -14,6 +14,7 @@ import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.CompanyAge.PRE_START_UP;
 import static org.innovateuk.ifs.application.resource.CompanyPrimaryFocus.CHEMICALS;
@@ -149,6 +150,12 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(6, bindingResult.getErrorCount());
+        assertEquals("validation.project.name.must.not.be.empty", bindingResult.getFieldError("name").getDefaultMessage());
+        assertEquals("validation.project.start.date.not.in.future", bindingResult.getFieldError("startDate").getDefaultMessage());
+        assertEquals("validation.project.duration.input.invalid", bindingResult.getFieldError("durationInMonths").getDefaultMessage());
+        assertEquals("validation.application.innovationarea.category.required", bindingResult.getFieldError("innovationArea").getDefaultMessage());
+        assertEquals("validation.application.previous.application.number.required", bindingResult.getFieldError("previousApplicationNumber").getDefaultMessage());
+        assertEquals("validation.application.previous.application.title.required", bindingResult.getFieldError("previousApplicationTitle").getDefaultMessage());
     }
 
     @Test
@@ -168,6 +175,15 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(9, bindingResult.getErrorCount());
+        assertEquals("validation.project.name.must.not.be.empty", bindingResult.getFieldError("name").getDefaultMessage());
+        assertEquals("validation.project.start.date.not.in.future", bindingResult.getFieldError("startDate").getDefaultMessage());
+        assertEquals("validation.project.duration.input.invalid", bindingResult.getFieldError("durationInMonths").getDefaultMessage());
+        assertEquals("validation.application.procurement.competitionreferralsource.required", bindingResult.getFieldError("competitionReferralSource").getDefaultMessage());
+        assertEquals("validation.application.procurement.companyage.required", bindingResult.getFieldError("companyAge").getDefaultMessage());
+        assertEquals("validation.application.procurement.companyprimaryfocus.required", bindingResult.getFieldError("companyPrimaryFocus").getDefaultMessage());
+        assertEquals("validation.application.innovationarea.category.required", bindingResult.getFieldError("innovationArea").getDefaultMessage());
+        assertEquals("validation.application.previous.application.number.required", bindingResult.getFieldError("previousApplicationNumber").getDefaultMessage());
+        assertEquals("validation.application.previous.application.title.required", bindingResult.getFieldError("previousApplicationTitle").getDefaultMessage());
     }
 
     @Test
@@ -187,8 +203,8 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
         validator.validate(validApplicationInnovationAreaApplicableNotSet, bindingResult);
 
         assertTrue(bindingResult.hasErrors());
-        assertEquals(bindingResult.getFieldError("innovationArea").getDefaultMessage(),
-                "validation.application.innovationarea.category.required");
+        assertEquals("validation.application.innovationarea.category.required",
+                bindingResult.getFieldError("innovationArea").getDefaultMessage());
     }
 
     @Test

@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -12,11 +11,11 @@ import org.springframework.validation.Validator;
 import java.time.LocalDate;
 
 import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * Validates the inputs in the application details, if valid on the markAsComplete action
- *
  */
 
 @Component
@@ -48,7 +47,7 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
         }
 
         Competition competition = application.getCompetition();
-        if (isEmpty(application.getDurationInMonths())){
+        if (isEmpty(application.getDurationInMonths())) {
             LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
             rejectValue(errors, "durationInMonths", "validation.field.must.not.be.blank");
         } else if (application.getDurationInMonths() < competition.getMinProjectDuration()
@@ -63,7 +62,7 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
             );
         }
 
-        if (competition.getFundingType() == FundingType.PROCUREMENT) {
+        if (competition.getFundingType() == PROCUREMENT) {
             if (isEmpty(application.getCompetitionReferralSource())) {
                 LOG.debug("MarkAsComplete application details validation message for competition Referral Source: " + application.getName());
                 rejectValue(errors, "competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
@@ -103,6 +102,6 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
     }
 
     private boolean applicationInnovationAreaIsInCorrectState(Application application) {
-        return application.getNoInnovationAreaApplicable() == true || (application.getNoInnovationAreaApplicable() == false && application.getInnovationArea() !=null);
+        return application.getNoInnovationAreaApplicable() == true || (application.getNoInnovationAreaApplicable() == false && application.getInnovationArea() != null);
     }
 }
