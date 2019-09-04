@@ -25,12 +25,6 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 @Component
 public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<GenericQuestionReadOnlyViewModel> {
 
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    private HttpServletUtil httpServletUtil;
-
     @Override
     public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
