@@ -15,6 +15,7 @@ import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -138,7 +139,7 @@ public class ApplicationDetailsController {
         Supplier<String> failureView = () -> viewDetailsPage(form, bindingResult, model, applicationId, questionId, user);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> result = saveDetails(form, applicationId);
+            ServiceResult<ValidationMessages> result = saveDetails(form, applicationId);
 
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> {
@@ -182,7 +183,7 @@ public class ApplicationDetailsController {
         return viewDetails(form, bindingResult, model, applicationId, questionId, user);
     }
 
-    private ServiceResult<Void> saveDetails(ApplicationDetailsForm form, long applicationId) {
+    private ServiceResult<ValidationMessages> saveDetails(ApplicationDetailsForm form, long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
         application.setName(form.getName());
         application.setStartDate(convertMinLocalDateToNull(form.getStartDate()));

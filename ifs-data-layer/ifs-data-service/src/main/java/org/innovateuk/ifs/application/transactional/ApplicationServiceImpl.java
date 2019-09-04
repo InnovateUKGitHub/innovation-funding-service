@@ -30,7 +30,6 @@ import java.util.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
-import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -119,28 +118,27 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long applicationId,
+    public ServiceResult<ValidationMessages> saveApplicationDetails(final Long applicationId,
                                                                      ApplicationResource applicationResource) {
-        return find(() -> getApplication(applicationId)).andOnSuccess(
-                foundApplication -> verifyApplicationIsOpen(foundApplication)
-                        .andOnSuccess(openApplication -> setApplicationDetails(openApplication, applicationResource))
-                        .andOnSuccess(app -> validateApplication(app))
-                        .andOnSuccessReturn(
-                        validApplication -> {
-                            Application savedApplication = applicationRepository.save(validApplication);
-                            return applicationMapper.mapToResource(savedApplication);
-                        }));
+        return find(() -> getApplication(applicationId)).andOnSuccessReturn(foundApplication
+                -> saveApplication(foundApplication, applicationResource));
     }
 
-    private ServiceResult<Application> validateApplication(Application application) {
-       List<ValidationMessages> result = applicationValidationUtil.isApplicationDetailsValid(application);
-       if (result.isEmpty()) {
-           return serviceSuccess(application);
-       }
-       return serviceFailure(collectValidationMessages(result).getErrors());
+    private ValidationMessages saveApplication(Application application, ApplicationResource applicationResource) {
+        return verifyApplicationIsOpen(application).andOnSuccessReturn(() -> {
+                    saveApplicationDetails(application, applicationResource);
+                    return validateApplication(application);
+                }
+        ).getSuccess();
     }
 
-    private ServiceResult<Application> setApplicationDetails(Application application, ApplicationResource resource) {
+    private ValidationMessages validateApplication(Application application) {
+       return applicationValidationUtil.isApplicationDetailsValid(application)
+               .stream()
+               .reduce(ValidationMessages.noErrors(), (vm1, vm2) -> {vm1.addAll(vm2); return vm1;});
+    }
+
+    private void saveApplicationDetails(Application application, ApplicationResource resource) {
         application.setName(resource.getName());
         application.setDurationInMonths(resource.getDurationInMonths());
         application.setStartDate(resource.getStartDate());
@@ -151,8 +149,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetitionReferralSource(resource.getCompetitionReferralSource());
         application.setCompanyAge(resource.getCompanyAge());
         application.setCompanyPrimaryFocus(resource.getCompanyPrimaryFocus());
-
-        return serviceSuccess(application);
     }
 
     @Override
