@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.internal;
 
-import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
-import java.util.Map;
+import java.util.Set;
 
 public class InternalProjectSetupRow {
 
@@ -14,10 +13,9 @@ public class InternalProjectSetupRow {
     private long competitionId;
     private String projectLeadOrganisationName;
     private Long projectId;
+    private Set<InternalProjectSetupCell> states;
 
-    private Map<ProjectSetupStage, InternalProjectSetupCell> states;
-
-    public InternalProjectSetupRow(String projectName, Long applicationNumber, ProjectState projectState, int numberOfPartners, long competitionId, String projectLeadOrganisationName, Long projectId, Map<ProjectSetupStage, InternalProjectSetupCell> states) {
+    public InternalProjectSetupRow(String projectName, Long applicationNumber, ProjectState projectState, int numberOfPartners, long competitionId, String projectLeadOrganisationName, Long projectId, Set<InternalProjectSetupCell> states) {
         this.projectName = projectName;
         this.applicationNumber = applicationNumber;
         this.projectState = projectState;
@@ -56,7 +54,7 @@ public class InternalProjectSetupRow {
         return projectId;
     }
 
-    public Map<ProjectSetupStage, InternalProjectSetupCell> getStates() {
+    public Set<InternalProjectSetupCell> getStates() {
         return states;
     }
 }

@@ -49,7 +49,7 @@
                     </th>
 
                     <th:block th:each="state : ${row.states}">
-                        <th:block th:insert="fragments/status :: project-status-table(${state.getValue().getProjectActivityState().toString()}, ${state.getKey().columnType}, ${row.getProjectState().isActive()})" th:with="access=${state.getValue().isCanBeAccessed()},url=${state.getValue().getUrl()}" />
+                        <th:block th:insert="fragments/status :: project-status-table(${state.getProjectActivityState().toString()}, ${state.getProjectSetupStage().columnType}, ${row.getProjectState().isActive()})" th:with="access=${state.isCanBeAccessed()},url=${state.getUrl()}" />
                     </th:block>
                 </tr>
                 </tbody>

@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.internal.populator.InternalProjectSetupRowPopulator;
-import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousBaseCompetitionViewModel;
+import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousCompetitionViewModel;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -61,7 +61,7 @@ public class PreviousCompetitionController {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         List<InternalProjectSetupRow> internalProjectSetupRows = internalProjectSetupRowPopulator.populate(projectStatusResources, competitionResource, user);
 
-        model.addAttribute("model", new PreviousBaseCompetitionViewModel(
+        model.addAttribute("model", new PreviousCompetitionViewModel(
                 competitionResource,
                 applicationSummaryRestService.getPreviousApplications(competitionId).getSuccess(),
                 internalProjectSetupRows,

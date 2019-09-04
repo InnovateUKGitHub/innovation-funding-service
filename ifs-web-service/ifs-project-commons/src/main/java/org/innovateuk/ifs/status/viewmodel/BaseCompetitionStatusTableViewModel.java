@@ -21,9 +21,7 @@ public abstract class BaseCompetitionStatusTableViewModel {
         this.canExportBankDetails = canExportBankDetails;
     }
 
-    public String getEmptyTableText() {
-        return "There are currently no projects in this competition.";
-    }
+    public abstract String getEmptyTableText();
 
     public long getCompetitionId() {
         return competitionId;

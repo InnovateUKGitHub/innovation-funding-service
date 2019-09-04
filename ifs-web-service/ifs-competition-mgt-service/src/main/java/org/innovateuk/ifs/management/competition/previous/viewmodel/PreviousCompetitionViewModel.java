@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
-public class PreviousBaseCompetitionViewModel extends BaseCompetitionStatusTableViewModel {
+public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableViewModel {
 
     private final String competitionType;
     private final String fundingBody;
@@ -21,7 +21,7 @@ public class PreviousBaseCompetitionViewModel extends BaseCompetitionStatusTable
     private final boolean competitionCanHaveProjects;
     private final List<PreviousApplicationResource> applications;
 
-    public PreviousBaseCompetitionViewModel(CompetitionResource competition,
+    public PreviousCompetitionViewModel(CompetitionResource competition,
                                             List<PreviousApplicationResource> applications,
                                             List<InternalProjectSetupRow> rows,
                                             boolean hasProjectFinanceRole,
@@ -34,6 +34,11 @@ public class PreviousBaseCompetitionViewModel extends BaseCompetitionStatusTable
         this.competitionCanHaveProjects = CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage());
         this.applications = applications;
         this.ifsAdmin = ifsAdmin;
+    }
+
+    @Override
+    public String getEmptyTableText() {
+        return "There are currently no completed projects in this competition.";
     }
 
     public String getCompetitionType() {

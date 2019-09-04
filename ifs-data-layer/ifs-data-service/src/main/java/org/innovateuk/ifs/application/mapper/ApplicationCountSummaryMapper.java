@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 
 import static org.mapstruct.ReportingPolicy.IGNORE;
 
-@Mapper(config = GlobalMapperConfig.class, unmappedTargetPolicy = IGNORE)
+@Mapper(config = GlobalMapperConfig.class)
 public abstract class ApplicationCountSummaryMapper extends BaseMapper<ApplicationStatistics, ApplicationCountSummaryResource, Long> {
 
     @Override

@@ -26,6 +26,11 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
         this.applicationSearchString = applicationSearchString;
     }
 
+    @Override
+    public String getEmptyTableText() {
+        return "There are currently no projects in this competition.";
+    }
+
     public long getOpenQueryCount() { return openQueryCount; }
 
     public long getPendingSpendProfilesCount() { return pendingSpendProfilesCount; }
