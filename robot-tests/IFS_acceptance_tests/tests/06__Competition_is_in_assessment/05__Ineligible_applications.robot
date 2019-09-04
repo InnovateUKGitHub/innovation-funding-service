@@ -102,12 +102,13 @@ Filter ineligible applications
 
 Support user should see the inelibible application with reason
     [Documentation]  IFS-6152
-    Given log in as a different user     &{support_user_credentials}
-    When the user enters text to a text field     id = searchQuery   ${ineligibleApplicationNumber}
-    And the user clicks the button/link        id = searchsubmit
-    And the user clicks the button/link       link = ${ineligibleApplicationNumber}
-    Then the user should see the element      jQuery = h2:contains("Removed by") ~ p:contains("Ian Cooper, ${today}")
-    And the user should see the element       jQuery = h2:contains("Reason for removal") ~ p:contains("This is the reason of why this application is ineligible")
+    Given log in as a different user            &{support_user_credentials}
+    When the user enters text to a text field   id = searchQuery   ${ineligibleApplicationNumber}
+    And the user clicks the button/link         id = searchsubmit
+    And the user clicks the button/link         link = ${ineligibleApplicationNumber}
+    Then the user navigates to the page         ${ineligibleApplicationOverview}
+    And the user should see the element         jQuery = h2:contains("Removed by") ~ p:contains("Ian Cooper, ${today}")
+    And the user should see the element         jQuery = h2:contains("Reason for removal") ~ p:contains("This is the reason of why this application is ineligible")
 
 The Administrator should see the ineligible applications in unsuccessful list but he cannot reinstate it
     [Documentation]  IFS-1458 IFS-1459 IFS-50
