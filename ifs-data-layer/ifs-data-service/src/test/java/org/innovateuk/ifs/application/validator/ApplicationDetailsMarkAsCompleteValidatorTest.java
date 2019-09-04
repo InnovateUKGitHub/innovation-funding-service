@@ -23,7 +23,8 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Mark as complete validator test class for application details section
@@ -31,25 +32,23 @@ import static org.junit.Assert.*;
 public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
     private Validator validator;
+    private LocalDate currentDate;
     private BindingResult bindingResult;
+    private Competition competition;
+    private Competition procurementCompetition;
     private Application validApplication;
-    private Application invalidApplication;
-    private Application validProcurementApplication;
-    private Application invalidProcurementApplication;
-    private Application validApplicationInnovationAreaApplicableAndSet;
-    private Application validApplicationInnovationAreaApplicableNotSet;
 
     @Before
     public void setUp() {
         validator = new ApplicationDetailsMarkAsCompleteValidator();
-        LocalDate currentDate = LocalDate.now();
+        currentDate = LocalDate.now();
 
-        Competition competition = newCompetition()
+        competition = newCompetition()
                 .withMinProjectDuration(10)
                 .withMaxProjectDuration(20)
                 .build();
 
-        Competition procurementCompetition = newCompetition()
+        procurementCompetition = newCompetition()
                 .withFundingType(FundingType.PROCUREMENT)
                 .withMinProjectDuration(10)
                 .withMaxProjectDuration(20)
@@ -60,71 +59,6 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
                 .withStartDate(currentDate.plusDays(1))
                 .withDurationInMonths(18L)
                 .withNoInnovationAreaApplicable(true)
-                .withResubmission(true)
-                .withCompetition(competition)
-                .withPreviousApplicationNumber("Previous Application Number")
-                .withPreviousApplicationTitle("Failed Application")
-                .withResearchCategory(newResearchCategory().build())
-                .build();
-
-        invalidApplication = newApplication()
-                .withName((String) null)
-                .withStartDate(currentDate.minusDays(1))
-                .withDurationInMonths(-5L)
-                .withNoInnovationAreaApplicable(false)
-                .withResubmission(true)
-                .withCompetition(competition)
-                .withPreviousApplicationNumber((String) null)
-                .withPreviousApplicationTitle((String) null)
-                .build();
-
-        validProcurementApplication = newApplication()
-                .withName("Valid Procurement Application")
-                .withStartDate(currentDate.plusDays(1))
-                .withDurationInMonths(18L)
-                .withNoInnovationAreaApplicable(true)
-                .withResubmission(true)
-                .withCompetition(procurementCompetition)
-                .withPreviousApplicationNumber("Previous Application Number")
-                .withPreviousApplicationTitle("Failed Application")
-                .withCompetitionReferralSource(BUSINESS_CONTACT)
-                .withCompetitionPrimaryFocus(CHEMICALS)
-                .withCompanyAge(PRE_START_UP)
-                .withResearchCategory(newResearchCategory().build())
-                .build();
-
-        invalidProcurementApplication = newApplication()
-                .withName((String) null)
-                .withStartDate(currentDate.minusDays(1))
-                .withDurationInMonths(-5L)
-                .withNoInnovationAreaApplicable(false)
-                .withResubmission(true)
-                .withCompetition(procurementCompetition)
-                .withCompetitionReferralSource((CompetitionReferralSource) null)
-                .withCompetitionPrimaryFocus((CompanyPrimaryFocus) null)
-                .withCompanyAge((CompanyAge) null)
-                .withPreviousApplicationNumber((String) null)
-                .withPreviousApplicationTitle((String) null)
-                .build();
-
-        validApplicationInnovationAreaApplicableAndSet = newApplication()
-                .withName("Valid Application")
-                .withStartDate(currentDate.plusDays(1))
-                .withDurationInMonths(18L)
-                .withNoInnovationAreaApplicable(false)
-                .withInnovationArea(newInnovationArea().build())
-                .withResubmission(true)
-                .withCompetition(competition)
-                .withPreviousApplicationNumber("Previous Application Number")
-                .withPreviousApplicationTitle("Failed Application")
-                .withResearchCategory(newResearchCategory().build())
-                .build();
-
-        validApplicationInnovationAreaApplicableNotSet = newApplication()
-                .withName("Application with no Innovation Area Applicable")
-                .withStartDate(currentDate.plusDays(1))
-                .withDurationInMonths(18L)
-                .withNoInnovationAreaApplicable(false)
                 .withResubmission(true)
                 .withCompetition(competition)
                 .withPreviousApplicationNumber("Previous Application Number")
@@ -144,6 +78,17 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
     @Test
     public void invalidApplication() {
+        Application invalidApplication = newApplication()
+                .withName((String) null)
+                .withStartDate(currentDate.minusDays(1))
+                .withDurationInMonths(-5L)
+                .withNoInnovationAreaApplicable(false)
+                .withResubmission(true)
+                .withCompetition(competition)
+                .withPreviousApplicationNumber((String) null)
+                .withPreviousApplicationTitle((String) null)
+                .build();
+
         DataBinder dataBinder = new DataBinder(invalidApplication);
         bindingResult = dataBinder.getBindingResult();
         validator.validate(invalidApplication, bindingResult);
@@ -160,6 +105,21 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
     @Test
     public void validProcurementApplication() {
+        Application validProcurementApplication = newApplication()
+                .withName("Valid Procurement Application")
+                .withStartDate(currentDate.plusDays(1))
+                .withDurationInMonths(18L)
+                .withNoInnovationAreaApplicable(true)
+                .withResubmission(true)
+                .withCompetition(procurementCompetition)
+                .withPreviousApplicationNumber("Previous Application Number")
+                .withPreviousApplicationTitle("Failed Application")
+                .withCompetitionReferralSource(BUSINESS_CONTACT)
+                .withCompetitionPrimaryFocus(CHEMICALS)
+                .withCompanyAge(PRE_START_UP)
+                .withResearchCategory(newResearchCategory().build())
+                .build();
+
         DataBinder dataBinder = new DataBinder(validProcurementApplication);
         bindingResult = dataBinder.getBindingResult();
         validator.validate(validProcurementApplication, bindingResult);
@@ -169,6 +129,20 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
     @Test
     public void invalidProcurementApplication() {
+        Application invalidProcurementApplication = newApplication()
+                .withName((String) null)
+                .withStartDate(currentDate.minusDays(1))
+                .withDurationInMonths(-5L)
+                .withNoInnovationAreaApplicable(false)
+                .withResubmission(true)
+                .withCompetition(procurementCompetition)
+                .withCompetitionReferralSource((CompetitionReferralSource) null)
+                .withCompetitionPrimaryFocus((CompanyPrimaryFocus) null)
+                .withCompanyAge((CompanyAge) null)
+                .withPreviousApplicationNumber((String) null)
+                .withPreviousApplicationTitle((String) null)
+                .build();
+
         DataBinder dataBinder = new DataBinder(invalidProcurementApplication);
         bindingResult = dataBinder.getBindingResult();
         validator.validate(invalidProcurementApplication, bindingResult);
@@ -188,6 +162,18 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
     @Test
     public void valid_applicationInnovationAreaIsApplicableAndSet() {
+        Application validApplicationInnovationAreaApplicableAndSet = newApplication()
+                .withName("Valid Application")
+                .withStartDate(currentDate.plusDays(1))
+                .withDurationInMonths(18L)
+                .withNoInnovationAreaApplicable(false)
+                .withInnovationArea(newInnovationArea().build())
+                .withResubmission(true)
+                .withCompetition(competition)
+                .withPreviousApplicationNumber("Previous Application Number")
+                .withPreviousApplicationTitle("Failed Application")
+                .withResearchCategory(newResearchCategory().build())
+                .build();
 
         DataBinder dataBinder = new DataBinder(validApplicationInnovationAreaApplicableAndSet);
         bindingResult = dataBinder.getBindingResult();
@@ -198,6 +184,18 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
 
     @Test
     public void validate_applicationInnovationAreaIsNotSetButApplicableShouldResultInError() {
+        Application validApplicationInnovationAreaApplicableNotSet = newApplication()
+                .withName("Application with no Innovation Area Applicable")
+                .withStartDate(currentDate.plusDays(1))
+                .withDurationInMonths(18L)
+                .withNoInnovationAreaApplicable(false)
+                .withResubmission(true)
+                .withCompetition(competition)
+                .withPreviousApplicationNumber("Previous Application Number")
+                .withPreviousApplicationTitle("Failed Application")
+                .withResearchCategory(newResearchCategory().build())
+                .build();
+
         DataBinder dataBinder = new DataBinder(validApplicationInnovationAreaApplicableNotSet);
         bindingResult = dataBinder.getBindingResult();
         validator.validate(validApplicationInnovationAreaApplicableNotSet, bindingResult);
