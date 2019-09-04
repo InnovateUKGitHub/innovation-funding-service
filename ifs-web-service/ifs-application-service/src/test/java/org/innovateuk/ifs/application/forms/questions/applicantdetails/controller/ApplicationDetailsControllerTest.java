@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -173,6 +174,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         applicationDetailsForm.setResubmission(FALSE);
         applicationDetailsForm.setStartDate(LocalDate.now().plusYears(1));
         applicationDetailsForm.setDurationInMonths(3L);
+        ValidationMessages validationMessages = new ValidationMessages();
 
         ApplicationDetailsViewModel viewModel = mock(ApplicationDetailsViewModel.class);
         ApplicantQuestionResource applicantQuestionResource = mock(ApplicantQuestionResource.class);
@@ -180,7 +182,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(viewModel.getApplication()).thenReturn(newApplicationResource().build());
         when(applicationDetailsViewModelPopulator.populate(any(ApplicantQuestionResource.class), any(CompetitionResource.class))).thenReturn(viewModel);
         when(applicationService.getById(anyLong())).thenReturn(newApplicationResource().build());
-        when(applicationService.save(any(ApplicationResource.class))).thenReturn(serviceSuccess());
+        when(applicationService.save(any(ApplicationResource.class))).thenReturn(serviceSuccess(validationMessages));
         when(userRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(newProcessRoleResource().build()));
         when(questionStatusRestService.markAsComplete(anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
 
