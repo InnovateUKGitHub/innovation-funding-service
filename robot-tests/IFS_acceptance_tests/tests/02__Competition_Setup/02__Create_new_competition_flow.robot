@@ -732,7 +732,7 @@ The Applicant see the correct Questions
     #default question that has been removed is not there.
 
 The Applicant is able to enter duration
-    [Documentation]
+    [Documentation]  IFS-6398  IFS-6417
     Given the user clicks the button/link  link = Application details
     When the user fills new application details
     the user should see the element       jQuery = li:contains("Application details") .task-status-complete
