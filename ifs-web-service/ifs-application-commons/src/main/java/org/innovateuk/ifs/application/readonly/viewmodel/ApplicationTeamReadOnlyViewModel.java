@@ -10,14 +10,20 @@ import java.util.List;
  */
 public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
     private final List<ApplicationTeamOrganisationReadOnlyViewModel> organisations;
+    private final boolean internal;
 
-    public ApplicationTeamReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question, List<ApplicationTeamOrganisationReadOnlyViewModel> organisations) {
+    public ApplicationTeamReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question, List<ApplicationTeamOrganisationReadOnlyViewModel> organisations, boolean internal) {
         super(data, question);
         this.organisations = organisations;
+        this.internal = internal;
     }
 
     public List<ApplicationTeamOrganisationReadOnlyViewModel> getOrganisations() {
         return organisations;
+    }
+
+    public boolean isInternal() {
+        return internal;
     }
 
     @Override

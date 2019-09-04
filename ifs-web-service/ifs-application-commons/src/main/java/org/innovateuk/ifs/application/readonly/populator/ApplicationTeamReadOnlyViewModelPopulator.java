@@ -13,6 +13,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+        boolean internalUser = data.getUser().isInternalUser();
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(data.getApplication().getId()).getSuccess()
                 .stream()
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
@@ -61,7 +63,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .collect(toMap(InviteOrganisationResource::getOrganisation, Function.identity()));
 
         List<ApplicationTeamOrganisationReadOnlyViewModel> organisationViewModels = organisations.stream()
-                .map(organisation -> toOrganisationTeamViewModel(organisation, organisationToProcessRole.get(organisation.getId()), organisationToInvite.get(organisation.getId())))
+                .map(organisation -> toOrganisationTeamViewModel(organisation, organisationToProcessRole.get(organisation.getId()), organisationToInvite.get(organisation.getId()), internalUser))
                 .collect(toList());
 
         organisationViewModels.addAll(inviteOrganisationResources.stream()
@@ -69,7 +71,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .map(this::toInviteOrganisationTeamViewModel)
                 .collect(toList()));
 
-        return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels);
+        return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, internalUser);
 
     }
 
@@ -78,9 +80,9 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 || data.getUser().hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR);
     }
 
-    private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite) {
+    private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean internalUser) {
         List<ApplicationTeamUserReadOnlyViewModel> userRows = processRoles.stream()
-                .map(ApplicationTeamUserReadOnlyViewModel::fromProcessRole)
+                .map(pr -> ApplicationTeamUserReadOnlyViewModel.fromProcessRole(pr, internalUser ? getPhoneNumber(pr.getUserEmail()) : null))
                 .collect(toList());
 
         Optional<InviteOrganisationResource> maybeOrganisationInvite = ofNullable(organisationInvite);
@@ -96,6 +98,10 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 organisation.getOrganisationTypeName(),
                 userRows,
                 true);
+    }
+
+    private String getPhoneNumber(String userEmail) {
+        return userRestService.findUserByEmail(userEmail).getOptionalSuccessObject().map(UserResource::getPhoneNumber).orElse(null);
     }
 
     private ApplicationTeamOrganisationReadOnlyViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite) {
