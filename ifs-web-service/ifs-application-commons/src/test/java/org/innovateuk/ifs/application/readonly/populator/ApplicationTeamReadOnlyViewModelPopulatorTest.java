@@ -41,6 +41,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -115,7 +116,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(leadOrganisation, collaboratorOrganisation)));
-
+        when(userRestService.findUserByEmail(any())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").build()));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
         ApplicationTeamReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
@@ -133,6 +134,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         ApplicationTeamUserReadOnlyViewModel leadUserViewModel = leadOrganisationViewModel.getUsers().get(0);
         assertTrue(leadUserViewModel.isLead());
         assertFalse(leadUserViewModel.isInvite());
+        assertEquals("999", leadUserViewModel.getPhone());
 
         ApplicationTeamOrganisationReadOnlyViewModel collaboratorOrganisationViewModel = viewModel.getOrganisations().get(1);
         assertEquals("Collaborator", collaboratorOrganisationViewModel.getName());
@@ -143,6 +145,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         ApplicationTeamUserReadOnlyViewModel collaboratorUserViewModel = collaboratorOrganisationViewModel.getUsers().get(0);
         assertFalse(collaboratorUserViewModel.isLead());
         assertFalse(collaboratorUserViewModel.isInvite());
+        assertEquals("999", collaboratorUserViewModel.getPhone());
 
         ApplicationTeamOrganisationReadOnlyViewModel inviteOrganisationViewModel = viewModel.getOrganisations().get(2);
         assertEquals("New organisation", inviteOrganisationViewModel.getName());
