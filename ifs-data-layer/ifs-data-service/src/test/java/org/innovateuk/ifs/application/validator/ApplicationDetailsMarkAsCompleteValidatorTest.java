@@ -39,7 +39,7 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
     private Application validApplication;
 
     @Before
-    public void setUp() {
+    public void setup() {
         validator = new ApplicationDetailsMarkAsCompleteValidator();
         currentDate = LocalDate.now();
 
