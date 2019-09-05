@@ -382,7 +382,8 @@ public class CsvUtils {
         public AssessmentState state;
         public String feedback;
         public String recommendComment;
-
+        public boolean assignToPanel;
+        public boolean assignToInterview;
         private AssessmentLine(List<String> line) {
 
             int i = 0;
@@ -394,6 +395,8 @@ public class CsvUtils {
             state = AssessmentState.valueOf(line.get(i++));
             feedback = nullable(line.get(i++));
             recommendComment = nullable(line.get(i++));
+            assignToPanel = nullableBoolean(line.get(i++));
+            assignToInterview = nullableBoolean(line.get(i++));
         }
     }
 
