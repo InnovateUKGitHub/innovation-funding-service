@@ -9,6 +9,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.initialiseFinanceTypes;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
+import static org.junit.Assert.assertTrue;
 
 public class CompetitionInitialiserTest {
 
@@ -17,7 +19,7 @@ public class CompetitionInitialiserTest {
         Competition competition = newCompetition().withFundingType(LOAN).build();
         Competition competitionWithFinanceTypes = initialiseFinanceTypes(competition);
 
-        competitionWithFinanceTypes.getFinanceRowTypes().containsAll(EnumSet.of(
+        assertTrue(competitionWithFinanceTypes.getFinanceRowTypes().containsAll(EnumSet.of(
                 LABOUR,
                 OVERHEADS,
                 MATERIALS,
@@ -25,9 +27,19 @@ public class CompetitionInitialiserTest {
                 SUBCONTRACTING_COSTS,
                 TRAVEL,
                 OTHER_COSTS,
-                FINANCE,
-                OTHER_FUNDING
-        ));
+                GRANT_CLAIM_AMOUNT,
+                OTHER_FUNDING,
+                YOUR_FINANCE
+        )));
+
+        assertTrue(competitionWithFinanceTypes.getProjectSetupStages().containsAll(EnumSet.of(
+                PROJECT_DETAILS,
+                PROJECT_TEAM,
+                DOCUMENTS,
+                MONITORING_OFFICER,
+                FINANCE_CHECKS,
+                SPEND_PROFILE
+        )));
     }
 
     @Test
@@ -35,7 +47,7 @@ public class CompetitionInitialiserTest {
         Competition competition = newCompetition().withFundingType(GRANT).build();
         Competition competitionWithFinanceTypes = initialiseFinanceTypes(competition);
 
-        competitionWithFinanceTypes.getFinanceRowTypes().containsAll(EnumSet.of(
+        assertTrue(competitionWithFinanceTypes.getFinanceRowTypes().containsAll(EnumSet.of(
                 LABOUR,
                 OVERHEADS,
                 MATERIALS,
@@ -46,7 +58,18 @@ public class CompetitionInitialiserTest {
                 FINANCE,
                 OTHER_FUNDING,
                 YOUR_FINANCE
-        ));
+        )));
+
+        assertTrue(competitionWithFinanceTypes.getProjectSetupStages().containsAll(EnumSet.of(
+                PROJECT_DETAILS,
+                PROJECT_TEAM,
+                DOCUMENTS,
+                MONITORING_OFFICER,
+                BANK_DETAILS,
+                FINANCE_CHECKS,
+                SPEND_PROFILE,
+                GRANT_OFFER_LETTER
+        )));
     }
 
     @Test
@@ -54,7 +77,7 @@ public class CompetitionInitialiserTest {
         Competition competition = newCompetition().withFundingType(PROCUREMENT).build();
         Competition competitionWithFinanceTypes = initialiseFinanceTypes(competition);
 
-        competitionWithFinanceTypes.getFinanceRowTypes().containsAll(EnumSet.of(
+        assertTrue(competitionWithFinanceTypes.getFinanceRowTypes().containsAll(EnumSet.of(
                 LABOUR,
                 PROCUREMENT_OVERHEADS,
                 MATERIALS,
@@ -65,6 +88,17 @@ public class CompetitionInitialiserTest {
                 FINANCE,
                 OTHER_FUNDING,
                 VAT
-        ));
+        )));
+
+        assertTrue(competitionWithFinanceTypes.getProjectSetupStages().containsAll(EnumSet.of(
+                PROJECT_DETAILS,
+                PROJECT_TEAM,
+                DOCUMENTS,
+                MONITORING_OFFICER,
+                BANK_DETAILS,
+                FINANCE_CHECKS,
+                SPEND_PROFILE,
+                GRANT_OFFER_LETTER
+        )));
     }
 }

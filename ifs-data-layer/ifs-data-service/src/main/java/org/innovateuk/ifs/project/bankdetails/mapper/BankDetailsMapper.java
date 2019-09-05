@@ -11,7 +11,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import static org.mapstruct.ReportingPolicy.WARN;
+import static org.mapstruct.ReportingPolicy.IGNORE;
 
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -20,8 +20,7 @@ import static org.mapstruct.ReportingPolicy.WARN;
                 AddressMapper.class,
                 OrganisationMapper.class
 
-        },
-        unmappedTargetPolicy = WARN
+        }
 )
 public abstract class BankDetailsMapper extends BaseMapper<BankDetails, BankDetailsResource, Long> {
 
