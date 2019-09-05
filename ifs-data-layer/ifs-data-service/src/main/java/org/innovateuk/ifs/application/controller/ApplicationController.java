@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
@@ -76,10 +77,10 @@ public class ApplicationController {
     }
 
     @PostMapping("/save-application-details/{id}")
-    public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
-                                                   @RequestBody ApplicationResource application) {
+    public RestResult<ValidationMessages> saveApplicationDetails(@PathVariable("id") final Long id,
+                                                                       @RequestBody ApplicationResource application) {
 
-        return applicationService.saveApplicationDetails(id, application).toPostResponse();
+        return applicationService.saveApplicationDetails(id, application).toPostWithBodyResponse();
     }
 
     @GetMapping("/get-progress-percentage-by-application-id/{applicationId}")

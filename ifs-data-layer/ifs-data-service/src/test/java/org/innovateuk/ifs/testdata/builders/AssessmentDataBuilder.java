@@ -3,6 +3,11 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
+import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +18,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 
@@ -40,11 +46,12 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                     new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccess()
             );
 
-            testService.doWithinTransaction(() -> {
-
-                Assessment assessment = assessmentRepository.findById(assessmentResource.getId()).get();
-                doAs(compAdmin(), () -> assessmentWorkflowHandler.notify(assessment));
-            });
+            doAs(compAdmin(), () ->
+                testService.doWithinTransaction(() -> {
+                    Assessment assessment = assessmentRepository.findById(assessmentResource.getId()).get();
+                    assessmentWorkflowHandler.notify(assessment);
+                })
+            );
 
             switch (state) {
                 case ACCEPTED:
@@ -111,6 +118,47 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
         });
     }
 
+    public AssessmentDataBuilder withPanelAssignment(String applicationName, String assessorEmail, CompetitionResource competition) {
+        return with(data -> {
+            Application application = applicationRepository.findByName(applicationName).get(0);
+            UserResource assessor = retrieveUserByEmail(assessorEmail);
+
+            doAs(compAdmin(), () -> {
+                ExistingUserStagedInviteResource invite = new ExistingUserStagedInviteResource(assessor.getId(), competition.getId());
+                reviewInviteService.inviteUsers(singletonList(invite)).getSuccess();
+                reviewInviteService.sendAllInvites(competition.getId(), new AssessorInviteSendResource("", "")).getSuccess();
+            });
+
+            ReviewInvite invite = reviewInviteRepository.getByEmailAndCompetitionId(assessor.getEmail(), competition.getId());
+
+            doAs(systemRegistrar(), () ->
+                reviewInviteService.openInvite(invite.getHash()).getSuccess());
+
+            doAs(assessor, () ->
+                reviewInviteService.acceptInvite(invite.getHash()).getSuccess());
+        });
+    }
+
+    public AssessmentDataBuilder withInterviewAssignment(String applicationName, String assessorEmail, CompetitionResource competition) {
+        return with(data -> {
+            Application application = applicationRepository.findByName(applicationName).get(0);
+            UserResource assessor = retrieveUserByEmail(assessorEmail);
+
+            doAs(compAdmin(), () -> {
+                ExistingUserStagedInviteResource invite = new ExistingUserStagedInviteResource(assessor.getId(), competition.getId());
+                interviewInviteService.inviteUsers(singletonList(invite)).getSuccess();
+                interviewInviteService.sendAllInvites(competition.getId(), new AssessorInviteSendResource("", "")).getSuccess();
+            });
+
+            InterviewInvite invite = interviewInviteRepository.getByEmailAndCompetitionId(assessor.getEmail(), competition.getId());
+
+            doAs(systemRegistrar(), () ->
+                    interviewInviteService.openInvite(invite.getHash()).getSuccess());
+
+            doAs(assessor, () ->
+                    interviewInviteService.acceptInvite(invite.getHash()).getSuccess());
+        });
+    }
 
     public static AssessmentDataBuilder newAssessmentData(ServiceLocator serviceLocator) {
 
@@ -138,4 +186,5 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
         super.postProcess(index, instance);
         LOG.info("Created Assessment", instance);
     }
+
 }
