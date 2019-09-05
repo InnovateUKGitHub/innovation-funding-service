@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -54,8 +55,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> saveApplication(ApplicationResource application) {
-        return postWithRestResult(applicationRestURL + "/save-application-details/" + application.getId(), application, Void.class);
+    public RestResult<ValidationMessages> saveApplication(ApplicationResource application) {
+        return postWithRestResult(applicationRestURL + "/save-application-details/" + application.getId(), application, ValidationMessages.class);
     }
 
     @Override

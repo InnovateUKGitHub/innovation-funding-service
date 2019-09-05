@@ -78,6 +78,10 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 createAssessorResponses(assessmentLine, assessorResponseLines, application.getCompetition());
 
                 submitAssessment(assessmentLine);
+
+                assignToPanel(assessmentLine, application.getCompetition());
+
+                assignToInterview(assessmentLine, application.getCompetition());
             });
 
         });
@@ -228,6 +232,26 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 line.assessorEmail,
                 line.state)
                 .build();
+    }
+
+    private void assignToPanel(AssessmentLine assessmentLine, CompetitionResource competition) {
+        if (assessmentLine.assignToPanel) {
+            assessmentBuilder.withPanelAssignment(
+                    assessmentLine.applicationName,
+                    assessmentLine.assessorEmail,
+                    competition
+            ).build();
+        }
+    }
+
+    private void assignToInterview(AssessmentLine assessmentLine, CompetitionResource competition) {
+        if (assessmentLine.assignToInterview) {
+            assessmentBuilder.withInterviewAssignment(
+                    assessmentLine.applicationName,
+                    assessmentLine.assessorEmail,
+                    competition
+            ).build();
+        }
     }
 
     private void createAssessor(AssessorUserLine line, List<InviteLine> inviteLines) {

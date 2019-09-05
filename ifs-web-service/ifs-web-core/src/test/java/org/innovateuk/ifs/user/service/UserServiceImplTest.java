@@ -1,14 +1,20 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
@@ -16,10 +22,10 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.Mockito.*;
@@ -34,9 +40,29 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Mock
     private UserRestService userRestService;
 
+    private Role roleResource;
+    private Long applicationId;
+    private UserResource leadUser;
+    private ApplicationResource application;
+    private List<ProcessRoleResource> processRoles;
+
     @Before
     public void setUp() {
         super.setup();
+
+        applicationId = 123L;
+        leadUser = newUserResource().withId(87L).build();
+        UserResource collaborator = newUserResource().withId(34L).build();
+
+        application = new ApplicationResource();
+        application.setId(applicationId);
+
+        processRoles = newProcessRoleResource()
+                .withApplication(applicationId)
+                .withUser(leadUser, collaborator)
+                .withRole(LEADAPPLICANT, COLLABORATOR)
+                .withOrganisation(13L, 24L)
+                .build(2);
 
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER))).thenReturn(restSuccess());
         when(userRestService.resendEmailVerificationNotification(eq(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR))).thenReturn(restFailure(internalServerErrorError()));
@@ -49,13 +75,13 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void resendEmailVerificationNotification() throws Exception {
+    public void resendEmailVerificationNotification() {
         service.resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER);
         verify(userRestService, only()).resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER);
     }
 
     @Test(expected = Test.None.class /* No exception expected here even though the mock returns an ObjectNotFoundException. We don't want to reveal that an email address was not recognised. */)
-    public void resendEmailVerificationNotification_notExists() throws Exception {
+    public void resendEmailVerificationNotification_notExists() {
         // Try sending the verification link to an email address which doesn't exist for a user
         final String email = "i-dont-exist@me.com";
 
@@ -64,7 +90,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test(expected = GeneralUnexpectedErrorException.class)
-    public void resendEmailVerificationNotification_otherError() throws Exception {
+    public void resendEmailVerificationNotification_otherError() {
         // Try sending the verification link to an email address that exists but cause another error to occur
 
         service.resendEmailVerificationNotification(EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR);
@@ -72,7 +98,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void userHasApplicationForCompetition() throws Exception {
+    public void userHasApplicationForCompetition() {
         Long userId = 1L;
         Long competitionId = 2L;
         Boolean expected = true;
@@ -88,7 +114,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole() {
         Long userId = 1L;
-        Role roleResource = COMP_ADMIN;
+        roleResource = COMP_ADMIN;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))
@@ -102,7 +128,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole_wrongRole() {
         Long userId = 1L;
-        Role roleResource = Role.FINANCE_CONTACT;
+        roleResource = Role.FINANCE_CONTACT;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))
@@ -121,5 +147,107 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRestService.retrieveUserById(userId)).thenReturn(restFailure(error));
 
         assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
+    }
+
+    @Test
+    public void isLeadApplicant() {
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        assertTrue(service.isLeadApplicant(leadUser.getId(), application));
+    }
+
+    @Test
+    public void getLeadApplicantProcessRole() {
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        assertEquals(processRoles.get(0), service.getLeadApplicantProcessRole(applicationId));
+    }
+
+    @Test
+    public void getOrganisationProcessRoles() {
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        List<ProcessRoleResource> result = service.getOrganisationProcessRoles(application, 13L);
+
+        verify(userRestService, times(1)).findProcessRole(applicationId);
+        verifyNoMoreInteractions(userRestService);
+        assertEquals(singletonList(processRoles.get(0)), result);
+    }
+
+    @Test
+    public void getLeadPartnerOrganisationProcessRoles() {
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        List<ProcessRoleResource> result = service.getLeadPartnerOrganisationProcessRoles(application);
+
+        verify(userRestService, times(2)).findProcessRole(applicationId);
+        verifyNoMoreInteractions(userRestService);
+        assertEquals(singletonList(processRoles.get(0)), result);
+    }
+
+    @Test
+    public void getUserOrganisationId() {
+        when(userRestService.findProcessRole(leadUser.getId(), applicationId)).thenReturn(restSuccess(processRoles.get(0)));
+        Long result = service.getUserOrganisationId(leadUser.getId(), applicationId);
+
+        verify(userRestService, times(1)).findProcessRole(leadUser.getId(), applicationId);
+        verifyNoMoreInteractions(userRestService);
+        assertEquals(processRoles.get(0).getOrganisationId(), result);
+    }
+
+    @Test
+    public void createUserForOrganisation() {
+        when(userRestService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
+        ServiceResult<UserResource> result = service.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
+
+        verify(userRestService, times(1)).createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
+        verifyNoMoreInteractions(userRestService);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void createLeadApplicantForOrganisationWithCompetitionId() {
+        when(userRestService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
+        ServiceResult<UserResource> result = service.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
+
+        verify(userRestService, times(1)).createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
+        verifyNoMoreInteractions(userRestService);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void createOrganisationUser() {
+        when(userRestService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
+        ServiceResult<UserResource> result = service.createOrganisationUser(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
+
+        verify(userRestService, times(1)).createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
+        verifyNoMoreInteractions(userRestService);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void updateDetails() {
+        when(userRestService.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
+        ServiceResult<UserResource> result = service.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+
+        verify(userRestService, times(1)).updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+        verifyNoMoreInteractions(userRestService);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void sendPasswordResetNotification() {
+        String email = "bill@Email.com";
+        service.sendPasswordResetNotification(email);
+
+        verify(userRestService).sendPasswordResetNotification(email);
+    }
+
+    @Test
+    public void findUserByEmail() {
+        String email = "bill@Email.com";
+        UserResource user = newUserResource().withEmail(email).build();
+        when(userRestService.findUserByEmail(email)).thenReturn(restSuccess(user));
+        Optional<UserResource> result = service.findUserByEmail(email);
+
+        verify(userRestService).findUserByEmail(email);
+        verifyNoMoreInteractions(userRestService);
+        assertEquals(user, result.get());
     }
 }

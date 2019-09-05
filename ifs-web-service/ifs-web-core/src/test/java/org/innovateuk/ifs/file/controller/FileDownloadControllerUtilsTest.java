@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class FileDownloadControllerUtilsTest {
 
 	@Test
-	public void testFileResponseEntity() {
+	public void fileResponseEntity() {
 		ByteArrayResource resource = new ByteArrayResource("somebytes".getBytes());
 
 		FileEntryResource fileEntry = new FileEntryResource();
@@ -27,7 +27,7 @@ public class FileDownloadControllerUtilsTest {
 	}
 	
 	@Test
-	public void testFileResponseEntityMissingName() {
+	public void fileResponseEntityMissingName() {
 		ByteArrayResource resource = new ByteArrayResource("somebytes".getBytes());
 
 		FileEntryResource fileEntry = new FileEntryResource();
