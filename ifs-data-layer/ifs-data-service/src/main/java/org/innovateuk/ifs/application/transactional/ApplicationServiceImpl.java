@@ -5,7 +5,9 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -54,6 +56,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ApplicationProgressService applicationProgressService;
+
+    @Autowired
+    private ApplicationValidationUtil applicationValidationUtil;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
 
@@ -113,25 +118,37 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long applicationId,
-                                                                     ApplicationResource application) {
-        return find(() -> getApplication(applicationId)).andOnSuccess(
-                foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccessReturn(
-                        openApplication -> {
-                            openApplication.setName(application.getName());
-                            openApplication.setDurationInMonths(application.getDurationInMonths());
-                            openApplication.setStartDate(application.getStartDate());
-                            openApplication.setStateAidAgreed(application.getStateAidAgreed());
-                            openApplication.setResubmission(application.getResubmission());
-                            openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
-                            openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
-                            openApplication.setCompetitionReferralSource(application.getCompetitionReferralSource());
-                            openApplication.setCompanyAge(application.getCompanyAge());
-                            openApplication.setCompanyPrimaryFocus(application.getCompanyPrimaryFocus());
+    public ServiceResult<ValidationMessages> saveApplicationDetails(final Long applicationId,
+                                                                     ApplicationResource applicationResource) {
+        return find(() -> getApplication(applicationId)).andOnSuccessReturn(foundApplication
+                -> saveApplication(foundApplication, applicationResource));
+    }
 
-                            Application savedApplication = applicationRepository.save(openApplication);
-                            return applicationMapper.mapToResource(savedApplication);
-                        }));
+    private ValidationMessages saveApplication(Application application, ApplicationResource applicationResource) {
+        return verifyApplicationIsOpen(application).andOnSuccessReturn(() -> {
+                    saveApplicationDetails(application, applicationResource);
+                    return validateApplication(application);
+                }
+        ).getSuccess();
+    }
+
+    private ValidationMessages validateApplication(Application application) {
+       return applicationValidationUtil.isApplicationDetailsValid(application)
+               .stream()
+               .reduce(ValidationMessages.noErrors(), (vm1, vm2) -> {vm1.addAll(vm2); return vm1;});
+    }
+
+    private void saveApplicationDetails(Application application, ApplicationResource resource) {
+        application.setName(resource.getName());
+        application.setDurationInMonths(resource.getDurationInMonths());
+        application.setStartDate(resource.getStartDate());
+        application.setStateAidAgreed(resource.getStateAidAgreed());
+        application.setResubmission(resource.getResubmission());
+        application.setPreviousApplicationNumber(resource.getPreviousApplicationNumber());
+        application.setPreviousApplicationTitle(resource.getPreviousApplicationTitle());
+        application.setCompetitionReferralSource(resource.getCompetitionReferralSource());
+        application.setCompanyAge(resource.getCompanyAge());
+        application.setCompanyPrimaryFocus(resource.getCompanyPrimaryFocus());
     }
 
     @Override
