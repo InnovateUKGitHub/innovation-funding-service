@@ -104,9 +104,9 @@ public class PageHistoryServiceTest {
         pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
 
         assertEquals(2, history.size());
-        assertEquals("/url/pageFirst", model.get("cookieBackLinkUrl"));
-        assertEquals("pageFirst", model.get("cookieBackLinkText"));
-        verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+        assertEquals("/url/pageSecond", model.get("cookieBackLinkUrl"));
+        assertEquals("pageSecond", model.get("cookieBackLinkText"));
+        verify(encodedCookieService, never()).saveToCookie(any(), any(), any());
     }
 
 }
