@@ -22,8 +22,6 @@ public abstract class Finance {
     @Column(name = "organisation_size_id")
     private OrganisationSize organisationSize;
 
-    private String workPostcode;
-
     public Finance(Organisation organisation, OrganisationSize organisationSize) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
@@ -63,14 +61,6 @@ public abstract class Finance {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
-    }
-
-    public String getWorkPostcode() {
-        return workPostcode;
-    }
-
-    public void setWorkPostcode(String workPostcode) {
-        this.workPostcode = workPostcode;
     }
 
     public String getOrganisationName() {
