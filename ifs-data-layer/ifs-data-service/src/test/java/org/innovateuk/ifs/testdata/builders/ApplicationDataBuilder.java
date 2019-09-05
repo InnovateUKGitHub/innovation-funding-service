@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
@@ -52,7 +53,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     getSuccess();
 
             created.setResubmission(resubmission);
-            created = applicationService.saveApplicationDetails(created.getId(), created)
+            ValidationMessages validationMessages = applicationService.saveApplicationDetails(created.getId(), created)
                     .getSuccess();
 
             ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
@@ -233,10 +234,9 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         updateFn.accept(application);
 
-        ApplicationResource updated = applicationService.saveApplicationDetails(application.getId(), application).
-                getSuccess();
+        applicationService.saveApplicationDetails(application.getId(), application);
 
-        data.setApplication(updated);
+        data.setApplication(application);
     }
 
     public static ApplicationDataBuilder newApplicationData(ServiceLocator serviceLocator) {

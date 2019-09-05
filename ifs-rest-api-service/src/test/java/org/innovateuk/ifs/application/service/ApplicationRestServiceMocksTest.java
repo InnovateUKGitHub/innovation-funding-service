@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Assert;
 import org.junit.Test;
@@ -114,7 +115,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         ApplicationResource applicationToUpdate = new ApplicationResource(); // newApplicationResource().withId(123L).build();
         applicationToUpdate.setId(123L);
         ResponseEntity<String> response = new ResponseEntity<>("", OK);
-        setupPostWithRestResultExpectations(expectedUrl, Void.class, applicationToUpdate, null, OK);
+        setupPostWithRestResultExpectations(expectedUrl, ValidationMessages.class, applicationToUpdate, null, OK);
 
         // now run the method under test
         service.saveApplication(applicationToUpdate);
