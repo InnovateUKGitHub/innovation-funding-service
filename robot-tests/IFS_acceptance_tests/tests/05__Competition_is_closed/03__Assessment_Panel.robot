@@ -52,6 +52,7 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
 ${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
+&{assessor_madeleine_panel}    email=${assessor_madeleine_email}  password=${short_password}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -237,7 +238,8 @@ Assessor can attend Panel and see applications he has not assessed
 Assessor can attend Panel and see applications that he has assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]  HappyPath
-    Given the assessor accept the application
+    [Setup]  log in as a different user         &{assessor_madeleine_panel}
+    Given the assessor accept the application   ${CLOSED_COMPETITION_NAME}  ${CLOSED_COMPETITION_APPLICATION_TITLE}
     When the user clicks the button/link        link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     And the user expands the section            Business opportunity
     Then the user should see the element        jQuery = p:contains("This is the business opportunity feedback")
@@ -365,10 +367,3 @@ the assessor accept the applications for panel
     the user should see the text in the element    accept-application    You will still have the option to reject after accepting and viewing the full application.
     the user clicks the button/link                jQuery = button:contains("Confirm")
     the user should see the element                jQuery = .progress-list div:contains("${computer_vision_application_name}") ~ div strong:contains("Accepted")
-
-the assessor accept the application
-    log in as a different user            ${assessor_madeleine_email}  ${short_password}
-    the user clicks the button/link       jQuery = h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    the user clicks the button/link       jQuery = .progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
-    the user selects the radio button     reviewAccept  true
-    the user clicks the button/link       css = button[type="submit"]  # Confirm
