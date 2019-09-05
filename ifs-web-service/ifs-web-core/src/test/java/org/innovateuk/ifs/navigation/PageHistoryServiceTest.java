@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
+import static javax.servlet.DispatcherType.ERROR;
 import static org.innovateuk.ifs.navigation.PageHistoryService.PAGE_HISTORY_COOKIE_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -82,6 +83,22 @@ public class PageHistoryServiceTest {
         Map<String, Object> model = new HashMap<>();
         when(modelAndView.getModel()).thenReturn(model);
         when(request.getRequestURI()).thenReturn("/url/pageSecond");
+        when(handler.hasMethodAnnotation(NavigationRoot.class)).thenReturn(false);
+
+        pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
+
+        assertEquals(2, history.size());
+        assertEquals("/url/pageFirst", model.get("cookieBackLinkUrl"));
+        assertEquals("pageFirst", model.get("cookieBackLinkText"));
+        verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+    }
+
+    @Test
+    public void recordPageHistory_errorPage() {
+        Map<String, Object> model = new HashMap<>();
+        when(modelAndView.getModel()).thenReturn(model);
+        when(request.getRequestURI()).thenReturn("/error");
+        when(request.getDispatcherType()).thenReturn(ERROR);
         when(handler.hasMethodAnnotation(NavigationRoot.class)).thenReturn(false);
 
         pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
