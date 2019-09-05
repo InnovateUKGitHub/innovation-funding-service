@@ -396,3 +396,26 @@ the user enter the Correspondence address
     the user clicks the button/link                     id = postcode-lookup
     the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
+
+the user uploads to the collaboration agreement/exploitation plan
+    [Arguments]  ${file_name}
+    choose file  name = document  ${upload_folder}/${file_name}
+
+the user goes to documents page
+    [Arguments]  ${link1}  ${link2}
+    the user clicks the button/link    link = ${link1}
+    the user clicks the button/link    link = ${link2}
+
+Search for MO
+    [Arguments]  ${MO_name}  ${MO_fullname}
+    the element should be disabled      jQuery = button:contains("View Monitoring Officer")
+    input text                          id = userId    ${MO_name}
+    the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")
+    the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
+
+The internal user assign project to MO
+    [Arguments]  ${search_ID}  ${project_name}
+    the element should be disabled      jQuery = button:contains("Assign")
+    input text                          id = projectId    ${search_ID}
+    the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
+    the user clicks the button/link     jQuery = button:contains("Assign")

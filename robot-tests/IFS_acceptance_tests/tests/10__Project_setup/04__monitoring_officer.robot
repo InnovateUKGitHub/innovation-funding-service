@@ -356,23 +356,9 @@ The user should not see assigned project in Select a project to assign search fi
     input text                             id = projectId    ${Assign_Project_ID}
     the user should not see the element    jQuery = ul li:contains("${Assign_Project_ID} - ${Assign_Project}")
 
-The internal user assign project to MO
-    [Arguments]  ${search_ID}  ${project_name}
-    the element should be disabled      jQuery = button:contains("Assign")
-    input text                          id = projectId    ${search_ID}
-    the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
-    the user clicks the button/link     jQuery = button:contains("Assign")
-
 Comp admin assign and remove project to MO
     the internal user assign project to MO        ${Assign_Project_ID}  ${Assign_Project}
     comp admin remove project assigned to MO      ${Assign_Project}
-
-Search for MO
-    [Arguments]  ${MO_name}  ${MO_fullname}
-    the element should be disabled      jQuery = button:contains("View Monitoring Officer")
-    input text                          id = userId    ${MO_name}
-    the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")
-    the user clicks the button/link     jQuery = button:contains("View Monitoring Officer")
 
 The user should see exisitng IFS user details and add phone number
     the user should see the element          jQuery = .message-alert:contains("We have found a user with this email address.")

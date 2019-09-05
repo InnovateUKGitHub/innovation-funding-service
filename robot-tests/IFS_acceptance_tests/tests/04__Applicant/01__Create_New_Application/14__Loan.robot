@@ -18,8 +18,10 @@ Resource        ../../10__Project_setup/PS_Common.robot
 ${loan_comp_PS}              Project setup loan comp
 ${loan_comp_PS_Id}           ${competition_ids["${loan_comp_PS}"]}
 ${loan_PS_application1}      Loan Project 1
-${loan_PS_application_Id}    ${project_ids["${loan_PS_application1}"]}
-${loan_PS_Url}               ${server}/project-setup/project/${loan_PS_application_Id}/details
+${loan_PS_application_Id}    ${application_ids["${loan_PS_application1}"]}
+${loan_PS_project_Id}        ${project_ids["${loan_PS_application1}"]}
+${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_Id}
+${loan_PS_Url}               ${loan_PS}/details
 
 *** Test Cases ***
 Loan application shows correct T&C's
@@ -57,6 +59,19 @@ Applicant complete the project setup details
     [Documentation]  IFS-6369
     Given the user completes the project details
     And the user completes the project team details
+    And the user submits the project document
+
+Project finance completes all project setup steps
+    [Documentation]  IFS-6369
+    Given internal user approve project documents
+    And internal user assign MO to loan project
+    And internal user generate SP
+
+Applicant checks the generated SP
+    [Documentation]  IFS-6369
+    Given log in as a different user       &{lead_applicant_credentials}
+    When the user navigates to the page    ${loan_PS}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
+    Then the user should not see the financial year table on SP
 
 *** Keywords ***
 Custom suite setup
@@ -98,3 +113,58 @@ the user completes the project team details
     the user clicks the button/link     jQuery = button:contains("Save project manager")
     the user clicks the button/link     link = Set up your project
     the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+the user submits the project document
+    the user navigates to the page       ${loan_PS}/document/all
+    the user clicks the button/link      link = Exploitation plan
+    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
+    the user clicks the button/link      id = submitDocumentButton
+    the user clicks the button/link      id = submitDocumentButtonConfirm
+    the user goes to documents page      Back to document overview  Set up your project
+    the user should see the element      jQuery = li:contains("Documents") span:contains("Awaiting review")
+
+internal user approve project documents
+    Log in as a different user            &{internal_finance_credentials}
+    the user navigates to the page        ${server}/project-setup-management/project/${loan_PS_project_Id}/document/all
+    the user clicks the button/link       link = Exploitation plan
+    internal user approve uploaded documents
+
+internal user assign MO to loan project
+    the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/monitoring-officer
+    Search for MO                            Orvill  Orville Gibbs
+    The internal user assign project to MO   ${loan_PS_application_Id}  ${loan_PS_application1}
+
+internal user generate SP
+    the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user selects the checkbox            project-viable
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link          css = #confirm-button
+    the user clicks the button/link          jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
+    the user clicks the button/link          link = Return to finance checks
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
+    the user selects the checkbox            project-eligible
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link          css = #confirm-button
+    the user clicks the button/link          css = [name="confirm-eligibility"]
+    the user clicks the button/link          link = Return to finance checks
+    the user clicks the button/link          css = .generate-spend-profile-main-button
+    the user clicks the button/link          css = #generate-spend-profile-modal-button
+
+the user should not see the financial year table on SP
+    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link       link = Edit spend profile
+    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link       jQuery = button:contains("Save and return to spend profile overview")
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+    the user clicks the button/link       link = Empire Ltd
+    the user should not see the element   jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
+    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link       link = Spend profile overview
+    the user clicks the button/link       link = Review and send total project spend profile
+    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link       link = Send project spend profile
+    the user clicks the button/link       id = submit-send-all-spend-profiles
