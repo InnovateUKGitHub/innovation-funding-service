@@ -29,6 +29,10 @@ public class ApplicationFinanceResourceBuilder extends BaseFinanceResourceBuilde
         return withArray((maximumFundingLevel, applicationFinanceResource) -> applicationFinanceResource.setMaximumFundingLevel(maximumFundingLevel), maximumFundingLevels);
     }
 
+    public ApplicationFinanceResourceBuilder withWorkPostcode(String... workPostcodes) {
+        return withArray((workPostcode, applicationFinanceResource) -> applicationFinanceResource.setWorkPostcode(workPostcode), workPostcodes);
+    }
+
     private ApplicationFinanceResourceBuilder(List<BiConsumer<Integer, ApplicationFinanceResource>> newMultiActions) {
         super(newMultiActions);
     }

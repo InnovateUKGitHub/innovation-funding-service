@@ -148,12 +148,34 @@ Css user is able to add a new team member to all partners
 
 Dashboard status updates correctly for internal and external users
     [Documentation]  IFS-5710
-    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    [Setup]  log in as a different user    &{internal_finance_credentials}
     Given the Project team status for internal user is incomplete
     When all partners complete the Project team section
     Then the Project team status appears as complete for the internal user
 
+New user is able to repspond to a query
+    [Documentation]  IFS-6421
+    Given the internal user posts a query
+    When the new user posts a response
+    Then the user should not see an error in the page
+
 *** Keywords ***
+the internal user posts a query
+    the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
+    the user clicks the button/link        jQuery =tr:contains("Empire") td:nth-child(6):contains("View")
+    the user clicks the button/link        id = post-new-query
+    the user enters text to a text field   id = queryTitle  a viability query's title
+    the user enters text to a text field   css = .editor    another query body
+    the user clicks the button/link        css = .govuk-grid-column-one-half button[type = "submit"]  # Post query
+    the user should not see an error in the page
+
+the new user posts a response
+    log in as a different user                 ${leadNewMemberEmail}   ${short_password}
+    the user clicks the button/link            link = Magic material
+    the user clicks the button/link            link = Finance checks
+    the user clicks the button/link      link = Respond
+    the user enters text to a text field  css = .editor    one more response to the eligibility query
+    the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
 
 The Project team status for internal user is incomplete
     the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
@@ -189,7 +211,7 @@ Lead partner completes the Project team section
     the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The Project team status appears as complete for the internal user
-    log in as a different user    &{Comp_admin1_credentials}
+    log in as a different user    &{internal_finance_credentials}
     the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     the user should see the element   jQuery = th:contains("Magic material")~ ~ td:contains("Complete")
 
