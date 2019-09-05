@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.internal.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupCell;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
@@ -31,12 +32,13 @@ public class InternalProjectSetupRowPopulator {
                         competition.getId(),
                         status.getProjectLeadOrganisationName(),
                         status.getProjectNumber(),
-                        getProjectCells(status, competition.getProjectSetupStages(), user, competition.getId())
+                        getProjectCells(status, competition.getProjectSetupStages(), user, competition)
                 )).collect(Collectors.toList());
     }
 
-    private Set<InternalProjectSetupCell> getProjectCells(ProjectStatusResource status, List<ProjectSetupStage> columns, UserResource user, long competitionId) {
+    private Set<InternalProjectSetupCell> getProjectCells(ProjectStatusResource status, List<ProjectSetupStage> columns, UserResource user, CompetitionResource competition) {
         Set<InternalProjectSetupCell> cells = new LinkedHashSet<>();
+        long competitionId = competition.getId();
 
         SetupSectionInternalUser setupSectionInternalUser = new SetupSectionInternalUser(status);
 
@@ -60,7 +62,7 @@ public class InternalProjectSetupRowPopulator {
                     setupSectionInternalUser.canAccessProjectDetailsSection(user)
             ));
         }
-        if (columns.contains(DOCUMENTS)) {
+        if (columns.contains(DOCUMENTS) && !hasProjectDocuments(competition)) {
             cells.add(new InternalProjectSetupCell(
                     DOCUMENTS,
                     status.getDocumentsStatus(),
@@ -110,5 +112,12 @@ public class InternalProjectSetupRowPopulator {
         }
 
         return cells;
+    }
+
+    private boolean hasProjectDocuments(CompetitionResource competition) {
+        return competition.getCompetitionDocuments().stream()
+                .filter(CompetitionDocumentResource::isEnabled)
+                .findAny()
+                .isPresent();
     }
 }
