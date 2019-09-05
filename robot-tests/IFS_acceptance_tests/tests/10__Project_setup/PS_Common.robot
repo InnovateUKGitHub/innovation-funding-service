@@ -390,3 +390,9 @@ internal user approve uploaded documents
     the user clicks the button/link        id = submit-button
     the user clicks the button/link        id = accept-document
     the user should see the element        jQuery = p:contains("You have approved this document.")
+
+the user enter the Correspondence address
+    the user enters text to a text field                id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link                     id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
