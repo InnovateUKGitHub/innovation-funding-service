@@ -225,4 +225,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 //    public void setMonitoringOfficer(boolean monitoringOfficer) {
 //        this.monitoringOfficer = monitoringOfficer;
 //    }
+
+
+    public boolean shouldShowStatus(SetupStatusStageViewModel stage) {
+        return isMonitoringOfficer() || !stage.getAccess().isNotAccessible();
+    }
 }

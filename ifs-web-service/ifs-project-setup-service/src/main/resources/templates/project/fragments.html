@@ -28,15 +28,14 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="project-setup-status-indicator(status)">
+<th:block th:fragment="project-setup-status-indicator(status, override)">
     <div class="status">
         <div class="status-msg msg-progress">
             <th:block th:switch="${status}">
-                <span th:case="complete" class="status-complete">Completed</span>
-                <span th:case="require-action" class="status-action-required">To be completed</span>
-                <span th:case="waiting" class="status-waiting">Awaiting review</span>
-                <span th:case="rejected" class="status-reject">Unsuccessful</span>
-                <span th:case="awaiting-assignment">Awaiting assignment</span>
+                <span th:case="complete" class="status-complete" th:text="${override} ?: 'Completed'">Completed</span>
+                <span th:case="require-action" class="status-action-required" th:text="${override} ?: 'To be completed'">To be completed</span>
+                <span th:case="waiting" class="status-waiting" th:text="${override} ?: 'Awaiting review'">Awaiting review</span>
+                <span th:case="rejected" class="status-reject" th:text="${override} ?: 'Unsuccessful'">Unsuccessful</span>
             </th:block>
         </div>
     </div>

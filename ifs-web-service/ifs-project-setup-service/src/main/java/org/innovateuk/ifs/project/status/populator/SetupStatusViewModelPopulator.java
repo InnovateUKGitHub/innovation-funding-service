@@ -149,16 +149,16 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 : String.format("/project/%d/monitoring-officer/readonly", project.getId()),
                         sectionStatus.monitoringOfficerSectionStatus(maybeMonitoringOfficer.isPresent(),
                                 requiredProjectDetailsForMonitoringOfficerComplete),
-                        statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest), partnerProjectLocationRequired)
+                        statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest), partnerProjectLocationRequired),
+                        maybeMonitoringOfficer.isPresent() ? null : "Awaiting assignment"
                 );
             case BANK_DETAILS:
-                SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest));
                 return new SetupStatusStageViewModel(stage.getColumnName(),
                         "We need bank details for those partners eligible for funding.",
                         projectComplete ? String.format("/project/%d/bank-details", project.getId())
                                 : String.format("/project/%d/bank-details/readonly", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
-                        bankDetailsAccess
+                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest))
                 );
             case FINANCE_CHECKS:
                 SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
@@ -169,7 +169,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 ownOrganisation.getFinanceChecksStatus(),
                                 financeChecksAccess
                         ),
-                        financeChecksAccess
+                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess
                 );
             case SPEND_PROFILE:
                 return new SetupStatusStageViewModel(stage.getColumnName(),

@@ -83,7 +83,8 @@
                         </h2>
                         <p class="govuk-body govuk-!-margin-0" th:text="${stage.subtitle}">Confirm the proposed start date and location of the project.</p>
                     </div>
-                    <th:block th:insert="project/fragments :: project-setup-status-indicator(${stage.status.status})"/>
+                    <th:block th:if="${model.shouldShowStatus(stage)}"
+                        th:insert="project/fragments :: project-setup-status-indicator(${stage.status.status}, ${stage.statusOverride})"/>
                 </li>
             </ul>
         </div>

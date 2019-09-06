@@ -9,6 +9,7 @@ public class SetupStatusStageViewModel {
     private final String url;
     private final SectionStatus status;
     private final SectionAccess access;
+    private final String statusOverride;
 
     public SetupStatusStageViewModel(String title, String subtitle, String url, SectionStatus status, SectionAccess access) {
         this.title = title;
@@ -16,8 +17,17 @@ public class SetupStatusStageViewModel {
         this.url = url;
         this.status = status;
         this.access = access;
+        this.statusOverride = null;
     }
 
+    public SetupStatusStageViewModel(String title, String subtitle, String url, SectionStatus status, SectionAccess access, String statusOverride) {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.url = url;
+        this.status = status;
+        this.access = access;
+        this.statusOverride = statusOverride;
+    }
     public String getTitle() {
         return title + (getAccess().isNotRequired() ? " (not required)" : "");
     }
@@ -36,5 +46,9 @@ public class SetupStatusStageViewModel {
 
     public SectionAccess getAccess() {
         return access;
+    }
+
+    public String getStatusOverride() {
+        return statusOverride;
     }
 }

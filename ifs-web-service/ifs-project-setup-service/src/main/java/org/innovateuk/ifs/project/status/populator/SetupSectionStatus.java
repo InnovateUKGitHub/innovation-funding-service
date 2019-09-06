@@ -38,10 +38,8 @@ public class SetupSectionStatus {
                                                         final boolean requiredProjectDetailsForMonitoringOfficerComplete) {
         if (monitoringOfficerAssigned) {
             return TICK;
-        } else if (requiredProjectDetailsForMonitoringOfficerComplete) {
-            return HOURGLASS;
         } else {
-            return EMPTY;
+            return HOURGLASS;
         }
 
     }
