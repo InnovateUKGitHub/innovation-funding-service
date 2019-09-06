@@ -162,14 +162,18 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
             case FINANCE_CHECKS:
                 SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
+                SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
+                        ownOrganisation.getFinanceChecksStatus(),
+                        financeChecksAccess
+                );
+                boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
+
                 return new SetupStatusStageViewModel(stage.getColumnName(),
                        "We will review your financial information.",
                         String.format("/project/%d/finance-checks", project.getId()),
-                        sectionStatus.financeChecksSectionStatus(
-                                ownOrganisation.getFinanceChecksStatus(),
-                                financeChecksAccess
-                        ),
-                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess
+                        financeChecksStatus,
+                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,
+                        pendingQueries ? "Pending query" : null
                 );
             case SPEND_PROFILE:
                 return new SetupStatusStageViewModel(stage.getColumnName(),
