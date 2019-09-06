@@ -151,6 +151,24 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         return doSetAdministrativeSupportCosts(OverheadRateType.TOTAL, customRate);
     }
 
+    public IndustrialCostDataBuilder withProcurementOverheads(String item, int project, int company) {
+        return addCostItem("Procurement overhead", (finance) ->
+                new ProcurementOverhead(null, item, BigDecimal.valueOf(project), company, finance.getId()));
+    }
+
+    public IndustrialCostDataBuilder withGrantClaimAmount(int amount) {
+        return updateCostItem(GrantClaimAmount.class, FinanceRowType.GRANT_CLAIM_AMOUNT, existingCost -> {
+            existingCost.setAmount(BigDecimal.valueOf(amount));
+            financeRowCostsService.update(existingCost.getId(), existingCost);
+        });
+    }
+
+    public IndustrialCostDataBuilder withVat(boolean registered) {
+        return updateCostItem(Vat.class, FinanceRowType.VAT, existingCost -> {
+            existingCost.setRegistered(registered);
+            financeRowCostsService.update(existingCost.getId(), existingCost);
+        });
+    }
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
         return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate, existingCost.getTargetId());
@@ -213,4 +231,5 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccess();
         LOG.info("Created Industrial Costs for Application '{}', Organisation '{}'", application.getName(), organisation.getName());
     }
+
 }
