@@ -1,95 +1,95 @@
-Assessor email,Application name,Reject Reason,Reject Comment,State,Feedback,Recommend Comment
-tera.maynard@example.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N
-louise.yates@example.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N
-paul.plum@gmail.com,Park living,\N,\N,PENDING,\N,\N
-felix.wilson@gmail.com,Intelligent water system,\N,\N,PENDING,\N,\N
-tera.maynard@example.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N
-louise.yates@example.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N
-paul.plum@gmail.com,Intelligent water system,\N,\N,ACCEPTED,\N,\N
-felix.wilson@gmail.com,Park living,\N,\N,ACCEPTED,\N,\N
-tera.maynard@example.com,A new innovative solution,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-louise.yates@example.com,A new innovative solution,\N,\N,READY_TO_SUBMIT,"Innovative solution with great promise, recommended",Excellent application
-tera.maynard@example.com,Mobile Phone Data for Logistics Analytics,\N,\N,SUBMITTED,I am recommending this application for funding,This application demonstrated all the qualities I wanted to see
-louise.yates@example.com,Mobile Phone Data for Logistics Analytics,\N,\N,SUBMITTED,"Stellar application, I would recommend",Great application
-paul.plum@gmail.com,Intelligent Building,\N,\N,ACCEPTED,\N,\N
-paul.plum@gmail.com,Products and Services Personalised,\N,\N,ACCEPTED,\N,\N
-felix.wilson@gmail.com,Intelligent Building,\N,\N,ACCEPTED,\N,\N
-felix.wilson@gmail.com,Products and Services Personalised,\N,\N,ACCEPTED,\N,\N
-paul.plum@gmail.com,Plastic reprocessing with zero waste,\N,\N,PENDING,\N,\N
-felix.wilson@gmail.com,Plastic reprocessing with zero waste,\N,\N,WITHDRAWN,\N,\N
-paul.plum@gmail.com,Low power air purification systems,\N,\N,PENDING,\N,\N
-felix.wilson@gmail.com,Low power air purification systems,\N,\N,PENDING,\N,\N
-paul.plum@gmail.com,Molecular tree breeding,\N,\N,PENDING,\N,\N
-felix.wilson@gmail.com,Molecular tree breeding,\N,\N,PENDING,\N,\N
-maureen.moore@gmail.com,Intelligent water system,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased"
-patrice.rene@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,I have no problem recommending this application,Top quality application
-rita.friedemann@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,"Very good, but could have been better in areas","Could have tried a bit harder in parts, but overall good"
-owain.awstin@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,"I enjoyed reading this application, well done",High quality application that should be recommended
-madeleine.martin@gmail.com,Neural networks to optimise freight train routing,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-joel.george@gmail.com,Neural networks to optimise freight train routing,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-mabel.robinson@gmail.com,Computer vision and machine learning for transport networks,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-maureen.moore@gmail.com,Computer vision and machine learning for transport networks,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-mabel.robinson@gmail.com,Crowd sourced cycling navigator,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-maureen.moore@gmail.com,Crowd sourced cycling navigator,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-mabel.robinson@gmail.com,Artificial Intelligence in transportation IOT devices,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-maureen.moore@gmail.com,Artificial Intelligence in transportation IOT devices,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-madeleine.martin@gmail.com,Machine learning applied to the traveler experience,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-joel.george@gmail.com,Machine learning applied to the traveler experience,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-benjamin.nixon@gmail.com,Machine learning for driverless cars,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-paige.godfrey@gmail.com,Machine learning for driverless cars,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-paul.plum@gmail.com,Living with Virtual Reality,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-felix.wilson@gmail.com,Living with Augmented Reality,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-load-assessor1@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N
-load-assessor1@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N
-load-assessor2@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N
-load-assessor3@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N
-load-assessor4@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N
-load-assessor5@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N
-eoi-assessor-user1@example.com,Expression of Interest: Assistive technologies for caregivers - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-eoi-assessor-user2@example.com,Expression of Interest: Assistive technologies for caregivers - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-apc-assessor-user1@example.com,Smart monitoring in high-pressure engineering systems - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-apc-assessor-user2@example.com,Smart monitoring in high-pressure engineering systems - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+Assessor email,Application name,Reject Reason,Reject Comment,State,Feedback,Recommend Comment,Panel,Interview
+tera.maynard@example.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N,No,No
+louise.yates@example.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N,No,No
+paul.plum@gmail.com,Park living,\N,\N,PENDING,\N,\N,No,No
+felix.wilson@gmail.com,Intelligent water system,\N,\N,PENDING,\N,\N,No,No
+tera.maynard@example.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N,No,No
+louise.yates@example.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N,No,No
+paul.plum@gmail.com,Intelligent water system,\N,\N,ACCEPTED,\N,\N,No,No
+felix.wilson@gmail.com,Park living,\N,\N,ACCEPTED,\N,\N,No,No
+tera.maynard@example.com,A new innovative solution,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+louise.yates@example.com,A new innovative solution,\N,\N,READY_TO_SUBMIT,"Innovative solution with great promise, recommended",Excellent application,No,No
+tera.maynard@example.com,Mobile Phone Data for Logistics Analytics,\N,\N,SUBMITTED,I am recommending this application for funding,This application demonstrated all the qualities I wanted to see,No,No
+louise.yates@example.com,Mobile Phone Data for Logistics Analytics,\N,\N,SUBMITTED,"Stellar application, I would recommend",Great application,No,No
+paul.plum@gmail.com,Intelligent Building,\N,\N,ACCEPTED,\N,\N,No,No
+paul.plum@gmail.com,Products and Services Personalised,\N,\N,ACCEPTED,\N,\N,No,No
+felix.wilson@gmail.com,Intelligent Building,\N,\N,ACCEPTED,\N,\N,No,No
+felix.wilson@gmail.com,Products and Services Personalised,\N,\N,ACCEPTED,\N,\N,No,No
+paul.plum@gmail.com,Plastic reprocessing with zero waste,\N,\N,PENDING,\N,\N,No,No
+felix.wilson@gmail.com,Plastic reprocessing with zero waste,\N,\N,WITHDRAWN,\N,\N,No,No
+paul.plum@gmail.com,Low power air purification systems,\N,\N,PENDING,\N,\N,No,No
+felix.wilson@gmail.com,Low power air purification systems,\N,\N,PENDING,\N,\N,No,No
+paul.plum@gmail.com,Molecular tree breeding,\N,\N,PENDING,\N,\N,No,No
+felix.wilson@gmail.com,Molecular tree breeding,\N,\N,PENDING,\N,\N,No,No
+maureen.moore@gmail.com,Intelligent water system,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+patrice.rene@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,I have no problem recommending this application,Top quality application,No,No
+rita.friedemann@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,"Very good, but could have been better in areas","Could have tried a bit harder in parts, but overall good",No,No
+owain.awstin@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,"I enjoyed reading this application, well done",High quality application that should be recommended,No,No
+madeleine.martin@gmail.com,Neural networks to optimise freight train routing,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+joel.george@gmail.com,Neural networks to optimise freight train routing,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application,No,No
+mabel.robinson@gmail.com,Computer vision and machine learning for transport networks,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+maureen.moore@gmail.com,Computer vision and machine learning for transport networks,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application,No,No
+mabel.robinson@gmail.com,Crowd sourced cycling navigator,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+maureen.moore@gmail.com,Crowd sourced cycling navigator,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application,No,No
+mabel.robinson@gmail.com,Artificial Intelligence in transportation IOT devices,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+maureen.moore@gmail.com,Artificial Intelligence in transportation IOT devices,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application,No,No
+madeleine.martin@gmail.com,Machine learning applied to the traveler experience,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+joel.george@gmail.com,Machine learning applied to the traveler experience,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application,No,No
+benjamin.nixon@gmail.com,Machine learning for driverless cars,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+paige.godfrey@gmail.com,Machine learning for driverless cars,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application,No,No
+paul.plum@gmail.com,Living with Virtual Reality,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+felix.wilson@gmail.com,Living with Augmented Reality,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application,No,No
+load-assessor1@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor1@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor2@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor3@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor4@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 2,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 3,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 4,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 5,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 6,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 7,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 8,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 9,\N,\N,ACCEPTED,\N,\N,No,No
+load-assessor5@load.test,Application for load 10,\N,\N,ACCEPTED,\N,\N,No,No
+eoi-assessor-user1@example.com,Expression of Interest: Assistive technologies for caregivers - Application 1,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",Yes,Yes
+eoi-assessor-user2@example.com,Expression of Interest: Assistive technologies for caregivers - Application 1,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them",Yes,Yes
+apc-assessor-user1@example.com,Smart monitoring in high-pressure engineering systems - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No
+apc-assessor-user2@example.com,Smart monitoring in high-pressure engineering systems - Application 1,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them",No,No

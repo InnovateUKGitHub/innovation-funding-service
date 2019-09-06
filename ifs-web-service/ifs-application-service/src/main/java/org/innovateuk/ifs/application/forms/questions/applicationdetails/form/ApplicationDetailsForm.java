@@ -18,7 +18,7 @@ import static java.lang.Boolean.TRUE;
 
 @FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
 @FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
-@FieldRequiredIf(required = "innovationAreaName", argument = "canSelectInnovationArea", predicate = true, message = "{validation.application.innovationarea.category.required}")
+@FieldRequiredIf(required = "innovationAreaName", argument = "validateInnovationArea", predicate = true, message = "{validation.application.innovationarea.category.required}")
 @FieldRequiredIf(required = "competitionReferralSource", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.competitionreferralsource.required}")
 @FieldRequiredIf(required = "companyAge", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.companyage.required}")
 @FieldRequiredIf(required = "companyPrimaryFocus", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.companyprimaryfocus.required}")
@@ -32,7 +32,7 @@ public class ApplicationDetailsForm {
     private LocalDate startDate;
 
     @NotNull
-    @Range(min = 1, max = 36, message = "{validation.project.duration.range.invalid}")
+    @Range(min = 1, message = "{validation.project.duration.range.invalid}")
     private Long durationInMonths;
 
     @NotNull(message = "{validation.application.must.indicate.resubmission.or.not}")
@@ -43,6 +43,8 @@ public class ApplicationDetailsForm {
     private String previousApplicationTitle;
 
     private boolean canSelectInnovationArea;
+
+    private boolean validateInnovationArea;
 
     private String innovationArea;
 
@@ -73,6 +75,7 @@ public class ApplicationDetailsForm {
             this.companyAge = (null != application.getCompanyAge()) ? application.getCompanyAge().toString() : null;
             this.companyPrimaryFocus = (null != application.getCompanyPrimaryFocus()) ? application.getCompanyPrimaryFocus().toString() : null;
         }
+        this.validateInnovationArea = validateInnovationArea(viewModel);
     }
 
     public String getName() {
@@ -178,4 +181,13 @@ public class ApplicationDetailsForm {
     public void setCompanyPrimaryFocus(String companyPrimaryFocus) {
         this.companyPrimaryFocus = companyPrimaryFocus;
     }
+
+    public boolean isValidateInnovationArea() {
+        return validateInnovationArea;
+    }
+
+    private boolean validateInnovationArea(ApplicationDetailsViewModel viewModel) {
+        return !viewModel.getApplication().getNoInnovationAreaApplicable() && canSelectInnovationArea;
+    }
+
 }

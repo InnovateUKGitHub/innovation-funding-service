@@ -26,6 +26,7 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -115,7 +116,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     public void populate() {
         long applicationId = 1L;
         long assessmentId = 2L;
-        UserResource user = newUserResource().build();
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
         ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings()
                 .setIncludeQuestionLinks(true)
                 .setIncludeStatuses(true)

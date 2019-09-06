@@ -55,7 +55,7 @@
                 <div class="govuk-form-group"
                      th:if="${model.formInputViewModel.canSelectInnovationArea}"
                      th:classappend="${#fields.hasErrors('*{__innovationAreaName__}')} ? 'govuk-form-group--error'">
-                    <label for="researchArea">
+                    <label for="innovationAreaName">
                         <span class="govuk-heading-m">Innovation area</span>
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
@@ -66,7 +66,7 @@
                             <th:block th:if="${model.formInputViewModel.noInnovationAreaApplicable}" th:text="#{ifs.application.no_innovation_area}"/>
                         </p>
                     </div>
-                    <button id="researchArea"
+                    <button id="innovationAreaName"
                             class="button-clear"
                             name="change_innovation_area"
                             type="submit"

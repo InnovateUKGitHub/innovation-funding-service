@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -92,7 +93,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testGetById() throws Exception {
+    public void getById() {
         Long applicationId = 3L;
 
         ApplicationResource application = new ApplicationResource();
@@ -104,7 +105,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test(expected = ObjectNotFoundException.class)
-    public void testGetByIdNotFound() throws Exception {
+    public void testGetByIdNotFound() {
         Long applicationId = 5L;
 
         when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException("Application not found", asList(applicationId)));
@@ -113,25 +114,27 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testGetByIdNullValue() throws Exception {
+    public void getByIdNullValue() {
         ApplicationResource returnedApplication = service.getById(null);
 
         assertEquals(null, returnedApplication);
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void save() {
         ApplicationResource application = new ApplicationResource();
 
-        when(applicationRestService.saveApplication(application)).thenReturn(restSuccess());
+        ValidationMessages validationMessages = new ValidationMessages();
 
-        ServiceResult<Void> result = service.save(application);
+        when(applicationRestService.saveApplication(application)).thenReturn(restSuccess(validationMessages));
+
+        ServiceResult<ValidationMessages> result = service.save(application);
         assertTrue(result.isSuccess());
         Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).saveApplication(application);
     }
 
     @Test
-    public void testRemoveCollaborator() throws Exception {
+    public void removeCollaborator() {
         Long applicationInviteId = 80512L;
         ServiceResult<Void> result = service.removeCollaborator(applicationInviteId);
         assertTrue(result.isSuccess());
@@ -139,7 +142,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void markAsIneligible() throws Exception {
+    public void markAsIneligible() {
         long applicationId = 1L;
         IneligibleOutcomeResource reason = newIneligibleOutcomeResource()
                 .withReason("reason")
