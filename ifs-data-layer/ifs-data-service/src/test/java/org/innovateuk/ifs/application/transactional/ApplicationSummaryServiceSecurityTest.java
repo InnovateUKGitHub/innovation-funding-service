@@ -1,20 +1,14 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.project.security.ProjectApplicationPermissionRules;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.Optional.empty;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummaryService> {
 
@@ -62,26 +56,6 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getIneligibleApplicationSummariesByCompetitionId(1L, null, 0, 20, empty(), empty()),
                 PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, STAKEHOLDER);
-    }
-
-    @Test
-    public void test_getApplicationTeamByApplicationId() {
-        final long applicationId = 1L;
-        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource()
-                .build());
-        assertAccessDenied(
-                () -> classUnderTest.getApplicationTeamByApplicationId(applicationId),
-                () -> {
-                    verify(applicationRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class),
-                            isA(UserResource.class));
-                    verify(projectApplicationPermissionRules).projectPartnerCanViewApplicationsLinkedToTheirProjects(isA(ApplicationResource.class),
-                            isA(UserResource.class));
-                    verify(applicationRules).internalUsersCanViewApplications(isA(ApplicationResource.class), isA
-                            (UserResource.class));
-                    verify(applicationRules).innovationLeadAssignedToCompetitionCanViewApplications(isA
-                            (ApplicationResource.class), isA(UserResource.class));
-                }
-        );
     }
 
     @Test

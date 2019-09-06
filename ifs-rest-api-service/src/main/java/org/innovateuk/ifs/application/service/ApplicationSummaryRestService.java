@@ -63,7 +63,5 @@ public interface ApplicationSummaryRestService {
                                                                          Optional<String> filter,
                                                                          Optional<Boolean> informFilter);
 
-    RestResult<ApplicationTeamResource> getApplicationTeam(long applicationId);
-
     RestResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId);
 }
