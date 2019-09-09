@@ -14,6 +14,8 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Optional;
 
+import static javax.servlet.DispatcherType.ERROR;
+
 @Service
 public class PageHistoryService {
 
@@ -37,8 +39,10 @@ public class PageHistoryService {
             modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
         }
 
-        history.push(new PageHistory(request.getRequestURI()));
-        encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+        if (!ERROR.equals(request.getDispatcherType())) {
+            history.push(new PageHistory(request.getRequestURI()));
+            encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+        }
     }
 
     public Optional<PageHistory> getPreviousPage(HttpServletRequest request) {
@@ -49,7 +53,8 @@ public class PageHistoryService {
                 });
     }
 
-    private  Optional<Deque<PageHistory>> getPageHistory(HttpServletRequest request) {
-        return encodedCookieService.getCookieAs(request, PAGE_HISTORY_COOKIE_NAME, new TypeReference<Deque<PageHistory>>() {});
+    private Optional<Deque<PageHistory>> getPageHistory(HttpServletRequest request) {
+        return encodedCookieService.getCookieAs(request, PAGE_HISTORY_COOKIE_NAME, new TypeReference<Deque<PageHistory>>() {
+        });
     }
 }
