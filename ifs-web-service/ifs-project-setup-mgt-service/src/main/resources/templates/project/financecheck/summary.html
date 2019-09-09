@@ -107,7 +107,8 @@
                     </td>
                     <td class="govuk-table__cell aligncentre cell-border-right">
                         <span th:if="${orgDetails.viability.notApplicable}"
-                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.rag.GREEN') : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.rag.GREEN') :
+                              model.financeCheckSummaryResource.loan ? #messages.msg('ifs.project.setup.rag.UNSET') : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                               th:classappend="${'viability-rag-' + status.index}"></span>
                         <span th:unless="${orgDetails.viability.notApplicable}"
                               th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
