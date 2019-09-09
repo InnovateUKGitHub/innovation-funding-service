@@ -5,7 +5,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.application.id}: ${applicationName} - Application overview|,hasFormErrors=${#fields.hasErrors('${ineligibleForm.*}')}" />
 </head>
 
-<body class="govuk-template__body app-summary competition-management" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">
+<body class="govuk-template__body app-summary" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">
 
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -51,7 +51,7 @@
             </th:block>
         </th:block>
 
-        <div class="govuk-grid-row">
+        <div class="govuk-grid-row app-details">
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Competition name</dt>
@@ -97,14 +97,15 @@
                         <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
                     </th:block>
                 </dl>
+
+                <th:block th:if="${model.support}">
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application progress</h2>
+                    <div th:include="fragments/elements :: progress-indicator"
+                         th:with="percentage=${model.application.completion.intValue()},size='medium'" class="govuk-!-margin-top-6"/>
+                </th:block>
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
-                    <li>
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${model.competition.id},applicationId=${model.application.id})}" class="govuk-link">
-                            view contributors and collaborators
-                        </a>
-                    </li>
                     <li th:if="${model.hasProject()}">
                         <a th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${model.competition.id},projectId=${model.projectId})}" class="govuk-link">
                             view activity log

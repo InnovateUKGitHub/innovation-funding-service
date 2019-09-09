@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -288,10 +289,15 @@ public class ProjectSpendProfileController {
                                                                     final Long organisationId,
                                                                     final SpendProfileTableResource spendProfileTableResource,
                                                                     final UserResource loggedInUser) {
-        SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+
+        SpendProfileSummaryModel summary = null;
+        if (!competition.getFundingType().equals(LOAN)) {
+            summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
+        }
+
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisationResource.getOrganisationTypeEnum());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());

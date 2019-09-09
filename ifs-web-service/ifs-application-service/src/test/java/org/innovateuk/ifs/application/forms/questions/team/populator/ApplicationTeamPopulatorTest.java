@@ -186,9 +186,5 @@ public class ApplicationTeamPopulatorTest {
         assertTrue(inviteViewModel.isInvite());
         assertEquals(newUserInvite.getId(), inviteViewModel.getInviteId());
         assertEquals("New user (Pending for 10 days)", inviteViewModel.getName());
-
-
-
-
     }
 }
