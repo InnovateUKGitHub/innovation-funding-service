@@ -421,10 +421,6 @@ Sole applicant can see documents approval
     Then the user should see the element   jQuery = .success-alert h2:contains("This document has been approved by us.")
 
 *** Keywords ***
-the user uploads to the collaboration agreement/exploitation plan
-    [Arguments]  ${file_name}
-    choose file  name = document  ${upload_folder}/${file_name}
-
 the user navigates to the competition
     the user navigates to the page      ${COMP_MANAGEMENT_PROJECT_SETUP}
     the user clicks the button/link     jQuery = button:contains("Next")
@@ -457,11 +453,6 @@ Partners can see both documents approved
     the user clicks the button/link     link = Return to documents
     the user clicks the button/link     link = Exploitation plan
     the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-
-the user goes to documents page
-    [Arguments]  ${link1}  ${link2}
-    the user clicks the button/link    link = ${link1}
-    the user clicks the button/link    link = ${link2}
 
 PM submits both documents
     the user clicks the button/link     link = Collaboration agreement

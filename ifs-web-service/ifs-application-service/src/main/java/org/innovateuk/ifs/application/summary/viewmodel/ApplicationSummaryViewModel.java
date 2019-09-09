@@ -11,7 +11,6 @@ public class ApplicationSummaryViewModel {
     private final ApplicationResource application;
     private final CompetitionResource competition;
     private final boolean projectWithdrawn;
-    private final boolean support;
 
     private final String competitionName;
     private final String applicationName;
@@ -23,12 +22,11 @@ public class ApplicationSummaryViewModel {
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
 
-    public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn, boolean support) {
+    public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn) {
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.application = application;
         this.competition = competition;
         this.projectWithdrawn = projectWithdrawn;
-        this.support = support;
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
         this.startDate = application.getStartDate();
@@ -54,10 +52,6 @@ public class ApplicationSummaryViewModel {
 
     public boolean isProjectWithdrawn() {
         return projectWithdrawn;
-    }
-
-    public boolean isSupport() {
-        return support;
     }
 
     public String getCompetitionName() {

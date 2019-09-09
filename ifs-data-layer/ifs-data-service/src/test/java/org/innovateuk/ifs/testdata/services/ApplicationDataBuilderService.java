@@ -488,26 +488,64 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             String user,
             String organisationName) {
 
+        UnaryOperator<IndustrialCostDataBuilder> costBuilder = costs -> {
+            final IndustrialCostDataBuilder[] builder = {costs};
+            competition.getFinanceRowTypes().forEach(type -> {
+                switch(type) {
+                    case LABOUR:
+                        builder[0] = builder[0].withWorkingDaysPerYear(123).
+                                withLabourEntry("Role 1", 200, 200).
+                                withLabourEntry("Role 2", 400, 300).
+                                withLabourEntry("Role 3", 600, 365);
+                        break;
+                    case OVERHEADS:
+                        builder[0] = builder[0].withAdministrationSupportCostsNone();
+                        break;
+                    case PROCUREMENT_OVERHEADS:
+                        builder[0] = builder[0].withProcurementOverheads("procurement overhead" , 1000, 2000);
+                        break;
+                    case MATERIALS:
+                        builder[0] = builder[0].withMaterials("Generator", bd("10020"), 10);
+                        break;
+                    case CAPITAL_USAGE:
+                        builder[0] = builder[0].withCapitalUsage(12, "Depreciating Stuff", true, bd("2120"), bd("1200"), 60);
+                        break;
+                    case SUBCONTRACTING_COSTS:
+                        builder[0] = builder[0].withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000"));
+                        break;
+                    case TRAVEL:
+                        builder[0] = builder[0].withTravelAndSubsistence("To visit colleagues", 15, bd("398"));
+                        break;
+                    case OTHER_COSTS:
+                        builder[0] = builder[0].withOtherCosts("Some more costs", bd("1100"));
+                        break;
+                    case VAT:
+                        builder[0] = builder[0].withVat(true);
+                        break;
+                    case FINANCE:
+                        builder[0] = builder[0].withGrantClaim(30);
+                        break;
+                    case GRANT_CLAIM_AMOUNT:
+                        builder[0] = builder[0].withGrantClaimAmount(12000);
+                        break;
+                    case OTHER_FUNDING:
+                        builder[0] = builder[0].withOtherFunding("Lottery", LocalDate.of(2016, 4, 1), bd("2468"));
+                        break;
+                    case ACADEMIC:
+                    case YOUR_FINANCE:
+                        //none for industrial costs.
+                        break;
+                }
+            });
+            return builder[0].withOrganisationSize(SMALL).
+                    withWorkPostcode("AB12 3CD");
+        };
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
                 withOrganisation(organisationName).
                 withUser(user).
-                withIndustrialCosts(costs -> costs.
-                        withWorkingDaysPerYear(123).
-                        withGrantClaim(30).
-                        withOtherFunding("Lottery", LocalDate.of(2016, 4, 1), bd("2468")).
-                        withLabourEntry("Role 1", 200, 200).
-                        withLabourEntry("Role 2", 400, 300).
-                        withLabourEntry("Role 3", 600, 365).
-                        withAdministrationSupportCostsNone().
-                        withMaterials("Generator", bd("10020"), 10).
-                        withCapitalUsage(12, "Depreciating Stuff", true, bd("2120"), bd("1200"), 60).
-                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000")).
-                        withTravelAndSubsistence("To visit colleagues", 15, bd("398")).
-                        withOtherCosts("Some more costs", bd("1100")).
-                        withOrganisationSize(SMALL).
-                        withWorkPostcode("AB12 3CD"));
+                withIndustrialCosts(costBuilder);
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(
