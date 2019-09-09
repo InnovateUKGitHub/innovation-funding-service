@@ -644,8 +644,8 @@
 </th:block>
 <th:block th:fragment="grant_claim_amount">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <p class="govuk-body" th:text="|Submitted funding sought: £${changePair.submitted.amount}|"></p>
-        <p class="govuk-body govuk-!-font-weight-bold" th:text="|Changed funding sought: £${changePair.changed.amount}|"></p>
+        <p class="govuk-body" th:text="|Submitted funding sought: £${#numbers.formatInteger(changePair.submitted.amount, 0, 'DEFAULT')}|"></p>
+        <p class="govuk-body govuk-!-font-weight-bold" th:text="|Changed funding sought: £${#numbers.formatInteger(changePair.changed.amount, 0, 'DEFAULT')}|"></p>
     </th:block>
 </th:block>
 

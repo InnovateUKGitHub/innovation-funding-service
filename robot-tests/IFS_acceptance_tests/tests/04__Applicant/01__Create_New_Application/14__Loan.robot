@@ -64,14 +64,14 @@ Applicant complete the project setup details
     And the user submits the project document
 
 Funding sought validations
-    [Documentation]  IFS-
+    [Documentation]  IFS-6293
     Given the user selects to change funding sought
     When the user enters text to a text field           id = partners[${EMPIRE_LTD_ID}].funding  ${EMPTY}
     And the user clicks the button/link                 jQuery = button:contains("Save and return to finances")
     Then the user should see a field and summary error  Enter the amount of funding sought.
 
 Found sought changes
-    [Documentation]
+    [Documentation]  IFS-6293
     Given the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  6000
     When the user clicks the button/link         jQuery = button:contains("Save and return to finances")
     Then the user should see the element         jQuery = h3:contains("Finances summary") ~ div td:contains("£200,903") ~ td:contains("4%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
