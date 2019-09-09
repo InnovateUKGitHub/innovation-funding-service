@@ -7,8 +7,10 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
-import org.innovateuk.ifs.competition.repository.*;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -21,7 +23,6 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -65,8 +66,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionMapper competitionMapper;
     @Autowired
-    private CompetitionTypeRepository competitionTypeRepository;
-    @Autowired
     private InnovationLeadRepository innovationLeadRepository;
     @Autowired
     private StakeholderRepository stakeholderRepository;
@@ -83,8 +82,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
     @Autowired
-    private GrantTermsAndConditionsMapper termsAndConditionsMapper;
-    @Autowired
     private PublicContentRepository publicContentRepository;
     @Autowired
     private MilestoneRepository milestoneRepository;
@@ -97,9 +94,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private FileService fileService;
-
-    @Autowired
-    private FileEntryService fileEntryService;
 
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")

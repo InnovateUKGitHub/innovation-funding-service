@@ -16,7 +16,6 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
-import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -879,9 +878,5 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public Optional<FileEntry> getCompetitionTerms() {
         return ofNullable(competitionTerms);
-    }
-
-    public List<ProjectSetupStage> getProjectSetupStages() {
-        return projectStages.stream().map(ProjectStages::getProjectSetupStage).collect(Collectors.toList());
     }
 }
