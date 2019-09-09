@@ -23,16 +23,13 @@ public class ApplicationSummaryViewModelPopulator {
     @Autowired
     private ProjectService projectService;
 
-    public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, boolean support) {
+    public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
         ApplicationReadOnlySettings settings = defaultSettings();
-        if (support) {
-            settings.setIncludeStatuses(true);
-        }
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
         return new ApplicationSummaryViewModel(applicationReadOnlyViewModel,
                                                application,
                                                competition,
-                                               isProjectWithdrawn(application.getId()), support);
+                                               isProjectWithdrawn(application.getId()));
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

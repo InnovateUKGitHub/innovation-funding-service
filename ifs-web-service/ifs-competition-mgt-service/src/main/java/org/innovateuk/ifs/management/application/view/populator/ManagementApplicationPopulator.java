@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.application.view.populator;
 
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -63,7 +64,13 @@ public class ManagementApplicationPopulator {
                                                    UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, defaultSettings());
+        ApplicationReadOnlySettings settings = defaultSettings();
+        boolean support = user.hasRole(Role.SUPPORT);
+        if (support && application.isOpen()) {
+            settings.setIncludeStatuses(true);
+        }
+
+        ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application, competition);
 
         Long projectId = null;
@@ -79,6 +86,7 @@ public class ManagementApplicationPopulator {
                 getAppendices(applicationId),
                 canMarkAsIneligible(application, user),
                 user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
+                support,
                 projectId
         );
 
