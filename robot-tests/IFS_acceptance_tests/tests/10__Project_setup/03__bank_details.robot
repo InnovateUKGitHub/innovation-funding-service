@@ -251,7 +251,7 @@ The applicant user is able to submit bank details
     applicant user enters bank details
     verify applicant submission is waiting review
 
-Applicant user enters bank details
+applicant user enters bank details
     the user enters text to a text field                name = accountNumber  ${Account_Two}
     the user enters text to a text field                name = sortCode  ${Sortcode_two}
     the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
