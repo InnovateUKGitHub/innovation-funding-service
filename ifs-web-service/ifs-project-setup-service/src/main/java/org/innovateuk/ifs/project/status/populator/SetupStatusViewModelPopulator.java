@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.status.populator;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -16,8 +14,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
-import org.innovateuk.ifs.project.status.viewmodel.SectionAccessList;
-import org.innovateuk.ifs.project.status.viewmodel.SectionStatusList;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusStageViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
@@ -52,9 +48,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private MonitoringOfficerRestService monitoringOfficerService;
-
-    @Autowired
-    private ApplicationService applicationService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -196,112 +189,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         throw new IllegalArgumentException("Unknown enum type " + stage.name());
     }
 
-    private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails,
-                                                         ProjectTeamStatusResource teamStatus,
-                                                         Optional<MonitoringOfficerResource> monitoringOfficer,
-                                                         boolean isProjectManager,
-                                                         List<OrganisationResource> partnerOrganisations,
-                                                         boolean isMonitoringOfficer) {
-
-
-//        CompletableFuture<OrganisationResource> organisationRequest =
-//                awaitAll(projectRequest).thenApply(project ->
-//                        loggedInUser.getId().equals(project.getMonitoringOfficerUser()) ?
-//                                projectService.getLeadOrganisation(projectId) :
-//                                projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
-//        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(projectId, Optional.empty()));
-//        CompletableFuture<Boolean> isProjectManagerRequest = async(() -> projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false));
-//        CompletableFuture<Optional<MonitoringOfficerResource>> monitoringOfficerRequest = async(() -> monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject());
-//        CompletableFuture<List<OrganisationResource>> partnerOrganisationsRequest = async(() -> projectService.getPartnerOrganisationsForProject(projectId));
-
-        boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
-
-        SectionAccessList sectionAccesses = getSectionAccesses(basicDetails, teamStatus);
-        SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager, collaborationAgreementRequired);
-
-        boolean pendingQueries = SectionStatus.FLAG.equals(sectionStatuses.getFinanceChecksStatus());
-
-        boolean leadPartner = isLeadPartner(teamStatus, basicDetails.getOrganisation());
-        boolean projectDocuments = basicDetails.getCompetition().getCompetitionDocuments().size() > 0;
-
-    return null;
-    }
-
-    private SectionStatusList getSectionStatuses(BasicDetails basicDetails,
-                                                 ProjectTeamStatusResource teamStatus,
-                                                 Optional<MonitoringOfficerResource> monitoringOfficer,
-                                                 boolean isProjectManager,
-                                                 boolean collaborationAgreementRequired) {
-
-        if (teamStatus.getProjectState().isOffline()) {
-            return SectionStatusList.offline();
-        }
-
-        CompetitionResource competition = basicDetails.getCompetition();
-        OrganisationResource organisation = basicDetails.getOrganisation();
-        ProjectResource project = basicDetails.getProject();
-
-        ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
-        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-
-        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
-
-        boolean isLeadPartner = isLeadPartner(teamStatus, organisation);
-
-        boolean isProjectDetailsProcessCompleted =
-                isLeadPartner ?
-                        checkLeadPartnerProjectDetailsProcessCompleted(teamStatus)
-                        : partnerProjectDetailsComplete(statusAccessor, organisation, partnerProjectLocationRequired);
-
-        boolean isProjectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
-
-        boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(teamStatus,
-                                                                                                                               partnerProjectLocationRequired);
-
-        boolean requiredProjectDetailsForMonitoringOfficerComplete =
-                requiredProjectDetailsForMonitoringOfficerComplete(partnerProjectLocationRequired,
-                                                                   isProjectDetailsSubmitted,
-                                                                   teamStatus);
-
-
-        SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(
-                isProjectDetailsProcessCompleted,
-                awaitingProjectDetailsActionFromOtherPartners,
-                isLeadPartner);
-        SectionStatus projectTeamStatus = sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus());
-        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(),
-                                                                                             requiredProjectDetailsForMonitoringOfficerComplete);
-        SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus());
-        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
-        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
-                ownOrganisation.getFinanceChecksStatus(),
-                financeChecksAccess
-        );
-        SectionStatus spendProfileStatus = sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
-        SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(
-                isProjectManager,
-                getCompetitionDocuments(
-                        competition,
-                        collaborationAgreementRequired
-                ),
-                project.getProjectDocuments()
-        );
-        SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(
-                ownOrganisation.getGrantOfferLetterStatus(),
-                isLeadPartner
-        );
-
-        return new SectionStatusList(
-                projectDetailsStatus,
-                projectTeamStatus,
-                monitoringOfficerStatus,
-                bankDetailsStatus,
-                financeChecksStatus,
-                spendProfileStatus,
-                documentsStatus,
-                grantOfferStatus
-        );
-    }
 
     private List<CompetitionDocumentResource> getCompetitionDocuments(CompetitionResource competition, boolean collaborationAgreementRequired) {
 
@@ -319,36 +206,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
     }
 
-    private SectionAccessList getSectionAccesses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus) {
-
-        CompetitionResource competition = basicDetails.getCompetition();
-        OrganisationResource organisation = basicDetails.getOrganisation();
-
-        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-
-        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
-
-        SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
-        SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
-        SectionAccess projectTeamAccess = statusAccessor.canAccessProjectTeamSection(organisation);
-        SectionAccess monitoringOfficerAccess = statusAccessor.canAccessMonitoringOfficerSection(organisation, partnerProjectLocationRequired);
-        SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
-        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
-        SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
-        SectionAccess documentsAccess = statusAccessor.canAccessDocumentsSection(organisation);
-        SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
-
-        return new SectionAccessList(companiesHouseAccess,
-                                     projectDetailsAccess,
-                                     projectTeamAccess,
-                                     monitoringOfficerAccess,
-                                     bankDetailsAccess,
-                                     financeChecksAccess,
-                                     spendProfileAccess,
-                                     documentsAccess,
-                                     grantOfferAccess);
-    }
-
     private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean partnerProjectLocationRequired, boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {
 
         if (partnerProjectLocationRequired) {
@@ -356,7 +213,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         } else {
             return isProjectDetailsSubmitted;
         }
-
     }
 
     private boolean partnerProjectDetailsComplete(SetupSectionAccessibilityHelper statusAccessor, OrganisationResource organisation, boolean partnerProjectLocationRequired) {
@@ -382,38 +238,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 && !allOtherPartnersProjectLocationStatusComplete(teamStatus);
     }
 
-    private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {
-        return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getFinanceContactStatus()));
-    }
-
     private boolean allOtherPartnersProjectLocationStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
     }
 
     private boolean allPartnersProjectLocationStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
-    }
-
-    private class BasicDetails {
-        private ProjectResource project;
-        private CompetitionResource competition;
-        private ApplicationResource application;
-        private OrganisationResource organisation;
-
-        public ProjectResource getProject() {
-            return project;
-        }
-
-        public CompetitionResource getCompetition() {
-            return competition;
-        }
-
-        public ApplicationResource getApplication() {
-            return application;
-        }
-
-        public OrganisationResource getOrganisation() {
-            return organisation;
-        }
     }
 }

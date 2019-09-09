@@ -17,12 +17,14 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.viewmodel.SetupStatusStageViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
@@ -58,7 +60,9 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.FINANCE_CHECKS;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
+import static org.innovateuk.ifs.sections.SectionStatus.HOURGLASS;
 import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -169,11 +173,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
-
-        assertFalse(viewModel.isProjectComplete());
-        assertTrue(viewModel.isCompetitionDocuments());
+        assertStageStatus(FINANCE_CHECKS, HOURGLASS);
 
     }
 
@@ -209,9 +209,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("documentsStatus", SectionStatus.FLAG));
-
-        assertFalse(viewModel.isProjectComplete());
-        assertTrue(viewModel.isProjectManager());
     }
 
     @Test
@@ -239,7 +236,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -268,7 +264,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -298,7 +294,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
         assertEquals(viewModel.getFinanceChecksSection(), SectionAccess.ACCESSIBLE);
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -355,9 +351,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("bankDetailsStatus", TICK),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
         assertEquals(SectionAccess.ACCESSIBLE, viewModel.getFinanceChecksSection());
-
-        assertFalse(viewModel.isProjectComplete());
-        assertFalse(viewModel.isProjectManager());
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -389,7 +382,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -424,7 +417,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -459,7 +452,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("financeChecksStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -494,7 +487,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -527,7 +520,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -562,7 +555,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -598,7 +591,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("financeChecksStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -634,7 +627,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -670,7 +663,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -699,7 +692,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     // PD = Project Details, PL = Project Location
@@ -732,7 +725,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
                 Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -758,7 +751,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
                 Pair.of("bankDetailsStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -785,7 +778,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("bankDetailsStatus", TICK),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -816,7 +809,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("bankDetailsStatus", TICK),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -847,7 +840,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("bankDetailsStatus", TICK),
                 Pair.of("financeChecksStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        
         assertTrue(viewModel.isShowFinanceChecksPendingQueryWarning());
     }
 
@@ -898,7 +891,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("bankDetailsStatus", TICK),
                 Pair.of("financeChecksStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        
         assertTrue(viewModel.isShowFinanceChecksPendingQueryWarning());
     }
 
@@ -930,7 +923,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("bankDetailsStatus", TICK),
                 Pair.of("financeChecksStatus", TICK));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -963,7 +956,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", TICK),
                 Pair.of("spendProfileStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -996,7 +989,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", TICK),
                 Pair.of("spendProfileStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1029,7 +1022,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", TICK),
                 Pair.of("spendProfileStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1062,7 +1055,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", TICK),
                 Pair.of("spendProfileStatus", TICK));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1098,7 +1091,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("spendProfileStatus", TICK),
                 Pair.of("grantOfferLetterStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1136,7 +1129,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("spendProfileStatus", TICK),
                 Pair.of("grantOfferLetterStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1172,7 +1165,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("spendProfileStatus", TICK),
                 Pair.of("grantOfferLetterStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1242,7 +1235,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1285,7 +1278,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
                 Pair.of("documentsStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1314,7 +1307,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1343,7 +1336,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", TICK));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1378,7 +1371,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
                 Pair.of("documentsStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        
     }
 
     @Test
@@ -1472,7 +1465,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER).build())));
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertFalse(viewModel.isProjectComplete());
+        
 
         return viewModel;
     }
@@ -1521,7 +1514,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(false, viewModel.isCollaborationAgreementRequired());
         assertEquals(true, viewModel.getDocumentsStatus().equals(TICK));
 
-        assertFalse(viewModel.isProjectComplete());
+        
         assertFalse(viewModel.isMonitoringOfficer());
 
     }
@@ -1585,4 +1578,10 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertTrue(partnerStatusFlagChecks.get("documentsStatus") == viewModel.getDocumentsStatus());
         assertTrue(partnerStatusFlagChecks.get("grantOfferLetterStatus") == viewModel.getGrantOfferLetterStatus());
     }
+
+
+    private void assertStageStatus(SetupStatusViewModel viewModel, ProjectSetupStage stage, SectionStatus status) {
+        SetupStatusStageViewModel found = viewModel.getStages().stream().filter(stageViewModel -> stageViewModel.getStage() == stage).get();
+    }
+
 }
