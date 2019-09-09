@@ -23,7 +23,7 @@ ${loan_PS_project_Id}        ${project_ids["${loan_PS_application1}"]}
 ${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_Id}
 ${loan_PS_Url}               ${loan_PS}/details
 ${loan_finance_checks}       ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
-${eligibility_changes}       ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility/changes
+${eligibility_changes}       ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
 
 *** Test Cases ***
 Loan application shows correct T&C's
