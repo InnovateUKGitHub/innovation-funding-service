@@ -12,7 +12,7 @@ public class DateViewModel {
     private ZonedDateTime dateTime;
     private String content;
 
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM YYYY");
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
     public ZonedDateTime getDateTime() {
         return dateTime;

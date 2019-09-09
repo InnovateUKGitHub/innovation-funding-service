@@ -22,7 +22,7 @@ public class DateViewModel {
         this.mustBeStrong = mustBeStrong;
     }
 
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM YYYY");
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM yyyy");
     public static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("h:mma");
 
     public ZonedDateTime getDateTime() {
