@@ -100,8 +100,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 return new SetupStatusStageViewModel(stage.getColumnName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
                             : "The proposed start date and location of the project.",
-                        projectComplete? String.format("/project/%d/details", project.getId())
-                            : String.format("/project/%d/readonly", project.getId()),
+                        projectComplete ? String.format("/project/%d/readonly", project.getId())
+                            : String.format("/project/%d/details", project.getId()),
                         sectionStatus.projectDetailsSectionStatus(
                                 isProjectDetailsProcessCompleted,
                                 awaitingProjectDetailsActionFromOtherPartners,
@@ -112,8 +112,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 return new SetupStatusStageViewModel(stage.getColumnName(),
                         projectComplete ? "Add people to your project."
                                 : "The people on your project.",
-                        projectComplete ? String.format("/project/%d/team", project.getId())
-                                : String.format("/project/%d/readonly", project.getId()),
+                        projectComplete ? String.format("/project/%d/readonly", project.getId())
+                                : String.format("/project/%d/team", project.getId()),
                         sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus()),
                         statusAccessor.canAccessProjectTeamSection(resolve(organisationRequest))
                     );
@@ -143,20 +143,20 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 isProjectDetailsSubmitted,
                                 resolve(teamStatusRequest));
                 return new SetupStatusStageViewModel("Monitoring Officer",
-                        maybeMonitoringOfficer.isPresent() ? String.format("Your Monitoring Officer for this project is %s", maybeMonitoringOfficer.get().getFullName())
+                        maybeMonitoringOfficer.isPresent() ? String.format("Your Monitoring Officer for this project is %s.", maybeMonitoringOfficer.get().getFullName())
                                 : "We will assign the project a Monitoring Officer.",
-                        projectComplete ? String.format("/project/%d/monitoring-officer", project.getId())
-                                : String.format("/project/%d/monitoring-officer/readonly", project.getId()),
+                        projectComplete ? String.format("/project/%d/monitoring-officer/readonly", project.getId())
+                                : String.format("/project/%d/monitoring-officer", project.getId()),
                         sectionStatus.monitoringOfficerSectionStatus(maybeMonitoringOfficer.isPresent(),
                                 requiredProjectDetailsForMonitoringOfficerComplete),
                         statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest), partnerProjectLocationRequired),
-                        maybeMonitoringOfficer.isPresent() ? null : "Awaiting assignment"
+                        maybeMonitoringOfficer.isPresent() ? null : "awaiting-assignment"
                 );
             case BANK_DETAILS:
                 return new SetupStatusStageViewModel(stage.getColumnName(),
                         "We need bank details for those partners eligible for funding.",
-                        projectComplete ? String.format("/project/%d/bank-details", project.getId())
-                                : String.format("/project/%d/bank-details/readonly", project.getId()),
+                        projectComplete ? String.format("/project/%d/bank-details/readonly", project.getId())
+                                : String.format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
                         monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest))
                 );
@@ -173,12 +173,12 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         String.format("/project/%d/finance-checks", project.getId()),
                         financeChecksStatus,
                         monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,
-                        pendingQueries ? "Pending query" : null
+                        pendingQueries ? "pending-query" : null
                 );
             case SPEND_PROFILE:
                 return new SetupStatusStageViewModel(stage.getColumnName(),
                         "Once we have approved your project finances you can change your project spend profile.",
-                        String.format("/project/%d/spend-profile", project.getId()),
+                        String.format("/project/%d/partner-organisation/%d/spend-profile", project.getId(), resolve(organisationRequest).getId()),
                         sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus()),
                         statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
                 );
@@ -193,15 +193,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
                 );
         }
-        return new SetupStatusStageViewModel(stage.getColumnName(),"","", SectionStatus.EMPTY, SectionAccess.ACCESSIBLE);
+        throw new IllegalArgumentException("Unknown enum type " + stage.name());
     }
-
-
-
-
-
-
-
 
     private SetupStatusViewModel getSetupStatusViewModel(BasicDetails basicDetails,
                                                          ProjectTeamStatusResource teamStatus,

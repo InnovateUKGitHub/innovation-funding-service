@@ -75,7 +75,7 @@
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${stage.access.accessible}"
-                               th:href="${stage.url}"
+                               th:href="|/project-setup${stage.url}|"
                                th:text="${stage.title}"
                                class="govuk-link">Project details</a>
                             <th:block th:unless="${stage.access.accessible}"
@@ -84,7 +84,7 @@
                         <p class="govuk-body govuk-!-margin-0" th:text="${stage.subtitle}">Confirm the proposed start date and location of the project.</p>
                     </div>
                     <th:block th:if="${model.shouldShowStatus(stage)}"
-                        th:insert="project/fragments :: project-setup-status-indicator(${stage.status.status}, ${stage.statusOverride})"/>
+                        th:insert="project/fragments :: project-setup-status-indicator(${stage.statusOverride ?: stage.status.status})"/>
                 </li>
             </ul>
         </div>
