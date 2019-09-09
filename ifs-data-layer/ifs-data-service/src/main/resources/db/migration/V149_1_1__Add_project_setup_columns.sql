@@ -34,7 +34,8 @@ FROM competition;
 
 INSERT INTO project_stages (competition_id, project_setup_stage)
 SELECT id as competition_id, 'BANK_DETAILS' as project_setup_stage
-FROM competition;
+FROM competition
+WHERE funding_type != "LOAN";
 
 INSERT INTO project_stages (competition_id, project_setup_stage)
 SELECT id as competition_id, 'FINANCE_CHECKS' as project_setup_stage
@@ -46,4 +47,5 @@ FROM competition;
 
 INSERT INTO project_stages (competition_id, project_setup_stage)
 SELECT id as competition_id, 'GRANT_OFFER_LETTER' as project_setup_stage
-FROM competition;
+FROM competition
+WHERE funding_type != "LOAN";
