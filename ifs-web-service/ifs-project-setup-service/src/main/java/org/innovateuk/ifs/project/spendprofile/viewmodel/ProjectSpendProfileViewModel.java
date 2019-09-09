@@ -226,6 +226,9 @@ public class ProjectSpendProfileViewModel {
         this.leadPartner = leadPartner;
     }
 
+    public boolean isIncludeFinancialYearTable() {
+        return summary != null;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
