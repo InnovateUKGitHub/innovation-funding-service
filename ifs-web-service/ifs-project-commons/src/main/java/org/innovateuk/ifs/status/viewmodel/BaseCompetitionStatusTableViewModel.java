@@ -5,6 +5,8 @@ import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.BANK_DETAILS;
+
 public abstract class BaseCompetitionStatusTableViewModel {
 
     private final long competitionId;
@@ -13,17 +15,15 @@ public abstract class BaseCompetitionStatusTableViewModel {
     private final List<InternalProjectSetupRow> rows;
     private boolean canExportBankDetails;
 
-    public BaseCompetitionStatusTableViewModel(long competitionId, String competitionName, List<ProjectSetupStage> columns, List<InternalProjectSetupRow> rows, boolean canExportBankDetails) {
+    public BaseCompetitionStatusTableViewModel(long competitionId, String competitionName, List<ProjectSetupStage> columns, List<InternalProjectSetupRow> rows, boolean projectFinanceUser) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.columns = columns;
         this.rows = rows;
-        this.canExportBankDetails = canExportBankDetails;
+        this.canExportBankDetails = projectFinanceUser && columns.contains(BANK_DETAILS);
     }
 
-    public String getEmptyTableText() {
-        return "There are currently no projects in this competition.";
-    }
+    public abstract String getEmptyTableText();
 
     public long getCompetitionId() {
         return competitionId;

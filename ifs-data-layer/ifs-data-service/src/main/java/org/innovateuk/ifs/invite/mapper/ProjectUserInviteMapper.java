@@ -21,7 +21,6 @@ import static org.mapstruct.ReportingPolicy.IGNORE;
           OrganisationMapper.class,
           UserMapper.class
    }
-        , unmappedTargetPolicy = IGNORE
 )
 public abstract class ProjectUserInviteMapper extends BaseMapper<ProjectUserInvite, ProjectUserInviteResource, Long> {
 

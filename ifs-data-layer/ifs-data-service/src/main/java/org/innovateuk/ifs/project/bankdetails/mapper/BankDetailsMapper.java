@@ -20,8 +20,7 @@ import static org.mapstruct.ReportingPolicy.IGNORE;
                 AddressMapper.class,
                 OrganisationMapper.class
 
-        },
-        unmappedTargetPolicy = IGNORE
+        }
 )
 public abstract class BankDetailsMapper extends BaseMapper<BankDetails, BankDetailsResource, Long> {
 

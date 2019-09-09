@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.internal.populator.InternalProjectSetupRowPopulator;
 import org.innovateuk.ifs.management.competition.previous.controller.PreviousCompetitionController;
-import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousBaseCompetitionViewModel;
+import org.innovateuk.ifs.management.competition.previous.viewmodel.PreviousCompetitionViewModel;
 import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -106,7 +106,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
                 .andExpect(view().name("competition/previous"))
                 .andReturn();
 
-        PreviousBaseCompetitionViewModel viewModel = (PreviousBaseCompetitionViewModel) result.getModelAndView().getModel().get("model");
+        PreviousCompetitionViewModel viewModel = (PreviousCompetitionViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals("competition", viewModel.getCompetitionName());

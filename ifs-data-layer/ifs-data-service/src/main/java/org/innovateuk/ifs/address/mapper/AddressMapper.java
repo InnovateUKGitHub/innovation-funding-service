@@ -13,8 +13,7 @@ import static org.mapstruct.ReportingPolicy.IGNORE;
     config = GlobalMapperConfig.class,
     uses = {
         OrganisationAddressMapper.class
-    },
-    unmappedTargetPolicy = IGNORE
+    }
 )
 public abstract class AddressMapper  extends BaseMapper<Address, AddressResource, Long> {
 
