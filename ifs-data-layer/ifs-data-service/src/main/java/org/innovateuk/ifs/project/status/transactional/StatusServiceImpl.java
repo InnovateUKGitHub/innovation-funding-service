@@ -22,8 +22,6 @@ import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
@@ -60,7 +58,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -669,8 +666,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean financeChecksApproved(PartnerOrganisation partnerOrg) {
-        return asList(EligibilityState.APPROVED, EligibilityState.NOT_APPLICABLE).contains(eligibilityWorkflowHandler.getState(partnerOrg)) &&
-                asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg));
+        return eligibilityWorkflowHandler.getState(partnerOrg).isApprovedState() &&
+                viabilityWorkflowHandler.getState(partnerOrg).isApprovedState();
     }
 
     private ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {

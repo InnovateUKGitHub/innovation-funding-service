@@ -4,6 +4,7 @@ import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -19,6 +20,9 @@ public enum ViabilityState implements ProcessState, IdentifiableEnum {
     COMPLETED_OFFLINE(54, State.COMPLETED_OFFLINE, Viability.COMPLETED_OFFLINE),
 
     COMPLETE_OFFLINE_DECISION(-1, null, null );
+
+    private static final EnumSet<ViabilityState> approvedStates =
+            EnumSet.of(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE, ViabilityState.COMPLETED_OFFLINE);
 
     private final long id;
     private final State backingState;
@@ -55,5 +59,9 @@ public enum ViabilityState implements ProcessState, IdentifiableEnum {
     @Override
     public long getId() {
         return id;
+    }
+
+    public boolean isApprovedState() {
+        return approvedStates.contains(this);
     }
 }
