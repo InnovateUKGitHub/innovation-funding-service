@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -9,14 +8,13 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -324,22 +322,20 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void checkAccessToGrantOfferLetterSendSectionHappyPath() {
 
-        Map<Role, ProjectActivityStates> roleSpecificActivityStates = new HashMap<>();
-        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
         List<Role> roles = singletonList(COMP_ADMIN);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
 
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
-        when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+        when(setupProgressCheckerMock.getGrantOfferLetterState()).thenReturn(ACTION_REQUIRED);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
-        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(compAdmin));
 
         verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
-                SetupProgressChecker::getRoleSpecificActivityState,
                 SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isGrantOfferLetterSent,
                 SetupProgressChecker::isBankDetailsApproved);
     }
 
@@ -348,41 +344,26 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(true);
-
-        Map<Role, ProjectActivityStates> roleSpecificActivityStates = new HashMap<>();
-        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
-        when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+        when(setupProgressCheckerMock.getGrantOfferLetterState()).thenReturn(ACTION_REQUIRED);
 
         List<Role> roles = singletonList(COMP_ADMIN);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
-        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(compAdmin));
 
         verifyInteractions(SetupProgressChecker::allDocumentsApproved,
                 SetupProgressChecker::isSpendProfileApproved,
-                SetupProgressChecker::getRoleSpecificActivityState,
+                SetupProgressChecker::isGrantOfferLetterSent,
                 SetupProgressChecker::isBankDetailsApproved);
     }
 
     @Test
     public void checkNoAccessToGrantOfferLetterSendSectionWhenBankDetailsNotApprovedButDocumentsApproved() {
-        when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
-        when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
-        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
-
-        Map<Role, ProjectActivityStates> roleSpecificActivityStates = new HashMap<>();
-        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
-        when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
-
         List<Role> roles = singletonList(COMP_ADMIN);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
-        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(compAdmin));
 
-        verifyInteractions(SetupProgressChecker::allDocumentsApproved,
-                           SetupProgressChecker::isSpendProfileApproved,
-                           SetupProgressChecker::getRoleSpecificActivityState,
-                           SetupProgressChecker::isBankDetailsApproved);
+        verifyInteractions(SetupProgressChecker::isGrantOfferLetterSent);
     }
 
 
@@ -507,19 +488,6 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
                 SetupProgressChecker::isGrantOfferLetterApproved,
                 SetupProgressChecker::allDocumentsApproved,
                 SetupProgressChecker::isBankDetailsApproved);
-    }
-
-    @Test
-    public void checkFinanceUserGetsCompAdminActivityStates() {
-        Map<Role, ProjectActivityStates> roleSpecificActivityStates = new HashMap<>();
-        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
-        when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
-
-        List<Role> roles = singletonList(PROJECT_FINANCE);
-        UserResource financeUser = newUserResource().withRolesGlobal(roles).build();
-        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(financeUser));
-
-        verifyInteractions(SetupProgressChecker::getRoleSpecificActivityState);
     }
 
     @Test
