@@ -410,7 +410,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
 
         if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType) && !golWorkflowHandler.isRejected(project)) {
-            return PENDING;
+            return processState.isActive() ?
+                    ACTION_REQUIRED : PENDING;
         }
 
         if (project.getOfferSubmittedDate() == null && golWorkflowHandler.isRejected(project)) {
