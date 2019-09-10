@@ -49,13 +49,14 @@ Loan application finance overview
 Loan application submission
     [Documentation]  IFS-6237  IFS-6238
     Given the user submits the loan application
-    And the user should see the element   jQuery = h2:contains("Part A: Innovation Funding Service application")
+    And the user should see the element            jQuery = h2:contains("Part A: Innovation Funding Service application")
+    When the user clicks the button/link           link = startup high growth index survey
     #TODO
-    #the user clicks the button/link           link = startup high growth index survey
     #the user should be on the right page.  Update once we have this link
-    When the user clicks the button/link  link = View part A
-    Then the user should see the element  jQuery = h1:contains("Application overview")
-    And the user reads his email          ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  To finish your application, you must complete part B
+    And the user closes the last opened tab
+    When the user clicks the button/link            link = View part A
+    Then the user should see the element            jQuery = h1:contains("Application overview")
+    And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  To finish your application, you must complete part B
 
 Applicant complete the project setup details
     [Documentation]  IFS-6369
