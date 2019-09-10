@@ -34,6 +34,8 @@ public enum ActivityType {
     WITHDRAWN,
     ON_HOLD,
     RESUMED_FROM_ON_HOLD,
+    MARKED_PROJECT_AS_SUCCESSFUL,
+    MARKED_PROJECT_AS_UNSUCCESSFUL,
 
 
     NONE //Will not be persisted to database. Only gives default value to annotation.

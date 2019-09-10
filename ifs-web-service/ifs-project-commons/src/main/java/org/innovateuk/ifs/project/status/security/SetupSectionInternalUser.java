@@ -31,10 +31,6 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessProjectDetailsSection(UserResource userResource) {
-        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
-            return fail("Unable to access Project Details section until Project Details are submitted");
-        }
-
         return ACCESSIBLE;
     }
 

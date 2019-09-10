@@ -1,17 +1,20 @@
 package org.innovateuk.ifs.project.consortiumoverview.viewmodel;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+
+import java.util.List;
+import java.util.Objects;
 
 public class ProjectConsortiumStatusViewModel {
     private Long projectId;
     private ProjectTeamStatusResource projectTeamStatusResource;
+    private List<ProjectSetupStage> stages;
 
-    public ProjectConsortiumStatusViewModel(final Long projectId, final ProjectTeamStatusResource projectTeamStatusResource) {
+    public ProjectConsortiumStatusViewModel(Long projectId, ProjectTeamStatusResource projectTeamStatusResource, List<ProjectSetupStage> stages) {
         this.projectId = projectId;
         this.projectTeamStatusResource = projectTeamStatusResource;
+        this.stages = stages;
     }
 
     public Long getProjectId() {
@@ -22,33 +25,54 @@ public class ProjectConsortiumStatusViewModel {
         return projectTeamStatusResource;
     }
 
+    public List<ProjectSetupStage> getStages() {
+        return stages;
+    }
+
+    public boolean hasProjectDetails() {
+        return stages.contains(ProjectSetupStage.PROJECT_DETAILS);
+    }
+
+    public boolean hasProjectTeam() {
+        return stages.contains(ProjectSetupStage.PROJECT_TEAM);
+    }
+
+    public boolean hasDocuments() {
+        return stages.contains(ProjectSetupStage.DOCUMENTS);
+    }
+
+    public boolean hasMonitoringOfficer() {
+        return stages.contains(ProjectSetupStage.MONITORING_OFFICER);
+    }
+
+    public boolean hasBankDetails() {
+        return stages.contains(ProjectSetupStage.BANK_DETAILS);
+    }
+
+    public boolean hasFinanceChecks() {
+        return stages.contains(ProjectSetupStage.FINANCE_CHECKS);
+    }
+
+    public boolean hasSpendProfile() {
+        return stages.contains(ProjectSetupStage.SPEND_PROFILE);
+    }
+
+    public boolean hasGrantOfferLetter() {
+        return stages.contains(ProjectSetupStage.GRANT_OFFER_LETTER);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         ProjectConsortiumStatusViewModel that = (ProjectConsortiumStatusViewModel) o;
-
-        return new EqualsBuilder()
-                .append(projectId, that.projectId)
-                .append(projectTeamStatusResource, that.projectTeamStatusResource)
-                .isEquals();
+        return Objects.equals(projectId, that.projectId) &&
+                Objects.equals(projectTeamStatusResource, that.projectTeamStatusResource) &&
+                Objects.equals(stages, that.stages);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(projectId)
-                .append(projectTeamStatusResource)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("projectId", projectId)
-                .append("projectTeamStatusResource", projectTeamStatusResource)
-                .toString();
+        return Objects.hash(projectId, projectTeamStatusResource, stages);
     }
 }

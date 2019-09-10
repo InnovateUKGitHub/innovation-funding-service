@@ -78,6 +78,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table").optional(),
             fieldWithPath("includeYourOrganisationSection").description("Indicates if the competition has a your organisation section").optional(),
             fieldWithPath("fundingType").description("The FundingType of the competition").optional(),
+            fieldWithPath("projectSetupStages").description("The stages an applicant most complete when application is in project setup").optional(),
             fieldWithPath("competitionTerms").description("Any competition-specific terms").optional(),
             fieldWithPath("createdBy").description("user who created this competition").optional(),
             fieldWithPath("createdOn").description("when the competition was created").optional(),

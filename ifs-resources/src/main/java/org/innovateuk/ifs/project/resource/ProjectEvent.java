@@ -13,7 +13,9 @@ public enum ProjectEvent implements ProcessEvent {
     HANDLE_OFFLINE("handled-offline"),
     COMPLETE_OFFLINE("completed-offline"),
     PUT_ON_HOLD("put-on-hold"),
-    RESUME_PROJECT("resume-project");
+    RESUME_PROJECT("resume-project"),
+    MARKED_AS_UNSUCCESSFUL("mark-as-unsuccessful"),
+    MARKED_AS_SUCCESSFUL("mark-as-unsuccessful");
 
 
     String event;
