@@ -159,6 +159,8 @@ internal user generate SP
     the user navigates to the page           ${loan_finance_checks}
     the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) span:contains("Complete")
     the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(3) span:contains("Not set")
+    the user should see the element          jQuery = dt:contains("Funding sought")
+    the user should see the element          jQuery = dt:contains("Total percentage loan")
     the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
     the user selects the checkbox            project-eligible
     the user selects the option from the drop-down menu  Green  id = rag-rating
