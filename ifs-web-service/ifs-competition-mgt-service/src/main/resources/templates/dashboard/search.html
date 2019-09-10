@@ -20,7 +20,7 @@
             <p class="govuk-body"><span th:text="${model.getCompetitions().totalElements}"
                                         class="govuk-!-font-size-48 govuk-!-font-weight-bold"></span> <strong>competitions</strong>
                 with the term <strong th:if="${param.searchQuery}" th:text="${param.searchQuery[0]}">QUERY</strong>
-                <a th:href="@{'/dashboard/live'}" class="govuk-link-padding-left-10">Clear filters</a></p>
+                <a th:href="@{'/dashboard/live'}" class="govuk-link">Clear filters</a></p>
 
             <section
                 th:with="openComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}">
