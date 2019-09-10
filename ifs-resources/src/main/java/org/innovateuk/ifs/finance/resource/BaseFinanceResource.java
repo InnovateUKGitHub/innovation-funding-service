@@ -18,9 +18,9 @@ import java.util.Map;
  */
 public abstract class BaseFinanceResource {
 
-
     protected Long id;
     protected Long organisation;
+    protected String organisationName;
     protected Long target;
     protected OrganisationSize organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
@@ -62,6 +62,14 @@ public abstract class BaseFinanceResource {
 
     public void setOrganisation(Long organisation) {
         this.organisation = organisation;
+    }
+
+    public String getOrganisationName() {
+        return organisationName;
+    }
+
+    public void setOrganisationName(String organisationName) {
+        this.organisationName = organisationName;
     }
 
     public Long getTarget() {
