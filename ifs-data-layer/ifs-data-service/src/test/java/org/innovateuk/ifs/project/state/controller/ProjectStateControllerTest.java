@@ -29,7 +29,7 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
 
     @Test
     public void testWithdrawProject() throws Exception {
-        Long projectId = 456L;
+        long projectId = 456L;
         when(projectStateService.withdrawProject(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
@@ -84,7 +84,7 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
 
     @Test
     public void putProjectOnHold() throws Exception {
-        Long projectId = 456L;
+        long projectId = 456L;
         OnHoldReasonResource reason =  new OnHoldReasonResource("Title", "Body");
         when(projectStateService.putProjectOnHold(projectId, reason)).thenReturn(serviceSuccess());
 
@@ -98,13 +98,34 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
 
     @Test
     public void resumeProject() throws Exception {
-        Long projectId = 456L;
+        long projectId = 456L;
         when(projectStateService.resumeProject(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/resume", projectId))
                 .andExpect(status().isOk());
 
         verify(projectStateService).resumeProject(projectId);
+    }
+    @Test
+    public void markAsSuccessful() throws Exception {
+        long projectId = 456L;
+        when(projectStateService.markAsSuccessful(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/resume", projectId))
+                .andExpect(status().isOk());
+
+        verify(projectStateService).markAsSuccessful(projectId);
+    }
+
+    @Test
+    public void markAsUnsuccessful() throws Exception {
+        long projectId = 456L;
+        when(projectStateService.markAsUnsuccessful(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/resume", projectId))
+                .andExpect(status().isOk());
+
+        verify(projectStateService).markAsUnsuccessful(projectId);
     }
 }
 

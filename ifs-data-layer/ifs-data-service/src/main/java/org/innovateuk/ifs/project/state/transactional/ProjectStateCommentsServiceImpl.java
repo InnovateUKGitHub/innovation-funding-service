@@ -122,6 +122,8 @@ public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsServ
                 return "Marked as on hold";
             case SETUP:
                 return "Project has been resumed from on hold";
+            case UNSUCCESSFUL:
+                return "Project has been marked as unsuccessful";
             default:
                 throw new IFSRuntimeException(String.format("Unsupported state change to %s", state.name()));
         }

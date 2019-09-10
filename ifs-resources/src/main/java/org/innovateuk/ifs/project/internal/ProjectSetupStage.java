@@ -8,7 +8,8 @@ public enum ProjectSetupStage {
     BANK_DETAILS("Bank details", "bank-details", 5),
     FINANCE_CHECKS("Finance checks", "finance-checks", 6),
     SPEND_PROFILE("Spend profile", "spend-profile", 7),
-    GRANT_OFFER_LETTER("GOL", "grant-offer-letter", 8);
+    GRANT_OFFER_LETTER("GOL", "grant-offer-letter", 8),
+    PROJECT_SETUP_COMPLETE("Project setup complete", "project-setup-complete", 9);
 
     private String columnName;
     private String columnType;
