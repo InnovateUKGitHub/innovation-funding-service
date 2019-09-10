@@ -194,4 +194,4 @@ the user selects to change funding sought
 
 the internal user should see the funding changes
     the user navigates to the page    ${eligibility_changes}
-    the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("Changed funding sought: £6,000")
+    the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
