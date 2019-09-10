@@ -45,15 +45,12 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -70,7 +67,6 @@ import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMIT
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_STATES;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -184,8 +180,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 getSpendProfileStatus(project, financeChecksStatus, process.getProcessState()),
                 getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus, process.getProcessState()),
                 getDocumentsStatus(project, process.getProcessState()),
-                getGrantOfferLetterStatus(project, process.getProcessState()),
-                getRoleSpecificGrantOfferLetterState(project, process.getProcessState(), bankDetailsStatus),
+                getGrantOfferLetterState(project, process.getProcessState(), bankDetailsStatus),
                 golWorkflowHandler.isSent(project),
                 process.getProcessState());
     }
@@ -400,35 +395,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return PENDING;
     }
 
-    private ProjectActivityStates getGrantOfferLetterStatus(Project project, ProjectState processState) {
-
-        ApprovalType spendProfileApprovalType = spendProfileService.getSpendProfileStatus(project.getId()).getSuccess();
-
-
-        if (project.getOfferSubmittedDate() != null && golWorkflowHandler.isApproved(project)) {
-            return COMPLETE;
-        }
-
-        if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType) && !golWorkflowHandler.isRejected(project)) {
-            return processState.isActive() ?
-                    ACTION_REQUIRED : PENDING;
-        }
-
-        if (project.getOfferSubmittedDate() == null && golWorkflowHandler.isRejected(project)) {
-            return REJECTED;
-        }
-
-
-        if (project.getOfferSubmittedDate() != null) {
-            return processState.isActive() ?
-                    ACTION_REQUIRED : PENDING;
-        }
-
-        return notStartedIfProjectActive(processState);
-    }
-
-    private Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project, ProjectState processState, ProjectActivityStates bankDetailsStatus) {
-        Map<Role, ProjectActivityStates> roleSpecificGolStates = new HashMap<Role, ProjectActivityStates>();
+    private ProjectActivityStates getGrantOfferLetterState(Project project, ProjectState processState, ProjectActivityStates bankDetailsStatus) {
             ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
             ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
 
@@ -436,27 +403,24 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                     && COMPLETE.equals(spendProfileStatus)
                     && COMPLETE.equals(bankDetailsStatus)) {
                 if (golWorkflowHandler.isApproved(project)) {
-                    roleSpecificGolStates.put(COMP_ADMIN, COMPLETE);
+                    return COMPLETE;
                 } else if (golWorkflowHandler.isRejected(project)) {
-                    ProjectActivityStates state = processState.isActive() ?
+                    return processState.isActive() ?
                             REJECTED : PENDING;
-                    roleSpecificGolStates.put(COMP_ADMIN, state);
                 } else {
                     if (golWorkflowHandler.isReadyToApprove(project)) {
-                        roleSpecificGolStates.put(COMP_ADMIN, actionRequiredIfProjectActive(processState));
+                        return actionRequiredIfProjectActive(processState);
                     } else {
                         if (golWorkflowHandler.isSent(project)) {
-                            roleSpecificGolStates.put(COMP_ADMIN, PENDING);
+                            return PENDING;
                         } else {
-                            roleSpecificGolStates.put(COMP_ADMIN, actionRequiredIfProjectActive(processState));
+                            return actionRequiredIfProjectActive(processState);
                         }
                     }
                 }
             } else {
-                roleSpecificGolStates.put(COMP_ADMIN, notStartedIfProjectActive(processState));
+                return notStartedIfProjectActive(processState);
             }
-
-            return roleSpecificGolStates;
     }
 
     private boolean documentsApproved(Project project, ProjectState state) {
