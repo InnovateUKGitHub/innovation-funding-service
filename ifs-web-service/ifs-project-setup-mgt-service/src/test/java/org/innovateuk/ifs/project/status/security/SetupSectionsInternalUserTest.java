@@ -31,21 +31,11 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @InjectMocks
     private SetupSectionInternalUser internalUser;
-
-    @Test
-    public void checkAccessToProjectDetailsSectionHappyPath() {
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessProjectDetailsSection(null));
-
-        verifyInteractions(
-                SetupProgressChecker::isProjectDetailsSubmitted
-        );
-    }
-
+    
     @Test
     public void checkAccessToProjectDetailsSectionButProjectDetailsSectionIncomplete() {
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessProjectDetailsSection(null));
+        assertEquals(ACCESSIBLE, internalUser.canAccessProjectDetailsSection(null));
     }
 
     @Test
