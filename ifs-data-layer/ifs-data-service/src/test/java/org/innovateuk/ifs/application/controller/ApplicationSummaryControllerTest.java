@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.junit.Test;
@@ -334,18 +333,5 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
         verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(informFilter));
-    }
-
-    @Test
-    public void getApplicationTeam() throws Exception {
-        long applicationId = 4L;
-
-        ApplicationTeamResource resource = new ApplicationTeamResource();
-        when(applicationSummaryService.getApplicationTeamByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
-        mockMvc.perform(get("/application-summary/application-team/{applicationId}", applicationId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
-
-        verify(applicationSummaryService).getApplicationTeamByApplicationId(applicationId);
     }
 }

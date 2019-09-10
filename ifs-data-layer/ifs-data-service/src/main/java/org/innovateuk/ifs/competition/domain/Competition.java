@@ -16,6 +16,7 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -27,7 +28,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
@@ -163,7 +166,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Enumerated(EnumType.STRING)
     private Set<FinanceRowType> financeRowTypes = new HashSet<>();
 
-    @OrderBy("priority ASC")
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectStages> projectStages = new ArrayList<>();
 
@@ -233,7 +235,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public List<ProjectStages> getProjectStages() {
-        return projectStages;
+        return projectStages.stream()
+                .sorted(comparing(stage -> stage.getProjectSetupStage().getPriority()))
+                .collect(toList());
     }
 
     public void setProjectStages(List<ProjectStages> projectStages) {
@@ -878,5 +882,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public Optional<FileEntry> getCompetitionTerms() {
         return ofNullable(competitionTerms);
+    }
+
+    public List<ProjectSetupStage> getProjectSetupStages() {
+        return projectStages.stream().map(ProjectStages::getProjectSetupStage).collect(toList());
     }
 }

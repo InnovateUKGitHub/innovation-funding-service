@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -16,9 +15,9 @@ import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Collectors;
 
@@ -42,9 +41,6 @@ import java.util.stream.Collectors;
                 FileEntryMapper.class
         })
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
 
     @Mappings({
             @Mapping(source = "innovationAreas", target = "innovationAreaNames"),
@@ -76,9 +72,17 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
     }
 
     @AfterMapping
-    public void setProjectSetupStagesOnResource(Competition competition, @MappingTarget CompetitionResource resource) {
-        resource.setProjectSetupStages(
-                competition.getProjectStages().stream().map(ProjectStages::getProjectSetupStage).collect(Collectors.toList())
+    public void setStagesOnDomain(@MappingTarget Competition competition, CompetitionResource resource) {
+        competition.setProjectStages(
+            resource.getProjectSetupStages()
+                .stream()
+                .map(stage -> mapProjectSetupStageToProjectStage(stage, competition))
+                .collect(Collectors.toList())
         );
     }
+
+    private ProjectStages mapProjectSetupStageToProjectStage(ProjectSetupStage projectSetupStage, Competition competition) {
+        return new ProjectStages(competition, projectSetupStage);
+    }
+
 }

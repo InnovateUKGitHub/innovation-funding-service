@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -199,6 +200,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withProjectDocument(List<CompetitionDocumentResource> competitionDocumentResourcesList) {
         return withList(competitionDocumentResourcesList, (projectDocumentResource, section) -> section.setCompetitionDocuments(competitionDocumentResourcesList));
+    }
+
+    public CompetitionResourceBuilder withProjectSetupStages(List<ProjectSetupStage> projectSetupStages) {
+        return withList(projectSetupStages, (projectSetupStage, section) -> section.setProjectSetupStages(projectSetupStages));
     }
 
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {

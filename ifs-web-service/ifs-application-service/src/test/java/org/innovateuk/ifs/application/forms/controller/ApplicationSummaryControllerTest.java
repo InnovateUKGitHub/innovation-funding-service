@@ -64,7 +64,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
 
         ApplicationSummaryViewModel expectedModel = mock(ApplicationSummaryViewModel.class);
-        when(applicationSummaryViewModelPopulator.populate(app, competition, loggedInUser, false)).thenReturn(expectedModel);
+        when(applicationSummaryViewModelPopulator.populate(app, competition, loggedInUser)).thenReturn(expectedModel);
         MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
