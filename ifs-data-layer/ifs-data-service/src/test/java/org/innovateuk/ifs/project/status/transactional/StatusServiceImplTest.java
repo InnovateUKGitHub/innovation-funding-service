@@ -849,7 +849,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, COMPLETE);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -890,7 +890,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, PENDING);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -933,7 +933,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -974,7 +974,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));

@@ -31,7 +31,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @InjectMocks
     private SetupSectionInternalUser internalUser;
-    
+
     @Test
     public void checkAccessToProjectDetailsSectionButProjectDetailsSectionIncomplete() {
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
