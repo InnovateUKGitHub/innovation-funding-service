@@ -202,6 +202,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withList(competitionDocumentResourcesList, (projectDocumentResource, section) -> section.setCompetitionDocuments(competitionDocumentResourcesList));
     }
 
+    public CompetitionResourceBuilder withProjectSetupStages(List<ProjectSetupStage> projectSetupStages) {
+        return withList(projectSetupStages, (projectSetupStage, section) -> section.setProjectSetupStages(projectSetupStages));
+    }
+
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
         return withArraySetFieldByReflection("assessorCount", assessorCount);
     }

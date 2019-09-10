@@ -84,14 +84,14 @@ public final class CompetitionInitialiser {
     private static void addDefaultProjectSetupColumns(Competition competition) {
 
         List<ProjectStages> stages = asList(
-                createProjectSetupStage(competition, PROJECT_DETAILS, 1),
-                createProjectSetupStage(competition, PROJECT_TEAM, 2),
-                createProjectSetupStage(competition, DOCUMENTS, 3),
-                createProjectSetupStage(competition, MONITORING_OFFICER, 4),
-                createProjectSetupStage(competition, BANK_DETAILS, 5),
-                createProjectSetupStage(competition, FINANCE_CHECKS, 6),
-                createProjectSetupStage(competition, SPEND_PROFILE, 7),
-                createProjectSetupStage(competition, GRANT_OFFER_LETTER, 8)
+                createProjectSetupStage(competition, PROJECT_DETAILS),
+                createProjectSetupStage(competition, PROJECT_TEAM),
+                createProjectSetupStage(competition, DOCUMENTS),
+                createProjectSetupStage(competition, MONITORING_OFFICER),
+                createProjectSetupStage(competition, BANK_DETAILS),
+                createProjectSetupStage(competition, FINANCE_CHECKS),
+                createProjectSetupStage(competition, SPEND_PROFILE),
+                createProjectSetupStage(competition, GRANT_OFFER_LETTER)
         );
 
         competition.setProjectStages(stages);
@@ -101,18 +101,18 @@ public final class CompetitionInitialiser {
     private static void addLoanProjectSetupColumns(Competition competition) {
 
         List<ProjectStages> stages = asList(
-                createProjectSetupStage(competition, PROJECT_DETAILS, 1),
-                createProjectSetupStage(competition, PROJECT_TEAM, 2),
-                createProjectSetupStage(competition, DOCUMENTS, 3),
-                createProjectSetupStage(competition, MONITORING_OFFICER, 4),
-                createProjectSetupStage(competition, FINANCE_CHECKS, 5),
-                createProjectSetupStage(competition, SPEND_PROFILE, 6)
+                createProjectSetupStage(competition, PROJECT_DETAILS),
+                createProjectSetupStage(competition, PROJECT_TEAM),
+                createProjectSetupStage(competition, DOCUMENTS),
+                createProjectSetupStage(competition, MONITORING_OFFICER),
+                createProjectSetupStage(competition, FINANCE_CHECKS),
+                createProjectSetupStage(competition, SPEND_PROFILE)
         );
 
         competition.setProjectStages(stages);
     }
 
-    private static ProjectStages createProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage, long priorty) {
-        return new ProjectStages(competition, projectSetupStage, priorty);
+    private static ProjectStages createProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage) {
+        return new ProjectStages(competition, projectSetupStage);
     }
 }

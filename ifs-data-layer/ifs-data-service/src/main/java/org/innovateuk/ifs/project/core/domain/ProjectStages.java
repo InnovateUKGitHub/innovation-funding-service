@@ -22,15 +22,12 @@ public class ProjectStages {
     @Enumerated(EnumType.STRING)
     private ProjectSetupStage projectSetupStage;
 
-    private Long priority;
-
     public ProjectStages() {
     }
 
-    public ProjectStages(Competition competition, ProjectSetupStage projectSetupStage, Long priority) {
+    public ProjectStages(Competition competition, ProjectSetupStage projectSetupStage) {
         this.competition = competition;
         this.projectSetupStage = projectSetupStage;
-        this.priority = priority;
     }
 
     public Long getId() {
@@ -51,13 +48,5 @@ public class ProjectStages {
 
     public void setProjectSetupStage(ProjectSetupStage projectSetupStage) {
         this.projectSetupStage = projectSetupStage;
-    }
-
-    public Long getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Long priority) {
-        this.priority = priority;
     }
 }
