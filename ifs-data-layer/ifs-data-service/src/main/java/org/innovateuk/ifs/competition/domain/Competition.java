@@ -244,6 +244,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.projectStages = projectStages;
     }
 
+    public void removeProjectStage(ProjectStages stage)
+    {
+        this.projectStages.remove(stage);
+    }
+
     public List<Section> getSections() {
         return sections;
     }

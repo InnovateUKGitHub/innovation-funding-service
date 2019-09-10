@@ -21,7 +21,7 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -34,9 +34,9 @@ import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -126,7 +126,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<CompetitionResource>> findAll() {
         return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findAll().stream().filter(comp -> !comp.isTemplate()).collect(Collectors.toList())
+                competitionRepository.findAll().stream().filter(comp -> !comp.isTemplate()).collect(toList())
         ));
     }
 
@@ -163,18 +163,21 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private void sortProjectSetupColumns(Competition competition) {
-        boolean competitionHasDocuments = competition.getCompetitionDocuments().stream()
+        
+        boolean hasDocuments = competition.getCompetitionDocuments()
+                .stream()
                 .filter(CompetitionDocument::isEnabled)
                 .findAny()
                 .isPresent();
 
-        if (!competitionHasDocuments && competition.isLoan()) {
-            Optional<ProjectSetupStage> projectSetupStage = competition.getProjectSetupStages()
+        if (!hasDocuments) {
+            Optional<ProjectStages> projectStage = competition.getProjectStages()
                     .stream()
-                    .filter(stage -> DOCUMENTS.equals(stage))
-                    .findAny();
-            if (projectSetupStage.isPresent()) {
-                competition.getProjectStages().remove(projectSetupStage);
+                    .filter(stage -> DOCUMENTS.equals(stage.getProjectSetupStage()))
+                    .findFirst();
+
+            if (projectStage.isPresent()) {
+                competition.removeProjectStage(projectStage.get());
             }
         }
     }
