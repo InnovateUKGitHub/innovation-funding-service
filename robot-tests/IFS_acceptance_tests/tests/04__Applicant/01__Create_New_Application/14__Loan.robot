@@ -22,6 +22,8 @@ ${loan_PS_application_Id}    ${application_ids["${loan_PS_application1}"]}
 ${loan_PS_project_Id}        ${project_ids["${loan_PS_application1}"]}
 ${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_Id}
 ${loan_PS_Url}               ${loan_PS}/details
+${loan_finance_checks}       ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
+${eligibility_changes}       ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
 
 *** Test Cases ***
 Loan application shows correct T&C's
@@ -61,6 +63,20 @@ Applicant complete the project setup details
     Given the user completes the project details
     And the user completes the project team details
     And the user submits the project document
+
+Funding sought validations
+    [Documentation]  IFS-6293
+    Given the user selects to change funding sought
+    When the user enters text to a text field           id = partners[${EMPIRE_LTD_ID}].funding  ${EMPTY}
+    And the user clicks the button/link                 jQuery = button:contains("Save and return to finances")
+    Then the user should see a field and summary error  Enter the amount of funding sought.
+
+Found sought changes
+    [Documentation]  IFS-6293
+    Given the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  6000
+    When the user clicks the button/link         jQuery = button:contains("Save and return to finances")
+    Then the user should see the element         jQuery = h3:contains("Finances summary") ~ div td:contains("£200,903") ~ td:contains("4%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
+    And the internal user should see the funding changes
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6369
@@ -169,3 +185,13 @@ the user should not see the financial year table on SP
     the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
     the user clicks the button/link       link = Send project spend profile
     the user clicks the button/link       id = submit-send-all-spend-profiles
+
+the user selects to change funding sought
+    log in as a different user       &{internal_finance_credentials}
+    the user navigates to the page   ${loan_finance_checks}
+    the user clicks the button/link  link = View finances
+    the user clicks the button/link  link = Change funding sought
+
+the internal user should see the funding changes
+    the user navigates to the page    ${eligibility_changes}
+    the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
