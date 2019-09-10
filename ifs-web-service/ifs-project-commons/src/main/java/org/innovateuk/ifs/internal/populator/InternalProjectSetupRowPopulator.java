@@ -6,6 +6,7 @@ import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
+import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +50,7 @@ public class InternalProjectSetupRowPopulator {
                     PROJECT_DETAILS,
                     status.getProjectDetailsStatus(),
                     String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/details"),
-                    setupSectionInternalUser.canAccessProjectDetailsSection(user)
+                    SectionAccess.ACCESSIBLE
             ));
         }
         if (columns.contains(PROJECT_TEAM)) {
@@ -57,7 +58,7 @@ public class InternalProjectSetupRowPopulator {
                     PROJECT_TEAM,
                     status.getProjectTeamStatus(),
                     String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/team"),
-                    setupSectionInternalUser.canAccessProjectDetailsSection(user)
+                    SectionAccess.ACCESSIBLE
             ));
         }
         if (columns.contains(DOCUMENTS)) {
