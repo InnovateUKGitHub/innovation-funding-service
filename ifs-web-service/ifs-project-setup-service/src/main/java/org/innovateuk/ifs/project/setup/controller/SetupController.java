@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.project.setup;
+package org.innovateuk.ifs.project.setup.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.project.setup.populator.SetupViewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -21,8 +21,7 @@ public class SetupController {
 
     @GetMapping("/{projectId}/setup")
     public String viewProjectSetup(@PathVariable("projectId") long projectId,
-                                   Model model,
-                                   UserResource loggedInUser) {
+                                   Model model) {
         model.addAttribute("model", setupViewModelPopulator.populate(projectId));
         return "project/setup";
     }

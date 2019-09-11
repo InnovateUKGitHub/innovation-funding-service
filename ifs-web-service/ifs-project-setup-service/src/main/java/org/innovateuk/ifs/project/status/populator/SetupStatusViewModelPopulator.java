@@ -30,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -186,12 +187,14 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
                 );
             case PROJECT_SETUP_COMPLETE:
+                SectionStatus projectSetupCompleteStatus = sectionStatus.projectSetupCompleteStatus(ownOrganisation.getProjectSetupCompleteStatus());
                 return new SetupStatusStageViewModel(stage,
                         stage.getColumnName(),
                         "Once all tasks are complete Innovate UK will review your application.",
                         String.format("/project/%d/setup", project.getId()),
-                        sectionStatus.setupSectionStatus(ownOrganisation.getSetupStatus()),
-                        statusAccessor.canAccessSetupSection()
+                        projectSetupCompleteStatus,
+                        statusAccessor.canAccessSetupSection(),
+                        projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-assignment"
                 );
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());

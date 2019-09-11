@@ -61,6 +61,10 @@ public class ProjectConsortiumStatusViewModel {
         return stages.contains(ProjectSetupStage.GRANT_OFFER_LETTER);
     }
 
+     public boolean hasProjectSetupComplete() {
+        return stages.contains(ProjectSetupStage.PROJECT_SETUP_COMPLETE);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

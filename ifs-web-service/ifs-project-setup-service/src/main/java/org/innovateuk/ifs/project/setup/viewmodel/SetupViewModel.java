@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.project.setup;
+package org.innovateuk.ifs.project.setup.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.ZonedDateTime;
 
@@ -12,6 +13,7 @@ public class SetupViewModel {
     private final long projectId;
     private final String projectName;
     private final ZonedDateTime submittedDate;
+    private final ProjectState projectState;
 
     public SetupViewModel(CompetitionResource competitionResource, ProjectResource projectResource, ZonedDateTime submittedDate) {
         this.competitionId = competitionResource.getId();
@@ -19,6 +21,7 @@ public class SetupViewModel {
         this.projectId = projectResource.getId();
         this.projectName = projectResource.getName();
         this.submittedDate = submittedDate;
+        this.projectState = projectResource.getProjectState();
     }
 
     public long getCompetitionId() {
@@ -39,5 +42,9 @@ public class SetupViewModel {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public ProjectState getProjectState() {
+        return projectState;
     }
 }
