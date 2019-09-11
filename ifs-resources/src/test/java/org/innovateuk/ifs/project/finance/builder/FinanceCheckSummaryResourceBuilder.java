@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 
@@ -97,9 +98,12 @@ public class FinanceCheckSummaryResourceBuilder extends BaseBuilder<FinanceCheck
         return withArray((h2020Status, financeCheckResource) -> setField("h2020", h2020Status, financeCheckResource), h2020Statuses);
     }
 
+    public FinanceCheckSummaryResourceBuilder withFundingType(FundingType... fundingTypes) {
+        return withArray((fundingType, financeCheckResource) -> financeCheckResource.setFundingType(fundingType), fundingTypes);
+    }
+
     @SafeVarargs
     public final FinanceCheckSummaryResourceBuilder withPartnerStatusResources(List<FinanceCheckPartnerStatusResource>... partnerStatusResourcesLst) {
         return withArray((competitionId, financeCheckResource) -> setField("partnerStatusResources", competitionId, financeCheckResource), partnerStatusResourcesLst);
     }
-
 }

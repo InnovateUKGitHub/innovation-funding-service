@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financechecks.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
@@ -96,5 +97,15 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
                 .append(target)
                 .append(activityState)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("participant", participant)
+                .append("target", target)
+                .append("activityState", activityState)
+                .append("internalParticipant", internalParticipant)
+                .toString();
     }
 }
