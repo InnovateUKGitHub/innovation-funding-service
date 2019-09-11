@@ -450,10 +450,7 @@ the user should see validations triggered correctly
 the user updates the correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save")
     the user should see a field and summary error       Search using a valid postcode or enter the address manually.
-    the user enters text to a text field                id = addressForm.postcodeInput  BS1 4NT
-    the user clicks the button/link                     id = postcode-lookup
-    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
+    the user enter the Correspondence address
     the user should see the address data
     the user clicks the button/link                     link = Correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")

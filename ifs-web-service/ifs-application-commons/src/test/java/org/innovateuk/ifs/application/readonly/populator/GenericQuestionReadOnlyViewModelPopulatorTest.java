@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnly
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
@@ -15,14 +14,10 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.HttpServletUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -34,23 +29,13 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
     @InjectMocks
     private GenericQuestionReadOnlyViewModelPopulator populator;
-
-    @Mock
-    private UserAuthenticationService userAuthenticationService;
-
-    @Mock
-    private HttpServletUtil httpServletUtil;
 
     @Test
     public void populate() {
@@ -113,10 +98,6 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withValue("1")
                 .build();
         UserResource user = newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build();
-        HttpServletRequest request = mock(HttpServletRequest.class);
-
-        when(httpServletUtil.request()).thenReturn(request);
-        when(userAuthenticationService.getAuthenticatedUser(request)).thenReturn(user);
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse, templateDocumentResponse), emptyList(), asList(feedbackResponse, scoreResponse));
 

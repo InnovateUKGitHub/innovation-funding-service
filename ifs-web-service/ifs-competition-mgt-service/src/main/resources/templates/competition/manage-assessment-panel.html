@@ -55,9 +55,12 @@
         <h2 class="govuk-heading-m">Panel navigation</h2>
 
         <ul class="govuk-list link-list">
-            <li><a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors to attend</a></li>
+            <li><p class="govuk-body">
+                <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors to attend</a>
+            </p></li>
 
-            <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+            <li><p class="govuk-body">
+                <a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
                    th:href="@{/assessment/panel/competition/{competitionId}/manage-applications(competitionId=${model.competitionId})}"
                    class="govuk-link">
                 Assign applications to panel
@@ -66,7 +69,7 @@
                    class="govuk-link disabled" aria-disabled="true" >
                     Assign applications to panel
                 </a>
-            </li>
+            </p></li>
 
             <li><a class="govuk-link disabled" aria-disabled="true">Allocate applications to assessors</a></li>
         </ul>

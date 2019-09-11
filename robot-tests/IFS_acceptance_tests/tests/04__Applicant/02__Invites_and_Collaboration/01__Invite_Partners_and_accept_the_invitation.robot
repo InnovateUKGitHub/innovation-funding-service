@@ -29,8 +29,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...               IFS-1841 Basic view of all 'external' IFS users
 #create new competition to test the new application team view.
-Suite Setup       log in and create new application if there is not one already  Invite robot test application
-Suite Teardown    The user closes the browser
+Suite Setup       Custom Suite Setup
+Suite Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -142,11 +142,21 @@ The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
     [Tags]
     Then the user should not see the element  css = li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
-    [Teardown]  logout as user
+
+Supprot user should the pending invite on application team
+    [Documentation]  IFS-6152
+    Given log in as a different user       &{support_user_credentials}
+    And the user navigates to the page     ${server}/management/competition/${openCompetitionBusinessRTO}/applications/all
+    ${applicationId} =  get application id by name   ${application_name}
+    When the user clicks the button/link   link = ${applicationId}
+    Then the user navigates to the page    ${server}/management/competition/${openCompetitionBusinessRTO}/application/${applicationId}
+    And the user clicks the button/link    id = accordion-questions-heading-1
+    Then the user should see the element   jQuery = td:contains("Adrian Booth (Pending for")
 
 Business organisation (partner accepts invitation)
     [Documentation]  INFUND-1005 INFUND-2286 INFUND-1779 INFUND-2336
     [Tags]  HappyPath
+    Given log in as a different user                    ${invite_email}  ${short_password}
     When the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
     And the user clicks the button/link                 jQuery = .govuk-button:contains("Yes, accept invitation")
     And the user selects the radio button               organisationType    1
@@ -318,3 +328,11 @@ the lead applicant is no longer directed to the team page
     The user clicks the button/link  jQuery = .progress-list a:contains("Untitled application (start here)")
     The user should see the element  jQuery = h1:contains("Application overview")
     # Added the above check, to see that the user doesn't get directed to the team page (since he has not clicked on the Begin application button)
+
+Custom Suite Setup
+    Connect to database  @{database}
+    log in and create new application if there is not one already  Invite robot test application
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

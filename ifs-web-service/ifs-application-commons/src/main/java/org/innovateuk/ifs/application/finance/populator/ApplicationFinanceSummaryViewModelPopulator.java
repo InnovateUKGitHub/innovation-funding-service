@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -79,7 +80,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         long leadOrganisationId = leadOrganisationId(processRoles);
         SectionResource financeSection = getFinanceSection(competition.getId());
 
-        List<FinanceSummaryTableRow> rows = organisations.stream()
+        List<FinanceSummaryTableRow> rows = financeSection == null ? emptyList() :organisations.stream()
                 .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection))
                 .collect(toList());
 

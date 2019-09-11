@@ -26,13 +26,13 @@ import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 public class CompetitionResource implements ApplicationConfiguration {
 
-    public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+    public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final String H2020_TYPE_NAME = "Horizon 2020";
     public static final String EXPRESSION_OF_INTEREST_TYPE_NAME = "Expression of interest";
 
     private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     private static final int CLOSING_SOON_AMOUNT = 3;
-    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
+    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM yyyy");
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();

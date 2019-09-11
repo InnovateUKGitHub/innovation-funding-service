@@ -2,56 +2,44 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.PageableMatcher;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.PageableMatcher.srt;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.*;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -572,97 +560,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(2, result.getSuccess().size());
         assertEquals(applications.get(0).getId(), result.getSuccess().get(0));
         assertEquals(applications.get(1).getId(), result.getSuccess().get(1));
-    }
-
-    @Test
-    public void getApplicationTeamSuccess() {
-        User leadOrgLeadUser = newUser().withFirstName("Lee").withLastName("Der").withRoles(singleton(Role.LEADAPPLICANT)).build();
-        User leadOrgNonLeadUser1 = newUser().withFirstName("A").withLastName("Bee").build();
-        User leadOrgNonLeadUser2 = newUser().withFirstName("Cee").withLastName("Dee").build();
-        User partnerOrgLeadUser1 = newUser().withFirstName("Zee").withLastName("Der").withRoles(singleton(Role.LEADAPPLICANT)).build();
-        User partnerOrgLeadUser2 = newUser().withFirstName("Ay").withLastName("Der").withRoles(singleton(Role.LEADAPPLICANT)).build();
-
-        ProcessRole lead = newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(234L).withUser(leadOrgLeadUser).build();
-        ProcessRole leadOrgCollaborator1 = newProcessRole().withRole(Role.COLLABORATOR).withOrganisationId(234L).withUser(leadOrgNonLeadUser1).build();
-        ProcessRole collaborator1 = newProcessRole().withRole(Role.COLLABORATOR).withOrganisationId(345L).withUser(partnerOrgLeadUser1).build();
-        ProcessRole collaborator2 = newProcessRole().withRole(Role.COLLABORATOR).withOrganisationId(456L).withUser(partnerOrgLeadUser2).build();
-        Application app = newApplication().withProcessRoles(lead, leadOrgCollaborator1, collaborator1, collaborator2).build();
-
-        Organisation leadOrg = newOrganisation()
-                .withName("Lead")
-                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
-                .withUser(Arrays.asList(leadOrgLeadUser,leadOrgNonLeadUser1,leadOrgNonLeadUser2))
-                .build();
-        Organisation partnerOrgA = newOrganisation()
-                .withName("A")
-                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
-                .withUser(singletonList(partnerOrgLeadUser1))
-                .build();
-        Organisation partnerOrgB = newOrganisation()
-                .withName("B")
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
-                .withUser(singletonList(partnerOrgLeadUser2))
-                .build();
-
-        when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(app));
-        when(organisationRepositoryMock.findById(234L)).thenReturn(Optional.of(leadOrg));
-        when(organisationRepositoryMock.findById(345L)).thenReturn(Optional.of(partnerOrgB));
-        when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(partnerOrgA));
-
-        AddressTypeResource registeredAddressTypeResource = newAddressTypeResource().withName("REGISTERED").build();
-        AddressTypeResource operatingAddressTypeResource = newAddressTypeResource().withName("OPERATING").build();
-        AddressResource addressResource1 = newAddressResource()
-                .withAddressLine1("1E")
-                .withAddressLine2("2.16")
-                .withAddressLine3("Polaris House")
-                .withTown("Swindon")
-                .withCounty("Wilts")
-                .withPostcode("SN1 1AA")
-                .build();
-        AddressResource addressResource2 = newAddressResource()
-                .withAddressLine1("2E")
-                .withAddressLine2("2.17")
-                .withAddressLine3("North Star House")
-                .withTown("Swindon").withCounty("Wiltshire")
-                .withPostcode("SN2 2AA")
-                .build();
-        OrganisationAddressResource leadOrgRegisteredAddressResource = newOrganisationAddressResource().withAddressType(registeredAddressTypeResource).withAddress(addressResource1).build();
-        OrganisationAddressResource leadOrgOperatingAddressResource = newOrganisationAddressResource().withAddressType(operatingAddressTypeResource).withAddress(addressResource2).build();
-
-        UserResource leadOrgLeadUserResource = newUserResource().withFirstName("Lee").withLastName("Der").build();
-        UserResource leadOrgNonLeadUser1Resource = newUserResource().withFirstName("A").withLastName("Bee").build();
-        UserResource leadOrgNonLeadUser2Resource = newUserResource().withFirstName("Cee").withLastName("Dee").build();
-        UserResource partnerOrgLeadUser1Resource = newUserResource().withFirstName("Zee").withLastName("Der").build();
-        UserResource partnerOrgLeadUser2Resource = newUserResource().withFirstName("Ay").withLastName("Der").build();
-        when(userMapper.mapToResource(leadOrgLeadUser)).thenReturn(leadOrgLeadUserResource);
-        when(userMapper.mapToResource(leadOrgNonLeadUser1)).thenReturn(leadOrgNonLeadUser1Resource);
-        when(userMapper.mapToResource(leadOrgNonLeadUser2)).thenReturn(leadOrgNonLeadUser2Resource);
-        when(userMapper.mapToResource(partnerOrgLeadUser1)).thenReturn(partnerOrgLeadUser1Resource);
-        when(userMapper.mapToResource(partnerOrgLeadUser2)).thenReturn(partnerOrgLeadUser2Resource);
-
-        ServiceResult<ApplicationTeamResource> result = applicationSummaryService.getApplicationTeamByApplicationId(123L);
-        assertTrue(result.isSuccess());
-
-        ApplicationTeamOrganisationResource leadOrganisation = result.getSuccess().getLeadOrganisation();
-        assertTrue(leadOrganisation.getOrganisationName().equals("Lead"));
-        assertTrue(leadOrganisation.getUsers().get(0).getName().equals("Lee Der"));
-
-        List<ApplicationTeamOrganisationResource> partnerOrganisations = result.getSuccess().getPartnerOrganisations();
-        assertEquals(2, partnerOrganisations.size());
-        assertTrue(partnerOrganisations.get(0).getOrganisationName().equals("A"));
-        assertTrue(partnerOrganisations.get(0).getUsers().get(0).getName().equals("Ay Der"));
-
-        assertTrue(partnerOrganisations.get(1).getOrganisationName().equals("B"));
-        assertTrue(partnerOrganisations.get(1).getUsers().get(0).getName().equals("Zee Der"));
-    }
-
-    @Test
-    public void getApplicationTeamFailsNoApplication() {
-        when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.empty());
-
-        ServiceResult<ApplicationTeamResource> result = applicationSummaryService.getApplicationTeamByApplicationId(123L);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().getErrors().get(0).getErrorKey().equals(CommonFailureKeys.GENERAL_NOT_FOUND.getErrorKey()));
     }
 
     @Test

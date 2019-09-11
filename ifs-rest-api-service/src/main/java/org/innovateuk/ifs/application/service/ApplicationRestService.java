@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.Role;
 
@@ -17,7 +18,7 @@ public interface ApplicationRestService {
     RestResult<ApplicationPageResource> wildcardSearchById(String searchString, int pageNumber, int pageSize);
     RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId);
     RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, Role role);
-    RestResult<Void> saveApplication(ApplicationResource application);
+    RestResult<ValidationMessages> saveApplication(ApplicationResource application);
     RestResult<ApplicationResource> createApplication(long competitionId, long userId, long organisationId, String applicationName);
     RestResult<Void> updateApplicationState(long applicationId, ApplicationState state);
     Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);

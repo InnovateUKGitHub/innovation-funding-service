@@ -71,12 +71,10 @@ the user marks the section as complete
     the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link         name=complete
 
-
 the user marks the section as complete procurement
     the user enters text to a text field  css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user uploads the file             css = input[name="templateDocument"]    ${valid_pdf}
     the user clicks the button/link       name=complete
-
 
 Create new application with the same user
     [Arguments]  ${Application_title}   ${orgType}
