@@ -93,48 +93,8 @@ public class ApplicationOverviewController {
                 .getRole() == LEADAPPLICANT;
     }
 
-    @ZeroDowntime(description = "remove this method", reference = "IFS-6123")
-    @PostMapping(value = "/{applicationId}")
-    public String applicationOverview(@PathVariable("applicationId") long applicationId,
-                                     UserResource user,
-                                     HttpServletRequest request) {
-
-        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-
-        questionService.assignQuestion(applicationId, request, assignedBy);
-        return "redirect:/application/" + applicationId;
-    }
-
     @GetMapping("/terms-and-conditions")
     public String termsAndConditions() {
         return "application-terms-and-conditions";
-    }
-
-    @ZeroDowntime(description = "remove method and comment", reference = "IFS-6123")
-    /**
-     * Assign a question to a user
-     *
-     * @param applicationId the application for which the user is assigned
-     * @param sectionId     section id for showing details
-     * @param request       request parameters
-     * @return
-     */
-    @PostMapping("/{applicationId}/section/{sectionId}")
-    public String assignQuestion(@PathVariable("applicationId") long applicationId,
-                                 @PathVariable("sectionId") long sectionId,
-                                 UserResource user,
-                                 HttpServletRequest request,
-                                 HttpServletResponse response) {
-        doAssignQuestion(applicationId, user, request, response);
-
-        return "redirect:/application/" + applicationId + "/section/" + sectionId;
-    }
-
-    @ZeroDowntime(description = "remove method", reference = "IFS-6123")
-    private void doAssignQuestion(Long applicationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
-        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-
-        questionService.assignQuestion(applicationId, request, assignedBy);
-        cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 }
