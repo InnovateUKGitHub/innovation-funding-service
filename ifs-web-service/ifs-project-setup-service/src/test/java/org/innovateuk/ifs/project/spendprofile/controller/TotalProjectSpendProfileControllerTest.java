@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -26,10 +29,13 @@ import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,6 +50,8 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
     private ProjectService projectService;
     @Mock
     private SpendProfileService spendProfileService;
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected TotalProjectSpendProfileController supplyControllerUnderTest() {
@@ -52,13 +60,16 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
 
     @Test
     public void viewSpendProfileSuccessfulViewModelPopulation() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .build();
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
+                .withCompetition(competition.getId())
                 .build();
-
 
         Long organisationOneId = 1L;
         Long organisationTwoId = 2L;
@@ -69,6 +80,7 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         when(projectService.getLeadOrganisation(projectResource.getId())).thenReturn(organisations.get(0));
         when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(organisations);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
         SpendProfileTableResource tableOne = buildSpendProfileTableResource(projectResource);
         SpendProfileTableResource tableTwo = buildSpendProfileTableResource(projectResource);
@@ -82,6 +94,8 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile-totals"));
+
+        assertTrue(expectedViewModel.isIncludeFinancialYearTable());
     }
 
     private SpendProfileTableResource buildSpendProfileTableResource(ProjectResource projectResource) {

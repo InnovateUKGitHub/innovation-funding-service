@@ -190,8 +190,7 @@ public class CompetitionManagementDashboardController {
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                         matchedApplications.getTotalElements(),
                         new Pagination(matchedApplications, "search?" + existingSearchQuery),
-                        searchQuery,
-                        isSupport(user));
+                        searchQuery);
 
         model.addAttribute("model", viewModel);
 
