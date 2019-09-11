@@ -12,8 +12,6 @@ import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,8 +45,6 @@ public class IndustrialCostFinanceHandlerTest {
     private ApplicationFinanceRowRepository financeRowRepositoryMock;
     @Mock
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
-    @Mock
-    private QuestionService questionService;
     @Spy
     private LabourCostHandler labourCostHandler;
     @Spy
@@ -73,19 +69,8 @@ public class IndustrialCostFinanceHandlerTest {
     private VatHandler vatHandler;
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
-    private Competition competition;
-    private Application application;
     private ApplicationFinance applicationFinance;
-    private HashMap<FinanceRowType, Question> costTypeQuestion;
-    private LabourCost labour;
-    private CapitalUsage capitalUsage;
-    private FinanceRow capitalUsageCost;
-    private SubContractingCost subContracting;
-    private FinanceRow subContractingCost;
-    private FinanceRow labourCost;
     private Materials material;
-    private Vat vat;
-    private FinanceRow vatCost;
     private FinanceRow materialCost;
 
     @Before
@@ -97,14 +82,13 @@ public class IndustrialCostFinanceHandlerTest {
 
         when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
 
-        competition = newCompetition()
+        Competition competition = newCompetition()
                 .withFundingType(FundingType.GRANT)
                 .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
                 .withFinanceRowTypes(EnumSet.allOf(FinanceRowType.class))
                 .build();
-        application = newApplication().withCompetition(competition).build();
+        Application application = newApplication().withCompetition(competition).build();
         applicationFinance = newApplicationFinance().withApplication(application).build();
-        costTypeQuestion = new HashMap<>();
 
         List<ApplicationFinanceRow> costs = new ArrayList<>();
 
@@ -112,12 +96,12 @@ public class IndustrialCostFinanceHandlerTest {
         for (FinanceRowType costType : FinanceRowType.values()) {
             init = handler.initialiseCostType(applicationFinance, costType);
             if(init != null){
-                init.forEach(i -> costs.add(i));
+                init.forEach(costs::add);
             }
         }
 
-        capitalUsage =  new CapitalUsage(null, 20,"Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20, applicationFinance.getId());
-        capitalUsageCost = handler.toApplicationDomain(capitalUsage);
+        CapitalUsage capitalUsage = new CapitalUsage(null, 20, "Description", "Yes", new BigDecimal(200000), new BigDecimal(100000), 20, applicationFinance.getId());
+        FinanceRow capitalUsageCost = handler.toApplicationDomain(capitalUsage);
         capitalUsageCost.setTarget(applicationFinance);
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(3l, "existing", "String"), "Yes"));
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(4l, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
@@ -126,25 +110,25 @@ public class IndustrialCostFinanceHandlerTest {
         capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, null, String.valueOf(20)));
         costs.add((ApplicationFinanceRow) capitalUsageCost);
 
-        subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role", applicationFinance.getId());
-        subContractingCost = handler.toApplicationDomain(subContracting);
+        SubContractingCost subContracting = new SubContractingCost(null, BigDecimal.ONE, "france", "name", "role", applicationFinance.getId());
+        FinanceRow subContractingCost = handler.toApplicationDomain(subContracting);
         subContractingCost.setTarget(applicationFinance);
         subContractingCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(1l, "country", "france"), "frane"));
-        costs.add((ApplicationFinanceRow)subContractingCost);
+        costs.add((ApplicationFinanceRow) subContractingCost);
         SubContractingCost subContracting2 = new SubContractingCost(null, BigDecimal.TEN, "france", "name", "role", applicationFinance.getId());
         FinanceRow subContractingCost2 = handler.toApplicationDomain(subContracting2);
         subContractingCost2.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(2l, "country", "france"), "frane"));
         subContractingCost2.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow)subContractingCost2);
 
-        labour = new LabourCost(applicationFinance.getId());
+        LabourCost labour = new LabourCost(applicationFinance.getId());
         labour.setLabourDays(300);
         labour.setGrossEmployeeCost(BigDecimal.valueOf(50000));
         labour.setRole("Developer");
         labour.setDescription("");
-        labourCost = handler.toApplicationDomain(labour);
+        FinanceRow labourCost = handler.toApplicationDomain(labour);
         labourCost.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow)labourCost);
+        costs.add((ApplicationFinanceRow) labourCost);
 
         material = new Materials(applicationFinance.getId());
         material.setCost(BigDecimal.valueOf(100));
@@ -154,11 +138,11 @@ public class IndustrialCostFinanceHandlerTest {
         materialCost.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow)materialCost);
 
-        vat = new Vat(applicationFinance.getId());
+        Vat vat = new Vat(applicationFinance.getId());
         vat.setRegistered(false);
-        vatCost = handler.toApplicationDomain(vat);
+        FinanceRow vatCost = handler.toApplicationDomain(vat);
         vatCost.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow)vatCost);
+        costs.add((ApplicationFinanceRow) vatCost);
 
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
