@@ -80,9 +80,9 @@ public class ReviewAndSubmitController {
     @SecuredBySpring(value = "APPLICATION_SUBMIT", description = "Applicants can submit their applications.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/review-and-submit")
-    public String submitApplication(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationSubmitForm applicationSubmitForm,
+    public String submitApplication(@PathVariable long applicationId,
+                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm applicationSubmitForm,
                                     BindingResult bindingResult,
-                                    @PathVariable long applicationId,
                                     RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return format("redirect:/application/%d/confirm-submit", applicationId);
