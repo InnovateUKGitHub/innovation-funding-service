@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.ZonedDateTime;
 
-public class SetupViewModel {
+public class SetupCompleteViewModel {
 
     private final long competitionId;
     private final String competitionName;
@@ -15,7 +15,7 @@ public class SetupViewModel {
     private final ZonedDateTime submittedDate;
     private final ProjectState projectState;
 
-    public SetupViewModel(CompetitionResource competitionResource, ProjectResource projectResource, ZonedDateTime submittedDate) {
+    public SetupCompleteViewModel(CompetitionResource competitionResource, ProjectResource projectResource, ZonedDateTime submittedDate) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.projectId = projectResource.getId();

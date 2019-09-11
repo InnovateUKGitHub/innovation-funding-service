@@ -4,14 +4,16 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.setup.viewmodel.SetupViewModel;
+import org.innovateuk.ifs.project.setup.viewmodel.SetupCompleteViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+
 @Component
-public class SetupViewModelPopulator {
+public class SetupCompleteViewModelPopulator {
 
     @Autowired
     private ProjectService projectService;
@@ -19,13 +21,23 @@ public class SetupViewModelPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public SetupViewModel populate(long projectId) {
+    public SetupCompleteViewModel populate(long projectId) {
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
-        return new SetupViewModel(
+        return new SetupCompleteViewModel(
                 competition,
                 project,
-                ZonedDateTime.now());
+                getSubmittedTime(project));
     }
+
+    private ZonedDateTime getSubmittedTime(ProjectResource project) {
+        if (SETUP.equals(project.getProjectState())) {
+            return project.getSpendProfileSubmittedDate();
+        } else {
+            // TODO change to use internal user action submitted date
+            return ZonedDateTime.now();
+        }
+    }
+
 }
