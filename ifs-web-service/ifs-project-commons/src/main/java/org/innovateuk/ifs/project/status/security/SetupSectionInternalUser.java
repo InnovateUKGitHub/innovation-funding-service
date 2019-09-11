@@ -111,6 +111,13 @@ public class SetupSectionInternalUser {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessProjectSetupComplete(UserResource user) {
+        if (user.hasRole(PROJECT_FINANCE)) {
+            return ACCESSIBLE;
+        }
+        return NOT_ACCESSIBLE;
+    }
+
     private boolean documentsApproved() {
         return projectSetupProgressChecker.allDocumentsApproved();
     }
@@ -129,4 +136,5 @@ public class SetupSectionInternalUser {
         LOG.info(message);
         return NOT_ACCESSIBLE;
     }
+
 }
