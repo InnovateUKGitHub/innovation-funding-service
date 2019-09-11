@@ -4,6 +4,7 @@ import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -17,6 +18,9 @@ public enum EligibilityState implements ProcessState, IdentifiableEnum {
     REVIEW(24, State.NOT_VERIFIED),
     NOT_APPLICABLE(25, State.NOT_APPLICABLE),
     APPROVED(26, State.ACCEPTED);
+
+    private static final EnumSet<EligibilityState> approvedStates =
+            EnumSet.of(EligibilityState.APPROVED, EligibilityState.NOT_APPLICABLE);
 
     private final long id;
     private final State backingState;
@@ -47,5 +51,9 @@ public enum EligibilityState implements ProcessState, IdentifiableEnum {
     @Override
     public long getId() {
         return id;
+    }
+
+    public boolean isApprovedState() {
+        return approvedStates.contains(this);
     }
 }
