@@ -61,8 +61,8 @@ public class ApplicationSummaryController {
         this.euGrantTransferRestService = euGrantTransferRestService;
     }
 
-    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, monitoring officers and stakeholders have permission to view the application summary page")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
+    @SecuredBySpring(value = "READ", description = "Applicants have permission to view the application summary page")
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/summary")
     @AsyncMethod
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
@@ -71,28 +71,19 @@ public class ApplicationSummaryController {
                                      UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        boolean isSupport = isSupport(user);
-        if (shouldDisplayFeedback(competition, application, isSupport)) {
+        if (shouldDisplayFeedback(competition, application)) {
             return redirectToFeedback(applicationId);
         }
-        UserResource userForModel;
-        if (isSupport) {
-            ProcessRoleResource leadProcessRoleResource = userService.getLeadApplicantProcessRole(applicationId);
-            userForModel = userRestService.retrieveUserById(leadProcessRoleResource.getUser()).getSuccess();
-        } else {
-            userForModel = user;
-        }
 
-        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, userForModel, isSupport));
+        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, user));
         return "application-summary";
     }
 
-    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application, boolean isSupport) {
+    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
         boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
         return application.isSubmitted()
-                && feedbackAvailable
-                && !isSupport;
+                && feedbackAvailable;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the horizon 2020 grant agreement")
@@ -102,10 +93,6 @@ public class ApplicationSummaryController {
     ResponseEntity<ByteArrayResource> downloadGrantAgreement(@PathVariable long applicationId) {
         return getFileResponseEntity(euGrantTransferRestService.downloadGrantAgreement(applicationId).getSuccess(),
                 euGrantTransferRestService.findGrantAgreement(applicationId).getSuccess());
-    }
-
-    private boolean isSupport(UserResource user) {
-        return user.hasRole(SUPPORT);
     }
 
     private String redirectToFeedback(long applicationId) {

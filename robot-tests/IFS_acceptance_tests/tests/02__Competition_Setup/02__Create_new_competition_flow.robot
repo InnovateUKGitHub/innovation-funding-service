@@ -731,6 +731,12 @@ The Applicant see the correct Questions
     And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
+The Applicant is able to enter duration
+    [Documentation]  IFS-6398  IFS-6417
+    Given the user clicks the button/link  link = Application details
+    When the user fills new application details
+    the user should see the element       jQuery = li:contains("Application details") .task-status-complete
+
 *** Keywords ***
 the total should be correct
     [Arguments]    ${Total}
@@ -866,8 +872,7 @@ the user should not be able to edit the assessed question feedback
 
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
-    ${nextyear} =  get next year
-    Set suite variable  ${nextyear}
+    Set predefined date variables
     Connect to database  @{database}
 
 the user enters multiple innovation areas
@@ -903,6 +908,19 @@ the comp admin creates competition
     the user navigates to the page        ${CA_UpcomingComp}
     the user clicks the button/link       link = Create competition
     the user navigates to the page        ${CA_UpcomingComp}
+
+the user fills new application details
+    the user enters text to a text field  id = name  New application
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  id = durationInMonths  45
+    the user clicks the button twice      css = label[for="resubmission-no"]
+    the user clicks the button/link       id = innovationAreaName
+    the user selects the radio button     innovationAreaChoice  NOT_APPLICABLE
+    the user clicks the button/link       jQuery = button:contains("Save")
+    the user clicks the button/link       css = button[name="mark_as_complete"]
+    the user clicks the button/link       link = Application overview
 
 Custom suite teardown
     The user closes the browser

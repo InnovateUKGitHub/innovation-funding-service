@@ -87,35 +87,37 @@
             </div>
             <div class="flex-table-after"></div>
         </div>
-        <h2 class="govuk-heading-m">Project costs for financial year</h2>
-        <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-        <table class="govuk-table govuk-!-margin-bottom-6 govuk-!-width-one-half">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header width-50-percent">Financial year (April to March)</th>
-                <th scope="col" class="govuk-table__header width-50-percent">Project spend</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
-                <td class="govuk-table__cell" th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                <td class="govuk-table__cell" th:attr="data-calculation-fields=${'.apr-'+item.year+',
-                                                          .may-'+item.year+',
-                                                          .jun-'+item.year+',
-                                                          .jul-'+item.year+',
-                                                          .aug-'+item.year+',
-                                                          .sep-'+item.year+',
-                                                          .oct-'+item.year+',
-                                                          .nov-'+item.year+',
-                                                          .dec-'+item.year+',
-                                                          .jan-'+(item.year+1)+',
-                                                          .feb-'+(item.year+1)+',
-                                                          .mar-'+(item.year+1)}">
-                    &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <th:block th:if="${model.includeFinancialYearTable}">
+            <h2 class="govuk-heading-m">Project costs for financial year</h2>
+            <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
+            <table class="govuk-table govuk-!-margin-bottom-6 govuk-!-width-one-half">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header width-50-percent">Financial year (April to March)</th>
+                    <th scope="col" class="govuk-table__header width-50-percent">Project spend</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
+                    <td class="govuk-table__cell" th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+                    <td class="govuk-table__cell" th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                                                              .may-'+item.year+',
+                                                              .jun-'+item.year+',
+                                                              .jul-'+item.year+',
+                                                              .aug-'+item.year+',
+                                                              .sep-'+item.year+',
+                                                              .oct-'+item.year+',
+                                                              .nov-'+item.year+',
+                                                              .dec-'+item.year+',
+                                                              .jan-'+(item.year+1)+',
+                                                              .feb-'+(item.year+1)+',
+                                                              .mar-'+(item.year+1)}">
+                        &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
         <a th:href="@{/project/{id}/spend-profile/total/confirmation(id=${project.getId()})}"
            class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-spend-profile-totals">Send project spend profile</a>
     </main>
