@@ -82,6 +82,14 @@ public class SetupSectionStatus {
         }
     }
 
+    public SectionStatus setupSectionStatus(final ProjectActivityStates setupSectionState) {
+        if (setupSectionState.equals(COMPLETE)) {
+            return TICK;
+        } {
+            return EMPTY;
+        }
+    }
+
     public SectionStatus documentsSectionStatus(final boolean isProjectManager,
                                                 List<CompetitionDocumentResource> expectedDocuments,
                                                 List<ProjectDocumentResource> projectDocuments) {

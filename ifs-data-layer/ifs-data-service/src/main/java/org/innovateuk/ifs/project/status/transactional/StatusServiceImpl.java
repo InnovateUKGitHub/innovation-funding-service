@@ -491,6 +491,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates documentsStatus = isLead ? createDocumentStatus(project) : NOT_REQUIRED;
         ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
+        ProjectActivityStates setupStatus = createProjectSetupStatus(project);
 
         boolean grantOfferLetterSentToProjectTeam =
                 golWorkflowHandler.getExtendedState(project).
@@ -511,6 +512,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 grantOfferLetterStatus,
                 financeContactStatus,
                 partnerProjectLocationStatus,
+                setupStatus,
                 grantOfferLetterSentToProjectTeam,
                 isLead);
     }
@@ -566,6 +568,17 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 .orElse(false);
 
         return locationPresent ? COMPLETE : ACTION_REQUIRED;
+    }
+
+    private ProjectActivityStates createProjectSetupStatus(Project project) {
+
+        if (project.getApplication().getCompetition().isLoan()) {
+            return NOT_REQUIRED;
+        }
+
+       // TODO implement state based on workflow
+
+        return COMPLETE;
     }
 
     private ProjectActivityStates createProjectDetailsStatus(Project project) {

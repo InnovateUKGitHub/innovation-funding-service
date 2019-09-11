@@ -186,7 +186,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
                 );
             case PROJECT_SETUP_COMPLETE:
-                return new SetupStatusStageViewModel(stage, "", "", "", SectionStatus.EMPTY, SectionAccess.NOT_ACCESSIBLE);
+                return new SetupStatusStageViewModel(stage,
+                        stage.getColumnName(),
+                        "Once all tasks are complete Innovate UK will review your application.",
+                        String.format("/project/%d/setup", project.getId()),
+                        sectionStatus.setupSectionStatus(ownOrganisation.getSetupStatus()),
+                        statusAccessor.canAccessSetupSection()
+                );
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());
     }
