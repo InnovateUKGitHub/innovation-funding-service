@@ -5,9 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.user.resource.Role;
-
-import java.util.Map;
 
 public class ProjectStatusResource {
     private String projectTitle;
@@ -26,7 +23,6 @@ public class ProjectStatusResource {
     private ProjectActivityStates monitoringOfficerStatus;
     private ProjectActivityStates documentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
-    private Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState;
     private boolean grantOfferLetterSent;
     private ProjectState projectState;
 
@@ -45,7 +41,6 @@ public class ProjectStatusResource {
                                  ProjectActivityStates monitoringOfficerStatus,
                                  ProjectActivityStates documentsStatus,
                                  ProjectActivityStates grantOfferLetterStatus,
-                                 Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState,
                                  boolean grantOfferLetterSent,
                                  ProjectState projectState) {
         this.projectTitle = projectTitle;
@@ -63,7 +58,6 @@ public class ProjectStatusResource {
         this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.documentsStatus = documentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
-        this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
         this.grantOfferLetterSent = grantOfferLetterSent;
         this.projectState = projectState;
     }
@@ -162,14 +156,6 @@ public class ProjectStatusResource {
 
     public void setGrantOfferLetterStatus(ProjectActivityStates grantOfferLetterStatus) {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
-    }
-
-    public Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState() {
-        return roleSpecificGrantOfferLetterState;
-    }
-
-    public void setRoleSpecificGrantOfferLetterState(Map<Role, ProjectActivityStates>  roleSpecificGrantOfferLetterState) {
-        this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
     }
 
     public boolean getGrantOfferLetterSent() { return grantOfferLetterSent; }
