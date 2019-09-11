@@ -12,6 +12,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import static org.mapstruct.ReportingPolicy.IGNORE;
+
 @Mapper(
    componentModel = "spring",
    uses = {
