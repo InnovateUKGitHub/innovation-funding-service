@@ -31,6 +31,7 @@ public class FinanceChecksEligibilityViewModel {
     private FileDetailsViewModel jesFileDetails;
     private final boolean h2020;
     private final boolean projectIsActive;
+    private final boolean isLoanCompetition;
 
     public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview,
                                              String organisationName,
@@ -48,7 +49,8 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean isUsingJesFinances,
                                              FileDetailsViewModel jesFileDetailsViewModel,
                                              boolean h2020,
-                                             boolean projectIsActive) {
+                                             boolean projectIsActive,
+                                             boolean isLoanCompetition) {
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -56,18 +58,17 @@ public class FinanceChecksEligibilityViewModel {
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.projectId = projectId;
         this.organisationId = organisationId;
-
         this.eligibilityApproved = eligibilityApproved;
         this.eligibilityRagStatus = eligibilityRagStatus;
         this.approverFirstName = approverFirstName;
         this.approverLastName = approverLastName;
         this.approvalDate = approvalDate;
-
         this.externalView = externalView;
         this.isUsingJesFinances = isUsingJesFinances;
         this.jesFileDetails = jesFileDetailsViewModel;
         this.h2020 = h2020;
         this.projectIsActive = projectIsActive;
+        this.isLoanCompetition = isLoanCompetition;
     }
 
     public boolean isApproved() {
@@ -217,5 +218,9 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isProjectIsActive() {
         return projectIsActive;
+    }
+
+    public boolean isIsLoan() {
+        return isLoanCompetition;
     }
 }

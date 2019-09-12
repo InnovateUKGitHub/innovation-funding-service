@@ -32,9 +32,16 @@
                   th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.isApproved()}">
-            <div class="success-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body">The checks have been completed and your project finances approved.</p>
-            </div>
+            <th:block th:unless="${model.isLoanCompetition}">
+                <div class="success-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body">The checks have been completed and your project finances approved.</p>
+                </div>
+            </th:block>
+            <th:block th:if="${model.isLoanCompetition}">
+                <div class="message-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body">We have finished checking your finances.</p>
+                </div>
+            </th:block>
             <p class="govuk-body"> Review your <a
                 th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                 class="govuk-link">finances</a>
@@ -87,7 +94,7 @@
                     <div class="govuk-accordion__section-header">
                         <h2 class="govuk-accordion__section-heading">
                             <div class="govuk-accordion__section-button"
-                                  th:id="|accordion-pending-queries-heading-${iteration.count}|">
+                                 th:id="|accordion-pending-queries-heading-${iteration.count}|">
                                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                                 <div class="section-status section-incomplete">Pending query</div>
                             </div>
@@ -224,7 +231,7 @@
                     <div class="govuk-accordion__section-header">
                         <h2 class="govuk-accordion__section-heading">
                             <div class="govuk-accordion__section-button"
-                                  th:id="|accordion-awaiting-queries-heading-${iteration.count}|">
+                                 th:id="|accordion-awaiting-queries-heading-${iteration.count}|">
                                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                                 <div class="section-status section-awaiting">Awaiting review</div>
                             </div>
@@ -362,7 +369,7 @@
                     <div class="govuk-accordion__section-header">
                         <h2 class="govuk-accordion__section-heading">
                             <div class="govuk-accordion__section-button"
-                                  th:id="|accordion-closed-queries-heading-${iteration.count}|">
+                                 th:id="|accordion-closed-queries-heading-${iteration.count}|">
                                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                                 <div class="section-status section-complete">Resolved</div>
                             </div>
