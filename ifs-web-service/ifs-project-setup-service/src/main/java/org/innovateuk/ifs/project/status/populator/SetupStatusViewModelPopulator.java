@@ -91,7 +91,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 : partnerProjectDetailsComplete(statusAccessor, resolve(organisationRequest), partnerProjectLocationRequired);
                 boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(resolve(teamStatusRequest),
                         partnerProjectLocationRequired);
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
                             : "The proposed start date and location of the project.",
                         projectComplete ? String.format("/project/%d/readonly", project.getId())
@@ -103,7 +103,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessProjectDetailsSection(resolve(organisationRequest))
                     );
             case PROJECT_TEAM:
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Add people to your project."
                                 : "The people on your project.",
                         projectComplete ? String.format("/project/%d/readonly", project.getId())
@@ -115,7 +115,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
                 List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(project.getId());
                 boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         isProjectManager ? "You must upload supporting documents to be reviewed."
                                 : "The Project Manager must upload supporting documents to be reviewed.",
                         String.format("/project/%d/document/all", project.getId()),
@@ -147,7 +147,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         maybeMonitoringOfficer.isPresent() ? null : "awaiting-assignment"
                 );
             case BANK_DETAILS:
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         "We need bank details for those partners eligible for funding.",
                         projectComplete ? String.format("/project/%d/bank-details/readonly", project.getId())
                                 : String.format("/project/%d/bank-details", project.getId()),
@@ -162,7 +162,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
                 boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
 
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                        "We will review your financial information.",
                         String.format("/project/%d/finance-checks", project.getId()),
                         financeChecksStatus,
@@ -170,7 +170,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         pendingQueries ? "pending-query" : null
                 );
             case SPEND_PROFILE:
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         "Once we have approved your project finances you can change your project spend profile.",
                         String.format("/project/%d/partner-organisation/%d/spend-profile", project.getId(), resolve(organisationRequest).getId()),
                         sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus()),
@@ -189,7 +189,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             case PROJECT_SETUP_COMPLETE:
                 SectionStatus projectSetupCompleteStatus = sectionStatus.projectSetupCompleteStatus(ownOrganisation.getProjectSetupCompleteStatus());
                 return new SetupStatusStageViewModel(stage,
-                        stage.getColumnName(),
+                        stage.getShortName(),
                         "Once all tasks are complete Innovate UK will review your application.",
                         String.format("/project/%d/setup", project.getId()),
                         projectSetupCompleteStatus,
