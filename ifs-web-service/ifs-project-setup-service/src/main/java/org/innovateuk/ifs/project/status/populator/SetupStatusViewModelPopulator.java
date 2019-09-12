@@ -152,7 +152,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         projectComplete ? String.format("/project/%d/bank-details/readonly", project.getId())
                                 : String.format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
-                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest))
+                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest)),
+                        "awaiting-assessment"
                 );
             case FINANCE_CHECKS:
                 SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
