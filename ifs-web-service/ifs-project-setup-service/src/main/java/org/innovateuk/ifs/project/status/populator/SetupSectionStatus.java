@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import static org.innovateuk.ifs.sections.SectionStatus.*;
 /**
  * This is a helper class for determining the status of a given Project Setup section
  */
+@Component
 public class SetupSectionStatus {
 
     public SectionStatus projectDetailsSectionStatus(final boolean projectDetailsProcessCompleted,
@@ -36,10 +38,8 @@ public class SetupSectionStatus {
                                                         final boolean requiredProjectDetailsForMonitoringOfficerComplete) {
         if (monitoringOfficerAssigned) {
             return TICK;
-        } else if (requiredProjectDetailsForMonitoringOfficerComplete) {
-            return HOURGLASS;
         } else {
-            return EMPTY;
+            return HOURGLASS;
         }
 
     }
