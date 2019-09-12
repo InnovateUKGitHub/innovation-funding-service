@@ -96,7 +96,8 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 
-    public ProjectResourceBuilder withProjectDocuments(List<ProjectDocumentResource>... projectDocuments) {
+    @SafeVarargs
+    public final ProjectResourceBuilder withProjectDocuments(List<ProjectDocumentResource>... projectDocuments) {
         return withArray((projectDocumentList, project) -> project.setProjectDocuments(projectDocumentList), projectDocuments);
     }
 

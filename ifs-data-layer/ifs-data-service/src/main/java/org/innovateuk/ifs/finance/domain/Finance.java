@@ -63,4 +63,7 @@ public abstract class Finance {
         this.organisationSize = organisationSize;
     }
 
+    public String getOrganisationName() {
+        return organisation.getName();
+    }
 }

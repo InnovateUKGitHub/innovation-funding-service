@@ -69,6 +69,14 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
         return fireEvent(internalUserEvent(project, internalUser, ProjectEvent.RESUME_PROJECT), project);
     }
 
+    public boolean markAsSuccessful(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, ProjectEvent.MARK_AS_SUCCESSFUL), project);
+    }
+
+    public boolean markAsUnsuccessful(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, ProjectEvent.MARK_AS_UNSUCCESSFUL), project);
+    }
+
     public ProjectState getState(Project project) {
         return getCurrentProcess(project).getProcessState();
     }

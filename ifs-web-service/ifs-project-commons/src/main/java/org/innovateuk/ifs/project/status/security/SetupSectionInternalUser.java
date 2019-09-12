@@ -2,14 +2,12 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -31,10 +29,6 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessProjectDetailsSection(UserResource userResource) {
-        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
-            return fail("Unable to access Project Details section until Project Details are submitted");
-        }
-
         return ACCESSIBLE;
     }
 
@@ -117,6 +111,15 @@ public class SetupSectionInternalUser {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessProjectSetupComplete(UserResource user) {
+        if (user.hasRole(PROJECT_FINANCE)
+            && documentsApproved()
+            && projectSetupProgressChecker.isSpendProfileApproved()) {
+            return ACCESSIBLE;
+        }
+        return NOT_ACCESSIBLE;
+    }
+
     private boolean documentsApproved() {
         return projectSetupProgressChecker.allDocumentsApproved();
     }
@@ -136,12 +139,4 @@ public class SetupSectionInternalUser {
         return NOT_ACCESSIBLE;
     }
 
-    public ProjectActivityStates grantOfferLetterActivityStatus(UserResource userResource) {
-        if (isInternalAdmin(userResource)) {
-            return projectSetupProgressChecker.getRoleSpecificActivityState().get(COMP_ADMIN);
-        } else {
-            return projectSetupProgressChecker.getGrantOfferLetterState();
-        }
-
-    }
 }

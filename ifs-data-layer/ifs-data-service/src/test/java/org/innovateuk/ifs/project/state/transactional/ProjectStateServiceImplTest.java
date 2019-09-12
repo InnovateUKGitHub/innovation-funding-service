@@ -41,8 +41,8 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
 
     @Test
     public void withdrawProject() {
-        Long projectId = 123L;
-        Long userId = 456L;
+        long projectId = 123L;
+        long userId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
                 .withRoleGlobal(IFS_ADMINISTRATOR)
@@ -67,8 +67,8 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
 
     @Test
     public void withdrawProject_fails() {
-        Long projectId = 321L;
-        Long userId = 987L;
+        long projectId = 321L;
+        long userId = 987L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
                 .withRoleGlobal(IFS_ADMINISTRATOR)
@@ -93,7 +93,7 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
 
     @Test
     public void withdrawProject_cannotFindIdFails() {
-        Long projectId = 456L;
+        long projectId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource user = newUserResource()
                 .withRoleGlobal(IFS_ADMINISTRATOR)
@@ -111,8 +111,8 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
 
     @Test
     public void handleProjectOffline() {
-        Long projectId = 123L;
-        Long userId = 456L;
+        long projectId = 123L;
+        long userId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
                 .withRoleGlobal(IFS_ADMINISTRATOR)
@@ -137,8 +137,8 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
 
     @Test
     public void completeProjectOffline() {
-        Long projectId = 123L;
-        Long userId = 456L;
+        long projectId = 123L;
+        long userId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
                 .withRoleGlobal(IFS_ADMINISTRATOR)
@@ -163,8 +163,8 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
 
     @Test
     public void putProjectOnHold() {
-        Long projectId = 123L;
-        Long userId = 456L;
+        long projectId = 123L;
+        long userId = 456L;
         OnHoldReasonResource onHoldReasonResource = new OnHoldReasonResource("Title", "Body");
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
@@ -190,8 +190,8 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
 
     @Test
     public void resumeProject() {
-        Long projectId = 123L;
-        Long userId = 456L;
+        long projectId = 123L;
+        long userId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
                 .withRoleGlobal(PROJECT_FINANCE)
@@ -214,6 +214,58 @@ public class ProjectStateServiceImplTest extends BaseServiceUnitTest<ProjectStat
         verify(projectStateCommentsService).create(projectId, ProjectState.SETUP);
     }
 
+
+    @Test
+    public void markAsSuccessful() {
+        long projectId = 123L;
+        long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRoleGlobal(PROJECT_FINANCE)
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.ofNullable(user));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(project));
+        when(projectWorkflowHandlerMock.markAsSuccessful(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.markAsSuccessful(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findById(projectId);
+        verify(userRepositoryMock).findById(userId);
+        verify(projectWorkflowHandlerMock).markAsSuccessful(eq(project), any());
+        verify(projectStateCommentsService).create(projectId, ProjectState.LIVE);
+    }
+
+    @Test
+    public void markAsUnsuccessful() {
+        long projectId = 123L;
+        long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRoleGlobal(PROJECT_FINANCE)
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.ofNullable(user));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(project));
+        when(projectWorkflowHandlerMock.markAsUnsuccessful(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.markAsUnsuccessful(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findById(projectId);
+        verify(userRepositoryMock).findById(userId);
+        verify(projectWorkflowHandlerMock).markAsUnsuccessful(eq(project), any());
+        verify(projectStateCommentsService).create(projectId, ProjectState.UNSUCCESSFUL);
+    }
 
     @Override
     protected ProjectStateService supplyServiceUnderTest() {

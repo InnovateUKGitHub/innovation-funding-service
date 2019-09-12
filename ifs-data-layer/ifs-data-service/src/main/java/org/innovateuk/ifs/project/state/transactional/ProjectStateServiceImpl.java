@@ -72,4 +72,24 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
                 ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.SETUP));
 
     }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> markAsSuccessful(long projectId) {
+        return getProject(projectId).andOnSuccess(
+                project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.markAsSuccessful(project, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_MARKED_AS_SUCCESSFUL))
+        ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.LIVE));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> markAsUnsuccessful(long projectId) {
+        return getProject(projectId).andOnSuccess(
+                project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.markAsUnsuccessful(project, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_MARKED_AS_UNSUCCESSFUL))
+        ).andOnSuccessReturnVoid(() -> projectStateCommentsService.create(projectId, ProjectState.UNSUCCESSFUL));
+    }
 }

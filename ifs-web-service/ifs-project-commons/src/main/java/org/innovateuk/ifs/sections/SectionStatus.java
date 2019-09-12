@@ -13,12 +13,12 @@ public enum SectionStatus {
 
     private final String status;
 
-    SectionStatus(String value) {
-        status = value;
+    SectionStatus(String status) {
+        this.status = status;
     }
 
-    public String getSectionStatus() {
-        return this.status;
+    public String getStatus() {
+        return status;
     }
 
 }

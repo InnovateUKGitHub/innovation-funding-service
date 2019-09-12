@@ -7,14 +7,24 @@
         <th:block th:if="${isLead}"> (Lead)</th:block>
     </th>
 
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectTeamStatus})" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.documentsStatus})" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.financeChecksStatus})" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
+    <th:block th:if="${model.hasProjectDetails()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})" />
+    <th:block th:if="${model.hasProjectTeam()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectTeamStatus})" />
+    <th:block th:if="${model.hasDocuments()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.documentsStatus})" />
+    <th:block th:if="${model.hasMonitoringOfficer()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})" />
+    <th:block th:if="${model.hasBankDetails()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})" />
+    <th:block th:if="${model.hasFinanceChecks()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.financeChecksStatus})" />
+    <th:block th:if="${model.hasSpendProfile()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})" />
+    <th:block th:if="${model.hasGrantOfferLetter()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
+    <th:block th:if="${model.hasProjectSetupComplete()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
 </th:block>
 
 <th:block th:fragment="consortium-partner-status-indicator(status)">
@@ -37,6 +47,7 @@
                 <span th:case="waiting" class="status-waiting">Awaiting review</span>
                 <span th:case="rejected" class="status-reject">Unsuccessful</span>
                 <span th:case="awaiting-assignment">Awaiting assignment</span>
+                <span th:case="pending-query" class="status-warning">Pending query</span>
             </th:block>
         </div>
     </div>
