@@ -13,7 +13,6 @@ import java.util.List;
 public interface ApplicationFinanceRestService {
     RestResult<ApplicationFinanceResource> getApplicationFinance(Long applicationId, Long organisationId);
     RestResult<List<ApplicationFinanceResource>> getApplicationFinances(Long applicationId);
-    RestResult<ApplicationFinanceResource> addApplicationFinanceForOrganisation(Long applicationId, Long organisationId);
     RestResult<ApplicationFinanceResource> update(Long applicationFinanceId, ApplicationFinanceResource applicationFinance);
     RestResult<ApplicationFinanceResource> getById(Long applicationFinanceId);
     RestResult<Double> getResearchParticipationPercentage(Long applicationId);
