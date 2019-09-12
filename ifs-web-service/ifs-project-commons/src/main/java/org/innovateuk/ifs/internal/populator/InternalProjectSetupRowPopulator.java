@@ -5,7 +5,6 @@ import org.innovateuk.ifs.internal.InternalProjectSetupCell;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -115,7 +114,7 @@ public class InternalProjectSetupRowPopulator {
                     );
                 case PROJECT_SETUP_COMPLETE:
                     return new InternalProjectSetupCell(
-                            status.getProjectState().equals(ProjectState.LIVE) ||  status.getProjectState().equals(ProjectState.UNSUCCESSFUL) ? ProjectActivityStates.COMPLETE : ProjectActivityStates.ACTION_REQUIRED,
+                            status.getProjectSetupCompleteStatus(),
                             String.format("/project-setup-management/competition/" + competitionId + "/project/" + status.getProjectNumber() + "/setup-complete"),
                             setupSectionInternalUser.canAccessProjectSetupComplete(user).isAccessible(),
                             PROJECT_SETUP_COMPLETE,

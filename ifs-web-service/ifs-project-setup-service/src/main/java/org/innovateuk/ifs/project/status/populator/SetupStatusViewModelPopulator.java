@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -94,8 +95,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
                             : "The proposed start date and location of the project.",
-                        projectComplete ? String.format("/project/%d/readonly", project.getId())
-                            : String.format("/project/%d/details", project.getId()),
+                        projectComplete ? format("/project/%d/readonly", project.getId())
+                            : format("/project/%d/details", project.getId()),
                         sectionStatus.projectDetailsSectionStatus(
                                 isProjectDetailsProcessCompleted,
                                 awaitingProjectDetailsActionFromOtherPartners,
@@ -106,8 +107,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Add people to your project."
                                 : "The people on your project.",
-                        projectComplete ? String.format("/project/%d/readonly", project.getId())
-                                : String.format("/project/%d/team", project.getId()),
+                        projectComplete ? format("/project/%d/readonly", project.getId())
+                                : format("/project/%d/team", project.getId()),
                         sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus()),
                         statusAccessor.canAccessProjectTeamSection(resolve(organisationRequest))
                     );
@@ -118,7 +119,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         isProjectManager ? "You must upload supporting documents to be reviewed."
                                 : "The Project Manager must upload supporting documents to be reviewed.",
-                        String.format("/project/%d/document/all", project.getId()),
+                        format("/project/%d/document/all", project.getId()),
                         sectionStatus.documentsSectionStatus(
                                 isProjectManager,
                                 getCompetitionDocuments(
@@ -137,10 +138,10 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 isProjectDetailsSubmitted,
                                 resolve(teamStatusRequest));
                 return new SetupStatusStageViewModel(stage, "Monitoring Officer",
-                        maybeMonitoringOfficer.isPresent() ? String.format("Your Monitoring Officer for this project is %s.", maybeMonitoringOfficer.get().getFullName())
+                        maybeMonitoringOfficer.isPresent() ? format("Your Monitoring Officer for this project is %s.", maybeMonitoringOfficer.get().getFullName())
                                 : "We will assign the project a Monitoring Officer.",
-                        projectComplete ? String.format("/project/%d/monitoring-officer/readonly", project.getId())
-                                : String.format("/project/%d/monitoring-officer", project.getId()),
+                        projectComplete ? format("/project/%d/monitoring-officer/readonly", project.getId())
+                                : format("/project/%d/monitoring-officer", project.getId()),
                         sectionStatus.monitoringOfficerSectionStatus(maybeMonitoringOfficer.isPresent(),
                                 requiredProjectDetailsForMonitoringOfficerComplete),
                         statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest), partnerProjectLocationRequired),
@@ -149,8 +150,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             case BANK_DETAILS:
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         "We need bank details for those partners eligible for funding.",
-                        projectComplete ? String.format("/project/%d/bank-details/readonly", project.getId())
-                                : String.format("/project/%d/bank-details", project.getId()),
+                        projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
+                                : format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
                         monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest)),
                         "awaiting-assessment"
@@ -165,7 +166,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                        "We will review your financial information.",
-                        String.format("/project/%d/finance-checks", project.getId()),
+                        format("/project/%d/finance-checks", project.getId()),
                         financeChecksStatus,
                         monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,
                         pendingQueries ? "pending-query" : null
@@ -173,14 +174,14 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             case SPEND_PROFILE:
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         "Once we have approved your project finances you can change your project spend profile.",
-                        String.format("/project/%d/partner-organisation/%d/spend-profile", project.getId(), resolve(organisationRequest).getId()),
+                        format("/project/%d/partner-organisation/%d/spend-profile", project.getId(), resolve(organisationRequest).getId()),
                         sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus()),
                         statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
                 );
             case GRANT_OFFER_LETTER:
                 return new SetupStatusStageViewModel(stage, "Grant offer letter",
                         "Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.",
-                        String.format("/project/%d/offer", project.getId()),
+                        format("/project/%d/offer", project.getId()),
                         sectionStatus.grantOfferLetterSectionStatus(
                                 ownOrganisation.getGrantOfferLetterStatus(),
                                 isLeadPartner
