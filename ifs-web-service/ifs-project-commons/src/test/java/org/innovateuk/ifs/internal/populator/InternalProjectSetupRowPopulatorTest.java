@@ -58,7 +58,7 @@ public class InternalProjectSetupRowPopulatorTest extends BaseUnitTest {
         assertEquals(2, cells.size());
 
         List<ProjectSetupStage> stages = cells.stream()
-                .map(InternalProjectSetupCell::getProjectSetupStage)
+                .map(InternalProjectSetupCell::getStage)
                 .collect(Collectors.toList());
 
         assertTrue(stages.contains(PROJECT_DETAILS));
