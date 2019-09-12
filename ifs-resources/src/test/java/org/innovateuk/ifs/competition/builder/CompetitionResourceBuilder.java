@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.math.BigDecimal;
@@ -202,6 +203,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withList(competitionDocumentResourcesList, (projectDocumentResource, section) -> section.setCompetitionDocuments(competitionDocumentResourcesList));
     }
 
+    public CompetitionResourceBuilder withProjectSetupStages(List<ProjectSetupStage> projectSetupStages) {
+        return withList(projectSetupStages, (projectSetupStage, section) -> section.setProjectSetupStages(projectSetupStages));
+    }
+
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
         return withArraySetFieldByReflection("assessorCount", assessorCount);
     }
@@ -289,6 +294,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withCompetitionTerms(FileEntryResource... competitionTermsItems) {
         return withArray((competitionTerms, competitionResource) -> competitionResource.setCompetitionTerms(competitionTerms), competitionTermsItems);
+    }
+
+    @SafeVarargs
+    public final CompetitionResourceBuilder withProjectSetupStages(List<ProjectSetupStage>... projectSetupStages) {
+        return withArray((projectSetupStage, competitionResource) -> competitionResource.setProjectSetupStages(projectSetupStage), projectSetupStages);
     }
 
     @Override

@@ -8,6 +8,14 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6207 Loans - Your Funding - How much funding is required
 ...
 ...             IFS-6208 Loans - Updates to Finance Summary Table
+...
+...             IFS-6369 Loans - Remove Financial year table from Spend Profile
+...
+...             IFS-6292 Loans - Finance Checks - Remove 'Approved' and link to viability checks
+...
+...             IFS-6285 Loans - Remove Bank Details - External Journey - Project Setup
+...
+...             IFS-6307 Loans - Remove Bank Details - Internal Journey - Project Setup
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -50,19 +58,20 @@ Loan application submission
     [Documentation]  IFS-6237  IFS-6238
     Given the user submits the loan application
     And the user should see the element            jQuery = h2:contains("Part A: Innovation Funding Service application")
-    When the user clicks the button/link           link = startup high growth index survey
+    #When the user clicks the button/link           link = startup high growth index survey
     #TODO
     #the user should be on the right page.  Update once we have this link
-    And the user closes the last opened tab
+    #And the user closes the last opened tab
     When the user clicks the button/link            link = View part A
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  To finish your application, you must complete part B
 
 Applicant complete the project setup details
-    [Documentation]  IFS-6369
+    [Documentation]  IFS-6369  IFS-6285
     Given the user completes the project details
     And the user completes the project team details
     And the user submits the project document
+    Then the user should not see the element    jQuery = h2:contains("Bank details")
 
 Funding sought validations
     [Documentation]  IFS-6293
@@ -79,10 +88,12 @@ Found sought changes
     And the internal user should see the funding changes
 
 Project finance completes all project setup steps
-    [Documentation]  IFS-6369
+    [Documentation]  IFS-6369  IFS-6292  IFS-6307
     Given internal user approve project documents
     And internal user assign MO to loan project
     And internal user generate SP
+    When the user navigates to the page         ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    Then the user should not see the element    jQuery = th:contains("Bank details")
 
 Applicant checks the generated SP
     [Documentation]  IFS-6369
@@ -152,19 +163,18 @@ internal user assign MO to loan project
     The internal user assign project to MO   ${loan_PS_application_Id}  ${loan_PS_application1}
 
 internal user generate SP
-    the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
-    the user selects the checkbox            project-viable
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link          css = #confirm-button
-    the user clicks the button/link          jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
-    the user clicks the button/link          link = Return to finance checks
+    the user navigates to the page           ${loan_finance_checks}
+    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) span:contains("Complete")
+    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(3) span:contains("Not set")
+    the user should see the element          jQuery = dt:contains("Funding sought")
+    the user should see the element          jQuery = dt:contains("Total percentage loan")
     the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
     the user selects the checkbox            project-eligible
     the user selects the option from the drop-down menu  Green  id = rag-rating
     the user clicks the button/link          css = #confirm-button
     the user clicks the button/link          css = [name="confirm-eligibility"]
     the user clicks the button/link          link = Return to finance checks
+    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
     the user clicks the button/link          css = .generate-spend-profile-main-button
     the user clicks the button/link          css = #generate-spend-profile-modal-button
 

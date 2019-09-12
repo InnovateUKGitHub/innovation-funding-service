@@ -2,14 +2,16 @@ package org.innovateuk.ifs.project.status.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectStatusResourceListType;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -29,39 +31,36 @@ public class StatusRestServiceImplTest extends BaseRestServiceUnitTest<StatusRes
         Long competitionId = 1L;
         String applicationSearchString = "12";
 
-        CompetitionProjectsStatusResource returnedResponse = new CompetitionProjectsStatusResource();
+        List<ProjectStatusResource> returnedResponse = asList(new ProjectStatusResource());
 
-        setupGetWithRestResultExpectations(competitionURL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, CompetitionProjectsStatusResource.class, returnedResponse);
+        setupGetWithRestResultExpectations(competitionURL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, projectStatusResourceListType(), returnedResponse);
 
-        RestResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
+        RestResult<List<ProjectStatusResource>> result = service.getCompetitionStatus(competitionId, applicationSearchString);
 
         assertTrue(result.isSuccess());
 
-        Assert.assertEquals(returnedResponse, result.getSuccess());
-        setupGetWithRestResultVerifications(competitionURL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, null, CompetitionProjectsStatusResource.class);
+        assertEquals(returnedResponse, result.getSuccess());
     }
 
     @Test
     public void getPreviousCompetitionStatus() {
         Long competitionId = 1L;
 
-        CompetitionProjectsStatusResource returnedResponse = new CompetitionProjectsStatusResource();
+        List<ProjectStatusResource> returnedResponse = asList(new ProjectStatusResource());
 
-        setupGetWithRestResultExpectations("/project/previous/competition/" + competitionId, CompetitionProjectsStatusResource.class, returnedResponse);
+        setupGetWithRestResultExpectations("/project/previous/competition/" + competitionId, projectStatusResourceListType(), returnedResponse);
 
-        RestResult<CompetitionProjectsStatusResource> result = service.getPreviousCompetitionStatus(competitionId);
+        RestResult<List<ProjectStatusResource>> result = service.getPreviousCompetitionStatus(competitionId);
 
         assertTrue(result.isSuccess());
-
-        Assert.assertEquals(returnedResponse, result.getSuccess());
-        setupGetWithRestResultVerifications("/project/previous/competition/" + competitionId, null, CompetitionProjectsStatusResource.class);
+        assertEquals(returnedResponse, result.getSuccess());
     }
     @Test
     public void getStatusByProjectId() {
         ProjectStatusResource returnedResponse = new ProjectStatusResource();
         setupGetWithRestResultExpectations(projectRestURL + "/123/status", ProjectStatusResource.class, returnedResponse);
         ProjectStatusResource result = service.getProjectStatus(123L).getSuccess();
-        Assert.assertEquals(returnedResponse, result);
+        assertEquals(returnedResponse, result);
         setupGetWithRestResultVerifications(projectRestURL + "/123/status", null, ProjectStatusResource.class);
     }
 

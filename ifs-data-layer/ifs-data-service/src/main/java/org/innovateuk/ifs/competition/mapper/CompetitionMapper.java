@@ -14,10 +14,12 @@ import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.mapstruct.*;
+
+import java.util.stream.Collectors;
 
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -57,7 +59,8 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "questions", ignore = true),
             @Mapping(target = "template", ignore = true),
             @Mapping(target = "assessmentPanelDate", ignore = true),
-            @Mapping(target = "panelDate", ignore = true)
+            @Mapping(target = "panelDate", ignore = true),
+            @Mapping(target = "projectStages", ignore = true)
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 
@@ -66,6 +69,20 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             return null;
         }
         return object.getId();
+    }
+
+    @AfterMapping
+    public void setStagesOnDomain(@MappingTarget Competition competition, CompetitionResource resource) {
+        competition.setProjectStages(
+            resource.getProjectSetupStages()
+                .stream()
+                .map(stage -> mapProjectSetupStageToProjectStage(stage, competition))
+                .collect(Collectors.toList())
+        );
+    }
+
+    private ProjectStages mapProjectSetupStageToProjectStage(ProjectSetupStage projectSetupStage, Competition competition) {
+        return new ProjectStages(competition, projectSetupStage);
     }
 
 }

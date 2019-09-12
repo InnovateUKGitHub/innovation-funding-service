@@ -6,9 +6,9 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.mapstruct.Mapper;
 
-import static org.mapstruct.ReportingPolicy.WARN;
+import static org.mapstruct.ReportingPolicy.IGNORE;
 
-@Mapper(config = GlobalMapperConfig.class, unmappedTargetPolicy = WARN)
+@Mapper(config = GlobalMapperConfig.class)
 public abstract class ApplicationCountSummaryMapper extends BaseMapper<ApplicationStatistics, ApplicationCountSummaryResource, Long> {
 
     @Override
