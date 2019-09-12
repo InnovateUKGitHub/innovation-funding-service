@@ -65,4 +65,21 @@ public class ProjectStateRestServiceImplTest extends BaseRestServiceUnitTest<Pro
         assertTrue(result.isSuccess());
     }
 
+    @Test
+    public void markAsSuccessful() {
+        long projectId = 123L;
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/successful", null, OK );
+        RestResult<Void> result = service.markAsSuccessful(projectId);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/successful", Void.class);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void markAsUnsuccessful() {
+        long projectId = 123L;
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/unsuccessful", null, OK );
+        RestResult<Void> result = service.markAsUnsuccessful(projectId);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/unsuccessful", Void.class);
+        assertTrue(result.isSuccess());
+    }
 }

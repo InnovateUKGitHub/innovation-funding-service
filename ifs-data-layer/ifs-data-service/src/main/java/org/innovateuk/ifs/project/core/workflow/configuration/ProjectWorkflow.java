@@ -44,6 +44,7 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
         configureWithdraw(transitions);
         configureOffline(transitions);
         configureOnHold(transitions);
+        configureSuccess(transitions);
     }
 
     private void configureOnHold(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
@@ -109,5 +110,18 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
                     .source(SETUP)
                     .event(PROJECT_CREATED)
                     .target(SETUP);
+    }
+
+    private void configureSuccess(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                    .source(SETUP)
+                    .event(MARK_AS_UNSUCCESSFUL)
+                    .target(UNSUCCESSFUL)
+                .and()
+                .withExternal()
+                    .source(SETUP)
+                    .event(MARK_AS_SUCCESSFUL)
+                    .target(LIVE);
     }
 }

@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
