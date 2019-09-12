@@ -54,6 +54,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
                         withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
                         withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
+                        withProjectSetupCompleteStatus(PENDING, PENDING, PENDING).
                         withProjectState(LIVE).
                         build(3);
 

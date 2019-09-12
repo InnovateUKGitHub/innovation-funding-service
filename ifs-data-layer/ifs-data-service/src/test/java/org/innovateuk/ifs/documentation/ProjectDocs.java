@@ -53,6 +53,7 @@ public class ProjectDocs {
             fieldWithPath("monitoringOfficerStatus").description("Status of the monitoring officer"),
             fieldWithPath("documentsStatus").description("Status of the project documents"),
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
+            fieldWithPath("projectSetupCompleteStatus").description("Status of the project setup complete section"),
             fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent"),
             fieldWithPath("projectState").description("State of the project")
     };
