@@ -20,6 +20,8 @@ public class ActivityLogUrlHelper {
             case WITHDRAWN:
             case ON_HOLD:
             case RESUMED_FROM_ON_HOLD:
+            case MARKED_PROJECT_AS_SUCCESSFUL:
+            case MARKED_PROJECT_AS_UNSUCCESSFUL:
                 return format("/project-setup-management/competition/%d/project/%d/details", project.getCompetition(), project.getId());
             case PROJECT_MANAGER_NOMINATED:
             case FINANCE_CONTACT_NOMINATED:
