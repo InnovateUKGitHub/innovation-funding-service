@@ -18,7 +18,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup complete',subTitle=${model.projectName}, size='govuk-heading-xl'" />
         </th:block>
 
-        <th:block th:insert="fragments/setup-state :: content(${model.projectState})"/>
+        <th:block th:insert="fragments/setup-state :: content"/>
 
         <div class="govuk-!-margin-top-9">
             <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
