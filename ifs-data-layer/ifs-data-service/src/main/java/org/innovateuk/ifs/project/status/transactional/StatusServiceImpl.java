@@ -22,8 +22,6 @@ import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
@@ -56,7 +54,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
@@ -185,10 +182,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus, process.getProcessState()),
                 getDocumentsStatus(project, process.getProcessState()),
                 getGrantOfferLetterState(project, process.getProcessState(), bankDetailsStatus),
+                getProjectSetupCompleteState(project, process.getProcessState()),
                 golWorkflowHandler.isSent(project),
                 process.getProcessState());
     }
-
     private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectState processState) {
         if (locationPerPartnerRequired && PENDING.equals(getPartnerProjectLocationStatus(project))) {
             return PENDING;
@@ -427,6 +424,21 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             }
     }
 
+    private ProjectActivityStates getProjectSetupCompleteState(Project project, ProjectState processState) {
+        ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
+        ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
+        if (documentsApproved(project, processState)
+                && COMPLETE.equals(spendProfileStatus)) {
+            if (processState == LIVE || processState == UNSUCCESSFUL) {
+                return COMPLETE;
+            } else {
+                return actionRequiredIfProjectActive(processState);
+            }
+        } else {
+            return notStartedIfProjectActive(processState);
+        }
+    }
+
     private boolean documentsApproved(Project project, ProjectState state) {
         return COMPLETE.equals(getDocumentsStatus(project, state));
     }
@@ -644,8 +656,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean financeChecksApproved(PartnerOrganisation partnerOrg) {
-        return asList(EligibilityState.APPROVED, EligibilityState.NOT_APPLICABLE).contains(eligibilityWorkflowHandler.getState(partnerOrg)) &&
-                asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg));
+        return eligibilityWorkflowHandler.getState(partnerOrg).isApprovedState() &&
+                viabilityWorkflowHandler.getState(partnerOrg).isApprovedState();
     }
 
     private ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {

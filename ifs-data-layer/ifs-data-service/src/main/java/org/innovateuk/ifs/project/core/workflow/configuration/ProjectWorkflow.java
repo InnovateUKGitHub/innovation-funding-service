@@ -116,12 +116,12 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
         transitions
                 .withExternal()
                     .source(SETUP)
-                    .event(MARKED_AS_UNSUCCESSFUL)
+                    .event(MARK_AS_UNSUCCESSFUL)
                     .target(UNSUCCESSFUL)
                 .and()
                 .withExternal()
                     .source(SETUP)
-                    .event(MARKED_AS_SUCCESSFUL)
+                    .event(MARK_AS_SUCCESSFUL)
                     .target(LIVE);
     }
 }

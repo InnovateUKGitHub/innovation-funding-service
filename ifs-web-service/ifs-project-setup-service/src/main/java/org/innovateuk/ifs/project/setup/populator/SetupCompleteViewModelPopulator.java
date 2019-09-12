@@ -35,8 +35,7 @@ public class SetupCompleteViewModelPopulator {
         if (SETUP.equals(project.getProjectState())) {
             return project.getSpendProfileSubmittedDate();
         } else {
-            // TODO change to use internal user action submitted date
-            return ZonedDateTime.now();
+            return project.getLastModifiedDate();
         }
     }
 
