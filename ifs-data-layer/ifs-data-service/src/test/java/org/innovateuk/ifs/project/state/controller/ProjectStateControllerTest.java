@@ -111,7 +111,7 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
         long projectId = 456L;
         when(projectStateService.markAsSuccessful(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/resume", projectId))
+        mockMvc.perform(post("/project/{projectId}/successful", projectId))
                 .andExpect(status().isOk());
 
         verify(projectStateService).markAsSuccessful(projectId);
@@ -122,7 +122,7 @@ public class ProjectStateControllerTest extends BaseControllerMockMVCTest<Projec
         long projectId = 456L;
         when(projectStateService.markAsUnsuccessful(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/resume", projectId))
+        mockMvc.perform(post("/project/{projectId}/unsuccessful", projectId))
                 .andExpect(status().isOk());
 
         verify(projectStateService).markAsUnsuccessful(projectId);
