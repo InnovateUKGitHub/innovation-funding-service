@@ -63,9 +63,11 @@
                 <th:block th:if="${model.isAcademic()}">
                     your project finances.
                 </th:block>
+                <th:block th:unless="${model.isLoanCompetition}">
                 You can also view the <a
                     th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                     class="govuk-link">project finance overview</a>.
+                </th:block>
             </p>
         </th:block>
 
