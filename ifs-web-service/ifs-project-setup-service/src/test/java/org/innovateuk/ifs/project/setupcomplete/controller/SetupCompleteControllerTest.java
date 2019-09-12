@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.project.setup.controller;
+package org.innovateuk.ifs.project.setupcomplete.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.setup.controller.SetupCompleteController;
-import org.innovateuk.ifs.project.setup.populator.SetupCompleteViewModelPopulator;
-import org.innovateuk.ifs.project.setup.viewmodel.SetupCompleteViewModel;
+import org.innovateuk.ifs.project.setupcomplete.SetupCompleteController;
+import org.innovateuk.ifs.project.setupcomplete.populator.SetupCompleteViewModelPopulator;
+import org.innovateuk.ifs.project.setupcomplete.viewmodel.SetupCompleteViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 

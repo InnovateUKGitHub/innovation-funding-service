@@ -1,10 +1,12 @@
-package org.innovateuk.ifs.project.setup.viewmodel;
+package org.innovateuk.ifs.project.setupcomplete.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.ZonedDateTime;
+
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 
 public class SetupCompleteViewModel {
 
@@ -46,5 +48,18 @@ public class SetupCompleteViewModel {
 
     public ProjectState getProjectState() {
         return projectState;
+    }
+
+    /* view model logic. */
+    public boolean isInSetup() {
+        return this.projectState.equals(SETUP) || this.projectState.equals(ON_HOLD);
+    }
+
+    public boolean isUnsuccessful() {
+        return this.projectState.equals(UNSUCCESSFUL);
+    }
+
+    public boolean isSuccessful() {
+        return this.projectState.equals(LIVE);
     }
 }

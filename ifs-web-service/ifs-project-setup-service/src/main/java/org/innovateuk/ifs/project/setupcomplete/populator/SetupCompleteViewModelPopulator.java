@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.project.setup.populator;
+package org.innovateuk.ifs.project.setupcomplete.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.setup.viewmodel.SetupCompleteViewModel;
+import org.innovateuk.ifs.project.setupcomplete.viewmodel.SetupCompleteViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ public class SetupCompleteViewModelPopulator {
         if (SETUP.equals(project.getProjectState())) {
             return project.getSpendProfileSubmittedDate();
         } else {
-            return project.getLastModifiedDate();
+            return project.getProcessLastModifiedDate();
         }
     }
 

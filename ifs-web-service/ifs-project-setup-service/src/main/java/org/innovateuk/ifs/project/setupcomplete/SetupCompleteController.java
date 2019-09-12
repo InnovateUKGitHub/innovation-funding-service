@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.project.setup.controller;
+package org.innovateuk.ifs.project.setupcomplete;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.project.setup.populator.SetupCompleteViewModelPopulator;
+import org.innovateuk.ifs.project.setupcomplete.populator.SetupCompleteViewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
