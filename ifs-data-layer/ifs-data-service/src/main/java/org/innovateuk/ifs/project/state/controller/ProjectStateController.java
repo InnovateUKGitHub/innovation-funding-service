@@ -45,4 +45,14 @@ public class ProjectStateController {
     public RestResult<Void> resumeProject(@PathVariable("projectId") final long projectId) {
         return projectStateService.resumeProject(projectId).toPostWithBodyResponse();
     }
+
+    @PostMapping("/{projectId}/successful")
+    public RestResult<Void> markAsSuccessful(@PathVariable("projectId") final long projectId) {
+        return projectStateService.markAsSuccessful(projectId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/{projectId}/unsuccessful")
+    public RestResult<Void> markAsUnsuccessful(@PathVariable("projectId") final long projectId) {
+        return projectStateService.markAsUnsuccessful(projectId).toPostWithBodyResponse();
+    }
 }

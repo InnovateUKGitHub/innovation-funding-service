@@ -12,6 +12,10 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6369 Loans - Remove Financial year table from Spend Profile
 ...
 ...             IFS-6292 Loans - Finance Checks - Remove 'Approved' and link to viability checks
+...
+...             IFS-6285 Loans - Remove Bank Details - External Journey - Project Setup
+...
+...             IFS-6307 Loans - Remove Bank Details - Internal Journey - Project Setup
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -54,19 +58,20 @@ Loan application submission
     [Documentation]  IFS-6237  IFS-6238
     Given the user submits the loan application
     And the user should see the element            jQuery = h2:contains("Part A: Innovation Funding Service application")
-    When the user clicks the button/link           link = startup high growth index survey
+    #When the user clicks the button/link           link = startup high growth index survey
     #TODO
     #the user should be on the right page.  Update once we have this link
-    And the user closes the last opened tab
+    #And the user closes the last opened tab
     When the user clicks the button/link            link = View part A
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  To finish your application, you must complete part B
 
 Applicant complete the project setup details
-    [Documentation]  IFS-6369
+    [Documentation]  IFS-6369  IFS-6285
     Given the user completes the project details
     And the user completes the project team details
     And the user submits the project document
+    Then the user should not see the element    jQuery = h2:contains("Bank details")
 
 Funding sought validations
     [Documentation]  IFS-6293
@@ -83,10 +88,12 @@ Found sought changes
     And the internal user should see the funding changes
 
 Project finance completes all project setup steps
-    [Documentation]  IFS-6369  IFS-6292
+    [Documentation]  IFS-6369  IFS-6292  IFS-6307
     Given internal user approve project documents
     And internal user assign MO to loan project
     And internal user generate SP
+    When the user navigates to the page         ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    Then the user should not see the element    jQuery = th:contains("Bank details")
 
 Applicant checks the generated SP
     [Documentation]  IFS-6369

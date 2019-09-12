@@ -50,13 +50,13 @@ public class TeamStatusController {
     @GetMapping
     public String viewProjectTeamStatus(Model model, @PathVariable("projectId") final Long projectId) {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
-        populateProjectTeamStatuses(teamStatus, projectId);
+        CompetitionResource competitionResource = populateProjectTeamStatuses(teamStatus, projectId);
 
-        model.addAttribute("model", new ProjectConsortiumStatusViewModel(projectId, teamStatus));
+        model.addAttribute("model", new ProjectConsortiumStatusViewModel(projectId, teamStatus, competitionResource.getProjectSetupStages()));
         return "project/consortium-status";
     }
 
-    private void populateProjectTeamStatuses(ProjectTeamStatusResource consortiumStatus, final Long projectId) {
+    private CompetitionResource populateProjectTeamStatuses(ProjectTeamStatusResource consortiumStatus, final Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
@@ -67,6 +67,7 @@ public class TeamStatusController {
         setOtherPartnersProjectDetailsTeamStatus(consortiumStatus, partnerProjectLocationRequired);
         setLeadPartnerProjectTeamStatus(consortiumStatus);
         setLeadPartnerMonitoringOfficerStatus(consortiumStatus, partnerProjectLocationRequired);
+        return competition;
     }
 
     private void setLeadPartnerProjectTeamStatus(ProjectTeamStatusResource consortiumStatus) {

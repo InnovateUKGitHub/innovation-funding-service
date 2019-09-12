@@ -15,6 +15,8 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -26,7 +28,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
@@ -162,6 +166,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Enumerated(EnumType.STRING)
     private Set<FinanceRowType> financeRowTypes = new HashSet<>();
 
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectStages> projectStages = new ArrayList<>();
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionTermsFileEntryId", referencedColumnName = "id")
     private FileEntry competitionTerms;
@@ -225,6 +232,16 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
         this.financeRowTypes = financeRowTypes;
+    }
+
+    public List<ProjectStages> getProjectStages() {
+        return projectStages.stream()
+                .sorted(comparing(stage -> stage.getProjectSetupStage().getPriority()))
+                .collect(toList());
+    }
+
+    public void setProjectStages(List<ProjectStages> projectStages) {
+        this.projectStages = projectStages;
     }
 
     public List<Section> getSections() {
@@ -708,6 +725,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
     }
 
+    public boolean isLoan() {
+        return FundingType.LOAN.equals(fundingType);
+    }
+
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
@@ -861,5 +882,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public Optional<FileEntry> getCompetitionTerms() {
         return ofNullable(competitionTerms);
+    }
+
+    public List<ProjectSetupStage> getProjectSetupStages() {
+        return projectStages.stream().map(ProjectStages::getProjectSetupStage).collect(toList());
     }
 }
