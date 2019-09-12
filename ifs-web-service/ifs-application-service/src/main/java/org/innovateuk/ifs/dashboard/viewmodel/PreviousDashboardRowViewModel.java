@@ -78,6 +78,9 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     public boolean isLiveOrCompletedOffline() {
         return hasProject() && (projectState.isLive() || projectState.isCompletedOffline());
     }
+    public boolean isUnsuccessful() {
+        return hasProject() && projectState.isUnsuccessful();
+    }
 
     @Override
     public String getLinkUrl() {

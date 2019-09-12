@@ -49,7 +49,7 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
         return ProcessState.fromState(ProjectState.values(), state);
     }
 
-    public static final Set<ProjectState> COMPLETED_STATES = EnumSet.of(LIVE, WITHDRAWN, COMPLETED_OFFLINE);
+    public static final Set<ProjectState> COMPLETED_STATES = EnumSet.of(LIVE, WITHDRAWN, COMPLETED_OFFLINE, UNSUCCESSFUL);
 
     @Override
     public long getId() {
@@ -82,6 +82,10 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
 
     public boolean isLive() {
         return this == LIVE;
+    }
+
+    public boolean isUnsuccessful() {
+        return this == UNSUCCESSFUL;
     }
 
     public boolean isOnHold() {
