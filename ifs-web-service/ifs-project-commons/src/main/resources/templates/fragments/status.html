@@ -40,7 +40,7 @@
                                 <th:block th:if="${row.projectState.live}">
                                     <strong class="ifs-project-status-live">Successful</strong>
                                 </th:block>
-                                <th:block th:if="${row.projectState.unsuccessful}">
+                                <th:block th:if="${row.projectState.unsuccessful && model.isLoan}">
                                     <strong class="ifs-project-status-unsuccessful">Unsuccessful</strong>
                                 </th:block>
                             </div>
