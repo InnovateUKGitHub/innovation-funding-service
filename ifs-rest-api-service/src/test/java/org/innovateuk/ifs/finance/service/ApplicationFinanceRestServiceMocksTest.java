@@ -57,16 +57,6 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void test_addApplicationFinance_forApplicationIdAndOrganisationId() {
-        ApplicationFinanceResource returnedResponse = new ApplicationFinanceResource();
-
-        setupPostWithRestResultExpectations(applicationFinanceRestURL + "/add/123/456", ApplicationFinanceResource.class, null, returnedResponse, OK);
-
-        ApplicationFinanceResource finance = service.addApplicationFinanceForOrganisation(123L, 456L).getSuccess();
-        Assert.assertEquals(returnedResponse, finance);
-    }
-
-    @Test
     public void test_getFileDetails() {
 
         FileEntryResource returnedResponse = new FileEntryResource();
@@ -75,13 +65,6 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
         FileEntryResource fileDetails = service.getFileDetails(123L).getSuccess();
         Assert.assertEquals(returnedResponse, fileDetails);
-    }
-
-    @Test
-    public void test_addApplicationFinance_nullSafe() {
-        assertNull(service.addApplicationFinanceForOrganisation(123L, null));
-        assertNull(service.addApplicationFinanceForOrganisation(null, 456L));
-        assertNull(service.addApplicationFinanceForOrganisation(null, null));
     }
 
     @Test

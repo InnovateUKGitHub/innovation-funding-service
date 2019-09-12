@@ -72,7 +72,7 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted during the request for a Horizon 2020 grant transfer.</p>
-                        <p class="govuk-body">The applicant will be able to see all saved changes. You must discuss all changes with them by raising queries through IFS.</p>
+                        <p class="govuk-body">The applicant will be able to see all saved changes. You must discuss all changes with them by raising queries through the Innovation Funding Service.</p>
                         <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">Review all changes to project finances</a></p>
                     </th:block>
 
@@ -86,7 +86,7 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
-                        <p class="govuk-body">All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
+                        <p class="govuk-body">All potential changes must be discussed with the lead applicant. You can do this by raising queries through the Innovation Funding Service.</p>
                         <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">Review all changes to project finances</a></p>
                     </th:block>
 
@@ -134,7 +134,7 @@
         <th:block th:if="${summaryModel.usingJesFinances}">
             <h2 class="govuk-heading-m">Je-S Form overview</h2>
             <p class="govuk-body">These finances were initially submitted at the application stage, from the details in the Je-S form.</p>
-            <p class="govuk-body">If you need to make corrections, discuss this with the applicant. You can do this by raising queries through IFS. Saved changes will be visible to the applicant.</p>
+            <p class="govuk-body">If you need to make corrections, discuss this with the applicant. You can do this by raising queries through the Innovation Funding Service. Saved changes will be visible to the applicant.</p>
             <div class="upload-section">
                 <h3 class="govuk-heading-s govuk-!-margin-0">Download Je-S form:</h3>
                 <p class="uploaded-file govuk-body">

@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.project.consortiumoverview.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ProjectConsortiumStatusViewModel {
     private Long projectId;
@@ -64,15 +65,24 @@ public class ProjectConsortiumStatusViewModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
+
         ProjectConsortiumStatusViewModel that = (ProjectConsortiumStatusViewModel) o;
-        return Objects.equals(projectId, that.projectId) &&
-                Objects.equals(projectTeamStatusResource, that.projectTeamStatusResource) &&
-                Objects.equals(stages, that.stages);
+
+        return new EqualsBuilder()
+                .append(projectId, that.projectId)
+                .append(projectTeamStatusResource, that.projectTeamStatusResource)
+                .append(stages, that.stages)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(projectId, projectTeamStatusResource, stages);
+        return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .append(projectTeamStatusResource)
+                .append(stages)
+                .toHashCode();
     }
 }

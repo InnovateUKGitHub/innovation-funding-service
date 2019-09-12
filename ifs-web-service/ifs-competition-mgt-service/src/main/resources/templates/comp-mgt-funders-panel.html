@@ -154,8 +154,8 @@
                         <td class="govuk-table__cell" th:text="${result.name}"></td>
                         <td class="govuk-table__cell" th:text="${result.lead}"></td>
                         <td class="govuk-table__cell" th:text="${result.numberOfPartners}"></td>
-                        <td class="govuk-table__cell" th:text="${result.grantRequested}"></td>
-                        <td class="govuk-table__cell" th:text="${result.totalProjectCost}"></td>
+                        <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.grantRequested, 0, 'DEFAULT')}"></td>
+                        <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.totalProjectCost, 0, 'DEFAULT')}"></td>
                         <td class="govuk-table__cell" th:text="${result.duration}"></td>
                         <td class="govuk-table__cell" th:text="${result.fundingDecision?.name}"/>
                     </tr>
