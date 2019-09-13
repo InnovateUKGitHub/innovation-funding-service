@@ -48,7 +48,7 @@ public abstract class BaseCompetitionStatusTableViewModel {
         return canExportBankDetails;
     }
 
-    public boolean isLoan() {
+    public boolean isIsLoan() {
         return isLoan;
     }
 }
