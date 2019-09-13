@@ -37,10 +37,10 @@
                                 <th:block th:if="${row.projectState.onHold}">
                                     <strong class="ifs-project-status-on-hold">On hold</strong>
                                 </th:block>
-                                <th:block th:if="${row.projectState.live}">
-                                    <strong class="ifs-project-status-live">Successful</strong>
+                                <th:block th:if="${row.projectState.live && model.isLoan}">
+                                    <strong class="ifs-project-status-successful">Successful</strong>
                                 </th:block>
-                                <th:block th:if="${row.projectState.unsuccessful && model.isLoan}">
+                                <th:block th:if="${row.projectState.unsuccessful}">
                                     <strong class="ifs-project-status-unsuccessful">Unsuccessful</strong>
                                 </th:block>
                             </div>
