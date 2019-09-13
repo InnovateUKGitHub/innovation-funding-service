@@ -5,11 +5,11 @@ import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.core.workflow.configuration.actions.BaseProjectAction;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
-import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ProjectWorkflowHandlerIntegrationTest extends
-        BaseWorkflowHandlerIntegrationTest<ProjectWorkflowHandler, ProjectProcessRepository, TestableTransitionWorkflowAction> {
+        BaseWorkflowHandlerIntegrationTest<ProjectWorkflowHandler, ProjectProcessRepository, BaseProjectAction> {
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
@@ -169,7 +169,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
 
     @Override
     protected Class getBaseActionType() {
-        return TestableTransitionWorkflowAction.class;
+        return BaseProjectAction.class;
     }
 
     @Override

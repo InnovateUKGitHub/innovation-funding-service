@@ -126,6 +126,7 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
                 .withExternal()
                     .source(SETUP)
                     .event(MARK_AS_SUCCESSFUL)
+                    .target(LIVE)
                     .action(projectLiveAction);
     }
 }
