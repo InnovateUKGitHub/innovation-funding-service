@@ -241,14 +241,20 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     private void markSetupApplicationQuestionsAsComplete(CompetitionData data) {
         List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccess();
-
-        SectionResource applicationSection = competitionSections.stream().filter(section -> section.getName().equals("Application questions")).findFirst().get();
-        SectionResource projectDetails = competitionSections.stream().filter(section -> section.getName().equals("Project details")).findFirst().get();
-
         List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccess();
+
+        // no application section or project details for h2020
+        competitionSections.stream().filter(section -> section.getName().equals("Application questions"))
+                .findFirst()
+                .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
+        competitionSections.stream().filter(section -> section.getName().equals("Project details"))
+                .findFirst()
+                .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
+    }
+
+    private void markSectionQuestionsSetupComplete(List<QuestionResource> questionResources, SectionResource section, CompetitionData data) {
         questionResources.stream()
-                .filter(question -> question.getSection().equals(applicationSection.getId())
-                        || question.getSection().equals(projectDetails.getId()))
+                .filter(question -> question.getSection().equals(section.getId()))
                 .forEach(question -> questionSetupService.markQuestionInSetupAsComplete(question.getId(), data.getCompetition().getId(), CompetitionSetupSection.APPLICATION_FORM));
 
         competitionSetupService.markAsSetup(data.getCompetition().getId());

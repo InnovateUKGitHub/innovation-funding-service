@@ -101,9 +101,9 @@ public class GrantAgreementController {
                                        @PathVariable long questionId,
                                        UserResource user) {
 
-        Supplier<String> failureAndSuccesView = () -> viewGrantAgreement(form, bindingResult, model, applicationId, questionId, user);
+        Supplier<String> failureAndSuccessView = () -> viewGrantAgreement(form, bindingResult, model, applicationId, questionId, user);
         MultipartFile file = form.getGrantAgreement();
-        return validationHandler.performFileUpload("grantAgreement", failureAndSuccesView, () -> euGrantTransferRestService
+        return validationHandler.performFileUpload("grantAgreement", failureAndSuccessView, () -> euGrantTransferRestService
                 .uploadGrantAgreement(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
     }
 
