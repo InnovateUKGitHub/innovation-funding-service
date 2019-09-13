@@ -68,7 +68,7 @@ public class ProjectSetupCompleteControllerTest extends BaseControllerMockMVCTes
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/setup-complete", competitionId, projectId)
                 .param("successful", "true")
                 .param("successfulConfirmation", "true"))
-                .andExpect(redirectedUrl("/competition/1/status"));
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/setup-complete", competitionId, projectId)));
 
         verify(projectStateRestService).markAsSuccessful(projectId);
     }
