@@ -13,7 +13,6 @@ modules:
       server_url : "${server_url}"
       authorisation_url : "${authorisation_url}"
       competitions_csv : "${data_path}competition_data.csv"
-      invites_csv : "${data_path}invite_data.csv"
       assessor_csv : "${data_path}assessor_data.csv"
       front_door_competitions_csv : "${data_path}front-door-competitions.csv"
       summariser.name : summary
@@ -25,15 +24,6 @@ modules:
     test: High load test
 
 execution:
-  - scenario: invite_users
-    iterations: 1
-    locations:
-      eu-west-2: 1
-      europe-west2-a: 1
-    concurrency: ${invite_users}
-    files:
-      - jmeter/Representative/invite_data.csv
-
   - scenario: applicant_users
     iterations: 1
     locations:
@@ -41,14 +31,12 @@ execution:
       europe-west2-a: 1
     concurrency: ${applicant_users}
 
-  - scenario: registration_users
+  - scenario: h2020_users
     iterations: 1
     locations:
       eu-west-2: 1
       europe-west2-a: 1
-    concurrency: ${registration_users}
-    files:
-      - jmeter/Representative/competition_data.csv
+    concurrency: ${applicant_users}
 
   - scenario: front_door_users
     iterations: 1
@@ -76,12 +64,10 @@ execution:
 #      - jmeter/Representative/assessor_data.csv
 
 scenarios:
-  invite_users:
-    script: taurus/invite.jmx
   applicant_users:
     script: taurus/application.jmx
-  registration_users:
-    script: taurus/registration.jmx
+  h2020_users:
+    script: taurus/h2020.jmx
   front_door_users:
     script: taurus/front_door.jmx
   competition_management:
