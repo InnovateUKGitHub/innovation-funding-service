@@ -13,7 +13,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -63,9 +62,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
-
-    @Autowired
-    private GrantProcessService grantProcessService;
 
     @Autowired
     private GrantOfferLetterWorkflowHandler golWorkflowHandler;
@@ -350,8 +346,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 if (golWorkflowHandler.isReadyToApprove(project)) {
                     if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType()) && !isOnHold(project)) {
                         return approveGOL(project)
-                                .andOnSuccess(() -> moveProjectToLiveState(project))
-                                .andOnSuccess(() -> createGrantProcess(project));
+                                .andOnSuccess(() -> moveProjectToLiveState(project));
                     } else if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return rejectGOL(project, grantOfferLetterApprovalResource.getRejectionReason());
                     }
@@ -383,11 +378,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
         return notifyProjectIsLive(project.getId());
-    }
-
-    private ServiceResult<Void> createGrantProcess(Project project) {
-        grantProcessService.createGrantProcess(project.getApplication().getId());
-        return serviceSuccess();
     }
 
     private ServiceResult<Void> approveGOL(Project project) {

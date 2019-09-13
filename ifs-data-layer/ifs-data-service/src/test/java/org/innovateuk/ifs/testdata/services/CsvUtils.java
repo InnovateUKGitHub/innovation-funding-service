@@ -175,7 +175,7 @@ public class CsvUtils {
 
             projectState = ProjectState.valueOf(line.get(i++));
             projectDocumentsUploaded = nullableBoolean(line.get(i++));
-            generateSpendProfile = nullableBoolean(line.get(i++)) && organisationsWithApprovedFinanceChecks && bankDetailsApproved;
+            generateSpendProfile = nullableBoolean(line.get(i++)) && organisationsWithApprovedFinanceChecks;
             uploadSpendProfile = nullableBoolean(line.get(i++)) && generateSpendProfile;
             approveSpendProfile = nullableBoolean(line.get(i++)) && uploadSpendProfile && generateSpendProfile;
             publishGrantOffLetter = nullableBoolean(line.get(i++)) && approveSpendProfile;
