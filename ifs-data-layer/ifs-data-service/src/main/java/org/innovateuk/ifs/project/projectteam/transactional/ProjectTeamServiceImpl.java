@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectteam.transactional;
 
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
@@ -46,7 +47,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
@@ -122,7 +122,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
         if(!invite.getTarget().equals(project)) {
             return serviceFailure(PROJECT_INVITE_NOT_FOR_CORRECT_PROJECT);
         }
-        if(invite.getStatus().equals(OPENED)) {
+        if(!invite.getStatus().equals(InviteStatus.SENT)) {
             return serviceFailure(PROJECT_INVITE_ALREADY_OPENED);
         }
         return serviceSuccess();
