@@ -141,8 +141,6 @@ public class FinanceChecksViabilityController {
         Long applicationId = project.getApplication();
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        boolean isLoanCompetition = competition.isLoan();
 
         if (viability.getViability().isNotApplicable()) {
             throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));
@@ -201,8 +199,7 @@ public class FinanceChecksViabilityController {
                 organisationSizeDescription,
                 applicationId,
                 project.getName(),
-                project.getProjectState().isActive(),
-                isLoanCompetition);
+                project.getProjectState().isActive());
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
