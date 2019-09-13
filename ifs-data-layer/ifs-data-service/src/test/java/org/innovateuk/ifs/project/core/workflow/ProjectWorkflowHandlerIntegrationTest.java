@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.project.core.workflow;
 
+import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.core.workflow.configuration.actions.BaseProjectAction;
+import org.innovateuk.ifs.project.core.workflow.configuration.actions.ProjectLiveAction;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;
@@ -19,18 +21,21 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class ProjectWorkflowHandlerIntegrationTest extends
         BaseWorkflowHandlerIntegrationTest<ProjectWorkflowHandler, ProjectProcessRepository, BaseProjectAction> {
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
+    @Autowired
+    private ProjectLiveAction projectLiveAction;
     private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Override
@@ -63,10 +68,14 @@ public class ProjectWorkflowHandlerIntegrationTest extends
     @Test
     public void grantOfferLetterApproved() {
 
+        GrantProcessService grantProcessService = mock(GrantProcessService.class);
+        setField(projectLiveAction, "grantProcessService", grantProcessService);
+
         callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> projectWorkflowHandler.grantOfferLetterApproved(project, projectUser)),
 
                 // current State, destination State and expected Event to be fired
                 ProjectState.SETUP, ProjectState.LIVE, ProjectEvent.GOL_APPROVED);
+        verify(grantProcessService).createGrantProcess(anyLong());
     }
 
     @Test
@@ -122,7 +131,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, ProjectState currentProjectState, ProjectState destinationProjectState, ProjectEvent expectedEventToBeFired) {
 
-        Project project = newProject().build();
+        Project project = newProject().withApplication(newApplication().build()).build();
         ProjectUser projectUser = newProjectUser().build();
 
         // Set the current state in the Project Process
