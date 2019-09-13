@@ -32,6 +32,7 @@ ${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_I
 ${loan_PS_Url}               ${loan_PS}/details
 ${loan_finance_checks}       ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
 ${eligibility_changes}       ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
+${spend_profile}             ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
 
 *** Test Cases ***
 Loan application shows correct T&C's
@@ -100,6 +101,26 @@ Applicant checks the generated SP
     Given log in as a different user       &{lead_applicant_credentials}
     When the user navigates to the page    ${loan_PS}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
     Then the user should not see the financial year table on SP
+
+Internal user can mark project as successful
+    Given Log in as a different user    &{internal_finance_credentials}
+    the user navigates to the page           ${spend_profile}
+    the user selects the checkbox            approvedByLeadTechnologist
+    the user clicks the button/link          jQuery = button:contains("Approved")
+    the user clicks the button/link          jQuery = .modal-accept-profile button:contains("Approve")
+    the user navigates to the page           ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    then the user clicks the button/link     jQuery = tr:contains(${loan_PS_application1}) td:contains("Review") a
+    the user selects the radio button        successful  successful
+    the user selects the checkbox            successfulConfirmation
+    the user clicks the button/link          id = mark-as-successful
+
+Internal user can mark project as unsuccessful
+      the user navigates to the page           ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+      then the user clicks the button/link     jQuery = tr:contains(Loan Project 2) td:contains("Review") a
+      the user selects the radio button        successful  unsuccessful
+      the user selects the checkbox            unsuccessfulConfirmation
+      the user clicks the button/link          id = mark-as-unsuccessful
+
 
 *** Keywords ***
 Custom suite setup
