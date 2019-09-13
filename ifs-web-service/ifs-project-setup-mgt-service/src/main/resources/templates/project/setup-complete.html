@@ -26,8 +26,11 @@
                   th:with="pageTitle='Project setup complete',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.readonly}">
-            <div class="success-alert govuk-!-margin-bottom-4">
-                <p class="govuk-body">Project setup is complete.</p>
+            <div th:if="${model.state.live}" class="success-alert govuk-!-margin-bottom-4">
+                <p class="govuk-body">Project setup is complete and was successful.</p>
+            </div>
+            <div th:if="${model.state.unsuccessful}" class="success-alert govuk-!-margin-bottom-4">
+                <p class="govuk-body">Project setup is complete and was unsuccessful.</p>
             </div>
             <p class="govuk-body">Innovate UK and the organisation can view the project but can no longer make changes online. This cannot be undone.</p>
             <p class="govuk-body"><a th:href="@{/competition/{id}/status(id=${model.competitionId})}">Return to project setup</a></p>
