@@ -39,4 +39,8 @@ public class ProjectSetupCompleteViewModel {
     public ProjectState getState() {
         return state;
     }
+
+    public boolean isReadonly() {
+        return !state.isActive();
+    }
 }

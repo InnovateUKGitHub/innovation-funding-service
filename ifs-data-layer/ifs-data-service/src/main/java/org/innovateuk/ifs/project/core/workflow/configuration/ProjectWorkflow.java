@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.project.core.workflow.configuration;
 
+import org.innovateuk.ifs.project.core.workflow.configuration.actions.ProjectLiveAction;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -22,11 +24,12 @@ import static org.innovateuk.ifs.project.resource.ProjectState.*;
 @Configuration
 @EnableStateMachineFactory(name = "projectStateMachineFactory")
 public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState, ProjectEvent> {
+    @Autowired
+    private ProjectLiveAction projectLiveAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ProjectState, ProjectEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
-
     }
 
     @Override
@@ -101,7 +104,8 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
                 .withExternal()
                     .source(SETUP)
                     .event(GOL_APPROVED)
-                    .target(LIVE);
+                    .target(LIVE)
+                    .action(projectLiveAction);
     }
 
     private void configureCreated(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
@@ -122,6 +126,6 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
                 .withExternal()
                     .source(SETUP)
                     .event(MARK_AS_SUCCESSFUL)
-                    .target(LIVE);
+                    .action(projectLiveAction);
     }
 }
