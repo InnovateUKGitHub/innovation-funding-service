@@ -17,7 +17,6 @@ public enum ProjectEvent implements ProcessEvent {
     MARK_AS_UNSUCCESSFUL("mark-as-unsuccessful"),
     MARK_AS_SUCCESSFUL("mark-as-successful");
 
-
     String event;
 
     ProjectEvent(String event) {

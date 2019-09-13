@@ -46,7 +46,7 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
             @Mapping(target = "competition", source = "application.competition.id"),
             @Mapping(target = "competitionName", source = "application.competition.name"),
             @Mapping(target = "monitoringOfficerUser", source = "projectMonitoringOfficerOrElseNull.user.id"),
-            @Mapping(target = "lastModifiedDate", source = "projectProcess.lastModified")
+            @Mapping(target = "processLastModifiedDate", source = "projectProcess.lastModified")
     })
     @Override
     public abstract ProjectResource mapToResource(Project project);

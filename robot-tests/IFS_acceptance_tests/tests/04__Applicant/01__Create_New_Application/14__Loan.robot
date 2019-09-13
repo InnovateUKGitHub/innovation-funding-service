@@ -16,6 +16,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6285 Loans - Remove Bank Details - External Journey - Project Setup
 ...
 ...             IFS-6307 Loans - Remove Bank Details - Internal Journey - Project Setup
+...
+...             IFS-6363 Loans - Project Setup Complete - Internal Screen & Submission
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -32,6 +34,7 @@ ${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_I
 ${loan_PS_Url}               ${loan_PS}/details
 ${loan_finance_checks}       ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
 ${eligibility_changes}       ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
+${spend_profile}             ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
 
 *** Test Cases ***
 Loan application shows correct T&C's
@@ -100,6 +103,20 @@ Applicant checks the generated SP
     Given log in as a different user       &{lead_applicant_credentials}
     When the user navigates to the page    ${loan_PS}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
     Then the user should not see the financial year table on SP
+
+Internal user can mark project as successful
+    [Documentation]  IFS-6363
+    [Setup]  Log in as a different user    &{internal_finance_credentials}
+    Given the user approves the spend profile
+    When the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    And the user clicks the button/link     jQuery = tr:contains(${loan_PS_application1}) td:contains("Review") a
+    Then the user marks loan as complete    successful
+
+Internal user can mark project as unsuccessful
+    [Documentation]  IFS-6363
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    When the user clicks the button/link     jQuery = tr:contains("Loan Project 2") td:contains("Review") a
+    Then the user marks loan as complete     unsuccessful
 
 *** Keywords ***
 Custom suite setup
@@ -205,3 +222,16 @@ the user selects to change funding sought
 the internal user should see the funding changes
     the user navigates to the page    ${eligibility_changes}
     the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
+
+the user marks loan as complete
+    [Arguments]  ${status}
+    the user selects the radio button  successful   ${status}
+    the user selects the checkbox      ${status}Confirmation
+    the user clicks the button/link    id = mark-as-${status}
+    the user should see the element    jQuery = p:contains("Project setup is complete and was ${status}.")
+
+the user approves the spend profile
+    the user navigates to the page   ${spend_profile}
+    the user selects the checkbox    approvedByLeadTechnologist
+    the user clicks the button/link  jQuery = button:contains("Approved")
+    the user clicks the button/link  jQuery = .modal-accept-profile button:contains("Approve")
