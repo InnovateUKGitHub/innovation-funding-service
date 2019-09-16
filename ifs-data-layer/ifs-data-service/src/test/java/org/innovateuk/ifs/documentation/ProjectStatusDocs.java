@@ -26,10 +26,4 @@ public class ProjectStatusDocs {
             fieldWithPath("grantOfferLetterSent").description("Grant offer letter sent of the project status"),
             fieldWithPath("projectState").description("Project state"),
     };
-
-    public static final FieldDescriptor[] competitionProjectsStatusResourceFields = {
-            fieldWithPath("competitionNumber").description("Formatted competition number"),
-            fieldWithPath("competitionName").description("Competition name"),
-            fieldWithPath("projectStatusResources").description("Project status for each funded project in the requested competition")
-    };
 }

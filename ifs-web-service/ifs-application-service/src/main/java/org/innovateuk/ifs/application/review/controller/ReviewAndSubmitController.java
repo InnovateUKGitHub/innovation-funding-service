@@ -84,9 +84,6 @@ public class ReviewAndSubmitController {
                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm applicationSubmitForm,
                                     BindingResult bindingResult,
                                     RedirectAttributes redirectAttributes) {
-
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return format("redirect:/application/%d/confirm-submit", applicationId);
     }

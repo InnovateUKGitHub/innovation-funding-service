@@ -40,14 +40,6 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     }
 
     @Override
-    public RestResult<ApplicationFinanceResource> addApplicationFinanceForOrganisation(Long applicationId, Long organisationId) {
-        if(applicationId == null || organisationId == null) {
-            return null;
-        }
-        return postWithRestResult(applicationFinanceRestURL + "/add/" + applicationId + "/" + organisationId, null, ApplicationFinanceResource.class);
-    }
-
-    @Override
     public RestResult<ApplicationFinanceResource> update(Long applicationFinanceId, ApplicationFinanceResource applicationFinance){
         return postWithRestResult(applicationFinanceRestURL + "/update/"+ applicationFinanceId, applicationFinance, ApplicationFinanceResource.class);
     }

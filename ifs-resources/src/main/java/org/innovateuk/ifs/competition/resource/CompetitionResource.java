@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -26,18 +27,20 @@ import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 public class CompetitionResource implements ApplicationConfiguration {
 
-    public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+    public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final String H2020_TYPE_NAME = "Horizon 2020";
     public static final String EXPRESSION_OF_INTEREST_TYPE_NAME = "Expression of interest";
 
     private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     private static final int CLOSING_SOON_AMOUNT = 3;
-    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
+    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM yyyy");
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
     private List<CompetitionDocumentResource> competitionDocuments = new ArrayList<>();
+    private List<ProjectSetupStage> projectSetupStages = new ArrayList<>();
+
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
@@ -190,6 +193,14 @@ public class CompetitionResource implements ApplicationConfiguration {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
+    }
+
+    public List<ProjectSetupStage> getProjectSetupStages() {
+        return projectSetupStages;
+    }
+
+    public void setProjectSetupStages(List<ProjectSetupStage> projectSetupStages) {
+        this.projectSetupStages = projectSetupStages;
     }
 
     public Set<FinanceRowType> getFinanceRowTypes() {
