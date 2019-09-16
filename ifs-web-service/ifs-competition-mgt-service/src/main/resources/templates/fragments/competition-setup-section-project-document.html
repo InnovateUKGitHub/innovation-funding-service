@@ -28,7 +28,7 @@
                     </th:block>
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.competitionDocuments}"
-                             data-target="documents-warning"
+                             data-target="documents-warning" data-target-inverted="true"
                              data-target-clear-validation="true" data-target-clear-form="true">
                             <input th:value="${document.id}"
                                     type="checkbox"
@@ -52,7 +52,6 @@
                     <a th:href="@{/competition/setup/{competitionId}/section/project-document/add(competitionId=${model.general.competition.id})}">Add document type</a>
                 </p>
             </th:form>
-
 
             <div class="govuk-warning-text" id="documents-warning">
                 <span class="govuk-warning-text__icon" aria-hidden="false">!</span>
