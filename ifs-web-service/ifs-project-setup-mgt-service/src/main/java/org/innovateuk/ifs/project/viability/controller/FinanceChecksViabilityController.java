@@ -4,8 +4,6 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -59,9 +57,6 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private ProjectFinanceService financeService;
-
-    @Autowired
-    private CompetitionRestService competitionRestService;
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
