@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.survey.*;
 import org.innovateuk.ifs.survey.form.FeedbackForm;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +17,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.survey.SurveyType.getSurveyTypeFromString;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 /**
@@ -36,10 +36,12 @@ public class SurveyController {
     @GetMapping("/{competitionId}/feedback")
     public String viewFeedback(@ModelAttribute("form") FeedbackForm feedbackForm,
                                BindingResult bindingResult,
+                               @RequestParam(value = "type", defaultValue = "APPLICATION_SUBMISSION") String surveyType,
                                @PathVariable("competitionId") long competitionId,
                                Model model) {
 
         model.addAttribute("competitionId", competitionId);
+        model.addAttribute("surveyType", surveyType);
 
         return "survey/survey";
     }
@@ -50,13 +52,13 @@ public class SurveyController {
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  @PathVariable("competitionId") long competitionId,
-                                 UserResource user,
+                                 @RequestParam(value = "type", defaultValue = "APPLICATION_SUBMISSION") String surveyType,
                                  Model model) {
 
-        Supplier<String> failureView = () -> viewFeedback(feedbackForm, bindingResult, competitionId, model);
+        Supplier<String> failureView = () -> viewFeedback(feedbackForm, bindingResult, surveyType, competitionId, model);
         Supplier<String> successView = () -> navigationUtils.getRedirectToLandingPageUrl(request);
 
-        SurveyResource surveyResource = getSurveyResource(feedbackForm, competitionId);
+        SurveyResource surveyResource = getSurveyResource(feedbackForm, competitionId, surveyType);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             RestResult<Void> sendResult = surveyRestService.save(surveyResource);
@@ -70,15 +72,20 @@ public class SurveyController {
         });
     }
 
-    private SurveyResource getSurveyResource(FeedbackForm feedbackForm, long competitionId) {
+    private SurveyResource getSurveyResource(FeedbackForm feedbackForm, long competitionId, String surveyType) {
 
         Satisfaction satisfaction = null;
+
+        SurveyType.valueOf(surveyType);
+
+
 
         if (feedbackForm.getSatisfaction() != null){
             satisfaction = Satisfaction.getById(Long.valueOf(feedbackForm.getSatisfaction()));
         }
 
-        SurveyResource surveyResource = new SurveyResource(SurveyType.APPLICATION_SUBMISSION,
+        SurveyResource surveyResource = new SurveyResource(
+                getSurveyTypeFromString(surveyType),
                 SurveyTargetType.COMPETITION,
                 competitionId,
                 satisfaction,
