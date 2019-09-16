@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="content(projectState)" xmlns:th="http://www.w3.org/1999/html">
-    <th:block th:if="${projectState.equals(T(org.innovateuk.ifs.project.resource.ProjectState).SETUP)}">
+<th:block th:fragment="content" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:if="${model.isInSetup()}">
         <div class="govuk-panel style1 govuk-!-margin-bottom-9">
             <h2 class="govuk-panel__title">Your project will be reviewed by Innovate UK</h2>
             <div class="govuk-panel__body govuk-!-font-size-19">
@@ -31,7 +31,7 @@
 
     </th:block>
 
-    <th:block th:if="${projectState.equals(T(org.innovateuk.ifs.project.resource.ProjectState).LIVE)}">
+    <th:block th:if="${model.isSuccessful()}">
 
         <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
             <h2 class="govuk-panel__title">We have approved your loan application</h2>
@@ -54,7 +54,7 @@
 
     </th:block>
 
-    <th:block th:if="${projectState.equals(T(org.innovateuk.ifs.project.resource.ProjectState).UNSUCCESSFUL)}">
+    <th:block th:if="${model.isUnsuccessful()}">
 
         <div class="govuk-panel style2 govuk-!-margin-bottom-9">
             <h2>Your loan application has not been successful in this competition</h2>

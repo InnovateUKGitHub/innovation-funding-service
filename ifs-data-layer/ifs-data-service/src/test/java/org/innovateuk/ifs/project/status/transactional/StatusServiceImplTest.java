@@ -138,7 +138,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     private OrganisationRepository organisationRepositoryMock;
 
     @Mock
-
     private LoggedInUserSupplier loggedInUserSupplierMock;
 
     @Mock
@@ -1544,6 +1543,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withSpendProfileStatus(NOT_STARTED).
                 withDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
+                withProjectSetupCompleteStatus(NOT_REQUIRED).
                 withIsLeadPartner(true).
                 build();
 
@@ -1563,6 +1563,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withSpendProfileStatus(NOT_STARTED, NOT_STARTED).
                 withDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
+                withProjectSetupCompleteStatus(NOT_REQUIRED, NOT_REQUIRED).
                 build(2);
 
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().
@@ -1589,6 +1590,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withSpendProfileStatus(NOT_STARTED).
                 withDocumentsStatus(NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
+                withProjectSetupCompleteStatus(NOT_REQUIRED).
                 build(1);
 
         // try with filtering on a non-lead partner organisation
@@ -1633,6 +1635,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withSpendProfileStatus(NOT_STARTED).
                 withDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
+                withProjectSetupCompleteStatus(NOT_REQUIRED).
                 withIsLeadPartner(true).
                 build();
 

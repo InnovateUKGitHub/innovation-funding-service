@@ -34,7 +34,8 @@ public class ProjectDocs {
             fieldWithPath("projectDocuments").description("List of project documents for this project"),
             fieldWithPath("grantOfferLetterRejectionReason").description("Rejection reason when the Grant Offer Letter has been rejected"),
             fieldWithPath("spendProfileSubmittedDate").description("Flag which indicates if Spend Profile has been review and submitted by the Project Manager."),
-            fieldWithPath("projectState").description("The current state of the project in its workflow.")
+            fieldWithPath("projectState").description("The current state of the project in its workflow."),
+            fieldWithPath("processLastModifiedDate").description("The last date the project state was modified")
     };
 
     public static final FieldDescriptor[] projectStatusResourceFields = {
@@ -53,6 +54,7 @@ public class ProjectDocs {
             fieldWithPath("monitoringOfficerStatus").description("Status of the monitoring officer"),
             fieldWithPath("documentsStatus").description("Status of the project documents"),
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
+            fieldWithPath("projectSetupCompleteStatus").description("Status of the project setup complete section"),
             fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent"),
             fieldWithPath("projectState").description("State of the project")
     };

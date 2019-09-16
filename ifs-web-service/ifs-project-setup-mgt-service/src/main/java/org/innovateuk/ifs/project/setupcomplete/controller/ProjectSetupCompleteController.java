@@ -58,7 +58,7 @@ public class ProjectSetupCompleteController {
             } else {
                 validationHandler.addAnyErrors(projectStateRestService.markAsUnsuccessful(projectId));
             }
-            return validationHandler.failNowOrSucceedWith(failureView, () -> format("redirect:/competition/%d/status", competitionId));
+            return validationHandler.failNowOrSucceedWith(failureView, () -> format("redirect:/competition/%d/project/%d/setup-complete", competitionId, projectId));
         });
     }
 
