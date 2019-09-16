@@ -28,6 +28,7 @@ Resource        ../../10__Project_setup/PS_Common.robot
 ${loan_comp_PS}              Project setup loan comp
 ${loan_comp_PS_Id}           ${competition_ids["${loan_comp_PS}"]}
 ${loan_PS_application1}      Loan Project 1
+${loan_PS_application2}      Loan Project 2
 ${loan_PS_application_Id}    ${application_ids["${loan_PS_application1}"]}
 ${loan_PS_project_Id}        ${project_ids["${loan_PS_application1}"]}
 ${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_Id}
@@ -109,14 +110,14 @@ Internal user can mark project as successful
     [Setup]  Log in as a different user    &{internal_finance_credentials}
     Given the user approves the spend profile
     When the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    And the user clicks the button/link     jQuery = tr:contains(${loan_PS_application1}) td:contains("Review") a
-    Then the user marks loan as complete    successful
+    And the user clicks the button/link     jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
+    Then the user marks loan as complete    successful  ${loan_PS_application1}
 
 Internal user can mark project as unsuccessful
     [Documentation]  IFS-6363
     Given the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    When the user clicks the button/link     jQuery = tr:contains("Loan Project 2") td:contains("Review") a
-    Then the user marks loan as complete     unsuccessful
+    When the user clicks the button/link     jQuery = tr:contains("${loan_PS_application2}") td:contains("Review") a
+    Then the user marks loan as complete     unsuccessful  ${loan_PS_application2}
 
 *** Keywords ***
 Custom suite setup
@@ -224,11 +225,13 @@ the internal user should see the funding changes
     the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
 
 the user marks loan as complete
-    [Arguments]  ${status}
-    the user selects the radio button  successful   ${status}
-    the user selects the checkbox      ${status}Confirmation
-    the user clicks the button/link    id = mark-as-${status}
-    the user should see the element    jQuery = p:contains("Project setup is complete and was ${status}.")
+    [Arguments]  ${status}  ${appl_name}
+    the user selects the radio button     successful   ${status}
+    the user selects the checkbox         ${status}Confirmation
+    the user clicks the button/link       id = mark-as-${status}
+    the user should see the element       jQuery = p:contains("Project setup is complete and was ${status}.")
+    then the user clicks the button/link  link = Back to project setup
+    the user should see the element       jQuery = tr:contains("${appl_name}") .ifs-project-status-${status}
 
 the user approves the spend profile
     the user navigates to the page   ${spend_profile}
