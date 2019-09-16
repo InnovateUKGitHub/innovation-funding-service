@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.internal.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupCell;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
 import org.innovateuk.ifs.user.resource.UserResource;
