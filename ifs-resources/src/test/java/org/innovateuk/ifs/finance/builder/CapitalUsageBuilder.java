@@ -40,6 +40,10 @@ public class CapitalUsageBuilder extends BaseBuilder<CapitalUsage, CapitalUsageB
         return withArraySetFieldByReflection("utilisation", value);
     }
 
+    public CapitalUsageBuilder withTargetId(Long... value) {
+        return withArraySetFieldByReflection("targetId", value);
+    }
+
     public static CapitalUsageBuilder newCapitalUsage() {
         return new CapitalUsageBuilder(emptyList()).with(uniqueIds());
     }

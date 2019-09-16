@@ -234,5 +234,4 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
         assertTrue(result.isSuccess());
         verify(financeRowMetaValueRepositoryMock, times(0)).save(any(FinanceRowMetaValue.class));
     }
-
 }
