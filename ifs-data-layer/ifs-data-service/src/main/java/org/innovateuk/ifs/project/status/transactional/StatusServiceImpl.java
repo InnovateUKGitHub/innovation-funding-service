@@ -427,8 +427,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates getProjectSetupCompleteState(Project project, ProjectState processState) {
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
         ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
-        if (documentsApproved(project, processState)
-                && COMPLETE.equals(spendProfileStatus)) {
+        if (COMPLETE.equals(spendProfileStatus)) {
             if (processState == LIVE || processState == UNSUCCESSFUL) {
                 return COMPLETE;
             } else {

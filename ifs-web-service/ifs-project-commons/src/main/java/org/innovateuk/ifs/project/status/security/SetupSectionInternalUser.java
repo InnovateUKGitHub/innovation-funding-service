@@ -113,7 +113,6 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessProjectSetupComplete(UserResource user) {
         if (user.hasRole(PROJECT_FINANCE)
-            && documentsApproved()
             && projectSetupProgressChecker.isSpendProfileApproved()) {
             return ACCESSIBLE;
         }

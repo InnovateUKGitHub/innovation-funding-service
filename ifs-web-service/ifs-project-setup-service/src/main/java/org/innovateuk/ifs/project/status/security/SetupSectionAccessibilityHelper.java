@@ -306,7 +306,7 @@ public class SetupSectionAccessibilityHelper {
             return NOT_ACCESSIBLE;
         }
 
-        if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()) {
+        if (setupProgressChecker.isSpendProfileApproved()) {
             return ACCESSIBLE;
         }
 
