@@ -23,8 +23,6 @@
               th:insert="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})" />
     <th:block th:if="${model.hasGrantOfferLetter()}"
               th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
-    <th:block th:if="${model.hasProjectSetupComplete()}"
-              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
 </th:block>
 
 <th:block th:fragment="consortium-partner-status-indicator(status)">

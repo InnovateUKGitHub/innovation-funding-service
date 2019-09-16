@@ -84,12 +84,11 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
         return this == LIVE;
     }
 
-    public boolean isUnsuccessful() {
-        return this == UNSUCCESSFUL;
-    }
-
     public boolean isOnHold() {
         return this == ON_HOLD;
     }
 
+    public boolean isUnsuccessful() {
+        return this == UNSUCCESSFUL;
+    }
 }

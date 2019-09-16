@@ -23,7 +23,6 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates bankDetailsStatus;
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
-    private ProjectActivityStates projectSetupCompleteStatus;
 
     private ProjectActivityStates financeContactStatus = COMPLETE;
     private ProjectActivityStates partnerProjectLocationStatus;
@@ -54,7 +53,6 @@ public class ProjectPartnerStatusResource {
                                         ProjectActivityStates grantOfferLetterStatus,
                                         ProjectActivityStates financeContactStatus,
                                         ProjectActivityStates partnerProjectLocationStatus,
-                                        ProjectActivityStates projectSetupCompleteStatus,
                                         Boolean isGrantOfferLetterSent, Boolean isLead) {
         this.organisationId = organisationId;
         this.name = name;
@@ -70,7 +68,6 @@ public class ProjectPartnerStatusResource {
         this.financeContactStatus = financeContactStatus;
         this.partnerProjectLocationStatus = partnerProjectLocationStatus;
         this.isGrantOfferLetterSent = isGrantOfferLetterSent;
-        this.projectSetupCompleteStatus = projectSetupCompleteStatus;
         this.isLead = isLead;
     }
 
@@ -121,7 +118,6 @@ public class ProjectPartnerStatusResource {
     public ProjectActivityStates getGrantOfferLetterStatus() {
         return grantOfferLetterStatus;
     }
-
 
     public void setName(String name) {
         this.name = name;
@@ -199,14 +195,6 @@ public class ProjectPartnerStatusResource {
         isLead = lead;
     }
 
-    public ProjectActivityStates getProjectSetupCompleteStatus() {
-        return projectSetupCompleteStatus;
-    }
-
-    public void setProjectSetupCompleteStatus(ProjectActivityStates projectSetupCompleteStatus) {
-        this.projectSetupCompleteStatus = projectSetupCompleteStatus;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -229,7 +217,6 @@ public class ProjectPartnerStatusResource {
                 .append(isGrantOfferLetterSent, that.isGrantOfferLetterSent)
                 .append(financeContactStatus, that.financeContactStatus)
                 .append(partnerProjectLocationStatus, that.partnerProjectLocationStatus)
-                .append(projectSetupCompleteStatus, that.projectSetupCompleteStatus)
                 .isEquals();
     }
 
@@ -249,7 +236,6 @@ public class ProjectPartnerStatusResource {
                 .append(isGrantOfferLetterSent)
                 .append(financeContactStatus)
                 .append(partnerProjectLocationStatus)
-                .append(projectSetupCompleteStatus)
                 .toHashCode();
     }
 
@@ -269,7 +255,6 @@ public class ProjectPartnerStatusResource {
                 .append("isGrantOfferLetterSent", isGrantOfferLetterSent)
                 .append("financeContactStatus", financeContactStatus)
                 .append("partnerProjectLocationStatus", partnerProjectLocationStatus)
-                .append("projectSetupCompleteStatus", projectSetupCompleteStatus)
                 .toString();
     }
 }
