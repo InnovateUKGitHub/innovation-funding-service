@@ -74,6 +74,7 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markAsSuccessful(long projectId) {
         return getProject(projectId).andOnSuccess(
                 project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
@@ -83,6 +84,7 @@ public class ProjectStateServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markAsUnsuccessful(long projectId) {
         return getProject(projectId).andOnSuccess(
                 project -> getCurrentlyLoggedInUser().andOnSuccess(user ->
