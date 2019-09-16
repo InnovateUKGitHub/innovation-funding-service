@@ -6,8 +6,6 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.project.resource.ProjectState.*;
-
 public class SetupCompleteViewModel {
 
     private final long competitionId;
@@ -50,16 +48,4 @@ public class SetupCompleteViewModel {
         return projectState;
     }
 
-    /* view model logic. */
-    public boolean isInSetup() {
-        return this.projectState.equals(SETUP) || this.projectState.equals(ON_HOLD);
-    }
-
-    public boolean isUnsuccessful() {
-        return this.projectState.equals(UNSUCCESSFUL);
-    }
-
-    public boolean isSuccessful() {
-        return this.projectState.equals(LIVE);
-    }
 }

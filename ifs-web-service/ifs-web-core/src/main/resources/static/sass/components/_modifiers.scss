@@ -210,6 +210,10 @@ hr,
   }
 }
 
+.govuk-panel--grey {
+  background: govuk-colour("grey-3");
+}
+
 .govuk-link {
   &:focus {
     color: $govuk-text-colour;
