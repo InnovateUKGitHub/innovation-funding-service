@@ -20,7 +20,6 @@ public class ProjectPartnerStatusResourceDocs {
             fieldWithPath("monitoringOfficerStatus").description("Monitoring officer status of the project partner status"),
             fieldWithPath("documentsStatus").description("Other documents status of the project partner status"),
             fieldWithPath("grantOfferLetterStatus").description("Grant offer letter status of the project partner status"),
-            fieldWithPath("projectSetupCompleteStatus").description("Flag to indicate the state of project setup"),
             fieldWithPath("lead").description("Lead of the project partner status"),
             fieldWithPath("grantOfferLetterSent").description("Grant offer letter sent of the project partner status"),
     };

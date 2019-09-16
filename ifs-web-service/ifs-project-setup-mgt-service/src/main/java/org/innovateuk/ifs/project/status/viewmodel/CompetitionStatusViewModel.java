@@ -19,7 +19,7 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
                                       long pendingSpendProfilesCount,
                                       String applicationSearchString,
                                       List<InternalProjectSetupRow> rows) {
-        super(competition, rows, hasProjectFinanceRole);
+        super(competition.getId(), competition.getName(), competition.getProjectSetupStages(), rows, hasProjectFinanceRole);
         this.showTabs = hasProjectFinanceRole;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;

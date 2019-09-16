@@ -301,18 +301,6 @@ public class SetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
-    public SectionAccess canAccessSetupSection() {
-        if (setupProgressChecker.isOfflineOrWithdrawn()) {
-            return NOT_ACCESSIBLE;
-        }
-
-        if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()) {
-            return ACCESSIBLE;
-        }
-
-        return NOT_ACCESSIBLE;
-    }
-
     private boolean documentsApproved() {
         return setupProgressChecker.isDocumentsApproved();
     }

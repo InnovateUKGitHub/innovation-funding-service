@@ -31,7 +31,6 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -153,8 +152,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
                                 : format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
-                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest)),
-                        "awaiting-assessment"
+                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest))
                 );
             case FINANCE_CHECKS:
                 SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
@@ -189,15 +187,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
                 );
             case PROJECT_SETUP_COMPLETE:
-                SectionStatus projectSetupCompleteStatus = sectionStatus.projectSetupCompleteStatus(ownOrganisation.getProjectSetupCompleteStatus());
-                return new SetupStatusStageViewModel(stage,
-                        stage.getShortName(),
-                        "Once all tasks are complete Innovate UK will review your application.",
-                        String.format("/project/%d/setup", project.getId()),
-                        projectSetupCompleteStatus,
-                        statusAccessor.canAccessSetupSection(),
-                        projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-assignment"
-                );
+                return new SetupStatusStageViewModel(stage, "", "", "", SectionStatus.EMPTY, SectionAccess.NOT_ACCESSIBLE);
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());
     }

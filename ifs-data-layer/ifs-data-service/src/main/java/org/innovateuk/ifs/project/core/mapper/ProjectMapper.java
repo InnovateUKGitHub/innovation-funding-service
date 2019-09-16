@@ -45,8 +45,7 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
             @Mapping(target = "projectState", ignore = true),
             @Mapping(target = "competition", source = "application.competition.id"),
             @Mapping(target = "competitionName", source = "application.competition.name"),
-            @Mapping(target = "monitoringOfficerUser", source = "projectMonitoringOfficerOrElseNull.user.id"),
-            @Mapping(target = "processLastModifiedDate", source = "projectProcess.lastModified")
+            @Mapping(target = "monitoringOfficerUser", source = "projectMonitoringOfficerOrElseNull.user.id")
     })
     @Override
     public abstract ProjectResource mapToResource(Project project);
@@ -63,6 +62,7 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     @AfterMapping
     public void setAdditionalFieldsOnResource(Project project, @MappingTarget ProjectResource resource) {
         ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
+
         if (process != null) {
             resource.setProjectState(process.getProcessState());
         }

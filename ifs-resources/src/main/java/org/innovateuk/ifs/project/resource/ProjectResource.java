@@ -36,7 +36,6 @@ public class ProjectResource {
     private String grantOfferLetterRejectionReason;
     private ApprovalType otherDocumentsApproved;
     private ZonedDateTime spendProfileSubmittedDate;
-    private ZonedDateTime processLastModifiedDate;
     private ProjectState projectState;
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
 
@@ -232,14 +231,6 @@ public class ProjectResource {
         this.financeReviewer = financeReviewer;
     }
 
-    public ZonedDateTime getProcessLastModifiedDate() {
-        return processLastModifiedDate;
-    }
-
-    public void setProcessLastModifiedDate(ZonedDateTime processLastModifiedDate) {
-        this.processLastModifiedDate = processLastModifiedDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -270,7 +261,6 @@ public class ProjectResource {
                 .append(projectState, that.projectState)
                 .append(projectDocuments, that.projectDocuments)
                 .append(durationInMonths, that.durationInMonths)
-                .append(processLastModifiedDate, that.processLastModifiedDate)
                 .isEquals();
     }
 
@@ -298,7 +288,6 @@ public class ProjectResource {
                 .append(projectState)
                 .append(projectDocuments)
                 .append(durationInMonths)
-                .append(processLastModifiedDate)
                 .toHashCode();
     }
 }

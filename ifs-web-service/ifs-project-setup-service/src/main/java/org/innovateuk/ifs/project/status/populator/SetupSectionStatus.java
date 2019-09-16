@@ -59,7 +59,7 @@ public class SetupSectionStatus {
     public SectionStatus financeChecksSectionStatus(final ProjectActivityStates financeCheckState,
                                                     final SectionAccess access) {
 
-        if (access.equals(SectionAccess.NOT_ACCESSIBLE)) {
+        if(access.equals(SectionAccess.NOT_ACCESSIBLE)) {
             return EMPTY;
         } else if (financeCheckState.equals(COMPLETE)) {
             return TICK;
@@ -82,16 +82,6 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus projectSetupCompleteStatus(final ProjectActivityStates setupSectionState) {
-        if (setupSectionState.equals(COMPLETE)) {
-            return TICK;
-        } else if (setupSectionState.equals(PENDING)) {
-            return HOURGLASS;
-        } else {
-            return EMPTY;
-        }
-    }
-
     public SectionStatus documentsSectionStatus(final boolean isProjectManager,
                                                 List<CompetitionDocumentResource> expectedDocuments,
                                                 List<ProjectDocumentResource> projectDocuments) {
@@ -106,7 +96,7 @@ public class SetupSectionStatus {
 
         if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
                 .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
-                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
+                                                    || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
             return isProjectManager ? FLAG : EMPTY;
         }
 
