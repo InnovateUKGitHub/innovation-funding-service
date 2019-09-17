@@ -69,8 +69,7 @@ public class CompetitionSetupDocumentController {
     @GetMapping("/landing-page")
     public String projectDocumentLandingPage(Model model,
                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                             @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
-                                             BindingResult bindingResult) {
+                                             @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form) {
 
         Redirect redirect = doViewProjectDocument(model, competitionId);
         return redirect.redirect ? redirect.url : "competition/setup";
@@ -100,12 +99,11 @@ public class CompetitionSetupDocumentController {
 
     @PostMapping("/landing-page")
     public String saveProjectDocumentLandingPage(@ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
-                                                 BindingResult bindingResult,
                                                  ValidationHandler validationHandler,
                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                  Model model) {
 
-        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId, form, bindingResult);
+        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId, form);
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId;
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
