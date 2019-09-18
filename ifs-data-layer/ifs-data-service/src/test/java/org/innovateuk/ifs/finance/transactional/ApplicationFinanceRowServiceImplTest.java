@@ -198,7 +198,8 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
 
         ApplicationFinanceRow convertedApplicationFinanceRow = newApplicationFinanceRow()
                 .withFinanceRowMetadata(financeRowMetaValue)
-                .withTarget(applicationFinance).build();
+                .withTarget(applicationFinance)
+                .build();
 
         ApplicationFinanceRow currentApplicationFinanceRow = newApplicationFinanceRow()
                 .withTarget(applicationFinance).build();

@@ -30,6 +30,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
+import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder.newFinanceRowMetaField;
+import static org.innovateuk.ifs.finance.builder.FinanceRowMetaValueBuilder.newFinanceRowMetaValue;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
@@ -101,7 +103,7 @@ public class IndustrialCostFinanceHandlerTest {
         Iterable<ApplicationFinanceRow> init;
         for (FinanceRowType costType : values()) {
             init = industrialCostFinanceHandler.initialiseCostType(applicationFinance, costType);
-            if(init != null){
+            if (init != null) {
                 init.forEach(costs::add);
             }
         }
@@ -111,19 +113,45 @@ public class IndustrialCostFinanceHandlerTest {
                 .withDeprecation(20)
                 .withDescription("Description")
                 .withExisting("Yes")
-                .withNpv(BigDecimal.valueOf(200000))
-                .withResidualValue(BigDecimal.valueOf(100000))
+                .withNpv(BigDecimal.valueOf(100000))
+                .withResidualValue(BigDecimal.valueOf(200000))
                 .withUtilisation(20)
                 .withTargetId(applicationFinance.getId())
                 .build();
 
+        FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField()
+                .withId(3L)
+                .withTitle("existing")
+                .withType("String")
+                .build();
+
+        FinanceRowMetaField financeRowMetaField2 = newFinanceRowMetaField()
+                .withId(4L)
+                .withTitle("residual_value")
+                .withType("BigDecimal")
+                .build();
+
+        FinanceRowMetaField financeRowMetaField3 = newFinanceRowMetaField()
+                .withId(5L)
+                .withTitle("utilisation")
+                .withType("Integer")
+                .build();
+
+        FinanceRowMetaValue financeRowMetaValue1 = newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField, financeRowMetaField2)
+                .withValue("Yes", String.valueOf(new BigDecimal(100000)))
+                .build();
+
+        FinanceRowMetaValue financeRowMetaValue2 = newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField3, null)
+                .withValue(String.valueOf(20), String.valueOf(20))
+                .build();
+
         FinanceRow capitalUsageCost = industrialCostFinanceHandler.toApplicationDomain(capitalUsage);
         capitalUsageCost.setTarget(applicationFinance);
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(3L, "existing", "String"), "Yes"));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(4L, "residual_value", "BigDecimal"), String.valueOf(new BigDecimal(100000))));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(5L, "utilisation", "Integer"), String.valueOf(20)));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, new FinanceRowMetaField(6L, null, "Integer"), String.valueOf(20)));
-        capitalUsageCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(capitalUsageCost, null, String.valueOf(20)));
+
+        capitalUsageCost.getFinanceRowMetadata().add(financeRowMetaValue1);
+        capitalUsageCost.getFinanceRowMetadata().add(financeRowMetaValue2);
         costs.add((ApplicationFinanceRow) capitalUsageCost);
 
         SubContractingCost subContracting = newSubContractingCost()
@@ -152,7 +180,7 @@ public class IndustrialCostFinanceHandlerTest {
         FinanceRow subContractingCost2 = industrialCostFinanceHandler.toApplicationDomain(subContracting2);
         subContractingCost2.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(2L, "country", "france"), "frane"));
         subContractingCost2.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow)subContractingCost2);
+        costs.add((ApplicationFinanceRow) subContractingCost2);
 
         LabourCost labour = newLabourCost()
                 .withLabourDays(300)
@@ -174,7 +202,7 @@ public class IndustrialCostFinanceHandlerTest {
 
         materialCost = industrialCostFinanceHandler.toApplicationDomain(material);
         materialCost.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow)materialCost);
+        costs.add((ApplicationFinanceRow) materialCost);
 
         Vat vat = newVATCost()
                 .withRegistered(false)
@@ -201,24 +229,25 @@ public class IndustrialCostFinanceHandlerTest {
     @Test
     public void getOrganisationFinancesOtherCosts() {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
-        assertEquals("Testing equality for; "+ OTHER_COSTS.getType(), new BigDecimal(0), organisationFinances.get(OTHER_COSTS).getTotal());
+        assertEquals("Testing equality for; " + OTHER_COSTS.getType(), new BigDecimal(0), organisationFinances.get(OTHER_COSTS).getTotal());
     }
 
     @Test
     public void getOrganisationFinancesVat() {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
-        assertEquals("Testing equality for; "+ VAT.getType(), new BigDecimal(0), organisationFinances.get(VAT).getTotal());
+        assertEquals("Testing equality for; " + VAT.getType(), new BigDecimal(0), organisationFinances.get(VAT).getTotal());
     }
 
     @Test
     public void getOrganisationFinancesCapitalUsage() {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
-        assertEquals("Testing equality for; "+ CAPITAL_USAGE.getType(), new BigDecimal(20000).setScale(2), organisationFinances.get(CAPITAL_USAGE).getTotal().setScale(2));
+        assertEquals("Testing equality for; " + CAPITAL_USAGE.getType(), new BigDecimal(20000).setScale(2), organisationFinances.get(CAPITAL_USAGE).getTotal().setScale(2));
     }
+
     @Test
     public void getOrganisationFinancesSubcontractingCost() {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
-        assertEquals("Testing equality for; "+ SUBCONTRACTING_COSTS.getType(), new BigDecimal(11).setScale(2), organisationFinances.get(SUBCONTRACTING_COSTS).getTotal().setScale(2));
+        assertEquals("Testing equality for; " + SUBCONTRACTING_COSTS.getType(), new BigDecimal(11).setScale(2), organisationFinances.get(SUBCONTRACTING_COSTS).getTotal().setScale(2));
     }
 
     @Test
@@ -228,7 +257,7 @@ public class IndustrialCostFinanceHandlerTest {
         labourCategory.getWorkingDaysPerYearCostItem().setLabourDays(25);
         labourCategory.calculateTotal();
         assertEquals(0, new BigDecimal(600000).compareTo(labourCategory.getTotal()));
-        assertEquals("Testing equality for; "+ LABOUR.getType(), new BigDecimal(600000).setScale(5),
+        assertEquals("Testing equality for; " + LABOUR.getType(), new BigDecimal(600000).setScale(5),
                 organisationFinances.get(LABOUR).getTotal().setScale(5));
     }
 
@@ -252,7 +281,7 @@ public class IndustrialCostFinanceHandlerTest {
 
     @Test
     public void getHandlerMatches() {
-        asList( Pair.of(MATERIALS, MaterialsHandler.class),
+        asList(Pair.of(MATERIALS, MaterialsHandler.class),
                 Pair.of(LABOUR, LabourCostHandler.class),
                 Pair.of(TRAVEL, TravelCostHandler.class),
                 Pair.of(CAPITAL_USAGE, CapitalUsageHandler.class),
