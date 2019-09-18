@@ -22,7 +22,6 @@ import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -39,13 +38,14 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder.newFinanceRowMetaField;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaValueBuilder.newFinanceRowMetaValue;
+import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.inOrder;
 
 public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<ApplicationFinanceRowServiceImpl> {
 
@@ -98,7 +98,7 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
                 ).build();
 
         OrganisationType organisationType = newOrganisationType()
-                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
+                .withOrganisationType(RESEARCH)
                 .build();
 
         applicationFinance = newApplicationFinance()
@@ -129,10 +129,18 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
     public void getCostItem() {
         long doesExistId = 1L;
 
-        FinanceRowItem financeRowItem = new SubContractingCost(doesExistId, new BigDecimal(10), "Country", "name", "role", applicationFinance.getId());
+        FinanceRowItem financeRowItem = newSubContractingCost()
+                .withId(doesExistId)
+                .withCost(new BigDecimal(10))
+                .withCountry("Country")
+                .withName("name")
+                .withRole("role")
+                .withTargetId(applicationFinance.getId())
+                .build();
+
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
-        OrganisationType organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(RESEARCH).build();
         Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
         ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
         ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withId(doesExistId).withTarget(applicationFinance).build();
