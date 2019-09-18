@@ -86,6 +86,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
     APPLICATION_NOT_READY_TO_BE_SUBMITTED(FORBIDDEN),
 
     /**
+     * Finance
+     */
+    FINANCE_TYPE_NOT_SUPPORTED_BY_COMPETITION(BAD_REQUEST),
+
+    /**
      * Public content
      */
     PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH(BAD_REQUEST),
@@ -320,6 +325,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     PROJECT_CANNOT_BE_PUT_ON_HOLD(BAD_REQUEST),
     PROJECT_CANNOT_BE_RESUMED(BAD_REQUEST),
+
+    /**
+     * Projects success
+     */
+    PROJECT_CANNOT_BE_MARKED_AS_SUCCESSFUL(BAD_REQUEST),
+    PROJECT_CANNOT_BE_MARKED_AS_UNSUCCESSFUL(BAD_REQUEST),
 
     /**
      * SIL CRM

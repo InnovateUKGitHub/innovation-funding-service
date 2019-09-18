@@ -16,6 +16,7 @@ public class ProjectDocs {
             fieldWithPath("id").description("Id of the project"),
             fieldWithPath("application").description("Application that the project was created from"),
             fieldWithPath("competition").description("Competition that the project was created from"),
+            fieldWithPath("competitionName").description("Name of competition that the project was created from"),
             fieldWithPath("targetStartDate").description("Expected target start date for the project"),
             fieldWithPath("address").description("Address where the project is expected to be executed from"),
             fieldWithPath("durationInMonths").description("Duration that the project is expected to last"),
@@ -52,7 +53,7 @@ public class ProjectDocs {
             fieldWithPath("monitoringOfficerStatus").description("Status of the monitoring officer"),
             fieldWithPath("documentsStatus").description("Status of the project documents"),
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
-            fieldWithPath("roleSpecificGrantOfferLetterState").description("Map of specific user role type to Grant Offer Letter status"),
+            fieldWithPath("projectSetupCompleteStatus").description("Status of the project setup complete section"),
             fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent"),
             fieldWithPath("projectState").description("State of the project")
     };

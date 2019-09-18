@@ -12,6 +12,8 @@ Documentation     Suite description
 ...               IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 ...
 ...               IFS-5920 Acceptance tests for T's and C's
+...
+...               IFS-6054 Display completed projects in the previous tab
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -24,6 +26,11 @@ Resource          ../../07__Assessor/Assessor_Commons.robot
 *** Variables ***
 ${comp_name}         EOI comp
 ${EOI_application}   EOI Application
+${EOI_comp_title}    Expression of Interest: Assistive technologies for caregivers
+${EOI_comp_ID}       ${competition_ids['${EOI_comp_title}']}
+${EOI_application1}      Expression of Interest: Assistive technologies for caregivers - Application 1
+${EOI_application_id}    ${application_ids["${EOI_application1}"]}
+&{EOI_assessor}          email=eoi-assessor-user1@example.com    password=${short_password}
 
 *** Test Cases ***
 Comp Admin Creates EOI type competition
@@ -55,7 +62,7 @@ Invite a registered assessor
     Given log in as a different user                          &{Comp_admin1_credentials}
     When the user clicks the button/link                      link = ${comp_name}
     And the user clicks the button/link                       link = Invite assessors to assess the competition
-    And the user selects the option from the drop-down menu   Smart infrastructure  id = filterInnovationArea
+    And the user enters text to a text field                  id = assessorNameFilter   Paul Plum
     And the user clicks the button/link                       jQuery = .govuk-button:contains("Filter")
     Then the user clicks the button/link                      jQuery = tr:contains("Paul Plum") label[for^="assessor-row"]
     And the user clicks the button/link                       jQuery = .govuk-button:contains("Add selected to invite list")
@@ -108,13 +115,42 @@ the comp admin closes the assessment and releases feedback
     Then the user should not see an error in the page
 
 the EOI comp moves to Previous tab
-    [Documentation]  IFS-2376
+    [Documentation]  IFS-2376  IFS-6054
     [Tags]
     Given the user clicks the button/link  link = Dashboard
     When the user clicks the button/link   jQuery = a:contains("Previous")
-    Then the user clicks the button/link   link = ${comp_name}
-    And the user should see the element    JQuery = h1:contains("${comp_name}")
-#    TODO IFS-2471 Once implemented please update test to see the application appear in relevant section in Previous tab.
+    Then the user should see the competition details and sucessful application
+
+The comp admin assign application to panel and interview panel
+    [Documentation]  IFS-6416
+    [Setup]  the user navigates to the page   ${server}/management/competition/${EOI_comp_ID}
+    Given the user clicks the button/link     jQuery = button:contains("Close assessment")
+    Then the comp admin assign application to panel
+    And the comp admin assign application to applicant
+    And the comp admin assign application to interview panel
+
+An assessor accept the application for panel
+    [Documentation]  IFS-6416
+    [Setup]  log in as a different user          &{EOI_assessor}
+    Given the assessor accept the application    ${EOI_comp_title}  ${EOI_application1}
+    When the user clicks the button/link         link = ${EOI_application1}
+    And the user expands the section             Innovation
+    Then the user should see the element         jQuery = p:contains("This is the innovation feedback")
+    [Teardown]  the user clicks the button/link  link = Back to panel overview
+
+An assessor view application assigned for interview panel
+    [Documentation]  IFS-6416
+    Given the user navigates to the page    ${server}/assessment/assessor/dashboard/competition/${EOI_comp_ID}/interview
+    When the user clicks the button/link    link = ${EOI_application1}
+    Then the user navigates to the page     ${server}/application/${EOI_application_id}/feedback
+    And the user should see the element     jQuery = h1:contains("Feedback overview")
+
+An applicant see the application in interview panel
+    [Documentation]  IFS-6416
+    Given log in as a different user       &{lead_applicant_credentials}
+    When the user clicks the button/link   jQuery = ul li a:contains("${EOI_application1}")
+    Then the user navigates to the page    ${server}/application/${EOI_application_id}/feedback
+    And the user should see the element    jQuery = h1:contains("Feedback overview")
 
 *** Keywords ***
 Custom Suite Setup
@@ -156,7 +192,34 @@ the applicant checks for competition terms and conditions
     the user clicks the button/link       link = Award terms and conditions
     the user should see the element       jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     the user should not see the element   jQuery = button:contains("Agree and continue")
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       link = Back to application overview
+
+the user should see the competition details and sucessful application
+    the user clicks the button/link    link = ${comp_name}
+    the user should see the element    jQuery = dt:contains("Competition type:") ~ dd:contains("Expression of interest")
+    the user should see the element    jQuery = button:contains("Projects (0)")
+    the user expands the section       Applications
+    the user should see the element    jQuery = h1:contains("${comp_name}")
+
+the comp admin assign application to panel
+    the user navigates to the page     ${server}/management/assessment/panel/competition/${EOI_comp_ID}/manage-applications
+    the user clicks the button/link    jQuery = td:contains("${EOI_application_id}") ~ td a:contains("Assign")
+    the user clicks the button/link    link = Manage assessment panel
+    the user clicks the button/link    jQuery = button:contains("Confirm actions")
+
+the comp admin assign application to applicant
+    the user navigates to the page    ${server}/management/assessment/interview/competition/${EOI_comp_ID}/applications/find
+    the user selects the checkbox     selectedIds
+    the user clicks the button/link   jQuery = button:contains("Add selected to invite list")
+    the user clicks the button/link   link = Review and send invites
+    the user clicks the button/link   jQuery = button:contains("Send invite")
+
+the comp admin assign application to interview panel
+    the user navigates to the page      ${server}/management/assessment/interview/competition/${EOI_comp_ID}/assessors/allocate-assessors
+    the user clicks the button/link     jQuery = td:contains("Klaus Baudelaire") ~ td a:contains("Allocate")
+    the user selects the checkbox       selectedIds
+    the user clicks the button/link     jQuery = button:contains("Allocate")
+    the user clicks the button/link     jQuery = input[type='submit']     #Notify
 
 Custom suite teardown
     Close browser and delete emails

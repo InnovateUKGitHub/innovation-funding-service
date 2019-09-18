@@ -3,10 +3,10 @@ package org.innovateuk.ifs.application.feedback.controller;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -16,6 +16,7 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.invite.InviteService;
@@ -62,15 +63,13 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
     @Spy
     @InjectMocks
+    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
+
+    @Mock
     private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
 
-    @Spy
-    @InjectMocks
+    @Mock
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
 
     @Mock
     private ApplicantRestService applicantRestService;
@@ -118,6 +117,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     public void testUpload() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
+        competition.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
@@ -147,6 +147,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     public void testRemove() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
+        competition.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
@@ -161,10 +162,8 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withOrganisation(organisations.get(0).getId()).build();
 
-
         when(userRestService.findProcessRole(userResource.getId(), app.getId())).thenReturn(restSuccess(processRole));
         when(organisationRestService.getOrganisationById(processRole.getOrganisationId())).thenReturn(restSuccess(organisations.get(0)));
-
 
         when(interviewResponseRestService.deleteResponse(app.getId()))
                 .thenReturn(restSuccess());

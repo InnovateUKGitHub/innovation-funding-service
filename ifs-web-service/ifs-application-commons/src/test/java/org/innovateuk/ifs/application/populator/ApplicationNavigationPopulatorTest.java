@@ -81,7 +81,7 @@ public class ApplicationNavigationPopulatorTest {
 
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
@@ -93,7 +93,7 @@ public class ApplicationNavigationPopulatorTest {
 
         setupApplicationClosed(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
         verify(model).addAttribute(eq("backTitle"), contains("Application summary"));
     }
@@ -104,7 +104,7 @@ public class ApplicationNavigationPopulatorTest {
         Model model = mock(Model.class);
 
         setupApplicationCompetitionClosed(applicationId);
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), contains("Application overview"));
     }
@@ -117,10 +117,10 @@ public class ApplicationNavigationPopulatorTest {
         setupApplicationOpen(applicationId);
 
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).build();
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), Optional.empty(), false);
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/FINANCE"));
-        verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
+        verify(model).addAttribute(eq("backTitle"), contains("Your project finances"));
     }
 
     @Test
@@ -130,7 +130,7 @@ public class ApplicationNavigationPopulatorTest {
         SectionResource section = newSectionResource().withType(SectionType.GENERAL).build();
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), Optional.empty(), false);
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
@@ -234,7 +234,7 @@ public class ApplicationNavigationPopulatorTest {
 
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), Optional.empty(), false);
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), false);
         verify(model).addAttribute(eq("backURL"), contains("application/" + applicationId + "/summary"));
         verify(model).addAttribute(eq("backTitle"), eq("Application summary"));
     }
@@ -247,10 +247,10 @@ public class ApplicationNavigationPopulatorTest {
         setupApplicationOpen(applicationId);
 
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).withParentSection(33L).build();
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), Optional.empty(), false);
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/section/33/22"));
-        verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
+        verify(model).addAttribute(eq("backTitle"), contains("Your project finances"));
     }
 
     private void setupApplicationOpen(Long applicationId) {

@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
-import org.innovateuk.ifs.activitylog.domain.ActivityType;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -14,11 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 
@@ -31,7 +35,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(final String applicationName, final long competitionId, final long userId, long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
-    ServiceResult<ApplicationResource> saveApplicationDetails(Long applicationId, ApplicationResource application);
+    ServiceResult<ValidationMessages> saveApplicationDetails(Long applicationId, ApplicationResource application);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(Long applicationId, ZonedDateTime date);
@@ -41,12 +45,15 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(Long applicationId, ZonedDateTime fundingEmailDate);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE_APPLICATION_STATE')")
-    @Activity(type = ActivityType.APPLICATION_SUBMITTED, condition = "isSubmitted", applicationId = "applicationId")
+    @Activity(dynamicType = "submittedActivityType", applicationId = "applicationId")
     ServiceResult<ApplicationResource> updateApplicationState(long applicationId, ApplicationState state);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default boolean isSubmitted(Long applicationId, ApplicationState state) {
-        return SUBMITTED == state;
+    default Optional<ActivityType> submittedActivityType(long applicationId, ApplicationState state) {
+        if (SUBMITTED == state) {
+            return Optional.of(ActivityType.APPLICATION_SUBMITTED);
+        }
+        return Optional.empty();
     }
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_AS_INELIGIBLE')")
@@ -85,9 +92,6 @@ public interface ApplicationService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_PREVIOUS_APPLICATIONS')")
-    ServiceResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageIndex, int pageSize, String sortField, String filter);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId);

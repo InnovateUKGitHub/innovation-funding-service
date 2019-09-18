@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<ApplicationFinanceRowPermissionRules> {
@@ -78,7 +78,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
             final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
             cost = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
-            costItem = new AcademicCost(cost.getId(), "", ZERO, "", FinanceRowType.LABOUR);
+            costItem = new AcademicCost(cost.getId(), "", ZERO, "", FinanceRowType.LABOUR, 1L);
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
@@ -154,7 +154,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     @Test
     public void monitoringOfficerCanReadACostForTheirApplicationAndOrganisation() {
         Project project = newProject().withId(1L).build();
-        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
 
         allGlobalRoleUsers.forEach(user -> {

@@ -79,11 +79,13 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((app, project) -> project.setApplication(app), application);
     }
 
-    public ProjectBuilder withProjectUsers(List<ProjectUser>... projectUsers){
+    @SafeVarargs
+    public final  ProjectBuilder withProjectUsers(List<ProjectUser>... projectUsers){
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
     }
 
-    public ProjectBuilder withProjectDocuments(List<ProjectDocument>... projectDocuments){
+    @SafeVarargs
+    public final ProjectBuilder withProjectDocuments(List<ProjectDocument>... projectDocuments){
         return withArray((projectDocument, project) -> project.setProjectDocuments(projectDocument), projectDocuments);
     }
 
@@ -91,7 +93,8 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((date, project) -> project.setSpendProfileSubmittedDate(date), dates);
     }
 
-    public ProjectBuilder withPartnerOrganisations(List<PartnerOrganisation>... partnerOrganisations) {
+    @SafeVarargs
+    public final ProjectBuilder withPartnerOrganisations(List<PartnerOrganisation>... partnerOrganisations) {
         return withArray((orgs, project) -> project.setPartnerOrganisations(orgs), partnerOrganisations);
     }
 

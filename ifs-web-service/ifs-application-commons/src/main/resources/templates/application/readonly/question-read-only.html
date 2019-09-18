@@ -5,30 +5,53 @@
     Empty
 </th:block>
 
-<th:block th:fragment="generic (model)" th:with="isApplicant = ${isApplicant == null || isApplicant}">
+<th:block th:fragment="generic (model)">
     <div class="govuk-form-group">
         <label th:if="${model.question != null}" class="govuk-label">
             <span th:text="${model.question}" class="govuk-heading-s"></span>
         </label>
-        <div class="textarea-wrapped">
-            <textarea class="govuk-textarea"
-                      readonly="readonly"
-                      data-editor="md"
-                      th:text="${model.answer}">
-            </textarea>
-        </div>
-        <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
-            <p class="uploaded-file govuk-body"
-                th:with="applicantUrl=@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixId})},
-                         internalUrl=@{/competition/{competitionId}/application/{applicationId}/forminput/{formInputId}/download(competitionId=${model.competitionId}, applicationId=${model.applicationId}, formInputId=${model.appendixId})}">
-                <a class="govuk-link"
-                   th:href="${isApplicant ? applicantUrl : internalUrl}"
-                   th:text="${model.appendixFilename}"
+        <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
+
+        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateDocumentFilename != null}">
+            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateDocumentTitle}|">
+                Uploaded project plan and methodology
+            </h1>
+            <p class="uploaded-file govuk-body">
+               <a class="govuk-link"
+                   th:href="${model.templateDocumentUrl}"
+                   th:text="${model.templateDocumentFilename}"
                    target="_blank"
-                   aria-describedby="file-hint">file</a> <span id="file-hint">(opens in a new window)</span>.
+                   aria-describedby="template-document-hint">file</a><span id="template-document-hint"> (opens in a new window)</span>.
             </p>
         </div>
 
+        <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
+            <p class="uploaded-file govuk-body">
+                <a class="govuk-link"
+                   th:href="${model.appendixUrl}"
+                   th:text="${model.appendixFilename}"
+                   target="_blank"
+                   aria-describedby="appendix-hint">file</a><span id="appendix-hint">(opens in a new window)</span>.
+            </p>
+        </div>
+
+        <th:block th:if="${model.hasAssessorResponse()}">
+            <div class="clear-floats">
+                <div class="govuk-grid-row govuk-!-margin-top-6">
+                    <div class="govuk-grid-column-one-half">
+                        <h3 class="govuk-heading-s">Feedback</h3>
+                    </div>
+                    <div class="govuk-grid-column-one-half alignright govuk-heading-s">
+                        Score <span th:text="${model.score}">Feedback score</span>/10
+                    </div>
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <p class="govuk-body" th:text="${model.feedback}">Feedback text</p>
+                </div>
+            </div>
+        </th:block>
     </div>
 </th:block>
 
@@ -62,6 +85,18 @@
                         <dd th:text="${model.previousApplicationTitle}"></dd>
                     </th:block>
                 </th:block>
+                <th:block th:if="${model.competitionReferralSource != null}">
+                    <dt>Who made you aware of the competition?</dt>
+                    <dd th:text="${model.competitionReferralSource.name} ?: 'None Selected'"></dd>
+                </th:block>
+                <th:block th:if="${model.companyAge != null}">
+                    <dt>How long has the company been established for?</dt>
+                    <dd th:text="${model.companyAge.name} ?: 'None Selected'"></dd>
+                </th:block>
+                <th:block th:if="${model.companyPrimaryFocus != null}">
+                    <dt>What is your organisation's primary area of focus?</dt>
+                    <dd th:text="${model.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
+                </th:block>
             </dl>
         </div>
     </div>
@@ -78,37 +113,64 @@
     </div>
 </th:block>
 
-<th:block th:fragment="finance-summary (model)" th:with="isApplicant = ${isApplicant == null || isApplicant}">
+<th:block th:fragment="finance-summary (model)">
     <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
         provided by all partners in this project.</p>
 
-    <p class="govuk-body" th:if="${model.open and isApplicant}">
+    <p class="govuk-body" th:if="${model.open}">
         To make changes to your organisations' finances, go back to the
         <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-           class="govuk-link">your finances</a> section.
+           class="govuk-link">your project finances</a> section.
     </p>
 
     <div>
         <th:block th:unless="${model.fullyFunded}">
-            <th:block ifs:global="${model.applicationFinanceSummaryViewModel}"
-                      th:replace="finance/finance-summary :: application_finances_summary"></th:block>
-            <th:block ifs:global="${model.applicationResearchParticipationViewModel}"
-                      th:replace="finance/finance-summary :: research_participation_alert"
-                      th:if="${model.open}"></th:block>
+            <th:block th:replace="finance/finance-summary :: application-finances-summary (${model.applicationFinanceSummaryViewModel})" />
+            <th:block th:replace="finance/finance-summary :: research-participation-alert (${model.applicationResearchParticipationViewModel})"
+                      th:if="${model.open}"/>
         </th:block>
 
         <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}">Funding breakdown</h2>
-        <th:block ifs:global="${model.applicationFundingBreakdownViewModel}"
-                  th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${true}, supportUserAndSummaryPage=${supportUserAndSummaryPage ?: false })"/>
+        <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
     </div>
 </th:block>
 
 <th:block th:fragment="application-team (model)">
-    <th:block th:insert="application/readonly/application-read-only :: organisation(${model.team.leadOrganisation}, true, '0')" />
-    <br />
-    <th:block th:each="organisation,status : ${model.team.partnerOrganisations}">
-        <th:block th:insert="application/readonly/application-read-only :: organisation(${organisation}, false, ${status.index + 1})"/>
-        <br />
+    <th:block th:each="organisation: ${model.organisations}">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+            <th:block th:text="${organisation.name}"></th:block>
+            <th:block th:if="${organisation.lead}">(Lead)</th:block>
+        </h2>
+
+        <th:block th:if="${organisation.type != null}">
+            <h3 class="govuk-heading-s govuk-!-margin-top-2">Organisation type</h3>
+            <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations
+                (RTOs)</p>
+        </th:block>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
+                <th th:if="${model.internal}" scope="col" class="govuk-table__header govuk-!-width-one-third">Phone number</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr th:each="row : ${organisation.users}"
+                class="govuk-table__row">
+                <td class="govuk-table__cell"
+                    th:text="${row.name}"
+                    th:classappend="${row.invite ? 'hint' : ''}"></td>
+                <td class="govuk-table__cell"
+                    th:if="${model.internal}"
+                    th:text="${row.phone}"
+                    th:classappend="${row.invite ? 'hint' : ''}"></td>
+                <td class="govuk-table__cell ifs-table__email"
+                    th:text="${row.email}"
+                    th:classappend="${row.invite ? 'hint' : ''}"></td>
+            </tr>
+            </tbody>
+        </table>
     </th:block>
 </th:block>
 
@@ -173,8 +235,17 @@
     </th:block>
     <p class="govuk-body" th:if="${model.complete}">
         Terms and conditions have been accepted by all partners in this project.
-        <a th:href="@{~/application/{applicationId}/form/question/{questionId}/(applicationId=${model.applicationId},questionId=${model.questionId})} + ${originQuery} + '&readonly=true'">
+        <a th:href="@{~/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})} + '?readonly=true'">
             View terms and conditions</a>
+    </p>
+</th:block>
+
+<th:block th:fragment="terms-and-conditions-assessment(model)">
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
+    <p class="govuk-body">
+        <a class="govuk-link"
+           th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.questionId})}">
+            View award terms and conditions</a>
     </p>
 </th:block>
 

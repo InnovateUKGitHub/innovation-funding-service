@@ -6,11 +6,9 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
@@ -23,20 +21,18 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_ID;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 
@@ -62,7 +58,6 @@ public class ApplicationAjaxController {
 
     @Autowired
     private CompetitionRestService competitionRestService;
-
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -111,21 +106,11 @@ public class ApplicationAjaxController {
     }
 
     private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) throws NumberFormatException {
-
-        if (fieldName.startsWith("application.")) {
-
-            // this does not need id
-            List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
-            return new StoreFieldResult(errors);
-        } else if (inputIdentifier.startsWith("formInput[cost-") || fieldName.startsWith("cost-")) {
-            return new StoreFieldResult();
-        } else {
-            Long formInputId = Long.valueOf(inputIdentifier);
-            ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
-                    formInputId, value, false).getSuccess();
-            List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
-            return new StoreFieldResult(lookedUpErrorMessages);
-        }
+        Long formInputId = Long.valueOf(inputIdentifier);
+        ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
+                formInputId, value, false).getSuccess();
+        List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
+        return new StoreFieldResult(lookedUpErrorMessages);
     }
 
     private ObjectNode createJsonObjectNode(boolean success, Long fieldId) {
@@ -137,71 +122,6 @@ public class ApplicationAjaxController {
             node.set("fieldId", new LongNode(fieldId));
         }
         return node;
-    }
-
-    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value) throws NumberFormatException {
-        List<String> errors = new ArrayList<>();
-        ApplicationResource application = applicationService.getById(applicationId);
-
-        if ("application.name".equals(fieldName)) {
-            String trimmedValue = value.trim();
-            if (StringUtils.isEmpty(trimmedValue)) {
-                errors.add("Please enter the full title of the project");
-            } else {
-
-                application.setName(trimmedValue);
-                applicationService.save(application);
-            }
-        } else if (fieldName.startsWith("application.durationInMonths")) {
-            Long durationInMonth = Long.valueOf(value);
-            CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-            if (durationInMonth < competition.getMinProjectDuration() || durationInMonth > competition.getMaxProjectDuration()) {
-                String message = MessageFormat.format("validation.project.duration.input.invalid",
-                        competition.getMinProjectDuration(), competition.getMaxProjectDuration());
-                errors.add(message);
-                application.setDurationInMonths(durationInMonth);
-            } else {
-                application.setDurationInMonths(durationInMonth);
-                applicationService.save(application);
-            }
-        } else if (fieldName.startsWith(APPLICATION_START_DATE)) {
-            errors = this.saveApplicationStartDate(application, fieldName, value);
-        } else if ("application.resubmission".equals(fieldName)) {
-            application.setResubmission(Boolean.valueOf(value));
-            applicationService.save(application);
-        } else if ("application.previousApplicationNumber".equals(fieldName)) {
-            application.setPreviousApplicationNumber(value);
-            applicationService.save(application);
-        } else if ("application.previousApplicationTitle".equals(fieldName)) {
-            application.setPreviousApplicationTitle(value);
-            applicationService.save(application);
-        }
-        return errors;
-    }
-
-    private List<String> saveApplicationStartDate(ApplicationResource application, String fieldName, String value) {
-        List<String> errors = new ArrayList<>();
-        LocalDate startDate = application.getStartDate();
-        if (fieldName.endsWith(".dayOfMonth")) {
-            startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
-        } else if (fieldName.endsWith(".monthValue")) {
-            startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
-        } else if (fieldName.endsWith(".year")) {
-            startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
-        } else if ("application.startDate".equals(fieldName)) {
-            String[] parts = value.split("-");
-            startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
-        }
-        if (startDate.isBefore(LocalDate.now())) {
-            errors.add("Please enter a future date");
-            startDate = null;
-        } else {
-            LOG.debug("Save startdate: " + startDate.toString());
-        }
-
-        application.setStartDate(startDate);
-        applicationService.save(application);
-        return errors;
     }
 
     private static class StoreFieldResult {
@@ -234,9 +154,10 @@ public class ApplicationAjaxController {
     }
 
     @GetMapping(value = "/update_time_details")
-    public String updateTimeDetails(Model model) {
+    public String updateTimeDetails(Model model, @PathVariable Long applicationId) {
         model.addAttribute("updateDate", TimeZoneUtil.toUkTimeZone(now()));
         model.addAttribute("lastUpdatedText", "by you");
+        model.addAttribute("applicationId", applicationId);
         return "question-type/form-elements :: updateTimeDetails";
     }
 }

@@ -119,8 +119,10 @@ Custom Suite Setup
     Set predefined date variables
     the user logs-in in new browser                   &{lead_applicant_credentials}
     the user navigates to the page                    ${server}/application/${openCompetitionRTOApplication1Id}
+    the user clicks the button/link                   link = Application details
+    the user fills in the Application details         ${openCompetitionRTOApplication1Name}   ${tomorrowday}  ${month}  ${nextyear}
     the user selects research category                Feasibility studies
-    the user fills in the organisation information    ${openCompetitionRTOApplication1Name}  ${LARGE_ORGANISATION_SIZE}
+    Complete the org size section                     ${openCompetitionRTOApplication1Name}
 
 the user provides invalid value as percentage then he should see the error
     [Arguments]  ${error}  ${value}
@@ -128,6 +130,22 @@ the user provides invalid value as percentage then he should see the error
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  ${value}
     Set Focus To Element                  css = button.govuk-button[type="submit"]
     the user should see a field error     ${error}
+
+Complete the org size section
+    [Arguments]  ${applicationName}
+    the user navigates to the page                      ${APPLICANT_DASHBOARD_URL}
+    the user clicks the button/link                     link = ${applicationName}
+    the user clicks the button/link                     link = Your project finances
+    the user clicks the button/link                     link = Your organisation
+    ${orgSizeReadonly} =   Run Keyword And Return Status    Element Should Be Visible   jQuery = button:contains("Edit")
+    Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery = button:contains("Edit")
+    the user selects the radio button                   organisationSize  ${LARGE_ORGANISATION_SIZE}
+    the user enters text to a text field                css = #turnover    150
+    the user enters text to a text field                css = #headCount    0
+    the user selects the checkbox                       stateAidAgreed
+    Set Focus To Element                                jQuery = button:contains("Mark as complete")
+    run keyword and ignore error without screenshots    the user clicks the button/link    jQuery = button:contains("Mark as complete")
+    run keyword and ignore error without screenshots    the user clicks the button/link    link = Your project finances
 
 the user adds more rows in other funding
     the user clicks the button/link         jQuery = button:contains("Add another source of funding")

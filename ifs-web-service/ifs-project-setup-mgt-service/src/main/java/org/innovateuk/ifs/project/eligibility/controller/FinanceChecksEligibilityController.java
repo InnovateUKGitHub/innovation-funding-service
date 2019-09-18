@@ -3,12 +3,10 @@ package org.innovateuk.ifs.project.eligibility.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -35,7 +33,6 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.AjaxResult;
@@ -71,9 +68,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private SectionService sectionService;
-
-    @Autowired
     private ProjectService projectService;
 
     @Autowired
@@ -81,12 +75,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
-
-    @Autowired
-    private FinanceViewHandlerProvider financeViewHandlerProvider;
-
-    @Autowired
-    private FinanceUtil financeUtil;
 
     @Autowired
     private FinanceService financeService;
@@ -130,9 +118,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             boolean eligibilityApproved = eligibility.get().getEligibility() == EligibilityState.APPROVED;
 
             FileDetailsViewModel jesFileDetailsViewModel = null;
-            boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition.get(), organisation.get().getOrganisationType());
+            boolean isUsingJesFinances = competition.get().applicantShouldUseJesFinances(organisation.get().getOrganisationTypeEnum());
             if (!isUsingJesFinances) {
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType));
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType, competition.get().getFinanceRowTypes()));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisationId)));
                 }

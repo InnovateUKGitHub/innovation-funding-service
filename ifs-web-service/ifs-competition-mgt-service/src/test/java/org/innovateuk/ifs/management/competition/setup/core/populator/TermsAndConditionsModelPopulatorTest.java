@@ -17,7 +17,9 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -42,6 +44,7 @@ public class TermsAndConditionsModelPopulatorTest {
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withTermsAndConditions(termsAndConditions.get(0))
+                .withCompetitionTerms(newFileEntryResource().build())
                 .build();
 
         when(termsAndConditionsRestService.getById(competitionResource.getTermsAndConditions().getId()))
@@ -56,6 +59,7 @@ public class TermsAndConditionsModelPopulatorTest {
         assertEquals(CompetitionSetupSection.TERMS_AND_CONDITIONS, viewModel.getGeneral().getCurrentSection());
         assertEquals(viewModel.getTermsAndConditionsList(), termsAndConditions);
         assertEquals(viewModel.getCurrentTermsAndConditions(), termsAndConditions.get(0));
+        assertTrue(viewModel.isTermsAndConditionsDocUploaded());
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {

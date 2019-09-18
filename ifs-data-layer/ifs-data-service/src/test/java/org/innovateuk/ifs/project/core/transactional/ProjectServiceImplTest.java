@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -36,7 +39,6 @@ import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStr
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
@@ -60,6 +62,7 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -121,9 +124,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private UserRepository userRepositoryMock;
 
     @Mock
-    private ProcessRoleRepository processRoleRepositoryMock;
-
-    @Mock
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
@@ -131,6 +131,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
+
+    @Mock
+    private ActivityLogService activityLogService;
 
     private Long applicationId = 456L;
     private Long userId = 7L;
@@ -185,6 +188,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 withFundingDecision(FundingDecisionStatus.FUNDED).
                 withApplicationFinancesList(applicationFinances).
+                withCompetition(newCompetition().withFundingType(FundingType.GRANT).build()).
                 build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -285,6 +289,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);
+        verify(activityLogService).recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
     }
 
     @Test
@@ -347,7 +352,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         // Expectations
         assertTrue(shouldFail.isFailure());
         assertTrue(shouldFail.getFailure().is(badRequestError("project does not contain organisation")));
-        verifyZeroInteractions(processRoleRepositoryMock);
     }
 
     @Test
@@ -380,7 +384,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());
         // Expectations
         assertTrue(shouldSucceed.isSuccess());
-        verify(processRoleRepositoryMock).save(any(ProcessRole.class));
     }
 
     @Test
@@ -438,6 +441,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);
+        verify(activityLogService).recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
+
     }
 
     @Test
@@ -452,7 +457,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             service.createProjectsFromFundingDecisions(fundingDecisions);
             assertThat("Service failed to throw expected exception.", false);
         } catch (Exception e) {
-            assertEquals(e.getCause().getCause().getCause().getMessage(),"dummy constraint violation");
+            assertEquals(e.getCause().getCause().getMessage(),"dummy constraint violation");
         }
     }
 

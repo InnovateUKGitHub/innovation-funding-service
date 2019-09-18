@@ -25,6 +25,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
@@ -51,8 +52,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.SCOPE;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -91,7 +91,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     private CompetitionRestService competitionRestService;
 
     @Override
-    protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }
+    protected CompetitionSetupApplicationController supplyControllerUnderTest() {
+        return new CompetitionSetupApplicationController();
+    }
 
     @Before
     public void setUp() {
@@ -230,7 +232,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         mockMvc.perform(post(URL_PREFIX + "/landing-page"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/competition/setup/"+COMPETITION_ID+"/section/application/landing-page"));
+                .andExpect(redirectedUrl("/competition/setup/" + COMPETITION_ID + "/section/application/landing-page"));
         verify(competitionSetupQuestionService).validateApplicationQuestions(eq(competition), any(), any());
     }
 
@@ -250,7 +252,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX +"/question/" + questionId + "/edit")
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString()))
                 .andExpect(status().isOk())
@@ -271,7 +273,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX +"/question/" + questionId + "/edit")
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
                 .param("question.type", SCOPE.name()))
                 .andExpect(status().isOk())
@@ -372,6 +374,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
         question.setType(ASSESSED_QUESTION);
+        question.setTemplateFilename("templateFile");
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
@@ -386,8 +389,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")
                 .param("question.appendix", "true")
-                .param("question.allowedFileTypes", "PDF")
+                .param("question.allowedAppendixResponseFileTypes", "PDF")
                 .param("question.appendixGuidance", "Only PDFs allowed")
+                .param("question.templateDocument", "true")
+                .param("question.allowedTemplateResponseFileTypes", "DOCUMENT")
+                .param("question.templateTitle", "Document")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "100")
                 .param("question.writtenFeedback", "true")
@@ -429,6 +435,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")
                 .param("question.appendix", "true")
+                .param("question.templateDocument", "true")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "100")
                 .param("question.writtenFeedback", "true")
@@ -442,9 +449,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+ CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
-        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedFileTypes").getCode());
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedAppendixResponseFileTypes").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.appendixGuidance").getCode());
+        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedTemplateResponseFileTypes").getCode());
+        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.templateTitle").getCode());
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(QuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
     }
@@ -477,9 +486,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
         assertEquals(QuestionSetupViewModel.class, result.getModelAndView().getModel().get("model").getClass());
-        QuestionSetupViewModel viewModel = (QuestionSetupViewModel)result.getModelAndView().getModel().get("model");
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Boolean.TRUE, viewModel.getGeneral().isEditable());
 
@@ -515,7 +524,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
 
         assertNull(bindingResult.getFieldError("question.scoreTotal"));
         assertNull(bindingResult.getFieldError("question.assessmentGuidanceTitle"));
@@ -551,7 +560,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
         Map<String, Object> model = result.getModelAndView().getModel();
 
         assertEquals(QuestionSetupViewModel.class, model.get("model").getClass());
@@ -592,7 +601,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
 
         Map<String, Object> model = result.getModelAndView().getModel();
         assertEquals(QuestionSetupViewModel.class, model.get("model").getClass());
@@ -626,7 +635,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")
                 .param("question.appendix", "true")
-                .param("question.allowedFileTypes", "SPREADSHEET")
+                .param("question.allowedAppendixResponseFileTypes", "SPREADSHEET")
                 .param("question.appendixGuidance", "Spreadsheet only")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "100")
@@ -701,7 +710,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 APPLICATION_FORM,
                 CompetitionSetupSubsection.APPLICATION_DETAILS,
                 Optional.empty())
-                ).thenReturn(form);
+        ).thenReturn(form);
 
         mockMvc.perform(get(URL_PREFIX + "/detail"))
                 .andExpect(status().isOk())
@@ -822,5 +831,48 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(view().name("redirect:" + URL_PREFIX + "/landing-page"));
 
         verify(questionSetupCompetitionRestService).deleteById(questionId);
+    }
+
+    @Test
+    public void uploadTemplateDocumentFile() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(QUESTION_ID)
+                .withType(ASSESSED_QUESTION).build();
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(questionSetupCompetitionRestService.getByQuestionId(QUESTION_ID)).thenReturn(restSuccess(question));
+        MockMultipartFile uploadedFile = new MockMultipartFile("templateDocumentFile", "filename.txt", "text/plain", "My content!".getBytes());
+        when(questionSetupCompetitionRestService.uploadTemplateDocument(QUESTION_ID, "text/plain", 11, "filename.txt", "My content!".getBytes())).thenReturn(restSuccess());
+
+        mockMvc.perform(multipart(URL_PREFIX + "/question/" + QUESTION_ID + "/edit")
+                .file(uploadedFile)
+                .param("uploadTemplateDocumentFile","true")
+                .param("question.type", "ASSESSED_QUESTION"))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(questionSetupCompetitionRestService).uploadTemplateDocument(QUESTION_ID, "text/plain", 11, "filename.txt", "My content!".getBytes());
+    }
+
+    @Test
+    public void removeTemplateDocumentFile() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(QUESTION_ID)
+                .withType(ASSESSED_QUESTION).build();
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(questionSetupCompetitionRestService.getByQuestionId(QUESTION_ID)).thenReturn(restSuccess(question));
+        when(questionSetupCompetitionRestService.deleteTemplateDocument(QUESTION_ID)).thenReturn(restSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/question/" + QUESTION_ID + "/edit")
+                .param("removeTemplateDocumentFile","true")
+                .param("question.type", "ASSESSED_QUESTION"))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(questionSetupCompetitionRestService).deleteTemplateDocument(QUESTION_ID);
+
     }
 }

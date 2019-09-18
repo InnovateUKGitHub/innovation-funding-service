@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
 import org.innovateuk.ifs.application.transactional.CompetitionSummaryService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -104,8 +104,9 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, informFilter).toGetResponse();
     }
 
-    @GetMapping("/application-team/{applicationId}")
-    public RestResult<ApplicationTeamResource> getApplicationTeamByApplicationId(@PathVariable("applicationId") long applicationId) {
-        return applicationSummaryService.getApplicationTeamByApplicationId(applicationId).toGetResponse();
+    @GetMapping("/find-by-competition/{competitionId}/previous")
+    public RestResult<List<PreviousApplicationResource>> getPreviousApplications(
+            @PathVariable long competitionId) {
+        return applicationSummaryService.getPreviousApplications(competitionId).toGetResponse();
     }
 }

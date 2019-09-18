@@ -27,7 +27,7 @@ public class InterviewInviteAssessorsInviteModelPopulator extends InterviewInvit
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public InterviewInviteAssessorsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
+    public InterviewInviteAssessorsInviteViewModel populateModel(long competitionId, int page) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -40,7 +40,7 @@ public class InterviewInviteAssessorsInviteModelPopulator extends InterviewInvit
         List<InvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
-        model.setPagination(new Pagination(pageResource, originQuery));
+        model.setPagination(new Pagination(pageResource));
 
         return model;
     }

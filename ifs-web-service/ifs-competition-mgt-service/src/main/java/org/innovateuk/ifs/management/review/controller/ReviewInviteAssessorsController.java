@@ -9,20 +9,18 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.review.form.ReviewSelectionForm;
 import org.innovateuk.ifs.management.review.model.ReviewInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.review.model.ReviewInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.review.model.ReviewInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.review.viewmodel.ReviewInviteAssessorsFindViewModel;
-import org.innovateuk.ifs.management.review.form.ReviewSelectionForm;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -34,7 +32,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -85,16 +82,13 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam MultiValueMap<String, String> queryParams,
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
-        ReviewInviteAssessorsFindViewModel reviewInviteAssessorsFindViewModel = panelInviteAssessorsFindModelPopulator.populateModel(competitionId, page, originQuery);
+        ReviewInviteAssessorsFindViewModel reviewInviteAssessorsFindViewModel = panelInviteAssessorsFindModelPopulator.populateModel(competitionId, page);
 
         model.addAttribute("model", reviewInviteAssessorsFindViewModel);
-        model.addAttribute("originQuery", originQuery);
 
         return "assessors/panel-find";
     }
@@ -233,13 +227,9 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
     @GetMapping("/invite")
     public String invite(Model model,
                          @PathVariable("competitionId") long competitionId,
-                         @RequestParam(defaultValue = "0") int page,
-                         @RequestParam MultiValueMap<String, String> queryParams) {
+                         @RequestParam(defaultValue = "0") int page) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_INVITE, queryParams);
-
-        model.addAttribute("model", panelInviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
-        model.addAttribute("originQuery", originQuery);
+        model.addAttribute("model", panelInviteAssessorsInviteModelPopulator.populateModel(competitionId, page));
 
         return "assessors/panel-invite";
     }
@@ -247,14 +237,10 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
     @GetMapping("/accepted")
     public String accepted(Model model,
                            @PathVariable("competitionId") long competitionId,
-                           @RequestParam(defaultValue = "0") int page,
-                           @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_ACCEPTED, queryParams);
-
+                           @RequestParam(defaultValue = "0") int page) {
         model.addAttribute("model", panelInviteAssessorsAcceptedModelPopulator.populateModel(
                 competitionId,
-                page,
-                originQuery
+                page
         ));
 
         return "assessors/panel-accepted";

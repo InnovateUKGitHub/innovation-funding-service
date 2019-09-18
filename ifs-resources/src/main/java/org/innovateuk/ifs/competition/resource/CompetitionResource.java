@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -19,22 +21,26 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
-public class CompetitionResource {
+public class CompetitionResource implements ApplicationConfiguration {
 
-    public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+    public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final String H2020_TYPE_NAME = "Horizon 2020";
     public static final String EXPRESSION_OF_INTEREST_TYPE_NAME = "Expression of interest";
 
     private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     private static final int CLOSING_SOON_AMOUNT = 3;
-    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
+    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM yyyy");
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
     private List<CompetitionDocumentResource> competitionDocuments = new ArrayList<>();
+    private List<ProjectSetupStage> projectSetupStages = new ArrayList<>();
+
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
@@ -101,9 +107,10 @@ public class CompetitionResource {
     private boolean nonFinanceType;
     private CompetitionCompletionStage completionStage;
     private FundingType fundingType;
+    private Set<FinanceRowType> financeRowTypes;
+    private FileEntryResource competitionTerms;
 
     public CompetitionResource() {
-        // no-arg constructor
     }
 
     public CompetitionResource(long id,
@@ -121,6 +128,11 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isOpen() {
         return CompetitionStatus.OPEN.equals(competitionStatus);
+    }
+
+    @JsonIgnore
+    public boolean isInProjectSetup() {
+        return CompetitionStatus.PROJECT_SETUP.equals(competitionStatus);
     }
 
     @JsonIgnore
@@ -157,18 +169,22 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
-        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+        return isH2020() || isProcurement();
     }
 
     @JsonIgnore
     public boolean isProcurement() {
-        return FundingType.PROCUREMENT.equals(fundingType);
+        return PROCUREMENT.equals(fundingType);
     }
 
     @JsonIgnore
+    public boolean isLoan() {
+        return LOAN.equals(fundingType);
+    }
 
+    @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
-        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+        return isH2020() || isProcurement();
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -177,6 +193,22 @@ public class CompetitionResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
+    }
+
+    public List<ProjectSetupStage> getProjectSetupStages() {
+        return projectSetupStages;
+    }
+
+    public void setProjectSetupStages(List<ProjectSetupStage> projectSetupStages) {
+        this.projectSetupStages = projectSetupStages;
+    }
+
+    public Set<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
+    }
+
+    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
+        this.financeRowTypes = financeRowTypes;
     }
 
     public boolean isNonFinanceType() {
@@ -739,11 +771,6 @@ public class CompetitionResource {
         this.includeJesForm = includeJesForm;
     }
 
-    @JsonIgnore
-    public boolean showJesFinances(long organisationType) {
-        return includeJesForm && OrganisationTypeEnum.isResearch(organisationType);
-    }
-
     public CompetitionCompletionStage getCompletionStage() {
         return completionStage;
     }
@@ -758,6 +785,19 @@ public class CompetitionResource {
 
     public void setFundingType(FundingType fundingType) {
         this.fundingType = fundingType;
+    }
+
+    public FileEntryResource getCompetitionTerms() {
+        return competitionTerms;
+    }
+
+    public void setCompetitionTerms(FileEntryResource competitionTerms) {
+        this.competitionTerms = competitionTerms;
+    }
+
+    @JsonIgnore
+    public boolean isCompetitionTermsUploaded() {
+        return competitionTerms != null;
     }
 
     @Override
@@ -831,6 +871,7 @@ public class CompetitionResource {
                 .append(applicationFinanceType, that.applicationFinanceType)
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
                 .append(fundingType, that.fundingType)
+                .append(competitionTerms, that.competitionTerms)
                 .append(createdBy, that.createdBy)
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
@@ -899,6 +940,7 @@ public class CompetitionResource {
                 .append(applicationFinanceType)
                 .append(includeProjectGrowthTable)
                 .append(fundingType)
+                .append(competitionTerms)
                 .append(createdBy)
                 .append(createdOn)
                 .append(modifiedBy)

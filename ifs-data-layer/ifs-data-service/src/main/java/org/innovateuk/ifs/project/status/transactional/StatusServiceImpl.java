@@ -3,10 +3,9 @@ package org.innovateuk.ifs.project.status.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -22,8 +21,6 @@ import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
@@ -41,25 +38,21 @@ import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfi
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
@@ -69,8 +62,8 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -110,7 +103,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
@@ -124,20 +117,18 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     @Autowired
     private FinanceCheckService financeCheckService;
 
-
     @Override
-    public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
-        Competition competition = competitionRepository.findById(competitionId).get();
-        List<Project> projects = projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString);
-        List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
-        CompetitionProjectsStatusResource competitionProjectsStatusResource
-                = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatuses);
-
-        return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
+    public ServiceResult<List<ProjectStatusResource>> getCompetitionStatus(long competitionId, String applicationSearchString) {
+        return serviceSuccess(getProjectStatuses(() -> projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)));
     }
 
-    private List<ProjectStatusResource> projectStatuses(List<Project> projects) {
-        return projects.stream()
+    @Override
+    public ServiceResult<List<ProjectStatusResource>> getPreviousCompetitionStatus(long competitionId) {
+        return serviceSuccess(getProjectStatuses(() -> projectRepository.findByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, COMPLETED_STATES)));
+    }
+
+    private List<ProjectStatusResource> getProjectStatuses(Supplier<List<Project>> projectSupplier) {
+        return projectSupplier.get().stream()
                 .map(this::getProjectStatusResourceByProject)
                 .sorted(comparing(ProjectStatusResource::getApplicationNumber))
                 .collect(Collectors.toList());
@@ -168,6 +159,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         Optional<Organisation> leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId());
 
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
+
         ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project, process.getProcessState());
 
         return new ProjectStatusResource(
@@ -185,12 +177,11 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 getSpendProfileStatus(project, financeChecksStatus, process.getProcessState()),
                 getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus, process.getProcessState()),
                 getDocumentsStatus(project, process.getProcessState()),
-                getGrantOfferLetterStatus(project, process.getProcessState()),
-                getRoleSpecificGrantOfferLetterState(project, process.getProcessState(), bankDetailsStatus),
+                getGrantOfferLetterState(project, process.getProcessState(), bankDetailsStatus),
+                getProjectSetupCompleteState(project, process.getProcessState()),
                 golWorkflowHandler.isSent(project),
                 process.getProcessState());
     }
-
     private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectState processState) {
         if (locationPerPartnerRequired && PENDING.equals(getPartnerProjectLocationStatus(project))) {
             return PENDING;
@@ -234,6 +225,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project, ProjectState processState) {
+
         // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
         boolean started = false;
@@ -263,7 +255,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
+    private boolean isOrganisationSeekingFunding(long projectId, long applicationId, long organisationId) {
         Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
         return result.orElse(false);
     }
@@ -400,34 +392,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return PENDING;
     }
 
-    private ProjectActivityStates getGrantOfferLetterStatus(Project project, ProjectState processState) {
-
-        ApprovalType spendProfileApprovalType = spendProfileService.getSpendProfileStatus(project.getId()).getSuccess();
-
-
-        if (project.getOfferSubmittedDate() != null && golWorkflowHandler.isApproved(project)) {
-            return COMPLETE;
-        }
-
-        if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType) && !golWorkflowHandler.isRejected(project)) {
-            return PENDING;
-        }
-
-        if (project.getOfferSubmittedDate() == null && golWorkflowHandler.isRejected(project)) {
-            return REJECTED;
-        }
-
-
-        if (project.getOfferSubmittedDate() != null) {
-            return processState.isActive() ?
-                    ACTION_REQUIRED : PENDING;
-        }
-
-        return notStartedIfProjectActive(processState);
-    }
-
-    private Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project, ProjectState processState, ProjectActivityStates bankDetailsStatus) {
-        Map<Role, ProjectActivityStates> roleSpecificGolStates = new HashMap<Role, ProjectActivityStates>();
+    private ProjectActivityStates getGrantOfferLetterState(Project project, ProjectState processState, ProjectActivityStates bankDetailsStatus) {
             ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
             ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
 
@@ -435,27 +400,39 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                     && COMPLETE.equals(spendProfileStatus)
                     && COMPLETE.equals(bankDetailsStatus)) {
                 if (golWorkflowHandler.isApproved(project)) {
-                    roleSpecificGolStates.put(COMP_ADMIN, COMPLETE);
+                    return COMPLETE;
                 } else if (golWorkflowHandler.isRejected(project)) {
-                    ProjectActivityStates state = processState.isActive() ?
+                    return processState.isActive() ?
                             REJECTED : PENDING;
-                    roleSpecificGolStates.put(COMP_ADMIN, state);
                 } else {
                     if (golWorkflowHandler.isReadyToApprove(project)) {
-                        roleSpecificGolStates.put(COMP_ADMIN, actionRequiredIfProjectActive(processState));
+                        return actionRequiredIfProjectActive(processState);
                     } else {
                         if (golWorkflowHandler.isSent(project)) {
-                            roleSpecificGolStates.put(COMP_ADMIN, PENDING);
+                            return PENDING;
                         } else {
-                            roleSpecificGolStates.put(COMP_ADMIN, actionRequiredIfProjectActive(processState));
+                            return actionRequiredIfProjectActive(processState);
                         }
                     }
                 }
             } else {
-                roleSpecificGolStates.put(COMP_ADMIN, notStartedIfProjectActive(processState));
+                return notStartedIfProjectActive(processState);
             }
+    }
 
-            return roleSpecificGolStates;
+    private ProjectActivityStates getProjectSetupCompleteState(Project project, ProjectState processState) {
+        ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
+        ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
+        if (documentsApproved(project, processState)
+                && COMPLETE.equals(spendProfileStatus)) {
+            if (processState == LIVE || processState == UNSUCCESSFUL) {
+                return COMPLETE;
+            } else {
+                return actionRequiredIfProjectActive(processState);
+            }
+        } else {
+            return notStartedIfProjectActive(processState);
+        }
     }
 
     private boolean documentsApproved(Project project, ProjectState state) {
@@ -637,7 +614,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates createBankDetailStatus(Long projectId, Long applicationId, Long organisationId, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
-        } else if (!isSeekingFunding(projectId, applicationId, organisationId)) {
+        } else if (!isOrganisationSeekingFunding(projectId, applicationId, organisationId)) {
             return NOT_REQUIRED;
         } else if (COMPLETE.equals(financeContactStatus)) {
             return ACTION_REQUIRED;
@@ -646,11 +623,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private boolean isSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        return financeService.organisationSeeksFunding(projectId, applicationId, organisationId)
-                .getOptionalSuccessObject()
-                .orElse(false);
-    }
 
     private ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, boolean isAwaitingResponse) {
         PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
@@ -663,8 +635,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean financeChecksApproved(PartnerOrganisation partnerOrg) {
-        return asList(EligibilityState.APPROVED, EligibilityState.NOT_APPLICABLE).contains(eligibilityWorkflowHandler.getState(partnerOrg)) &&
-                asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg));
+        return eligibilityWorkflowHandler.getState(partnerOrg).isApprovedState() &&
+                viabilityWorkflowHandler.getState(partnerOrg).isApprovedState();
     }
 
     private ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class OtherCostBuilder extends AbstractCostBuilder<OtherCost, OtherCostBuilder> {
@@ -29,7 +28,7 @@ public class OtherCostBuilder extends AbstractCostBuilder<OtherCost, OtherCostBu
     }
 
     public static OtherCostBuilder newOtherCost() {
-        return new OtherCostBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Other cost "));
+        return new OtherCostBuilder(emptyList()).with(uniqueIds());
     }
 
     private OtherCostBuilder(List<BiConsumer<Integer, OtherCost>> multiActions) {
@@ -43,6 +42,6 @@ public class OtherCostBuilder extends AbstractCostBuilder<OtherCost, OtherCostBu
 
     @Override
     protected OtherCost createInitial() {
-        return new OtherCost();
+        return newInstance(OtherCost.class);
     }
 }

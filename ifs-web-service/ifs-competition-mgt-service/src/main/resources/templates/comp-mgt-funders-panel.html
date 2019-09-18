@@ -150,12 +150,12 @@
                                 <span class="empty-table-cell-select">-</span>
                             </th:block>
                         </td>
-                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${model.competitionSummary.competitionId}, rid=${result.id})} + ${model.originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
+                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${model.competitionSummary.competitionId}, rid=${result.id})}"  th:text="${result.id}" class="govuk-link" /></td>
                         <td class="govuk-table__cell" th:text="${result.name}"></td>
                         <td class="govuk-table__cell" th:text="${result.lead}"></td>
                         <td class="govuk-table__cell" th:text="${result.numberOfPartners}"></td>
-                        <td class="govuk-table__cell" th:text="${result.grantRequested}"></td>
-                        <td class="govuk-table__cell" th:text="${result.totalProjectCost}"></td>
+                        <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.grantRequested, 0, 'DEFAULT')}"></td>
+                        <td class="govuk-table__cell" th:text="${#numbers.formatInteger(result.totalProjectCost, 0, 'DEFAULT')}"></td>
                         <td class="govuk-table__cell" th:text="${result.duration}"></td>
                         <td class="govuk-table__cell" th:text="${result.fundingDecision?.name}"/>
                     </tr>
@@ -173,7 +173,7 @@
                     </thead>
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="result : ${results.content}">
-                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
+                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})}"  th:text="${result.id}" class="govuk-link" /></td>
                         <td class="govuk-table__cell" th:text="${result.name}"></td>
                         <td class="govuk-table__cell" th:text="${result.lead}"></td>
                         <td class="govuk-table__cell" th:text="${result.completedPercentage}"></td>

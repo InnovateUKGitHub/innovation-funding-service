@@ -12,7 +12,6 @@ import java.math.BigDecimal;
  */
 public class CapitalUsage extends AbstractFinanceRowItem {
     Long id;
-    String name;
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
@@ -44,13 +43,17 @@ public class CapitalUsage extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer utilisation;
 
-    public CapitalUsage() {
-        this.name = getCostType().getType();
+    private CapitalUsage() {
+        this(null);
+    }
+
+    public CapitalUsage(Long targetId) {
+        super(targetId);
     }
 
     public CapitalUsage(Long id, Integer deprecation, String description, String existing,
-                        BigDecimal npv, BigDecimal residualValue, Integer utilisation) {
-        this();
+                        BigDecimal npv, BigDecimal residualValue, Integer utilisation, Long targetId) {
+        this(targetId);
         this.id = id;
         this.deprecation = deprecation;
         this.description = description;
@@ -127,7 +130,7 @@ public class CapitalUsage extends AbstractFinanceRowItem {
 
     @Override
     public String getName() {
-        return name;
+        return getCostType().getType();
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
@@ -16,12 +17,14 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.sort;
@@ -56,7 +59,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     @Override
-    public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
+    public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(long questionId) {
         return find(questionRepository.findById(questionId), notFoundError(Question.class, questionId))
                 .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
     }
@@ -87,13 +90,22 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
-                setupResource.setAllowedFileTypes(formInput.getAllowedFileTypes());
+                setupResource.setAllowedAppendixResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
                 setupResource.setGuidance(formInput.getGuidanceAnswer());
                 setupResource.setMaxWords(formInput.getWordCount());
+                break;
+            case TEMPLATE_DOCUMENT:
+                setupResource.setTemplateDocument(formInput.getActive());
+                setupResource.setAllowedTemplateResponseFileTypes(formInput.getAllowedFileTypes());
+                setupResource.setTemplateTitle(formInput.getDescription());
+                setupResource.setTemplateFilename(Optional.ofNullable(formInput.getFile())
+                        .map(FileEntry::getName)
+                        .orElse(null));
+                setupResource.setTemplateFormInput(formInput.getId());
                 break;
         }
     }
@@ -127,7 +139,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     @Override
     @Transactional
-    public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
+    public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccess(competition -> questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
                 .andOnSuccess(this::mapQuestionToSuperQuestionResource);
@@ -166,12 +178,28 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
         markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource);
+        markTemplateUploadAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markWrittenFeedbackAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markResearchCategoryQuestionAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource);
 
         return serviceSuccess(competitionSetupQuestionResource);
+    }
+
+    private void markTemplateUploadAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        FormInput templateFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
+                FormInputScope.APPLICATION,
+                FormInputType.TEMPLATE_DOCUMENT);
+        if (templateFormInput != null && competitionSetupQuestionResource.getTemplateDocument() != null) {
+            templateFormInput.setActive(competitionSetupQuestionResource.getTemplateDocument());
+
+            if(competitionSetupQuestionResource.getTemplateDocument()) {
+                setTemplateSubOptions(templateFormInput, competitionSetupQuestionResource );
+            } else {
+                resetTemplateSubOptions(templateFormInput);
+            }
+        }
     }
 
     private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
@@ -183,18 +211,29 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
             if(competitionSetupQuestionResource.getAppendix()) {
                 setAppendixSubOptions(appendixFormInput, competitionSetupQuestionResource );
-            }
-            else {
+            } else {
                 resetAppendixSubOptions(appendixFormInput);
             }
         }
     }
 
+    private void setTemplateSubOptions(FormInput templateFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        templateFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedTemplateResponseFileTypes());
+        if (competitionSetupQuestionResource.getTemplateTitle() != null) {
+            templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateTitle());
+        }
+    }
+
     private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedFileTypes());
-        if(competitionSetupQuestionResource.getAppendixGuidance() != null) {
+        appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
+        if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
             appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
         }
+    }
+
+    private void resetTemplateSubOptions(FormInput appendixFormInput) {
+        appendixFormInput.setAllowedFileTypes(null);
+        appendixFormInput.setDescription(null);
     }
 
     private void resetAppendixSubOptions(FormInput appendixFormInput) {

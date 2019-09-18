@@ -2,12 +2,15 @@ package org.innovateuk.ifs.form.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
 
 @Service
@@ -53,4 +56,17 @@ public class FormInputRestServiceImpl extends BaseRestService implements FormInp
     public RestResult<FormInputResource> save(FormInputResource formInputResource) {
         return putWithRestResult(formInputRestURL + "/", formInputResource, FormInputResource.class);
     }
+
+    @Override
+    public RestResult<ByteArrayResource> downloadFile(long formInputId) {
+        String url = format("%s/%s/%s", formInputRestURL, "file", formInputId);
+        return getWithRestResult(url, ByteArrayResource.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> findFile(long formInputId) {
+        String url = format("%s/%s/%s", formInputRestURL, "file-details", formInputId);
+        return getWithRestResult(url, FileEntryResource.class);
+    }
+
 }

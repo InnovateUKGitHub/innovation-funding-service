@@ -43,12 +43,16 @@ public class LabourCost extends AbstractFinanceRowItem {
     private String description;
     private BigDecimal total; // calculated field, no validation
 
-    public LabourCost() {
-
+    private LabourCost() {
+        this(null);
     }
 
-    public LabourCost(Long id, String name, String role, BigDecimal grossEmployeeCost, Integer labourDays, String description) {
-        this();
+    public LabourCost(Long targetId) {
+        super(targetId);
+    }
+
+    public LabourCost(Long id, String name, String role, BigDecimal grossEmployeeCost, Integer labourDays, String description, Long targetId) {
+        super(targetId);
         this.id = id;
         this.name = name;
         this.role = role;
@@ -64,7 +68,6 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     @Override
-
     public Long getId() {
         return id;
     }

@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.dashboard.populator;
 
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationForEuGrantTransferResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInProgressResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardApplicationInSetupResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousApplicationResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.dashboard.viewmodel.EuGrantTransferDashboardRowViewModel;
@@ -33,21 +33,21 @@ public class ApplicantDashboardPopulator {
         this.applicantRestService = applicantRestService;
     }
 
-    public ApplicantDashboardViewModel populate(Long userId, String originQuery) {
+    public ApplicantDashboardViewModel populate(Long userId) {
         ApplicantDashboardResource applicantDashboardResource = applicantRestService.getApplicantDashboard(userId);
-        return getApplicantDashboardViewModel(originQuery, applicantDashboardResource);
+        return getApplicantDashboardViewModel(applicantDashboardResource);
     }
 
-    private ApplicantDashboardViewModel getApplicantDashboardViewModel(String originQuery, ApplicantDashboardResource applicantDashboardResource) {
+    private ApplicantDashboardViewModel getApplicantDashboardViewModel(ApplicantDashboardResource applicantDashboardResource) {
         List<InSetupDashboardRowViewModel> applicationsInSetUp = getViewModelForInSetup(applicantDashboardResource.getInSetup());
         List<EuGrantTransferDashboardRowViewModel> applicationsForEuGrantTransfers = getViewModelForEuGrantTransfers(applicantDashboardResource.getEuGrantTransfer());
         List<InProgressDashboardRowViewModel> applicationsInProgress = getViewModelForInProgress(applicantDashboardResource.getInProgress());
         List<PreviousDashboardRowViewModel> applicationsPreviouslySubmitted = getViewModelForPrevious(applicantDashboardResource.getPrevious());
 
-        return new ApplicantDashboardViewModel(applicationsInSetUp, applicationsForEuGrantTransfers, applicationsInProgress, applicationsPreviouslySubmitted, originQuery);
+        return new ApplicantDashboardViewModel(applicationsInSetUp, applicationsForEuGrantTransfers, applicationsInProgress, applicationsPreviouslySubmitted);
     }
 
-    private List<InSetupDashboardRowViewModel> getViewModelForInSetup(List<DashboardApplicationInSetupResource> inSetupResources){
+    private List<InSetupDashboardRowViewModel> getViewModelForInSetup(List<DashboardInSetupRowResource> inSetupResources){
         return inSetupResources
                 .stream()
                 .map(InSetupDashboardRowViewModel::new)
@@ -55,7 +55,7 @@ public class ApplicantDashboardPopulator {
                 .collect(toList());
     }
 
-    private List<EuGrantTransferDashboardRowViewModel> getViewModelForEuGrantTransfers(List<DashboardApplicationForEuGrantTransferResource> euGrantTransferResources){
+    private List<EuGrantTransferDashboardRowViewModel> getViewModelForEuGrantTransfers(List<DashboardEuGrantTransferRowResource> euGrantTransferResources){
         return euGrantTransferResources
                 .stream()
                 .map(EuGrantTransferDashboardRowViewModel::new)
@@ -63,7 +63,7 @@ public class ApplicantDashboardPopulator {
                 .collect(toList());
     }
 
-    private List<InProgressDashboardRowViewModel> getViewModelForInProgress(List<DashboardApplicationInProgressResource> dashboardApplicationInProgressResources){
+    private List<InProgressDashboardRowViewModel> getViewModelForInProgress(List<DashboardInProgressRowResource> dashboardApplicationInProgressResources){
         return dashboardApplicationInProgressResources
                 .stream()
                 .map(InProgressDashboardRowViewModel::new)
@@ -71,7 +71,7 @@ public class ApplicantDashboardPopulator {
                 .collect(toList());
     }
 
-    private List<PreviousDashboardRowViewModel> getViewModelForPrevious(List<DashboardPreviousApplicationResource> applicantDashboardResource){
+    private List<PreviousDashboardRowViewModel> getViewModelForPrevious(List<DashboardPreviousRowResource> applicantDashboardResource){
         return applicantDashboardResource
                 .stream()
                 .map(PreviousDashboardRowViewModel::new)

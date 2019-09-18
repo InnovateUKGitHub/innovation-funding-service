@@ -55,7 +55,7 @@ the user changes the application name
     the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link         jQuery=a:contains("Application details")
-    the user enters text to a text field    css=[id="application.name"]  ${application_name}
+    the user enters text to a text field    css=[id="name"]  ${application_name}
     the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
 
 the user sees the application he was invited for on his dashboard
@@ -66,11 +66,11 @@ the user sees the application he was invited for on his dashboard
 the user verifies account and starts his application
     [Arguments]  ${email}
     the user reads his email and clicks the link  ${email}  Please verify your email address  you can sign into your account.
-    the user clicks the button/link               jQuery=.govuk-button:contains("Sign in")
+    the user clicks the button/link               jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     logging in and error checking                 ${email}  ${correct_password}
     the user clicks the button/link               link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link               link=Application details
-    the user enters text to a text field          css=[id="application.name"]  ${email}'s Application
+    the user enters text to a text field          css=[id="name"]  ${email}'s Application
     the user clicks the button/link               jQuery=button:contains("Save and return to application overview")
 
 the user navigates to the Application Team Page

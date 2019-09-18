@@ -54,7 +54,8 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(target = "invites", ignore = true),
             @Mapping(target = "applicationFinances", ignore = true),
             @Mapping(target = "processRoles", ignore = true),
-            @Mapping(target = "manageFundingEmailDate", ignore = true)
+            @Mapping(target = "manageFundingEmailDate", ignore = true),
+            @Mapping(target = "project", ignore = true)
     })
     @Override
     public abstract Application mapToDomain(ApplicationResource resource);

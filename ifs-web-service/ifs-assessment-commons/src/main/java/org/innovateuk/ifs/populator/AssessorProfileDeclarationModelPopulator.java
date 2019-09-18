@@ -1,16 +1,14 @@
 package org.innovateuk.ifs.populator;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
-import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
-import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
-import org.innovateuk.ifs.profile.populator.AssessorProfileDeclarationBasePopulator;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,10 +30,10 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
         this.competitionRestService = competitionRestService;
     }
 
-    public AssessorProfileDeclarationViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, String originQuery, boolean compAdminUser) {
+    public AssessorProfileDeclarationViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, boolean compAdminUser) {
 
-        CompetitionResource competition =
-                Optional.ofNullable(competitionId).isPresent() ? competitionRestService.getCompetitionById(competitionId.get()).getSuccess() : null;
+        CompetitionResource competition = competitionId.map(id -> competitionRestService.getCompetitionById(id).getSuccess())
+                .orElse(null);
 
         AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = assessorProfileDetailsModelPopulator.populateModel(user, profile);
 
@@ -54,7 +52,6 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
                 getFinancialInterests(affiliations),
                 getFamilyAffiliations(affiliations),
                 getFamilyFinancialInterests(affiliations),
-                originQuery,
                 compAdminUser
         );
     }

@@ -43,7 +43,6 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
         final int totalPages = 3;
         final int pageSize = 11;
         final int pageNumber = 1;
-        final String origin = "query";
         final List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource().build(2);
 
         final List<AssessorCountSummaryResource> assessorCountSummaryResources = newAssessorCountSummaryResource().build((int) totalElements);
@@ -59,7 +58,7 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectorResources));
 
        ManageAssessorsViewModel manageAssessmentsViewModel =
-               manageAssessorsModelPopulator.populateModel(competition, assessorCountSummaryPageResource, origin);
+               manageAssessorsModelPopulator.populateModel(competition, assessorCountSummaryPageResource);
 
         ManageAssessorsViewModel expectedViewModel = new ManageAssessorsViewModel(
                 competition.getId(),
@@ -67,7 +66,7 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
                 simpleMap(assessorCountSummaryResources, ManageAssessorsRowViewModel::new),
                 competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT,
                 innovationSectorResources,
-                new Pagination(assessorCountSummaryPageResource, origin)
+                new Pagination(assessorCountSummaryPageResource)
         );
 
         assertEquals(expectedViewModel, manageAssessmentsViewModel);

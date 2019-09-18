@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -54,8 +55,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> saveApplication(ApplicationResource application) {
-        return postWithRestResult(applicationRestURL + "/save-application-details/" + application.getId(), application, Void.class);
+    public RestResult<ValidationMessages> saveApplication(ApplicationResource application) {
+        return postWithRestResult(applicationRestURL + "/save-application-details/" + application.getId(), application, ValidationMessages.class);
     }
 
     @Override
@@ -119,15 +120,4 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return getWithRestResult(applicationRestURL + "/get-latest-email-funding-date/" + applicationId, ZonedDateTime.class);
     }
 
-    @Override
-    public RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-
-        if (filter != null) {
-            params.put("filter", singletonList(filter));
-        }
-
-        String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/previous-applications", pageNumber, pageSize, sortField, params);
-        return getWithRestResult(uriWithParams, PreviousApplicationPageResource.class);
-    }
 }

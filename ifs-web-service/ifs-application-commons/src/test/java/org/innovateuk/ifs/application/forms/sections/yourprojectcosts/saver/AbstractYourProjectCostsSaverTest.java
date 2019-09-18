@@ -26,7 +26,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -62,7 +61,7 @@ public class AbstractYourProjectCostsSaverTest {
 
         LabourForm labourForm = new LabourForm();
         labourForm.setWorkingDaysPerYear(365);
-        LabourRowForm labourRow =  new LabourRowForm();
+        LabourRowForm labourRow = new LabourRowForm();
         labourRow.setGross(new BigDecimal(123));
         labourForm.setRows(asMap(UNSAVED_ROW_PREFIX, labourRow));
         form.setLabour(labourForm);
@@ -92,9 +91,13 @@ public class AbstractYourProjectCostsSaverTest {
         otherRow.setEstimate(new BigDecimal(123));
         form.setOtherRows(asMap(UNSAVED_ROW_PREFIX, otherRow));
 
+        VatForm vat = new VatForm();
+        vat.setRegistered(false);
+        form.setVatForm(vat);
+
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
-        when(financeRowRestService.addWithResponse(eq(APPLICATION_FINANCE_RESOURCE.getId()), any())).thenReturn(restSuccess(mockResponse));
+        when(financeRowRestService.create(any())).thenReturn(restSuccess(mockResponse));
 
         ServiceResult<Void> result = target.save(form, 1L, 2L);
 
@@ -109,16 +112,16 @@ public class AbstractYourProjectCostsSaverTest {
         assertEquals(overhead.getRate(), (Integer) 100);
         verify(financeRowRestService).update(overhead);
 
-        verify(financeRowRestService).addWithResponse(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(LabourCost.class));
-        verify(financeRowRestService).addWithResponse(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(Materials.class));
-        verify(financeRowRestService).addWithResponse(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(CapitalUsage.class));
-        verify(financeRowRestService).addWithResponse(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(SubContractingCost.class));
-        verify(financeRowRestService).addWithResponse(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(TravelCost.class));
-        verify(financeRowRestService).addWithResponse(eq(APPLICATION_FINANCE_RESOURCE.getId()), isA(OtherCost.class));
+        verify(financeRowRestService).create(isA(LabourCost.class));
+        verify(financeRowRestService).create(isA(Materials.class));
+        verify(financeRowRestService).create(isA(CapitalUsage.class));
+        verify(financeRowRestService).create(isA(SubContractingCost.class));
+        verify(financeRowRestService).create(isA(TravelCost.class));
+        verify(financeRowRestService).create(isA(OtherCost.class));
+        verify(financeRowRestService).update(isA(Vat.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);
     }
-
 
 }

@@ -9,18 +9,14 @@ if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.ena
     apply from: "gradle-support/zipkin.gradle"
 }
 
-if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false) {
-    apply from: "gradle-support/spring-boot-admin.gradle"
-}
-
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance-totals.enabled'] ?: true
 
 def isNamedEnv() {
-    return ["ifs-sysint", "ifs-uat", "ifs-demo", "ifs-perf", "production"].contains(openshiftEnv)
+    return ["ifs-sysint", "ifs-uat", "ifs-demo", "ifs-perf", "ifs-prod"].contains(openshiftEnv)
 }
 
 def isNotProductionEnv() {
-    !"production".equals(openshiftEnv)
+    !"ifs-prod".equals(openshiftEnv)
 }
 
 def isSysIntEnv() {
@@ -36,7 +32,7 @@ apply from: "gradle-support/openshift-support.gradle"
 buildscript {
 
     ext {
-        springBootVersion = '2.0.5.RELEASE'
+        springBootVersion = '2.0.9.RELEASE'
     }
 
     repositories {
@@ -76,8 +72,8 @@ dependencyUpdates.resolutionStrategy = {
 apply plugin: "com.github.hierynomus.license"
 
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+wrapper {
+    gradleVersion = '5.5'
 }
 
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false

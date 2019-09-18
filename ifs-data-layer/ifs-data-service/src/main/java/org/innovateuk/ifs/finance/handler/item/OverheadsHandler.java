@@ -6,7 +6,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.transactional.OverheadFileService;
@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OVERHEADS;
 
 /**
  * Handles the overheads, i.e. converts the costs to be stored into the database
@@ -58,24 +59,25 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(Overhead overhead) {
+    public ApplicationFinanceRow toApplicationDomain(Overhead overhead) {
         final String rateType = overhead.getRateType() != null ? overhead.getRateType().toString() : null;
-        return new ApplicationFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, null);
+        return new ApplicationFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, overhead.getCostType());
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(Overhead overhead) {
+    public ProjectFinanceRow toProjectDomain(Overhead overhead) {
         final String rateType = overhead.getRateType() != null ? overhead.getRateType().toString() : null;
-        return new ProjectFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, null);
+        return new ProjectFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, overhead.getCostType());
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
-        return buildRowItem(cost);
+    public Overhead toResource(FinanceRow cost) {
+        return new Overhead(cost.getId(), OverheadRateType.valueOf(cost.getItem()), cost.getQuantity(), cost.getTarget().getId());
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost) {
-        return new Overhead(cost.getId(), OverheadRateType.valueOf(cost.getItem()), cost.getQuantity());
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return OVERHEADS;
     }
 
     private void validateFilePresent(Overhead overhead, BindingResult bindingResult) {
@@ -91,12 +93,12 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
 
     @Override
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        return singletonList(initializeAcceptRate());
+        return singletonList(initializeAcceptRate(applicationFinance));
     }
 
-    private ApplicationFinanceRow initializeAcceptRate() {
-        Overhead costItem = new Overhead();
-        ApplicationFinanceRow cost = toCost(costItem);
+    private ApplicationFinanceRow initializeAcceptRate(ApplicationFinance applicationFinance) {
+        Overhead costItem = new Overhead(applicationFinance.getId());
+        ApplicationFinanceRow cost = toApplicationDomain(costItem);
         cost.setDescription(OverheadCostCategory.ACCEPT_RATE);
         return cost;
     }

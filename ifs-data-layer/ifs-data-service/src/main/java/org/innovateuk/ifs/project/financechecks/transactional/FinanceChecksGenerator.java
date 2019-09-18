@@ -15,7 +15,6 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,9 +53,6 @@ public class FinanceChecksGenerator {
     private ApplicationFinanceRowRepository financeRowRepository;
 
     @Autowired
-    private FinanceUtil financeUtil;
-
-    @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
 
     @Autowired
@@ -85,7 +81,7 @@ public class FinanceChecksGenerator {
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
-        if(competition.isH2020() || financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType().getId())) {
+        if(competition.isH2020() || competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
 
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
@@ -107,7 +103,7 @@ public class FinanceChecksGenerator {
             newRow.setItem("HORIZON_2020_TOTAL".equals(original.getItem()) ? "TOTAL" : original.getItem());
             newRow.setName(original.getName());
             newRow.setQuantity(original.getQuantity());
-            newRow.setQuestion(original.getQuestion());
+            newRow.setType(original.getType());
             return newRow;
         });
 

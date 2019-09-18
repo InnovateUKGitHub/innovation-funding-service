@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -92,45 +93,8 @@ public class ApplicationOverviewController {
                 .getRole() == LEADAPPLICANT;
     }
 
-    @PostMapping(value = "/{applicationId}")
-    public String applicationOverview(@PathVariable("applicationId") long applicationId,
-                                     UserResource user,
-                                     HttpServletRequest request) {
-
-        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-
-        questionService.assignQuestion(applicationId, request, assignedBy);
-        return "redirect:/application/" + applicationId;
-    }
-
     @GetMapping("/terms-and-conditions")
     public String termsAndConditions() {
         return "application-terms-and-conditions";
-    }
-
-    /**
-     * Assign a question to a user
-     *
-     * @param applicationId the application for which the user is assigned
-     * @param sectionId     section id for showing details
-     * @param request       request parameters
-     * @return
-     */
-    @PostMapping("/{applicationId}/section/{sectionId}")
-    public String assignQuestion(@PathVariable("applicationId") long applicationId,
-                                 @PathVariable("sectionId") long sectionId,
-                                 UserResource user,
-                                 HttpServletRequest request,
-                                 HttpServletResponse response) {
-        doAssignQuestion(applicationId, user, request, response);
-
-        return "redirect:/application/" + applicationId + "/section/" + sectionId;
-    }
-
-    private void doAssignQuestion(Long applicationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
-        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-
-        questionService.assignQuestion(applicationId, request, assignedBy);
-        cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 }

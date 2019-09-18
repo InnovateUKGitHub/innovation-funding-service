@@ -9,15 +9,18 @@ public class AssessmentTermsAndConditionsViewModel {
     private final String competitionTermsTemplate;
     private final long daysLeft;
     private final long daysLeftPercentage;
+    private final long competitionId;
 
     public AssessmentTermsAndConditionsViewModel(long assessmentId,
                                                  String competitionTermsTemplate,
                                                  long daysLeft,
-                                                 long daysLeftPercentage) {
+                                                 long daysLeftPercentage,
+                                                 long competitionId) {
         this.assessmentId = assessmentId;
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
+        this.competitionId = competitionId;
     }
 
     public long getAssessmentId() {
@@ -36,6 +39,10 @@ public class AssessmentTermsAndConditionsViewModel {
         return daysLeftPercentage;
     }
 
+    public long getCompetitionId() {
+        return competitionId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,20 +52,22 @@ public class AssessmentTermsAndConditionsViewModel {
         AssessmentTermsAndConditionsViewModel that = (AssessmentTermsAndConditionsViewModel) o;
 
         return new EqualsBuilder()
-                .append(getAssessmentId(), that.getAssessmentId())
-                .append(getDaysLeft(), that.getDaysLeft())
-                .append(getDaysLeftPercentage(), that.getDaysLeftPercentage())
-                .append(getCompetitionTermsTemplate(), that.getCompetitionTermsTemplate())
+                .append(assessmentId, that.assessmentId)
+                .append(daysLeft, that.daysLeft)
+                .append(daysLeftPercentage, that.daysLeftPercentage)
+                .append(competitionId, that.competitionId)
+                .append(competitionTermsTemplate, that.competitionTermsTemplate)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(getAssessmentId())
-                .append(getCompetitionTermsTemplate())
-                .append(getDaysLeft())
-                .append(getDaysLeftPercentage())
+                .append(assessmentId)
+                .append(competitionTermsTemplate)
+                .append(daysLeft)
+                .append(daysLeftPercentage)
+                .append(competitionId)
                 .toHashCode();
     }
 
@@ -69,6 +78,7 @@ public class AssessmentTermsAndConditionsViewModel {
                 ", competitionTermsTemplate='" + competitionTermsTemplate + '\'' +
                 ", daysLeft=" + daysLeft +
                 ", daysLeftPercentage=" + daysLeftPercentage +
+                ", competitionId=" + competitionId +
                 '}';
     }
 }

@@ -10,9 +10,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
  * View model for the review and send project spend profile.
  */
 public class TotalSpendProfileViewModel {
-    private ProjectResource project;
-    private TotalProjectSpendProfileTableViewModel table;
-    private SpendProfileSummaryModel summary;
+    private final ProjectResource project;
+    private final TotalProjectSpendProfileTableViewModel table;
+    private final SpendProfileSummaryModel summary;
 
     public TotalSpendProfileViewModel(ProjectResource project, TotalProjectSpendProfileTableViewModel table, SpendProfileSummaryModel summary) {
         this.project = project;
@@ -27,6 +27,10 @@ public class TotalSpendProfileViewModel {
         return table;
     }
     public SpendProfileSummaryModel getSummary() { return summary; }
+
+    public boolean isIncludeFinancialYearTable() {
+        return summary != null;
+    }
 
     @Override
     public boolean equals(Object o) {

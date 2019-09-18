@@ -72,6 +72,10 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
 
         String applicantResponseValue = getApplicantResponseValue(applicationFormInputs, applicantResponses);
         FileDetailsViewModel appendixDetails = getAppendixDetails(applicationFormInputs, applicantResponses);
+        FileDetailsViewModel templateDocumentDetails = getTemplateDocumentDetails(applicationFormInputs, applicantResponses);
+        String templateDocumentTitle = findFormInputWithType(applicationFormInputs, TEMPLATE_DOCUMENT)
+                .map(FormInputResource::getDescription)
+                .orElse(null);
 
         return new AssessmentFeedbackViewModel(assessment,
                 competition,
@@ -81,6 +85,8 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
                 findFormInputWithType(assessmentFormInputs, ASSESSOR_SCORE).isPresent(),
                 findFormInputWithType(assessmentFormInputs, ASSESSOR_APPLICATION_IN_SCOPE).isPresent(),
                 appendixDetails,
+                templateDocumentDetails,
+                templateDocumentTitle,
                 researchCategories);
     }
 
@@ -102,6 +108,18 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
             return applicantAppendixResponseExists ? new FileDetailsViewModel(appendixFormInput.getId(),
                         applicantAppendixResponse.getFilename(),
                         applicantAppendixResponse.getFilesizeBytes()) : null;
+        }).orElse(null);
+    }
+
+    private FileDetailsViewModel getTemplateDocumentDetails(List<FormInputResource> applicationFormInputs,
+                                                    Map<Long, FormInputResponseResource> applicantResponses) {
+
+        return findFormInputWithType(applicationFormInputs, TEMPLATE_DOCUMENT).map(appendixFormInput -> {
+            FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
+            boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
+            return applicantAppendixResponseExists ? new FileDetailsViewModel(appendixFormInput.getId(),
+                    applicantAppendixResponse.getFilename(),
+                    applicantAppendixResponse.getFilesizeBytes()) : null;
         }).orElse(null);
     }
 

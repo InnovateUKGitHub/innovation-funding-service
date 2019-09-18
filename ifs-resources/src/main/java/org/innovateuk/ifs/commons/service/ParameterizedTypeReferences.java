@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.commons.service;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -41,6 +38,7 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmen
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
@@ -164,6 +162,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<PreviousCompetitionSearchResultItem>>() {};
     }
 
+    public static ParameterizedTypeReference<List<PreviousApplicationResource>> previousApplicationResourceListType() {
+        return new ParameterizedTypeReference<List<PreviousApplicationResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<InnovationAreaResource>> innovationAreaResourceListType() {
         return new ParameterizedTypeReference<List<InnovationAreaResource>>() {};
     }
@@ -246,6 +248,11 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ProjectResource>> projectResourceListType() {
         return new ParameterizedTypeReference<List<ProjectResource>>() {
+        };
+    }
+
+    public static ParameterizedTypeReference<List<ProjectStatusResource>> projectStatusResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectStatusResource>>() {
         };
     }
 
@@ -368,4 +375,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<MonitoringOfficerAssignmentResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<ActivityLogResource>> activityLogResourceListType() {
+        return new ParameterizedTypeReference<List<ActivityLogResource>>() {};
+    }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
@@ -72,7 +73,20 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((scope, formInput) -> formInput.setScope(scope), scopes);
     }
 
-    public FormInputResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {
+    public FormInputResourceBuilder withFile(FileEntryResource... files) {
+        return withArray((file, formInput) -> formInput.setFile(file), files);
+    }
+
+    public FormInputResourceBuilder withGuidanceTitle(String... guidanceTitles) {
+        return withArray((guidanceTitle, formInput) -> formInput.setGuidanceTitle(guidanceTitle), guidanceTitles);
+    }
+
+    public FormInputResourceBuilder withGuidanceAnswer(String... guidanceAnswers) {
+        return withArray((guidanceAnswer, formInput) -> formInput.setGuidanceAnswer(guidanceAnswer), guidanceAnswers);
+    }
+
+    @SafeVarargs
+    public final FormInputResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {
         return withArray((types, formInput) -> formInput.setAllowedFileTypes(newLinkedHashSet(types)), fileTypes);
     }
 

@@ -3,9 +3,6 @@ package org.innovateuk.ifs.invite.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.user.resource.Role;
 
-/**
- * Created by rav on 30/06/2017.
- */
 public class RoleInviteResource extends InviteResource {
     private Long id;
     private String name;
@@ -75,7 +72,7 @@ public class RoleInviteResource extends InviteResource {
     }
 
     @JsonIgnore
-    public String getRoleDisplayName(){
+    public String getRoleDisplayName() {
         return Role.getById(roleId).getDisplayName();
     }
 }

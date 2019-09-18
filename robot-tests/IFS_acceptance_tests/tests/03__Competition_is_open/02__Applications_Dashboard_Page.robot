@@ -76,31 +76,13 @@ All Applications page: Key Statistics
     [Tags]
     Then the totals in the Key statistics should be correct
 
-Application has team link and team details
-    [Documentation]  IFS-43
+Application has application team details
+    [Documentation]  IFS-43  IFS-6152
     [Tags]
-    Given the user clicks the button/link            link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-    Then the user should see the element             link = view contributors and collaborators
-    And the user should see the element              jQuery = h1 span:contains("${OPEN_COMPETITION_APPLICATION_NAME}")
-    When the user clicks the button/link             link = view contributors and collaborators
-    Then the user should see the element             jQuery = h1:contains("Application team")
-    And the user should see the element    jQuery = p:contains("View contributors for both the lead and collaborating organisations.")
-    And the user should see the element    jQuery = h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")+h3:contains("Organisation type")+p:contains("Business")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("Steve Smith (Lead)")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("${lead_applicant}")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("46439359578")
-    And the user should see the element    jQuery = h2:nth-of-type(2):contains("${organisationEggsName}")+h3:contains("Organisation type")+p:contains("Research")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("Pete Tom")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("81877706440")
-    And the user should see the element    jQuery = h2:nth-of-type(3):contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("Ewan Cormack")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("36267829240")
-    And the user should see the element    jQuery = h2:nth-of-type(4):contains("${organisationLudlowName}")+h3:contains("Organisation type")+p:contains("Business")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("Jessica Doe")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}")
-    And the user should see the element    jQuery = table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("15247172589")
+    Given the user clicks the button/link          link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    Then the user should see the element           jQuery = h1 span:contains("${OPEN_COMPETITION_APPLICATION_NAME}")
+    When the user clicks the button/link           id = accordion-questions-heading-1     #Application team
+    Then the user should should see lead and partners details
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
@@ -118,7 +100,6 @@ Comp admin can open the view mode of the application
     And the user should see the element                                    link = Print application
     And the user should see the element                                    jQuery = h1 span:contains("Climate science the history of Greenland's ice")
     And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf")
-
     And open pdf link                                                      ${5mb_pdf}, 4 MB
     #    And the user should see the text in the page    ${quarantine_pdf}
     #    And the user cannot see this file but gets a quarantined message
@@ -134,8 +115,8 @@ Comp admin should be able to view but not edit the finances for every partner
     [Tags]
     Given the user navigates to the page             ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link             jQuery = button:contains("Finances summary")
-    Then the user should not see the element         link = your finances
-    And the user should see the element              jQuery = h3:contains("Finances summary")
+    Then the user should not see the element         link = your project finances
+    And the user should see the element              jQuery = h2:contains("Finances summary")
     And the user should see the element              jQuery = h2:contains("Funding breakdown")
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
@@ -184,7 +165,7 @@ the applicant edits the Subcontracting costs section
     the user clicks the button/link             link = Your project costs
     the user clicks the button/link             jQuery = button:contains("Subcontracting costs")
     the user should see the element             jQuery = label:contains("Subcontractor name")
-    The user enters text to a text field        css = #collapsible-4 .form-row:nth-child(2) input[name$=".cost"]    2000
+    The user enters text to a text field        css = #accordion-finances-content-5 .form-row:nth-child(2) input[name$=".cost"]    2000
     The user enters text to a text field        css = .form-row:nth-child(2) [name$=".name"]    Jackson Ltd
     The user enters text to a text field        css = .form-row:nth-child(2) [name$=".country"]    Romania
     The user enters text to a text field        css = .form-row:nth-child(2) [name$=".role"]    Contractor
@@ -283,3 +264,21 @@ The totals in the Key statistics should be correct
     ${SUBMITTED_COUNT} =     Get text    css = li:nth-child(4) > div > span
     Should Be Equal As Integers    ${SUBMITTED_APPLICATIONS}    ${SUBMITTED_COUNT}
     #TODO ADD Check for the beyond 50% counts when we will have test data
+
+the user should should see lead and partners details
+    the user should see the element    jQuery = #accordion-questions-content-1 h2:contains("Empire Ltd")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("Steve Smith")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("${lead_applicant}")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("46439359578")
+    the user should see the element    jQuery = #accordion-questions-content-1 h2:contains("EGGS")+h3:contains("Organisation type")+p:contains("Research")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("Pete Tom")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("81877706440")
+    the user should see the element    jQuery = #accordion-questions-content-1 h2:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("Ewan Cormack")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("36267829240")
+    the user should see the element    jQuery = #accordion-questions-content-1 h2:contains("${organisationLudlowName}")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("Jessica Doe")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}")
+    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("15247172589")

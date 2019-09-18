@@ -89,18 +89,6 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
     }
 
     @Test
-    public void financeSectionForCompetition() {
-        long competitionId = 1L;
-        String expectedUrl = sectionRestUrl + "/get-finance-section-by-competition-id/" + competitionId;
-        SectionResource resource = newSectionResource().build();
-        setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, resource);
-
-        RestResult<SectionResource> result = service.getFinanceSectionForCompetition(competitionId);
-
-        assertEquals(resource, result.getSuccess());
-    }
-
-    @Test
     public void getByCompetitionIdVisibleForAssessment() throws Exception {
         List<SectionResource> expected = newSectionResource().build(2);
 

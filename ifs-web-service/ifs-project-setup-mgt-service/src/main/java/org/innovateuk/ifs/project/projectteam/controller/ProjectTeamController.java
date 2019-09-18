@@ -24,7 +24,6 @@ import static java.lang.String.format;
 /**
  * This controller will handle all requests that are related to the project team.
  */
-
 @Controller
 @RequestMapping("/competition/{competitionId}/project")
 public class ProjectTeamController {

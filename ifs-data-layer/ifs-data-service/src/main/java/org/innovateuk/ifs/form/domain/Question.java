@@ -2,9 +2,8 @@ package org.innovateuk.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -42,9 +41,6 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId", referencedColumnName = "id")
     private Section section;
-
-    @OneToMany(mappedBy = "question")
-    private List<FinanceRow> costs;
 
     private String questionNumber;
     
@@ -140,15 +136,9 @@ public class Question {
         return formInputs;
     }
 
-    @JsonIgnore
-    public List<FinanceRow> getCosts() {
-        return costs;
-    }
-
     public Boolean getAssignEnabled() {
         return this.assignEnabled;
     }
-
 
     public void setId(Long id) {
         this.id = id;
@@ -180,10 +170,6 @@ public class Question {
 
     public void setFormInputs(List<FormInput> formInputs) {
         this.formInputs = formInputs;
-    }
-
-    public void setCosts(List<FinanceRow> costs) {
-        this.costs = costs;
     }
 
     public void setQuestionNumber(String questionNumber) {

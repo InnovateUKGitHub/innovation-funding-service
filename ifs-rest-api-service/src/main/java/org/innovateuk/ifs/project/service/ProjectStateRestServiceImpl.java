@@ -40,6 +40,16 @@ public class ProjectStateRestServiceImpl extends BaseRestService implements Proj
     }
 
     @Override
+    public RestResult<Void> markAsSuccessful(long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/successful");
+    }
+
+    @Override
+    public RestResult<Void> markAsUnsuccessful(long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/unsuccessful");
+    }
+
+    @Override
     public RestResult<ProjectStateCommentsResource> findOpenComments(long projectId) {
         return getWithRestResult(format("/project/%d/state/comments/open", projectId), ProjectStateCommentsResource.class);
     }

@@ -1,17 +1,20 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -42,16 +45,34 @@ public class YourFundingSaver {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private DefaultFinanceRowRestService financeRowRestService;
+    private ApplicationFinanceRowRestService financeRowRestService;
 
-    public ServiceResult<Void> save(long applicationId, YourFundingForm form, UserResource user) {
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
+    public ServiceResult<Void> save(long applicationId, YourFundingAmountForm form, long organisationId) {
+        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+
+        ValidationMessages messages = new ValidationMessages();
+
+        saveGrantClaimAmount(finance, form, messages);
+
+        if (form.getOtherFunding() != null) {
+            saveOtherFunding(finance, form, messages);
+        }
+
+        if (messages.getErrors().isEmpty()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(messages.getErrors());
+        }
+
+    }
+
+    public ServiceResult<Void> save(long applicationId, YourFundingPercentageForm form, long organisationId) {
+        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         ValidationMessages messages = new ValidationMessages();
 
         if (form.getRequestingFunding() != null) {
-            saveGrantClaim(finance, form, messages);
+            saveGrantClaimPercentage(finance, form, messages);
         }
         if (form.getOtherFunding() != null) {
             saveOtherFunding(finance, form, messages);
@@ -64,12 +85,12 @@ public class YourFundingSaver {
         }
     }
 
-    public void addOtherFundingRow(YourFundingForm form) {
+    public void addOtherFundingRow(YourFundingPercentageForm form) {
         OtherFundingRowForm rowForm = new OtherFundingRowForm();
         form.getOtherFundingRows().put(generateUnsavedRowId(), rowForm);
     }
 
-    public void removeOtherFundingRowForm(YourFundingForm form, String costId) {
+    public void removeOtherFundingRowForm(YourFundingPercentageForm form, String costId) {
         form.getOtherFundingRows().remove(costId);
         removeOtherFundingRow(costId);
     }
@@ -87,8 +108,13 @@ public class YourFundingSaver {
         try {
             if (field.equals("grantClaimPercentage")) {
                 finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
-                GrantClaim grantClaim = finance.getGrantClaim();
-                grantClaim.setGrantClaimPercentage(Integer.valueOf(value));
+                GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
+                grantClaim.setPercentage(Integer.valueOf(value));
+                financeRowRestService.update(grantClaim).getSuccess();
+            } else if (field.equals("amount")) {
+                finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
+                GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
+                grantClaim.setAmount(new BigDecimal(value));
                 financeRowRestService.update(grantClaim).getSuccess();
             } else if (field.startsWith("otherFundingRows")) {
                 String id = field.substring(field.indexOf('[') + 1, field.indexOf(']'));
@@ -96,9 +122,9 @@ public class YourFundingSaver {
                 OtherFunding cost;
 
                 if (id.startsWith(UNSAVED_ROW_PREFIX)) {
-                    cost = (OtherFunding) financeRowRestService.addWithResponse(finance.getId(), new OtherFunding()).getSuccess();
+                    cost = (OtherFunding) financeRowRestService.create(new OtherFunding(finance.getId())).getSuccess();
                 } else {
-                    cost = (OtherFunding) financeRowRestService.getCost(Long.valueOf(id)).getSuccess();
+                    cost = (OtherFunding) financeRowRestService.get(Long.valueOf(id)).getSuccess();
                 }
 
                 if (rowField.equals("source")) {
@@ -122,17 +148,23 @@ public class YourFundingSaver {
         return Optional.empty();
     }
 
-    private void saveGrantClaim(ApplicationFinanceResource finance, YourFundingForm form, ValidationMessages messages) {
-        GrantClaim claim = finance.getGrantClaim();
+    private void saveGrantClaimPercentage(ApplicationFinanceResource finance, YourFundingPercentageForm form, ValidationMessages messages) {
+        GrantClaimPercentage claim = (GrantClaimPercentage) finance.getGrantClaim();
         if (form.getRequestingFunding()) {
-            claim.setGrantClaimPercentage(form.getGrantClaimPercentage());
+            claim.setPercentage(form.getGrantClaimPercentage());
         } else {
-            claim.setGrantClaimPercentage(0);
+            claim.setPercentage(0);
         }
         messages.addAll(financeRowRestService.update(claim).getSuccess());
     }
 
-    private void saveOtherFunding(ApplicationFinanceResource finance, YourFundingForm form, ValidationMessages messages) {
+
+    private void saveGrantClaimAmount(ApplicationFinanceResource finance, YourFundingAmountForm form, ValidationMessages messages) {
+        GrantClaimAmount claim = (GrantClaimAmount) finance.getGrantClaim();
+        claim.setAmount(form.getAmount());
+        messages.addAll(financeRowRestService.update(claim).getSuccess());
+    }
+    private void saveOtherFunding(ApplicationFinanceResource finance, AbstractYourFundingForm form, ValidationMessages messages) {
         OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         otherFundingCategory.getOtherFunding().setOtherPublicFunding(form.getOtherFunding() ? "Yes" : "No");
         messages.addAll(financeRowRestService.update(otherFundingCategory.getOtherFunding()).getSuccess());
@@ -140,10 +172,10 @@ public class YourFundingSaver {
             form.getOtherFundingRows().forEach((id, cost) -> {
                 if (id.startsWith(UNSAVED_ROW_PREFIX)) {
                     if (!cost.isBlank()) {
-                        messages.addAll(financeRowRestService.add(finance.getId(), form.getOtherFundingQuestionId(), cost.toCost()).getSuccess());
+                        financeRowRestService.create(cost.toCost(finance.getId())).getSuccess();
                     }
                 } else {
-                    messages.addAll(financeRowRestService.update(cost.toCost()).getSuccess());
+                    messages.addAll(financeRowRestService.update(cost.toCost(finance.getId())).getSuccess());
                 }
             });
         }

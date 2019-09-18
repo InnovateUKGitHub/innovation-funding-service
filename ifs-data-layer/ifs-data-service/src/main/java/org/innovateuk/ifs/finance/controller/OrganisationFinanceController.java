@@ -14,8 +14,9 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -30,13 +31,8 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -44,12 +40,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.lang.Boolean.TRUE;
-import static java.time.YearMonth.*;
+import static java.time.YearMonth.parse;
 import static org.apache.commons.lang3.math.NumberUtils.isDigits;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOVER;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
@@ -66,50 +61,33 @@ public class OrganisationFinanceController {
     static final String ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION = "Annual export";
     static final String RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION = "Research and development spend";
 
+    @Autowired
     private CompetitionService competitionService;
+    @Autowired
     private QuestionService questionService;
+    @Autowired
     private FormInputService formInputService;
+    @Autowired
     private FormInputResponseService formInputResponseService;
+    @Autowired
     private ApplicationService applicationService;
-    private FinanceService financeService;
-    private FinanceRowCostsService financeRowCostsService;
+    @Autowired
+    private ApplicationFinanceService financeService;
+    @Autowired
+    private ApplicationFinanceRowService financeRowCostsService;
+    @Autowired
     private OrganisationService organisationService;
+    @Autowired
     private AuthenticationHelper authenticationHelper;
+    @Autowired
     private GrantClaimMaximumService grantClaimMaximumService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private UsersRolesService usersRolesService;
+    @Autowired
     private SectionStatusService sectionStatusService;
 
-
-    OrganisationFinanceController(
-            CompetitionService competitionService,
-            QuestionService questionService,
-            FormInputService formInputService,
-            FormInputResponseService formInputResponseService,
-            ApplicationService applicationService,
-            FinanceService financeService,
-            FinanceRowCostsService financeRowCostsService,
-            OrganisationService organisationService,
-            AuthenticationHelper authenticationHelper,
-            GrantClaimMaximumService grantClaimMaximumService,
-            SectionService sectionService,
-            UsersRolesService usersRolesService,
-            SectionStatusService sectionStatusService) {
-
-        this.competitionService = competitionService;
-        this.questionService = questionService;
-        this.formInputService = formInputService;
-        this.formInputResponseService = formInputResponseService;
-        this.applicationService = applicationService;
-        this.financeService = financeService;
-        this.financeRowCostsService = financeRowCostsService;
-        this.organisationService = organisationService;
-        this.authenticationHelper = authenticationHelper;
-        this.grantClaimMaximumService = grantClaimMaximumService;
-        this.sectionService = sectionService;
-        this.usersRolesService = usersRolesService;
-        this.sectionStatusService = sectionStatusService;
-    }
 
     @GetMapping("/with-growth-table")
     public RestResult<OrganisationFinancesWithGrowthTableResource> getOrganisationWithGrowthTable(
@@ -276,12 +254,12 @@ public class OrganisationFinanceController {
     }
 
     private ServiceResult<Void> updateOrganisationSize(long applicationId, long competitionId, long organisationId, OrganisationSize organisationSize) {
-        return financeService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).
+        return financeService.financeDetails(applicationId, organisationId).
                 andOnSuccess(finance -> {
                     if (finance.getOrganisationSize() != organisationSize) {
 
                         finance.setOrganisationSize(organisationSize);
-                        ServiceResult<ApplicationFinanceResource> updateSizeResult = financeRowCostsService.updateApplicationFinance(finance.getId(), finance);
+                        ServiceResult<ApplicationFinanceResource> updateSizeResult = financeService.updateApplicationFinance(finance.getId(), finance);
 
                         long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
                         handleOrganisationSizeChange(finance, competitionId, userId);
@@ -298,52 +276,42 @@ public class OrganisationFinanceController {
     private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance,
                                               long competitionId,
                                               long userId) {
-
+        CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
         OrganisationResource organisation = organisationService.findById(applicationFinance.getOrganisation()).getSuccess();
         boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).getSuccess();
 
-        if (organisation.getOrganisationType().equals(BUSINESS.getId()) && !maximumFundingLevelOverridden) {
+        if (!competition.isMaximumFundingLevelConstant(organisation.getOrganisationTypeEnum(), maximumFundingLevelOverridden)) {
             resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
         }
     }
 
     public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
-        CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
-        if (!competition.isFullyFunded()) {
-
-            final ProcessRoleResource processRole =
-                    usersRolesService.getAssignableProcessRolesByApplicationId(applicationFinance.getApplication()).getSuccess().stream()
+        final ProcessRoleResource processRole =
+                usersRolesService.getAssignableProcessRolesByApplicationId(applicationFinance.getApplication()).getSuccess().stream()
                         .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
                         .findFirst().get();
 
-            sectionService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FUNDING_FINANCES).getSuccess()
-                    .forEach(fundingSection ->
-                            sectionStatusService.markSectionAsInComplete(
-                                    fundingSection.getId(),
-                                    applicationFinance.getApplication(),
-                                    processRole.getId()
-                    ));
+        sectionService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FUNDING_FINANCES).getSuccess()
+                .forEach(fundingSection ->
+                        sectionStatusService.markSectionAsInComplete(
+                                fundingSection.getId(),
+                                applicationFinance.getApplication(),
+                                processRole.getId()
+                ));
 
-            Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
+        Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
 
-            resetFundingLevel(applicationFinance, financeQuestion.getId());
-        }
+        resetFundingLevel(applicationFinance);
     }
 
-    private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
-        if (applicationFinance.getGrantClaim() != null) {
-            applicationFinance.getGrantClaim().setGrantClaimPercentage(null);
-            financeRowCostsService.addCost(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim()).getSuccess();
-        }
+    private void resetFundingLevel(ApplicationFinanceResource applicationFinance) {
+        GrantClaim grantClaim = applicationFinance.getGrantClaim();
+        grantClaim.reset();
+        financeRowCostsService.update(grantClaim.getId(), grantClaim).getSuccess();
     }
 
     private ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, YearMonth financialYearEnd) {
         return updateYearMonthValueForFormInput(applicationId, competitionId, userId, financialYearEnd, FormInputType.FINANCIAL_YEAR_END);
-    }
-
-    private ServiceResult<Boolean> isIncludingGrowthTable(long competitionId) {
-        return competitionService.getCompetitionById(competitionId).
-                andOnSuccessReturn(competition -> TRUE.equals(competition.getIncludeProjectGrowthTable()));
     }
 
     private ServiceResult<YearMonth> getFinancialYearEnd(long applicationId, long competitionId, long organisationId) {

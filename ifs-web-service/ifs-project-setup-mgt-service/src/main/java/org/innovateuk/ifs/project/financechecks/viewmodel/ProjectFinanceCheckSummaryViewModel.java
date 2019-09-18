@@ -8,8 +8,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleNoneMatch;
  */
 public class ProjectFinanceCheckSummaryViewModel {
 
-    private FinanceCheckSummaryResource financeCheckSummaryResource;
-    private boolean projectIsActive;
+    private final FinanceCheckSummaryResource financeCheckSummaryResource;
+    private final boolean projectIsActive;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive) {
@@ -40,10 +40,6 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     public FinanceCheckSummaryResource getFinanceCheckSummaryResource() {
         return financeCheckSummaryResource;
-    }
-
-    public void setFinanceCheckSummaryResource(FinanceCheckSummaryResource financeCheckSummaryResource) {
-        this.financeCheckSummaryResource = financeCheckSummaryResource;
     }
 
     public boolean isProjectIsActive() {

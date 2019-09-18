@@ -84,7 +84,7 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
     }
 
     @Override
-    public LabourCost toCost() {
-        return new LabourCost(getCostId(), null, role, gross, days, null);
+    public LabourCost toCost(Long financeId) {
+        return new LabourCost(getCostId(), null, role, gross, days, null, financeId);
     }
 }

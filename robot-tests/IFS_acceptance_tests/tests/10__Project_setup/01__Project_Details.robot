@@ -119,7 +119,7 @@ Lead partner is able to see finances without an error
     Given the user clicks the button/link    jQuery = button:contains("Finances summary")
     When the user clicks the button/link     link = View finances
     Then the user should see the element     jQuery = h2:contains("Finance summary")
-    And the user clicks the button/link      link = Application summary
+    And the user clicks the button/link      link = Back to feedback overview
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
@@ -321,7 +321,7 @@ the invited user signs in
     [Arguments]  ${email}  ${name}  ${famName}
     the user reads his email and clicks the link    ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element                 jQuery = h1:contains("Account verified")
-    the user clicks the button/link                 jQuery = .govuk-button:contains("Sign in")
+    the user clicks the button/link                 jQuery = p:contains("Sign in to your Innovation Funding Service account.")~ a:contains("Sign in")
     Logging in and Error Checking                   ${email}  ${correct_password}
 
 The user resends and clicks the button
@@ -368,7 +368,7 @@ the competition admin should see that their Project details aren't completed
 Internal user can view project details via the clickable 'hour glass' for Project details
     the user clicks the button/link    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.waiting a
     the user should see the element    jQuery = h1:contains("Project details")
-    the user clicks the button/link    link = Projects in setup
+    the user clicks the button/link    link = Back to project setup
     the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(2)  # Project details
 
 the user should see the grant award terms and conditions
@@ -450,10 +450,7 @@ the user should see validations triggered correctly
 the user updates the correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save")
     the user should see a field and summary error       Search using a valid postcode or enter the address manually.
-    the user enters text to a text field                id = addressForm.postcodeInput  BS1 4NT
-    the user clicks the button/link                     id = postcode-lookup
-    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
+    the user enter the Correspondence address
     the user should see the address data
     the user clicks the button/link                     link = Correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")

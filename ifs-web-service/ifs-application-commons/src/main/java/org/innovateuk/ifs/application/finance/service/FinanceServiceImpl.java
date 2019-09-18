@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.application.finance.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ public class FinanceServiceImpl implements FinanceService {
     private UserRestService userRestService;
 
     @Autowired
-    private DefaultFinanceRowRestService financeRowRestService;
+    private ApplicationFinanceRowRestService financeRowRestService;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -43,19 +41,6 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Autowired
     private ApplicationService applicationService;
-
-    @Override
-    public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
-        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
-
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
-
-        if(processRole.getOrganisationId()!=null && competitionResource.isOpen()) {
-            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisationId()).getSuccess();
-        }
-        return null;
-    }
 
     @Override
     public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {

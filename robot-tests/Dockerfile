@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 RUN apt-get update && \
     apt-get install -y mysql-client && \
     apt-get install -y curl && \
-    apt-get install -y python-pip && \
+    apt-get install -y python3-pip && \
     apt-get install -y xvfb && \
     apt-get install -y rsync && \
     apt-get install -y telnet && \
@@ -31,7 +31,7 @@ RUN groupadd -g ${GID} gluster && \
 VOLUME /mnt/ifs_storage
 
 COPY robotPythonLibs-requirements.txt /tmp/
-RUN pip install -r /tmp/robotPythonLibs-requirements.txt
+RUN pip3 install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
 COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 

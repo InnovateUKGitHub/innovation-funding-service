@@ -2,20 +2,22 @@ package org.innovateuk.ifs.application.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationSummaryController;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
 import org.innovateuk.ifs.documentation.ApplicationSummaryDocs;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.primitives.Longs.asList;
+import static org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder.newPreviousApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_BUILDER;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -166,41 +168,26 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
-    public void getApplicationTeamByApplicationId() throws Exception {
-        long applicationId = 4L;
+    public void getPreviousApplications() throws Exception {
+        long competitionId = 4L;
 
-        ApplicationTeamUserResource user = new ApplicationTeamUserResource();
-        ApplicationTeamOrganisationResource teamOrg = new ApplicationTeamOrganisationResource();
-        teamOrg.setUsers(Collections.singletonList(user));
-        ApplicationTeamResource applicationTeam = new ApplicationTeamResource();
-        applicationTeam.setLeadOrganisation(teamOrg);
-        applicationTeam.setPartnerOrganisations(Collections.singletonList(teamOrg));
-
-        when(applicationSummaryService.getApplicationTeamByApplicationId(applicationId)).thenReturn(serviceSuccess(applicationTeam));
+        when(applicationSummaryService.getPreviousApplications(competitionId)).thenReturn(serviceSuccess(newPreviousApplicationResource().build(1)));
 
         mockMvc.perform(
-                get(baseUrl + "/application-team/{applicationId}", applicationId)
+                get(baseUrl + "/find-by-competition/{competitionId}/previous", competitionId)
                         .contentType(APPLICATION_JSON))
                 .andDo(document("application-summary/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("The application id")),
+                        pathParameters(parameterWithName("competitionId").description("The competition id to get previous applications")),
                         responseFields(
-                                fieldWithPath("leadOrganisation").description("Lead organisation"),
-                                fieldWithPath("leadOrganisation.organisationName").description("Organisation name"),
-                                fieldWithPath("leadOrganisation.organisationTypeName").description("Organisation type name"),
-                                fieldWithPath("leadOrganisation.users[]").description("Users in lead organisation"),
-                                fieldWithPath("leadOrganisation.users[].name").description("User's name"),
-                                fieldWithPath("leadOrganisation.users[].email").description("User's email"),
-                                fieldWithPath("leadOrganisation.users[].phoneNumber").description("User's telephone number"),
-                                fieldWithPath("leadOrganisation.users[].lead").description("Is user the lead applicant"),
-                                fieldWithPath("partnerOrganisations[]").description("Collaborating organisations"),
-                                fieldWithPath("partnerOrganisations[].organisationName").description("Organisation name"),
-                                fieldWithPath("partnerOrganisations[].organisationTypeName").description("Organisation type name"),
-                                fieldWithPath("partnerOrganisations[].users[]").description("Users in partner organisation"),
-                                fieldWithPath("partnerOrganisations[].users[].name").description("User's name"),
-                                fieldWithPath("partnerOrganisations[].users[].email").description("User's email"),
-                                fieldWithPath("partnerOrganisations[].users[].phoneNumber").description("User's telephone number"),
-                                fieldWithPath("partnerOrganisations[].users[].lead").description("Is user the lead applicant"))
+                                fieldWithPath("[].id").description("The id of the application"),
+                                fieldWithPath("[].name").description("The name of the application"),
+                                fieldWithPath("[].leadOrganisationName").description("The lead organisation of the application"),
+                                fieldWithPath("[].applicationState").description("The state of the application"),
+                                fieldWithPath("[].competition").description("The id of the competition")
                         )
-                );
+                )
+            );
+
+        verify(applicationSummaryService).getPreviousApplications(competitionId);
     }
 }

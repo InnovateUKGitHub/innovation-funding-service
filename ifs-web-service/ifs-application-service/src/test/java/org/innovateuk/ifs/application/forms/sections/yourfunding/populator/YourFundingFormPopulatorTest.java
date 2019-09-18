@@ -2,16 +2,16 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.populator;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
+import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -25,14 +25,13 @@ import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.collections.ListUtils.union;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
@@ -62,10 +61,10 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     private UserResource user = newUserResource().build();
     private OrganisationResource organisation =  newOrganisationResource().build();
 
-    private GrantClaim grantClaim;
+    private GrantClaimPercentage grantClaim;
     private OtherFunding otherFunding;
     private List<OtherFunding> otherFundingRows;
-    private GrantClaimCategory grantClaimCategory;
+    private ExcludedCostCategory grantClaimCategory;
     private OtherFundingCostCategory otherFundingCategory;
     private ApplicationFinanceResource finance;
     private ApplicationResource application;
@@ -80,7 +79,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     public void setup() {
         super.setup();
 
-        grantClaim = newGrantClaim()
+        grantClaim = newGrantClaimPercentage()
                 .withGrantClaimPercentage(100)
                 .build();
 
@@ -88,7 +87,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
                 .withCosts(asList(grantClaim))
                 .build();
 
-        otherFunding = new OtherFunding();
+        otherFunding = new OtherFunding(1L);
         otherFunding.setFundingSource(OtherFundingCostCategory.OTHER_FUNDING);
         otherFunding.setOtherPublicFunding("Yes");
 
@@ -114,7 +113,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
                 .build();
         otherFundingQuestion = newQuestionResource().build();
 
-        when(organisationRestService.getByUserAndApplicationId(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(organisation));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
         when(applicationService.getById(APPLICATION_ID)).thenReturn(application);
         when(questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING)).thenReturn(restSuccess(otherFundingQuestion));
@@ -122,9 +121,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate() {
-        YourFundingForm form = new YourFundingForm();
-
-        service.populateForm(form, APPLICATION_ID, user, Optional.empty());
+        YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertEquals(form.getRequestingFunding(), true);
         assertEquals(form.getGrantClaimPercentage(), (Integer) 100);
@@ -149,11 +146,10 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate_defaultValues() {
-        YourFundingForm form = new YourFundingForm();
-        grantClaim.setGrantClaimPercentage(null);
+        grantClaim.setPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 
-        service.populateForm(form, APPLICATION_ID, user, Optional.empty());
+        YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertNull(form.getRequestingFunding());
         assertNull(form.getOtherFunding());
@@ -162,11 +158,10 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void populate_withOrgId() {
-        YourFundingForm form = new YourFundingForm();
-        grantClaim.setGrantClaimPercentage(null);
+        grantClaim.setPercentage(null);
         otherFunding.setOtherPublicFunding(null);
 
-        service.populateForm(form, APPLICATION_ID, user, Optional.of(organisation.getId()));
+        YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertNull(form.getRequestingFunding());
         assertNull(form.getOtherFunding());

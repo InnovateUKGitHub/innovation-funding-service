@@ -6,13 +6,15 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 
 /**
  * Handles the labour costs, i.e. converts the costs to be stored into the database
@@ -33,7 +35,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(LabourCost labourCostItem) {
+    public ApplicationFinanceRow toApplicationDomain(LabourCost labourCostItem) {
         return labourCostItem != null ? new ApplicationFinanceRow(
                                             labourCostItem.getId(),
                                             labourCostItem.getName(),
@@ -41,11 +43,11 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
                                             labourCostItem.getDescription(),
                                             labourCostItem.getLabourDays(),
                                             labourCostItem.getGrossEmployeeCost(),
-                                            null, null) : null;
+                                            null, labourCostItem.getCostType()) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(LabourCost costItem) {
+    public ProjectFinanceRow toProjectDomain(LabourCost costItem) {
         return new ProjectFinanceRow(
                     costItem.getId(),
                     costItem.getName(),
@@ -53,29 +55,31 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
                     costItem.getDescription(),
                     costItem.getLabourDays(),
                     costItem.getGrossEmployeeCost(),
-                    null, null);
+                    null, costItem.getCostType());
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
-        return buildRowItem(cost);
+    public LabourCost toResource(FinanceRow cost) {
+        return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription(), cost.getTarget().getId());
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return LABOUR;
     }
 
     @Override
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeWorkingDays());
+        costs.add(initializeWorkingDays(applicationFinance));
         return costs;
     }
 
-    private ApplicationFinanceRow initializeWorkingDays() {
+    private ApplicationFinanceRow initializeWorkingDays(ApplicationFinance applicationFinance) {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
-        LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description);
-        return toCost(costItem);
+        LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, applicationFinance.getId());
+        return toApplicationDomain(costItem);
     }
+
 }

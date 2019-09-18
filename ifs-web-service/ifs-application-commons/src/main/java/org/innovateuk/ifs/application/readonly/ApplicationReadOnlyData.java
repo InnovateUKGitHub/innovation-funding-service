@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -17,34 +18,46 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 
 public class ApplicationReadOnlyData {
 
     private final CompetitionResource competition;
     private final ApplicationResource application;
     private final UserResource user;
-    private final Optional<ProcessRoleResource> processRole;
+    private final Optional<ProcessRoleResource> applicantProcessRole;
 
     private final Map<Long, QuestionResource> questionIdToQuestion;
-    private final Multimap<Long, FormInputResource> questionIdToFormInputs;
+    private final Multimap<Long, FormInputResource> questionIdToApplicationFormInputs;
+    private final Map<Long, FormInputResource> formInputIdToAssessorFormInput;
     private final Map<Long, FormInputResponseResource> formInputIdToFormInputResponses;
+    /* only included if ApplicationReadOnlySettings for isIncludeStatuses is set. */
     private final Multimap<Long, QuestionStatusResource> questionToQuestionStatus;
+    /* only included if ApplicationReadOnlySettings for assessmentId is set. */
+    private final Multimap<Long, AssessorFormInputResponseResource> questionToAssessorResponse;
 
 
-    public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition, UserResource user, Optional<ProcessRoleResource> processRole, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses, List<QuestionStatusResource> questionStatuses) {
+    public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition, UserResource user, Optional<ProcessRoleResource> applicantProcessRole, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses, List<QuestionStatusResource> questionStatuses, List<AssessorFormInputResponseResource> assessorResponses) {
         this.application = application;
         this.competition = competition;
         this.user = user;
-        this.processRole = processRole;
+        this.applicantProcessRole = applicantProcessRole;
 
         this.questionIdToQuestion = questions.stream()
                 .collect(toMap(QuestionResource::getId, Function.identity()));
-        this.questionIdToFormInputs = Multimaps.index(formInputs, FormInputResource::getQuestion);
+        this.questionIdToApplicationFormInputs = Multimaps.index(formInputs.stream().filter(input -> APPLICATION.equals(input.getScope())).collect(Collectors.toSet()),
+                FormInputResource::getQuestion);
+        this.formInputIdToAssessorFormInput = formInputs.stream()
+                .filter(input -> ASSESSMENT.equals(input.getScope()))
+                .collect(toMap(FormInputResource::getId, Function.identity()));
         this.formInputIdToFormInputResponses = formInputResponses.stream()
                 .collect(toMap(FormInputResponseResource::getFormInput, Function.identity(), (m1, m2) -> m1));
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
+        this.questionToAssessorResponse = Multimaps.index(assessorResponses, AssessorFormInputResponseResource::getQuestion);
     }
 
     public Map<Long, QuestionResource> getQuestionIdToQuestion() {
@@ -63,20 +76,28 @@ public class ApplicationReadOnlyData {
         return competition;
     }
 
-    public Multimap<Long, FormInputResource> getQuestionIdToFormInputs() {
-        return questionIdToFormInputs;
+    public Multimap<Long, FormInputResource> getQuestionIdToApplicationFormInputs() {
+        return questionIdToApplicationFormInputs;
     }
 
     public Map<Long, FormInputResponseResource> getFormInputIdToFormInputResponses() {
         return formInputIdToFormInputResponses;
     }
 
+    public Map<Long, FormInputResource> getFormInputIdToAssessorFormInput() {
+        return formInputIdToAssessorFormInput;
+    }
+
     public Multimap<Long, QuestionStatusResource> getQuestionToQuestionStatus() {
         return questionToQuestionStatus;
     }
 
-    public Optional<ProcessRoleResource> getProcessRole() {
-        return processRole;
+    public Optional<ProcessRoleResource> getApplicantProcessRole() {
+        return applicantProcessRole;
+    }
+
+    public Multimap<Long, AssessorFormInputResponseResource> getQuestionToAssessorResponse() {
+        return questionToAssessorResponse;
     }
 
     @Override
@@ -91,11 +112,12 @@ public class ApplicationReadOnlyData {
                 .append(competition, that.competition)
                 .append(application, that.application)
                 .append(user, that.user)
-                .append(processRole, that.processRole)
+                .append(applicantProcessRole, that.applicantProcessRole)
                 .append(questionIdToQuestion, that.questionIdToQuestion)
-                .append(questionIdToFormInputs, that.questionIdToFormInputs)
+                .append(questionIdToApplicationFormInputs, that.questionIdToApplicationFormInputs)
                 .append(formInputIdToFormInputResponses, that.formInputIdToFormInputResponses)
                 .append(questionToQuestionStatus, that.questionToQuestionStatus)
+                .append(questionToAssessorResponse, that.questionToAssessorResponse)
                 .isEquals();
     }
 
@@ -105,11 +127,12 @@ public class ApplicationReadOnlyData {
                 .append(competition)
                 .append(application)
                 .append(user)
-                .append(processRole)
+                .append(applicantProcessRole)
                 .append(questionIdToQuestion)
-                .append(questionIdToFormInputs)
+                .append(questionIdToApplicationFormInputs)
                 .append(formInputIdToFormInputResponses)
                 .append(questionToQuestionStatus)
+                .append(questionToAssessorResponse)
                 .toHashCode();
     }
 }

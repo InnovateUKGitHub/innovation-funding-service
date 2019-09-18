@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -22,4 +23,10 @@ public interface GrantTermsAndConditionsRepository extends CrudRepository<GrantT
 
     @Query(FIND_LATEST_VERSION)
     List<GrantTermsAndConditions> findLatestVersions();
+
+    GrantTermsAndConditions findFirstByNameOrderByVersionDesc(String name);
+
+    default GrantTermsAndConditions getLatestForFundingType(FundingType type) {
+        return findFirstByNameOrderByVersionDesc(type.getDefaultTermsName());
+    }
 }

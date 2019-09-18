@@ -8,8 +8,6 @@ import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestServi
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.status.populator.CompetitionStatusViewModelPopulator;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
-import org.innovateuk.ifs.project.status.security.StatusPermission;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
@@ -23,10 +21,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -38,16 +34,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<CompetitionStatusController> {
 
@@ -61,7 +50,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     private CompetitionStatusViewModelPopulator competitionStatusViewModelPopulatorMock;
 
     @Test
-    public void testViewCompetitionStatusPage() throws Exception {
+    public void viewCompetitionStatusPage() throws Exception {
         Long competitionId = 123L;
 
         mockMvc.perform(get("/competition/" + competitionId + "/status"))
@@ -70,48 +59,39 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
-    public void testViewCompetitionStatusPageAllProjectFinance() throws Exception {
+    public void viewCompetitionStatusPageAllProjectFinance() throws Exception {
         Long competitionId = 123L;
         String applicationSearchString = "12";
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
 
-        CompetitionStatusViewModel competitionStatusViewModel = new CompetitionStatusViewModel(new CompetitionProjectsStatusResource(), TRUE, new HashMap<Long, StatusPermission>(), 1L, 4L);
+        CompetitionStatusViewModel competitionStatusViewModel = mock(CompetitionStatusViewModel.class);
+
         when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString())).thenReturn(competitionStatusViewModel);
 
-        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
+        mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
-                .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
-                .andReturn();
-        CompetitionStatusViewModel viewModel = (CompetitionStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(1L, viewModel.getOpenQueryCount());
-        assertEquals(4L, viewModel.getPendingSpendProfilesCount());
-        assertTrue(viewModel.isShowTabs());
+                .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)));
     }
 
     @Test
-    public void testViewCompetitionStatusPageAllCompAdmin() throws Exception {
+    public void viewCompetitionStatusPageAllCompAdmin() throws Exception {
         long competitionId = 123L;
         String applicationSearchString = "12";
 
-        CompetitionStatusViewModel competitionStatusViewModel = new CompetitionStatusViewModel(new CompetitionProjectsStatusResource(), TRUE, new HashMap<Long, StatusPermission>(), 0L, 0L);
+        CompetitionStatusViewModel competitionStatusViewModel = mock(CompetitionStatusViewModel.class);
         when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString())).thenReturn(competitionStatusViewModel);
 
-        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
+        mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
-                .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
-                .andReturn();
+                .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)));
 
-        CompetitionStatusViewModel viewModel = (CompetitionStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(0L, viewModel.getOpenQueryCount());
-        assertEquals(0L, viewModel.getPendingSpendProfilesCount());
-        assertTrue(viewModel.isShowTabs());
         verify(competitionPostSubmissionRestService, never()).getCompetitionOpenQueriesCount(competitionId);
         verify(competitionPostSubmissionRestService, never()).countPendingSpendProfiles(competitionId);
     }
 
     @Test
-    public void testViewCompetitionStatusPageQueries() throws Exception {
+    public void viewCompetitionStatusPageQueries() throws Exception {
         long competitionId = 123L;
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
@@ -145,7 +125,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
-    public void testViewPendingSpendProfiles() throws Exception {
+    public void viewPendingSpendProfiles() throws Exception {
         long competitionId = 123L;
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());

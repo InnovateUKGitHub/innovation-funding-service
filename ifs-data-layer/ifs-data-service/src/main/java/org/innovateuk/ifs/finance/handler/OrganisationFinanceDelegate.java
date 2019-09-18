@@ -2,7 +2,7 @@ package org.innovateuk.ifs.finance.handler;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,17 +13,14 @@ public class OrganisationFinanceDelegate {
     private CompetitionService competitionService;
 
     @Autowired
-    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
+    private IndustrialCostFinanceHandler organisationFinanceDefaultHandler;
 
     @Autowired
-    private OrganisationJESFinance organisationJESFinance;
+    private JesFinanceHandler organisationJESFinance;
 
-    @Autowired
-    private FinanceUtil financeUtil;
-
-    public OrganisationFinanceHandler getOrganisationFinanceHandler(Long competitionId, Long organisationType) {
+    public OrganisationTypeFinanceHandler getOrganisationFinanceHandler(Long competitionId, Long organisationType) {
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
-        if (financeUtil.isUsingJesFinances(competition, organisationType)) {
+        if (competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisationType))) {
             return organisationJESFinance;
         } else {
             return organisationFinanceDefaultHandler;

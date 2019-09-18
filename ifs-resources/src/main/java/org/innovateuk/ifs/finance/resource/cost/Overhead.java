@@ -26,15 +26,18 @@ public class Overhead extends AbstractFinanceRowItem {
     @Max(value = 100, groups = RateNotZero.class, message = VALUE_MUST_BE_LOWER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = MAX_DIGITS_MESSAGE)
     private Integer rate;
-    private String name;
 
-    public Overhead() {
-        this.rateType = OverheadRateType.NONE;
-        this.name = getCostType().getType();
+    private Overhead() {
+        this(null);
     }
 
-    public Overhead(Long id, OverheadRateType rateType, Integer rate) {
-        this();
+    public Overhead(Long targetId) {
+        super(targetId);
+        this.rateType = OverheadRateType.NONE;
+    }
+
+    public Overhead(Long id, OverheadRateType rateType, Integer rate, Long targetId) {
+        this(targetId);
         this.id = id;
         this.rateType = rateType;
         this.rate = rate;
@@ -70,7 +73,7 @@ public class Overhead extends AbstractFinanceRowItem {
 
     @Override
     public String getName() {
-        return name;
+        return getCostType().getType();
     }
 
     @Override

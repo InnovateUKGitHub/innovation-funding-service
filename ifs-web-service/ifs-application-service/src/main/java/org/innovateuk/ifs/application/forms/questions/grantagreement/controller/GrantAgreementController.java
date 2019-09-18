@@ -22,13 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.commons.rest.RestFailure.error;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fileUploadField;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATTRIBUTE_FORM;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/grant-agreement")
@@ -104,14 +101,10 @@ public class GrantAgreementController {
                                        @PathVariable long questionId,
                                        UserResource user) {
 
+        Supplier<String> failureAndSuccessView = () -> viewGrantAgreement(form, bindingResult, model, applicationId, questionId, user);
         MultipartFile file = form.getGrantAgreement();
-        RestResult<Void> sendResult = euGrantTransferRestService
-                .uploadGrantAgreement(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-
-        Supplier<String> failureAndSuccesView = () -> viewGrantAgreement(form, bindingResult, model, applicationId, questionId, user);
-
-        return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())), fileUploadField("grantAgreement"), defaultConverters())
-                .failNowOrSucceedWith(failureAndSuccesView, failureAndSuccesView);
+        return validationHandler.performFileUpload("grantAgreement", failureAndSuccessView, () -> euGrantTransferRestService
+                .uploadGrantAgreement(applicationId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
     }
 
     @PostMapping(params = "removeGrantAgreement")

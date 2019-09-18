@@ -38,7 +38,10 @@ public class ApplicationDocs {
             fieldWithPath("leadOrganisationId").description("the id of the lead organisation").optional(),
             fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel").optional(),
             fieldWithPath("collaborationLevel").description("Collaboration level of the Competition (single, collaborative...)").optional(),
-            fieldWithPath("collaborativeProject").description("Flag indicating if the project is collaborative").optional()
+            fieldWithPath("collaborativeProject").description("Flag indicating if the project is collaborative").optional(),
+            fieldWithPath("competitionReferralSource").description("Enum indicating how the applicant was referred to the competition").optional(),
+            fieldWithPath("companyAge").description("Enum indicating age of company applying").optional(),
+            fieldWithPath("companyPrimaryFocus").description("Enum indicating the sector of business of the company applying").optional()
     };
 
     public static final FieldDescriptor[] previousApplicationResourceFields = {

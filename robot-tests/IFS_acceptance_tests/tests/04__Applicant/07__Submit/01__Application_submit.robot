@@ -36,12 +36,12 @@ Submit button disabled when application is incomplete
     Given the user navigates to the page               ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link               link = ${application_rto_name}
     And the user should not see the element            jQuery = .message-alert:contains("Now your application is complete, you need to review and submit at the bottom of this page.")
-    And the user clicks the button/link                link = Your finances
-    And the user clicks the button/link                link = Application overview
+    And the user clicks the button/link                link = Your project finances
+    And the user clicks the button/link                link = Back to application overview
     And the user clicks the button/link                jQuery = .govuk-button:contains("Review and submit")
     Then the submit button should be disabled
     When the user clicks the button/link               jQuery = button:contains("Application details")
-    Then the user should see the element               jQuery = div[id="collapsible-1"] button:contains("Mark as complete")+button:contains("Return and edit")
+    Then the user should see the element               jQuery = #accordion-questions-content-2 button:contains("Mark as complete")+button:contains("Return and edit")
     When the user clicks the button/link               jQuery = button:contains("Mark as complete")
     Then the user should see the element               jQuery = h1:contains("Application details")
     And the user should see a field and summary error  Please enter a future date
@@ -137,11 +137,11 @@ The user can check that the sections are read only
     the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link        link = ${application_name}
     the user clicks the button/link        link = View application
-    the user clicks the button/link        css = section:nth-of-type(1) .collapsible:nth-of-type(4)
+    the user expands the section           Scope
     the user should not see the element    jQuery = button:contains("Edit")
-    the user clicks the button/link        css = section:nth-of-type(2) .collapsible:nth-of-type(10)
+    the user expands the section           Adding value
     the user should not see the element    jQuery = .govuk-button:contains("Edit")
-    the user clicks the button/link        css = section:nth-of-type(3) .collapsible:nth-of-type(1)
+    the user expands the section           Finances summary
     the user should not see the element    jQuery = .govuk-button:contains("Edit")
 
 the submit button should be disabled
@@ -188,7 +188,7 @@ Custom Suite Setup
 create new application for submitting
     [Arguments]  ${application_name}
     the user clicks the button/link                   link=Application details
-    the user enters text to a text field              css=[id="application.name"]    ${application_name}
+    the user enters text to a text field              css=[id="name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
     the user marks every section but one as complete  ${application_name}  Experimental development
 

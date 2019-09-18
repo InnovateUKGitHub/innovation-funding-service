@@ -178,12 +178,11 @@ User should have access to all the sections
     And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
 
 The user must select the Terms and Conditions they want Applicants to accept
-    [Documentation]  IFS-3086
+    [Documentation]  IFS-3086  IFS-6205
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When the user selects the index from the drop-down menu     2  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
-    And the user clicks the button/link      css = button.govuk-button  #Done
-    Then the user should see the element     link = Advanced Propulsion Centre (APC)
+    When the user should see the element     link = Loans
+    And the user clicks the button/link      jQuery = button:contains("Done")
     And the user clicks the button/link      link = Competition setup
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
@@ -518,7 +517,7 @@ Application: Finances
     [Tags]  HappyPath
     Given the user clicks the button/link          link = Finances
     When the user should see the element           jQuery = h1:contains("Finances")
-    And the user selects the radio button          applicationFinanceType  STANDARD_WITH_VAT
+    And the user selects the radio button          applicationFinanceType  STANDARD
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
@@ -587,7 +586,7 @@ Moving competition to Ready to Open state
     [Tags]  HappyPath
 #    The following steps will move the comp from "In preparation" to "Ready to Open" state
     When the user clicks the button/link    css = #compCTA
-    Then the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    Then the user clicks the button/link    jQuery = button:contains("Done")
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
 
@@ -621,11 +620,11 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]
     [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}/section/application/landing-page
-    And the user clicks the button/link      css = button.govuk-button
+    And the user clicks the button/link      jQuery = button:contains("Done")
     Given the user navigates to the page     ${server}/management/competition/setup/${competitionId}
     And the user should see the element      jQuery = li:contains("Application") .task-status-complete
     When the user clicks the button/link     css = #compCTA
-    Then the user clicks the button/link     jQuery = .govuk-button:contains("Done")
+    Then the user clicks the button/link     jQuery = button:contains("Done")
     When the user clicks the button/link     link = Competition
     And the user navigates to the page       ${CA_UpcomingComp}
     Then the user should see the element     jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
@@ -667,7 +666,7 @@ Assessor: Should have a Green Check
     When The user clicks the button/link    link = Competition setup
     Then the user should see the element    jQuery = li:contains("Assessors") .task-status-complete
     And the user clicks the button/link     css = #compCTA
-    And the user clicks the button/link     jQuery = .govuk-button:contains("Done")
+    And the user clicks the button/link     jQuery = button:contains("Done")
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("Ready to open") li:contains("${competitionTitle}")
 
@@ -695,7 +694,7 @@ Innovation leads can be added to a competition
 User deletes the competition
     [Documentation]  IFS-1084
     [Tags]  HappyPath
-    Given the user navigates to the page        ${CA_UpcomingComp}
+    Given the comp admin creates competition
     And The user clicks the button/link         link = No competition title defined
     When the user clicks the button/link        link = Delete competition
     And the user clicks the button/link         css = .delete-modal button[type="submit"]
@@ -732,12 +731,11 @@ The Applicant see the correct Questions
     And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
-The user can see the VAT text in Your project costs
-    [Documentation]  IFS-4345
-    [Tags]
-    Given the user clicks the button/link      link = Your finances
-    When the user clicks the button/link       link = Your project costs
-    Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
+The Applicant is able to enter duration
+    [Documentation]  IFS-6398  IFS-6417
+    Given the user clicks the button/link  link = Application details
+    When the user fills new application details
+    the user should see the element       jQuery = li:contains("Application details") .task-status-complete
 
 *** Keywords ***
 the total should be correct
@@ -874,15 +872,14 @@ the user should not be able to edit the assessed question feedback
 
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
-    ${nextyear} =  get next year
-    Set suite variable  ${nextyear}
+    Set predefined date variables
     Connect to database  @{database}
 
 the user enters multiple innovation areas
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
     the user selects the value from the drop-down menu     15    name=innovationAreaCategoryIds[1]
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
-    List Should not Contain Value                          css = [id="innovationAreaCategoryIds[2]"]    Space technology
+    the user should see the element                        jQuery = #innovation-row-2 option:disabled:contains("Space technology")
     the user selects the value from the drop-down menu     12    name=innovationAreaCategoryIds[2]
 
 The user should not see the selected option again
@@ -906,6 +903,24 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
+
+the comp admin creates competition
+    the user navigates to the page        ${CA_UpcomingComp}
+    the user clicks the button/link       link = Create competition
+    the user navigates to the page        ${CA_UpcomingComp}
+
+the user fills new application details
+    the user enters text to a text field  id = name  New application
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  id = durationInMonths  45
+    the user clicks the button twice      css = label[for="resubmission-no"]
+    the user clicks the button/link       id = innovationAreaName
+    the user selects the radio button     innovationAreaChoice  NOT_APPLICABLE
+    the user clicks the button/link       jQuery = button:contains("Save")
+    the user clicks the button/link       css = button[name="mark_as_complete"]
+    the user clicks the button/link       link = Application overview
 
 Custom suite teardown
     The user closes the browser

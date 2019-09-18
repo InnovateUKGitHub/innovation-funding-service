@@ -27,14 +27,17 @@ public class TravelCost extends AbstractFinanceRowItem {
     @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer quantity;
-    private String name;
 
-    public TravelCost() {
-        this.name = getCostType().getType();
+    private TravelCost() {
+        this(null);
     }
 
-    public TravelCost(Long id, String item, BigDecimal cost, Integer quantity) {
-        this();
+    public TravelCost(Long targetId) {
+        super(targetId);
+    }
+
+    public TravelCost(Long id, String item, BigDecimal cost, Integer quantity, Long targetId) {
+        this(targetId);
         this.id = id;
         this.item = item;
         this.cost = cost;
@@ -73,7 +76,7 @@ public class TravelCost extends AbstractFinanceRowItem {
 
     @Override
     public String getName() {
-        return name;
+        return getCostType().getType();
     }
 
     @Override

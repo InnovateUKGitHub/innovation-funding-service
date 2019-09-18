@@ -4,7 +4,6 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.validator.AcademicValidator;
 import org.springframework.stereotype.Component;
@@ -26,22 +25,23 @@ public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(AcademicCost academicCostItem) {
+    public ApplicationFinanceRow toApplicationDomain(AcademicCost academicCostItem) {
         return academicCostItem != null ?
-                new ApplicationFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(), academicCostItem.getCostType().name(), null, academicCostItem.getTotal(), null, null) : null;
+                new ApplicationFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(), academicCostItem.getCostType().name(), null, academicCostItem.getTotal(), null, academicCostItem.getCostType()) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(AcademicCost costItem) {
-        return new ProjectFinanceRow(costItem.getId(), costItem.getName(), costItem.getItem(), costItem.getCostType().name(), null, costItem.getTotal(), null, null);
+    public ProjectFinanceRow toProjectDomain(AcademicCost costItem) {
+        return new ProjectFinanceRow(costItem.getId(), costItem.getName(), costItem.getItem(), costItem.getCostType().name(), null, costItem.getTotal(), null, costItem.getCostType());
     }
 
     @Override
-    public FinanceRowItem toCostItem(FinanceRow cost) {
-        return buildRowItem(cost);
+    public AcademicCost toResource(FinanceRow cost) {
+        return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem(), FinanceRowType.valueOf(cost.getDescription()), cost.getTarget().getId());
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem(), FinanceRowType.valueOf(cost.getDescription()));
+    @Override
+    public FinanceRowType getFinanceRowType() {
+        return FinanceRowType.ACADEMIC;
     }
 }

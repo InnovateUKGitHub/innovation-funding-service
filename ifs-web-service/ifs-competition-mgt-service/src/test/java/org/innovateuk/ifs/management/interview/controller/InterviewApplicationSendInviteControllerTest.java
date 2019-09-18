@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.interview.controller.InterviewApplicationSendInviteController;
 import org.innovateuk.ifs.management.interview.form.InterviewApplicationSendForm;
 import org.innovateuk.ifs.management.interview.model.InterviewApplicationSentInviteModelPopulator;
 import org.innovateuk.ifs.management.interview.model.InterviewApplicationsSendModelPopulator;
@@ -22,7 +21,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +39,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -88,7 +87,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     }
 
     @Mock
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Mock
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -101,7 +100,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
 
     @Before
     public void setUp() {
-        setupCookieUtil(cookieUtil);
+        setupEncryptedCookieService(cookieUtil);
 
         competition = newCompetitionResource()
                 .withId(1L)
@@ -289,8 +288,8 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                                 "App 1", "Org 1", "file1"),
                         new InterviewAssignmentApplicationInviteSendRowViewModel(2L, 4L,
                                 "App 2", "Org 2", "file2")),
-                newInterviewAssignmentKeyStatisticsResource().build(), new Pagination(invites, ""),
-                "?origin=INTERVIEW_PANEL_SEND", "Some content"
+                newInterviewAssignmentKeyStatisticsResource().build(), new Pagination(invites, "")
+                , "Some content"
         );
     }
 

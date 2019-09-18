@@ -20,14 +20,17 @@ public class OtherCost extends AbstractFinanceRowItem {
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal cost;
 
-    private String name;
 
-    public OtherCost() {
-        this.name = getCostType().getType();
+    private OtherCost() {
+        this(null);
     }
 
-    public OtherCost(Long id, String description, BigDecimal cost) {
-        this();
+    public OtherCost(Long targetId) {
+        super(targetId);
+    }
+
+    public OtherCost(Long id, String description, BigDecimal cost, Long targetId) {
+        this(targetId);
         this.id = id;
         this.description = description;
         this.cost = cost;
@@ -58,7 +61,7 @@ public class OtherCost extends AbstractFinanceRowItem {
 
     @Override
     public String getName() {
-        return this.name;
+        return getCostType().getType();
     }
 
     @Override

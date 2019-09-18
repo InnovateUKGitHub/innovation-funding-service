@@ -58,6 +58,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return withArray((competition, project) -> project.setCompetition(competition), competitions);
     }
 
+    public ProjectResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArray((competitionName, project) -> project.setCompetitionName(competitionName), competitionNames);
+    }
+
     public ProjectResourceBuilder withTargetStartDate(LocalDate... dates) {
         return withArray((date, project) -> project.setTargetStartDate(date), dates);
     }
@@ -92,7 +96,8 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 
-    public ProjectResourceBuilder withProjectDocuments(List<ProjectDocumentResource>... projectDocuments) {
+    @SafeVarargs
+    public final ProjectResourceBuilder withProjectDocuments(List<ProjectDocumentResource>... projectDocuments) {
         return withArray((projectDocumentList, project) -> project.setProjectDocuments(projectDocumentList), projectDocuments);
     }
 

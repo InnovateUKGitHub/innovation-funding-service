@@ -4,9 +4,9 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
+import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
@@ -26,6 +26,8 @@ import static org.innovateuk.ifs.finance.builder.OverheadBuilder.newOverhead;
 import static org.innovateuk.ifs.finance.builder.OverheadCostCategoryBuilder.newOverheadCostCategory;
 import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
 import static org.innovateuk.ifs.finance.builder.TravelCostBuilder.newTravelCost;
+import static org.innovateuk.ifs.finance.builder.VATCategoryBuilder.newVATCategory;
+import static org.innovateuk.ifs.finance.builder.VATCostBuilder.newVATCost;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -45,18 +47,15 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
     }
 
-    public S withWorkPostcode(String... value) {
-        return withArray((v, finance) -> finance.setWorkPostcode(v), value);
-    }
-
-    public S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
+    @SafeVarargs
+    public final S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
         return withArray((financeOrganisationDetail, finance) -> setField("financeOrganisationDetails", financeOrganisationDetail, finance), financeOrganisationDetails);
     }
 
     public S withGrantClaimPercentage(Integer percentage) {
         return with(finance -> {
-            GrantClaimCategory costCategory = new GrantClaimCategory();
-            costCategory.addCost(new GrantClaim(null, percentage));
+            ExcludedCostCategory costCategory = new ExcludedCostCategory();
+            costCategory.addCost(new GrantClaimPercentage(null, percentage, finance.getId()));
             costCategory.calculateTotal();
             finance.getFinanceOrganisationDetails().put(FINANCE, costCategory);
         });
@@ -123,7 +122,14 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withDescription("Something", "Else").
                                 withCost(new BigDecimal("100"), new BigDecimal("300")).
                                 build(2))
-                        .build()));
+                        .build(),
+                FinanceRowType.VAT, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                        .build(2))
+                        .build())
+        );
     }
 
     public S withAcademicCosts() {

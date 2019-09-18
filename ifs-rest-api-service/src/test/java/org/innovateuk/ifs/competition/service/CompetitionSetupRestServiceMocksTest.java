@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -16,11 +17,14 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionStatusMap;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
+import static org.springframework.http.HttpStatus.OK;
 
 public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionSetupRestServiceImpl> {
 
@@ -80,9 +84,9 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
     @Test
     public void generateCompetitionCode() {
         ZonedDateTime openingDate = ZonedDateTime.of(2016, 2, 1, 0, 0, 0, 0, ZoneId.systemDefault());
-        Long competitionId = Long.MAX_VALUE;
+        long competitionId = Long.MAX_VALUE;
         String competitionCode = "1602-1";
-        setupPostWithRestResultExpectations(String.format("%s/generate-competition-code/%s", competitionSetupRestURL, competitionId), String.class, openingDate, competitionCode, HttpStatus.OK);
+        setupPostWithRestResultExpectations(format("%s/generate-competition-code/%s", competitionSetupRestURL, competitionId), String.class, openingDate, competitionCode, HttpStatus.OK);
 
         String response = service.generateCompetitionCode(competitionId, openingDate).getSuccess();
         assertNotNull(response);
@@ -109,9 +113,9 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
 
     @Test
     public void testMarkSectionComplete() {
-        final Long competitionId = 4L;
+        final long competitionId = 4L;
         final CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
-        setupPutWithRestResultExpectations(String.format("%s/section-status/complete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class, null, null );
+        setupPutWithRestResultExpectations(format("%s/section-status/complete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class, null, null );
 
         RestResult<Void> result = service.markSectionComplete(competitionId, section);
         assertTrue(result.isSuccess());
@@ -119,9 +123,9 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
 
     @Test
     public void testMarkSectionIncomplete() {
-        final Long competitionId = 4L;
+        final long competitionId = 4L;
         final CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
-        setupPutWithRestResultExpectations(String.format("%s/section-status/incomplete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class, null, null );
+        setupPutWithRestResultExpectations(format("%s/section-status/incomplete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class, null, null );
 
         RestResult<Void> result = service.markSectionIncomplete(competitionId, section);
         assertTrue(result.isSuccess());
@@ -129,11 +133,11 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
 
     @Test
     public void testMarkSubSectionComplete() {
-        final Long competitionId = 4L;
+        final long competitionId = 4L;
         final CompetitionSetupSection parentSection = CompetitionSetupSection.INITIAL_DETAILS;
         final CompetitionSetupSubsection subsection = CompetitionSetupSubsection.FINANCES;
 
-        setupPutWithRestResultExpectations(String.format("%s/subsection-status/complete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class, null, null );
+        setupPutWithRestResultExpectations(format("%s/subsection-status/complete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class, null, null );
 
         RestResult<Void> result = service.markSubSectionComplete(competitionId, parentSection, subsection);
         assertTrue(result.isSuccess());
@@ -141,11 +145,11 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
 
     @Test
     public void testMarkSubSectionIncomplete() {
-        final Long competitionId = 4L;
+        final long competitionId = 4L;
         final CompetitionSetupSection parentSection = CompetitionSetupSection.INITIAL_DETAILS;
         final CompetitionSetupSubsection subsection = CompetitionSetupSubsection.FINANCES;
 
-        setupPutWithRestResultExpectations(String.format("%s/subsection-status/incomplete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class, null, null );
+        setupPutWithRestResultExpectations(format("%s/subsection-status/incomplete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class, null, null );
 
         RestResult<Void> result = service.markSubSectionIncomplete(competitionId, parentSection, subsection);
         assertTrue(result.isSuccess());
@@ -153,7 +157,7 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
 
     @Test
     public void getSectionStatuses() {
-        final Long competitionId = 342L;
+        final long competitionId = 342L;
 
         Map<CompetitionSetupSection, Optional<Boolean>> expectedResult = asMap(INITIAL_DETAILS, Optional.of(TRUE), ELIGIBILITY, Optional.empty());
         setupGetWithRestResultExpectations(competitionSetupRestURL + "/section-status/" + competitionId, competitionSetupSectionStatusMap(), expectedResult, HttpStatus.OK);
@@ -168,11 +172,44 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
     public void delete() {
         long competitionId = 1L;
 
-        setupDeleteWithRestResultExpectations(String.format("%s/%s", competitionSetupRestURL, competitionId));
+        setupDeleteWithRestResultExpectations(format("%s/%s", competitionSetupRestURL, competitionId));
 
         RestResult<Void> response = service.delete(competitionId);
 
         assertTrue(response.isSuccess());
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void uploadCompetitionTerms() {
+        long competitionId = 1L;
+        String originalFilename = "filename";
+        String mediaType = "media/type";
+        String requestBody = "content";
+        long fileSizeBytes = 1000;
+
+        String url = format("%s/competition-terms?competitionId=%d&filename=%s", competitionSetupRestURL, competitionId, originalFilename);
+
+        FileEntryResource expectedFileEntryResource = newFileEntryResource().build();
+
+        setupFileUploadWithRestResultExpectations(url, FileEntryResource.class, requestBody, mediaType, fileSizeBytes, expectedFileEntryResource, OK);
+
+        FileEntryResource result =
+                service.uploadCompetitionTerms(competitionId, mediaType, fileSizeBytes, originalFilename, requestBody.getBytes()).getSuccess();
+
+        assertEquals(expectedFileEntryResource, result);
+    }
+
+    @Test
+    public void deleteCompetitionTerms() {
+        long competitionId = 1L;
+
+        String url = format("%s/competition-terms?competitionId=%d", competitionSetupRestURL, competitionId);
+
+        setupDeleteWithRestResultExpectations(url, OK);
+
+        RestResult<Void> result = service.deleteCompetitionTerms(competitionId);
+
+        assertTrue(result.isSuccess());
     }
 }

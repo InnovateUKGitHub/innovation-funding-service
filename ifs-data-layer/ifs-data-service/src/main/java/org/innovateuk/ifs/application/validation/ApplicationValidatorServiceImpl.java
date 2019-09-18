@@ -9,11 +9,12 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -48,16 +49,19 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     private FormInputRepository formInputRepository;
 
     @Autowired
-    private FinanceRowCostsService financeRowCostsService;
+    private ApplicationFinanceRowService financeRowCostsService;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Autowired
     private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
     private ApplicationValidationUtil applicationValidationUtil;
+
+    @Autowired
+    private FinanceValidationUtil financeValidationUtil;
 
     @Autowired
     private OrganisationService organisationService;
@@ -96,11 +100,11 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
 
     @Override
-    public List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById) {
+    public List<ValidationMessages> validateCostItem(Long applicationId, FinanceRowType type, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
                 financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
-                        financeRowCostsService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems ->
-                                applicationValidationUtil.validateCostItem(costItems, question)
+                        financeRowCostsService.getCostItems(financeDetails.getId(), type).andOnSuccessReturn(costItems ->
+                                financeValidationUtil.validateCostItem(costItems)
                         )
                 )
         ).getSuccess();

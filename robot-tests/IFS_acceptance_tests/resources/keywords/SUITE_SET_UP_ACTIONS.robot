@@ -41,6 +41,11 @@ the lead applicant fills all the questions and marks as complete(programme)
     :FOR  ${ELEMENT}    IN    @{programme_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
+the lead applicant fills all the questions and marks as complete(procurement)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{programme_questions}
+     \     the lead applicant marks every question as complete procurement    ${ELEMENT}
+
 the lead applicant fills all the questions and marks as complete(sector)
     the user marks the project details as complete
     :FOR  ${ELEMENT}    IN    @{sector_questions}
@@ -54,15 +59,22 @@ the lead applicant marks every question as complete
     [Arguments]  ${question_link}
     the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
     the user marks the section as complete
-    the user clicks the button/link             link=Application overview
+    the user clicks the button/link             link=Back to application overview
+
+the lead applicant marks every question as complete procurement
+    [Arguments]  ${question_link}
+    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
+    the user marks the section as complete procurement
+    the user clicks the button/link             link=Back to application overview
 
 the user marks the section as complete
-    Wait Until Element Is Visible Without Screenshots    css=.textarea-wrapped .editor
-    Input Text    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
-    Mouse Out    css=.textarea-wrapped .editor
-    wait for autosave
-    the user clicks the button/link    name=mark_as_complete
-    #the user clicks the button/link    css=.next
+    the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    the user clicks the button/link         name=complete
+
+the user marks the section as complete procurement
+    the user enters text to a text field  css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
+    the user uploads the file             css = input[name="templateDocument"]    ${valid_pdf}
+    the user clicks the button/link       name=complete
 
 Create new application with the same user
     [Arguments]  ${Application_title}   ${orgType}
@@ -77,7 +89,7 @@ Create new application with the same user
     the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
     the user clicks the button/link            link=Application details
-    the user enters text to a text field       css=[id="application.name"]  ${Application_title}
+    the user enters text to a text field       css=[id="name"]  ${Application_title}
     the user clicks the button/link            jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition
@@ -99,7 +111,7 @@ Invite and accept the invitation
     the research user finds org in companies house      Live  University of Liverpool
     And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
-    And the user clicks the button/link                 jQuery=.govuk-button:contains("Sign in")
+    And the user clicks the button/link                 jQuery=p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     And Logging in and Error Checking                   ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 the user fills in the inviting steps no edit
@@ -181,7 +193,7 @@ the user verifies email
     The user should be redirected to the correct page          ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link               ${EMAIL_INVITED}  Please verify your email address  Once verified you can sign into your account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
-    The user clicks the button/link                            jQuery=.govuk-button:contains("Sign in")
+    The user clicks the button/link                            jQuery=p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
 

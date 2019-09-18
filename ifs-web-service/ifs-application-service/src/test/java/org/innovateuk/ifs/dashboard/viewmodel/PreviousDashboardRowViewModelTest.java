@@ -15,8 +15,13 @@ public class PreviousDashboardRowViewModelTest {
 
     @Test
     public void testConstruct() {
-        PreviousDashboardRowViewModel viewModel = new PreviousDashboardRowViewModel(null, 1L,
-                "Competition", APPROVED, YESTERDAY);
+        PreviousDashboardRowViewModel viewModel = new PreviousDashboardRowViewModel(null,
+                                                                                    1L,
+                                                                                    1L,
+                                                                                    "Competition",
+                                                                                    APPROVED,
+                                                                                    null,
+                                                                                    YESTERDAY);
 
         assertEquals("/application/1/summary", viewModel.getLinkUrl());
         assertEquals("Untitled application", viewModel.getTitle());

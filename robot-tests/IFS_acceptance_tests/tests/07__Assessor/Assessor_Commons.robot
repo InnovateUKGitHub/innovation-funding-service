@@ -117,3 +117,10 @@ assessor should see the competition terms and conditions
     Given the user clicks the button/link        link = View award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     [Teardown]  the user clicks the button/link  link = ${back_link}
+
+the assessor accept the application
+    [Arguments]   ${comp_name}  ${application_name}
+    the user clicks the button/link       jQuery = h2:contains("Attend panel") + ul li h3:contains("${comp_name}")
+    the user clicks the button/link       jQuery = .progress-list div:contains("${application_name}") ~ div a:contains("Accept or reject")
+    the user selects the radio button     reviewAccept  true
+    the user clicks the button/link       css = button[type="submit"]  # Confirm

@@ -38,7 +38,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     private QuestionService questionService;
     private QuestionRestService questionRestService;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-    private ApplicationQuestionApplicationDetailsSaver detailsSaver;
     private ApplicationQuestionFileSaver fileSaver;
     private ApplicationQuestionNonFileSaver nonFileSaver;
 
@@ -48,7 +47,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
                                     QuestionService questionService,
                                     QuestionRestService questionRestService,
                                     CookieFlashMessageFilter cookieFlashMessageFilter,
-                                    ApplicationQuestionApplicationDetailsSaver detailsSaver,
                                     ApplicationQuestionFileSaver fileSaver,
                                     ApplicationQuestionNonFileSaver nonFileSaver) {
         this.userRestService = userRestService;
@@ -57,7 +55,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         this.questionService = questionService;
         this.questionRestService = questionRestService;
         this.cookieFlashMessageFilter = cookieFlashMessageFilter;
-        this.detailsSaver = detailsSaver;
         this.fileSaver = fileSaver;
         this.nonFileSaver = nonFileSaver;
     }
@@ -77,14 +74,11 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         final boolean ignoreEmpty = !params.containsKey(MARK_AS_COMPLETE);
 
         ProcessRoleResource processRole = userRestService.findProcessRole(userId, application.getId()).getSuccess();
-        ApplicationResource updatedApplication = form.getApplication();
 
         if (!isMarkQuestionAsIncompleteRequest(params)) {
             errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questionList, request, userId, applicationId, ignoreEmpty));
             errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questionList, request.getParameterMap(), request, applicationId, processRole.getId()));
         }
-
-        detailsSaver.setApplicationDetails(application, updatedApplication);
 
         if (userService.isLeadApplicant(userId, application)) {
             applicationService.save(application);
@@ -119,7 +113,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         ValidationMessages combinedMessages = collectValidationMessages(applicationMessages);
         if (combinedMessages.hasErrors()) {
             questionService.markAsIncomplete(questionId, applicationId, processRoleId);
-            return detailsSaver.handleApplicationDetailsValidationMessages(applicationMessages);
         }
 
         return combinedMessages;

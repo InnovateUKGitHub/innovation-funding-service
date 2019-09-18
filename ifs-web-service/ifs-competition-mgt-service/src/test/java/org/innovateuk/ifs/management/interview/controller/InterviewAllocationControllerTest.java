@@ -23,7 +23,7 @@ import org.innovateuk.ifs.management.interview.viewmodel.InterviewAllocateApplic
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,6 @@ import java.util.List;
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -57,6 +56,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBui
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupCompressedCookieService;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -102,11 +102,11 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     }
 
     @Mock
-    private CookieUtil cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     @Before
     public void setUpCookies() {
-        setupCookieUtil(cookieUtil);
+        setupCompressedCookieService(cookieUtil);
     }
 
     @Test
@@ -359,9 +359,6 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         InterviewAllocationNotifyForm form = (InterviewAllocationNotifyForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(format("Applications for interview panel for '%s'", competition.getName()), form.getSubject());
-
-        String originQuery = (String) result.getModelAndView().getModel().get("originQuery");
-        assertEquals(format("?origin=INTERVIEW_PANEL_ALLOCATE&assessorId=%d", user.getId()), originQuery);
 
         InOrder inOrder = inOrder(userRestServiceMock, competitionRestService, interviewAllocationRestService, competitionRestService);
         inOrder.verify(userRestServiceMock).retrieveUserById(user.getId());

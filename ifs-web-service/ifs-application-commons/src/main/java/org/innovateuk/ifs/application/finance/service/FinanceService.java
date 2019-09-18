@@ -12,7 +12,6 @@ import java.util.List;
  * consists of costs.
  */
 public interface FinanceService {
-    ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId);
     ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId);
     ApplicationFinanceResource getApplicationFinanceByApplicationIdAndOrganisationId(Long applicationId, Long organisationId);
     ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);

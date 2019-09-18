@@ -258,7 +258,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withUser(assessors.get(0), assessors.get(1))
                 .build(2);
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<AssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
@@ -287,7 +287,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         int page = 0;
         int pageSize = 20;
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<AssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
@@ -433,7 +433,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         long totalElements = 100L;
 
-        Pageable pageable = new PageRequest(0, 20);
+        Pageable pageable = PageRequest.of(0, 20);
         Page<ReviewInvite> page = new PageImpl<>(existingUserInvites, pageable, totalElements);
 
         when(reviewInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED, pageable)).thenReturn(page);
@@ -754,7 +754,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     @Test
     public void getInvitationOverview() {
         long competitionId = 1L;
-        Pageable pageable = new PageRequest(0, 5);
+        Pageable pageable = PageRequest.of(0, 5);
         List<ReviewParticipant> expectedParticipants = newReviewParticipant()
                 .withInvite(
                         newReviewInvite()

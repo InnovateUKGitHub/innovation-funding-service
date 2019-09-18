@@ -38,7 +38,7 @@ public class YourProjectCostsViewModelPopulator {
         this.sectionService = sectionService;
     }
 
-    public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, boolean internalUser, String originQuery) {
+    public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, boolean internalUser) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -62,14 +62,15 @@ public class YourProjectCostsViewModelPopulator {
                 includeVat,
                 application.getName(),
                 organisation.getName(),
-                getYourFinancesUrl(applicationId, organisationId, internalUser, originQuery),
-                procurementCompetition);
+                getYourFinancesUrl(applicationId, organisationId, internalUser),
+                procurementCompetition,
+                competition.getFinanceRowTypes());
     }
 
-    private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser, String originQuery) {
+    private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {
         // IFS-4848 - we're constructing this URL in a few places - maybe a NavigationUtil?
         return internalUser ?
-                String.format("/application/%d/form/FINANCE/%d%s", applicationId, organisationId, originQuery) :
+                String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId) :
                 String.format("/application/%d/form/FINANCE", applicationId);
     }
 }

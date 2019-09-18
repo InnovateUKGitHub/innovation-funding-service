@@ -5,12 +5,13 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.NullValueMappingStrategy;
+
+import java.util.Optional;
 
 @Mapper(
-    config = GlobalMapperConfig.class,
-    uses = {
-
-    }
+        config = GlobalMapperConfig.class,
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
 public abstract class FileEntryMapper extends BaseMapper<FileEntry, FileEntryResource, Long> {
 
@@ -19,5 +20,9 @@ public abstract class FileEntryMapper extends BaseMapper<FileEntry, FileEntryRes
             return null;
         }
         return object.getId();
+    }
+
+    public FileEntryResource mapToResource(Optional<FileEntry> competitionTerms) {
+        return competitionTerms.map(this::mapToResource).orElse(null);
     }
 }

@@ -23,14 +23,22 @@
                 <thead class="govuk-table__head">
                   <tr class="govuk-table__row">
                       <th class="govuk-table__header" scope="col" rowspan="2">Partner</th>
-                      <th class="govuk-table__header status" scope="col">Project details</th>
-                      <th class="govuk-table__header status" scope="col">Project team</th>
-                      <th class="govuk-table__header status" scope="col">Documents</th>
-                      <th class="govuk-table__header status" scope="col">Monitoring Officer</th>
-                      <th class="govuk-table__header status" scope="col">Bank details</th>
-                      <th class="govuk-table__header status" scope="col">Finance checks</th>
-                      <th class="govuk-table__header status" scope="col">Spend profile</th>
-                      <th class="govuk-table__header status" scope="col">Grant offer letter</th>
+                      <th th:if="${model.hasProjectDetails()}"
+                          class="govuk-table__header status" scope="col">Project details</th>
+                      <th th:if="${model.hasProjectTeam()}"
+                          class="govuk-table__header status" scope="col">Project team</th>
+                      <th th:if="${model.hasDocuments()}"
+                          class="govuk-table__header status" scope="col">Documents</th>
+                      <th th:if="${model.hasMonitoringOfficer()}"
+                          class="govuk-table__header status" scope="col">Monitoring Officer</th>
+                      <th th:if="${model.hasBankDetails()}"
+                          class="govuk-table__header status" scope="col">Bank details</th>
+                      <th th:if="${model.hasFinanceChecks()}"
+                          class="govuk-table__header status" scope="col">Finance checks</th>
+                      <th th:if="${model.hasSpendProfile()}"
+                          class="govuk-table__header status" scope="col">Spend profile</th>
+                      <th th:if="${model.hasGrantOfferLetter()}"
+                          class="govuk-table__header status" scope="col">Grant offer letter</th>
                   </tr>
                 </thead>
                 <tbody class="govuk-table__body">

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -45,7 +45,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     private QuestionStatusService questionStatusService;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Autowired
     private ApplicationValidationUtil validationUtil;
@@ -108,15 +108,15 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Override
     @Transactional
-    public ServiceResult<List<ValidationMessages>> markSectionAsComplete(final long sectionId,
+    public ServiceResult<ValidationMessages> markSectionAsComplete(final long sectionId,
                                                                          final long applicationId,
                                                                          final long markedAsCompleteById) {
 
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
 
-            List<ValidationMessages> sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
+            ValidationMessages sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
-            if (sectionIsValid.isEmpty()) {
+            if (!sectionIsValid.hasErrors()) {
                 markSectionAsComplete(section, application, markedAsCompleteById);
             }
 

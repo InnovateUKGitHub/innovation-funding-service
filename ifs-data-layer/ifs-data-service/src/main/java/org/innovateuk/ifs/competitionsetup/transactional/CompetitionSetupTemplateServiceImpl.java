@@ -4,8 +4,11 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
@@ -20,6 +23,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.initialiseFinanceTypes;
 
 /**
  * Service that can create Competition template copies
@@ -38,6 +42,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Autowired
     private CompetitionRepository competitionRepository;
+
+    @Autowired
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
@@ -60,12 +67,24 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         Competition competition = competitionOptional.get();
 
         competition.setCompetitionType(competitionType.get());
-        competition = setDefaultAssessorPayAndCount(competition);
+        setDefaultAssessorPayAndCount(competition);
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
-        Competition populatedCompetition = copyTemplatePropertiesToCompetition(template, competition);
-        return serviceSuccess(competitionTemplatePersistor.persistByEntity(populatedCompetition));
+        copyTemplatePropertiesToCompetition(template, competition);
+
+        overrideTermsAndConditionsForNonGrantCompetitions(competition);
+        initialiseFinanceTypes(competition);
+
+        return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
+    }
+
+    private void overrideTermsAndConditionsForNonGrantCompetitions(Competition populatedCompetition) {
+        if (populatedCompetition.getFundingType() != FundingType.GRANT) {
+            GrantTermsAndConditions grantTermsAndConditions =
+                    grantTermsAndConditionsRepository.getLatestForFundingType(populatedCompetition.getFundingType());
+            populatedCompetition.setTermsAndConditions(grantTermsAndConditions);
+        }
     }
 
     private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
@@ -94,4 +113,5 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private boolean competitionIsNotInSetupState(Competition competition) {
         return !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP);
     }
+
 }

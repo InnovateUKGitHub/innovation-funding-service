@@ -197,9 +197,9 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         CompetitionSearchResult response = service.findPreviousCompetitions(page, size).getSuccess();
 
         assertEquals((long) competitionId, response.getContent().get(0).getId());
-        assertEquals((Integer) 1, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getApplications());
-        assertEquals((Integer) 2, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getProjects());
-        assertEquals((Integer) 3, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getCompleteProjects());
+        assertEquals(1, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getApplications());
+        assertEquals(2, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getProjects());
+        assertEquals(3, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getCompleteProjects());
     }
 
     @Test
@@ -259,7 +259,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         String competitionType = "Comp type";
         int page = 1;
         int size = 20;
-        PageRequest pageRequest = new PageRequest(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size);
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
@@ -311,7 +311,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), any(), any());
+        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock, never()).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }
@@ -380,7 +380,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), any(), any());
+        verify(competitionRepositoryMock).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock, never()).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }
@@ -405,7 +405,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         searchCompetitionsAssertions(totalElements, totalPages, page, size, competitionType, competition, response);
 
-        verify(competitionRepositoryMock, never()).searchForInnovationLeadOrStakeholder(any(), any(), any());
+        verify(competitionRepositoryMock, never()).searchForInnovationLeadOrStakeholder(any(), anyLong(), any());
         verify(competitionRepositoryMock).searchForSupportUser(any(), any());
         verify(competitionRepositoryMock, never()).search(any(), any());
     }

@@ -3,7 +3,8 @@ package org.innovateuk.ifs.eugrant.overview.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eu.grant.EuGrantRestService;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
+import org.innovateuk.ifs.util.HttpServletUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,10 @@ public class EuGrantCookieService {
     private EuGrantRestService euGrantRestService;
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Autowired
-    private EuGrantHttpServlet euGrantHttpServlet;
+    private HttpServletUtil httpServletUtil;
 
 
     public EuGrantResource get() {
@@ -53,19 +54,19 @@ public class EuGrantCookieService {
     }
 
     public void setPreviouslySubmitted(EuGrantResource euGrantResource) {
-        cookieUtil.saveToCookie(euGrantHttpServlet.response(), PREVIOUS_EU_GRANT, JsonUtil.getSerializedObject(euGrantResource));
+        cookieUtil.saveToCookie(httpServletUtil.response(), PREVIOUS_EU_GRANT, JsonUtil.getSerializedObject(euGrantResource));
     }
 
     public Optional<EuGrantResource> getPreviouslySubmitted() {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(euGrantHttpServlet.request(), PREVIOUS_EU_GRANT), EuGrantResource.class));
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(httpServletUtil.request(), PREVIOUS_EU_GRANT), EuGrantResource.class));
     }
 
     private void saveToEuGrantCookie(UUID uuid) {
-        cookieUtil.saveToCookie(euGrantHttpServlet.response(), EU_GRANT_ID, uuid.toString());
+        cookieUtil.saveToCookie(httpServletUtil.response(), EU_GRANT_ID, uuid.toString());
     }
 
     private Optional<UUID> getIdFromCookie() {
-        String cookie = cookieUtil.getCookieValue(euGrantHttpServlet.request(), EU_GRANT_ID);
+        String cookie = cookieUtil.getCookieValue(httpServletUtil.request(), EU_GRANT_ID);
 
         if (!cookie.isEmpty()) {
             return Optional.of(UUID.fromString(cookie));
@@ -75,6 +76,6 @@ public class EuGrantCookieService {
     }
 
     public void clear() {
-        cookieUtil.removeCookie(euGrantHttpServlet.response(), EU_GRANT_ID);
+        cookieUtil.removeCookie(httpServletUtil.response(), EU_GRANT_ID);
     }
 }

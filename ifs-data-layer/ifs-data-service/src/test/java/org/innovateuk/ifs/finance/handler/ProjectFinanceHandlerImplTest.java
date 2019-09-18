@@ -42,7 +42,7 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
     private ProjectFinanceHandler handler = new ProjectFinanceHandlerImpl();
 
     @Mock
-    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
+    private IndustrialCostFinanceHandler organisationFinanceDefaultHandlerMock;
 
     @Mock
     private OrganisationRepository organisationRepositoryMock;

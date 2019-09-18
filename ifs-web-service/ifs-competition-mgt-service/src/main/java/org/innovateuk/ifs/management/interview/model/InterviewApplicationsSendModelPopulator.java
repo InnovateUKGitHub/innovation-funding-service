@@ -32,7 +32,7 @@ public class InterviewApplicationsSendModelPopulator extends InterviewApplicatio
         this.competitionRestService = competitionRestService;
     }
 
-    public InterviewAssignmentApplicationsSendViewModel populateModel(long competitionId, int page, String originQuery, InterviewApplicationSendForm form) {
+    public InterviewAssignmentApplicationsSendViewModel populateModel(long competitionId, int page, InterviewApplicationSendForm form) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -54,8 +54,7 @@ public class InterviewApplicationsSendModelPopulator extends InterviewApplicatio
                 competition.getInnovationSectorName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
                 getKeyStatistics(competitionId),
-                new Pagination(pageResource, originQuery),
-                originQuery,
+                new Pagination(pageResource),
                 content
         );
     }

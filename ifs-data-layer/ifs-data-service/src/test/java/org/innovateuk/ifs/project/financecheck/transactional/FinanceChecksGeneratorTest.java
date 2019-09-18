@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -22,7 +23,6 @@ import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepositor
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newPro
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
@@ -74,9 +75,6 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
     @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
-
-    @Mock
-    private FinanceUtil financeUtilMock;
 
     @Mock
     private ProjectFinanceRepository projectFinanceRepositoryMock;
@@ -110,7 +108,9 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        competition = newCompetitionResource().build();
+        competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .build();
 
         costCategories = newCostCategory().withName("Cat1", "Cat2").build(2);
 
@@ -177,7 +177,8 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
     @Test
     public void testCreateFinanceChecksFiguresWhenOrganisationIsUsingJesFinances() {
-        when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType().getId())).thenReturn(true);
+        organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build());
+
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
         when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
@@ -216,9 +217,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
         assertTrue(result.isSuccess());
 
-
         verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
-        verifyZeroInteractions(financeUtilMock);
 
         assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
 
@@ -249,7 +248,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                 withDescription("Desc 1", "Desc 2").
                 withName("Name 1", "Name 2").
                 withQuantity(222, 333).
-                withQuestion(financeQuestions.get(0), financeQuestions.get(1)).
+                withType(FinanceRowType.FINANCE, FinanceRowType.FINANCE).
                 withFinanceRowMetadata(
                         newFinanceRowMetaValue().
                                 withFinanceRowMetaField(financeRowMetaField1, financeRowMetaField2).
@@ -272,7 +271,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                 withDescription("Desc 1", "Desc 2").
                 withName("Name 1", "Name 2").
                 withQuantity(222, 333).
-                withQuestion(financeQuestions.get(0), financeQuestions.get(1)).
+                withType(FinanceRowType.FINANCE, FinanceRowType.FINANCE).
                 withFinanceRowMetadata(
                         newFinanceRowMetaValue().
                                 withFinanceRowMetaField(financeRowMetaField1, financeRowMetaField2).
@@ -305,7 +304,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
             assertEquals(expected.getItem(), actual.getItem());
             assertEquals(expected.getName(), actual.getName());
             assertEquals(expected.getQuantity(), actual.getQuantity());
-            assertEquals(expected.getQuestion(), actual.getQuestion());
+            assertEquals(expected.getType(), actual.getType());
         });
     }
 

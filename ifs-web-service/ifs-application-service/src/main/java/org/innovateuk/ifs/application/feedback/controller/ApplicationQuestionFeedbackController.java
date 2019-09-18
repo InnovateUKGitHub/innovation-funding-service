@@ -3,21 +3,20 @@ package org.innovateuk.ifs.application.feedback.controller;
 import org.innovateuk.ifs.application.feedback.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Controller
 @RequestMapping("/application")
@@ -26,15 +25,20 @@ public class ApplicationQuestionFeedbackController {
     private ApplicationRestService applicationRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
+    private QuestionRestService questionRestService;
 
     public ApplicationQuestionFeedbackController() {
     }
 
     @Autowired
-    public ApplicationQuestionFeedbackController(ApplicationRestService applicationRestService, InterviewAssignmentRestService interviewAssignmentRestService, AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator) {
+    public ApplicationQuestionFeedbackController(ApplicationRestService applicationRestService,
+                                                 InterviewAssignmentRestService interviewAssignmentRestService,
+                                                 AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator,
+                                                 QuestionRestService questionRestService) {
         this.applicationRestService = applicationRestService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.assessorQuestionFeedbackPopulator = assessorQuestionFeedbackPopulator;
+        this.questionRestService = questionRestService;
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
@@ -42,9 +46,7 @@ public class ApplicationQuestionFeedbackController {
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId,
-                                                      UserResource user,
-                                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                                      @RequestParam MultiValueMap<String, String> queryParams
+                                                      UserResource user
                                                       ) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
@@ -55,11 +57,18 @@ public class ApplicationQuestionFeedbackController {
             return "redirect:/application/" + applicationId + "/summary";
         }
 
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+        QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
+        if (questionResource.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
+            return redirectToApplicationTeam(applicationId, questionId);
+        }
 
-        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, originQuery));
+        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionResource, user, model));
         return "application-assessor-feedback";
 
+    }
+
+    private String redirectToApplicationTeam(long applicationId, long questionId) {
+        return String.format("redirect:/application/%d/form/question/%d/team", applicationId, questionId);
     }
 
 }

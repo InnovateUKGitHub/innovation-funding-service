@@ -39,7 +39,7 @@ Administrator can navigate to manage users page
     [Setup]  The user logs-in in new browser  &{ifs_admin_user_credentials}
     Given the user clicks the button/link     link = Manage users
     Then the user should see the element      jQuery = h1:contains("Manage users")
-    And the user should see the element       jQuery = a[aria-selected]:contains("Active")
+    And the user should see the element       jQuery = .govuk-tabs__tab--selected:contains("Active")
 
 Administrator can see the read only view of internal user profile
     [Documentation]  INFUND-606
@@ -86,7 +86,7 @@ Administrator can successfully invite a new user
     Then the user cannot see a validation error in the page
     And the user should see the element                     jQuery = h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element                     jQuery = a[aria-selected]:contains("Pending")
+    And the user should see the element                     jQuery = .govuk-tabs__tab--selected:contains("Pending")
 
 Administrator can successfully finish the rest of the invitation
     [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842
@@ -206,7 +206,7 @@ Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50
     [Tags]
     [Setup]  log in as a different user      &{ifs_admin_user_credentials}
-    Given the user navigates to the page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/applications/previous
+    Given the user navigates to the page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
     Then the user should be allowed to only reinstate Unsuccessful applications
     When the user clicks the button/link     jQuery = td:contains("Cleaning Product packaging") ~ td a:contains("Mark as successful")
     And the user clicks the button/link      css = .govuk-button[name="mark-as-successful"]  # I'm sure button
@@ -344,7 +344,7 @@ the IFS admin should see the user details
 
 the IFS admin is redirected to the Manage Users page on Success
     the user should see the element    jQuery = h1:contains("Manage users")
-    the user should see the element    jQuery = a[aria-selected]:contains("Active")
+    the user should see the element    jQuery = .govuk-tabs__tab--selected:contains("Active")
     the user should see the element    jQuery = td:contains("Innovation Lead") + td:contains("Innovation Lead")
 
 the IFS admin deactivate the internal user
@@ -363,7 +363,8 @@ the IFS admin reactivate the internal user
     the user should see the element     jQuery = tr:contains("Innovation Lead")  #Checking the user swapped tab
 
 The user should be allowed to only reinstate Unsuccessful applications
-    the user should see the element  jQuery = td:contains("Unsuccessful") ~ td a:contains("Mark as successful")
+    the user clicks the button/link     jQuery = button:contains("Applications")
+    the user should see the element     jQuery = td:contains("Unsuccessful") ~ td a:contains("Mark as successful")
 
 the user should no longer see the application is capable of being marked as successful
     the user should not see the element  jQuery = td:contains("Unsuccessful") ~ td a:contains("Mark as successful")

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.eugrant.organisation.service;
 
 import org.innovateuk.ifs.eugrant.organisation.form.EuOrganisationTypeForm;
-import org.innovateuk.ifs.eugrant.overview.service.EuGrantHttpServlet;
-import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.EncryptedCookieService;
+import org.innovateuk.ifs.util.HttpServletUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,21 +17,21 @@ public class EuOrganisationCookieService {
     private static final String ORGANISATION_TYPE = "euOrganisationType";
 
     @Autowired
-    private CookieUtil cookieUtil;
+    private EncryptedCookieService cookieUtil;
 
     @Autowired
-    private EuGrantHttpServlet euGrantHttpServlet;
+    private HttpServletUtil httpServletUtil;
 
     public void saveToOrganisationTypeCookie(EuOrganisationTypeForm organisationTypeForm) {
-        cookieUtil.saveToCookie(euGrantHttpServlet.response(), ORGANISATION_TYPE, JsonUtil.getSerializedObject(organisationTypeForm));
+        cookieUtil.saveToCookie(httpServletUtil.response(), ORGANISATION_TYPE, JsonUtil.getSerializedObject(organisationTypeForm));
     }
 
     public Optional<EuOrganisationTypeForm> getOrganisationTypeCookieValue() {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(euGrantHttpServlet.request(), ORGANISATION_TYPE), EuOrganisationTypeForm.class));
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(httpServletUtil.request(), ORGANISATION_TYPE), EuOrganisationTypeForm.class));
     }
 
     public void clear() {
-        cookieUtil.removeCookie(euGrantHttpServlet.response(), ORGANISATION_TYPE);
+        cookieUtil.removeCookie(httpServletUtil.response(), ORGANISATION_TYPE);
     }
 
 }

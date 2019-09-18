@@ -222,7 +222,8 @@ CompAdmin marks appplications as successful and releases competition feedback
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
-    When the user clicks the button/link      jQuery = section:contains("Previous") h3:contains("Neural network")
+    When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user clicks the button/link       link = view application feedback
     Then the user should see the element      link = testing_5MB.pdf
 
 *** Keywords ***
@@ -462,7 +463,7 @@ an assessor can view feedback overview of an application
     the user clicks the button/link     link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     the user should see the element     jQuery = h1:contains("Feedback overview")
     the user should see the element     jQuery = .message-alert p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
-    assessor should see the competition terms and conditions     Interview
+    assessor should see the competition terms and conditions     Back to feedback overview
 
 Custom suite teardown
     Disconnect from database

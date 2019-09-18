@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.core.io.ByteArrayResource;
@@ -17,6 +14,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.previousApplicationResourceListType;
 
 @Service
 public class ApplicationSummaryRestServiceImpl extends BaseRestService implements ApplicationSummaryRestService {
@@ -159,8 +157,8 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
     }
 
     @Override
-    public RestResult<ApplicationTeamResource> getApplicationTeam(long applicationId) {
-        return getWithRestResult(applicationSummaryRestUrl + "/application-team/" + applicationId, ApplicationTeamResource.class);
+    public RestResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId) {
+        return getWithRestResult(String.format("%s/find-by-competition/%d/previous", applicationSummaryRestUrl, competitionId), previousApplicationResourceListType());
     }
 
     public void setApplicationSummaryRestUrl(String applicationSummaryRestUrl) {

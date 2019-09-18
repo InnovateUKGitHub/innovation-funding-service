@@ -1,18 +1,15 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'
-apply plugin: 'io.spring.dependency-management'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 jacocoTestReport {
     afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: ['**/*Mapper**'])
-        })
+        getClassDirectories().setFrom(
+                fileTree(dir: it,
+                        exclude: ['**/*Mapper**']))
     }
-
 }
 
 test {

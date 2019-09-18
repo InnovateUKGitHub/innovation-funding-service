@@ -1,45 +1,34 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
-import org.innovateuk.ifs.project.status.security.StatusPermission;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.internal.InternalProjectSetupRow;
+import org.innovateuk.ifs.status.viewmodel.BaseCompetitionStatusTableViewModel;
 
-import java.util.Map;
+import java.util.List;
 
-/**
- * Interface that defines the minimal information necessary to drive a standard Project page with the standard header information about the project
- */
-public class CompetitionStatusViewModel {
+public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewModel {
 
-    private CompetitionProjectsStatusResource competitionProjectsStatusResource;
-    private Map<Long, StatusPermission> statusPermissions;
-    private boolean canExportBankDetails;
+    private boolean showTabs;
     private long openQueryCount;
     private long pendingSpendProfilesCount;
-    private boolean showTabs;
+    private String applicationSearchString;
 
-    public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource,
+    public CompetitionStatusViewModel(CompetitionResource competition,
                                       boolean hasProjectFinanceRole,
-                                      Map<Long, StatusPermission> projectStatusPermissionsMap,
                                       long openQueryCount,
-                                      long pendingSpendProfilesCount) {
-        this.competitionProjectsStatusResource = competitionProjectsStatusResource;
-        this.canExportBankDetails = hasProjectFinanceRole;
-        this.statusPermissions = projectStatusPermissionsMap;
+                                      long pendingSpendProfilesCount,
+                                      String applicationSearchString,
+                                      List<InternalProjectSetupRow> rows) {
+        super(competition.getId(), competition.getName(), competition.getProjectSetupStages(), rows, hasProjectFinanceRole);
+        this.showTabs = hasProjectFinanceRole;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
-        this.showTabs = hasProjectFinanceRole;
+        this.applicationSearchString = applicationSearchString;
     }
 
-    public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
-        return competitionProjectsStatusResource;
-    }
-
-    public Map<Long, StatusPermission> getStatusPermissions() {
-        return statusPermissions;
-    }
-
-    public boolean isCanExportBankDetails() {
-        return canExportBankDetails;
+    @Override
+    public String getEmptyTableText() {
+        return "There are currently no projects in this competition.";
     }
 
     public long getOpenQueryCount() { return openQueryCount; }
@@ -47,4 +36,9 @@ public class CompetitionStatusViewModel {
     public long getPendingSpendProfilesCount() { return pendingSpendProfilesCount; }
 
     public boolean isShowTabs() { return showTabs; }
+
+    public String getApplicationSearchString() {
+        return applicationSearchString;
+    }
+
 }

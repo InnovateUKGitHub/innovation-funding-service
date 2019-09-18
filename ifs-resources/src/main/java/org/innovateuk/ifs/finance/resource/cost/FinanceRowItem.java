@@ -13,14 +13,17 @@ import java.math.BigDecimal;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = AcademicCost.class, name = "academic"),
         @JsonSubTypes.Type(value = CapitalUsage.class, name = "capitalUsage"),
-        @JsonSubTypes.Type(value = GrantClaim.class, name = "grantClaim"),
+        @JsonSubTypes.Type(value = GrantClaimPercentage.class, name = "grantClaim"),
+        @JsonSubTypes.Type(value = GrantClaimAmount.class, name = "grantClaimAmount"),
         @JsonSubTypes.Type(value = LabourCost.class, name = "labourCost"),
         @JsonSubTypes.Type(value = Materials.class, name = "materials"),
+        @JsonSubTypes.Type(value = ProcurementOverhead.class, name = "procurementOverhead"),
         @JsonSubTypes.Type(value = OtherCost.class, name = "otherCost"),
         @JsonSubTypes.Type(value = OtherFunding.class, name = "otherFunding"),
         @JsonSubTypes.Type(value = Overhead.class, name = "overhead"),
         @JsonSubTypes.Type(value = SubContractingCost.class, name = "subContractingCost"),
-        @JsonSubTypes.Type(value = TravelCost.class, name = "travelCost")
+        @JsonSubTypes.Type(value = TravelCost.class, name = "travelCost"),
+        @JsonSubTypes.Type(value = Vat.class, name = "VAT")
 })
 public interface FinanceRowItem {
     int MAX_DIGITS = 20;
@@ -35,6 +38,7 @@ public interface FinanceRowItem {
     String VALUE_MUST_BE_LOWER_MESSAGE = "{validation.field.max.value.or.lower}";
     String NO_DECIMAL_VALUES = "{validation.field.non.decimal.format}";
 
+    Long getTargetId();
     Long getId();
     BigDecimal getTotal();
     FinanceRowType getCostType();

@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.management.application.view.controller;
 
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
@@ -12,7 +15,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
-import org.innovateuk.ifs.management.application.view.populator.ApplicationTeamModelManagementPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
@@ -26,14 +28,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -41,7 +39,6 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
-import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
@@ -65,8 +62,6 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
     @Autowired
-    private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
-    @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Autowired
     private ManagementApplicationPopulator managementApplicationPopulator;
@@ -79,13 +74,10 @@ public class CompetitionManagementApplicationController {
                                         @PathVariable("competitionId") final Long competitionId,
                                         @ModelAttribute(value = "ineligibleForm", binding = false) IneligibleApplicationForm form,
                                         BindingResult bindingResult,
-                                        @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
-                                        @RequestParam MultiValueMap<String, String> queryParams,
                                         UserResource user,
                                         Model model) {
-        ManagementApplicationViewModel viewModel = managementApplicationPopulator.populate(applicationId, user, origin, queryParams);
+        ManagementApplicationViewModel viewModel = managementApplicationPopulator.populate(applicationId, user);
         model.addAttribute("model", viewModel);
-        model.addAttribute("originQuery", viewModel.getOriginQuery());
         return "competition-mgt-application-overview";
     }
 
@@ -94,20 +86,12 @@ public class CompetitionManagementApplicationController {
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
-                                   @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
-                                   @RequestParam(value = "assessorId", required = false) Optional<Long> assessorId,
                                    @ModelAttribute("ineligibleForm") @Valid IneligibleApplicationForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   HttpServletRequest request,
                                    UserResource user,
                                    Model model) {
-        // This is nasty, but we have to map the query parameters manually as Spring
-        // will try to automatically map the POST request body to MultiValueMap
-        // (causing issues with back links).
-        // TODO: IFS-253 bind query parameters to maps properly
-        MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
-        Supplier<String> failureVew = () -> newApplicationSummary(applicationId, competitionId, form, bindingResult, origin, queryParams, user, model);
+        Supplier<String> failureVew = () -> newApplicationSummary(applicationId, competitionId, form, bindingResult, user, model);
         return validationHandler.failNowOrSucceedWith(
                 failureVew,
                 () -> {
@@ -184,26 +168,6 @@ public class CompetitionManagementApplicationController {
                                              UserResource user,
                                              Model model) {
         return applicationPrintPopulator.print(applicationId, model, user);
-    }
-
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @GetMapping("/{applicationId}/team")
-    public String displayApplicationTeam(@PathVariable("applicationId") final Long applicationId,
-                                         @PathVariable("competitionId") final Long competitionId,
-                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
-                                         @RequestParam MultiValueMap<String, String> queryParams,
-                                         Model model) {
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        ApplicationTeamResource teamResource = applicationSummaryRestService.getApplicationTeam(applicationId).getSuccess();
-
-        String params = UriComponentsBuilder.newInstance()
-                .queryParams(queryParams)
-                .build()
-                .encode()
-                .toUriString();
-        model.addAttribute("model", applicationTeamModelPopulator.populateModel(application, teamResource, params));
-        return "application/team-read-only";
     }
 
     private String doReinstateIneligibleApplicationConfirm(final Model model, final long applicationId) {

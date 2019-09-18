@@ -2,21 +2,29 @@ package org.innovateuk.ifs.project.status.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectStatusResourceListType;
 
 @Service
 public class StatusRestServiceImpl extends BaseRestService implements StatusRestService {
     private static final String COMPETITION_URL = "/project/competition";
+    private static final String PREVIOUS_COMPETITION_URL = "/project/previous/competition";
     private static final String PROJECT_REST_URL = "/project";
 
     @Override
-    public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
-        return getWithRestResult(COMPETITION_URL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, CompetitionProjectsStatusResource.class);
+    public RestResult<List<ProjectStatusResource>> getCompetitionStatus(Long competitionId, String applicationSearchString) {
+        return getWithRestResult(COMPETITION_URL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, projectStatusResourceListType());
+    }
+
+    @Override
+    public RestResult<List<ProjectStatusResource>> getPreviousCompetitionStatus(Long competitionId) {
+        return getWithRestResult(PREVIOUS_COMPETITION_URL + "/" + competitionId, projectStatusResourceListType());
     }
 
     @Override

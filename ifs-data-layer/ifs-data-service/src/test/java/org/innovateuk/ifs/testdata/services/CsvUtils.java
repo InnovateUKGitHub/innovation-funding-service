@@ -175,7 +175,7 @@ public class CsvUtils {
 
             projectState = ProjectState.valueOf(line.get(i++));
             projectDocumentsUploaded = nullableBoolean(line.get(i++));
-            generateSpendProfile = nullableBoolean(line.get(i++)) && organisationsWithApprovedFinanceChecks && bankDetailsApproved;
+            generateSpendProfile = nullableBoolean(line.get(i++)) && organisationsWithApprovedFinanceChecks;
             uploadSpendProfile = nullableBoolean(line.get(i++)) && generateSpendProfile;
             approveSpendProfile = nullableBoolean(line.get(i++)) && uploadSpendProfile && generateSpendProfile;
             publishGrantOffLetter = nullableBoolean(line.get(i++)) && approveSpendProfile;
@@ -348,7 +348,7 @@ public class CsvUtils {
         public String researchCategory;
         public String innovationArea;
         public boolean resubmission;
-        public boolean markDetailsComplete;
+        public boolean markQuestionsComplete;
         public String ineligibleReason;
 
         private ApplicationLine(List<String> line) {
@@ -368,7 +368,7 @@ public class CsvUtils {
             researchCategory = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
-            markDetailsComplete = nullableBoolean(line.get(i++));
+            markQuestionsComplete = nullableBoolean(line.get(i++));
             ineligibleReason = nullable(line.get(i++));
         }
     }
@@ -382,7 +382,8 @@ public class CsvUtils {
         public AssessmentState state;
         public String feedback;
         public String recommendComment;
-
+        public boolean assignToPanel;
+        public boolean assignToInterview;
         private AssessmentLine(List<String> line) {
 
             int i = 0;
@@ -394,6 +395,8 @@ public class CsvUtils {
             state = AssessmentState.valueOf(line.get(i++));
             feedback = nullable(line.get(i++));
             recommendComment = nullable(line.get(i++));
+            assignToPanel = nullableBoolean(line.get(i++));
+            assignToInterview = nullableBoolean(line.get(i++));
         }
     }
 

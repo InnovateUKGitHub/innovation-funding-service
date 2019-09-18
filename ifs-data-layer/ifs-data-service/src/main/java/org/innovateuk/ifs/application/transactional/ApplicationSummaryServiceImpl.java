@@ -1,14 +1,15 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.resource.comparators.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,6 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -226,65 +225,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<ApplicationTeamResource> getApplicationTeamByApplicationId(long applicationId) {
-
-        ApplicationTeamResource result = new ApplicationTeamResource();
-        List<ApplicationTeamOrganisationResource> partnerOrganisations = new LinkedList<>();
-
-        return find(applicationRepository.findById(applicationId), notFoundError(ApplicationTeamResource.class))
-                .andOnSuccess(application -> {
-                    // Order organisations by lead, followed by other partners in alphabetic order
-                    result.setLeadOrganisation(getTeamOrganisation(application.getLeadApplicantProcessRole().getOrganisationId(), application));
-
-                    List<Long> organisationIds = application.getProcessRoles()
-                            .stream()
-                            .filter(pr -> pr.getRole() == COLLABORATOR)
-                            .map(u -> u.getOrganisationId())
-                            .distinct()
-                            .map(oId -> Pair.of(oId, organisationRepository.findById(oId).get().getName()))
-                            .sorted(Comparator.comparing(Pair::getValue))
-                            .map(p -> p.getKey())
-                            .collect(toList());
-                    organisationIds.remove(application.getLeadApplicantProcessRole().getOrganisationId()); // Remove the lead organisation
-                    organisationIds.forEach(organisationId -> partnerOrganisations.add(getTeamOrganisation(organisationId, application)));
-
-                    result.setPartnerOrganisations(partnerOrganisations);
-                    return serviceSuccess(result);
-                });
-    }
-
-    private ApplicationTeamOrganisationResource getTeamOrganisation(long organisationId, Application application) {
-        ApplicationTeamOrganisationResource teamOrg = new ApplicationTeamOrganisationResource();
-        Organisation organisation = organisationRepository.findById(organisationId).get();
-
-        teamOrg.setOrganisationName(organisation.getName());
-        teamOrg.setOrganisationTypeName(organisation.getOrganisationType().getName());
-
-        // Order users by lead, followed by other users in alphabetic order
-        List<ApplicationTeamUserResource> users = application.getProcessRoles()
-                .stream()
-                .filter(pr -> pr.getOrganisationId() != null && pr.getOrganisationId() == organisationId)
-                .sorted((pr1, pr2) -> {
-                    if (pr1.isLeadApplicant()) {
-                        return -1;
-                    } else if (pr2.isLeadApplicant()) {
-                        return 1;
-                    } else {
-                        return pr1.getUser().getName().compareTo(pr2.getUser().getName());
-                    }
-                })
-                .filter(pr -> applicantProcessRoles().contains(pr.getRole()))
-                .map(pr -> {
-                    ApplicationTeamUserResource user = new ApplicationTeamUserResource();
-                    user.setLead(pr.isLeadApplicant());
-                    user.setName(pr.getUser().getName());
-                    user.setEmail(pr.getUser().getEmail());
-                    user.setPhoneNumber(pr.getUser().getPhoneNumber());
-                    return user;
-                })
-                .collect(toList());
-        teamOrg.setUsers(users);
-        return teamOrg;
+    public ServiceResult<List<PreviousApplicationResource>> getPreviousApplications(long competitionId) {
+        return serviceSuccess(applicationRepository.findPrevious(competitionId));
     }
 
     private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(
@@ -294,7 +236,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Function<Pageable, Page<Application>> paginatedApplicationsSupplier,
             Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
         Sort sortField = getApplicationSummarySortField(sortBy);
-        Pageable pageable = new PageRequest(pageIndex, pageSize, sortField);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sortField);
 
         if (canUseSpringDataPaginationForSummaryResults(sortBy)) {
             Page<Application> applicationResults = paginatedApplicationsSupplier.apply(pageable);

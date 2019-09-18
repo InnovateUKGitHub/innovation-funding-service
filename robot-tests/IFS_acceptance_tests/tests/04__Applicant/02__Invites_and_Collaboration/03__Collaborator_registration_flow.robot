@@ -87,12 +87,12 @@ Research and technology organisations (RTO) search (accept invitation flow with 
     [Tags]  HappyPath
     Given the user reads his email and clicks the link  ${test_mailbox_one}+invite1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page                        ${REGISTRATION_VERIFIED}
-    When the user clicks the button/link                                         jQuery = .govuk-button:contains("Sign in")
-    And Logging in and Error Checking                                            ${test_mailbox_one}+invite1@gmail.com    ${correct_password}
+    When the user clicks the button/link                                         jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
+    And And Logging in and Error Checking                                        ${test_mailbox_one}+invite1@gmail.com    ${correct_password}
     Then the user should be redirected to the correct page                       ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                                          link = Climate science the history of Greenland's ice
-    And the user clicks the button/link                                          link = Your finances
-    And the user should see the element                                          jQuery = h1:contains("Your finances")
+    And the user clicks the button/link                                          link = Your project finances
+    And the user should see the element                                          jQuery = h1:contains("Your project finances")
 
 Validation on terms and condition page
     [Documentation]  IFS-3093

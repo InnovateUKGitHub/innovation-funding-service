@@ -51,7 +51,7 @@ public class EuInviteController {
         long totalNonNotified = euRegistrants.getTotalElements();
 
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
-                                                            new Pagination(euRegistrants, ""),
+                                                            new Pagination(euRegistrants),
                                                             totalSubmitted - totalNonNotified,
                                                             totalNonNotified,
                                                             successfulEmailsSent.isPresent(),
@@ -72,7 +72,7 @@ public class EuInviteController {
         long totalSubmitted = euInviteRestService.getTotalSubmittedEuGrants().getSuccess();
         long totalNotified = euRegistrants.getTotalElements();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
-                                                            new Pagination(euRegistrants, ""),
+                                                            new Pagination(euRegistrants),
                                                             totalNotified,
                                                             totalSubmitted - totalNotified,
                                                             successfulEmailsSent.isPresent(),
