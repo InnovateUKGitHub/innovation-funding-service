@@ -251,7 +251,7 @@ the user approves the spend profile
 the applicant should see the project setup complete stage enabled
     log in as a different user       &{lead_applicant_credentials}
     the user navigates to the page   ${loan_PS}
-    the user should see the element  jQuery = .waiting span:contains("Awaiting assignment")
+    the user should see the element  jQuery = .waiting span:contains("Awaiting review")
     the user clicks the button/link  link = Project setup complete
     the user navigates to the page   ${loan_PS}/setup
     the user should see the element  jQuery = h1:contains("Project setup complete")
