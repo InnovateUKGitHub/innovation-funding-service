@@ -50,10 +50,10 @@ User can view the competition brief
 Accept an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128
     [Tags]
-    Given the user should see the element                     jQuery = .in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
+    Given the user should see the element                     jQuery = .in-progress li:nth-child(1):contains("Low power air purification systems"):contains("Pending")
     When the user accepts the invitation
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the user should see the element                       jQuery = .in-progress li:nth-child(6):contains("Intelligent water system"):contains("Accepted")
+    And the user should see the element                       jQuery = .in-progress li:nth-child(6):contains("Low power air purification systems"):contains("Accepted")
 
 Reject an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128  INFUND-6358  INFUND-3726
@@ -105,7 +105,6 @@ The order of the applications should be correct according to the status
     element should contain    css = li:nth-child(3) .msg-deadline-waiting    Pending
     element should contain    css = .progress-list li:nth-child(4) .msg-progress    Accepted
     element should contain    css = .progress-list li:nth-child(5) .msg-progress    Accepted
-    element should contain    css = .progress-list li:nth-child(6) .msg-progress    Accepted
 
 The user should get a competition brief window
     Select Window   title = Competition Overview - Innovation Funding Service
