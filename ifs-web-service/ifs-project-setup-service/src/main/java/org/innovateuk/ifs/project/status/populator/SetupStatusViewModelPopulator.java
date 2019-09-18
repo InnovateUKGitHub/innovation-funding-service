@@ -196,7 +196,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         String.format("/project/%d/setup", project.getId()),
                         projectSetupCompleteStatus,
                         statusAccessor.canAccessSetupSection(),
-                        projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-assignment"
+                        projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-review"
                 );
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());
