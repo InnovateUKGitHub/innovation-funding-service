@@ -29,11 +29,6 @@
                         <p class="govuk-body">We have finished checking your finances.</p>
                     </div>
                 </th:block>
-            </th:block>
-        </th:block>
-
-        <th:block th:if="${summaryModel.isShowApprovalMessage()}">
-            <th:block th:if="${summaryModel.externalView}">
                 <th:block th:unless="${summaryModel.isLoan}">
                     <div class="success-alert">
                         <p class="govuk-body">The partner's finance eligibility has been approved by <span
@@ -45,29 +40,35 @@
         </th:block>
 
         <th:block th:if="${summaryModel.isShowApprovalMessage()}">
-            <div class="success-alert">
-                <p class="govuk-body">The partner's finance eligibility has been approved by <span
-                    th:text="${summaryModel.getApproverName()}"/>, <span
-                    th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
-            </div>
+            <th:block th:unless="${summaryModel.externalView}">
+                <th:block th:if="${summaryModel.isLoan}">
+                    <div class="success-alert">
+                        <p class="govuk-body">The organisation’s finance eligibility has been approved by <span
+                            th:text="${summaryModel.getApproverName()}"/>, <span
+                            th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+                    </div>
+                </th:block>
+                <th:block th:unless="${summaryModel.isLoan}">
+                    <div class="success-alert">
+                        <p class="govuk-body">The partner's finance eligibility has been approved by <span
+                            th:text="${summaryModel.getApproverName()}"/>, <span
+                            th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+                    </div>
+                </th:block>
+            </th:block>
         </th:block>
 
         <th:block th:unless="${summaryModel.isShowApprovalMessage()}">
             <th:block th:if="${summaryModel.isExternalView()}">
                 <th:block th:if="${summaryModel.isLoan}">
                     <p class="govuk-body">All members of your organisation can access and edit your project
-                        finances.
-                        Your designated finance contact will be the main contact for queries. You will be
-                        consulted
-                        before any changes are approved.</p>
+                        finances. Your designated finance contact will be the main contact for queries. You will be
+                        consulted before any changes are approved.</p>
                 </th:block>
                 <th:block th:unless="${summaryModel.isLoan}">
                     <p class="govuk-body">Only your organisation can see this level of detail. All members of
-                        your
-                        organisation can access and edit your project finances. Your designated finance partner
-                        will
-                        be
-                        the main contact for queries. You will be consulted before any changes are approved.</p>
+                        your organisation can access and edit your project finances. Your designated finance partner
+                        will be the main contact for queries. You will be consulted before any changes are approved.</p>
                 </th:block>
             </th:block>
         </th:block>
@@ -85,12 +86,10 @@
                     </th>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public
-                            sector
-                            funding (&pound;)
+                            sector funding (&pound;)
                         </th>
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to
-                            project
-                            (&pound;)
+                            project (&pound;)
                         </th>
                     </th:block>
                 </tr>
@@ -133,8 +132,7 @@
                 <h2 class="govuk-heading-m">Detailed finances</h2>
                 <p class="govuk-body">These are your project finances. Changes that result from discussions with
                     Innovate UK will be reflected here. Substantial changes to your project costs should be
-                    discussed
-                    with your Project Manager.</p>
+                    discussed with your Project Manager.</p>
                 <p class="govuk-body"><a
                     th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}"
                     class="govuk-link">View changes to finances</a></p>
@@ -145,12 +143,9 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted during the request for a
-                            Horizon
-                            2020 grant transfer.</p>
+                            Horizon 2020 grant transfer.</p>
                         <p class="govuk-body">The applicant will be able to see all saved changes. You must
-                            discuss
-                            all
-                            changes with them by raising queries through the Innovation Funding Service.</p>
+                            discuss all changes with them by raising queries through the Innovation Funding Service.</p>
                         <p class="govuk-body"><a
                             th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                             class="govuk-link">Review all changes to project finances</a></p>
@@ -159,8 +154,7 @@
                     <th:block th:if="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Detailed finances</h2>
                         <p class="govuk-body">These finances were initially submitted during the request for a
-                            Horizon
-                            2020 grant transfer.</p>
+                            Horizon 2020 grant transfer.</p>
                         <p class="govuk-body"><a
                             th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                             class="govuk-link">View changes to finances</a></p></th:block>
@@ -170,12 +164,9 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted at the application stage.
-                            All
-                            saved changes to finances will be viewable by the applicants.</p>
+                            All saved changes to finances will be viewable by the applicants.</p>
                         <p class="govuk-body">All potential changes must be discussed with the lead applicant.
-                            You
-                            can
-                            do this by raising queries through the Innovation Funding Service.</p>
+                            You can do this by raising queries through the Innovation Funding Service.</p>
                         <p class="govuk-body"><a
                             th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                             class="govuk-link">Review all changes to project finances</a></p>
@@ -184,8 +175,7 @@
                     <th:block th:if="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Detailed finances</h2>
                         <p class="govuk-body">These finances were submitted by the applicant during the
-                            application
-                            stage. They include all changes made during the eligibility checks.</p>
+                            application stage. They include all changes made during the eligibility checks.</p>
                         <p class="govuk-body"><a
                             th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                             class="govuk-link">View changes to finances</a></p>
