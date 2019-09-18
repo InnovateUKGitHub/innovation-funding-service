@@ -149,7 +149,6 @@ public class IndustrialCostFinanceHandlerTest {
 
         FinanceRow capitalUsageCost = industrialCostFinanceHandler.toApplicationDomain(capitalUsage);
         capitalUsageCost.setTarget(applicationFinance);
-
         capitalUsageCost.getFinanceRowMetadata().add(financeRowMetaValue1);
         capitalUsageCost.getFinanceRowMetadata().add(financeRowMetaValue2);
         costs.add((ApplicationFinanceRow) capitalUsageCost);
@@ -163,9 +162,20 @@ public class IndustrialCostFinanceHandlerTest {
                 .withTargetId(applicationFinance.getId())
                 .build();
 
+        FinanceRowMetaField financeRowMetaField4 = newFinanceRowMetaField()
+                .withId(1L)
+                .withTitle("country")
+                .withType("france")
+                .build();
+
+        FinanceRowMetaValue financeRowMetaValue3 = newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField4)
+                .withValue("frane")
+                .build();
+
         FinanceRow subContractingCost = industrialCostFinanceHandler.toApplicationDomain(subContracting);
+        subContractingCost.getFinanceRowMetadata().add(financeRowMetaValue3);
         subContractingCost.setTarget(applicationFinance);
-        subContractingCost.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(1L, "country", "france"), "frane"));
         costs.add((ApplicationFinanceRow) subContractingCost);
 
         SubContractingCost subContracting2 = newSubContractingCost()
@@ -177,8 +187,19 @@ public class IndustrialCostFinanceHandlerTest {
                 .withTargetId(applicationFinance.getId())
                 .build();
 
+        FinanceRowMetaField financeRowMetaField5 = newFinanceRowMetaField()
+                .withId(2L)
+                .withTitle("country")
+                .withType("france")
+                .build();
+
+        FinanceRowMetaValue financeRowMetaValue4 = newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField5)
+                .withValue("frane")
+                .build();
+
         FinanceRow subContractingCost2 = industrialCostFinanceHandler.toApplicationDomain(subContracting2);
-        subContractingCost2.getFinanceRowMetadata().add(new FinanceRowMetaValue(new FinanceRowMetaField(2L, "country", "france"), "frane"));
+        subContractingCost2.getFinanceRowMetadata().add(financeRowMetaValue4);
         subContractingCost2.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow) subContractingCost2);
 
