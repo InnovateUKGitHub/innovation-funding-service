@@ -10,10 +10,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
@@ -34,6 +31,7 @@ import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -41,6 +39,7 @@ import java.util.function.Predicate;
 
 import static java.lang.Boolean.TRUE;
 import static java.time.YearMonth.parse;
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.math.NumberUtils.isDigits;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -98,19 +97,27 @@ public class OrganisationFinanceController {
 
         Boolean stateAidAgreed = getStateAidAgreed(applicationId).getSuccess();
 
-        OrganisationSize organisationSize = getOrganisationSize(applicationId, organisationId).getSuccess();
+        ApplicationFinanceResource applicationFinance = getApplicationFinance(applicationId, organisationId).getSuccess();
 
-        YearMonth financialYearEnd = getFinancialYearEnd(applicationId, competitionId, organisationId).getSuccess();
+        OrganisationSize organisationSize = applicationFinance.getOrganisationSize();
 
-        Long annualTurnoverAtEndOfFinancialYear = getAnnualTurnoverAtEndOfFinancialYear(applicationId, competitionId, organisationId).getSuccess();
+        Optional<GrowthTableResource> growthTable = ofNullable(applicationFinance.getCompanyFinancesResource())
+                                                        .filter(GrowthTableResource.class::isInstance)
+                                                        .map(GrowthTableResource.class::cast);
 
-        Long annualProfitsAtEndOfFinancialYear = getAnnualProfitsAtEndOfFinancialYear(applicationId, competitionId, organisationId).getSuccess();
-
-        Long annualExportAtEndOfFinancialYear = getAnnualExportAtEndOfFinancialYear(applicationId, competitionId, organisationId).getSuccess();
-
-        Long researchAndDevelopmentSpendAtEndOfFinancialYear = getResearchAndDevelopmentSpendAtEndOfFinancialYear(applicationId, competitionId, organisationId).getSuccess();
-
-        Long headCountAtLastFinancialYear = getHeadCountAtLastFinancialYear(applicationId, competitionId, organisationId).getSuccess();
+        YearMonth financialYearEnd = growthTable.map(GrowthTableResource::getFinancialYearEnd)
+                                                .map(YearMonth::from)
+                                                .orElse(null);
+        BigDecimal annualTurnoverAtEndOfFinancialYear = growthTable.map(GrowthTableResource::getAnnualTurnover)
+                .orElse(null);
+        BigDecimal annualProfitsAtEndOfFinancialYear = growthTable.map(GrowthTableResource::getAnnualProfits)
+                .orElse(null);
+        BigDecimal annualExportAtEndOfFinancialYear = growthTable.map(GrowthTableResource::getAnnualExport)
+                .orElse(null);
+        BigDecimal researchAndDevelopmentSpendAtEndOfFinancialYear = growthTable.map(GrowthTableResource::getResearchAndDevelopment)
+                .orElse(null);
+        Integer headCountAtLastFinancialYear = growthTable.map(GrowthTableResource::getEmployees)
+                .orElse(null);
 
         return restSuccess(new OrganisationFinancesWithGrowthTableResource(
                 organisationSize,
@@ -131,15 +138,18 @@ public class OrganisationFinanceController {
         long competitionId = getCompetitionId(applicationId);
 
         Boolean stateAidAgreed = getStateAidAgreed(applicationId).getSuccess();
-        OrganisationSize organisationSize = getOrganisationSize(applicationId, organisationId).getSuccess();
-        Long turnover = getTurnover(applicationId, competitionId, organisationId).getSuccess();
-        Long headCount = getHeadCount(applicationId, competitionId, organisationId).getSuccess();
+        ApplicationFinanceResource applicationFinance = getApplicationFinance(applicationId, organisationId).getSuccess();
+
+        OrganisationSize organisationSize = applicationFinance.getOrganisationSize();
+
+        Optional<EmployeesAndTurnoverResource> employeesAndTurnover = ofNullable(applicationFinance.getCompanyFinancesResource())
+                .filter(EmployeesAndTurnoverResource.class::isInstance)
+                .map(EmployeesAndTurnoverResource.class::cast);
+
+        BigDecimal turnover = employeesAndTurnover.map(EmployeesAndTurnoverResource::getTurnover).orElse(null);
+        Integer headCount = employeesAndTurnover.map(EmployeesAndTurnoverResource::getEmployees).orElse(null);
 
         return restSuccess(new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover, headCount, stateAidAgreed));
-
-        // TODO DW - readOnlyAllApplicantApplicationFinances
-
-        // TODO DW - formInputViewModelGenerator.fromSection
     }
 
     private long getCompetitionId(@RequestParam("applicationId") long applicationId) {
@@ -159,13 +169,26 @@ public class OrganisationFinanceController {
 
         boolean stateAidIncluded = isShowStateAidAgreement(applicationId, organisationId).getSuccess();
 
-        updateOrganisationSize(applicationId, competitionId, organisationId, finances.getOrganisationSize()).getSuccess();
+        // form inputs
         updateFinancialYearEnd(applicationId, competitionId, userId, finances.getFinancialYearEnd()).getSuccess();
         updateAnnualTurnoverAtEndOfFinancialYear(applicationId, competitionId, userId, finances.getAnnualTurnoverAtLastFinancialYear()).getSuccess();
         updateAnnualProfitsAtEndOfFinancialYear(applicationId, competitionId, userId, finances.getAnnualProfitsAtLastFinancialYear()).getSuccess();
         updateAnnualExportAtEndOfFinancialYear(applicationId, competitionId, userId, finances.getAnnualExportAtLastFinancialYear()).getSuccess();
         updateResearchAndDevelopmentSpendAtEndOfFinancialYear(applicationId, competitionId, userId, finances.getResearchAndDevelopmentSpendAtLastFinancialYear()).getSuccess();
         updateHeadCountAtEndOfFinancialYear(applicationId, competitionId, userId, finances.getHeadCountAtLastFinancialYear()).getSuccess();
+
+        // finance
+        ApplicationFinanceResource applicationFinance = getApplicationFinance(applicationId, organisationId).getSuccess();
+        updateOrganisationSize(applicationFinance, competitionId, finances.getOrganisationSize());
+        GrowthTableResource growthTable = (GrowthTableResource) applicationFinance.getCompanyFinancesResource();
+        growthTable.setFinancialYearEnd(finances.getFinancialYearEnd().atEndOfMonth());
+        growthTable.setAnnualTurnover(finances.getAnnualTurnoverAtLastFinancialYear());
+        growthTable.setAnnualProfits(finances.getAnnualProfitsAtLastFinancialYear());
+        growthTable.setAnnualExport(finances.getAnnualExportAtLastFinancialYear());
+        growthTable.setResearchAndDevelopment(finances.getResearchAndDevelopmentSpendAtLastFinancialYear());
+        growthTable.setEmployees(finances.getHeadCountAtLastFinancialYear());
+
+        financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance).getSuccess();
 
         if (stateAidIncluded) {
             updateStateAidAgreed(applicationId, finances.getStateAidAgreed()).getSuccess();
@@ -184,9 +207,18 @@ public class OrganisationFinanceController {
         long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
         boolean stateAidIncluded = isShowStateAidAgreement(applicationId, organisationId).getSuccess();
 
-        updateOrganisationSize(applicationId, competitionId, organisationId, finances.getOrganisationSize()).getSuccess();
+        //form inputs
         updateHeadCount(applicationId, competitionId, userId, finances.getHeadCount()).getSuccess();
         updateTurnover(applicationId, competitionId, userId, finances.getTurnover()).getSuccess();
+
+        //finance
+        ApplicationFinanceResource applicationFinance = getApplicationFinance(applicationId, organisationId).getSuccess();
+        updateOrganisationSize(applicationFinance, competitionId, finances.getOrganisationSize());
+        EmployeesAndTurnoverResource employeesAndTurnover = (EmployeesAndTurnoverResource) applicationFinance.getCompanyFinancesResource();
+        employeesAndTurnover.setTurnover(finances.getTurnover());
+        employeesAndTurnover.setEmployees(finances.getHeadCount());
+
+        financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance).getSuccess();
 
         if (stateAidIncluded) {
             updateStateAidAgreed(applicationId, finances.getStateAidAgreed()).getSuccess();
@@ -231,17 +263,16 @@ public class OrganisationFinanceController {
                 andOnSuccessReturn(organisation -> organisation.getOrganisationType() == OrganisationTypeEnum.BUSINESS.getId());
     }
 
-    private ServiceResult<OrganisationSize> getOrganisationSize(long applicationId, long organisationId) {
-        return financeService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).
-                andOnSuccessReturn(ApplicationFinanceResource::getOrganisationSize);
+    private ServiceResult<ApplicationFinanceResource> getApplicationFinance(long applicationId, long organisationId) {
+        return financeService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId);
     }
 
-    private ServiceResult<Void> updateTurnover(long applicationId, long competitionId, long userId, Long value) {
-        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.ORGANISATION_TURNOVER);
+    private ServiceResult<Void> updateTurnover(long applicationId, long competitionId, long userId, BigDecimal value) {
+        return updateBigDecimalValueForFormInput(applicationId, competitionId, userId, value, FormInputType.ORGANISATION_TURNOVER);
     }
 
-    private ServiceResult<Void> updateHeadCount(long applicationId, long competitionId, long userId, Long value) {
-        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.STAFF_COUNT);
+    private ServiceResult<Void> updateHeadCount(long applicationId, long competitionId, long userId, Integer value) {
+        return updateIntegerValueForFormInput(applicationId, competitionId, userId, value, FormInputType.STAFF_COUNT);
     }
 
     private ServiceResult<Void> updateStateAidAgreed(long applicationId, boolean stateAidAgreed) {
@@ -253,24 +284,12 @@ public class OrganisationFinanceController {
                 andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<Void> updateOrganisationSize(long applicationId, long competitionId, long organisationId, OrganisationSize organisationSize) {
-        return financeService.financeDetails(applicationId, organisationId).
-                andOnSuccess(finance -> {
-                    if (finance.getOrganisationSize() != organisationSize) {
-
-                        finance.setOrganisationSize(organisationSize);
-                        ServiceResult<ApplicationFinanceResource> updateSizeResult = financeService.updateApplicationFinance(finance.getId(), finance);
-
-                        long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
-                        handleOrganisationSizeChange(finance, competitionId, userId);
-
-                        return updateSizeResult;
-                    } else {
-                        return serviceSuccess(finance);
-                    }
-
-                }).
-                andOnSuccessReturnVoid();
+    private void updateOrganisationSize(ApplicationFinanceResource finance, long competitionId, OrganisationSize organisationSize) {
+        if (finance.getOrganisationSize() != organisationSize) {
+            finance.setOrganisationSize(organisationSize);
+            long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
+            handleOrganisationSizeChange(finance, competitionId, userId);
+        }
     }
 
     private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance,
@@ -285,7 +304,7 @@ public class OrganisationFinanceController {
         }
     }
 
-    public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
+    private void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
         final ProcessRoleResource processRole =
                 usersRolesService.getAssignableProcessRolesByApplicationId(applicationFinance.getApplication()).getSuccess().stream()
                         .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
@@ -298,8 +317,6 @@ public class OrganisationFinanceController {
                                 applicationFinance.getApplication(),
                                 processRole.getId()
                 ));
-
-        Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
 
         resetFundingLevel(applicationFinance);
     }
@@ -362,35 +379,39 @@ public class OrganisationFinanceController {
                 andOnSuccessReturn(this::getYearMonthValueFromFormInputResponses);
     }
 
-    private ServiceResult<Void> updateAnnualTurnoverAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
-        return updateLongValueForFormInputAndDescription(applicationId, competitionId, userId, value,
+    private ServiceResult<Void> updateAnnualTurnoverAtEndOfFinancialYear(long applicationId, long competitionId, long userId, BigDecimal value) {
+        return updateLongBigDecimalForFormInputAndDescription(applicationId, competitionId, userId, value,
                 FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION);
     }
 
-    private ServiceResult<Void> updateAnnualProfitsAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
-        return updateLongValueForFormInputAndDescription(applicationId, competitionId, userId, value,
+    private ServiceResult<Void> updateAnnualProfitsAtEndOfFinancialYear(long applicationId, long competitionId, long userId, BigDecimal value) {
+        return updateLongBigDecimalForFormInputAndDescription(applicationId, competitionId, userId, value,
                 FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION);
     }
 
-    private ServiceResult<Void> updateAnnualExportAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
-        return updateLongValueForFormInputAndDescription(applicationId, competitionId, userId, value,
+    private ServiceResult<Void> updateAnnualExportAtEndOfFinancialYear(long applicationId, long competitionId, long userId, BigDecimal value) {
+        return updateLongBigDecimalForFormInputAndDescription(applicationId, competitionId, userId, value,
                 FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION);
     }
 
-    private ServiceResult<Void> updateResearchAndDevelopmentSpendAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
-        return updateLongValueForFormInputAndDescription(applicationId, competitionId, userId, value,
+    private ServiceResult<Void> updateResearchAndDevelopmentSpendAtEndOfFinancialYear(long applicationId, long competitionId, long userId, BigDecimal value) {
+        return updateLongBigDecimalForFormInputAndDescription(applicationId, competitionId, userId, value,
                 FormInputType.FINANCIAL_OVERVIEW_ROW, RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION);
     }
 
-    private ServiceResult<Void> updateHeadCountAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
-        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.FINANCIAL_STAFF_COUNT);
+    private ServiceResult<Void> updateHeadCountAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Integer value) {
+        return updateIntegerValueForFormInput(applicationId, competitionId, userId, value, FormInputType.FINANCIAL_STAFF_COUNT);
     }
 
-    private ServiceResult<Void> updateLongValueForFormInput(long applicationId, long competitionId, long userId, Long value, FormInputType formInputType) {
+    private ServiceResult<Void> updateIntegerValueForFormInput(long applicationId, long competitionId, long userId, Integer value, FormInputType formInputType) {
         return updateValueForFormInput(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType);
     }
 
-    private ServiceResult<Void> updateLongValueForFormInputAndDescription(long applicationId, long competitionId, long userId, Long value, FormInputType formInputType, String description) {
+    private ServiceResult<Void> updateBigDecimalValueForFormInput(long applicationId, long competitionId, long userId, BigDecimal value, FormInputType formInputType) {
+        return updateValueForFormInput(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType);
+    }
+
+    private ServiceResult<Void> updateLongBigDecimalForFormInputAndDescription(long applicationId, long competitionId, long userId, BigDecimal value, FormInputType formInputType, String description) {
         return updateValueForFormInputAndDescription(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType, description);
     }
 

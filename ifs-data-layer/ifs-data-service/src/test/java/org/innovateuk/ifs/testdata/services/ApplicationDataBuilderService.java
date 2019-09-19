@@ -29,11 +29,13 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -537,6 +539,19 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         break;
                 }
             });
+
+            if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
+                builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
+                        50000,
+                        new BigDecimal("1000"),
+                        new BigDecimal("2000"),
+                        new BigDecimal("3000"),
+                        new BigDecimal("4000"));
+            } else {
+                builder[0] = builder[0].withEmployeesAndTurnover(50000,
+                        new BigDecimal("1000"));
+            }
+
             return builder[0].withOrganisationSize(SMALL).
                     withWorkPostcode("AB12 3CD");
         };

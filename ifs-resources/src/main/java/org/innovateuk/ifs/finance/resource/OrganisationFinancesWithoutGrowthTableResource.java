@@ -1,20 +1,22 @@
 package org.innovateuk.ifs.finance.resource;
 
+import java.math.BigDecimal;
+
 /**
  * A class used to capture "Your organisation" information without a growth table
  */
 public class OrganisationFinancesWithoutGrowthTableResource {
 
     private OrganisationSize organisationSize;
-    private Long turnover;
-    private Long headCount;
+    private BigDecimal turnover;
+    private Integer headCount;
 
     private Boolean stateAidAgreed;
 
     public OrganisationFinancesWithoutGrowthTableResource(
             OrganisationSize organisationSize,
-            Long turnover,
-            Long headCount,
+            BigDecimal turnover,
+            Integer headCount,
             Boolean stateAidAgreed) {
 
         this.organisationSize = organisationSize;
@@ -34,19 +36,19 @@ public class OrganisationFinancesWithoutGrowthTableResource {
         this.organisationSize = organisationSize;
     }
 
-    public Long getTurnover() {
+    public BigDecimal getTurnover() {
         return turnover;
     }
 
-    public void setTurnover(Long turnover) {
+    public void setTurnover(BigDecimal turnover) {
         this.turnover = turnover;
     }
 
-    public Long getHeadCount() {
+    public Integer getHeadCount() {
         return headCount;
     }
 
-    public void setHeadCount(Long headCount) {
+    public void setHeadCount(Integer headCount) {
         this.headCount = headCount;
     }
 

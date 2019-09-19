@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 
 /**
@@ -10,16 +11,16 @@ public class OrganisationFinancesWithGrowthTableResource {
     private OrganisationSize organisationSize;
     private Boolean stateAidAgreed;
     private YearMonth financialYearEnd;
-    private Long headCountAtLastFinancialYear;
-    private Long annualTurnoverAtLastFinancialYear;
-    private Long annualProfitsAtLastFinancialYear;
-    private Long annualExportAtLastFinancialYear;
-    private Long researchAndDevelopmentSpendAtLastFinancialYear;
+    private Integer headCountAtLastFinancialYear;
+    private BigDecimal annualTurnoverAtLastFinancialYear;
+    private BigDecimal annualProfitsAtLastFinancialYear;
+    private BigDecimal annualExportAtLastFinancialYear;
+    private BigDecimal researchAndDevelopmentSpendAtLastFinancialYear;
 
     public OrganisationFinancesWithGrowthTableResource() {
     }
 
-    public OrganisationFinancesWithGrowthTableResource(OrganisationSize organisationSize, Boolean stateAidAgreed, YearMonth financialYearEnd, Long headCountAtLastFinancialYear, Long annualTurnoverAtLastFinancialYear, Long annualProfitsAtLastFinancialYear, Long annualExportAtLastFinancialYear, Long researchAndDevelopmentSpendAtLastFinancialYear) {
+    public OrganisationFinancesWithGrowthTableResource(OrganisationSize organisationSize, Boolean stateAidAgreed, YearMonth financialYearEnd, Integer headCountAtLastFinancialYear, BigDecimal annualTurnoverAtLastFinancialYear, BigDecimal annualProfitsAtLastFinancialYear, BigDecimal annualExportAtLastFinancialYear, BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.organisationSize = organisationSize;
         this.stateAidAgreed = stateAidAgreed;
         this.financialYearEnd = financialYearEnd;
@@ -54,43 +55,43 @@ public class OrganisationFinancesWithGrowthTableResource {
         this.financialYearEnd = financialYearEnd;
     }
 
-    public Long getHeadCountAtLastFinancialYear() {
+    public Integer getHeadCountAtLastFinancialYear() {
         return headCountAtLastFinancialYear;
     }
 
-    public void setHeadCountAtLastFinancialYear(Long headCountAtLastFinancialYear) {
+    public void setHeadCountAtLastFinancialYear(Integer headCountAtLastFinancialYear) {
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
     }
 
-    public Long getAnnualTurnoverAtLastFinancialYear() {
+    public BigDecimal getAnnualTurnoverAtLastFinancialYear() {
         return annualTurnoverAtLastFinancialYear;
     }
 
-    public void setAnnualTurnoverAtLastFinancialYear(Long annualTurnoverAtLastFinancialYear) {
+    public void setAnnualTurnoverAtLastFinancialYear(BigDecimal annualTurnoverAtLastFinancialYear) {
         this.annualTurnoverAtLastFinancialYear = annualTurnoverAtLastFinancialYear;
     }
 
-    public Long getAnnualProfitsAtLastFinancialYear() {
+    public BigDecimal getAnnualProfitsAtLastFinancialYear() {
         return annualProfitsAtLastFinancialYear;
     }
 
-    public void setAnnualProfitsAtLastFinancialYear(Long annualProfitsAtLastFinancialYear) {
+    public void setAnnualProfitsAtLastFinancialYear(BigDecimal annualProfitsAtLastFinancialYear) {
         this.annualProfitsAtLastFinancialYear = annualProfitsAtLastFinancialYear;
     }
 
-    public Long getAnnualExportAtLastFinancialYear() {
+    public BigDecimal getAnnualExportAtLastFinancialYear() {
         return annualExportAtLastFinancialYear;
     }
 
-    public void setAnnualExportAtLastFinancialYear(Long annualExportAtLastFinancialYear) {
+    public void setAnnualExportAtLastFinancialYear(BigDecimal annualExportAtLastFinancialYear) {
         this.annualExportAtLastFinancialYear = annualExportAtLastFinancialYear;
     }
 
-    public Long getResearchAndDevelopmentSpendAtLastFinancialYear() {
+    public BigDecimal getResearchAndDevelopmentSpendAtLastFinancialYear() {
         return researchAndDevelopmentSpendAtLastFinancialYear;
     }
 
-    public void setResearchAndDevelopmentSpendAtLastFinancialYear(Long researchAndDevelopmentSpendAtLastFinancialYear) {
+    public void setResearchAndDevelopmentSpendAtLastFinancialYear(BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
     }
 }

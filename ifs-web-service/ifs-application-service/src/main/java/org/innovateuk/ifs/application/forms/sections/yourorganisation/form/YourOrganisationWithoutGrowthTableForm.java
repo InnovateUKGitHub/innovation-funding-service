@@ -4,6 +4,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 /**
  * Form used to capture "Your organisation" information when a growth table is required.
@@ -15,18 +16,18 @@ public class YourOrganisationWithoutGrowthTableForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
-    private Long turnover;
+    private BigDecimal turnover;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
-    private Long headCount;
+    private Integer headCount;
 
     private Boolean stateAidAgreed;
 
     YourOrganisationWithoutGrowthTableForm(
             OrganisationSize organisationSize,
-            Long turnover,
-            Long headCount,
+            BigDecimal turnover,
+            Integer headCount,
             Boolean stateAidAgreed) {
 
         this.organisationSize = organisationSize;
@@ -46,19 +47,19 @@ public class YourOrganisationWithoutGrowthTableForm {
         this.organisationSize = organisationSize;
     }
 
-    public Long getTurnover() {
+    public BigDecimal getTurnover() {
         return turnover;
     }
 
-    public void setTurnover(Long turnover) {
+    public void setTurnover(BigDecimal turnover) {
         this.turnover = turnover;
     }
 
-    public Long getHeadCount() {
+    public Integer getHeadCount() {
         return headCount;
     }
 
-    public void setHeadCount(Long headCount) {
+    public void setHeadCount(Integer headCount) {
         this.headCount = headCount;
     }
 

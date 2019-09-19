@@ -3,6 +3,8 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
+import org.innovateuk.ifs.finance.resource.GrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -125,6 +128,45 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
+    public IndustrialCostDataBuilder withProjectGrowthTable(YearMonth financialYearEnd,
+                                                            Integer headCountAtLastFinancialYear,
+                                                            BigDecimal annualTurnoverAtLastFinancialYear,
+                                                            BigDecimal annualProfitsAtLastFinancialYear,
+                                                            BigDecimal annualExportAtLastFinancialYear,
+                                                            BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
+        return with(data -> {
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            GrowthTableResource growthTable = new GrowthTableResource();
+            growthTable.setFinancialYearEnd(financialYearEnd.atEndOfMonth());
+            growthTable.setEmployees(headCountAtLastFinancialYear);
+            growthTable.setAnnualTurnover(annualTurnoverAtLastFinancialYear);
+            growthTable.setAnnualProfits(annualProfitsAtLastFinancialYear);
+            growthTable.setAnnualExport(annualExportAtLastFinancialYear);
+            growthTable.setResearchAndDevelopment(researchAndDevelopmentSpendAtLastFinancialYear);
+
+            applicationFinance.setCompanyFinancesResource(growthTable);
+
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
+    public IndustrialCostDataBuilder withEmployeesAndTurnover(int employees, BigDecimal turnover) {
+        return with(data -> {
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            EmployeesAndTurnoverResource employeesAndTurnoverResource = new EmployeesAndTurnoverResource();
+            employeesAndTurnoverResource.setTurnover(turnover);
+            employeesAndTurnoverResource.setEmployees(employees);
+
+            applicationFinance.setCompanyFinancesResource(employeesAndTurnoverResource);
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
 
     public IndustrialCostDataBuilder withWorkPostcode(String workPostcode) {
         return with(data -> {
@@ -231,5 +273,4 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccess();
         LOG.info("Created Industrial Costs for Application '{}', Organisation '{}'", application.getName(), organisation.getName());
     }
-
 }

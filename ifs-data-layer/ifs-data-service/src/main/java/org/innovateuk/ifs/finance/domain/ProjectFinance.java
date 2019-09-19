@@ -25,6 +25,9 @@ public class ProjectFinance extends Finance {
     @JoinColumn(name="projectId", referencedColumnName="id")
     private Project project;
 
+    @OneToOne(mappedBy = "projectFinance", fetch = FetchType.LAZY)
+    private CompanyFinances companyFinances;
+
     private boolean creditReportConfirmed = false;
 
     @Enumerated(EnumType.STRING)
@@ -80,5 +83,14 @@ public class ProjectFinance extends Finance {
     public boolean isFinanceContact(Long userId) {
         return ofNullable(project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, getOrganisation()))
                 .map(pu -> pu.isUser(userId)).orElse(false);
+    }
+
+    @Override
+    public CompanyFinances getCompanyFinances() {
+        return companyFinances;
+    }
+
+    public void setCompanyFinances(CompanyFinances companyFinances) {
+        this.companyFinances = companyFinances;
     }
 }
