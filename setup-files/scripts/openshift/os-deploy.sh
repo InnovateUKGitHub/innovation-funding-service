@@ -61,10 +61,8 @@ function shibInit() {
     LDAP_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }')
     echo "Ldap pod: ${LDAP_POD}"
 
-    while RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/clean-migrate-db-sync-ldap.sh ifs-database 2>&1); echo $RESULT; echo $RESULT | grep "ERROR"; do
-        echo "Shibinit failed. Retrying.."
-        sleep 10
-    done
+    oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/clean-migrate-db-sync-ldap.sh
+    echo "Finished init.."
 }
 
 # Entry point
