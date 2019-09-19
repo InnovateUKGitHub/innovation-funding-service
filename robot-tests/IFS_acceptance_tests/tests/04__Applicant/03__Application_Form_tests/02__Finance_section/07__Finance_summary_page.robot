@@ -138,7 +138,7 @@ Alert shows If the academic research participation is too high
     And the user navigates to the finance overview of the academic  Performance Application 7
     Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
     And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link            link =
+    And the user clicks the button/link            link = Performance Application 7
     And the user clicks the button/link            link = Review and submit
     And the user expands the section               Finances summary
     Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
