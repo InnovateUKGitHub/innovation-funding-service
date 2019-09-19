@@ -20,9 +20,9 @@
 
         <th:block th:if="${model.projectState.active}" th:insert="fragments/setup-state :: active"/>
 
-        <th:block th:if="${model.projectState.live}"th:insert="fragments/setup-state :: successful"/>
+        <th:block th:if="${model.projectState.live}" th:insert="fragments/setup-state :: successful"/>
 
-        <th:block th:if="${model.projectState.unsuccessful}"th:insert="fragments/setup-state :: unsuccessful"/>
+        <th:block th:if="${model.projectState.unsuccessful}" th:insert="fragments/setup-state :: unsuccessful"/>
 
         <div class="govuk-!-margin-top-9">
             <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
