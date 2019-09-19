@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.finance.domain;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-public class GrowthTable extends CompanyFinances {
+public class GrowthTable extends FinancialYearAccounts {
     private LocalDate financialYearEnd;
     private BigDecimal annualTurnover;
     private BigDecimal annualProfits;

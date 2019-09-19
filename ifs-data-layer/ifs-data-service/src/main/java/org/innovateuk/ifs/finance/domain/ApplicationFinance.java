@@ -31,7 +31,10 @@ public class ApplicationFinance extends Finance {
     private FileEntry financeFileEntry;
 
     @OneToOne(mappedBy = "applicationFinance", fetch = FetchType.LAZY)
-    private CompanyFinances companyFinances;
+    private EmployeesAndTurnover employeesAndTurnover;
+
+    @OneToOne(mappedBy = "applicationFinance", fetch = FetchType.LAZY)
+    private GrowthTable growthTable;
 
     public ApplicationFinance() {
     }
@@ -118,12 +121,19 @@ public class ApplicationFinance extends Finance {
         this.workPostcode = workPostcode;
     }
 
-    @Override
-    public CompanyFinances getCompanyFinances() {
-        return companyFinances;
+    public EmployeesAndTurnover getEmployeesAndTurnover() {
+        return employeesAndTurnover;
     }
 
-    public void setCompanyFinances(CompanyFinances companyFinances) {
-        this.companyFinances = companyFinances;
+    public void setEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
+        this.employeesAndTurnover = employeesAndTurnover;
+    }
+
+    public GrowthTable getGrowthTable() {
+        return growthTable;
+    }
+
+    public void setGrowthTable(GrowthTable growthTable) {
+        this.growthTable = growthTable;
     }
 }

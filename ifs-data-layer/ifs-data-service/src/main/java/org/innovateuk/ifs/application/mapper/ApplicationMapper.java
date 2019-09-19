@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
@@ -19,7 +18,6 @@ import org.mapstruct.Mappings;
         config = GlobalMapperConfig.class,
         uses = {
                 ProcessRoleMapper.class,
-                ApplicationFinanceMapper.class,
                 CompetitionMapper.class,
                 ApplicationInviteMapper.class,
                 FileEntryMapper.class,

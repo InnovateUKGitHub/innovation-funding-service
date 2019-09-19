@@ -63,9 +63,17 @@ public abstract class Finance {
         this.organisationSize = organisationSize;
     }
 
-    public abstract CompanyFinances getCompanyFinances();
-
     public String getOrganisationName() {
         return organisation.getName();
     }
+
+    public FinancialYearAccounts getFinancialYearAccounts() {
+        if (getGrowthTable() != null) {
+            return getGrowthTable();
+        }
+        return getEmployeesAndTurnover();
+    }
+
+    public abstract GrowthTable getGrowthTable();
+    public abstract EmployeesAndTurnover getEmployeesAndTurnover();
 }

@@ -11,7 +11,7 @@ public class OrganisationFinancesWithGrowthTableResource {
     private OrganisationSize organisationSize;
     private Boolean stateAidAgreed;
     private YearMonth financialYearEnd;
-    private Integer headCountAtLastFinancialYear;
+    private Long headCountAtLastFinancialYear;
     private BigDecimal annualTurnoverAtLastFinancialYear;
     private BigDecimal annualProfitsAtLastFinancialYear;
     private BigDecimal annualExportAtLastFinancialYear;
@@ -20,7 +20,7 @@ public class OrganisationFinancesWithGrowthTableResource {
     public OrganisationFinancesWithGrowthTableResource() {
     }
 
-    public OrganisationFinancesWithGrowthTableResource(OrganisationSize organisationSize, Boolean stateAidAgreed, YearMonth financialYearEnd, Integer headCountAtLastFinancialYear, BigDecimal annualTurnoverAtLastFinancialYear, BigDecimal annualProfitsAtLastFinancialYear, BigDecimal annualExportAtLastFinancialYear, BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
+    public OrganisationFinancesWithGrowthTableResource(OrganisationSize organisationSize, Boolean stateAidAgreed, YearMonth financialYearEnd, Long headCountAtLastFinancialYear, BigDecimal annualTurnoverAtLastFinancialYear, BigDecimal annualProfitsAtLastFinancialYear, BigDecimal annualExportAtLastFinancialYear, BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.organisationSize = organisationSize;
         this.stateAidAgreed = stateAidAgreed;
         this.financialYearEnd = financialYearEnd;
@@ -55,11 +55,11 @@ public class OrganisationFinancesWithGrowthTableResource {
         this.financialYearEnd = financialYearEnd;
     }
 
-    public Integer getHeadCountAtLastFinancialYear() {
+    public Long getHeadCountAtLastFinancialYear() {
         return headCountAtLastFinancialYear;
     }
 
-    public void setHeadCountAtLastFinancialYear(Integer headCountAtLastFinancialYear) {
+    public void setHeadCountAtLastFinancialYear(Long headCountAtLastFinancialYear) {
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
     }
 

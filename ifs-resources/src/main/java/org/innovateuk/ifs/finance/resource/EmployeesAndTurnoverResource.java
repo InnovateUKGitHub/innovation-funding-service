@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.resource;
 
 import java.math.BigDecimal;
 
-public class EmployeesAndTurnoverResource extends CompanyFinancesResource {
+public class EmployeesAndTurnoverResource extends FinancialYearAccountsResource {
     private BigDecimal turnover;
 
     public BigDecimal getTurnover() {

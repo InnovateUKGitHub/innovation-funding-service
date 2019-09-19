@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.resource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class GrowthTableResource extends CompanyFinancesResource {
+public class GrowthTableResource extends FinancialYearAccountsResource {
     private LocalDate financialYearEnd;
     private BigDecimal annualTurnover;
     private BigDecimal annualProfits;

@@ -25,9 +25,6 @@ public class ProjectFinance extends Finance {
     @JoinColumn(name="projectId", referencedColumnName="id")
     private Project project;
 
-    @OneToOne(mappedBy = "projectFinance", fetch = FetchType.LAZY)
-    private CompanyFinances companyFinances;
-
     private boolean creditReportConfirmed = false;
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +32,12 @@ public class ProjectFinance extends Finance {
 
     @Enumerated(EnumType.STRING)
     private EligibilityRagStatus eligibilityStatus = EligibilityRagStatus.UNSET;
+
+    @OneToOne(mappedBy = "applicationFinance", fetch = FetchType.LAZY)
+    private EmployeesAndTurnover employeesAndTurnover;
+
+    @OneToOne(mappedBy = "applicationFinance", fetch = FetchType.LAZY)
+    private GrowthTable growthTable;
 
     public ProjectFinance() {
     }
@@ -85,12 +88,19 @@ public class ProjectFinance extends Finance {
                 .map(pu -> pu.isUser(userId)).orElse(false);
     }
 
-    @Override
-    public CompanyFinances getCompanyFinances() {
-        return companyFinances;
+    public EmployeesAndTurnover getEmployeesAndTurnover() {
+        return employeesAndTurnover;
     }
 
-    public void setCompanyFinances(CompanyFinances companyFinances) {
-        this.companyFinances = companyFinances;
+    public void setEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
+        this.employeesAndTurnover = employeesAndTurnover;
+    }
+
+    public GrowthTable getGrowthTable() {
+        return growthTable;
+    }
+
+    public void setGrowthTable(GrowthTable growthTable) {
+        this.growthTable = growthTable;
     }
 }

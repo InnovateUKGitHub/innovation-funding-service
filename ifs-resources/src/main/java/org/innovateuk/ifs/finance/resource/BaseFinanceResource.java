@@ -24,7 +24,7 @@ public abstract class BaseFinanceResource {
     protected Long target;
     protected OrganisationSize organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
-    private CompanyFinancesResource companyFinancesResource;
+    private FinancialYearAccountsResource financialYearAccounts;
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -99,12 +99,12 @@ public abstract class BaseFinanceResource {
         this.financeOrganisationDetails = financeOrganisationDetails;
     }
 
-    public CompanyFinancesResource getCompanyFinancesResource() {
-        return companyFinancesResource;
+    public FinancialYearAccountsResource getFinancialYearAccounts() {
+        return financialYearAccounts;
     }
 
-    public void setCompanyFinancesResource(CompanyFinancesResource companyFinancesResource) {
-        this.companyFinancesResource = companyFinancesResource;
+    public void setFinancialYearAccounts(FinancialYearAccountsResource financialYearAccounts) {
+        this.financialYearAccounts = financialYearAccounts;
     }
 
     public FinanceRowCostCategory getFinanceOrganisationDetails(FinanceRowType costType) {

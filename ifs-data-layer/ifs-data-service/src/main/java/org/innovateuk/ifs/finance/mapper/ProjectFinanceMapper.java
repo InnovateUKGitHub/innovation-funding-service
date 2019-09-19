@@ -17,8 +17,7 @@ import org.mapstruct.Mappings;
             OrganisationMapper.class,
             ProjectMapper.class,
             FileEntryMapper.class,
-            EmployeesAndTurnoverMapper.class,
-            GrowthTableMapper.class
+            FinancialYearAccountsMapper.class
     }
 )
 public abstract class ProjectFinanceMapper extends BaseMapper<ProjectFinance, ProjectFinanceResource, Long> {

@@ -9,14 +9,14 @@ public class OrganisationFinancesWithoutGrowthTableResource {
 
     private OrganisationSize organisationSize;
     private BigDecimal turnover;
-    private Integer headCount;
+    private Long headCount;
 
     private Boolean stateAidAgreed;
 
     public OrganisationFinancesWithoutGrowthTableResource(
             OrganisationSize organisationSize,
             BigDecimal turnover,
-            Integer headCount,
+            Long headCount,
             Boolean stateAidAgreed) {
 
         this.organisationSize = organisationSize;
@@ -44,11 +44,11 @@ public class OrganisationFinancesWithoutGrowthTableResource {
         this.turnover = turnover;
     }
 
-    public Integer getHeadCount() {
+    public Long getHeadCount() {
         return headCount;
     }
 
-    public void setHeadCount(Integer headCount) {
+    public void setHeadCount(Long headCount) {
         this.headCount = headCount;
     }
 

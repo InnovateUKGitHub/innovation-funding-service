@@ -147,7 +147,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             growthTable.setAnnualExport(annualExportAtLastFinancialYear);
             growthTable.setResearchAndDevelopment(researchAndDevelopmentSpendAtLastFinancialYear);
 
-            applicationFinance.setCompanyFinancesResource(growthTable);
+            applicationFinance.setFinancialYearAccountsResource(growthTable);
 
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
@@ -163,7 +163,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             employeesAndTurnoverResource.setTurnover(turnover);
             employeesAndTurnoverResource.setEmployees(employees);
 
-            applicationFinance.setCompanyFinancesResource(employeesAndTurnoverResource);
+            applicationFinance.setFinancialYearAccountsResource(employeesAndTurnoverResource);
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }

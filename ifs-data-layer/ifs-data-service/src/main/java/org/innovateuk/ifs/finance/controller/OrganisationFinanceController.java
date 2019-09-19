@@ -101,7 +101,7 @@ public class OrganisationFinanceController {
 
         OrganisationSize organisationSize = applicationFinance.getOrganisationSize();
 
-        Optional<GrowthTableResource> growthTable = ofNullable(applicationFinance.getCompanyFinancesResource())
+        Optional<GrowthTableResource> growthTable = ofNullable(applicationFinance.getFinancialYearAccounts())
                                                         .filter(GrowthTableResource.class::isInstance)
                                                         .map(GrowthTableResource.class::cast);
 
@@ -116,7 +116,7 @@ public class OrganisationFinanceController {
                 .orElse(null);
         BigDecimal researchAndDevelopmentSpendAtEndOfFinancialYear = growthTable.map(GrowthTableResource::getResearchAndDevelopment)
                 .orElse(null);
-        Integer headCountAtLastFinancialYear = growthTable.map(GrowthTableResource::getEmployees)
+        Long headCountAtLastFinancialYear = growthTable.map(GrowthTableResource::getEmployees)
                 .orElse(null);
 
         return restSuccess(new OrganisationFinancesWithGrowthTableResource(
@@ -142,12 +142,12 @@ public class OrganisationFinanceController {
 
         OrganisationSize organisationSize = applicationFinance.getOrganisationSize();
 
-        Optional<EmployeesAndTurnoverResource> employeesAndTurnover = ofNullable(applicationFinance.getCompanyFinancesResource())
+        Optional<EmployeesAndTurnoverResource> employeesAndTurnover = ofNullable(applicationFinance.getFinancialYearAccounts())
                 .filter(EmployeesAndTurnoverResource.class::isInstance)
                 .map(EmployeesAndTurnoverResource.class::cast);
 
         BigDecimal turnover = employeesAndTurnover.map(EmployeesAndTurnoverResource::getTurnover).orElse(null);
-        Integer headCount = employeesAndTurnover.map(EmployeesAndTurnoverResource::getEmployees).orElse(null);
+        Long headCount = employeesAndTurnover.map(EmployeesAndTurnoverResource::getEmployees).orElse(null);
 
         return restSuccess(new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover, headCount, stateAidAgreed));
     }
@@ -180,7 +180,7 @@ public class OrganisationFinanceController {
         // finance
         ApplicationFinanceResource applicationFinance = getApplicationFinance(applicationId, organisationId).getSuccess();
         updateOrganisationSize(applicationFinance, competitionId, finances.getOrganisationSize());
-        GrowthTableResource growthTable = (GrowthTableResource) applicationFinance.getCompanyFinancesResource();
+        GrowthTableResource growthTable = (GrowthTableResource) applicationFinance.getFinancialYearAccounts();
         growthTable.setFinancialYearEnd(finances.getFinancialYearEnd().atEndOfMonth());
         growthTable.setAnnualTurnover(finances.getAnnualTurnoverAtLastFinancialYear());
         growthTable.setAnnualProfits(finances.getAnnualProfitsAtLastFinancialYear());
@@ -214,7 +214,7 @@ public class OrganisationFinanceController {
         //finance
         ApplicationFinanceResource applicationFinance = getApplicationFinance(applicationId, organisationId).getSuccess();
         updateOrganisationSize(applicationFinance, competitionId, finances.getOrganisationSize());
-        EmployeesAndTurnoverResource employeesAndTurnover = (EmployeesAndTurnoverResource) applicationFinance.getCompanyFinancesResource();
+        EmployeesAndTurnoverResource employeesAndTurnover = (EmployeesAndTurnoverResource) applicationFinance.getFinancialYearAccounts();
         employeesAndTurnover.setTurnover(finances.getTurnover());
         employeesAndTurnover.setEmployees(finances.getHeadCount());
 
@@ -271,8 +271,8 @@ public class OrganisationFinanceController {
         return updateBigDecimalValueForFormInput(applicationId, competitionId, userId, value, FormInputType.ORGANISATION_TURNOVER);
     }
 
-    private ServiceResult<Void> updateHeadCount(long applicationId, long competitionId, long userId, Integer value) {
-        return updateIntegerValueForFormInput(applicationId, competitionId, userId, value, FormInputType.STAFF_COUNT);
+    private ServiceResult<Void> updateHeadCount(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.STAFF_COUNT);
     }
 
     private ServiceResult<Void> updateStateAidAgreed(long applicationId, boolean stateAidAgreed) {
@@ -399,11 +399,11 @@ public class OrganisationFinanceController {
                 FormInputType.FINANCIAL_OVERVIEW_ROW, RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION);
     }
 
-    private ServiceResult<Void> updateHeadCountAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Integer value) {
-        return updateIntegerValueForFormInput(applicationId, competitionId, userId, value, FormInputType.FINANCIAL_STAFF_COUNT);
+    private ServiceResult<Void> updateHeadCountAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.FINANCIAL_STAFF_COUNT);
     }
 
-    private ServiceResult<Void> updateIntegerValueForFormInput(long applicationId, long competitionId, long userId, Integer value, FormInputType formInputType) {
+    private ServiceResult<Void> updateLongValueForFormInput(long applicationId, long competitionId, long userId, Long value, FormInputType formInputType) {
         return updateValueForFormInput(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType);
     }
 

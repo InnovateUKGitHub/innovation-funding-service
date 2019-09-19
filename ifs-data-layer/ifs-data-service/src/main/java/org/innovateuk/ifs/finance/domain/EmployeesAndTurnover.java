@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.finance.domain;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-public class EmployeesAndTurnover extends CompanyFinances {
+public class EmployeesAndTurnover extends FinancialYearAccounts {
     private BigDecimal turnover;
 
     public BigDecimal getTurnover() {
