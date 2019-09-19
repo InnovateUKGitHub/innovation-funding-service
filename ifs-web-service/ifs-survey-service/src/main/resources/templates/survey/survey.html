@@ -26,7 +26,7 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Satisfaction survey',size='govuk-heading-xl'" />
 
-        <form th:action="@{/{competitionId}/feedback(competitionId=${competitionId})}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
+        <form th:action="@{/{competitionId}/feedback(competitionId=${competitionId},type=${surveyType})}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h2 class="govuk-fieldset__heading">
