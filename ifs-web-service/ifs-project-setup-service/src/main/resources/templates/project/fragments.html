@@ -23,6 +23,8 @@
               th:insert="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})" />
     <th:block th:if="${model.hasGrantOfferLetter()}"
               th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
+    <th:block th:if="${model.hasProjectSetupComplete()}"
+              th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
 </th:block>
 
 <th:block th:fragment="consortium-partner-status-indicator(status)">
@@ -45,6 +47,7 @@
                 <span th:case="waiting" class="status-waiting">Awaiting review</span>
                 <span th:case="rejected" class="status-reject">Unsuccessful</span>
                 <span th:case="awaiting-assignment">Awaiting assignment</span>
+                <span th:case="awaiting-review">Awaiting review</span>
                 <span th:case="pending-query" class="status-warning">Pending query</span>
             </th:block>
         </div>
