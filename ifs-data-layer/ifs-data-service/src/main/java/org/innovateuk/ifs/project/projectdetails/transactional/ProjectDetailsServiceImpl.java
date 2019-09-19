@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
@@ -27,11 +28,13 @@ import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -51,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
@@ -69,6 +73,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Transactional and secure service for Project Details processing work
@@ -119,6 +124,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private LegacyMonitoringOfficerRepository legacyMonitoringOfficerRepository;
+
+    @Autowired
+    private ProjectUserInviteMapper inviteMapper;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -420,6 +431,34 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return getProject(projectId)
                 .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
+    }
+
+    @Override
+    public ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
+
+        ProjectUserInvite projectInvite = inviteMapper.mapToDomain(projectUserInviteResource);
+        projectUserInviteRepository.save(projectInvite);
+
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<List<ProjectUserInviteResource>>  getInvitesByProject (Long projectId) {
+        if (projectId == null) {
+            return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
+        }
+        List<ProjectUserInvite> invites = projectUserInviteRepository.findByProjectId(projectId);
+        List<ProjectUserInviteResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
+        return serviceSuccess(Lists.newArrayList(inviteResources));
+    }
+
+    private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
+        ProjectUserInviteResource inviteResource = inviteMapper.mapToResource(invite);
+        Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
+        inviteResource.setLeadOrganisation(organisation.getName());
+        ProjectResource project = projectService.getProjectById(inviteResource.getProject()).getSuccess();
+        inviteResource.setApplicationId(project.getApplication());
+        return inviteResource;
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, ProjectUserInviteResource projectResource, Notifications kindOfNotification) {

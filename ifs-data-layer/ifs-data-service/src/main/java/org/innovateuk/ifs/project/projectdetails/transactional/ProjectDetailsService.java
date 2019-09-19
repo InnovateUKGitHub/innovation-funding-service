@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Transactional and secure service for Project Details processing work
@@ -46,4 +47,9 @@ public interface ProjectDetailsService {
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteProjectManager(Long projectId, ProjectUserInviteResource inviteResource);
+
+    ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource);
+
+    ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId);
+
 }

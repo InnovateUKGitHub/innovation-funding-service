@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -28,6 +29,7 @@ import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileProcessRepository;
@@ -42,6 +44,9 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -51,6 +56,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -93,6 +99,12 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     @Autowired
     private ViabilityProcessRepository viabilityProcessRepository;
+
+    @Autowired
+    private ProjectInviteService projectInviteService;
+
+    @Autowired
+    private ProjectDetailsService projectDetailsService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -234,7 +246,9 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     private ServiceResult<Void> inviteContact(long projectId, ProjectUserInviteResource projectResource, Notifications kindOfNotification) {
 
-        ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectResource);
+        ProjectUserInvite projectInvite =projectUserInviteMapper.mapToDomain(projectResource);
+
+        saveInvite(projectId, projectResource);
         projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
         projectUserInviteRepository.save(projectInvite);
 
@@ -242,6 +256,30 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
+
+    private ServiceResult<Void> saveInvite(long projectId, ProjectUserInviteResource invite) {
+
+        return inviteResult(projectId, invite, (project, projectResource) -> projectDetailsService.saveProjectInvite(projectResource));
+    }
+
+    @Transactional
+    private ServiceResult<Void> inviteResult(long projectId, ProjectUserInviteResource invite, BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
+
+        Optional<ProjectUserInviteResource> savedInvite = getSavedInvite(projectId, invite);
+
+        if (savedInvite.isPresent()) {
+            sendInvite.apply(projectId, savedInvite.get());
+            return serviceSuccess();
+        }
+
+        return serviceSuccess();
+    }
+
+    public Optional<ProjectUserInviteResource> getSavedInvite(long projectId, ProjectUserInviteResource invite) {
+
+            return simpleFindFirst(projectDetailsService.getInvitesByProject(projectId).getSuccess(),
+                    i -> i.getEmail().equals(invite.getEmail()));
+        }
 
     private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
         return new UserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
