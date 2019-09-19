@@ -24,7 +24,7 @@ public class YourOrganisationWithGrowthTableForm {
     private YearMonth financialYearEnd;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
-    private Integer headCountAtLastFinancialYear;
+    private Long headCountAtLastFinancialYear;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal annualTurnoverAtLastFinancialYear;
@@ -42,7 +42,7 @@ public class YourOrganisationWithGrowthTableForm {
             OrganisationSize organisationSize,
             Boolean stateAidAgreed,
             YearMonth financialYearEnd,
-            Integer headCountAtLastFinancialYear,
+            Long headCountAtLastFinancialYear,
             BigDecimal annualTurnoverAtLastFinancialYear,
             BigDecimal annualProfitsAtLastFinancialYear,
             BigDecimal annualExportAtLastFinancialYear,
@@ -85,11 +85,11 @@ public class YourOrganisationWithGrowthTableForm {
         this.financialYearEnd = financialYearEnd;
     }
 
-    public Integer getHeadCountAtLastFinancialYear() {
+    public Long getHeadCountAtLastFinancialYear() {
         return headCountAtLastFinancialYear;
     }
 
-    public void setHeadCountAtLastFinancialYear(Integer headCountAtLastFinancialYear) {
+    public void setHeadCountAtLastFinancialYear(Long headCountAtLastFinancialYear) {
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
     }
 

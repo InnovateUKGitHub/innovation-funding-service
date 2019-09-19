@@ -34,7 +34,9 @@ public abstract class ProjectFinanceMapper extends BaseMapper<ProjectFinance, Pr
     @Mappings({
             @Mapping(target = "viabilityStatus", ignore = true),
             @Mapping(target = "eligibilityStatus", ignore = true),
-            @Mapping(target = "creditReportConfirmed", ignore = true)
+            @Mapping(target = "creditReportConfirmed", ignore = true),
+            @Mapping(target = "growthTable", ignore = true),
+            @Mapping(target = "employeesAndTurnover", ignore = true)
     })
     @Override
     public abstract ProjectFinance mapToDomain(ProjectFinanceResource projectFinanceResource);

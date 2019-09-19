@@ -20,14 +20,14 @@ public class YourOrganisationWithoutGrowthTableForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
-    private Integer headCount;
+    private Long headCount;
 
     private Boolean stateAidAgreed;
 
     YourOrganisationWithoutGrowthTableForm(
             OrganisationSize organisationSize,
             BigDecimal turnover,
-            Integer headCount,
+            Long headCount,
             Boolean stateAidAgreed) {
 
         this.organisationSize = organisationSize;
@@ -55,11 +55,11 @@ public class YourOrganisationWithoutGrowthTableForm {
         this.turnover = turnover;
     }
 
-    public Integer getHeadCount() {
+    public Long getHeadCount() {
         return headCount;
     }
 
-    public void setHeadCount(Integer headCount) {
+    public void setHeadCount(Long headCount) {
         this.headCount = headCount;
     }
 
