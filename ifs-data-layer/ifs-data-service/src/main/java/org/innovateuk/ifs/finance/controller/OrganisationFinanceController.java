@@ -181,7 +181,7 @@ public class OrganisationFinanceController {
         ApplicationFinanceResource applicationFinance = getApplicationFinance(applicationId, organisationId).getSuccess();
         updateOrganisationSize(applicationFinance, competitionId, finances.getOrganisationSize());
         GrowthTableResource growthTable = (GrowthTableResource) applicationFinance.getFinancialYearAccounts();
-        growthTable.setFinancialYearEnd(finances.getFinancialYearEnd().atEndOfMonth());
+        growthTable.setFinancialYearEnd(ofNullable(finances.getFinancialYearEnd()).map(YearMonth::atEndOfMonth).orElse(null));
         growthTable.setAnnualTurnover(finances.getAnnualTurnoverAtLastFinancialYear());
         growthTable.setAnnualProfits(finances.getAnnualProfitsAtLastFinancialYear());
         growthTable.setAnnualExport(finances.getAnnualExportAtLastFinancialYear());
