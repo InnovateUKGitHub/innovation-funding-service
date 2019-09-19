@@ -53,7 +53,6 @@ import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfi
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -106,7 +105,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -331,16 +329,16 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(projectRepositoryMock.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)).thenReturn(projects);
 
-        ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
+        ServiceResult<List<ProjectStatusResource>> result = service.getCompetitionStatus(competitionId, applicationSearchString);
 
         assertTrue(result.isSuccess());
 
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccess();
-        assertTrue(projectsGetSortedByApplicationId(competitionProjectsStatusResource.getProjectStatusResources()));
-        assertEquals(3, competitionProjectsStatusResource.getProjectStatusResources().size());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(1).getNumberOfPartners());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(2).getNumberOfPartners());
+        List<ProjectStatusResource> projectStatusResources = result.getSuccess();
+        assertTrue(projectsGetSortedByApplicationId(projectStatusResources));
+        assertEquals(3, projectStatusResources.size());
+        assertEquals(new Integer(3), projectStatusResources.get(0).getNumberOfPartners());
+        assertEquals(new Integer(3), projectStatusResources.get(1).getNumberOfPartners());
+        assertEquals(new Integer(3), projectStatusResources.get(2).getNumberOfPartners());
     }
 
     @Test
@@ -351,16 +349,16 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(projectRepositoryMock.findByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, COMPLETED_STATES)).thenReturn(projects);
 
-        ServiceResult<CompetitionProjectsStatusResource> result = service.getPreviousCompetitionStatus(competitionId);
+        ServiceResult<List<ProjectStatusResource>> result = service.getPreviousCompetitionStatus(competitionId);
 
         assertTrue(result.isSuccess());
 
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccess();
-        assertTrue(projectsGetSortedByApplicationId(competitionProjectsStatusResource.getProjectStatusResources()));
-        assertEquals(3, competitionProjectsStatusResource.getProjectStatusResources().size());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(1).getNumberOfPartners());
-        assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(2).getNumberOfPartners());
+        List<ProjectStatusResource> projectStatusResources = result.getSuccess();
+        assertTrue(projectsGetSortedByApplicationId(projectStatusResources));
+        assertEquals(3, projectStatusResources.size());
+        assertEquals(new Integer(3), projectStatusResources.get(0).getNumberOfPartners());
+        assertEquals(new Integer(3), projectStatusResources.get(1).getNumberOfPartners());
+        assertEquals(new Integer(3), projectStatusResources.get(2).getNumberOfPartners());
     }
 
     private List<Project> setupCompetitionStatusMocks(long competitionId) {
@@ -532,8 +530,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
@@ -579,8 +576,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
@@ -624,8 +620,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -674,9 +669,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -722,9 +715,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -759,9 +750,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(REJECTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -800,9 +789,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(REJECTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, REJECTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(REJECTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -846,10 +833,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
-
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, COMPLETE);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(COMPLETE, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -889,10 +873,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, PENDING);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
-
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
@@ -930,10 +910,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
-
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -971,10 +949,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
-
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -1191,8 +1167,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
     }
 
     @Test
@@ -1238,8 +1213,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
     }
 
     @Test
@@ -1281,8 +1255,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
     }
 
     private Project createProjectStatusResource(long projectId,
@@ -1570,6 +1543,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withSpendProfileStatus(NOT_STARTED).
                 withDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
+                withProjectSetupCompleteStatus(NOT_REQUIRED).
                 withIsLeadPartner(true).
                 build();
 
@@ -1589,6 +1563,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withSpendProfileStatus(NOT_STARTED, NOT_STARTED).
                 withDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
+                withProjectSetupCompleteStatus(NOT_REQUIRED, NOT_REQUIRED).
                 build(2);
 
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().
@@ -1615,6 +1590,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withSpendProfileStatus(NOT_STARTED).
                 withDocumentsStatus(NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
+                withProjectSetupCompleteStatus(NOT_REQUIRED).
                 build(1);
 
         // try with filtering on a non-lead partner organisation
@@ -1659,6 +1635,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withSpendProfileStatus(NOT_STARTED).
                 withDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
+                withProjectSetupCompleteStatus(NOT_REQUIRED).
                 withIsLeadPartner(true).
                 build();
 

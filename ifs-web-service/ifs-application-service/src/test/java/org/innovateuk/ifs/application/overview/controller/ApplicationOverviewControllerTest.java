@@ -79,19 +79,6 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
-    public void applicationDetailsAssign() throws Exception {
-        ApplicationResource application = newApplicationResource().build();
-
-        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withRole(LEADAPPLICANT).build()));
-
-        mockMvc.perform(post("/application/" + application.getId()).param(ASSIGN_QUESTION_PARAM, "1_2"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/application/" + application.getId()));
-    }
-
-    @Test
     public void teesAndCees() throws Exception {
         mockMvc.perform(get("/application/terms-and-conditions"))
                 .andExpect(view().name("application-terms-and-conditions"));

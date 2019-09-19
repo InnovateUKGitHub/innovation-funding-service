@@ -12,6 +12,14 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6369 Loans - Remove Financial year table from Spend Profile
 ...
 ...             IFS-6292 Loans - Finance Checks - Remove 'Approved' and link to viability checks
+...
+...             IFS-6285 Loans - Remove Bank Details - External Journey - Project Setup
+...
+...             IFS-6307 Loans - Remove Bank Details - Internal Journey - Project Setup
+...
+...             IFS-6363 Loans - Project Setup Complete - Internal Screen & Submission
+...
+...             IFS-6294 Loans - Project Setup Complete External Journey
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -22,19 +30,22 @@ Resource        ../../10__Project_setup/PS_Common.robot
 ${loan_comp_PS}              Project setup loan comp
 ${loan_comp_PS_Id}           ${competition_ids["${loan_comp_PS}"]}
 ${loan_PS_application1}      Loan Project 1
+${loan_PS_application2}      Loan Project 2
 ${loan_PS_application_Id}    ${application_ids["${loan_PS_application1}"]}
 ${loan_PS_project_Id}        ${project_ids["${loan_PS_application1}"]}
+${loan_PS_project_Id2}       ${project_ids["${loan_PS_application2}"]}
 ${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_Id}
 ${loan_PS_Url}               ${loan_PS}/details
 ${loan_finance_checks}       ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
 ${eligibility_changes}       ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
+${spend_profile}             ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
 
 *** Test Cases ***
 Loan application shows correct T&C's
     [Documentation]    IFS-6205
     Given the user clicks the button/link   link = Award terms and conditions
     And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
-    When the user clicks the button/link     link = Back to application overview
+    When the user clicks the button/link    link = Back to application overview
     Then the user should see the element    jQuery = li:contains("Award terms and conditions") .task-status-complete
 
 Loan application Your funding
@@ -54,19 +65,20 @@ Loan application submission
     [Documentation]  IFS-6237  IFS-6238
     Given the user submits the loan application
     And the user should see the element            jQuery = h2:contains("Part A: Innovation Funding Service application")
-    When the user clicks the button/link           link = startup high growth index survey
+    #When the user clicks the button/link           link = startup high growth index survey
     #TODO
     #the user should be on the right page.  Update once we have this link
-    And the user closes the last opened tab
+    #And the user closes the last opened tab
     When the user clicks the button/link            link = View part A
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  To finish your application, you must complete part B
 
 Applicant complete the project setup details
-    [Documentation]  IFS-6369
+    [Documentation]  IFS-6369  IFS-6285
     Given the user completes the project details
     And the user completes the project team details
     And the user submits the project document
+    Then the user should not see the element    jQuery = h2:contains("Bank details")
 
 Funding sought validations
     [Documentation]  IFS-6293
@@ -83,16 +95,37 @@ Found sought changes
     And the internal user should see the funding changes
 
 Project finance completes all project setup steps
-    [Documentation]  IFS-6369  IFS-6292
+    [Documentation]  IFS-6369  IFS-6292  IFS-6307
     Given internal user approve project documents
     And internal user assign MO to loan project
     And internal user generate SP
+    When the user navigates to the page         ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    Then the user should not see the element    jQuery = th:contains("Bank details")
 
 Applicant checks the generated SP
     [Documentation]  IFS-6369
     Given log in as a different user       &{lead_applicant_credentials}
     When the user navigates to the page    ${loan_PS}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
     Then the user should not see the financial year table on SP
+
+Internal user can mark project as successful
+    [Documentation]  IFS-6363
+    [Setup]  Log in as a different user     &{internal_finance_credentials}
+    Given the user approves the spend profile
+    When the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    And the user clicks the button/link     jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
+    Then the user marks loan as complete    successful  ${loan_PS_application1}
+
+Internal user can mark project as unsuccessful
+    [Documentation]  IFS-6363
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    When the user clicks the button/link     jQuery = tr:contains("${loan_PS_application2}") td:contains("Review") a
+    Then the user marks loan as complete     unsuccessful  ${loan_PS_application2}
+
+Applicant checks successful and unsuccessful project status
+    [Documentation]  IFS-6294
+    Given log in as a different user    &{lead_applicant_credentials}
+    Then the applicant checks for project status
 
 *** Keywords ***
 Custom suite setup
@@ -198,3 +231,40 @@ the user selects to change funding sought
 the internal user should see the funding changes
     the user navigates to the page    ${eligibility_changes}
     the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
+
+the user marks loan as complete
+    [Arguments]  ${status}  ${appl_name}
+    the user selects the radio button     successful   ${status}
+    the user selects the checkbox         ${status}Confirmation
+    the user clicks the button/link       id = mark-as-${status}
+    the user should see the element       jQuery = p:contains("Project setup is complete and was ${status}.")
+    the user clicks the button/link       link = Back to project setup
+    the user should see the element       jQuery = tr:contains("${appl_name}") .ifs-project-status-${status}
+
+the user approves the spend profile
+    the user navigates to the page   ${spend_profile}
+    the user selects the checkbox    approvedByLeadTechnologist
+    the user clicks the button/link  jQuery = button:contains("Approved")
+    the user clicks the button/link  jQuery = .modal-accept-profile button:contains("Approve")
+    the applicant should see the project setup complete stage enabled
+
+the applicant should see the project setup complete stage enabled
+    log in as a different user       &{lead_applicant_credentials}
+    the user navigates to the page   ${loan_PS}
+    the user should see the element  jQuery = .waiting span:contains("Awaiting review")
+    the user clicks the button/link  link = Project setup complete
+    the user navigates to the page   ${loan_PS}/setup
+    the user should see the element  jQuery = h1:contains("Project setup complete")
+    the user should see the element  jQuery = h2:contains("Your project will be reviewed by Innovate UK")
+    Log in as a different user       &{internal_finance_credentials}
+
+the applicant checks for project status
+    the user should see the element   jQuery = li:contains("${loan_PS_application1}") .status:contains("Live project")
+    the user should see the element   jQuery = li:contains("${loan_PS_application2}") .status:contains("Unsuccessful")
+    the user navigates to the page    ${loan_PS}
+    the user should see the element   jQuery = .progress-list li:nth-child(7):contains("Completed")
+    the user clicks the button/link   link = Project setup complete
+    the user navigates to the page    ${loan_PS}/setup
+    the user should see the element   jQuery = h2:contains("We have approved your loan application")
+    the user navigates to the page    ${server}/project-setup/project/${loan_PS_project_Id2}/setup
+    the user should see the element   jQuery = h2:contains("Your loan application has not been successful in this competition")
