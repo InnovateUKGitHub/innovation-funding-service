@@ -3,7 +3,6 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.core.parameters.P;
@@ -17,7 +16,7 @@ public interface ProjectInviteService {
 
 
     @PreAuthorize("hasPermission(#projectUserInviteResource, 'SAVE_PROJECT_INVITE')")
-    ServiceResult<ProjectUserInvite> saveProjectInvite(@P("projectUserInviteResource") ProjectUserInviteResource projectUserInviteResource);
+    ServiceResult<Void> saveProjectInvite(@P("projectUserInviteResource") ProjectUserInviteResource projectUserInviteResource);
 
     @PostFilter("hasPermission(filterObject, 'READ_PROJECT_INVITE')")
     ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId);

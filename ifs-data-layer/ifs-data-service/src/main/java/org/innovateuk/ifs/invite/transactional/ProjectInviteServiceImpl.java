@@ -92,7 +92,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
 
     @Override
     @Transactional
-    public ServiceResult<ProjectUserInvite> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
+    public ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
 
         return validateProjectInviteResource(projectUserInviteResource).andOnSuccess(() ->
                 validateUserNotAlreadyInvited(projectUserInviteResource).andOnSuccess(() ->
@@ -106,7 +106,8 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
                                 return serviceFailure(badRequestError(errors.toString()));
                             } else {
                                 projectInvite.setHash(generateInviteHash());
-                                return serviceSuccess(projectUserInviteRepository.save(projectInvite));
+                                projectUserInviteRepository.save(projectInvite);
+                                return serviceSuccess();
                             }
                         })));
     }

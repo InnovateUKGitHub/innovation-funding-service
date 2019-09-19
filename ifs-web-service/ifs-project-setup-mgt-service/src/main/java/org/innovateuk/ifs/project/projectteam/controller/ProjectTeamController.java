@@ -2,10 +2,8 @@ package org.innovateuk.ifs.project.projectteam.controller;
 
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
 import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
@@ -22,8 +20,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.rest.RestFailure.error;
-import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 /**
  * This controller will handle all requests that are related to the project team.
@@ -111,27 +107,11 @@ public class ProjectTeamController {
             return "projectteam/project-team";
         };
 
-        Supplier<String> successView = () -> String.format("redirect:/project/%d/team", competitionId, projectId);
+        Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
 
-        projectInviteHelper.validateIfTryingToInviteSelf(loggedInUser.getEmail(), form.getEmail(), validationHandler);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            ProjectUserInviteResource projectUserInviteResource = projectInviteHelper.createProjectInviteResourceForNewContact(projectId, form.getName(), form.getEmail(), organisationId);
-
-            return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-                projectTeamRestService.inviteProjectMember(projectId, projectUserInviteResource).toServiceResult();
-
-                return validationHandler.failNowOrSucceedWith(failureView, successView);
-            });
-
-        });
-
-//        return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
-//                failureView, successView, projectId, organisationId,
-//                (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
-//
+        return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
+                          failureView, successView, projectId, organisationId,
+                          (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")

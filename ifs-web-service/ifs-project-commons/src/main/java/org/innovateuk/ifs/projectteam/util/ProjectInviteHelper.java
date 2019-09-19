@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.projectteam.util;
 
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -21,7 +19,6 @@ import java.util.function.Supplier;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -73,26 +70,7 @@ public class ProjectInviteHelper {
         });
     }
 
-    public String inviteResult(long projectId, ProjectUserInviteResource invite, ValidationHandler validationHandler,
-                               Supplier<String> failureView,
-                               Supplier<String> successView) {
-        ServiceResult<Void> saveResult = projectDetailsService.saveProjectInvite(invite);
-
-        return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
-            Optional<ProjectUserInviteResource> savedInvite = getSavedInvite(projectId, invite);
-
-            if (savedInvite.isPresent()) {
-                return validationHandler.failNowOrSucceedWith(failureView, successView);
-            } else {
-                return validationHandler.failNowOrSucceedWith(failureView, successView);
-            }
-        });
-//        projectDetailsService.saveProjectInvite(invite);
-//
-//        return validationHandler.failNowOrSucceedWith(failureView, successView);
-    }
-
-    public void validateIfTryingToInviteSelf(String loggedInUserEmail,
+    private void validateIfTryingToInviteSelf(String loggedInUserEmail,
                                               String inviteEmail,
                                               ValidationHandler validationHandler) {
         if (equalsIgnoreCase(loggedInUserEmail, inviteEmail)) {
@@ -100,7 +78,7 @@ public class ProjectInviteHelper {
         }
     }
 
-    public ProjectUserInviteResource createProjectInviteResourceForNewContact(long projectId,
+    private ProjectUserInviteResource createProjectInviteResourceForNewContact(long projectId,
                                                                                String name,
                                                                                String email,
                                                                                long organisationId) {
@@ -121,7 +99,7 @@ public class ProjectInviteHelper {
         return inviteResource;
     }
 
-    public Optional<ProjectUserInviteResource> getSavedInvite(long projectId, ProjectUserInviteResource invite) {
+    private Optional<ProjectUserInviteResource> getSavedInvite(long projectId, ProjectUserInviteResource invite) {
         return simpleFindFirst(projectDetailsService.getInvitesByProject(projectId).getSuccess(),
                                i -> i.getEmail().equals(invite.getEmail()));
     }
