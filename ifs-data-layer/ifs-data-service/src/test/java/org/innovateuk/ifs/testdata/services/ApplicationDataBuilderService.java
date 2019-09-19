@@ -542,13 +542,13 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
             if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
                 builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
-                        50000,
+                        50000L,
                         new BigDecimal("1000"),
                         new BigDecimal("2000"),
                         new BigDecimal("3000"),
                         new BigDecimal("4000"));
             } else {
-                builder[0] = builder[0].withEmployeesAndTurnover(50000,
+                builder[0] = builder[0].withEmployeesAndTurnover(50000L,
                         new BigDecimal("1000"));
             }
 

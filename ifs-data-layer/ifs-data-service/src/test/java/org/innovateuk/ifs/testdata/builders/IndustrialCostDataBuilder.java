@@ -129,7 +129,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
     public IndustrialCostDataBuilder withProjectGrowthTable(YearMonth financialYearEnd,
-                                                            Integer headCountAtLastFinancialYear,
+                                                            long headCountAtLastFinancialYear,
                                                             BigDecimal annualTurnoverAtLastFinancialYear,
                                                             BigDecimal annualProfitsAtLastFinancialYear,
                                                             BigDecimal annualExportAtLastFinancialYear,
@@ -147,13 +147,13 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             growthTable.setAnnualExport(annualExportAtLastFinancialYear);
             growthTable.setResearchAndDevelopment(researchAndDevelopmentSpendAtLastFinancialYear);
 
-            applicationFinance.setFinancialYearAccountsResource(growthTable);
+            applicationFinance.setFinancialYearAccounts(growthTable);
 
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
 
-    public IndustrialCostDataBuilder withEmployeesAndTurnover(int employees, BigDecimal turnover) {
+    public IndustrialCostDataBuilder withEmployeesAndTurnover(long employees, BigDecimal turnover) {
         return with(data -> {
             ApplicationFinanceResource applicationFinance =
                     financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
@@ -163,7 +163,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             employeesAndTurnoverResource.setTurnover(turnover);
             employeesAndTurnoverResource.setEmployees(employees);
 
-            applicationFinance.setFinancialYearAccountsResource(employeesAndTurnoverResource);
+            applicationFinance.setFinancialYearAccounts(employeesAndTurnoverResource);
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
