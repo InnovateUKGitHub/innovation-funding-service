@@ -128,17 +128,17 @@ Finance summary has total marked as complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]
-    [Setup]  logout as user
-    Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
-    When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
-    Then the user navigates to Your-finances page  Academic robot test application
+    Given Log in as a different user               &{collaborator2_credentials}
+    Then the user navigates to Your-finances page  Performance Application 7
     And The user clicks the button/link            link = Your project costs
-    When the user enters text to a text field      css = [name$="incurredStaff"]  1000000
+    When the user enters text to a text field      id = incurredStaff  1000000
+    And The user clicks the button/link            id = mark-all-as-complete
+    And The user should see the element            jQuery = h1:contains("Your project finances")
     And log in as a different user                 &{lead_applicant_credentials}
-    And the user navigates to the finance overview of the academic
+    And the user navigates to the finance overview of the academic  Performance Application 7
     Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
     And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link            link = Academic robot test application
+    And the user clicks the button/link            link =
     And the user clicks the button/link            link = Review and submit
     And the user expands the section               Finances summary
     Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
@@ -147,10 +147,10 @@ Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
     [Tags]
     When lead enters a valid research participation value
-    And the user navigates to the finance overview of the academic
+    And the user navigates to the finance overview of the academic  Performance Application 7
     Then the user should not see the element       jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
     And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link            link = Academic robot test application
+    And the user clicks the button/link            link = Performance Application 7
     And the user clicks the button/link            link = Review and submit
     And the user expands the section               Finances summary
     Then the user should not see the element       jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
@@ -319,7 +319,7 @@ the red warning should be visible
     the user should see the element  jQuery = .warning-alert h2:contains("not marked their finances as complete")
 
 Lead enters a valid research participation value
-    the user navigates to Your-finances page  Academic robot test application
+    the user navigates to Your-finances page          Performance Application 7
     the user clicks the button/link                   link = Your project costs
     run keyword and ignore error without screenshots  the user clicks the button/link  jQuery = .button-clear:contains("Edit")
     the user clicks the button/link                   jQuery = button:contains("Labour")

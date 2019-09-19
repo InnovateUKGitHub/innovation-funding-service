@@ -160,8 +160,9 @@ The user navigates to the overview page of the Robot test application
     the user navigates to the page       ${server}/application/${id}
 
 The user navigates to the finance overview of the academic
+    [Arguments]  ${appl}
     When the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link    link= Performance Application 7
+    And the user clicks the button/link    link= ${appl}
     And the user clicks the button/link    link=Finances overview
 
 invite a registered user

@@ -50,10 +50,10 @@ User can view the competition brief
 Accept an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128
     [Tags]
-    Given the user should see the element                     jQuery = .in-progress li:nth-child(1):contains("Low power air purification systems"):contains("Pending")
+    Given the user should see the element                     jQuery = .in-progress li:contains("Low power air purification systems"):contains("Pending")
     When the user accepts the invitation
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the user should see the element                       jQuery = .in-progress li:nth-child(6):contains("Low power air purification systems"):contains("Accepted")
+    And the user should see the element                       jQuery = .in-progress li:contains("Low power air purification systems"):contains("Accepted")
 
 Reject an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128  INFUND-6358  INFUND-3726
@@ -122,7 +122,7 @@ Custom suite teardown
     The user closes the browser
 
 the user accepts the invitation
-    the user clicks the button/link       jQuery = .in-progress li:nth-child(1) a:contains("Accept or reject")
+    the user clicks the button/link       jQuery = .in-progress li:contains("Low") a:contains("Accept or reject")
     the user should see the element       jQuery = h1:contains("Accept application")
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")

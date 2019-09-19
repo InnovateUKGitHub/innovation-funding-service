@@ -20,7 +20,7 @@ Academic finances should be editable when lead marks them as complete
     [Tags]
     [Setup]    Lead applicant marks the finances as complete
     Given Log in as a different user          &{collaborator2_credentials}
-    When the user navigates to Your-finances page  Performance Application 7
+    When the user navigates to Your-finances page  Evolution of the global phosphorus cycle
     And the user clicks the button/link       link = Your project costs
     Then the user should not see the element  css = #incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
@@ -29,7 +29,7 @@ Academic finance validations
     [Documentation]    INFUND-2399  IFS-2879
     [Tags]  HappyPath
     [Setup]    Log in as a different user            &{collaborator2_credentials}
-    When the user navigates to Your-finances page    Performance Application 7
+    When the user navigates to Your-finances page    Evolution of the global phosphorus cycle
     And the user clicks the button/link              link = Your project costs
     And the applicant enters invalid inputs
     And the user selects the checkbox                agree-terms-page
@@ -62,7 +62,7 @@ Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
     [Tags]  HappyPath
     [Setup]    log in as a different user     &{lead_applicant_credentials}
-    Given the user navigates to Your-finances page  Performance Application 7
+    Given the user navigates to Your-finances page  Evolution of the global phosphorus cycle
     When the user clicks the button/link      link = Your project costs
     Then the user should not see the element  css = .upload-section label
 
@@ -70,7 +70,7 @@ Academics upload
     [Documentation]    INFUND-917
     [Tags]
     [Setup]    log in as a different user              &{collaborator2_credentials}
-    When the user navigates to Your-finances page      Performance Application 7
+    When the user navigates to Your-finances page      Evolution of the global phosphorus cycle
     And the user clicks the button/link                link = Your project costs
     When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
@@ -80,7 +80,7 @@ Academics upload
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
     [Tags]
-    When the user navigates to the finance overview of the academic
+    When the user navigates to the finance overview of the academic  Evolution of the global phosphorus cycle
     Then the user should not see an error in the page
     [Teardown]    the user goes back to the previous page
 
@@ -88,7 +88,7 @@ Lead applicant can't view the file on the finances page
     [Documentation]    INFUND-917
     [Tags]
     [Setup]    log in as a different user              &{lead_applicant_credentials}
-    When the user navigates to Your-finances page      Performance Application 7
+    When the user navigates to Your-finances page      Evolution of the global phosphorus cycle
     And the user clicks the button/link                link = Your project costs
     Then the user should not see the element           link = ${5mb_pdf}
 
@@ -96,7 +96,7 @@ Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
     [Tags]
     [Setup]    log in as a different user             &{collaborator2_credentials}
-    When the user navigates to Your-finances page     Performance Application 7
+    When the user navigates to Your-finances page     Evolution of the global phosphorus cycle
     And the user should see correct grant percentage
     When the user clicks the button/link              link = Your project costs
     Then the user can see JeS details
@@ -105,7 +105,7 @@ Mark all as complete
     [Documentation]    INFUND-918  IFS-2879
     [Tags]
     Given log in as a different user               &{collaborator2_credentials}
-    And the user navigates to Your-finances page   Performance Application 7
+    And the user navigates to Your-finances page   Evolution of the global phosphorus cycle
     And the user clicks the button/link            link = Your project costs
     And the user should see the element            link = ${5mb_pdf}
     When the user enters text to a text field      css = input[name="tsbReference"]  123123
@@ -116,13 +116,13 @@ Mark all as complete
     And the user clicks the button/link            link = Your funding
     And the user marks your funding section as complete
     Then the user should see the element           jQuery = h1:contains("Your project finances")
-    And the user navigates to the finance overview of the academic
-    And the user should see the element            css = .finance-summary tr:nth-of-type(2) img[src*="/images/ifs-images/icons/icon-tick"]
+    And the user navigates to the finance overview of the academic  Evolution of the global phosphorus cycle
+    And the user should see the element            jQuery = .finance-summary tr:contains("EGGS") img[src*="/images/ifs-images/icons/icon-tick"]
 
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
     [Tags]
-    When the user navigates to Your-finances page     Performance Application 7
+    When the user navigates to Your-finances page     Evolution of the global phosphorus cycle
     And the user should see correct grant percentage
     And the user clicks the button/link               link = Your project costs
     Then the user should not see the element          jQuery = button:contains("Remove")
@@ -131,13 +131,13 @@ User should not be able to edit or upload the form
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
     [Tags]
-    When the user navigates to Your-finances page        Performance Application 7
+    When the user navigates to Your-finances page        Evolution of the global phosphorus cycle
     Then the user should not see the element             jQuery = button:contains("Remove")
 
 Academic finance overview
     [Documentation]  INFUND-917 INFUND-2399
     [Tags]
-    Given the user navigates to the finance overview of the academic
+    Given the user navigates to the finance overview of the academic  Evolution of the global phosphorus cycle
     Then the finance table should be correct
     Then the user should not see an error in the page
     [Teardown]  The user marks the academic application finances as incomplete
@@ -157,24 +157,24 @@ the academic partner uploads a file
     Choose File    css = .upload-section input    ${UPLOAD_FOLDER}/${file_name}
 
 the finance table should be correct
-    Wait Until Element Contains Without Screenshots  css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)  £32,698
-    Element Should Contain                           css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)  4,407
-    Element Should Contain                           css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)  8,909
-    Element Should Contain                           css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)  4,244
-    Element Should Contain                           css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)  0
-    Element Should Contain                           css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)  4,243
-    Element Should Contain                           css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)  10,895
+    Wait Until Element Contains Without Screenshots  jQuery = .project-cost-breakdown tr:contains("EGGS") td:nth-of-type(1)  £32,698
+    Element Should Contain                           jQuery = .project-cost-breakdown tr:contains("EGGS") td:nth-of-type(2)  4,407
+    Element Should Contain                           jQuery = .project-cost-breakdown tr:contains("EGGS") td:nth-of-type(3)  8,909
+    Element Should Contain                           jQuery = .project-cost-breakdown tr:contains("EGGS") td:nth-of-type(4)  4,244
+    Element Should Contain                           jQuery = .project-cost-breakdown tr:contains("EGGS") td:nth-of-type(6)  0
+    Element Should Contain                           jQuery = .project-cost-breakdown tr:contains("EGGS") td:nth-of-type(7)  4,243
+    Element Should Contain                           jQuery = .project-cost-breakdown tr:contains("EGGS") td:nth-of-type(8)  10,895
 
 Lead applicant marks the finances as complete
     Logging in and Error Checking                      &{lead_applicant_credentials}
-    the user clicks the button/link                    link = Performance Application 7
+    the user clicks the button/link                    link = Evolution of the global phosphorus cycle
     then the user selects research category            Feasibility studies
-    the user navigates to Your-finances page           Performance Application 7
-    the user marks the finances as complete            Performance Application 7  labour costs  n/a  yes
+    the user navigates to Your-finances page           Evolution of the global phosphorus cycle
+    the user marks the finances as complete            Evolution of the global phosphorus cycle  labour costs  n/a  no
 
 Lead applicant marks the finances as incomplete
     log in as a different user                  &{lead_applicant_credentials}
-    the user navigates to Your-finances page    Performance Application 7
+    the user navigates to Your-finances page    Evolution of the global phosphorus cycle
     the user clicks the button/link             link = Your funding
     the user clicks the button/link             jQuery = button:contains("Edit")
 
@@ -205,7 +205,7 @@ the user should see correct grant percentage
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  0
 
 The user marks the academic application finances as incomplete
-    the user navigates to Your-finances page  Performance Application 7
+    the user navigates to Your-finances page  Evolution of the global phosphorus cycle
     the user clicks the button/link    link = Your project costs
     Set Focus To Element      jQuery = button:contains("Edit")
     the user clicks the button/link    jQuery = button:contains("Edit")

@@ -26,7 +26,7 @@ Small org can be selected
     Given the user navigates to Your-finances page  Optimising engine output
     And the user clicks the button/link         link = Your organisation
     And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
-    [Teardown]  the user clicks the button/link  link = Application overview
+    [Teardown]  the user clicks the button/link  link = Back to application overview
 
 Funding section is now available
     [Documentation]    INFUND-6394
