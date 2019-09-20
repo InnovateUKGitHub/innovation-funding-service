@@ -19,7 +19,7 @@ Invite a new Assessor to assess a competition
 Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
     [Tags]  HappyPath
-    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text  1
+    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}  Invitation to assess 'Assessments of load capabilities'  This is custom text  1
     [Teardown]  Delete the emails from the local test mailbox
 
 Resend the invite to the assessor again
@@ -42,7 +42,7 @@ New assessor can login with the new account
     [Documentation]    INFUND-8092
     [Tags]  HappyPath
     Given Invited guest user log in       &{Assessor_e2e}
-    Then The user should see the element  link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Then The user should see the element  link = Assessments of load capabilities
 
 New assessor should have the correct innovation area
     [Documentation]    INFUND-8092
@@ -53,7 +53,7 @@ New assessor has no assements
     [Documentation]  INFUND-9007
     [Tags]  HappyPath
     Given The user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
-    Then the user should see the element           jQuery = h3:contains("${IN_ASSESSMENT_COMPETITION_NAME}") ~ div:contains("There are currently no assessments for you to review.")
+    Then the user should see the element           jQuery = h3:contains("Assessments of load capabilities") ~ div:contains("There are currently no assessments for you to review.")
 
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
@@ -140,7 +140,7 @@ The user fills and submits the registration form
 comp admin logs in and navigate to invite assessor page
     [Arguments]  ${tab_name}
     the user logs-in in new browser      &{Comp_admin1_credentials}
-    the user clicks the button/link      link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    the user clicks the button/link      link = Assessments of load capabilities
     the user clicks the button/link      jQuery = a:contains("Invite assessors to assess the competition")
     the user clicks the button/link      link = ${tab_name}
 
@@ -156,10 +156,10 @@ comp admin resend invite to an assessor
     the user clicks the button/link      jQuery = .govuk-button:contains("Send invite")
 
 Resent email can be read by the invited user
-    the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'    Assessment period:  1
+    the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess 'Assessments of load capabilities'    Assessment period:  1
 
 Invited user accept the invitation and navigate to registration form
-    the user should see the element         jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
+    the user should see the element         jQuery = h1:contains("Invitation to assess 'Assessments of load capabilities'")
     the user selects the radio button       acceptInvitation  true
     the user clicks the button/link         jQuery = button:contains("Confirm")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create account")
