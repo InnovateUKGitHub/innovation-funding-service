@@ -52,9 +52,6 @@ public class ApplicationValidationUtil {
     @Autowired
     private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
 
-    @Autowired
-    private ApplicationDetailsMarkAsCompleteValidator applicationDetailsMarkAsCompleteValidator;
-
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
         if (response == null) {
