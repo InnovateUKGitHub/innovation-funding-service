@@ -14,7 +14,6 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,17 +21,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static java.util.Collections.*;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -56,7 +59,7 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
     @Mock
     private ProjectFinanceMapper projectFinanceMapperMock;
 
-    private Long projectId = 1L;
+    private long projectId = 1L;
 
     private ProjectFinanceResourceId projectFinanceResourceId;
 
@@ -64,16 +67,34 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setUp() throws Exception {
-        Long organisationId = 2L;
-        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        long organisationId = 2L;
+
+        Organisation organisation = newOrganisation()
+                .withId(organisationId)
+                .withOrganisationType(BUSINESS)
+                .build();
+
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
-        Project project = newProject().withId(projectId).withApplication(application).build();
+
+        Project project = newProject()
+                .withId(projectId)
+                .withApplication(application)
+                .build();
+
         projectFinanceResourceId = new ProjectFinanceResourceId(projectId, organisationId);
-        ProjectFinance projectFinance = newProjectFinance().withOrganisation(organisation).withProject(project).build();
-        projectFinanceResource = newProjectFinanceResource().withId(projectFinance.getId()).withOrganisation(organisationId).build();
+        ProjectFinance projectFinance = newProjectFinance()
+                .withOrganisation(organisation)
+                .withProject(project)
+                .build();
+
+        projectFinanceResource = newProjectFinanceResource()
+                .withId(projectFinance.getId())
+                .withOrganisation(organisationId)
+                .build();
+
         Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
-        costs.put(FinanceRowType.MATERIALS, new DefaultCostCategory());
+        costs.put(MATERIALS, new DefaultCostCategory());
 
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId())).thenReturn(projectFinance);
         when(projectFinanceMapperMock.mapToResource(projectFinance)).thenReturn(projectFinanceResource);
@@ -88,7 +109,7 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
     @Test
     public void getResearchParticipationPercentageFromProject() {
         BigDecimal result = handler.getResearchParticipationPercentageFromProject(projectId);
-        assertTrue(result != null);
+        assertNotNull(result);
     }
 
     @Test
