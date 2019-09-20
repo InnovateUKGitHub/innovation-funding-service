@@ -134,7 +134,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         Question financeOverviewQuestion = newQuestion().build();
 
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId())).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(financeService.financeDetails(application.getId(), organisation.getId())).thenReturn(serviceSuccess(applicationFinanceResource));
 
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId,  FINANCIAL_OVERVIEW_ROW)).thenReturn(serviceSuccess(financeOverviewQuestion));
 
@@ -282,7 +282,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
         when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
+        when(financeService.financeDetails(application.getId(), organisation.getId()))
                 .thenReturn(serviceSuccess(applicationFinanceResource));
         when(financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource)).thenReturn(serviceSuccess(applicationFinanceResource));
 
@@ -315,7 +315,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
         when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
+        when(financeService.financeDetails(application.getId(), organisation.getId()))
                 .thenReturn(serviceSuccess(applicationFinanceResource));
 
         mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/show-state-aid", application.getId(), organisation.getId()))

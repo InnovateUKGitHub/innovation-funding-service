@@ -264,7 +264,7 @@ public class OrganisationFinanceController {
     }
 
     private ServiceResult<ApplicationFinanceResource> getApplicationFinance(long applicationId, long organisationId) {
-        return financeService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId);
+        return financeService.financeDetails(applicationId, organisationId);
     }
 
     private ServiceResult<Void> updateTurnover(long applicationId, long competitionId, long userId, BigDecimal value) {
