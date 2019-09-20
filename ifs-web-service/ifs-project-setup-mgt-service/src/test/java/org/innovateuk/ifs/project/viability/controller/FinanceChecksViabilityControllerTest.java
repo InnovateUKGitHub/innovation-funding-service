@@ -195,8 +195,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(false, form.isCreditReportConfirmed());
         assertEquals(true, form.isConfirmViabilityChecked());
 
-        assertEquals(2L, viewModel.getTurnover().longValue());
-        assertEquals(1L, viewModel.getHeadCount().longValue());
+        assertEquals((Long) 2L, viewModel.getTurnover());
+        assertEquals((Long) 1L, viewModel.getHeadCount());
     }
 
     @Test

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
+import org.innovateuk.ifs.finance.resource.FinancialYearAccountsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -31,6 +32,7 @@ import java.util.function.Supplier;
 
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.VIABILITY_CHECKS_NOT_APPLICABLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -95,17 +97,17 @@ public class FinanceChecksViabilityController {
         ServiceResult<Void> saveCreditReportResult = financeService.saveCreditReportConfirmed(projectId, organisationId, form.isCreditReportConfirmed());
 
         return validationHandler.
-               addAnyErrors(saveCreditReportResult).
-               failNowOrSucceedWith(failureView, () -> {
+                addAnyErrors(saveCreditReportResult).
+                failNowOrSucceedWith(failureView, () -> {
 
-            ViabilityRagStatus statusToSend = getRagStatusDependantOnConfirmationCheckboxSelection(form);
+                    ViabilityRagStatus statusToSend = getRagStatusDependantOnConfirmationCheckboxSelection(form);
 
-            ServiceResult<Void> saveViabilityResult = financeService.saveViability(projectId, organisationId, viability, statusToSend);
+                    ServiceResult<Void> saveViabilityResult = financeService.saveViability(projectId, organisationId, viability, statusToSend);
 
-            return validationHandler.
-                   addAnyErrors(saveViabilityResult).
-                   failNowOrSucceedWith(failureView, successView);
-        });
+                    return validationHandler.
+                            addAnyErrors(saveViabilityResult).
+                            failNowOrSucceedWith(failureView, successView);
+                });
     }
 
     private ViabilityRagStatus getRagStatusDependantOnConfirmationCheckboxSelection(FinanceChecksViabilityForm form) {
@@ -132,7 +134,7 @@ public class FinanceChecksViabilityController {
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
-        if(viability.getViability().isNotApplicable()){
+        if (viability.getViability().isNotApplicable()) {
             throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));
         }
 
@@ -160,25 +162,30 @@ public class FinanceChecksViabilityController {
                 (OrganisationSize::getDescription).orElse(null);
 
         return new FinanceChecksViabilityViewModel(organisationName,
-                                                   leadPartnerOrganisation,
-                                                   totalCosts,
-                                                   percentageGrant,
-                                                   fundingSought,
-                                                   otherPublicSectorFunding,
-                                                   contributionToProject,
-                                                   companyRegistrationNumber,
-                                                   financesForOrganisation.getFinancialYearAccounts().getEmployees(),
-                                                   financesForOrganisation.getFinancialYearAccounts().getTurnover().longValue(),
-                                                   projectId,
-                                                   viabilityConfirmed,
-                                                   viabilityConfirmed,
-                                                   approver,
-                                                   approvalDate,
-                                                   organisationId,
-                                                   organisationSizeDescription,
-                                                   applicationId,
-                                                   project.getName(),
-                                                   project.getProjectState().isActive());
+                leadPartnerOrganisation,
+                totalCosts,
+                percentageGrant,
+                fundingSought,
+                otherPublicSectorFunding,
+                contributionToProject,
+                companyRegistrationNumber,
+                ofNullable(financesForOrganisation.getFinancialYearAccounts())
+                        .map(FinancialYearAccountsResource::getTurnover)
+                        .map(BigDecimal::longValue)
+                        .orElse(null),
+                ofNullable(financesForOrganisation.getFinancialYearAccounts())
+                        .map(FinancialYearAccountsResource::getEmployees)
+                        .orElse(null),
+                projectId,
+                viabilityConfirmed,
+                viabilityConfirmed,
+                approver,
+                approvalDate,
+                organisationId,
+                organisationSizeDescription,
+                applicationId,
+                project.getName(),
+                project.getProjectState().isActive());
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
