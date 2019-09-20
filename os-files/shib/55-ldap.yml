@@ -2,12 +2,12 @@ apiVersion: v1
 kind: List
 items:
   - apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: ldap-config
-        data:
-          ONLY_SYNC_LDAP: "${ONLY_SYNC_LDAP}"
-          PERFORMANCE_APPLICANT_USERS: "${PERFORMANCE_APPLICANT_USERS}"
+    kind: ConfigMap
+    metadata:
+      name: ldap-config
+    data:
+      ONLY_SYNC_LDAP: "${ONLY_SYNC_LDAP}"
+      PERFORMANCE_APPLICANT_USERS: "${PERFORMANCE_APPLICANT_USERS}"
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
