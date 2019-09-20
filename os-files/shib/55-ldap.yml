@@ -1,82 +1,99 @@
 apiVersion: v1
 kind: List
 items:
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    name: ldap
-  spec:
-    replicas: 1
-    selector:
-      deploymentconfig: ldap
-    strategy:
-      resources: {}
-    template:
+  - apiVersion: v1
+      kind: ConfigMap
       metadata:
-        labels:
-          deploymentconfig: ldap
-      spec:
-        containers:
-        - env:
-          - name: LDAP_PORT
-            value: "8389"
-          image: innovateuk/ldap-service:${ldapVersion}
-          name: ldap
-          livenessProbe:
-            exec:
-              command:
-              - ldapsearch
-              - -H
-              - ldaps://localhost:8389
-              - -b
-              - dc=nodomain
-              - -x
-              - -LLL
-              - -s
-              - base
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 5
-            failureThreshold: 3
-          readinessProbe:
-            exec:
-              command:
-              - ldapsearch
-              - -H
-              - ldaps://localhost:8389
-              - -b
-              - dc=nodomain
-              - -x
-              - -LLL
-              - -s
-              - base
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 5
-            failureThreshold: 3
-          imagePullPolicy: Always
-          ports:
-          - containerPort: 8389
-          - containerPort: 8636
-          resources:
-            limits:
-              memory: 1200M
-            requests:
-              memory: 800M
-    test: false
-    triggers:
-    - type: ConfigChange
-  status: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: ldap
-  spec:
-    ports:
-    - name: 8389-tcp
-      port: 8389
-      targetPort: 8389
-    selector:
-      deploymentconfig: ldap
-  status:
-    loadBalancer: {}
+        name: ldap-config
+        data:
+          ONLY_SYNC_LDAP: "${ONLY_SYNC_LDAP}"
+          PERFORMANCE_APPLICANT_USERS: "${PERFORMANCE_APPLICANT_USERS}"
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: ldap
+    spec:
+      replicas: 1
+      selector:
+        deploymentconfig: ldap
+      strategy:
+        resources: {}
+      template:
+        metadata:
+          labels:
+            deploymentconfig: ldap
+        spec:
+          containers:
+            - env:
+                - name: ONLY_SYNC_LDAP
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: ONLY_SYNC_LDAP
+                - name: PERFORMANCE_APPLICANT_USERS
+                    valueFrom:
+                      configMapKeyRef:
+                        name: ldap-config
+                        key: PERFORMANCE_APPLICANT_USERS
+                - name: LDAP_PORT
+                  value: "8389"
+              image: innovateuk/ldap-service:${ldapVersion}
+              name: ldap
+              livenessProbe:
+                exec:
+                  command:
+                    - ldapsearch
+                    - -H
+                    - ldaps://localhost:8389
+                    - -b
+                    - dc=nodomain
+                    - -x
+                    - -LLL
+                    - -s
+                    - base
+                initialDelaySeconds: 60
+                periodSeconds: 30
+                timeoutSeconds: 5
+                failureThreshold: 3
+              readinessProbe:
+                exec:
+                  command:
+                    - ldapsearch
+                    - -H
+                    - ldaps://localhost:8389
+                    - -b
+                    - dc=nodomain
+                    - -x
+                    - -LLL
+                    - -s
+                    - base
+                initialDelaySeconds: 60
+                periodSeconds: 30
+                timeoutSeconds: 5
+                failureThreshold: 3
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 8389
+                - containerPort: 8636
+              resources:
+                limits:
+                  memory: 1200M
+                requests:
+                  memory: 800M
+      test: false
+      triggers:
+        - type: ConfigChange
+    status: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ldap
+    spec:
+      ports:
+        - name: 8389-tcp
+          port: 8389
+          targetPort: 8389
+      selector:
+        deploymentconfig: ldap
+    status:
+      loadBalancer: {}
