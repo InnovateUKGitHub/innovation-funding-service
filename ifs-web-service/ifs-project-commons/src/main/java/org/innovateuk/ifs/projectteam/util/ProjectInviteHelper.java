@@ -52,22 +52,22 @@ public class ProjectInviteHelper {
                              BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
 
         validateIfTryingToInviteSelf(loggedInUser.getEmail(), inviteEmail, validationHandler);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ProjectUserInviteResource invite = createProjectInviteResourceForNewContact(projectId, inviteName, inviteEmail, organisation);
-            ServiceResult<Void> saveResult = projectDetailsService.saveProjectInvite(invite);
 
-            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
-                Optional<ProjectUserInviteResource> savedInvite = getSavedInvite(projectId, invite);
+        ServiceResult<Void> inviteResult = sendInvite.apply(projectId, invite);
+        return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+//        return validationHandler.failNowOrSucceedWith(failureView, successView);
+//            ProjectUserInviteResource invite = createProjectInviteResourceForNewContact(projectId, inviteName, inviteEmail, organisation);
+////            ServiceResult<Void> saveResult = projectDetailsService.saveProjectInvite(invite);
 
-                if (savedInvite.isPresent()) {
-                    ServiceResult<Void> inviteResult = sendInvite.apply(projectId, savedInvite.get());
-                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
-                } else {
-                    return validationHandler.failNowOrSucceedWith(failureView, successView);
-                }
-            });
-        });
+//            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
+//                Optional<ProjectUserInviteResource> savedInvite = getSavedInvite(projectId, invite);
+
+//                if (savedInvite.isPresent()) {
+
+//                } else {
+//                    return validationHandler.failNowOrSucceedWith(failureView, successView);
+//                }
     }
 
     private void validateIfTryingToInviteSelf(String loggedInUserEmail,
@@ -78,7 +78,7 @@ public class ProjectInviteHelper {
         }
     }
 
-    private ProjectUserInviteResource createProjectInviteResourceForNewContact(long projectId,
+    public ProjectUserInviteResource createProjectInviteResourceForNewContact(long projectId,
                                                                                String name,
                                                                                String email,
                                                                                long organisationId) {
