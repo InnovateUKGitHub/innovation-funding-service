@@ -31,6 +31,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -92,7 +93,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 : partnerProjectDetailsComplete(statusAccessor, resolve(organisationRequest), partnerProjectLocationRequired);
                 boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(resolve(teamStatusRequest),
                         partnerProjectLocationRequired);
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
                             : "The proposed start date and location of the project.",
                         projectComplete ? format("/project/%d/readonly", project.getId())
@@ -104,7 +105,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessProjectDetailsSection(resolve(organisationRequest))
                     );
             case PROJECT_TEAM:
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Add people to your project."
                                 : "The people on your project.",
                         projectComplete ? format("/project/%d/readonly", project.getId())
@@ -116,7 +117,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
                 List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(project.getId());
                 boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         isProjectManager ? "You must upload supporting documents to be reviewed."
                                 : "The Project Manager must upload supporting documents to be reviewed.",
                         format("/project/%d/document/all", project.getId()),
@@ -148,12 +149,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         maybeMonitoringOfficer.isPresent() ? null : "awaiting-assignment"
                 );
             case BANK_DETAILS:
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         "We need bank details for those partners eligible for funding.",
                         projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
                                 : format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
-                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest))
+                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest)),
+                        "awaiting-assessment"
                 );
             case FINANCE_CHECKS:
                 SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
@@ -163,7 +165,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
                 boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
 
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                        "We will review your financial information.",
                         format("/project/%d/finance-checks", project.getId()),
                         financeChecksStatus,
@@ -171,7 +173,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         pendingQueries ? "pending-query" : null
                 );
             case SPEND_PROFILE:
-                return new SetupStatusStageViewModel(stage, stage.getColumnName(),
+                return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         "Once we have approved your project finances you can change your project spend profile.",
                         format("/project/%d/partner-organisation/%d/spend-profile", project.getId(), resolve(organisationRequest).getId()),
                         sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus()),
@@ -186,6 +188,16 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 isLeadPartner
                         ),
                         statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
+                );
+            case PROJECT_SETUP_COMPLETE:
+                SectionStatus projectSetupCompleteStatus = sectionStatus.projectSetupCompleteStatus(ownOrganisation.getProjectSetupCompleteStatus());
+                return new SetupStatusStageViewModel(stage,
+                        stage.getShortName(),
+                        "Once all tasks are complete Innovate UK will review your application.",
+                        String.format("/project/%d/setup", project.getId()),
+                        projectSetupCompleteStatus,
+                        statusAccessor.canAccessSetupSection(),
+                        projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-review"
                 );
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());

@@ -106,7 +106,8 @@ public final class CompetitionInitialiser {
                 createProjectSetupStage(competition, DOCUMENTS),
                 createProjectSetupStage(competition, MONITORING_OFFICER),
                 createProjectSetupStage(competition, FINANCE_CHECKS),
-                createProjectSetupStage(competition, SPEND_PROFILE)
+                createProjectSetupStage(competition, SPEND_PROFILE),
+                createProjectSetupStage(competition, PROJECT_SETUP_COMPLETE)
         );
 
         competition.setProjectStages(stages);

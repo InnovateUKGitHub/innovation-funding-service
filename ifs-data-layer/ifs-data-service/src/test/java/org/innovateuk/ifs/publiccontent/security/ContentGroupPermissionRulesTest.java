@@ -45,7 +45,7 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
                         .withPublicContent(newPublicContent().build()).build()).build()));
 
 
-        ContentGroupCompositeId publishedContentGroupId = ContentGroupCompositeId.id(2L);;
+        ContentGroupCompositeId publishedContentGroupId = ContentGroupCompositeId.id(2L);
         when(contentGroupRepository.findById(publishedContentGroupId.id())).thenReturn(
                 Optional.of(newContentGroup().withContentSection(newContentSection()
                         .withPublicContent(newPublicContent().withPublishDate(ZonedDateTime.now()).build()).build()).build()));
