@@ -3,8 +3,6 @@ package org.innovateuk.ifs.project.viability.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -31,6 +29,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -62,9 +61,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
     @Mock
     private ProjectFinanceService projectFinanceService;
-
-    @Mock
-    private OrganisationDetailsRestService organisationDetailsRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -111,8 +107,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                             withOtherPublicFunding("Yes", "").
                             withFundingSource(OTHER_FUNDING, "Some source of funding").
                             withFundingAmount(null, BigDecimal.valueOf(1000)).
-                            build(2)).
-                    build());
+                            build(2))
+            .build());
 
     private Map<FinanceRowType, FinanceRowCostCategory> academicOrganisationFinances = asMap(
             FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
@@ -146,6 +142,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
             withProject(project.getId()).
             withOrganisation(academicOrganisation.getId(), industrialOrganisation.getId()).
             withFinanceOrganisationDetails(academicOrganisationFinances, industrialOrganisationFinances).
+            withFinancialYearAccounts(null, newEmployeesAndTurnoverResource().withEmployees(1L).withTurnover(BigDecimal.valueOf(2)).build()).
             build(2);
 
     @Before
@@ -167,9 +164,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(applicationService.getById(456L)).thenReturn(app);
-
-        when(organisationDetailsRestService.getHeadCount(456L, 1L)).thenReturn(restSuccess(1L));
-        when(organisationDetailsRestService.getTurnover(456L, 1L)).thenReturn(restSuccess(2L));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
@@ -216,8 +210,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(viability);
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(organisationDetailsRestService.getHeadCount(456L, 2L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
-        when(organisationDetailsRestService.getTurnover(456L, 2L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).

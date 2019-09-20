@@ -51,9 +51,6 @@ public class FinanceChecksViabilityController {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private OrganisationDetailsRestService organisationDetailsService;
-
-    @Autowired
     private ProjectFinanceService financeService;
 
     @GetMapping
