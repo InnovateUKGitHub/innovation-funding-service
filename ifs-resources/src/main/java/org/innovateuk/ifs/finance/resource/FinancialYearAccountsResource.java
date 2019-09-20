@@ -2,7 +2,8 @@ package org.innovateuk.ifs.finance.resource;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.innovateuk.ifs.finance.resource.cost.*;
+
+import java.math.BigDecimal;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
@@ -19,4 +20,6 @@ public abstract class FinancialYearAccountsResource {
     public void setEmployees(Long employees) {
         this.employees = employees;
     }
+
+    public abstract BigDecimal getTurnover();
 }

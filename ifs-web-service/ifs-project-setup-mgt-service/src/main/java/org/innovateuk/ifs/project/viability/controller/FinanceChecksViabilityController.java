@@ -1,14 +1,12 @@
 package org.innovateuk.ifs.project.viability.controller;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
@@ -159,21 +157,11 @@ public class FinanceChecksViabilityController {
 
         String companyRegistrationNumber = organisation.getCompaniesHouseNumber();
 
-        Long headCount = null;
-        RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(applicationId, organisationId);
-        if (headCountResult.isSuccess()) {
-            headCount = headCountResult.getSuccess();
-        }
-        Long turnover = null;
-        RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(applicationId, organisationId);
-        if (turnOverResult.isSuccess()) {
-            turnover = turnOverResult.getSuccess();
-        }
-
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
                 (OrganisationSize::getDescription).orElse(null);
+
         return new FinanceChecksViabilityViewModel(organisationName,
                                                    leadPartnerOrganisation,
                                                    totalCosts,
@@ -182,8 +170,8 @@ public class FinanceChecksViabilityController {
                                                    otherPublicSectorFunding,
                                                    contributionToProject,
                                                    companyRegistrationNumber,
-                                                   turnover,
-                                                   headCount,
+                                                   financesForOrganisation.getFinancialYearAccounts().getEmployees(),
+                                                   financesForOrganisation.getFinancialYearAccounts().getTurnover().longValue(),
                                                    projectId,
                                                    viabilityConfirmed,
                                                    viabilityConfirmed,

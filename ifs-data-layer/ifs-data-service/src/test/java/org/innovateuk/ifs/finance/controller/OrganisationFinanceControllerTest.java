@@ -171,7 +171,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
                 .thenReturn(serviceSuccess(new FormInputResponseResource()));
         when(applicationService.getApplicationById(anyLong()))
                 .thenReturn(serviceSuccess(applicationResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(anyLong(), anyLong()))
+        when(financeService.financeDetails(anyLong(), anyLong()))
                 .thenReturn(serviceSuccess(new ApplicationFinanceResource()));
         when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), any(FormInputType.class)))
                 .thenReturn(serviceSuccess(question));
@@ -207,7 +207,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
                 .build();
 
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId())).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(financeService.financeDetails(application.getId(), organisation.getId())).thenReturn(serviceSuccess(applicationFinanceResource));
 
         OrganisationFinancesWithoutGrowthTableResource expectedOrganisationFinances = new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover, headcount, stateAidAgreed);
 
@@ -235,7 +235,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
         when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
+        when(financeService.financeDetails(application.getId(), organisation.getId()))
                 .thenReturn(serviceSuccess(applicationFinanceResource));
         when(financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource)).thenReturn(serviceSuccess(applicationFinanceResource));
 

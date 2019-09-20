@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -48,5 +50,11 @@ public class GrowthTableResource extends FinancialYearAccountsResource {
 
     public void setResearchAndDevelopment(BigDecimal researchAndDevelopment) {
         this.researchAndDevelopment = researchAndDevelopment;
+    }
+
+    @Override
+    @JsonIgnore
+    public BigDecimal getTurnover() {
+        return annualTurnover;
     }
 }
