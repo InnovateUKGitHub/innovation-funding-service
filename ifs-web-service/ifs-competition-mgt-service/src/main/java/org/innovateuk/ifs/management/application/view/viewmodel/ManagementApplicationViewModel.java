@@ -16,6 +16,7 @@ public class ManagementApplicationViewModel {
     private final List<AppendixViewModel> appendices;
     private final boolean canMarkAsIneligible;
     private final boolean canReinstate;
+    private final boolean support;
 
     private final String competitionName;
     private final String applicationName;
@@ -36,6 +37,7 @@ public class ManagementApplicationViewModel {
                                           List<AppendixViewModel> appendices,
                                           boolean canMarkAsIneligible,
                                           boolean canReinstate,
+                                          boolean support,
                                           Long projectId) {
         this.application = application;
         this.competition = competition;
@@ -44,6 +46,7 @@ public class ManagementApplicationViewModel {
         this.appendices = appendices;
         this.canMarkAsIneligible = canMarkAsIneligible;
         this.canReinstate = canReinstate;
+        this.support = support;
         this.projectId = projectId;
 
         this.competitionName = competition.getName();
@@ -83,6 +86,10 @@ public class ManagementApplicationViewModel {
 
     public boolean isCanReinstate() {
         return canReinstate;
+    }
+
+    public boolean isSupport() {
+        return support;
     }
 
     public String getCompetitionName() {

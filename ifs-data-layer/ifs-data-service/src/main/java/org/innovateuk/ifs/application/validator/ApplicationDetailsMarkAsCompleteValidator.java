@@ -17,7 +17,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 /**
  * Validates the inputs in the application details, if valid on the markAsComplete action
  */
-
 @Component
 public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
     private static final Log LOG = LogFactory.getLog(ApplicationDetailsMarkAsCompleteValidator.class);

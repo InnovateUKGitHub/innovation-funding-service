@@ -122,18 +122,6 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void addShouldReturnBadRequestOnWrongParamType() throws Exception {
-        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "1", "wronger"))
-                .andExpect(status().isBadRequest());
-
-        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "1"))
-                .andExpect(status().isBadRequest());
-
-        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "wronger"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     public void getFileDetails() throws Exception {
 
         FileEntryResource fileEntry = newFileEntryResource().build();

@@ -1,5 +1,6 @@
 apply from: rootProject.file("gradle-support/java.gradle")
 
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
 jacocoTestReport {
@@ -12,7 +13,6 @@ jacocoTestReport {
 
 dependencies {
     if (project.hasProperty("cloud") && project.cloud == "development") {
-        compile 'de.codecentric:spring-boot-admin-starter-client:2.0.0'
         compile "org.springframework.boot:spring-boot-devtools"
     }
 

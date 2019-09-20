@@ -2,12 +2,13 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
@@ -21,13 +22,13 @@ public class StatusController {
     private StatusService statusService;
 
     @GetMapping("/competition/{competitionId}")
-    public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(@PathVariable final long competitionId,
-                                                                              @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString){
+    public RestResult<List<ProjectStatusResource>> getCompetitionStatus(@PathVariable final long competitionId,
+                                                                        @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString){
         return statusService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).toGetResponse();
     }
 
     @GetMapping("/previous/competition/{competitionId}")
-    public RestResult<CompetitionProjectsStatusResource> getPreviousCompetitionStatus(@PathVariable final long competitionId) {
+    public RestResult<List<ProjectStatusResource>> getPreviousCompetitionStatus(@PathVariable final long competitionId) {
         return statusService.getPreviousCompetitionStatus(competitionId).toGetResponse();
     }
 

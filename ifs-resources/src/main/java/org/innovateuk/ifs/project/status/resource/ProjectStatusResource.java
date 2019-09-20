@@ -5,9 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.user.resource.Role;
-
-import java.util.Map;
 
 public class ProjectStatusResource {
     private String projectTitle;
@@ -26,7 +23,7 @@ public class ProjectStatusResource {
     private ProjectActivityStates monitoringOfficerStatus;
     private ProjectActivityStates documentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
-    private Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState;
+    private ProjectActivityStates projectSetupCompleteStatus;
     private boolean grantOfferLetterSent;
     private ProjectState projectState;
 
@@ -45,7 +42,7 @@ public class ProjectStatusResource {
                                  ProjectActivityStates monitoringOfficerStatus,
                                  ProjectActivityStates documentsStatus,
                                  ProjectActivityStates grantOfferLetterStatus,
-                                 Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState,
+                                 ProjectActivityStates projectSetupCompleteStatus,
                                  boolean grantOfferLetterSent,
                                  ProjectState projectState) {
         this.projectTitle = projectTitle;
@@ -63,7 +60,7 @@ public class ProjectStatusResource {
         this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.documentsStatus = documentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
-        this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
+        this.projectSetupCompleteStatus = projectSetupCompleteStatus;
         this.grantOfferLetterSent = grantOfferLetterSent;
         this.projectState = projectState;
     }
@@ -164,12 +161,12 @@ public class ProjectStatusResource {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
 
-    public Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState() {
-        return roleSpecificGrantOfferLetterState;
+    public ProjectActivityStates getProjectSetupCompleteStatus() {
+        return projectSetupCompleteStatus;
     }
 
-    public void setRoleSpecificGrantOfferLetterState(Map<Role, ProjectActivityStates>  roleSpecificGrantOfferLetterState) {
-        this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
+    public void setProjectSetupCompleteStatus(ProjectActivityStates projectSetupCompleteStatus) {
+        this.projectSetupCompleteStatus = projectSetupCompleteStatus;
     }
 
     public boolean getGrantOfferLetterSent() { return grantOfferLetterSent; }
@@ -221,6 +218,7 @@ public class ProjectStatusResource {
         ProjectStatusResource that = (ProjectStatusResource) o;
 
         return new EqualsBuilder()
+                .append(grantOfferLetterSent, that.grantOfferLetterSent)
                 .append(projectTitle, that.projectTitle)
                 .append(projectNumber, that.projectNumber)
                 .append(formattedProjectNumber, that.formattedProjectNumber)
@@ -236,6 +234,8 @@ public class ProjectStatusResource {
                 .append(monitoringOfficerStatus, that.monitoringOfficerStatus)
                 .append(documentsStatus, that.documentsStatus)
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
+                .append(projectSetupCompleteStatus, that.projectSetupCompleteStatus)
+                .append(projectState, that.projectState)
                 .isEquals();
     }
 
@@ -257,6 +257,9 @@ public class ProjectStatusResource {
                 .append(monitoringOfficerStatus)
                 .append(documentsStatus)
                 .append(grantOfferLetterStatus)
+                .append(projectSetupCompleteStatus)
+                .append(grantOfferLetterSent)
+                .append(projectState)
                 .toHashCode();
     }
 
@@ -278,6 +281,9 @@ public class ProjectStatusResource {
                 .append("monitoringOfficerStatus", monitoringOfficerStatus)
                 .append("documentsStatus", documentsStatus)
                 .append("grantOfferLetterStatus", grantOfferLetterStatus)
+                .append("projectSetupCompleteStatus", projectSetupCompleteStatus)
+                .append("grantOfferLetterSent", grantOfferLetterSent)
+                .append("projectState", projectState)
                 .toString();
     }
 }

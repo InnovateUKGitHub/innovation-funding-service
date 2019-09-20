@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import static org.innovateuk.ifs.sections.SectionStatus.*;
 /**
  * This is a helper class for determining the status of a given Project Setup section
  */
+@Component
 public class SetupSectionStatus {
 
     public SectionStatus projectDetailsSectionStatus(final boolean projectDetailsProcessCompleted,
@@ -36,10 +38,8 @@ public class SetupSectionStatus {
                                                         final boolean requiredProjectDetailsForMonitoringOfficerComplete) {
         if (monitoringOfficerAssigned) {
             return TICK;
-        } else if (requiredProjectDetailsForMonitoringOfficerComplete) {
-            return HOURGLASS;
         } else {
-            return EMPTY;
+            return HOURGLASS;
         }
 
     }
@@ -59,7 +59,7 @@ public class SetupSectionStatus {
     public SectionStatus financeChecksSectionStatus(final ProjectActivityStates financeCheckState,
                                                     final SectionAccess access) {
 
-        if(access.equals(SectionAccess.NOT_ACCESSIBLE)) {
+        if (access.equals(SectionAccess.NOT_ACCESSIBLE)) {
             return EMPTY;
         } else if (financeCheckState.equals(COMPLETE)) {
             return TICK;
@@ -82,6 +82,16 @@ public class SetupSectionStatus {
         }
     }
 
+    public SectionStatus projectSetupCompleteStatus(final ProjectActivityStates setupSectionState) {
+        if (setupSectionState.equals(COMPLETE)) {
+            return TICK;
+        } else if (setupSectionState.equals(PENDING)) {
+            return HOURGLASS;
+        } else {
+            return EMPTY;
+        }
+    }
+
     public SectionStatus documentsSectionStatus(final boolean isProjectManager,
                                                 List<CompetitionDocumentResource> expectedDocuments,
                                                 List<ProjectDocumentResource> projectDocuments) {
@@ -96,7 +106,7 @@ public class SetupSectionStatus {
 
         if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
                 .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
-                                                    || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
+                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
             return isProjectManager ? FLAG : EMPTY;
         }
 

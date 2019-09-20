@@ -327,6 +327,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_CANNOT_BE_RESUMED(BAD_REQUEST),
 
     /**
+     * Projects success
+     */
+    PROJECT_CANNOT_BE_MARKED_AS_SUCCESSFUL(BAD_REQUEST),
+    PROJECT_CANNOT_BE_MARKED_AS_UNSUCCESSFUL(BAD_REQUEST),
+
+    /**
      * SIL CRM
      */
     CONTACT_NOT_UPDATED(INTERNAL_SERVER_ERROR),

@@ -47,6 +47,9 @@ public class ApplicationValidationUtil {
     private ApplicationTeamMarkAsCompleteValidator applicationTeamMarkAsCompleteValidator;
 
     @Autowired
+    private ApplicationDetailsMarkAsCompleteValidator applicationDetailsMarkAsCompleteValidator;
+
+    @Autowired
     private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
 
     @Autowired
@@ -160,6 +163,16 @@ public class ApplicationValidationUtil {
         BindingResult bindingResult = addValidation(application, applicationTeamMarkAsCompleteValidator);
         if (bindingResult.hasErrors()) {
             validationMessages.add(new ValidationMessages(question.getId(), bindingResult));
+        }
+        return validationMessages;
+    }
+
+    public List<ValidationMessages> isApplicationDetailsValid(Application application) {
+        List<ValidationMessages> validationMessages = new ArrayList<>();
+
+        BindingResult bindingResult = addValidation(application, applicationDetailsMarkAsCompleteValidator);
+        if (bindingResult.hasErrors()) {
+            validationMessages.add(new ValidationMessages(bindingResult));
         }
         return validationMessages;
     }

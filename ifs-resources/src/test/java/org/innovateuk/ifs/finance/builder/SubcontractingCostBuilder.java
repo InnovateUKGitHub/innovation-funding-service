@@ -32,6 +32,10 @@ public class SubcontractingCostBuilder extends BaseBuilder<SubContractingCost, S
         return withArraySetFieldByReflection("cost", value);
     }
 
+    public SubcontractingCostBuilder withTargetId(Long... value) {
+        return withArraySetFieldByReflection("targetId", value);
+    }
+
     public static SubcontractingCostBuilder newSubContractingCost() {
         return new SubcontractingCostBuilder(emptyList()).with(uniqueIds());
     }

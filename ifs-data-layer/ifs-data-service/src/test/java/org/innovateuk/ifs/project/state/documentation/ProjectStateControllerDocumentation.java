@@ -29,7 +29,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
 
     @Test
     public void withdrawProject() throws Exception {
-        Long projectId = 456L;
+        long projectId = 456L;
         when(projectStateService.withdrawProject(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/withdraw", projectId)
@@ -43,7 +43,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
 
     @Test
     public void handleProjectOffline() throws Exception {
-        Long projectId = 456L;
+        long projectId = 456L;
         when(projectStateService.handleProjectOffline(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/handle-offline", projectId)
@@ -57,7 +57,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
 
     @Test
     public void completeProjectOffline() throws Exception {
-        Long projectId = 456L;
+        long projectId = 456L;
         when(projectStateService.completeProjectOffline(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/complete-offline", projectId)
@@ -71,7 +71,7 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
 
     @Test
     public void putProjectOnHold() throws Exception {
-        Long projectId = 456L;
+        long projectId = 456L;
         OnHoldReasonResource reason = new OnHoldReasonResource("Title", "Body");
         when(projectStateService.putProjectOnHold(projectId, reason)).thenReturn(serviceSuccess());
 
@@ -92,10 +92,37 @@ public class ProjectStateControllerDocumentation extends BaseControllerMockMVCTe
 
     @Test
     public void resumeProject() throws Exception {
-        Long projectId = 456L;
+        long projectId = 456L;
         when(projectStateService.resumeProject(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/resume", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to resume from on hold")
+                        )
+                ));
+    }
+    @Test
+    public void markAsSuccessful() throws Exception {
+        long projectId = 456L;
+        when(projectStateService.markAsSuccessful(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/successful", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to resume from on hold")
+                        )
+                ));
+    }
+
+    @Test
+    public void markAsUnsuccessful() throws Exception {
+        long projectId = 456L;
+        when(projectStateService.markAsUnsuccessful(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/unsuccessful", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(

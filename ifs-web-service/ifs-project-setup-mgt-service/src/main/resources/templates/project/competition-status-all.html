@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.competitionProjectsStatusResource.competitionNumber}: ${model.competitionProjectsStatusResource.competitionName} - Project setup|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.competitionId}: ${model.competitionName} - Project setup|" />
 </head>
 <body class="govuk-template__body competition-management project-management">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkUrl=@{~/management/dashboard/project-setup}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup',subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: ${model.competitionProjectsStatusResource.competitionName}|,size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
         <form method="GET">
             <div class="search-filters govuk-!-margin-top-6">
@@ -48,7 +48,7 @@
             <h2 class="govuk-tabs__title">
                 Project setup
             </h2>
-            <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
+            <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
             <section class="govuk-tabs__panel">
                 <th:block th:insert="fragments/status :: status-table (model=${model})" />
             </section>

@@ -3,15 +3,15 @@ package org.innovateuk.ifs.application.documentation;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.builder.PreviousApplicationResourceBuilder;
 import org.innovateuk.ifs.application.controller.ApplicationController;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.documentation.ApplicationDocs;
 import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
-import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.documentation.ResearchCategoryResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResour
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceFields;
 import static org.innovateuk.ifs.documentation.ApplicationIneligibleSendResourceDocs.applicationIneligibleSendResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationIneligibleSendResourceDocs.applicationIneligibleSendResourceFields;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -152,9 +152,10 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void saveApplicationDetails() throws Exception {
         Long applicationId = 1L;
 
+        ValidationMessages validationMessages = new ValidationMessages();
         ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
-        when(applicationServiceMock.saveApplicationDetails(applicationId, testApplicationResource1)).thenReturn(serviceSuccess(testApplicationResource1));
+        when(applicationServiceMock.saveApplicationDetails(applicationId, testApplicationResource1)).thenReturn(serviceSuccess(validationMessages));
 
         mockMvc.perform(post("/application/save-application-details/{id}", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc")

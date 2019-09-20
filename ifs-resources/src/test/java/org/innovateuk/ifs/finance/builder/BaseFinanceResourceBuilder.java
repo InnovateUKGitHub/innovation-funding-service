@@ -4,9 +4,9 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
+import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
@@ -47,10 +47,6 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
     }
 
-    public S withWorkPostcode(String... value) {
-        return withArray((v, finance) -> finance.setWorkPostcode(v), value);
-    }
-
     @SafeVarargs
     public final S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
         return withArray((financeOrganisationDetail, finance) -> setField("financeOrganisationDetails", financeOrganisationDetail, finance), financeOrganisationDetails);
@@ -58,8 +54,8 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
 
     public S withGrantClaimPercentage(Integer percentage) {
         return with(finance -> {
-            GrantClaimCategory costCategory = new GrantClaimCategory();
-            costCategory.addCost(new GrantClaim(null, percentage, finance.getId()));
+            ExcludedCostCategory costCategory = new ExcludedCostCategory();
+            costCategory.addCost(new GrantClaimPercentage(null, percentage, finance.getId()));
             costCategory.calculateTotal();
             finance.getFinanceOrganisationDetails().put(FINANCE, costCategory);
         });

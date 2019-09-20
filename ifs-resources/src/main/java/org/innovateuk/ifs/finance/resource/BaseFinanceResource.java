@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.Vat;
 
 import java.math.BigDecimal;
@@ -16,12 +18,11 @@ import java.util.Map;
  */
 public abstract class BaseFinanceResource {
 
-
     protected Long id;
     protected Long organisation;
+    protected String organisationName;
     protected Long target;
     protected OrganisationSize organisationSize;
-    protected String workPostcode;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
@@ -30,7 +31,6 @@ public abstract class BaseFinanceResource {
             this.organisation = originalFinance.getOrganisation();
             this.target = originalFinance.getTarget();
             this.organisationSize = originalFinance.getOrganisationSize();
-            this.workPostcode = originalFinance.getWorkPostcode();
         }
     }
 
@@ -41,13 +41,11 @@ public abstract class BaseFinanceResource {
     public BaseFinanceResource(long id,
                                long organisation,
                                long target,
-                               OrganisationSize organisationSize,
-                               String workPostcode) {
+                               OrganisationSize organisationSize) {
         this.id = id;
         this.organisation = organisation;
         this.target = target;
         this.organisationSize = organisationSize;
-        this.workPostcode = workPostcode;
     }
 
     public Long getId() {
@@ -64,6 +62,14 @@ public abstract class BaseFinanceResource {
 
     public void setOrganisation(Long organisation) {
         this.organisation = organisation;
+    }
+
+    public String getOrganisationName() {
+        return organisationName;
+    }
+
+    public void setOrganisationName(String organisationName) {
+        this.organisationName = organisationName;
     }
 
     public Long getTarget() {
@@ -84,14 +90,6 @@ public abstract class BaseFinanceResource {
         this.organisationSize = organisationSize;
     }
 
-    public String getWorkPostcode() {
-        return workPostcode;
-    }
-
-    public void setWorkPostcode(String workPostcode) {
-        this.workPostcode = workPostcode;
-    }
-
     public Map<FinanceRowType, FinanceRowCostCategory> getFinanceOrganisationDetails() {
         return financeOrganisationDetails;
     }
@@ -108,43 +106,57 @@ public abstract class BaseFinanceResource {
         }
     }
 
+    @JsonIgnore
     public GrantClaim getGrantClaim() {
-        if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.FINANCE)) {
-            FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.FINANCE);
-            return financeRowCostCategory.getCosts().stream()
-                    .findAny()
-                    .filter(c -> c instanceof GrantClaim)
-                    .map(c -> (GrantClaim) c)
-                    .orElse(null);
-        } else {
-            return null;
+        if (financeOrganisationDetails != null) {
+            FinanceRowCostCategory grantClaimPercentageCostCategory = financeOrganisationDetails.get(FinanceRowType.FINANCE);
+            if (grantClaimPercentageCostCategory != null) {
+                return grantClaimPercentageCostCategory.getCosts().stream()
+                        .findAny()
+                        .filter(c -> c instanceof GrantClaimPercentage)
+                        .map(c -> (GrantClaimPercentage) c)
+                        .orElse(null);
+            }
+            FinanceRowCostCategory grantClaimAmountCostCategory = financeOrganisationDetails.get(FinanceRowType.GRANT_CLAIM_AMOUNT);
+            if (grantClaimAmountCostCategory != null) {
+                return grantClaimAmountCostCategory.getCosts().stream()
+                        .findAny()
+                        .filter(c -> c instanceof GrantClaimAmount)
+                        .map(c -> (GrantClaimAmount) c)
+                        .orElse(null);
+            }
         }
+        return null;
     }
 
-    public Integer getGrantClaimPercentage() {
-        FinanceRowCostCategory financeRowCostCategory = getFinanceOrganisationDetails(FinanceRowType.FINANCE);
-        return (financeRowCostCategory != null && financeRowCostCategory.getTotal() != null) ? financeRowCostCategory.getTotal().intValueExact() : null;
+    @JsonIgnore
+    public boolean isRequestingFunding() {
+        GrantClaim grantClaim = getGrantClaim();
+        return grantClaim.isRequestingFunding();
     }
 
+    @JsonIgnore
+    public int getGrantClaimPercentage() {
+        GrantClaim grantClaim = getGrantClaim();
+        return grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
+    }
+
+    @JsonIgnore
     public BigDecimal getTotalFundingSought() {
-        if (getGrantClaimPercentage() == null) {
-            return new BigDecimal(0);
-        }
-        BigDecimal totalFundingSought = getTotal()
-                .multiply(new BigDecimal(getGrantClaimPercentage()))
-                .divide(new BigDecimal(100))
-                .subtract(getTotalOtherFunding());
-
-        return totalFundingSought.max(BigDecimal.ZERO);
-    }
-
-    public BigDecimal getTotalContribution() {
-        return getTotal()
-                .subtract(getTotalOtherFunding())
-                .subtract(getTotalFundingSought())
+        GrantClaim grantClaim = getGrantClaim();
+        return grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
                 .max(BigDecimal.ZERO);
     }
 
+    @JsonIgnore
+    public BigDecimal getTotalContribution() {
+        BigDecimal totalFunding = getTotalOtherFunding()
+                .add(getTotalFundingSought());
+        return getTotal().subtract(totalFunding)
+                .max(BigDecimal.ZERO);
+    }
+
+    @JsonIgnore
     public BigDecimal getTotalOtherFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
@@ -171,6 +183,7 @@ public abstract class BaseFinanceResource {
         return total;
     }
 
+    @JsonIgnore
     public boolean isVatRegistered() {
         if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {
             FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.VAT);

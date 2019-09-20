@@ -5,16 +5,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
-import org.innovateuk.ifs.finance.handler.item.*;
-import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.Map.Entry;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COSTS;
@@ -29,54 +30,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
     private static final Log LOG = LogFactory.getLog(IndustrialCostFinanceHandler.class);
 
-    private LabourCostHandler labourCostHandler;
+    private Map<FinanceRowType, FinanceRowHandler<?>> financeRowHandlers;
 
-    private CapitalUsageHandler capitalUsageHandler;
-
-    private MaterialsHandler materialsHandler;
-
-    private ProcurementsOverheadsHandler procurementsOverheadsHandler;
-
-    private OtherCostHandler otherCostHandler;
-
-    private OverheadsHandler overheadsHandler;
-
-    private SubContractingCostHandler subContractingCostHandler;
-
-    private TravelCostHandler travelCostHandler;
-
-    private GrantClaimHandler grantClaimHandler;
-
-    private OtherFundingHandler otherFundingHandler;
-
-    private VatHandler vatHandler;
-
-    public IndustrialCostFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
-                                        ProjectFinanceRowRepository projectFinanceRowRepository,
-                                        FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
-                                        QuestionService questionService,
-                                        ApplicationFinanceRepository applicationFinanceRepository,
-                                        ProjectFinanceRepository projectFinanceRepository,
-                                        LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
-                                        MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
-                                        OverheadsHandler overheadsHandler,
-                                        SubContractingCostHandler subContractingCostHandler,
-                                        TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
-                                        OtherFundingHandler otherFundingHandler,
-                                        ProcurementsOverheadsHandler procurementsOverheadsHandler,
-                                        VatHandler vatHandler) {
-        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository, projectFinanceRepository);
-        this.labourCostHandler = labourCostHandler;
-        this.capitalUsageHandler = capitalUsageHandler;
-        this.materialsHandler = materialsHandler;
-        this.otherCostHandler = otherCostHandler;
-        this.overheadsHandler = overheadsHandler;
-        this.subContractingCostHandler = subContractingCostHandler;
-        this.travelCostHandler = travelCostHandler;
-        this.grantClaimHandler = grantClaimHandler;
-        this.otherFundingHandler = otherFundingHandler;
-        this.vatHandler = vatHandler;
-        this.procurementsOverheadsHandler = procurementsOverheadsHandler;
+    @Autowired
+    public void setFinanceRowHandlers(Collection<FinanceRowHandler<?>> autowiredFinanceRowHandlers) {
+        this.financeRowHandlers = autowiredFinanceRowHandlers.stream().collect(Collectors.toMap(FinanceRowHandler::getFinanceRowType, Function.identity()));
     }
 
     @Override
@@ -128,42 +86,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowType costType) {
-        FinanceRowHandler handler = null;
-        switch (costType) {
-            case LABOUR:
-                handler = labourCostHandler;
-                break;
-            case CAPITAL_USAGE:
-                handler = capitalUsageHandler;
-                break;
-            case MATERIALS:
-                handler = materialsHandler;
-                break;
-            case PROCUREMENT_OVERHEADS:
-                handler = procurementsOverheadsHandler;
-                break;
-            case OTHER_COSTS:
-                handler = otherCostHandler;
-                break;
-            case OVERHEADS:
-                handler = overheadsHandler;
-                break;
-            case SUBCONTRACTING_COSTS:
-                handler = subContractingCostHandler;
-                break;
-            case TRAVEL:
-                handler = travelCostHandler;
-                break;
-            case FINANCE:
-                handler = grantClaimHandler;
-                break;
-            case OTHER_FUNDING:
-                handler = otherFundingHandler;
-                break;
-            case VAT:
-                handler = vatHandler;
-                break;
-        }
+        FinanceRowHandler handler = financeRowHandlers.get(costType);
         if (handler != null) {
             return handler;
         }
@@ -180,7 +103,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
             case OVERHEADS:
                 return new OverheadCostCategory();
             case FINANCE:
-                return new GrantClaimCategory();
+            case GRANT_CLAIM_AMOUNT:
+                return new ExcludedCostCategory();
             case VAT:
                 return new VatCostCategory();
             default:

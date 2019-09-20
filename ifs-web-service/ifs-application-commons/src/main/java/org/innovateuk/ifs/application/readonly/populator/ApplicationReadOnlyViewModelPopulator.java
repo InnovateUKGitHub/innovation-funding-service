@@ -23,9 +23,9 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -122,7 +122,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return new ApplicationSectionReadOnlyViewModel(section.getName(), questionViews);
     }
 
-    //Currently only the finance section has child sections.
+    //Currently only theA finance section has child sections.
     private ApplicationSectionReadOnlyViewModel sectionWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         ApplicationQuestionReadOnlyViewModel finance = financeSummaryViewModelPopulator.populate(data);
         return new ApplicationSectionReadOnlyViewModel(section.getName(), asSet(finance));
@@ -136,19 +136,21 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         }
     }
 
+    private Optional<ProcessRoleResource> getProcessRole(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
+        return userRestService.findProcessRole(user.getId(), application.getId()).getOptionalSuccessObject();
+    }
+
     private List<QuestionStatusResource> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
         if (!settings.isIncludeStatuses()) {
             return emptyList();
         }
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
-        return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId()).getSuccess();
-    }
-
-    private Optional<ProcessRoleResource> getProcessRole(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
-        if (!settings.isIncludeQuestionLinks()) {
-            return Optional.empty();
+        long organisationId;
+        if (user.hasRole(Role.APPLICANT)) {
+            organisationId = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess().getId();
+        } else {
+            organisationId = application.getLeadOrganisationId();
         }
-        return userRestService.findProcessRole(user.getId(), application.getId()).getOptionalSuccessObject();
+        return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisationId).getSuccess();
     }
 
     private List<AssessorFormInputResponseResource> getAssessmentResponses(ApplicationReadOnlySettings settings) {
@@ -157,7 +159,4 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         }
         return assessorFormInputResponseRestService.getAllAssessorFormInputResponses(settings.getAssessmentId()).getSuccess();
     }
-
-
-
 }

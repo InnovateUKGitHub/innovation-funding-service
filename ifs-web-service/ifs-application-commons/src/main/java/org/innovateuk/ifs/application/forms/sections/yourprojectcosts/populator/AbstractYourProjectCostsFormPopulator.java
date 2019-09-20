@@ -164,7 +164,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
      private VatForm vat(BaseFinanceResource finance) {
         VatCostCategory costCategory = (VatCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
          if (costCategory != null) {
-             Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));;
+             Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));
             return new VatForm(vat);
          }
          return new VatForm();

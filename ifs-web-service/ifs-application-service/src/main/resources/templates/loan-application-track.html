@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${applicationName + ' - Application Status'}"/>
+</head>
+<body class="govuk-template__body app-track">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="currentApplication=${currentApplication},linkTitle='Applications',linkUrl=@{/applicant/dashboard}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <th:block>
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Application status',subTitle=${applicationName},size='govuk-heading-xl'"/>
+        </th:block>
+
+        <p class="govuk-body">You have completed part A. To finish your application you must complete part B, the
+            <a th:href="${earlyMetricsUrl}" target="_blank" class="govuk-link">startup high growth index survey</a> (opens in a new window),
+            before the competition closes on
+            <span th:text="${#temporals.format(currentCompetition.endDate, 'd MMM yyyy')}"></span>.</p>
+        <p class="govuk-body">If you have completed both parts A and B, we will be in touch to let you know if your application has progressed to the next stage.</p>
+
+        <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
+            <h2 class="govuk-panel__title">Part A: Innovation Funding Service application</h2>
+            <div class="govuk-panel__body govuk-!-font-size-19">
+                Application number: <span th:text="${currentApplication.id}"/><br/>
+                You completed part A on
+                    <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"/>
+                    at
+                    <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}"/>.
+                <div class="govuk-!-margin-top-6">
+                    <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}"
+                       class="govuk-link govuk-!-margin-right-6">View part A</a>
+                    <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}"
+                       class="govuk-link">Print part A</a>
+                </div>
+            </div>
+        </div>
+        <div class="govuk-!-margin-top-6">
+
+            <h2 class="govuk-heading-l">What happens next?</h2>
+
+            <p class="govuk-body">We will email you to confirm submission of part A.</p>
+            <p class="govuk-body">Applicants that progress to the next stage will go through detailed credit
+                analysis and may be offered an innovation loan. They will need to set up their project within the
+                Innovation Funding Service. An applicant is successful only when they complete project setup and are
+                offered a loan on the terms stated in the loan agreement and has completed project set up.</p>
+            <p class="govuk-body">We assess applications and make lending decisions following these steps:</p>
+            <ol class="govuk-list govuk-list--number">
+                <li>Scope and eligibility checks.</li>
+                <li>Innovation assessment of your project (based on part A) and initial credit evaluation of your business (based on part B).</li>
+                <li>Notification of whether your application will progress to detailed credit analysis and project setup.</li>
+                <li>Detailed credit analysis, including requests for further information.</li>
+                <li>Decisions to applicants, including conditional loan offers.</li>
+                <li>Management presentation to Innovate UK Loans Ltd credit committee.</li>
+                <li>Project setup on the Innovation Funding Service.</li>
+                <li>Documentation and completion of all loan conditions.</li>
+                <li>Project start and first drawdown of the loan.</li>
+            </ol>
+
+            <h3 class="govuk-heading-m">Assessment and ranking</h3>
+            <p class="govuk-body">Part A applications that pass Innovate UK scope and eligibility checks are sent to 5
+                independent assessors who are experts in your application’s innovation area. They score applications
+                consistently in line with scoring matrices and give written feedback.</p>
+
+            <p class="govuk-body">All applications are ranked in descending order of their scores. Those below our
+                quality threshold will not be successful.</p>
+
+            <h3 class="govuk-heading-m">Initial credit evaluation</h3>
+            <p class="govuk-body">Early Metrics sends us a report based on the surveys and financial information you
+                provide. Our credit team reviews these with part A and other financial information and decides which
+                applications are:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>affordable, with enough interest cover in the availability and extension periods and debt
+                    service cover in the repayment period
+                </li>
+                <li>appropriate, by being close enough to market, achievable within the constraints of innovation
+                    loans and well enough funded if part of a wider project costs
+                </li>
+                <li>supported by a credible management team, with professional financial or commercial expertise and
+                    the necessary technical skills
+                </li>
+            </ul>
+            <P class="govuk-body">We notify you, by the date stated in the timeline, whether your application will go
+                for detailed credit evaluation.</P>
+
+            <h3 class="govuk-heading-m">Detailed credit evaluation</h3>
+
+            <p class="govuk-body">Our credit team will carry out detailed credit analysis of your suitability to
+                take on a loan. We might ask you to upload extra information to a secure site. We will try not to
+                make several requests. We might also ask for your consent to request credit reference agency checks of:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>the financial standing of your business</li>
+                <li>the financial standing of significant people in the business, including beneficial owners with a
+                    shareholding of more than 20&percnt;
+                </li>
+            </ul>
+
+            <h3 class="govuk-heading-m">Loan offers and feedback</h3>
+            <p class="govuk-body">We offer loans only to businesses that:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>were successful in parts A and B</li>
+                <li>are considered suitable after detailed credit evaluation</li>
+                <li>have completed project setup</li>
+            </ul>
+            <p class="govuk-body">The final terms of any loan offer will be decided by the Innovate UK Loans Ltd credit
+                committee and may not be the same as those proposed in the application.</p>
+            <p class="govuk-body">If we make you a loan offer, we will invite your management team to present to our
+                credit committee.</p>
+            <p class="govuk-body">All assessed applications will receive feedback on parts A and B. There will be no
+                further feedback and no further discussion on the application.</p>
+
+            <h3 class="govuk-heading-m">Give us feedback</h3>
+
+            <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
+            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}" class="govuk-button">Give us feedback</a>
+
+            <p class="govuk-body govuk-!-margin-bottom-6">
+                <a class="govuk-link" th:href="@{/applicant/dashboard}">Finish without feedback</a>
+            </p>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>

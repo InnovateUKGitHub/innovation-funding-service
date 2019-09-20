@@ -114,4 +114,8 @@ public class ProjectFinanceOverviewViewModel {
     public void setCompetitionMaximumResearchPercentage(BigDecimal competitionMaximumResearchPercentage) {
         this.competitionMaximumResearchPercentage = competitionMaximumResearchPercentage;
     }
+
+    public int getTotalPercentageGrantIntValue() {
+        return totalPercentageGrant.intValue();
+    }
 }

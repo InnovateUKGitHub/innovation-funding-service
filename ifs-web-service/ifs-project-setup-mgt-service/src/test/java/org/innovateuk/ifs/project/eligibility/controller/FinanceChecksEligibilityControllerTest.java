@@ -28,7 +28,6 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,9 +69,6 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     private FinanceCheckService financeCheckServiceMock;
 
     @Mock
-    private FinanceUtil financeUtilMock;
-
-    @Mock
     private ProjectFinanceService projectFinanceService;
 
     @Mock
@@ -103,7 +99,9 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
     private OrganisationResource academicOrganisation;
 
-    private CompetitionResource competitionResource = newCompetitionResource().build();
+    private CompetitionResource competitionResource = newCompetitionResource()
+            .withIncludeJesForm(true)
+            .build();
 
     private ApplicationResource application = newApplicationResource().withId(123L).build();
 
@@ -143,8 +141,6 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(financeUtilMock.isUsingJesFinances(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(Boolean.FALSE);
-        when(financeUtilMock.isUsingJesFinances(competitionResource, OrganisationTypeEnum.RESEARCH.getId())).thenReturn(Boolean.TRUE);
 
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(Collections.emptyList()));
     }

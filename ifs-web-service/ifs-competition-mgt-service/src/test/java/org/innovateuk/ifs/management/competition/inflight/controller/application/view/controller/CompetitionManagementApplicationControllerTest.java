@@ -2,7 +2,10 @@ package org.innovateuk.ifs.management.competition.inflight.controller.applicatio
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -12,10 +15,8 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
-import org.innovateuk.ifs.management.application.view.populator.ApplicationTeamModelManagementPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
-import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -27,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -71,8 +71,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     private FormInputResponseRestService formInputResponseRestService;
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
-    @Spy
-    private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
     @Mock
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Mock
@@ -207,47 +205,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         assertTrue(bindingResult.hasFieldErrors("ineligibleReason"));
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("ineligibleReason").getDefaultMessage());
 
-    }
-
-    @Test
-    public void showApplicationTeam() throws Exception {
-        long applicationId = 1L;
-        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
-        ApplicationTeamResource teamResource = new ApplicationTeamResource();
-        ApplicationTeamOrganisationResource leadOrg = new ApplicationTeamOrganisationResource();
-        leadOrg.setOrganisationName("lead");
-        ApplicationTeamUserResource leaderUser = new ApplicationTeamUserResource();
-        leaderUser.setEmail("lee.der@email.com");
-        leaderUser.setName("Lee Der");
-        leaderUser.setPhoneNumber("0800 0800");
-        leaderUser.setLead(true);
-        leadOrg.setUsers(Collections.singletonList(leaderUser));
-        ApplicationTeamOrganisationResource partnerOrg = new ApplicationTeamOrganisationResource();
-        partnerOrg.setOrganisationName("Partner");
-        ApplicationTeamUserResource partnerUser = new ApplicationTeamUserResource();
-        partnerUser.setEmail("pard.ner@email.com");
-        partnerUser.setName("Pard Ner");
-        partnerUser.setPhoneNumber("0900 9999");
-        partnerUser.setLead(false);
-        partnerOrg.setUsers(Collections.singletonList(partnerUser));
-        teamResource.setLeadOrganisation(leadOrg);
-        teamResource.setPartnerOrganisations(Collections.singletonList(partnerOrg));
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
-        when(applicationSummaryRestService.getApplicationTeam(applicationId)).thenReturn(restSuccess(teamResource));
-        MvcResult mvcResult = mockMvc.perform(get("/competition/" + application.getCompetition() + "/application/" + applicationId + "/team"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("application/team-read-only"))
-                .andReturn();
-
-        ApplicationTeamViewModel resultModel = (ApplicationTeamViewModel) mvcResult.getModelAndView().getModel().get("model");
-        assertEquals(application.getId().longValue(), resultModel.getApplicationId());
-        assertEquals(application.getCompetition().longValue(), resultModel.getCompetitionId());
-        assertEquals(application.getName(), resultModel.getApplicationName());
-        assertEquals("lead", resultModel.getTeam().getLeadOrganisation().getOrganisationName());
-        assertEquals("lee.der@email.com", resultModel.getTeam().getLeadOrganisation().getUsers().get(0).getEmail());
-        assertEquals("pard.ner@email.com", resultModel.getTeam().getPartnerOrganisations().get(0).getUsers().get(0).getEmail());
-        verify(applicationRestService).getApplicationById(application.getId());
-        verify(applicationSummaryRestService).getApplicationTeam(application.getId());
     }
 
     @Test

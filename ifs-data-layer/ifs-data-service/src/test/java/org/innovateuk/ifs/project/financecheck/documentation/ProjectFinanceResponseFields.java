@@ -15,19 +15,13 @@ public class ProjectFinanceResponseFields {
             fieldWithPath("[].target").description("The id of the project to which the ProjectFinance belongs"),
             fieldWithPath("[].organisationSizeValue").description("The organisation size of the owning organisation " +
                     "as recorded against their finances"),
-            fieldWithPath("[].financeOrganisationDetails").description("A detailed breakdown of the organisation's finances"),
-            fieldWithPath("[].workPostcode").description("Postcode of where the work takes place"),
+            fieldWithPath("[].financeOrganisationDetails").description("A detailed breakdown of the organisation's finances")
     };
 
     public static final FieldDescriptor[] projectFinanceGrantClaimRowFields = {
             fieldWithPath("id").description("Id of cost item"),
-            fieldWithPath("total").description("Total amount of cost item"),
-            fieldWithPath("costType").description("Type of cost (e.g. FINANCE, ACADEMIC)"),
-            fieldWithPath("name").description("Name of cost item row"),
-            fieldWithPath("empty").description("Flag indicating if cost item is empty"),
-            fieldWithPath("minRows").description("Minimum rows required"),
             fieldWithPath("type").description("Type of cost item"),
-            fieldWithPath("grantClaimPercentage").description("Percentage grant claim being requested."),
+            fieldWithPath("percentage").description("Percentage grant claim being requested."),
             fieldWithPath("targetId").description("Id of the organisation finance that this row targets.")
     };
 }

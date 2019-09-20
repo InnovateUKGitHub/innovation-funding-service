@@ -28,26 +28,28 @@ public class ApplicationReadOnlyData {
 
     private final CompetitionResource competition;
     private final ApplicationResource application;
-    private final UserResource modelUser;
+    private final UserResource user;
     private final Optional<ProcessRoleResource> applicantProcessRole;
 
     private final Map<Long, QuestionResource> questionIdToQuestion;
     private final Multimap<Long, FormInputResource> questionIdToApplicationFormInputs;
-    private final Map<Long, FormInputResource> formInputIdToAsessorFormInput;
+    private final Map<Long, FormInputResource> formInputIdToAssessorFormInput;
     private final Map<Long, FormInputResponseResource> formInputIdToFormInputResponses;
+    /* only included if ApplicationReadOnlySettings for isIncludeStatuses is set. */
     private final Multimap<Long, QuestionStatusResource> questionToQuestionStatus;
+    /* only included if ApplicationReadOnlySettings for assessmentId is set. */
     private final Multimap<Long, AssessorFormInputResponseResource> questionToAssessorResponse;
 
 
     public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition,
-                                   UserResource modelUser, Optional<ProcessRoleResource> applicantProcessRole,
+                                   UserResource user, Optional<ProcessRoleResource> applicantProcessRole,
                                    List<QuestionResource> questions, List<FormInputResource> formInputs,
                                    List<FormInputResponseResource> formInputResponses,
                                    List<QuestionStatusResource> questionStatuses,
                                    List<AssessorFormInputResponseResource> assessorResponses) {
         this.application = application;
         this.competition = competition;
-        this.modelUser = modelUser;
+        this.user = user;
         this.applicantProcessRole = applicantProcessRole;
 
         this.questionIdToQuestion = questions.stream()
@@ -55,7 +57,7 @@ public class ApplicationReadOnlyData {
         this.questionIdToApplicationFormInputs = Multimaps.index(formInputs.stream()
                         .filter(input -> APPLICATION.equals(input.getScope())).collect(Collectors.toSet()),
                 FormInputResource::getQuestion);
-        this.formInputIdToAsessorFormInput = formInputs.stream()
+        this.formInputIdToAssessorFormInput = formInputs.stream()
                 .filter(input -> ASSESSMENT.equals(input.getScope()))
                 .collect(toMap(FormInputResource::getId, Function.identity()));
         this.formInputIdToFormInputResponses = formInputResponses.stream()
@@ -72,8 +74,8 @@ public class ApplicationReadOnlyData {
         return application;
     }
 
-    public UserResource getModelUser() {
-        return modelUser;
+    public UserResource getUser() {
+        return user;
     }
 
     public CompetitionResource getCompetition() {
@@ -88,8 +90,8 @@ public class ApplicationReadOnlyData {
         return formInputIdToFormInputResponses;
     }
 
-    public Map<Long, FormInputResource> getFormInputIdToAsessorFormInput() {
-        return formInputIdToAsessorFormInput;
+    public Map<Long, FormInputResource> getFormInputIdToAssessorFormInput() {
+        return formInputIdToAssessorFormInput;
     }
 
     public Multimap<Long, QuestionStatusResource> getQuestionToQuestionStatus() {
@@ -115,7 +117,7 @@ public class ApplicationReadOnlyData {
         return new EqualsBuilder()
                 .append(competition, that.competition)
                 .append(application, that.application)
-                .append(modelUser, that.modelUser)
+                .append(user, that.user)
                 .append(applicantProcessRole, that.applicantProcessRole)
                 .append(questionIdToQuestion, that.questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs, that.questionIdToApplicationFormInputs)
@@ -130,7 +132,7 @@ public class ApplicationReadOnlyData {
         return new HashCodeBuilder(17, 37)
                 .append(competition)
                 .append(application)
-                .append(modelUser)
+                .append(user)
                 .append(applicantProcessRole)
                 .append(questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs)

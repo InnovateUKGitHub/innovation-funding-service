@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -10,6 +11,8 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
@@ -44,7 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ServiceResult<Void> save(ApplicationResource application) {
+    public ServiceResult<ValidationMessages> save(ApplicationResource application) {
         return applicationRestService.saveApplication(application).toServiceResult();
     }
 

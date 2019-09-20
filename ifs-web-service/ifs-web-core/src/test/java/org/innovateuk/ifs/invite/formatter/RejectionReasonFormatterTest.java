@@ -24,7 +24,7 @@ public class RejectionReasonFormatterTest {
     }
 
     @Test
-    public void print() throws Exception {
+    public void print() {
         RejectionReasonFormatter formatter = new RejectionReasonFormatter();
 
         RejectionReasonResource reason = newRejectionReasonResource()

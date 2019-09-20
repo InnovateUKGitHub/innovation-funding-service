@@ -86,7 +86,7 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
 
     public BigDecimal getTotalFundingSought() {
         return applicationFinances.stream()
-                .filter(of -> of != null && of.getGrantClaimPercentage() != null)
+                .filter(Objects::nonNull)
                 .map(ApplicationFinanceResource::getTotalFundingSought)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

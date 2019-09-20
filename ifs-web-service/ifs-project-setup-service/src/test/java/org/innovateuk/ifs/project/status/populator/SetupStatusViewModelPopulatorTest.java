@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.project.status.populator;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
@@ -17,12 +15,14 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.viewmodel.SetupStatusStageViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
@@ -58,12 +59,13 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
-import static org.innovateuk.ifs.sections.SectionStatus.TICK;
+import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
+import static org.innovateuk.ifs.sections.SectionStatus.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
@@ -78,9 +80,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private ProjectRestService projectRestService;
 
     @Mock
-    private ApplicationService applicationService;
-
-    @Mock
     private CompetitionRestService competitionRestService;
 
     @Mock
@@ -92,6 +91,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     @Mock
     private StatusService statusService;
 
+    @Spy
+    private SetupSectionStatus setupSectionStatus;
+
     @Mock
     private AsyncFuturesGenerator futuresGeneratorMock;
 
@@ -99,17 +101,21 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     List<CompetitionDocumentResource> projectDocumentConfig =
             newCompetitionDocumentResource()
-            .withTitle("Risk Register", "Plan Document")
-            .build(2);
+                    .withTitle("Risk Register", "Plan Document")
+                    .build(2);
 
     private CompetitionResource competition = newCompetitionResource()
             .withLocationPerPartner(false)
             .withProjectDocument(projectDocumentConfig)
+            .withProjectSetupStages(new ArrayList<>(EnumSet.allOf(ProjectSetupStage.class)))
             .build();
     private ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
     private ProjectResourceBuilder projectBuilder = newProjectResource().withApplication(application);
 
-    private ProjectResource project = projectBuilder.build();
+    private ProjectResource project = projectBuilder
+            .withCompetition(competition.getId())
+            .withProjectState(LIVE)
+            .build();
     private OrganisationResource organisationResource = newOrganisationResource().build();
     private OrganisationResource partnerOrganisationResource = newOrganisationResource().build();
 
@@ -121,8 +127,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private RestResult<MonitoringOfficerResource> monitoringOfficerFoundResult = restSuccess(monitoringOfficer);
     private RestResult<MonitoringOfficerResource> monitoringOfficerNotFoundResult = restFailure(HttpStatus.NOT_FOUND);
 
-    private Map<String, SectionStatus> partnerStatusFlagChecks = new HashMap<>();
-
     private UserResource loggedInUser = newUserResource().withId(1L)
             .withFirstName("James")
             .withLastName("Watts")
@@ -131,24 +135,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
             .withUID("2aerg234-aegaeb-23aer").build();
 
     @Before
-    public void setUpDefaults() {
-        partnerStatusFlagChecks.put("projectDetailsStatus", SectionStatus.FLAG);
-        partnerStatusFlagChecks.put("projectTeamStatus", SectionStatus.FLAG);
-        partnerStatusFlagChecks.put("monitoringOfficerStatus", SectionStatus.EMPTY);
-        partnerStatusFlagChecks.put("bankDetailsStatus", SectionStatus.EMPTY);
-        partnerStatusFlagChecks.put("financeChecksStatus", SectionStatus.EMPTY);
-        partnerStatusFlagChecks.put("spendProfileStatus", SectionStatus.EMPTY);
-        partnerStatusFlagChecks.put("documentsStatus", SectionStatus.EMPTY);
-        partnerStatusFlagChecks.put("grantOfferLetterStatus", SectionStatus.EMPTY);
-    }
-
-    @Before
     public void setupExpectations() {
         setupAsyncExpectations(futuresGeneratorMock);
     }
 
     @Test
-    public void viewProjectSetupStatus() throws Exception {
+    public void viewProjectSetupStatus() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -156,6 +148,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withFinanceChecksStatus(NOT_STARTED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -169,16 +162,11 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
-
-        assertFalse(viewModel.isProjectComplete());
-        assertTrue(viewModel.isCompetitionDocuments());
-
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedAsProjectManager() throws Exception {
+    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedAsProjectManager() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -186,6 +174,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -205,29 +194,28 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("documentsStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
-        assertTrue(viewModel.isProjectManager());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusForNonLeadPartnerWithFinanceContactNotSubmitted() throws Exception {
+    public void viewProjectSetupStatusForNonLeadPartnerWithFinanceContactNotSubmitted() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
                         .withProjectDetailsStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .build(1))
                 .withProjectState(LIVE)
                 .build();
@@ -235,15 +223,13 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmitted() throws Exception {
+    public void viewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmitted() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -251,6 +237,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .withIsLeadPartner(true)
                         .build())
@@ -263,16 +250,14 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedNotFinanceContact() throws Exception {
+    public void viewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedNotFinanceContact() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -280,6 +265,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .withIsLeadPartner(true)
                         .build())
@@ -292,17 +278,14 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
-        assertEquals(viewModel.getFinanceChecksSection(), SectionAccess.ACCESSIBLE);
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedAsFinanceContact() throws Exception {
+    public void viewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedAsFinanceContact() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -311,6 +294,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .withIsLeadPartner(true)
                         .build())
@@ -320,7 +304,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectState(LIVE).
                         build();
 
-        when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
@@ -349,20 +332,18 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
-        assertEquals(SectionAccess.ACCESSIBLE, viewModel.getFinanceChecksSection());
 
-        assertFalse(viewModel.isProjectComplete());
-        assertFalse(viewModel.isProjectManager());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
+
+        assertStageAccess(viewModel, FINANCE_CHECKS, ACCESSIBLE);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -373,6 +354,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(NOT_STARTED)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -385,16 +367,14 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -406,6 +386,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -419,17 +400,15 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -441,6 +420,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -454,17 +434,15 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("financeChecksStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, EMPTY);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -476,6 +454,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -489,17 +468,15 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, SectionStatus.HOURGLASS);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -510,12 +487,14 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(NOT_STARTED)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
                 .withProjectState(LIVE)
@@ -524,15 +503,13 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -543,6 +520,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(COMPLETE)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -550,6 +528,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
                 .withProjectState(LIVE)
@@ -558,16 +537,14 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, SectionStatus.HOURGLASS);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -578,6 +555,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(NOT_STARTED)
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -585,6 +563,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
                 .withProjectState(LIVE)
@@ -593,17 +572,16 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("financeChecksStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, EMPTY);
+
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -614,6 +592,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(COMPLETE)
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -621,6 +600,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
                 .withProjectState(LIVE)
@@ -629,17 +609,15 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedAndOnlyNonLeadFCSubmittedAndPLRequiredAndSubmitted() throws Exception {
+    public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedAndOnlyNonLeadFCSubmittedAndPLRequiredAndSubmitted() {
 
         competition.setLocationPerPartner(true);
 
@@ -650,6 +628,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(NOT_STARTED)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -658,6 +637,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .build(1))
                 .withProjectState(LIVE)
                 .build();
@@ -665,16 +645,16 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
+
+
     }
 
     @Test
-    public void viewProjectSetupStatusWhenAwaitingProjectDetailsActionFromOtherPartners() throws Exception {
+    public void viewProjectSetupStatusWhenAwaitingProjectDetailsActionFromOtherPartners() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -682,6 +662,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .withIsLeadPartner(true)
                         .build())
@@ -694,17 +675,15 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
     }
 
     // PD = Project Details, PL = Project Location
     @Test
-    public void viewProjectSetupStatusAsLeadWhenPLRequiredAndAwaitingPDActionFromOtherPartners() throws Exception {
+    public void viewProjectSetupStatusAsLeadWhenPLRequiredAndAwaitingPDActionFromOtherPartners() {
 
         competition.setLocationPerPartner(true);
 
@@ -715,6 +694,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .withIsLeadPartner(true)
                         .build())
@@ -728,41 +708,39 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
-                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
+
     }
 
     @Test
-    public void viewProjectSetupStatusWithMonitoringOfficerAssigned() throws Exception {
+    public void viewProjectSetupStatusWithMonitoringOfficerAssigned() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withFinanceChecksStatus(PENDING).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build())
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
-                Pair.of("bankDetailsStatus", SectionStatus.EMPTY));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
+        assertStageStatus(viewModel, BANK_DETAILS, EMPTY);
     }
 
     @Test
-    public void viewProjectSetupStatusWithBankDetailsEntered() throws Exception {
+    public void viewProjectSetupStatusWithBankDetailsEntered() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -770,26 +748,25 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(PENDING).
                         withSpendProfileStatus(NOT_REQUIRED).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build())
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithAllBankDetailsCompleteOrNotRequired() throws Exception {
+    public void viewProjectSetupStatusWithAllBankDetailsCompleteOrNotRequired() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -797,6 +774,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(PENDING).
                         withSpendProfileStatus(NOT_REQUIRED).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -805,22 +783,20 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(NOT_REQUIRED).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithQueryAwaitingResponseNonFinanceContact() throws Exception {
+    public void viewProjectSetupStatusWithQueryAwaitingResponseNonFinanceContact() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -829,6 +805,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(ACTION_REQUIRED).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
@@ -836,23 +813,22 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(NOT_REQUIRED).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
-        assertTrue(viewModel.isShowFinanceChecksPendingQueryWarning());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, FLAG);
+
+        assertStageStatusOverride(viewModel, FINANCE_CHECKS, "pending-query");
     }
 
     @Test
-    public void viewProjectSetupStatusWithQueryAwaitingResponseAsFinanceContact() throws Exception {
+    public void viewProjectSetupStatusWithQueryAwaitingResponseAsFinanceContact() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -861,6 +837,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .withIsLeadPartner(true)
                         .build())
@@ -870,7 +847,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectState(LIVE).
                         build();
 
-        when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerFoundResult);
@@ -892,18 +868,17 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
-        assertTrue(viewModel.isShowFinanceChecksPendingQueryWarning());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, FLAG);
+
+        assertStageStatusOverride(viewModel, FINANCE_CHECKS, "pending-query");
     }
 
     @Test
-    public void viewProjectSetupStatusWithAllFinanceChecksApproved() throws Exception {
+    public void viewProjectSetupStatusWithAllFinanceChecksApproved() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -911,6 +886,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(NOT_REQUIRED).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -919,22 +895,22 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+
+
     }
 
     @Test
-    public void viewProjectSetupStatusWithSpendProfile() throws Exception {
+    public void viewProjectSetupStatusWithSpendProfile() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -942,6 +918,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(ACTION_REQUIRED).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -951,23 +928,21 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(ACTION_REQUIRED).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK),
-                Pair.of("spendProfileStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+        assertStageStatus(viewModel, SPEND_PROFILE, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusWithSpendProfilePartnerComplete() throws Exception {
+    public void viewProjectSetupStatusWithSpendProfilePartnerComplete() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -975,6 +950,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(ACTION_REQUIRED).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -984,23 +960,21 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK),
-                Pair.of("spendProfileStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+        assertStageStatus(viewModel, SPEND_PROFILE, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusWithSpendAwaitingApproval() throws Exception {
+    public void viewProjectSetupStatusWithSpendAwaitingApproval() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -1008,6 +982,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(PENDING).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -1017,23 +992,21 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK),
-                Pair.of("spendProfileStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+        assertStageStatus(viewModel, SPEND_PROFILE, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithSpendApproved() throws Exception {
+    public void viewProjectSetupStatusWithSpendApproved() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -1041,6 +1014,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -1050,23 +1024,21 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK),
-                Pair.of("spendProfileStatus", TICK));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+        assertStageStatus(viewModel, SPEND_PROFILE, TICK);
     }
 
     @Test
-    public void viewProjectSetupStatusWithGOLNotSent() throws Exception {
+    public void viewProjectSetupStatusWithGOLNotSent() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -1076,6 +1048,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(NOT_STARTED).
                         withOrganisationId(organisationResource.getId()).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
@@ -1085,24 +1058,22 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withProjectDetailsStatus(COMPLETE).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK),
-                Pair.of("spendProfileStatus", TICK),
-                Pair.of("grantOfferLetterStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+        assertStageStatus(viewModel, SPEND_PROFILE, TICK);
+        assertStageStatus(viewModel, GRANT_OFFER_LETTER, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithGOLSent() throws Exception {
+    public void viewProjectSetupStatusWithGOLSent() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -1112,6 +1083,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(ACTION_REQUIRED).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -1128,19 +1100,17 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK),
-                Pair.of("spendProfileStatus", TICK),
-                Pair.of("grantOfferLetterStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+        assertStageStatus(viewModel, SPEND_PROFILE, TICK);
+        assertStageStatus(viewModel, GRANT_OFFER_LETTER, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusWithGOLReturned() throws Exception {
+    public void viewProjectSetupStatusWithGOLReturned() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -1149,6 +1119,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(PENDING).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -1159,24 +1130,22 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withProjectDetailsStatus(COMPLETE).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK),
-                Pair.of("spendProfileStatus", TICK),
-                Pair.of("grantOfferLetterStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+        assertStageStatus(viewModel, SPEND_PROFILE, TICK);
+        assertStageStatus(viewModel, GRANT_OFFER_LETTER, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWithGOLApproved() throws Exception {
+    public void viewProjectSetupStatusWithGOLApproved() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
@@ -1186,6 +1155,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(COMPLETE).
+                        withProjectSetupCompleteStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
@@ -1196,28 +1166,24 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withProjectDetailsStatus(COMPLETE).
                         build(1))
                 .withProjectState(LIVE).
-                build();
+                        build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser).get();
+        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser);
         assertStandardViewModelValuesCorrect(viewModel, monitoringOfficerExpected);
 
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", TICK),
-                Pair.of("monitoringOfficerStatus", TICK),
-                Pair.of("bankDetailsStatus", TICK),
-                Pair.of("financeChecksStatus", TICK),
-                Pair.of("spendProfileStatus", TICK),
-                Pair.of("grantOfferLetterStatus", TICK));
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, TICK);
+        assertStageStatus(viewModel, BANK_DETAILS, TICK);
+        assertStageStatus(viewModel, FINANCE_CHECKS, TICK);
+        assertStageStatus(viewModel, SPEND_PROFILE, TICK);
+        assertStageStatus(viewModel, GRANT_OFFER_LETTER, TICK);
 
-        assertTrue(viewModel.isProjectComplete());
     }
 
-    // Uncomment when ApprovalType conversation has finished.
-
     @Test
-    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAsProjectManager() throws Exception {
+    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAsProjectManager() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -1225,6 +1191,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -1233,20 +1200,18 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectState(LIVE)
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withProjectState(LIVE).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, EMPTY);
     }
 
     @Test
-    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndRejectedAsProjectManager() throws Exception {
+    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndRejectedAsProjectManager() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -1254,6 +1219,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -1262,7 +1229,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectState(LIVE)
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withProjectState(LIVE).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -1279,17 +1246,14 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER).build())));
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
-                Pair.of("documentsStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndRejectedAsPartner() throws Exception {
+    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndRejectedAsPartner() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -1297,6 +1261,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -1305,20 +1270,18 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectState(LIVE)
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withProjectState(LIVE).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, EMPTY);
     }
 
     @Test
-    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndApprovedAsPartner() throws Exception {
+    public void viewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndApprovedAsPartner() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -1326,6 +1289,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -1334,20 +1298,18 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectState(LIVE)
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withProjectState(LIVE).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", TICK));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, EMPTY);
     }
 
     @Test
-    public void viewProjectSetupStatusWhenAllDocumentsNotYetUploaded() throws Exception {
+    public void viewProjectSetupStatusWhenAllDocumentsNotYetUploaded() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -1355,6 +1317,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -1363,7 +1326,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectState(LIVE)
                 .build();
 
-        project = newProjectResource().withApplication(application).build();
+        project = newProjectResource().withApplication(application).withProjectState(LIVE).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
@@ -1372,82 +1335,70 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER).build())));
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
-                Pair.of("documentsStatus", SectionStatus.FLAG));
 
-        assertFalse(viewModel.isProjectComplete());
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusWhenAllDocumentsUploadedButNotSubmitted() throws Exception {
+    public void viewProjectSetupStatusWhenAllDocumentsUploadedButNotSubmitted() {
 
         SetupStatusViewModel viewModel = performDocumentsTest(DocumentStatus.UPLOADED, DocumentStatus.UPLOADED);
 
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
-                Pair.of("documentsStatus", SectionStatus.FLAG));
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusWhenOnlyOneDocumentSubmitted() throws Exception {
+    public void viewProjectSetupStatusWhenOnlyOneDocumentSubmitted() {
 
         SetupStatusViewModel viewModel = performDocumentsTest(DocumentStatus.UPLOADED, DocumentStatus.SUBMITTED);
 
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
-                Pair.of("documentsStatus", SectionStatus.FLAG));
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusWhenAllDocumentsSubmitted() throws Exception {
+    public void viewProjectSetupStatusWhenAllDocumentsSubmitted() {
 
         SetupStatusViewModel viewModel = performDocumentsTest(DocumentStatus.SUBMITTED, DocumentStatus.SUBMITTED);
 
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
-                Pair.of("documentsStatus", SectionStatus.HOURGLASS));
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, HOURGLASS);
     }
 
     @Test
-    public void viewProjectSetupStatusWhenAnyDocumentRejected() throws Exception {
+    public void viewProjectSetupStatusWhenAnyDocumentRejected() {
 
         SetupStatusViewModel viewModel = performDocumentsTest(DocumentStatus.REJECTED, DocumentStatus.SUBMITTED);
 
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
-                Pair.of("documentsStatus", SectionStatus.FLAG));
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, FLAG);
     }
 
     @Test
-    public void viewProjectSetupStatusWhenAllApproved() throws Exception {
+    public void viewProjectSetupStatusWhenAllApproved() {
 
         SetupStatusViewModel viewModel = performDocumentsTest(DocumentStatus.APPROVED, DocumentStatus.APPROVED);
 
-        assertPartnerStatusFlagsCorrect(viewModel,
-                Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
-                Pair.of("documentsStatus", TICK));
+        assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
+        assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
+        assertStageStatus(viewModel, DOCUMENTS, TICK);
     }
 
-    private SetupStatusViewModel performDocumentsTest(DocumentStatus document1Status, DocumentStatus document2Status) throws Exception {
+    private SetupStatusViewModel performDocumentsTest(DocumentStatus document1Status, DocumentStatus document2Status) {
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -1461,6 +1412,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .build(2);
 
         project = newProjectResource()
+                .withProjectState(LIVE)
                 .withApplication(application)
                 .withProjectDocuments(projectDocumentResources)
                 .build();
@@ -1472,14 +1424,14 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER).build())));
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-        assertFalse(viewModel.isProjectComplete());
+
 
         return viewModel;
     }
 
 
     @Test
-    public void viewProjectSetupStatusCollaborationAgreementNotNeeded() throws Exception {
+    public void viewProjectSetupStatusCollaborationAgreementNotNeeded() {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
@@ -1487,6 +1439,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withProjectSetupCompleteStatus(NOT_REQUIRED)
                         .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
@@ -1511,6 +1464,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withApplication(application)
                 .withProjectDocuments(projectDocuments)
                 .withCompetition(competition.getId())
+                .withProjectState(LIVE)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -1518,16 +1472,11 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
-        assertEquals(false, viewModel.isCollaborationAgreementRequired());
-        assertEquals(true, viewModel.getDocumentsStatus().equals(TICK));
-
-        assertFalse(viewModel.isProjectComplete());
         assertFalse(viewModel.isMonitoringOfficer());
-
     }
 
-    private SetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) throws Exception {
-        return populator.populateViewModel(projectId, loggedInUser).get();
+    private SetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) {
+        return populator.populateViewModel(projectId, loggedInUser);
     }
 
     private void setupLookupProjectDetailsExpectations(RestResult<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {
@@ -1538,9 +1487,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER)
                 .build();
 
-        when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerResult);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
@@ -1559,30 +1507,20 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(project.getName(), viewModel.getProjectName());
         assertEquals(competition.getName(), viewModel.getCompetitionName());
         assertEquals(application.getId(), viewModel.getApplicationId());
-        assertEquals(organisationResource.getId(), viewModel.getOrganisationId());
-        assertEquals(true, viewModel.isCollaborationAgreementRequired());
-
-        if (existingMonitoringOfficerExpected) {
-            assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
-        } else {
-            assertEquals("", viewModel.getMonitoringOfficerName());
-        }
     }
 
-    private final void assertPartnerStatusFlagsCorrect(SetupStatusViewModel viewModel, Pair<String, SectionStatus>... expectedTrueFlags) {
-        for (Pair<String, SectionStatus> section : expectedTrueFlags) {
-            partnerStatusFlagChecks.replace(section.getLeft(), section.getRight());
-        }
-        assertStatuses(viewModel);
+    private void assertStageStatus(SetupStatusViewModel viewModel, ProjectSetupStage stage, SectionStatus status) {
+        SetupStatusStageViewModel found = viewModel.getStages().stream().filter(stageViewModel -> stageViewModel.getStage() == stage).findFirst().get();
+        assertEquals(status, found.getStatus());
     }
 
-    private void assertStatuses(SetupStatusViewModel viewModel) {
-        assertTrue(partnerStatusFlagChecks.get("projectDetailsStatus") == viewModel.getProjectDetailsStatus());
-        assertTrue(partnerStatusFlagChecks.get("monitoringOfficerStatus") == viewModel.getMonitoringOfficerStatus());
-        assertTrue(partnerStatusFlagChecks.get("bankDetailsStatus") == viewModel.getBankDetailsStatus());
-        assertTrue(partnerStatusFlagChecks.get("financeChecksStatus") == viewModel.getFinanceChecksStatus());
-        assertTrue(partnerStatusFlagChecks.get("spendProfileStatus") == viewModel.getSpendProfileStatus());
-        assertTrue(partnerStatusFlagChecks.get("documentsStatus") == viewModel.getDocumentsStatus());
-        assertTrue(partnerStatusFlagChecks.get("grantOfferLetterStatus") == viewModel.getGrantOfferLetterStatus());
+    private void assertStageStatusOverride(SetupStatusViewModel viewModel, ProjectSetupStage stage, String override) {
+        SetupStatusStageViewModel found = viewModel.getStages().stream().filter(stageViewModel -> stageViewModel.getStage() == stage).findFirst().get();
+        assertEquals(found.getStatusOverride(), override);
+    }
+
+    private void assertStageAccess(SetupStatusViewModel viewModel, ProjectSetupStage stage, SectionAccess access) {
+        SetupStatusStageViewModel found = viewModel.getStages().stream().filter(stageViewModel -> stageViewModel.getStage() == stage).findFirst().get();
+        assertEquals(found.getAccess(), access);
     }
 }

@@ -2,98 +2,76 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="status-table(model)">
-    <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
+    <th:block th:if="${#lists.isEmpty(model.rows) && param.applicationSearchString == null}">
         <p class="govuk-body" th:text="${model.emptyTableText}"></p>
     </th:block>
 
-    <th:block th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
+    <th:block th:unless="${#lists.isEmpty(model.rows)}">
         <div class="table-overflow">
             <table id="table-project-status" class="govuk-table icon-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Project</th>
-                    <th class="govuk-table__header status" scope="col">Project details</th>
-                    <th class="govuk-table__header status" scope="col">Project team</th>
-                    <th class="govuk-table__header status" scope="col">Documents</th>
-                    <th class="govuk-table__header status" scope="col">MO</th>
-                    <th class="govuk-table__header status" scope="col">Bank details</th>
-                    <th class="govuk-table__header status" scope="col">Finance checks</th>
-                    <th class="govuk-table__header status" scope="col">Spend profile</th>
-                    <th class="govuk-table__header status" scope="col">GOL</th>
+                    <th:block th:each="column : ${model.columns}">
+                        <th class="govuk-table__header status" scope="col" th:text="${column.shortName}">column name</th>
+                    </th:block>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body cell-border-right">
-                <tr class="govuk-table__row" th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
+                <tr class="govuk-table__row" th:each="row : ${model.rows}">
                     <th class="govuk-table__header" scope="row">
                         <div class="govuk-grid-row govuk-!-padding-right-0">
                             <div class="govuk-grid-column-one-half">
-                                <div class="govuk-heading-s govuk-!-margin-0" th:text="${project.projectTitle}" />
-                                <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
+                                <div class="govuk-heading-s govuk-!-margin-0" th:text="${row.projectName}" />
                             </div>
                             <div class="govuk-grid-column-one-half alignright">
-                                <th:block th:if="${project.projectState.withdrawn}">
+                                <th:block th:if="${row.projectState.withdrawn}">
                                     <strong class="ifs-project-status-withdrawn">Withdrawn</strong>
                                 </th:block>
-                                <th:block th:if="${project.projectState.handledOffline}">
+                                <th:block th:if="${row.projectState.handledOffline}">
                                     <strong class="ifs-project-status-managed-offline">Managed offline</strong>
                                 </th:block>
-                                <th:block th:if="${project.projectState.completedOffline}">
+                                <th:block th:if="${row.projectState.completedOffline}">
                                     <strong class="ifs-project-status-completed-offline">Completed offline</strong>
                                 </th:block>
-                                <th:block th:if="${project.projectState.onHold}">
+                                <th:block th:if="${row.projectState.onHold}">
                                     <strong class="ifs-project-status-on-hold">On hold</strong>
+                                </th:block>
+                                <th:block th:if="${row.projectState.live && model.isLoan}">
+                                    <strong class="ifs-project-status-successful">Successful</strong>
+                                </th:block>
+                                <th:block th:if="${row.projectState.unsuccessful}">
+                                    <strong class="ifs-project-status-unsuccessful">Unsuccessful</strong>
                                 </th:block>
                             </div>
                         </div>
-                        <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
+                        <a th:text="${row.applicationNumber}" th:href="${'/management/competition/'+row.competitionId+'/application/'+row.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link"/>
                         <small>
-                            <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
-                            <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
-                            <a th:href="@{/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${model.competitionProjectsStatusResource.competitionNumber},projectId=${project.projectNumber})}"
-                               class="govuk-link">View activity log</a>
+                            <th:block th:text="${row.numberOfPartners > 1 ? row.numberOfPartners+' partners' : row.numberOfPartners+' partner'}" /><br/>
+                            <th:block th:text="${'Lead: '+row.projectLeadOrganisationName}" />
+                            <a th:href="@{/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
+                            class="govuk-link">View activity log</a>
                         </small>
                     </th>
-                    <th:block th:insert="fragments/status :: project-status-table(${project.projectDetailsStatus}, 'project-details', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
 
-                    <th:block th:insert="fragments/status :: project-status-table(${project.projectTeamStatus}, 'project-team', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/team'}" />
-
-                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
-                              th:insert="fragments/status :: project-status-table(${project.documentsStatus}, 'documents', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/document/all'}" />
-                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
-                              th:insert="fragments/status :: project-status-table(${project.documentsStatus}, 'documents', ${project.getProjectState().isActive()})" />
-
-                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
-                              th:insert="fragments/status :: project-status-table(${project.monitoringOfficerStatus}, 'MO', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
-                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
-                              th:insert="fragments/status :: project-status-table(${project.monitoringOfficerStatus}, 'MO', ${project.getProjectState().isActive()})" />
-
-                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
-                              th:insert="fragments/status :: project-status-table(${project.bankDetailsStatus}, 'bank-details', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
-                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
-                              th:insert="fragments/status :: project-status-table(${project.bankDetailsStatus}, 'bank-details', ${project.getProjectState().isActive()})" />
-
-                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
-                              th:insert="fragments/status :: project-status-table(${project.financeChecksStatus}, 'finance-checks', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/finance-check'}" />
-                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
-                              th:insert="fragments/status :: project-status-table(${project.financeChecksStatus}, 'finance-checks', ${project.getProjectState().isActive()})"/>
-
-                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
-                              th:insert="fragments/status :: project-status-table(${project.spendProfileStatus}, 'spend-profile', ${project.getProjectState().isActive()})" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
-                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
-                              th:insert="fragments/status :: project-status-table(${project.spendProfileStatus}, 'spend-profile', ${project.getProjectState().isActive()})" />
-
-                    <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                              th:insert="fragments/status :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL', ${project.getProjectState().isActive()})"
-                              th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
-                    <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                              th:insert="fragments/status :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL', ${project.getProjectState().isActive()})" />
+                    <th:block th:each="state : ${row.states}">
+                        <td class="govuk-table__cell status" th:classappend="${state.stateStyle}">
+                            <th:block th:if="${state.accessible}">
+                                <a th:href="${state.url}" class="govuk-link" th:text="${state.text}">View</a>
+                            </th:block>
+                            <th:block th:unless="${state.accessible}">
+                                <span class="govuk-visually-hidden" th:unless="${state.visible}" th:text="${state.text}"></span>
+                                <th:block th:if="${state.visible}" th:text="${state.text}">View</th:block>
+                            </th:block>
+                        </td>
+                    </th:block>
                 </tr>
                 </tbody>
                 <tfoot class="govuk-table__foot bank-export">
                 <tr class="govuk-table__row" th:if="${model.canExportBankDetails}">
                     <td class="govuk-table__cell" colspan="5"></td>
                     <td class="govuk-table__cell aligncentre">
-                        <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}" class="govuk-link">Export all bank details</a>
+                        <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionId})}" class="govuk-link">Export all bank details</a>
                     </td>
                     <td class="govuk-table__cell" colspan="3"></td>
                 </tr>
@@ -103,57 +81,3 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="project-status-table(status, columnType, isActive)">
-    <th:block th:switch="${status.name()}">
-        <td th:case="'VIEW'" class="govuk-table__cell status">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">View</a>
-            </th:block>
-        </td>
-        <td th:case="'COMPLETE'" class="govuk-table__cell status ok">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">
-                    <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
-                </a>
-            </th:block>
-            <th:block th:unless="${url}">
-                <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
-            </th:block>
-        </td>
-        <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">
-                    <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-                    <th:block th:unless="${columnType == 'MO'}">Review</th:block>
-                </a>
-            </th:block>
-            <th:block th:unless="${url}">
-                <th:block th:if="${columnType == 'MO'}">Assign</th:block>
-                <th:block th:unless="${columnType == 'MO'}">Review</th:block>
-            </th:block>
-        </td>
-        <td th:case="'NOT_STARTED'" class="govuk-table__cell status">
-            <span class="govuk-visually-hidden">Stage is not yet available</span>
-        </td>
-        <td th:case="'NOT_REQUIRED'" class="govuk-table__cell status na">
-            <span class="govuk-visually-hidden">Not required for this partner</span>
-        </td>
-        <td th:case="'PENDING'" class="govuk-table__cell status waiting">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">
-                    <span th:text="${columnType == 'project-details' or columnType == 'project-team' or not isActive ? 'Incomplete' : 'Pending'}">Incomplete</span>
-                </a>
-            </th:block>
-            <th:block th:unless="${url}">
-                <span th:text="${columnType == 'project-details' or columnType == 'project-team' or not isActive ? 'Incomplete' : 'Pending'}">Incomplete</span>
-            </th:block>
-        </td>
-        <td th:case="'REJECTED'" class="govuk-table__cell status rejected">
-            <th:block th:if="${url}">
-                <a th:href="${url}" class="govuk-link">Rejected</a>
-            </th:block>
-            <th:block th:unless="${url}">Rejected</th:block>
-        </td>
-        <td th:case="*" class="govuk-table__cell"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
-    </th:block>
-</th:block>

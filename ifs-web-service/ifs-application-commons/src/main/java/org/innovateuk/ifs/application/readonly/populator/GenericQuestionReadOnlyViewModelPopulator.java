@@ -10,7 +10,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.HttpServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,12 +24,6 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 
 @Component
 public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<GenericQuestionReadOnlyViewModel> {
-
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    private HttpServletUtil httpServletUtil;
 
     @Override
     public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
@@ -60,12 +53,12 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
             feedback = responses.flatMap(resps ->
                     resps.stream()
-                            .filter(resp -> data.getFormInputIdToAsessorFormInput().get(resp.getFormInput()).getType().equals(TEXTAREA))
+                            .filter(resp -> data.getFormInputIdToAssessorFormInput().get(resp.getFormInput()).getType().equals(TEXTAREA))
                             .findAny());
 
             score = responses.flatMap(resps ->
                     resps.stream()
-                            .filter(resp -> data.getFormInputIdToAsessorFormInput().get(resp.getFormInput()).getType().equals(ASSESSOR_SCORE))
+                            .filter(resp -> data.getFormInputIdToAssessorFormInput().get(resp.getFormInput()).getType().equals(ASSESSOR_SCORE))
                             .findAny());
         }
 
@@ -85,12 +78,10 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     }
 
     private String urlForFormInputDownload(long formInputId, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
-        UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
         if (data.getApplicantProcessRole().isPresent()) {
             return String.format("/application/%d/form/question/%d/forminput/%d/download", data.getApplication().getId(), question.getId(), formInputId);
-        } else if (authenticatedUser.hasRole(Role.ASSESSOR) && settings.isIncludeAssessment()) {
-            long assessmentId = data.getQuestionToAssessorResponse().entries().iterator().next().getValue().getAssessment();
-            return String.format("/assessment/%d/application/%d/formInput/%d/download", assessmentId, data.getApplication().getId(), formInputId);
+        } else if (data.getUser().hasRole(Role.ASSESSOR) && settings.isIncludeAssessment()) {
+            return String.format("/assessment/%d/application/%d/formInput/%d/download", settings.getAssessmentId(), data.getApplication().getId(), formInputId);
         } else {
             return String.format("/management/competition/%d/application/%d/forminput/%d/download", data.getCompetition().getId(), data.getApplication().getId(), formInputId);
         }
