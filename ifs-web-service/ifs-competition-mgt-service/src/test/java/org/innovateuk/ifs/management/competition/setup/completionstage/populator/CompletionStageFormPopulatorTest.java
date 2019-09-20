@@ -28,7 +28,7 @@ public class CompletionStageFormPopulatorTest {
     public void populateFormWithCompletionStageNotYetSelected() {
         CompetitionResource competition = newCompetitionResource().build();
         CompletionStageForm form = new CompletionStageFormPopulator().populateForm(competition);
-        assertThat(form.getSelectedCompletionStage()).isNull();;
+        assertThat(form.getSelectedCompletionStage()).isNull();
     }
 
     @Test
