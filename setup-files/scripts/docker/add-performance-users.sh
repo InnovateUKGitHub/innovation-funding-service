@@ -31,7 +31,7 @@ executeMySQLCommand() {
 
 # look at passing in parameter
 application_id=$(executeMySQLCommand "select id from application where name = 'Base Perf App';")
-for (( u=1; u<=${PERFORMANCE_APPLICANT_USERS}; u++ ))
+for (( u=2; u<=${PERFORMANCE_APPLICANT_USERS}; u++ ))
 do
     email="perf.applicant${u}@example.com"
     executeMySQLCommand "INSERT INTO user (email, first_name, last_name, status, uid, system_user, allow_marketing_emails, created_by, created_on, modified_by, modified_on) VALUES ('$email', 'firstName', 'lastName', 'ACTIVE', UUID(), '0', '0', '16', now(), '16', now());

@@ -54,18 +54,6 @@ task prepareDockerFile {
             from fileTree('src/main/docker/scripts')
             into "${inputDir}/scripts"
         }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db.sh")
-            into "${inputDir}/scripts"
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/add-performance-users.sh")
-            into "${inputDir}/scripts"
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db-sync-ldap.sh")
-            into "${inputDir}/scripts"
-        }
     }
 }
 
