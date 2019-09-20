@@ -31,10 +31,10 @@ items:
                       name: ldap-config
                       key: ONLY_SYNC_LDAP
                 - name: PERFORMANCE_APPLICANT_USERS
-                    valueFrom:
-                      configMapKeyRef:
-                        name: ldap-config
-                        key: PERFORMANCE_APPLICANT_USERS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: PERFORMANCE_APPLICANT_USERS
                 - name: LDAP_PORT
                   value: "8389"
               image: innovateuk/ldap-service:${ldapVersion}
