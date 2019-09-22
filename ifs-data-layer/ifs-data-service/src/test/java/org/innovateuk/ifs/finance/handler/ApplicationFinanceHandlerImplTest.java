@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -28,14 +27,17 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
+public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private ApplicationFinanceHandler handler = new ApplicationFinanceHandlerImpl();
@@ -60,17 +62,17 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
     private Map<FinanceRowType, FinanceRowCostCategory> businessOrgFinances;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         long researchOrgId = 2L;
         long businessOrgId = 4L;
 
-        Organisation researchOrg = newOrganisation().withId(researchOrgId).withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
-        Organisation businessOrg = newOrganisation().withId(businessOrgId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        Organisation researchOrg = newOrganisation().withId(researchOrgId).withOrganisationType(RESEARCH).build();
+        Organisation businessOrg = newOrganisation().withId(businessOrgId).withOrganisationType(BUSINESS).build();
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
 
         researchOrgFinances = asMap(
-                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                MATERIALS, newDefaultCostCategory().withCosts(
                         newMaterials().
                                 withCost(new BigDecimal("1000"), new BigDecimal("10001")).
                                 withQuantity(1, 2).
@@ -79,7 +81,7 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
         researchOrgFinances.forEach((type, category) -> category.calculateTotal());
 
         businessOrgFinances = asMap(
-                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                MATERIALS, newDefaultCostCategory().withCosts(
                         newMaterials().
                                 withCost(new BigDecimal("1000"), new BigDecimal("10000")).
                                 withQuantity(1, 2).
@@ -106,10 +108,12 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
                 .withApplication(applicationId)
                 .withOrganisation(researchOrgId)
                 .build();
+
         ApplicationFinanceResource appFinanceResourceBusinessOrg = newApplicationFinanceResource()
                 .withApplication(applicationId)
                 .withOrganisation(businessOrgId)
                 .build();
+
         when(applicationFinanceMapperMock.mapToResource(appFinanceResearchOrg)).thenReturn(appFinanceResourceResearchOrg);
         when(applicationFinanceMapperMock.mapToResource(appFinanceBusinessOrg)).thenReturn(appFinanceResourceBusinessOrg);
 
@@ -119,7 +123,7 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
     }
 
     @Test
-    public void getResearchParticipationPercentage_roundedUp() throws Exception {
+    public void getResearchParticipationPercentage_roundedUp() {
         BigDecimal expectedRawPercentage = new BigDecimal("50.002400");
         BigDecimal expectedPercentage = new BigDecimal("50.01");
 
@@ -132,7 +136,7 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
         BigDecimal businessTotalCost = businessFinanceResource.getTotal();
 
         BigDecimal totalCost = researchTotalCost.add(businessTotalCost);
-        BigDecimal rawResearchPercentage =  researchTotalCost
+        BigDecimal rawResearchPercentage = researchTotalCost
                 .divide(totalCost, 6, BigDecimal.ROUND_HALF_UP)
                 .multiply(BigDecimal.valueOf(100));
 

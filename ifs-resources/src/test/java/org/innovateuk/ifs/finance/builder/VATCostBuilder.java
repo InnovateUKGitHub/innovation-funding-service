@@ -28,6 +28,10 @@ public class VATCostBuilder extends BaseBuilder<Vat, VATCostBuilder> {
         return withArraySetFieldByReflection("name", value);
     }
 
+    public VATCostBuilder withTargetId(Long... value) {
+        return withArraySetFieldByReflection("targetId", value);
+    }
+
     public static VATCostBuilder newVATCost() {
         return new VATCostBuilder(emptyList()).with(uniqueIds());
     }

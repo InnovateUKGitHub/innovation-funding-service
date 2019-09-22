@@ -23,6 +23,7 @@ public class ProjectStatusResource {
     private ProjectActivityStates monitoringOfficerStatus;
     private ProjectActivityStates documentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
+    private ProjectActivityStates projectSetupCompleteStatus;
     private boolean grantOfferLetterSent;
     private ProjectState projectState;
 
@@ -41,6 +42,7 @@ public class ProjectStatusResource {
                                  ProjectActivityStates monitoringOfficerStatus,
                                  ProjectActivityStates documentsStatus,
                                  ProjectActivityStates grantOfferLetterStatus,
+                                 ProjectActivityStates projectSetupCompleteStatus,
                                  boolean grantOfferLetterSent,
                                  ProjectState projectState) {
         this.projectTitle = projectTitle;
@@ -58,6 +60,7 @@ public class ProjectStatusResource {
         this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.documentsStatus = documentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+        this.projectSetupCompleteStatus = projectSetupCompleteStatus;
         this.grantOfferLetterSent = grantOfferLetterSent;
         this.projectState = projectState;
     }
@@ -158,6 +161,14 @@ public class ProjectStatusResource {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
 
+    public ProjectActivityStates getProjectSetupCompleteStatus() {
+        return projectSetupCompleteStatus;
+    }
+
+    public void setProjectSetupCompleteStatus(ProjectActivityStates projectSetupCompleteStatus) {
+        this.projectSetupCompleteStatus = projectSetupCompleteStatus;
+    }
+
     public boolean getGrantOfferLetterSent() { return grantOfferLetterSent; }
 
     public void setGrantOfferLetterSent(boolean grantOfferLetterSent) { this.grantOfferLetterSent = grantOfferLetterSent; }
@@ -207,6 +218,7 @@ public class ProjectStatusResource {
         ProjectStatusResource that = (ProjectStatusResource) o;
 
         return new EqualsBuilder()
+                .append(grantOfferLetterSent, that.grantOfferLetterSent)
                 .append(projectTitle, that.projectTitle)
                 .append(projectNumber, that.projectNumber)
                 .append(formattedProjectNumber, that.formattedProjectNumber)
@@ -222,6 +234,8 @@ public class ProjectStatusResource {
                 .append(monitoringOfficerStatus, that.monitoringOfficerStatus)
                 .append(documentsStatus, that.documentsStatus)
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
+                .append(projectSetupCompleteStatus, that.projectSetupCompleteStatus)
+                .append(projectState, that.projectState)
                 .isEquals();
     }
 
@@ -243,6 +257,9 @@ public class ProjectStatusResource {
                 .append(monitoringOfficerStatus)
                 .append(documentsStatus)
                 .append(grantOfferLetterStatus)
+                .append(projectSetupCompleteStatus)
+                .append(grantOfferLetterSent)
+                .append(projectState)
                 .toHashCode();
     }
 
@@ -264,6 +281,9 @@ public class ProjectStatusResource {
                 .append("monitoringOfficerStatus", monitoringOfficerStatus)
                 .append("documentsStatus", documentsStatus)
                 .append("grantOfferLetterStatus", grantOfferLetterStatus)
+                .append("projectSetupCompleteStatus", projectSetupCompleteStatus)
+                .append("grantOfferLetterSent", grantOfferLetterSent)
+                .append("projectState", projectState)
                 .toString();
     }
 }

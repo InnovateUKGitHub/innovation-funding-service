@@ -80,11 +80,14 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         long leadOrganisationId = leadOrganisationId(processRoles);
         SectionResource financeSection = getFinanceSection(competition.getId());
 
-        List<FinanceSummaryTableRow> rows = financeSection == null ? emptyList() :organisations.stream()
-                .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection))
-                .collect(toList());
+        List<FinanceSummaryTableRow> rows = emptyList();
+        if (financeSection != null) {
+            rows = organisations.stream()
+                    .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection))
+                    .collect(toList());
 
-        rows.addAll(pendingOrganisations(applicationId));
+            rows.addAll(pendingOrganisations(applicationId));
+        }
 
         return new ApplicationFinanceSummaryViewModel(applicationId, rows, !open,
                 application.isCollaborativeProject(),

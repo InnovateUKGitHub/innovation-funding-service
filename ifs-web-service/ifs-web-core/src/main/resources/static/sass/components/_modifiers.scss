@@ -210,6 +210,18 @@ hr,
   }
 }
 
+.govuk-panel--grey {
+  background: govuk-colour("grey-3");
+}
+
+.govuk-panel--confirmation-outline {
+  border: 8px solid govuk-colour("turquoise");
+
+  .govuk-panel__title {
+    color: govuk-colour("turquoise");
+  }
+}
+
 .govuk-link {
   &:focus {
     color: $govuk-text-colour;

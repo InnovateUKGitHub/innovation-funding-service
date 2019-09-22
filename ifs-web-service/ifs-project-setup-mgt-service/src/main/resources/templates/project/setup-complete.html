@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle='Project setup complete',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+</head>
+<body class="govuk-template__body competition-management">
+<th:block th:insert="fragments/modals :: modal-overlay"/>
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Project setup complete',linkUrl=@{/competition/{id}/status(id=${model.competitionId})}, dynamicBackLink=${true}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Project setup complete',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+
+        <th:block th:if="${model.readonly}">
+            <div th:if="${model.state.live}" class="success-alert govuk-!-margin-bottom-4">
+                <p class="govuk-body">Project setup is complete and was successful.</p>
+            </div>
+            <div th:if="${model.state.unsuccessful}" class="success-alert govuk-!-margin-bottom-4">
+                <p class="govuk-body">Project setup is complete and was unsuccessful.</p>
+            </div>
+            <p class="govuk-body">Innovate UK and the organisation can view the project but can no longer make changes online.</p>
+            <p class="govuk-body"><a th:href="@{/competition/{id}/status(id=${model.competitionId})}">Return to project setup</a></p>
+        </th:block>
+        <th:block th:unless="${model.readonly}">
+            <h2 class="govuk-heading-l">What happens next</h2>
+
+            <p class="govuk-body">Finish the next steps offline so that the loan agreement can be completed. Once all
+                the steps are done then you must mark it as either successful or unsuccessful.</p>
+
+
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                  th:object="${form}"
+                  method="POST"
+                  novalidate="novalidate"
+                  enctype="multipart/form-data">
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('successful')} ? 'govuk-form-group--error'">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-visually-hidden">
+                                    <h2 class="govuk-fieldset__heading">
+                                        Set the project status
+                                    </h2>
+                                </legend>
+
+                                <th:block th:if="${#fields.hasErrors('successful')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('successful')}"
+                                      th:text="${err}"></span>
+                                </th:block>
+                                <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="successful"
+                                               type="radio"
+                                               th:field="*{successful}"
+                                               th:value="${true}"
+                                               data-aria-controls="project-conditional-successful">
+                                        <label class="govuk-label govuk-radios__label govuk-label--s"
+                                               for="successful">
+                                            Mark as successful
+                                        </label>
+                                    </div>
+                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                         id="project-conditional-successful">
+                                        <div class="govuk-form-group"
+                                             th:classappend="${#fields.hasErrors('successfulConfirmation')} ? 'govuk-form-group--error'">
+                                            <fieldset class="govuk-fieldset" aria-describedby="successful-hint">
+                                                <legend class="govuk-visually-hidden">
+                                                    <h1 class="govuk-fieldset__heading">
+                                                        Mark as successful
+                                                    </h1>
+                                                </legend>
+                                                <p id="successful-hint" class="govuk-body">
+                                                    Are you sure? This cannot be reversed. Innovate UK and the organisation
+                                                    can still view the project but will no longer be able to make changes.
+                                                </p>
+                                                <th:block th:if="${#fields.hasErrors('successfulConfirmation')}">
+                                                <span class="govuk-error-message"
+                                                      th:each="err : ${#fields.errors('successfulConfirmation')}"
+                                                      th:text="${err}"></span>
+                                                </th:block>
+                                                <div class="govuk-checkboxes">
+                                                    <div class="govuk-checkboxes__item">
+                                                        <input class="govuk-checkboxes__input"
+                                                               id="successfulConfirmation"
+                                                               th:field="*{successfulConfirmation}"
+                                                               value="true"
+                                                               type="checkbox"
+                                                               data-switches-button-status="#mark-as-successful">
+                                                        <label class="govuk-label govuk-checkboxes__label"
+                                                               for="successfulConfirmation">
+                                                            I understand that I cannot undo this.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="govuk-form-group govuk-!-margin-top-4">
+                                                    <button class="govuk-button" id="mark-as-successful">Mark as successful, complete project setup
+                                                    </button>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="unsuccessful"
+                                               type="radio"
+                                               th:field="*{successful}"
+                                               th:value="${false}"
+                                               data-aria-controls="project-conditional-unsuccessful">
+                                        <label class="govuk-label govuk-radios__label govuk-label--s"
+                                               for="unsuccessful">
+                                            Mark as unsuccessful
+                                        </label>
+                                    </div>
+                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                                         id="project-conditional-unsuccessful">
+                                        <div class="govuk-form-group"
+                                             th:classappend="${#fields.hasErrors('unsuccessfulConfirmation')} ? 'govuk-form-group--error'">
+                                            <fieldset class="govuk-fieldset" aria-describedby="unsuccessful-hint">
+                                                <legend class="govuk-visually-hidden">
+                                                    <h1 class="govuk-fieldset__heading">
+                                                        Mark as unsuccessful
+                                                    </h1>
+                                                </legend>
+                                                <p id="unsuccessful-hint" class="govuk-body">
+                                                    Are you sure? This cannot be reversed. Innovate UK and the organisation
+                                                    can still view the project but will no longer be able to make changes.
+                                                </p>
+                                                <th:block th:if="${#fields.hasErrors('unsuccessfulConfirmation')}">
+                                                <span class="govuk-error-message"
+                                                      th:each="err : ${#fields.errors('unsuccessfulConfirmation')}"
+                                                      th:text="${err}"></span>
+                                                </th:block>
+                                                <div class="govuk-checkboxes">
+                                                    <div class="govuk-checkboxes__item">
+                                                        <input class="govuk-checkboxes__input"
+                                                               id="unsuccessfulConfirmation"
+                                                               th:field="*{unsuccessfulConfirmation}"
+                                                               value="true"
+                                                               type="checkbox"
+                                                               data-switches-button-status="#mark-as-unsuccessful">
+                                                        <label class="govuk-label govuk-checkboxes__label"
+                                                               for="unsuccessfulConfirmation">
+                                                            I understand that I cannot undo this.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="govuk-form-group govuk-!-margin-top-4">
+                                                    <button id="mark-as-unsuccessful"
+                                                            class="govuk-button govuk-button--warning"
+                                                            data-module="govuk-button">Mark as unsuccessful, complete project setup
+                                                    </button>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </th:block>
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>
