@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
@@ -25,6 +27,7 @@ import static java.util.Collections.*;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
@@ -48,7 +51,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategoriesStrategy> {
+    public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategoriesStrategy> {
 
     @Mock
     private ProjectService projectServiceMock;
@@ -62,11 +65,15 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
     @Mock
     private CostCategoryTypeRepository costCategoryTypeRepositoryMock;
 
+    @Mock
+    private CompetitionService competitionService;
+
     @Test
     public void testIndustrialCreate() {
         // Setup
+        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).build();
         ApplicationResource ar = newApplicationResource().build();
-        ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
+        ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
         OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build(); // Industrial
         Map<FinanceRowType, FinanceRowCostCategory> fod = new HashMap<>();
         FinanceRowCostCategory labourFrcc = newLabourCostCategory().withCosts(newLabourCost().build(1)).build();
@@ -88,6 +95,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
+        when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
         assertTrue(result.isSuccess());
@@ -98,8 +106,9 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
     @Test
     public void testAlreadyCreated() {
         // Setup
+        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).build();
         ApplicationResource ar = newApplicationResource().build();
-        ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
+        ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
         OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getId()).build(); // Academic
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
 
@@ -122,6 +131,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
         when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(singletonList(expectedCct)); // This is the one already created and should be returned
+        when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
         assertTrue(result.isSuccess());
@@ -138,8 +148,9 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
     @Test
     public void testAcademicCreate() {
         // Setup
+        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).build();
         ApplicationResource ar = newApplicationResource().build();
-        ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
+        ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
         OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getId()).build(); // Academic
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
 
@@ -166,6 +177,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
+        when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
         assertTrue(result.isSuccess());
