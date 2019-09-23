@@ -2,7 +2,6 @@ package org.innovateuk.ifs.invite.transactional;
 
 
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
@@ -15,11 +14,9 @@ import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +24,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -88,28 +79,6 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
     @Override
     protected InviteRepository<ProjectUserInvite> getInviteRepository() {
         return projectUserInviteRepository;
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
-
-        return validateProjectInviteResource(projectUserInviteResource).andOnSuccess(() ->
-                validateUserNotAlreadyInvited(projectUserInviteResource).andOnSuccess(() ->
-                        validateTargetUserIsValid(projectUserInviteResource).andOnSuccess(() -> {
-
-                            ProjectUserInvite projectInvite = inviteMapper.mapToDomain(projectUserInviteResource);
-                            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
-                            validator.validate(projectInvite, errors);
-                            if (errors.hasErrors()) {
-                                errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
-                                return serviceFailure(badRequestError(errors.toString()));
-                            } else {
-                                projectInvite.setHash(generateInviteHash());
-                                projectUserInviteRepository.save(projectInvite);
-                                return serviceSuccess();
-                            }
-                        })));
     }
 
     private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
@@ -166,37 +135,4 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
                 .andOnSuccess(u -> u.map(ServiceResult::serviceSuccess).orElseGet(() -> serviceFailure(notFoundError(UserResource.class))));
     }
 
-    private ServiceResult<Void> validateProjectInviteResource(ProjectUserInviteResource projectUserInviteResource) {
-
-        if (StringUtils.isEmpty(projectUserInviteResource.getEmail()) || StringUtils.isEmpty(projectUserInviteResource.getName())
-                || projectUserInviteResource.getProject() == null || projectUserInviteResource.getOrganisation() == null) {
-            return serviceFailure(PROJECT_INVITE_INVALID);
-        }
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> validateUserNotAlreadyInvited(ProjectUserInviteResource invite) {
-
-        List<ProjectUserInvite> existingInvites = projectUserInviteRepository.findByProjectIdAndEmail(invite.getProject(), invite.getEmail());
-        return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
-    }
-
-    private ServiceResult<Void> validateTargetUserIsValid(ProjectUserInviteResource invite) {
-
-        String targetEmail = invite.getEmail();
-
-        Optional<User> existingUser = userRepository.findByEmail(targetEmail);
-
-        return existingUser.map(user ->
-                validateUserIsNotAlreadyOnProject(invite, user)).
-                orElse(serviceSuccess());
-    }
-
-    private ServiceResult<Void> validateUserIsNotAlreadyOnProject(ProjectUserInviteResource invite, User user) {
-
-        List<ProjectUser> existingUserEntryForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(invite.getProject(), user.getId(), PROJECT_PARTNER);
-
-        return existingUserEntryForProject.isEmpty() ? serviceSuccess() :
-                serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_EXISTS_ON_PROJECT);
-    }
 }
