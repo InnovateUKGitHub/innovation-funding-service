@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.status.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
@@ -13,14 +14,16 @@ public abstract class BaseCompetitionStatusTableViewModel {
     private final String competitionName;
     private final List<ProjectSetupStage> columns;
     private final List<InternalProjectSetupRow> rows;
-    private boolean canExportBankDetails;
+    private final boolean canExportBankDetails;
+    private final boolean isLoan;
 
-    public BaseCompetitionStatusTableViewModel(long competitionId, String competitionName, List<ProjectSetupStage> columns, List<InternalProjectSetupRow> rows, boolean projectFinanceUser) {
-        this.competitionId = competitionId;
-        this.competitionName = competitionName;
-        this.columns = columns;
+    public BaseCompetitionStatusTableViewModel(CompetitionResource competitionResource, List<InternalProjectSetupRow> rows, boolean projectFinanceUser) {
+        this.competitionId = competitionResource.getId();
+        this.competitionName = competitionResource.getName();
+        this.columns = competitionResource.getProjectSetupStages();
         this.rows = rows;
         this.canExportBankDetails = projectFinanceUser && columns.contains(BANK_DETAILS);
+        this.isLoan = competitionResource.isLoan();
     }
 
     public abstract String getEmptyTableText();
@@ -43,5 +46,9 @@ public abstract class BaseCompetitionStatusTableViewModel {
 
     public boolean isCanExportBankDetails() {
         return canExportBankDetails;
+    }
+
+    public boolean isIsLoan() {
+        return isLoan;
     }
 }

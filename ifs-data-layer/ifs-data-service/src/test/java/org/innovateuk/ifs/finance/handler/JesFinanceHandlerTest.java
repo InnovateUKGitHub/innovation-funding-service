@@ -25,7 +25,7 @@ public class JesFinanceHandlerTest extends BaseUnitTestMocksTest {
     private ApplicationFinanceRowRepository applicationFinanceRowRepository;
 
     @Test(expected = RuntimeException.class)
-    public void updateCost_shouldReturnFailureWhenCostItemCannotBeFoundById() throws Exception {
+    public void updateCost_shouldReturnFailureWhenCostItemCannotBeFoundById() {
         ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().build();
 
         when(applicationFinanceRowRepository.findById(any())).thenReturn(Optional.empty());
@@ -33,11 +33,13 @@ public class JesFinanceHandlerTest extends BaseUnitTestMocksTest {
         ApplicationFinanceRow result = organisationJESFinance.updateCost(applicationFinanceRow);
 
         assertNull(result);
+
         verify(applicationFinanceRowRepository, times(0)).save(any(ApplicationFinanceRow.class));
+        verifyNoMoreInteractions(applicationFinanceRowRepository);
     }
 
     @Test
-    public void updateCost_shouldSaveEntityWhenCostItemCanBeFoundById() throws Exception {
+    public void updateCost_shouldSaveEntityWhenCostItemCanBeFoundById() {
         ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withId(1L).build();
 
         when(applicationFinanceRowRepository.findById(any())).thenReturn(Optional.of(applicationFinanceRow));
@@ -46,11 +48,14 @@ public class JesFinanceHandlerTest extends BaseUnitTestMocksTest {
         ApplicationFinanceRow result = organisationJESFinance.updateCost(applicationFinanceRow);
 
         assertEquals(applicationFinanceRow,result);
+
+        verify(applicationFinanceRowRepository, times(1)).findById(any());
         verify(applicationFinanceRowRepository, times(1)).save(any(ApplicationFinanceRow.class));
+        verifyNoMoreInteractions(applicationFinanceRowRepository);
     }
 
     @Test
-    public void addCost_shouldSaveEntityWhenAFinanceRowForNameCannotBeFound() throws Exception {
+    public void addCost_shouldSaveEntityWhenAFinanceRowForNameCannotBeFound() {
         String financeRowName = "unique-name";
 
         ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withName(financeRowName).withTarget(newApplicationFinance().build())
@@ -63,6 +68,8 @@ public class JesFinanceHandlerTest extends BaseUnitTestMocksTest {
         ApplicationFinanceRow result = organisationJESFinance.addCost(applicationFinanceRow);
 
         assertEquals(applicationFinanceRow,result);
+
         verify(applicationFinanceRowRepository, times(1)).save(applicationFinanceRow);
+        verifyNoMoreInteractions(applicationFinanceRowRepository);
     }
 }
