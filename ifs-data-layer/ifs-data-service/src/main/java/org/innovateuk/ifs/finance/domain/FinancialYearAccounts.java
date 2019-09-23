@@ -14,7 +14,7 @@ public abstract class FinancialYearAccounts {
     }
 
     public FinancialYearAccounts(FinancialYearAccounts accounts) {
-        this.employees = accounts.employees;
+        this.employees = accounts.getEmployees();
     }
 
     public Long getId() {
