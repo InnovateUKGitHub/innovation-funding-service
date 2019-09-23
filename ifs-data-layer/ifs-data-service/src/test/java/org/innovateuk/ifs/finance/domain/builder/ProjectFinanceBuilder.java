@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.domain.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 
@@ -18,6 +19,10 @@ public class ProjectFinanceBuilder extends BaseBuilder<ProjectFinance, ProjectFi
 
     public ProjectFinanceBuilder withOrganisation(Organisation... value) {
         return withArray((v, finance) -> finance.setOrganisation(v), value);
+    }
+
+    public ProjectFinanceBuilder withOrganisationSize(OrganisationSize... value) {
+        return withArray((v, finance) -> finance.setOrganisationSize(v), value);
     }
 
     public ProjectFinanceBuilder withProject(Project... value) {

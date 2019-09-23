@@ -30,12 +30,20 @@ public class FinanceRowMetaFieldBuilder extends BaseBuilder<FinanceRowMetaField,
         return new FinanceRowMetaFieldBuilder(actions);
     }
 
-    public FinanceRowMetaFieldBuilder withTitle(String title) {
-        return with(metaField -> metaField.setTitle(title));
+    public FinanceRowMetaFieldBuilder withId(Long... ids) {
+        return withArray((id, financeRowMetaField) -> setField("id", id, financeRowMetaField), ids);
+    }
+
+    public FinanceRowMetaFieldBuilder withTitle(String... titles) {
+        return withArray((title, financeRowMetaField) -> setField("title", title, financeRowMetaField), titles);
     }
 
     public FinanceRowMetaFieldBuilder withType(String type) {
         return with(metaField -> metaField.setType(type));
+    }
+
+    public FinanceRowMetaFieldBuilder withType(String... types) {
+        return withArray((type, financeRowMetaField) -> setField("type", type, financeRowMetaField), types);
     }
 
     @Override

@@ -18,11 +18,11 @@ public class FinanceRowMetaValue {
     private Long financeRowId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="finance_row_meta_field_id")
+    @JoinColumn(name = "finance_row_meta_field_id")
     private FinanceRowMetaField financeRowMetaField;
 
     public FinanceRowMetaValue() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public FinanceRowMetaValue(FinanceRowMetaField financeRowMetaField, String value) {
@@ -61,7 +61,9 @@ public class FinanceRowMetaValue {
         this.financeRowMetaField = financeRowMetaField;
     }
 
-    public Long getId(){ return id;}
+    public Long getId() {
+        return id;
+    }
 
     public void setValue(String value) {
         this.value = value;

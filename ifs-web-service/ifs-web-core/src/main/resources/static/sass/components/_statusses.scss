@@ -339,3 +339,21 @@ ul {
     background-color: govuk-colour("yellow");
   }
 }
+
+.ifs-project-status-successful {
+  @extend %badge;
+
+  &:before {
+    background-color: govuk-colour("green");
+  }
+}
+
+.ifs-project-status-unsuccessful {
+  @extend %badge;
+
+  &:before {
+    background-color: $govuk-error-colour;
+  }
+}
+
+
