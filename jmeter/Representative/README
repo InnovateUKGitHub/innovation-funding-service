@@ -2,11 +2,12 @@ To run load_test_representative
 ===============================
 For Example (JMeter)
 --------------------
-1) jmeter -Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1 -puat.properties -tload_test_representative.jmx
+1) jmeter -Jinvite_user=1 -Japplicant_users=1 -JH2020_users=1 -Jregistration_users=1 -puat.properties -tload_test_representative.jmx
 
 Where
 invite_user                     = number of users to run the invite_user group
 applicant_users                 = number of users to run the applicant_users group
+h2020_users                     = number of users to run the H2020_users group
 registration_users              = number of users to run the registration_users group
 front_door_users                = number of users to run the front door group
 competition_management_users    = number of users to run competition management group

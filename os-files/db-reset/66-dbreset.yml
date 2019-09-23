@@ -33,6 +33,7 @@ items:
       name: performance-config
     data:
       PERFORMANCE_APPLICANT_USERS: "${PERFORMANCE_APPLICANT_USERS}"
+      PERFORMANCE_h2020_USERS: "${PERFORMANCE_h2020_USERS}"
   - apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -102,6 +103,11 @@ items:
                 configMapKeyRef:
                   name: performance-config
                   key: PERFORMANCE_APPLICANT_USERS
+            - name: PERFORMANCE_h2020_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: performance-config
+                  key: PERFORMANCE_h2020_USERS
             - name: ACC_USERNAME
               valueFrom:
                 configMapKeyRef:

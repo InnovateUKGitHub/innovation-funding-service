@@ -8,6 +8,7 @@ ext.registration_users = project.properties['registrationUsers'] ?: 1
 ext.front_door_users = project.properties['frontDoorUsers'] ?: 1
 ext.comp_management_users = project.properties['compManagementUsers'] ?: 1
 ext.applicant_users = project.properties['applicantUsers'] ?: 1
+ext.applicant_users = project.properties['H2020Users'] ?: 1
 ext.assessor_users = project.properties['assessorUsers'] ?: 1
 ext.provisioning = project.properties['provisioning'] ?: "local"
 ext.data_path = ''
