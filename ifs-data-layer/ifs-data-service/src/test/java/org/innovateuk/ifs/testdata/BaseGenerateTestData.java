@@ -89,7 +89,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
 
-    private static String competitionNameForFilter = "Project setup loan comp";
+    private static String competitionNameForFilter;
 
     private enum CompetitionFilter implements Predicate<CompetitionLine> {
 
@@ -183,6 +183,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
+
+    @Value("${ifs.generate.test.data.competition.filter.name:Rolling stock future developments}")
+    private void setCompetitionFilterName(String competitionNameForFilter) {
+        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+    }
 
     @Before
     public void setup() throws Exception {
