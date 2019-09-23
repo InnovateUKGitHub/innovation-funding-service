@@ -30,6 +30,12 @@ items:
   - apiVersion: v1
     kind: ConfigMap
     metadata:
+      name: performance-config
+    data:
+      PERFORMANCE_APPLICANT_USERS: "${PERFORMANCE_APPLICANT_USERS}"
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
       name: ldap-config
     data:
       LDAP_HOST: "${LDAP_HOST}"
@@ -91,6 +97,11 @@ items:
                 configMapKeyRef:
                   name: bitbucket-config
                   key: ACC_BITBUCKET_URL
+            - name: PERFORMANCE_APPLICANT_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: performance-config
+                  key: PERFORMANCE_APPLICANT_USERS
             - name: ACC_USERNAME
               valueFrom:
                 configMapKeyRef:

@@ -37,6 +37,12 @@
                                 <th:block th:if="${row.projectState.onHold}">
                                     <strong class="ifs-project-status-on-hold">On hold</strong>
                                 </th:block>
+                                <th:block th:if="${row.projectState.live && model.isLoan}">
+                                    <strong class="ifs-project-status-successful">Successful</strong>
+                                </th:block>
+                                <th:block th:if="${row.projectState.unsuccessful}">
+                                    <strong class="ifs-project-status-unsuccessful">Unsuccessful</strong>
+                                </th:block>
                             </div>
                         </div>
                         <a th:text="${row.applicationNumber}" th:href="${'/management/competition/'+row.competitionId+'/application/'+row.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link"/>

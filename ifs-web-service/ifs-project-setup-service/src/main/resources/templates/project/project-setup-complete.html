@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="pageTitle='Set up your project'">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - ' + pageTitle}" />
+</head>
+<body class="govuk-template__body app-track">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <th:block>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup complete',subTitle=${model.projectName}, size='govuk-heading-xl'" />
+        </th:block>
+
+        <th:block th:if="${model.projectState.active}" th:insert="fragments/setup-state :: active"/>
+
+        <th:block th:if="${model.projectState.live}" th:insert="fragments/setup-state :: successful"/>
+
+        <th:block th:if="${model.projectState.unsuccessful}" th:insert="fragments/setup-state :: unsuccessful"/>
+
+        <div class="govuk-!-margin-top-9">
+            <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
+            <a th:href="@{~/survey/{competitionId}/feedback(competitionId=${model.competitionId}, type=PROJECT_SUBMISSION)}" class="govuk-button">Give us feedback</a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>
