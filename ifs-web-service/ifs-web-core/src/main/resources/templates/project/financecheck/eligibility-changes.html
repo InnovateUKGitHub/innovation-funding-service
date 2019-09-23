@@ -25,10 +25,10 @@
                         <th class="govuk-table__header" scope="col">Total costs</th>
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (%)</th>
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
-                        <th:block th:unless="${model.isLoanCompetition}">
+                        <th:block th:unless="${model.loanCompetition}">
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
                         </th:block>
-                        <th:block th:if="${model.isLoanCompetition}">
+                        <th:block th:if="${model.loanCompetition}">
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public funding (&pound;)</th>
                         </th:block>
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>

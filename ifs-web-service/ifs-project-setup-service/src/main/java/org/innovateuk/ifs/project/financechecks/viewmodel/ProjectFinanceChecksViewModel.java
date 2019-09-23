@@ -26,7 +26,7 @@ public class ProjectFinanceChecksViewModel {
     private Long queryId;
     private String baseUrl;
     private boolean isAcademic;
-    private boolean isLoanCompetition;
+    private boolean loanCompetition;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
                                          List<ThreadViewModel> pendingQueries,
@@ -39,7 +39,7 @@ public class ProjectFinanceChecksViewModel {
                                          Long queryId,
                                          String baseUrl,
                                          boolean isAcademic,
-                                         boolean isLoanCompetition) {
+                                         boolean loanCompetition) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
@@ -53,7 +53,7 @@ public class ProjectFinanceChecksViewModel {
         this.queryId = queryId;
         this.baseUrl = baseUrl;
         this.isAcademic = isAcademic;
-        this.isLoanCompetition = isLoanCompetition;
+        this.loanCompetition = loanCompetition;
     }
 
     public Long getProjectId() {
@@ -185,7 +185,7 @@ public class ProjectFinanceChecksViewModel {
         return pendingQueries.isEmpty() && !awaitingResponseQueries.isEmpty();
     }
 
-    public boolean isIsLoanCompetition() {
-        return isLoanCompetition;
+    public boolean isLoanCompetition() {
+        return loanCompetition;
     }
 }

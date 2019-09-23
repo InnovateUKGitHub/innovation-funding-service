@@ -198,8 +198,7 @@
                        data-autosave-disabled/>
                 <label for="stateAidAgreed"
                        class="govuk-label govuk-checkboxes__label">
-                    By ticking this box you are accepting that the project costs for your organisation are eligible as
-                    defined in the
+                    By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
                     <a target="_blank"
                        href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance"
                        class="govuk-link"
@@ -208,7 +207,6 @@
                 </label>
             </div>
         </div>
-
     </div>
 </th:block>
 
@@ -219,41 +217,26 @@
          th:if="${(applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).CREATED or applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).OPENED) and competition.competitionStatus.name() != 'OPEN'}">
         <h2 class="govuk-heading-s govuk-!-margin-0">Application not submitted</h2>
         <p class="govuk-body">This application has not been entered into the competition
-            <th:block th:text="${competition.name}"/>
-            as it was not submitted before the competition deadline.
+            <th:block th:text="${competition.name}"/> as it was not submitted before the competition deadline.
         </p>
     </div>
     <div class="warning-alert" th:if="${projectWithdrawn}">
         <h2 class="govuk-heading-s govuk-!-margin-0">This project has been withdrawn.</h2>
-        <p class="govuk-body">The application was successful but withdrawn at project setup stage. The scores and
-            written feedback from each assessor can be found below.</p>
+        <p class="govuk-body">The application was successful but withdrawn at project setup stage. The scores and written feedback from each assessor can be found below.</p>
     </div>
     <th:block th:unless="${projectWithdrawn}">
         <div class="success-alert"
              th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).APPROVED}">
-            <th:block th:if="${model.isLoanCompetition}">
-                <h2 class="govuk-heading-s govuk-!-margin-0">Your application has progressed to project setup.</h2>
-                <p class="govuk-body">
-                    <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful
-                        in this round of funding.
-                    </th:block>
-                    <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback
-                        from each assessor can be found below.
-                    </th:block>
-                    <th:block
-                        th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
-                        th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}"/>
-                </p>
-            </th:block>
-            <th:block th:unless="${model.isLoanCompetition}">
+            <th:block th:unless="${model.loanCompetition}">
                 <h2 class="govuk-heading-s govuk-!-margin-0">Congratulations, your application has been successful</h2>
+            </th:block>
+            <th:block th:if="${model.loanCompetition}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Your application has progressed to project setup.</h2>
+            </th:block>
+            <th:block>
                 <p class="govuk-body">
-                    <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful
-                        in this round of funding.
-                    </th:block>
-                    <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback
-                        from each assessor can be found below.
-                    </th:block>
+                    <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
+                    <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
                     <th:block
                         th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
                         th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}"/>
@@ -266,12 +249,9 @@
         </div>
         <div class="warning-alert"
              th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).REJECTED}">
-            <h2 class="govuk-heading-s govuk-!-margin-0">Your application has not been successful in this
-                competition.</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0">Your application has not been successful in this competition.</h2>
             <p class="govuk-body">
-                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from
-                    each assessor can be found below.
-                </th:block>
+                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
                 <th:block
                     th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
                     th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}"/>
@@ -320,9 +300,7 @@
             <li th:each="err : ${#fields.detailedErrors('${__${formName}__.*}')}">
                 <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
                 <th:block th:unless="${err.global}">
-                    <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error
-                        message
-                    </th:block>
+                    <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
                     <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|"
                        th:text="${err.message}">The error message</a>
                 </th:block>
@@ -330,7 +308,6 @@
         </ul>
     </div>
 </th:block>
-
 </html>
 
 

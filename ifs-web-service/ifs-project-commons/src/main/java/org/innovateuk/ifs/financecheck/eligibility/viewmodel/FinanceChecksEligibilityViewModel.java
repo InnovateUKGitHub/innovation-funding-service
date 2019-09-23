@@ -31,7 +31,7 @@ public class FinanceChecksEligibilityViewModel {
     private FileDetailsViewModel jesFileDetails;
     private final boolean h2020;
     private final boolean projectIsActive;
-    private final boolean isLoanCompetition;
+    private final boolean loanCompetition;
 
     public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview,
                                              String organisationName,
@@ -50,7 +50,7 @@ public class FinanceChecksEligibilityViewModel {
                                              FileDetailsViewModel jesFileDetailsViewModel,
                                              boolean h2020,
                                              boolean projectIsActive,
-                                             boolean isLoanCompetition) {
+                                             boolean loanCompetition) {
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -68,7 +68,7 @@ public class FinanceChecksEligibilityViewModel {
         this.jesFileDetails = jesFileDetailsViewModel;
         this.h2020 = h2020;
         this.projectIsActive = projectIsActive;
-        this.isLoanCompetition = isLoanCompetition;
+        this.loanCompetition = loanCompetition;
     }
 
     public boolean isApproved() {
@@ -220,7 +220,7 @@ public class FinanceChecksEligibilityViewModel {
         return projectIsActive;
     }
 
-    public boolean isIsLoan() {
-        return isLoanCompetition;
+    public boolean isLoanCompetition() {
+        return loanCompetition;
     }
 }

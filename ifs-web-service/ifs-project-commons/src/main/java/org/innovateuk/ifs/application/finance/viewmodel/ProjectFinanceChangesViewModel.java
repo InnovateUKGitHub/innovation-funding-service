@@ -26,7 +26,7 @@ public class ProjectFinanceChangesViewModel {
     private Map<FinanceRowType, List<ChangedFinanceRowPair>> changes;
     private BigDecimal totalApplicationCosts;
     private BigDecimal totalProjectCostsAfterChanges;
-    private boolean isLoanCompetition;
+    private boolean loanCompetition;
 
     public ProjectFinanceChangesViewModel(boolean isInternal, String organisationName, Long organisationId,
                                           String projectName, Long applicationId, Long projectId,
@@ -35,7 +35,7 @@ public class ProjectFinanceChangesViewModel {
                                           Map<FinanceRowType, BigDecimal> sectionDifferences,
                                           Map<FinanceRowType, List<ChangedFinanceRowPair>> changes,
                                           BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges,
-                                          boolean isLoanCompetition) {
+                                          boolean loanCompetition) {
         this.isInternal = isInternal;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -49,7 +49,7 @@ public class ProjectFinanceChangesViewModel {
         this.changes = changes;
         this.totalApplicationCosts = totalApplicationCosts;
         this.totalProjectCostsAfterChanges = totalProjectCostsAfterChanges;
-        this.isLoanCompetition = isLoanCompetition;
+        this.loanCompetition = loanCompetition;
     }
 
     public Map<FinanceRowType, BigDecimal> getSectionDifferences() {
@@ -164,7 +164,7 @@ public class ProjectFinanceChangesViewModel {
         this.projectWorkingDaysPerYearCostItem = projectWorkingDaysPerYearCostItem;
     }
 
-    public boolean isIsLoanCompetition() {
-        return isLoanCompetition;
+    public boolean isLoanCompetition() {
+        return loanCompetition;
     }
 }

@@ -32,7 +32,7 @@
                   th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.isApproved()}">
-            <th:block th:unless="${model.isLoanCompetition}">
+            <th:block th:unless="${model.loanCompetition}">
                 <div class="success-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body">The checks have been completed and your project finances approved.</p>
                 </div>
@@ -43,7 +43,7 @@
                            class="govuk-link">project finance overview</a>.
             </p>
             </th:block>
-            <th:block th:if="${model.isLoanCompetition}">
+            <th:block th:if="${model.loanCompetition}">
                 <div class="message-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body">We have finished checking your finances.</p>
                 </div>
@@ -63,7 +63,7 @@
                 <th:block th:if="${model.isAcademic()}">
                     your project finances.
                 </th:block>
-                <th:block th:unless="${model.isLoanCompetition}">
+                <th:block th:unless="${model.loanCompetition}">
                 You can also view the <a
                     th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                     class="govuk-link">project finance overview</a>.

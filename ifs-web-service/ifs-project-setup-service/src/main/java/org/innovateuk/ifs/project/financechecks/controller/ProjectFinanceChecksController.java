@@ -337,7 +337,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility")
-    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId,
+    public String viewExternalEligibilityPage(@PathVariable final long projectId,
                                               Model model,
                                               UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
@@ -352,7 +352,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId,
+    public String viewExternalEligibilityChanges(@PathVariable final long projectId,
                                                  Model model,
                                                  UserResource loggedInUser) {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);

@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+
 public class ApplicationFeedbackViewModel {
 
     private final ApplicationResource application;
@@ -31,7 +33,7 @@ public class ApplicationFeedbackViewModel {
     private final long applicationTermsQuestionId;
     private final boolean projectWithdrawn;
     private final boolean collaborativeProject;
-    private final boolean isLoanCompetition;
+    private final boolean loanCompetition;
 
     public ApplicationFeedbackViewModel(ApplicationResource application,
                                         CompetitionResource competition,
@@ -48,8 +50,7 @@ public class ApplicationFeedbackViewModel {
                                         InterviewFeedbackViewModel interviewFeedbackViewModel,
                                         long applicationTermsQuestionId,
                                         boolean projectWithdrawn,
-                                        boolean collaborativeProject,
-                                        boolean isLoanCompetition) {
+                                        boolean collaborativeProject) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -66,7 +67,7 @@ public class ApplicationFeedbackViewModel {
         this.applicationTermsQuestionId = applicationTermsQuestionId;
         this.projectWithdrawn = projectWithdrawn;
         this.collaborativeProject = collaborativeProject;
-        this.isLoanCompetition = isLoanCompetition;
+        this.loanCompetition = competition.getFundingType().equals(LOAN);
     }
 
     public ApplicationResource getApplication() {
@@ -133,7 +134,7 @@ public class ApplicationFeedbackViewModel {
         return collaborativeProject;
     }
 
-    public boolean isIsLoanCompetition() {
-        return isLoanCompetition;
+    public boolean isLoanCompetition() {
+        return loanCompetition;
     }
 }
