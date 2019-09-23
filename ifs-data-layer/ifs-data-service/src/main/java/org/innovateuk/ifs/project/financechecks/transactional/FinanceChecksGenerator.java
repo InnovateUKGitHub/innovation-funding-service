@@ -77,7 +77,15 @@ public class FinanceChecksGenerator {
         ApplicationFinance applicationFinanceForOrganisation =
                 applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
 
-        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
+        EmployeesAndTurnover employeesAndTurnover = applicationFinanceForOrganisation.getEmployeesAndTurnover();
+        if (employeesAndTurnover != null) {
+            employeesAndTurnover = new EmployeesAndTurnover(employeesAndTurnover);
+        }
+        GrowthTable growthTable = applicationFinanceForOrganisation.getGrowthTable();
+        if (growthTable != null) {
+            growthTable = new GrowthTable(growthTable);
+        }
+        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover);
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 

@@ -6,6 +6,20 @@ import java.time.LocalDate;
 
 @Entity
 public class GrowthTable extends FinancialYearAccounts {
+
+    public GrowthTable() {
+        super();
+    }
+
+    public GrowthTable(GrowthTable growthTable) {
+        super(growthTable);
+        this.financialYearEnd = growthTable.getFinancialYearEnd();
+        this.annualTurnover = growthTable.getAnnualTurnover();
+        this.annualProfits = growthTable.getAnnualExport();
+        this.annualExport = growthTable.getAnnualExport();
+        this.researchAndDevelopment = growthTable.getResearchAndDevelopment();
+    }
+
     private LocalDate financialYearEnd;
     private BigDecimal annualTurnover;
     private BigDecimal annualProfits;

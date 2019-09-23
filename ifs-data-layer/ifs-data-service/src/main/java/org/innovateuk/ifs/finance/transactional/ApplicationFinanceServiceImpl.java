@@ -145,13 +145,11 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
                     find(organisation(organisationId)).andOnSuccess(organisation -> {
                         ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
                         if (TRUE.equals(application.getCompetition().getIncludeProjectGrowthTable())) {
-                            GrowthTable growthTable = new GrowthTable();
-                            growthTable.setApplicationFinance(applicationFinance);
-                            growthTableRepository.save(growthTable);
+                            applicationFinance.setGrowthTable(new GrowthTable());
+                            growthTableRepository.save(applicationFinance.getGrowthTable());
                         } else {
-                            EmployeesAndTurnover employeesAndTurnover = new EmployeesAndTurnover();
-                            employeesAndTurnover.setApplicationFinance(applicationFinance);
-                            employeesAndTurnoverRepository.save(employeesAndTurnover);
+                            applicationFinance.setEmployeesAndTurnover(new EmployeesAndTurnover());
+                            employeesAndTurnoverRepository.save(applicationFinance.getEmployeesAndTurnover());
                         }
                         initialize(applicationFinance);
                         return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));

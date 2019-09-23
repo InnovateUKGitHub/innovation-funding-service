@@ -15,6 +15,12 @@ public abstract class FinancialYearAccounts {
     @JoinColumn(name = "applicationFinanceId")
     private ApplicationFinance applicationFinance;
 
+    public FinancialYearAccounts() {}
+
+    public FinancialYearAccounts(FinancialYearAccounts accounts) {
+        this.employees = accounts.employees;
+    }
+
     public Long getId() {
         return id;
     }

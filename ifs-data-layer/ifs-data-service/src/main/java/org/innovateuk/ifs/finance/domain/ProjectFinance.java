@@ -42,9 +42,11 @@ public class ProjectFinance extends Finance {
     public ProjectFinance() {
     }
 
-    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project) {
+    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover) {
         super(organisation, organisationSize);
         this.project = project;
+        setGrowthTable(growthTable);
+        setEmployeesAndTurnover(employeesAndTurnover);
     }
 
     @JsonIgnore
@@ -94,6 +96,9 @@ public class ProjectFinance extends Finance {
 
     public void setEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
         this.employeesAndTurnover = employeesAndTurnover;
+        if (employeesAndTurnover != null) {
+            employeesAndTurnover.setProjectFinance(this);
+        }
     }
 
     public GrowthTable getGrowthTable() {
@@ -102,5 +107,8 @@ public class ProjectFinance extends Finance {
 
     public void setGrowthTable(GrowthTable growthTable) {
         this.growthTable = growthTable;
+        if (growthTable != null) {
+            growthTable.setProjectFinance(this);
+        }
     }
 }

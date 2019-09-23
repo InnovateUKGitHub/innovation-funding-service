@@ -109,7 +109,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         project = newProject().withId(projectId).withApplication(application).build();
 
-        newFinance = new ProjectFinance(organisation, SMALL, project);
+        newFinance = new ProjectFinance(organisation, SMALL, project, growthTable, employeesAndTurnover);
         newFinance.setId(projectFinanceId);
 
         material = new Materials(newFinance.getId());

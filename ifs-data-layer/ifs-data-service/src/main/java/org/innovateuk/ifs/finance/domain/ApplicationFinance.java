@@ -127,6 +127,9 @@ public class ApplicationFinance extends Finance {
 
     public void setEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
         this.employeesAndTurnover = employeesAndTurnover;
+        if (employeesAndTurnover != null) {
+            employeesAndTurnover.setApplicationFinance(this);
+        }
     }
 
     public GrowthTable getGrowthTable() {
@@ -135,5 +138,8 @@ public class ApplicationFinance extends Finance {
 
     public void setGrowthTable(GrowthTable growthTable) {
         this.growthTable = growthTable;
+        if (growthTable != null) {
+            growthTable.setApplicationFinance(this);
+        }
     }
 }
