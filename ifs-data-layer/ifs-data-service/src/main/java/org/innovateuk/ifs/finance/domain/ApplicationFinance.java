@@ -30,12 +30,6 @@ public class ApplicationFinance extends Finance {
     @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
 
-    @OneToOne(mappedBy = "applicationFinance", fetch = FetchType.LAZY)
-    private EmployeesAndTurnover employeesAndTurnover;
-
-    @OneToOne(mappedBy = "applicationFinance", fetch = FetchType.LAZY)
-    private GrowthTable growthTable;
-
     public ApplicationFinance() {
     }
 
@@ -119,27 +113,5 @@ public class ApplicationFinance extends Finance {
 
     public void setWorkPostcode(String workPostcode) {
         this.workPostcode = workPostcode;
-    }
-
-    public EmployeesAndTurnover getEmployeesAndTurnover() {
-        return employeesAndTurnover;
-    }
-
-    public void setEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
-        this.employeesAndTurnover = employeesAndTurnover;
-        if (employeesAndTurnover != null) {
-            employeesAndTurnover.setApplicationFinance(this);
-        }
-    }
-
-    public GrowthTable getGrowthTable() {
-        return growthTable;
-    }
-
-    public void setGrowthTable(GrowthTable growthTable) {
-        this.growthTable = growthTable;
-        if (growthTable != null) {
-            growthTable.setApplicationFinance(this);
-        }
     }
 }

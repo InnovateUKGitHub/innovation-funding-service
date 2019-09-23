@@ -7,15 +7,11 @@ public abstract class FinancialYearAccounts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private Long employees;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectFinanceId")
-    private ProjectFinance projectFinance;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applicationFinanceId")
-    private ApplicationFinance applicationFinance;
 
-    public FinancialYearAccounts() {}
+    public FinancialYearAccounts() {
+    }
 
     public FinancialYearAccounts(FinancialYearAccounts accounts) {
         this.employees = accounts.employees;
@@ -35,21 +31,5 @@ public abstract class FinancialYearAccounts {
 
     public void setEmployees(Long employees) {
         this.employees = employees;
-    }
-
-    public ProjectFinance getProjectFinance() {
-        return projectFinance;
-    }
-
-    public void setProjectFinance(ProjectFinance projectFinance) {
-        this.projectFinance = projectFinance;
-    }
-
-    public ApplicationFinance getApplicationFinance() {
-        return applicationFinance;
-    }
-
-    public void setApplicationFinance(ApplicationFinance applicationFinance) {
-        this.applicationFinance = applicationFinance;
     }
 }

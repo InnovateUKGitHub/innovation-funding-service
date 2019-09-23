@@ -1,30 +1,26 @@
 
 CREATE TABLE employees_and_turnover (
   id bigint(20) PRIMARY KEY AUTO_INCREMENT,
-  application_finance_id bigint(20),
-  project_finance_id bigint(20),
+  temp_application_finance_id bigint(20),
+  temp_project_finance_id bigint(20),
   turnover double,
-  employees int(11),
-  CONSTRAINT fk_employees_and_turnover_application_finance_id FOREIGN KEY (application_finance_id) REFERENCES application_finance(id),
-  CONSTRAINT fk_employees_and_turnover_project_finance_id FOREIGN KEY (project_finance_id) REFERENCES project_finance(id)
+  employees int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE growth_table (
   id bigint(20) PRIMARY KEY AUTO_INCREMENT,
-  application_finance_id bigint(20),
-  project_finance_id bigint(20),
+  temp_application_finance_id bigint(20),
+  temp_project_finance_id bigint(20),
   financial_year_end date,
   annual_turnover double,
   annual_profits double,
   annual_export double,
   research_and_development double,
-  employees int(11),
-  CONSTRAINT fk_growth_table_application_finance_id FOREIGN KEY (application_finance_id) REFERENCES application_finance(id),
-  CONSTRAINT fk_growth_table_project_finance_id FOREIGN KEY (project_finance_id) REFERENCES project_finance(id)
+  employees int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-insert into employees_and_turnover (application_finance_id, turnover, employees)
-    select af.id                        as application_finance_id,
+insert into employees_and_turnover (temp_application_finance_id, turnover, employees)
+    select af.id                        as temp_application_finance_id,
            turnover_response.value      as turnover,
            employees_response.value     as employees
     from application_finance af
@@ -40,9 +36,8 @@ insert into employees_and_turnover (application_finance_id, turnover, employees)
         left join process_role employees_updated_by on employees_updated_by.id = employees_response.updated_by_id and employees_updated_by.organisation_id = af.organisation_id
     where comp.include_project_growth_table = 0;
 
-
-insert into growth_table (application_finance_id, financial_year_end, annual_turnover, annual_profits, annual_export, research_and_development, employees)
-    select af.id                                                                                                            as application_finance_id,
+insert into growth_table (temp_application_finance_id, financial_year_end, annual_turnover, annual_profits, annual_export, research_and_development, employees)
+    select af.id                                                                                                            as temp_application_finance_id,
            date(concat(substring(year_end_response.value, 4, 4), '-', substring(year_end_response.value, 1, 2), '-01'))     as financial_year_end,
            annual_turnover_response.value                                                                                   as annual_turnover,
            annual_profits_response.value                                                                                    as annual_profits,
@@ -78,4 +73,58 @@ insert into growth_table (application_finance_id, financial_year_end, annual_tur
         left join process_role research_and_development_updated_by on research_and_development_updated_by.id = research_and_development_response.updated_by_id and research_and_development_updated_by.organisation_id = af.organisation_id
     where comp.include_project_growth_table = 1;
 
+insert into employees_and_turnover (temp_project_finance_id, turnover, employees)
+    select pf.id                        as temp_project_finance_id,
+           e.turnover                   as turnover,
+           e.employees                  as employees
+    from project_finance pf
+        inner join project p on p.id = pf.project_id
+        inner join application app on app.id = p.application_id
+        inner join application_finance af on af.application_id = app.id and af.organisation_id = pf.organisation_id
+        inner join employees_and_turnover e on e.temp_application_finance_id = af.id;
 
+insert into growth_table (temp_project_finance_id, financial_year_end, annual_turnover, annual_profits, annual_export, research_and_development, employees)
+    select pf.id                              as temp_project_finance_id,
+           g.financial_year_end               as financial_year_end,
+           g.annual_turnover                  as annual_turnover,
+           g.annual_profits                   as annual_profits,
+           g.annual_export                    as annual_export,
+           g.research_and_development         as research_and_development,
+           g.employees                        as employees
+    from project_finance pf
+        inner join project p on p.id = pf.project_id
+        inner join application app on app.id = p.application_id
+        inner join application_finance af on af.application_id = app.id and af.organisation_id = pf.organisation_id
+        inner join growth_table g on g.temp_application_finance_id = af.id;
+
+ALTER TABLE application_finance
+    ADD COLUMN growth_table_id bigint(20),
+    ADD CONSTRAINT fk_application_finance_growth_table_id FOREIGN KEY (growth_table_id) REFERENCES growth_table (id),
+    ADD COLUMN employees_and_turnover_id bigint(20),
+    ADD CONSTRAINT fk_application_finance_employees_and_turnover_id FOREIGN KEY (employees_and_turnover_id) REFERENCES employees_and_turnover (id);
+
+UPDATE application_finance af
+    LEFT JOIN growth_table g on g.temp_application_finance_id = af.id
+    LEFT JOIN employees_and_turnover e on e.temp_application_finance_id = af.id
+    SET af.growth_table_id = g.id,
+        af.employees_and_turnover_id = e.id;
+
+ALTER TABLE  project_finance
+    ADD COLUMN growth_table_id bigint(20),
+    ADD CONSTRAINT fk_project_finance_growth_table_id FOREIGN KEY (growth_table_id) REFERENCES growth_table (id),
+    ADD COLUMN employees_and_turnover_id bigint(20),
+    ADD CONSTRAINT fk_project_finance_employees_and_turnover_id FOREIGN KEY (employees_and_turnover_id) REFERENCES employees_and_turnover (id);
+
+UPDATE project_finance pf
+    LEFT JOIN growth_table g on g.temp_project_finance_id = pf.id
+    LEFT JOIN employees_and_turnover e on e.temp_project_finance_id = pf.id
+    SET pf.growth_table_id=g.id,
+        pf.employees_and_turnover_id = e.id;
+
+ALTER TABLE employees_and_turnover
+    DROP COLUMN temp_application_finance_id,
+    DROP COLUMN temp_project_finance_id;
+
+ALTER TABLE growth_table
+    DROP COLUMN temp_application_finance_id,
+    DROP COLUMN temp_project_finance_id;

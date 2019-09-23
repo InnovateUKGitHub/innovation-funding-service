@@ -33,20 +33,12 @@ public class ProjectFinance extends Finance {
     @Enumerated(EnumType.STRING)
     private EligibilityRagStatus eligibilityStatus = EligibilityRagStatus.UNSET;
 
-    @OneToOne(mappedBy = "applicationFinance", fetch = FetchType.LAZY)
-    private EmployeesAndTurnover employeesAndTurnover;
-
-    @OneToOne(mappedBy = "applicationFinance", fetch = FetchType.LAZY)
-    private GrowthTable growthTable;
-
     public ProjectFinance() {
     }
 
     public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover) {
-        super(organisation, organisationSize);
+        super(organisation, organisationSize, growthTable, employeesAndTurnover);
         this.project = project;
-        setGrowthTable(growthTable);
-        setEmployeesAndTurnover(employeesAndTurnover);
     }
 
     @JsonIgnore
@@ -90,25 +82,4 @@ public class ProjectFinance extends Finance {
                 .map(pu -> pu.isUser(userId)).orElse(false);
     }
 
-    public EmployeesAndTurnover getEmployeesAndTurnover() {
-        return employeesAndTurnover;
-    }
-
-    public void setEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
-        this.employeesAndTurnover = employeesAndTurnover;
-        if (employeesAndTurnover != null) {
-            employeesAndTurnover.setProjectFinance(this);
-        }
-    }
-
-    public GrowthTable getGrowthTable() {
-        return growthTable;
-    }
-
-    public void setGrowthTable(GrowthTable growthTable) {
-        this.growthTable = growthTable;
-        if (growthTable != null) {
-            growthTable.setProjectFinance(this);
-        }
-    }
 }

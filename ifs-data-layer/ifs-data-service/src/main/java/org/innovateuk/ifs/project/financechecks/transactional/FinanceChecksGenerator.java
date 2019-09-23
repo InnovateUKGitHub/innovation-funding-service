@@ -61,6 +61,12 @@ public class FinanceChecksGenerator {
     @Autowired
     private CompetitionService competitionService;
 
+    @Autowired
+    private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
+
+    @Autowired
+    private GrowthTableRepository growthTableRepository;
+
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
         populateFinanceCheck(newFinanceCheck);
@@ -79,11 +85,11 @@ public class FinanceChecksGenerator {
 
         EmployeesAndTurnover employeesAndTurnover = applicationFinanceForOrganisation.getEmployeesAndTurnover();
         if (employeesAndTurnover != null) {
-            employeesAndTurnover = new EmployeesAndTurnover(employeesAndTurnover);
+            employeesAndTurnover = employeesAndTurnoverRepository.save(new EmployeesAndTurnover(employeesAndTurnover));
         }
         GrowthTable growthTable = applicationFinanceForOrganisation.getGrowthTable();
         if (growthTable != null) {
-            growthTable = new GrowthTable(growthTable);
+            growthTable = growthTableRepository.save(new GrowthTable(growthTable));
         }
         ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover);
 
