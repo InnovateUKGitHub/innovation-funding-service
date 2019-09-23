@@ -115,9 +115,6 @@ public class ProjectTeamController {
 
         Supplier<String> successView = () -> String.format("redirect:/project/%d/team", projectId);
 
-        ProjectUserInviteResource invite = projectInviteHelper.createProjectInviteResourceForNewContact(projectId, form.getName(), form.getEmail(), organisationId);
-
-
         return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
                 failureView, successView, projectId, organisationId,
                 (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());

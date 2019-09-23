@@ -56,18 +56,6 @@ public class ProjectInviteHelper {
 
         ServiceResult<Void> inviteResult = sendInvite.apply(projectId, invite);
         return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
-//        return validationHandler.failNowOrSucceedWith(failureView, successView);
-//            ProjectUserInviteResource invite = createProjectInviteResourceForNewContact(projectId, inviteName, inviteEmail, organisation);
-////            ServiceResult<Void> saveResult = projectDetailsService.saveProjectInvite(invite);
-
-//            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
-//                Optional<ProjectUserInviteResource> savedInvite = getSavedInvite(projectId, invite);
-
-//                if (savedInvite.isPresent()) {
-
-//                } else {
-//                    return validationHandler.failNowOrSucceedWith(failureView, successView);
-//                }
     }
 
     private void validateIfTryingToInviteSelf(String loggedInUserEmail,

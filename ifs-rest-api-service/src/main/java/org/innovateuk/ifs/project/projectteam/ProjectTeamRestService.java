@@ -11,4 +11,6 @@ public interface ProjectTeamRestService {
 
     RestResult<Void> removeInvite(long projectId, long inviteId);
 
+    RestResult<Void> saveProjectInvite(ProjectUserInviteResource inviteResource);
+
 }

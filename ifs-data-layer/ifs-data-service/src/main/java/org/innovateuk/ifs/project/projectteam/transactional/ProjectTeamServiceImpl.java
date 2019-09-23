@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -26,6 +27,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
@@ -116,6 +118,9 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     @Autowired
     private ProjectUserInviteMapper inviteMapper;
 
+    @Autowired
+    private ProjectService projectService;
+
     private LocalValidatorFactoryBean validator;
 
     @Value("${ifs.web.baseURL}")
@@ -123,6 +128,12 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     enum Notifications {
         INVITE_PROJECT_MEMBER
+    }
+
+    public ProjectTeamServiceImpl() {
+        validator = new LocalValidatorFactoryBean();
+        validator.setProviderClass(HibernateValidator.class);
+        validator.afterPropertiesSet();
     }
 
     @Override
@@ -248,9 +259,47 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                 .findAny().get();
     }
 
+
+    public ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId) {
+        if (projectId == null) {
+            return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
+        }
+        List<ProjectUserInvite> invites = projectUserInviteRepository.findByProjectId(projectId);
+        List<ProjectUserInviteResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
+        return serviceSuccess(Lists.newArrayList(inviteResources));
+    }
+
+    private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
+        ProjectUserInviteResource inviteResource = inviteMapper.mapToResource(invite);
+        Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
+        inviteResource.setLeadOrganisation(organisation.getName());
+        ProjectResource project = projectService.getProjectById(inviteResource.getProject()).getSuccess();
+        inviteResource.setApplicationId(project.getApplication());
+        return inviteResource;
+    }
+
     @Override
     @Transactional
-    public ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
+    public ServiceResult<Void> inviteTeamMember(long projectId, ProjectUserInviteResource inviteResource) {
+        return getProject(projectId)
+                .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
+                .andOnSuccess(() -> saveProjectInvite(inviteResource))
+                .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MEMBER));
+    }
+
+    private ServiceResult<Void> inviteContact(long projectId, ProjectUserInviteResource requestedInvite, Notifications kindOfNotification) {
+        ProjectUserInviteResource inviteResource = getSavedInvite(projectId, requestedInvite).orElseThrow(() -> new RuntimeException("Unexpected missing invite."));
+
+        ProjectUserInvite invite = projectUserInviteMapper.mapToDomain(inviteResource);
+        invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+        projectUserInviteRepository.save(invite);
+
+        Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(invite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, inviteResource));
+
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
+    }
+
+    private ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
 
         return validateProjectInviteResource(projectUserInviteResource).andOnSuccess(() ->
                 validateUserNotAlreadyInvited(projectUserInviteResource).andOnSuccess(() ->
@@ -269,47 +318,6 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                             }
                         })));
     }
-
-    public ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId) {
-        if (projectId == null) {
-            return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
-        }
-        List<ProjectUserInvite> invites = projectUserInviteRepository.findByProjectId(projectId);
-        List<ProjectUserInviteResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
-        return serviceSuccess(Lists.newArrayList(inviteResources));
-    }
-
-    private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
-        ProjectUserInviteResource inviteResource = inviteMapper.mapToResource(invite);
-        Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
-        inviteResource.setLeadOrganisation(organisation.getName());
-        inviteResource.setApplicationId(inviteResource.getApplicationId());
-        return inviteResource;
-    }
-
-
-        @Override
-    @Transactional
-    public ServiceResult<Void> inviteTeamMember(long projectId, ProjectUserInviteResource inviteResource) {
-        return getProject(projectId)
-                .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
-                .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MEMBER));
-    }
-
-    private ServiceResult<Void> inviteContact(long projectId, ProjectUserInviteResource projectResource, Notifications kindOfNotification) {
-
-        saveProjectInvite(projectResource);
-        Optional<ProjectUserInviteResource> savedInvite = getSavedInvite(projectId, projectResource);
-
-        ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(savedInvite.get());
-        projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
-        projectUserInviteRepository.save(projectInvite);
-
-        Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(projectInvite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, projectResource));
-
-        return notificationService.sendNotificationWithFlush(notification, EMAIL);
-    }
-
     private Optional<ProjectUserInviteResource> getSavedInvite(long projectId, ProjectUserInviteResource invite) {
         return simpleFindFirst(getInvitesByProject(projectId).getSuccess(),
                 i -> i.getEmail().equals(invite.getEmail()));
