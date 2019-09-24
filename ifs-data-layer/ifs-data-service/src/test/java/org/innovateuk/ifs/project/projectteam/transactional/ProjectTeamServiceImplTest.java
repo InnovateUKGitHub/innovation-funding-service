@@ -23,8 +23,11 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -68,6 +71,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.mapstruct.factory.Mappers.getMapper;
 
 public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamServiceImpl> {
 
@@ -102,7 +106,13 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
+    private ProjectMapper projectMapperMock;
+
+    @Mock
     private UserRepository userRepositoryMock;
+
+    @Mock
+    private ProjectService projectServiceMock;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -122,13 +132,13 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
     public void setUp() {
 
         organisation = newOrganisation().
- //               withId(234L).
+                withId(234L).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
         user = newUser().
                 withId(userId).
- //               withEmailAddress("email@example.com").
+                withEmailAddress("email@example.com").
                 build();
 
         leadApplicantProcessRole = newProcessRole().
@@ -194,57 +204,67 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
     @Test
     public void inviteProjectManagerWhenUnableToSendNotification() {
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .withApplication(application)
+                .build();
+
+        Organisation leadOrganisation = newOrganisation()
+                .withId(89L)
+                .withName("Lead Organisation")
+                .build();
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .withCompetitionName("Competition 1")
                 .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation(organisation.getId())
+                .withLeadOrganisation(leadOrganisation.getId())
+                .withLeadOrganisation(leadOrganisation.getName())
                 .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
+                .withProject(projectInDB.getId())
+                .withOrganisation(organisation.getId())
                 .build();
 
-        Project projectInDB = ProjectBuilder.newProject()
-                .withName("Project 1")
-                .withApplication(application)
+        ProjectUserInvite projectInvite = newProjectUserInvite()
+                .withId(333L)
+                .withEmail("Abc.xyz@gmail.com")
+                .withName("Abc Xyz")
+                .withOrganisation(organisation)
+                .withProject(projectInDB)
                 .build();
 
-//        ProjectUserInvite projectInvite = newProjectUserInvite()
-//                .withEmail("a@b.com")
-//                .withName("A B")
-//                .withOrganisation(organisation)
-//                .withProject(project)
-//                .build();
-//
-//        when(organisationRepositoryMock.findDistinctByUsers(any(User.class))).thenReturn(singletonList(organisation));
-//
-//        ProjectUserInviteResource projectUserInviteResource = getMapper(ProjectUserInviteMapper.class).mapToResource(projectInvite);
-//
-//        when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-//        when(projectInviteMapperMock.mapToDomain(projectUserInviteResource)).thenReturn(projectInvite);
+        ProjectResource projectResource = new ProjectResource();
+        projectResource.setName("Project 1");
+        projectResource.setApplication(application.getId());
+
+        when(organisationRepositoryMock.findDistinctByUsers(any(User.class))).thenReturn(singletonList(organisation));
+        when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        when(projectUserInviteRepositoryMock.findByProjectId(projectInDB.getId())).thenReturn(singletonList(projectInvite));
+        when(projectMapperMock.mapToResource(projectInDB)).thenReturn(projectResource);
+        when(organisationRepositoryMock.findById(inviteResource.getLeadOrganisationId())).thenReturn(Optional.of(leadOrganisation));
+
+        when(projectServiceMock.getProjectById(projectInDB.getId())).thenReturn(serviceSuccess(projectResource));
         when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
+        when(projectInviteMapperMock.mapToResource(projectInvite)).thenReturn(inviteResource);
+        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 
-        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("Abc Xyz", "Abc.xyz@gmail.com");
 
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", projectInDB.getName());
-        globalArguments.put("competitionName", "Competition 1");
-        globalArguments.put("leadOrganisation", organisation.getName());
         globalArguments.put("applicationId", application.getId());
+        globalArguments.put("leadOrganisation", organisation.getName());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArguments.put("competitionName", "Competition 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
         Notification notification = new Notification(systemNotificationSourceMock, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
-        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(
-                serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
-        ProjectUserInvite projectInvite = newProjectUserInvite()
-                .withEmail("a@b.com")
-                .withName("A B")
-                .build();
-
-        when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL))
+                .thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.PENDING)
@@ -252,10 +272,11 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         ServiceResult<Void> result = service.inviteTeamMember(projectInDB.getId(), inviteResource);
 
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
         assertTrue(result.isFailure());
-  //      assertEquals(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
+        assertEquals(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(projectUserInviteRepositoryMock).save(projectInvite);
+        verify(projectUserInviteRepositoryMock, times(2)).save(projectInvite);
     }
 
     @Test
@@ -276,18 +297,18 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
                 .withApplication(application)
                 .build();
 
-//        ProjectUserInvite projectInvite = newProjectUserInvite().
-//                withEmail("a@b.com").
-//                withName("A B").
-//                withProject(project).
-//                withOrganisation(organisation).
-//                build();
+        ProjectUserInvite projectInvite = newProjectUserInvite().
+                withEmail("a@b.com").
+                withName("A B").
+                withProject(project).
+                withOrganisation(organisation).
+                build();
 
         when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
-//        ProjectUserInviteResource projectUserInviteResource = getMapper(ProjectUserInviteMapper.class).mapToResource(projectInvite);
-//
-//        when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-//        when(projectInviteMapperMock.mapToDomain(projectUserInviteResource)).thenReturn(projectInvite);
+        ProjectUserInviteResource projectUserInviteResource = getMapper(ProjectUserInviteMapper.class).mapToResource(projectInvite);
+
+        when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(projectInviteMapperMock.mapToDomain(projectUserInviteResource)).thenReturn(projectInvite);
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
@@ -303,10 +324,10 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         Notification notification = new Notification(systemNotificationSourceMock, to, ProjectTeamServiceImpl.Notifications.INVITE_PROJECT_MEMBER, globalArguments);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        ProjectUserInvite projectInvite = newProjectUserInvite().
-                withEmail("a@b.com").
-                withName("A B").
-                build();
+//        ProjectUserInvite projectInvite = newProjectUserInvite().
+//                withEmail("a@b.com").
+//                withName("A B").
+//                build();
 
         when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
 

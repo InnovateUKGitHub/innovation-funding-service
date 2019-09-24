@@ -115,9 +115,6 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     private ViabilityProcessRepository viabilityProcessRepository;
 
     @Autowired
-    private ProjectUserInviteMapper inviteMapper;
-
-    @Autowired
     private ProjectService projectService;
 
     private LocalValidatorFactoryBean validator;
@@ -269,7 +266,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
     private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
-        ProjectUserInviteResource inviteResource = inviteMapper.mapToResource(invite);
+        ProjectUserInviteResource inviteResource = projectUserInviteMapper.mapToResource(invite);
         Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
         inviteResource.setLeadOrganisation(organisation.getName());
         ProjectResource project = projectService.getProjectById(inviteResource.getProject()).getSuccess();
@@ -304,7 +301,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                 validateUserNotAlreadyInvited(projectUserInviteResource).andOnSuccess(() ->
                         validateTargetUserIsValid(projectUserInviteResource).andOnSuccess(() -> {
 
-                            ProjectUserInvite projectInvite = inviteMapper.mapToDomain(projectUserInviteResource);
+                            ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectUserInviteResource);
                             Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
                             validator.validate(projectInvite, errors);
                             if (errors.hasErrors()) {
