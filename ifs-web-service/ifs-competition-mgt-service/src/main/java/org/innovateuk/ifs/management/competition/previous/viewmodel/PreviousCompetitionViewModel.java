@@ -26,7 +26,7 @@ public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableView
                                             List<InternalProjectSetupRow> rows,
                                             boolean hasProjectFinanceRole,
                                             boolean ifsAdmin) {
-        super(competition.getId(), competition.getName(), competition.getProjectSetupStages(), rows, hasProjectFinanceRole);
+        super(competition, rows, hasProjectFinanceRole);
         this.competitionType = competition.getCompetitionTypeName();
         this.fundingBody = "Innovate UK";
         this.applicationDeadline = toUkTimeZone(competition.getEndDate());

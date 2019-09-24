@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -83,6 +84,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private GrantOfferLetterWorkflowHandler golWorkflowHandler;
+
+    @Autowired
+    private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -503,6 +507,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates documentsStatus = isLead ? createDocumentStatus(project) : NOT_REQUIRED;
         ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
+        ProjectActivityStates projectSetupCompleteStatus = createProjectSetupCompleteStatus(project, spendProfileStatus);
 
         boolean grantOfferLetterSentToProjectTeam =
                 golWorkflowHandler.getExtendedState(project).
@@ -523,6 +528,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 grantOfferLetterStatus,
                 financeContactStatus,
                 partnerProjectLocationStatus,
+                projectSetupCompleteStatus,
                 grantOfferLetterSentToProjectTeam,
                 isLead);
     }
@@ -578,6 +584,21 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 .orElse(false);
 
         return locationPresent ? COMPLETE : ACTION_REQUIRED;
+    }
+
+    private ProjectActivityStates createProjectSetupCompleteStatus(Project project, ProjectActivityStates spendProfileStatus) {
+
+        if (!project.getApplication().getCompetition().isLoan()) {
+            return NOT_REQUIRED;
+        }
+
+        ProjectState state = projectWorkflowHandler.getState(project);
+        if (LIVE.equals(state) || UNSUCCESSFUL.equals(state)) {
+            return COMPLETE;
+        } else if (spendProfileStatus.equals(COMPLETE)) {
+            return PENDING;
+        }
+        return NOT_STARTED;
     }
 
     private ProjectActivityStates createProjectDetailsStatus(Project project) {
