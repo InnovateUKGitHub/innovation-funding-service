@@ -52,7 +52,7 @@
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
         </th:block>
 
-        <th:block th:if="${model.projectState.active && !model.isLoanCompetition}">
+        <th:block th:if="${model.projectState.active && !model.loanCompetition}">
             <div class="message-alert">
                 <th:block th:unless="${model.monitoringOfficer}">
                     <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
