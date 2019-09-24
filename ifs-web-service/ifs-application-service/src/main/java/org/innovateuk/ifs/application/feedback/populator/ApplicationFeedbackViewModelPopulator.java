@@ -135,7 +135,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 interviewFeedbackViewModel,
                 applicationTermsQuestion,
                 projectWithdrawn,
-                application.isCollaborativeProject()
+                application.isCollaborativeProject(),
+                competition.isLoan()
         );
     }
 }

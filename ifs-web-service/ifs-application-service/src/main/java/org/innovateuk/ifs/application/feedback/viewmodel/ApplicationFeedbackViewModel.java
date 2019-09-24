@@ -13,8 +13,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
-
 public class ApplicationFeedbackViewModel {
 
     private final ApplicationResource application;
@@ -50,7 +48,8 @@ public class ApplicationFeedbackViewModel {
                                         InterviewFeedbackViewModel interviewFeedbackViewModel,
                                         long applicationTermsQuestionId,
                                         boolean projectWithdrawn,
-                                        boolean collaborativeProject) {
+                                        boolean collaborativeProject,
+                                        boolean loanCompetition) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -67,7 +66,7 @@ public class ApplicationFeedbackViewModel {
         this.applicationTermsQuestionId = applicationTermsQuestionId;
         this.projectWithdrawn = projectWithdrawn;
         this.collaborativeProject = collaborativeProject;
-        this.loanCompetition = competition.getFundingType().equals(LOAN);
+        this.loanCompetition = loanCompetition;
     }
 
     public ApplicationResource getApplication() {
