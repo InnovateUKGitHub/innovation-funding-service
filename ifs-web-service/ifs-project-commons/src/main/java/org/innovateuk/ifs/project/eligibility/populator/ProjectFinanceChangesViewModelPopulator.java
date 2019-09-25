@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.eligibility.populator;
 
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -32,17 +34,22 @@ public class ProjectFinanceChangesViewModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
 
     public ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(boolean isInternal, ProjectResource project,
                                                                           OrganisationResource organisation, Long userId) {
     FinanceCheckEligibilityResource eligibilityOverview = financeCheckRestService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId()).getSuccess();
     ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
     ApplicationFinanceResource appFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccess();
+    CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
     Map<FinanceRowType, BigDecimal> sectionDifferencesMap = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
     return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(), eligibilityOverview,
             getWorkingDaysPerYearCostItemFrom(appFinanceResource.getFinanceOrganisationDetails()),
             getWorkingDaysPerYearCostItemFrom(projectFinanceResource.getFinanceOrganisationDetails()),
-            sectionDifferencesMap, projectFinanceResource.getCostChanges(), appFinanceResource.getTotal(), projectFinanceResource.getTotal());
+            sectionDifferencesMap, projectFinanceResource.getCostChanges(), appFinanceResource.getTotal(),
+            projectFinanceResource.getTotal(), competition.isLoan());
 }
 
     private LabourCost getWorkingDaysPerYearCostItemFrom(Map<FinanceRowType, FinanceRowCostCategory> financeDetails) {
