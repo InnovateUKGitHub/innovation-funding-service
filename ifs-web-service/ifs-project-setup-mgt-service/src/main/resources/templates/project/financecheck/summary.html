@@ -37,7 +37,8 @@
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
                         </dd>
-                        <dt>Other public sector funding:</dt>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Other public sector funding:</dt>
+                        <dt th:if="${model.financeCheckSummaryResource.loan}">Other funding:</dt>
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}"/>
                         </dd>

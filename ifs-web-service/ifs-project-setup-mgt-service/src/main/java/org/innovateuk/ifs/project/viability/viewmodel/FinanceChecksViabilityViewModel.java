@@ -98,7 +98,9 @@ public class FinanceChecksViabilityViewModel {
         return projectId;
     }
 
-    public Long getOrganisationId() { return organisationId; }
+    public Long getOrganisationId() {
+        return organisationId;
+    }
 
     public Integer getTotalCosts() {
         return totalCosts;
