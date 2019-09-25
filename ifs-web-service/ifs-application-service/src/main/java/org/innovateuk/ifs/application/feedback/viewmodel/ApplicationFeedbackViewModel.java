@@ -48,8 +48,7 @@ public class ApplicationFeedbackViewModel {
                                         InterviewFeedbackViewModel interviewFeedbackViewModel,
                                         long applicationTermsQuestionId,
                                         boolean projectWithdrawn,
-                                        boolean collaborativeProject,
-                                        boolean loanCompetition) {
+                                        boolean collaborativeProject) {
         this.application = application;
         this.competition = competition;
         this.leadOrganisation = leadOrganisation;
@@ -66,7 +65,7 @@ public class ApplicationFeedbackViewModel {
         this.applicationTermsQuestionId = applicationTermsQuestionId;
         this.projectWithdrawn = projectWithdrawn;
         this.collaborativeProject = collaborativeProject;
-        this.loanCompetition = loanCompetition;
+        this.loanCompetition = competition.isLoan();
     }
 
     public ApplicationResource getApplication() {
