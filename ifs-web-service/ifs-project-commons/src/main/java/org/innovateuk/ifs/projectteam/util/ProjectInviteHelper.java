@@ -49,11 +49,13 @@ public class ProjectInviteHelper {
                              long organisation,
                              BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
 
-        validateIfTryingToInviteSelf(loggedInUser.getEmail(), inviteEmail, validationHandler);
-        ProjectUserInviteResource invite = createProjectInviteResourceForNewContact(projectId, inviteName, inviteEmail, organisation);
+            validateIfTryingToInviteSelf(loggedInUser.getEmail(), inviteEmail, validationHandler);
+            ProjectUserInviteResource invite = createProjectInviteResourceForNewContact(projectId, inviteName, inviteEmail, organisation);
 
-        ServiceResult<Void> inviteResult = sendInvite.apply(projectId, invite);
-        return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                ServiceResult<Void> inviteResult = sendInvite.apply(projectId, invite);
+                return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+            });
     }
 
     private void validateIfTryingToInviteSelf(String loggedInUserEmail,

@@ -4,7 +4,6 @@ package org.innovateuk.ifs.invite.transactional;
 import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,14 +60,6 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
 
     @Autowired
     private OrganisationRepository organisationRepository;
-
-    private LocalValidatorFactoryBean validator;
-
-    public ProjectInviteServiceImpl() {
-        validator = new LocalValidatorFactoryBean();
-        validator.setProviderClass(HibernateValidator.class);
-        validator.afterPropertiesSet();
-    }
 
     @Override
     protected Class<ProjectUserInvite> getInviteClass() {

@@ -27,8 +27,4 @@ public class ProjectTeamRestServiceImpl extends BaseRestService implements Proje
         return postWithRestResult(format(projectTeamRestURL + "/%d", projectId, "remove-invite", inviteId));
     }
 
-    @Override
-    public RestResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
-        return postWithRestResult(format(projectTeamRestURL , "save-invite"), projectUserInviteResource, Void.class);
-    }
 }

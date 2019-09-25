@@ -39,5 +39,4 @@ public class ProjectTeamController {
                                              @RequestBody @Valid final ProjectUserInviteResource inviteResource) {
         return projectTeamService.inviteTeamMember(projectId, inviteResource).toPostResponse();
     }
-
 }
