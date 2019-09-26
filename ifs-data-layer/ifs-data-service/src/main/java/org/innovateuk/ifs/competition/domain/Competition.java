@@ -734,6 +734,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return FundingType.LOAN.equals(fundingType);
     }
 
+    public boolean isGrant() {
+        return FundingType.GRANT.equals(fundingType);
+    }
+
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }

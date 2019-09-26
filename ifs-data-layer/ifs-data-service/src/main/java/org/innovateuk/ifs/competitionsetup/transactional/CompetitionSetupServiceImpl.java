@@ -427,11 +427,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private List<CompetitionDocument> createDefaultProjectDocuments(Competition competition) {
 
-        FileType pdfFileType = fileTypeRepository.findByName("PDF");
-
         List<CompetitionDocument> defaultCompetitionDocuments = new ArrayList<>();
-        defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
-        defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
+
+        if (competition.isGrant()) {
+            FileType pdfFileType = fileTypeRepository.findByName("PDF");
+            defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
+            defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
+        }
 
         return defaultCompetitionDocuments;
     }
