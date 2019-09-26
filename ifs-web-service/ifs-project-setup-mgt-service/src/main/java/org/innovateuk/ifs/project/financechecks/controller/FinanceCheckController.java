@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +27,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.function.Supplier;
-
-import static java.lang.String.format;
 
 /**
  * This controller is for allowing internal users to view and update application finances entered by applicants.
@@ -53,14 +52,14 @@ public class FinanceCheckController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
-    public String viewFinanceCheckSummary(@PathVariable long projectId, Model model,
+    public String viewFinanceCheckSummary(@P("projectId")@PathVariable Long projectId, Model model,
                                           @ModelAttribute(binding = false) FinanceCheckSummaryForm form) {
         return doViewFinanceCheckSummary(projectId, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping("/generate")
-    public String generateSpendProfile(@PathVariable long projectId, Model model,
+    public String generateSpendProfile(@P("projectId")@PathVariable Long projectId, Model model,
                                        @ModelAttribute FinanceCheckSummaryForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
@@ -75,8 +74,8 @@ public class FinanceCheckController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping("/organisation/{organisationId}/jes-file")
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@PathVariable long projectId,
-                                                                           @PathVariable("organisationId") long organisationId) {
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@P("projectId")@PathVariable("projectId") final Long projectId,
+                                                                           @PathVariable("organisationId") Long organisationId) {
 
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
@@ -93,14 +92,15 @@ public class FinanceCheckController {
 
     }
 
-    private String doViewFinanceCheckSummary(long projectId, Model model) {
+    private String doViewFinanceCheckSummary(Long projectId, Model model) {
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
         boolean projectIsActive = projectService.getById(projectId).getProjectState().isActive();
         model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource, projectIsActive));
         return "project/financecheck/summary";
     }
 
-    private static String redirectToViewFinanceCheckSummary(long projectId) {
-        return format("redirect:/project/%d/finance-check", projectId);
+    private String redirectToViewFinanceCheckSummary(Long projectId) {
+        return "redirect:/project/" + projectId + "/finance-check";
     }
+
 }

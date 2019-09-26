@@ -200,11 +200,16 @@ internal user assign MO to loan project
 
 internal user generate SP
     the user navigates to the page           ${loan_finance_checks}
-    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) span:contains("Complete")
     the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(3) span:contains("Not set")
     the user should see the element          jQuery = dt:contains("Other funding")
     the user should see the element          jQuery = dt:contains("Funding sought")
     the user should see the element          jQuery = dt:contains("Total percentage loan")
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user selects the checkbox            project-viable
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link          css = #confirm-button
+    the user clicks the button/link          jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
+    the user clicks the button/link          link = Return to finance checks
     the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
     the user selects the checkbox            project-eligible
     the user selects the option from the drop-down menu  Green  id = rag-rating
@@ -212,7 +217,6 @@ internal user generate SP
     the user clicks the button/link          css = [name="confirm-eligibility"]
     the user should see the element          jQuery = .govuk-body:contains("The organisation’s finance eligibility has been approved by")
     the user clicks the button/link          link = Return to finance checks
-    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
     the user clicks the button/link          css = .generate-spend-profile-main-button
     the user clicks the button/link          css = #generate-spend-profile-modal-button
     the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check-overview

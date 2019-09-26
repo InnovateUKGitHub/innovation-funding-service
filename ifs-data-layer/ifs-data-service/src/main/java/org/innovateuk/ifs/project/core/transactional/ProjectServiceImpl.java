@@ -201,7 +201,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    private ServiceResult<ProjectResource> createProjectFromApplicationId(final long applicationId) {
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
 

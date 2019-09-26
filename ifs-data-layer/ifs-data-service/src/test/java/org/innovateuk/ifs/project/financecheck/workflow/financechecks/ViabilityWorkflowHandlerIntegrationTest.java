@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.financecheck.workflow.financechecks;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -21,9 +20,6 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertTrue;
@@ -44,14 +40,8 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void projectCreated() {
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation()
-                .withProject(newProject()
-                        .withApplication(newApplication()
-                                .withCompetition(newCompetition().withFundingType(FundingType.GRANT).build()
-                                ).build()
-                        ).build()
-                ).build();
+    public void testProjectCreated() {
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectUser projectUser = newProjectUser().build();
 
         // Call the workflow here
@@ -70,32 +60,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void projectCreated_loan() {
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation()
-                .withProject(newProject()
-                        .withApplication(newApplication()
-                                .withCompetition(newCompetition().withFundingType(FundingType.LOAN).build()
-                                ).build()
-                        ).build()
-                ).build();
-        ProjectUser projectUser = newProjectUser().build();
-
-        // Call the workflow here
-        boolean result = viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
-
-        assertTrue(result);
-
-        // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
-        // This can be done by building the expected ViabilityProcess object (say X) and verifying that X was the object that was saved.
-        ViabilityProcess expectedViabilityProcess = new ViabilityProcess(projectUser, partnerOrganisation, ViabilityState.COMPLETED_OFFLINE);
-
-        // Ensure the correct event was fired by the workflow
-        expectedViabilityProcess.setProcessEvent(ViabilityEvent.PROJECT_CREATED.getType());
-
-        verify(viabilityProcessRepositoryMock).save(expectedViabilityProcess);
-    }
-    @Test
-    public void viabilityApproved() {
+    public void testViabilityApproved() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, internalUser)),
 
@@ -104,7 +69,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void viabilityNotApplicable() {
+    public void testViabilityNotApplicable() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, internalUser)),
 
