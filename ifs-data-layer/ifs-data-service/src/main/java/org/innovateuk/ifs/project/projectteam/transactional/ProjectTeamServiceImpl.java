@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
@@ -270,13 +271,13 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     private ServiceResult<Void> inviteContact(long projectId, ProjectUserInviteResource requestedInvite, Notifications kindOfNotification) {
         ProjectUserInviteResource inviteResource = getSavedInvite(projectId, requestedInvite).orElseThrow(() -> new ForbiddenActionException("Missing Invite Resource"));
 
-        ProjectUserInvite invite = projectUserInviteMapper.mapToDomain(inviteResource);
-        invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
-        projectUserInviteRepository.save(invite);
+                    ProjectUserInvite invite = projectUserInviteMapper.mapToDomain(inviteResource);
+                    invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+                    projectUserInviteRepository.save(invite);
 
-        Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(invite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, inviteResource));
+            Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(invite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, inviteResource));
 
-        return notificationService.sendNotificationWithFlush(notification, EMAIL);
+            return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
