@@ -41,7 +41,12 @@ public class ApplicationReadOnlyData {
     private final Multimap<Long, AssessorFormInputResponseResource> questionToAssessorResponse;
 
 
-    public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition, UserResource user, Optional<ProcessRoleResource> applicantProcessRole, List<QuestionResource> questions, List<FormInputResource> formInputs, List<FormInputResponseResource> formInputResponses, List<QuestionStatusResource> questionStatuses, List<AssessorFormInputResponseResource> assessorResponses) {
+    public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition,
+                                   UserResource user, Optional<ProcessRoleResource> applicantProcessRole,
+                                   List<QuestionResource> questions, List<FormInputResource> formInputs,
+                                   List<FormInputResponseResource> formInputResponses,
+                                   List<QuestionStatusResource> questionStatuses,
+                                   List<AssessorFormInputResponseResource> assessorResponses) {
         this.application = application;
         this.competition = competition;
         this.user = user;
@@ -49,7 +54,8 @@ public class ApplicationReadOnlyData {
 
         this.questionIdToQuestion = questions.stream()
                 .collect(toMap(QuestionResource::getId, Function.identity()));
-        this.questionIdToApplicationFormInputs = Multimaps.index(formInputs.stream().filter(input -> APPLICATION.equals(input.getScope())).collect(Collectors.toSet()),
+        this.questionIdToApplicationFormInputs = Multimaps.index(formInputs.stream()
+                        .filter(input -> APPLICATION.equals(input.getScope())).collect(Collectors.toSet()),
                 FormInputResource::getQuestion);
         this.formInputIdToAssessorFormInput = formInputs.stream()
                 .filter(input -> ASSESSMENT.equals(input.getScope()))

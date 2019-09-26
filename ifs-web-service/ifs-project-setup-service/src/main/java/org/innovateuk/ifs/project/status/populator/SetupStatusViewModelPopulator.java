@@ -61,7 +61,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        boolean  monitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
+        boolean monitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
 
         List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer))
@@ -70,7 +70,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return new SetupStatusViewModel(
                 project,
                 monitoringOfficer,
-                stages);
+                stages,
+                competition.isLoan());
     }
 
     private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer) {
@@ -196,7 +197,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         String.format("/project/%d/setup", project.getId()),
                         projectSetupCompleteStatus,
                         statusAccessor.canAccessSetupSection(),
-                        projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-assignment"
+                        projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-review"
                 );
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());

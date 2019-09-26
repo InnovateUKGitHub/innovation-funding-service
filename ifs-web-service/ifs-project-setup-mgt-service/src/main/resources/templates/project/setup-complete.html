@@ -32,7 +32,7 @@
             <div th:if="${model.state.unsuccessful}" class="success-alert govuk-!-margin-bottom-4">
                 <p class="govuk-body">Project setup is complete and was unsuccessful.</p>
             </div>
-            <p class="govuk-body">Innovate UK and the organisation can view the project but can no longer make changes online. This cannot be undone.</p>
+            <p class="govuk-body">Innovate UK and the organisation can view the project but can no longer make changes online.</p>
             <p class="govuk-body"><a th:href="@{/competition/{id}/status(id=${model.competitionId})}">Return to project setup</a></p>
         </th:block>
         <th:block th:unless="${model.readonly}">
@@ -86,7 +86,7 @@
                                                     </h1>
                                                 </legend>
                                                 <p id="successful-hint" class="govuk-body">
-                                                    Are you sure? This cannot be reversed. Innovate UK and the partners
+                                                    Are you sure? This cannot be reversed. Innovate UK and the organisation
                                                     can still view the project but will no longer be able to make changes.
                                                 </p>
                                                 <th:block th:if="${#fields.hasErrors('successfulConfirmation')}">
@@ -137,7 +137,7 @@
                                                     </h1>
                                                 </legend>
                                                 <p id="unsuccessful-hint" class="govuk-body">
-                                                    Are you sure? This cannot be reversed. Innovate UK and the partners
+                                                    Are you sure? This cannot be reversed. Innovate UK and the organisation
                                                     can still view the project but will no longer be able to make changes.
                                                 </p>
                                                 <th:block th:if="${#fields.hasErrors('unsuccessfulConfirmation')}">

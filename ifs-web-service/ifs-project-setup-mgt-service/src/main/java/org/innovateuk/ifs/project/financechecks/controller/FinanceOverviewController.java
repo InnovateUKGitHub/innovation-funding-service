@@ -75,7 +75,7 @@ public class FinanceOverviewController {
         boolean canChangeFunding = competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT)
                 && !financeCheckSummary.isSpendProfilesGenerated();
         return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(project, sortedOrganisations, competition),
-                getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition), applicationId, canChangeFunding);
+                getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition), applicationId, canChangeFunding, competition.isLoan());
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {

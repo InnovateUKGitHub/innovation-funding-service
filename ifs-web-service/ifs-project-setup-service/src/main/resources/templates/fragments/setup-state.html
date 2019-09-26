@@ -1,75 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="content" xmlns:th="http://www.w3.org/1999/html">
-    <th:block th:if="${model.isInSetup()}">
-        <div class="govuk-panel style1 govuk-!-margin-bottom-9">
-            <h2 class="govuk-panel__title">Your project will be reviewed by Innovate UK</h2>
-            <div class="govuk-panel__body govuk-!-font-size-19">
-                Project setup for the competition '<span th:text="${model.competitionName}"/>'<br/>
-                was submitted on
-                <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
-                at
-                <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
-                .
-            </div>
+<th:block th:fragment="active" xmlns:th="http://www.w3.org/1999/html">
+    <div class="govuk-panel govuk-panel--confirmation-outline govuk-!-margin-bottom-9">
+        <h2 class="govuk-panel__title">Your project will be reviewed<br/> by Innovate UK</h2>
+        <div class="govuk-panel__body govuk-!-font-size-19">
+            Project setup for the competition '<span th:text="${model.competitionName}"/>'<br/>
+            was submitted on
+            <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
+            at
+            <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
+            .
         </div>
+    </div>
 
-        <h2 class="govuk-heading-l">What happens next?</h2>
+    <h2 class="govuk-heading-l">What happens next?</h2>
 
-        <p class="govuk-body">Thank you for completing project setup. Your application will be handled offline by our
-            Innovation
-            Loans team</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>Completion of documentation further to your conditional loan offer</li>
-            <li>Satisfaction of all loan conditions, including a management presentation to the Innonovate UK Loans Ltd
-                credit
-                committee
-            </li>
-            <li>Project start and first drawdown of the loan</li>
-        </ul>
+    <p class="govuk-body">Thank you for completing project setup. Your application will be handled offline by our
+        Innovation
+        Loans team</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>Completion of documentation further to your conditional loan offer</li>
+        <li>Satisfaction of all loan conditions, including a management presentation to the Innonovate UK Loans Ltd
+            credit
+            committee
+        </li>
+        <li>Project start and first drawdown of the loan</li>
+    </ul>
+</th:block>
 
-    </th:block>
-
-    <th:block th:if="${model.isSuccessful()}">
-
-        <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
-            <h2 class="govuk-panel__title">We have approved your loan application</h2>
-            <div class="govuk-panel__body govuk-!-font-size-19">
-                Application accepted for '<span th:text="${model.competitionName}"/>'<br/>
-                was submitted on
-                <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
-                at
-                <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
-                .
-            </div>
+<th:block th:fragment="successful" xmlns:th="http://www.w3.org/1999/html">
+    <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
+        <h2 class="govuk-panel__title">We have approved your loan application</h2>
+        <div class="govuk-panel__body govuk-!-font-size-19">
+            Application accepted for '<span th:text="${model.competitionName}"/>'<br/>
+            was submitted on
+            <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
+            at
+            <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
+            .
         </div>
+    </div>
 
-        <h2 class="govuk-heading-l">What happens next?</h2>
+    <h2 class="govuk-heading-l">What happens next?</h2>
 
-        <ul class="govuk-list govuk-list--bullet">
-            <li>Your monitoring officer will be in touch to speak to you about your  project</li>
-            <li>Your credit specialist will be in touch to speak to you about your loan</li>
-        </ul>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>Your monitoring officer will be in touch to speak to you about your  project</li>
+        <li>Your credit specialist will be in touch to speak to you about your loan</li>
+    </ul>
+</th:block>
 
-    </th:block>
-
-    <th:block th:if="${model.isUnsuccessful()}">
-
-        <div class="govuk-panel style2 govuk-!-margin-bottom-9">
-            <h2>Your loan application has not been successful in this competition</h2>
-            <div class="govuk-panel__body govuk-!-font-size-19">
-                Application unsuccessful for '<span th:text="${model.competitionName}"/>'<br/>
-                was submitted on
-                <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
-                at
-                <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
-                .
-            </div>
+<th:block th:fragment="unsuccessful" xmlns:th="http://www.w3.org/1999/html">
+    <div class="govuk-panel govuk-panel--grey govuk-!-margin-bottom-9">
+        <h2 class="govuk-panel__title">Your loan application has not been successful in this competition</h2>
+        <div class="govuk-panel__body govuk-!-font-size-19">
+            Application unsuccessful for '<span th:text="${model.competitionName}"/>'<br/>
+            was submitted on
+            <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
+            at
+            <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
+            .
         </div>
-
-    </th:block>
-
+    </div>
 </th:block>
 
 </html>

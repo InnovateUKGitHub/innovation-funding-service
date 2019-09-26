@@ -5,17 +5,17 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 
 import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
+import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * Validates the inputs in the application details, if valid on the markAsComplete action
- *
  */
 @Component
 public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
@@ -35,18 +35,18 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
 
         Application application = (Application) target;
 
-        if (StringUtils.isEmpty(application.getName())) {
+        if (isEmpty(application.getName())) {
             LOG.debug("MarkAsComplete application details validation message for name: " + application.getName());
             rejectValue(errors, "name", "validation.project.name.must.not.be.empty");
         }
 
-        if (StringUtils.isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
+        if (isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
             LOG.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
             rejectValue(errors, "startDate", "validation.project.start.date.not.in.future");
         }
 
         Competition competition = application.getCompetition();
-        if (StringUtils.isEmpty(application.getDurationInMonths())){
+        if (isEmpty(application.getDurationInMonths())) {
             LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
             rejectValue(errors, "durationInMonths", "validation.field.must.not.be.blank");
         } else if (application.getDurationInMonths() < competition.getMinProjectDuration()
@@ -61,6 +61,23 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
             );
         }
 
+        if (competition.getFundingType() == PROCUREMENT) {
+            if (isEmpty(application.getCompetitionReferralSource())) {
+                LOG.debug("MarkAsComplete application details validation message for competition Referral Source: " + application.getName());
+                rejectValue(errors, "competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
+            }
+
+            if (isEmpty(application.getCompanyAge())) {
+                LOG.debug("MarkAsComplete application details validation message for company age: " + application.getName());
+                rejectValue(errors, "companyAge", "validation.application.procurement.companyage.required");
+            }
+
+            if (isEmpty(application.getCompanyPrimaryFocus())) {
+                LOG.debug("MarkAsComplete application details validation message for company primary focus: " + application.getName());
+                rejectValue(errors, "companyPrimaryFocus", "validation.application.procurement.companyprimaryfocus.required");
+            }
+        }
+
         if (!applicationInnovationAreaIsInCorrectState(application)) {
             LOG.debug("MarkAsComplete application details validation message for innovation area: " + application.getInnovationArea());
             rejectValue(errors, "innovationArea", "validation.application.innovationarea.category.required");
@@ -68,11 +85,11 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
 
         if (application.getResubmission() != null) {
             if (application.getResubmission()) {
-                if (StringUtils.isEmpty(application.getPreviousApplicationNumber())) {
+                if (isEmpty(application.getPreviousApplicationNumber())) {
                     LOG.debug("MarkAsComplete application details validation message for previous application number: " + application.getPreviousApplicationNumber());
                     rejectValue(errors, "previousApplicationNumber", "validation.application.previous.application.number.required");
                 }
-                if (StringUtils.isEmpty(application.getPreviousApplicationTitle())) {
+                if (isEmpty(application.getPreviousApplicationTitle())) {
                     LOG.debug("MarkAsComplete application details validation message for previous application title: " + application.getPreviousApplicationTitle());
                     rejectValue(errors, "previousApplicationTitle", "validation.application.previous.application.title.required");
                 }
@@ -84,6 +101,6 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
     }
 
     private boolean applicationInnovationAreaIsInCorrectState(Application application) {
-        return application.getNoInnovationAreaApplicable() == true || (application.getNoInnovationAreaApplicable() == false && application.getInnovationArea() !=null);
+        return application.getNoInnovationAreaApplicable() == true || (application.getNoInnovationAreaApplicable() == false && application.getInnovationArea() != null);
     }
 }
