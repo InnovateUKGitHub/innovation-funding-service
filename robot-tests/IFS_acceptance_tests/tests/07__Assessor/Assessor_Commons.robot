@@ -99,7 +99,7 @@ the user should see the competition details
     [Arguments]  ${comp_name}  ${comp_status}  ${sector}  ${area}  ${link}  ${link2}
     the user should see the element      jQuery =.govuk-caption-l:contains("${comp_name}")
     the user should see the element      jQuery =h1:contains("${comp_status}")
-    the user should see the element      jQuery = dt:contains("Competition type") ~ dd:contains("Advanced Propulsion Centre")
+    the user should see the element      jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
     the user should see the element      jQuery = dt:contains("Innovation sector") ~ dd:contains("${sector}")
     the user should see the element      jQuery = dt:contains("Innovation area") ~ dd:contains("${area}")
     #The following checks test if the correct buttons are disabled
@@ -108,7 +108,8 @@ the user should see the competition details
     the user should see the element      jQuery = a:contains("${link2}")
 
 comp admin navigate to manage applications
-    the user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    [Arguments]   ${comp_name}
+    the user clicks the button/link       link = ${comp_name}
     the user clicks the button/link       jQuery = a:contains("Manage assessments")
     the user clicks the button/link       jQuery = a:contains("Manage applications")
 

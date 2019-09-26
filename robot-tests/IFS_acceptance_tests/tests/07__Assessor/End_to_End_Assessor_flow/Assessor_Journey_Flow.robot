@@ -8,6 +8,11 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../Assessor_Commons.robot
 Resource          ../../04__Applicant/Applicant_Commons.robot
 
+*** Variables ***
+${Assessment_Comp_title}    Assessments of load capabilities
+${Assessment_Comp__Id}  ${competition_ids['${Assessment_Comp_title}']}
+${Assessor_dashboard}    ${server}/assessment/assessor/dashboard/competition/${Assessment_Comp__Id}
+
 *** Test Cases ***
 Invite a new Assessor to assess a competition
     [Documentation]    INFUND-8092
@@ -19,7 +24,7 @@ Invite a new Assessor to assess a competition
 Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
     [Tags]  HappyPath
-    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}  Invitation to assess 'Assessments of load capabilities'  This is custom text  1
+    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}  Invitation to assess '${Assessment_Comp_title}'  This is custom text  1
     [Teardown]  Delete the emails from the local test mailbox
 
 Resend the invite to the assessor again
@@ -42,7 +47,7 @@ New assessor can login with the new account
     [Documentation]    INFUND-8092
     [Tags]  HappyPath
     Given Invited guest user log in       &{Assessor_e2e}
-    Then The user should see the element  link = Assessments of load capabilities
+    Then The user should see the element  link = ${Assessment_Comp_title}
 
 New assessor should have the correct innovation area
     [Documentation]    INFUND-8092
@@ -53,7 +58,7 @@ New assessor has no assements
     [Documentation]  INFUND-9007
     [Tags]  HappyPath
     Given The user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
-    Then the user should see the element           jQuery = h3:contains("Assessments of load capabilities") ~ div:contains("There are currently no assessments for you to review.")
+    Then the user should see the element           jQuery = h3:contains("${Assessment_Comp_title}") ~ div:contains("There are currently no assessments for you to review.")
 
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
@@ -65,7 +70,7 @@ CompAdmin should see Assessor's profile and Innovation Area
 CompAdmin Invites assessor to assess an application
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link       link = Dashboard
-    Given comp admin navigate to manage applications
+    Given comp admin navigate to manage applications   ${Assessment_Comp_title}
     Then comp admin allocate application to an assessor
 
 New assessor has one assessment to accept
@@ -84,7 +89,7 @@ Assessor accepts the invite for the Application
     [Tags]  HappyPath
     Given Invited guest user log in                         &{Assessor_e2e}
     When Invited user accept the invitation
-    Then the user should be redirected to the correct page  ${Assessor_application_dashboard}
+    Then the user should be redirected to the correct page  ${Assessor_dashboard}
 
 New assessor has one assessment
     [Documentation]  INFUND-9007
@@ -140,7 +145,7 @@ The user fills and submits the registration form
 comp admin logs in and navigate to invite assessor page
     [Arguments]  ${tab_name}
     the user logs-in in new browser      &{Comp_admin1_credentials}
-    the user clicks the button/link      link = Assessments of load capabilities
+    the user clicks the button/link      link = ${Assessment_Comp_title}
     the user clicks the button/link      jQuery = a:contains("Invite assessors to assess the competition")
     the user clicks the button/link      link = ${tab_name}
 
@@ -156,10 +161,10 @@ comp admin resend invite to an assessor
     the user clicks the button/link      jQuery = .govuk-button:contains("Send invite")
 
 Resent email can be read by the invited user
-    the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess 'Assessments of load capabilities'    Assessment period:  1
+    the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${Assessment_Comp_title}'    Assessment period:  1
 
 Invited user accept the invitation and navigate to registration form
-    the user should see the element         jQuery = h1:contains("Invitation to assess 'Assessments of load capabilities'")
+    the user should see the element         jQuery = h1:contains("Invitation to assess '${Assessment_Comp_title}'")
     the user selects the radio button       acceptInvitation  true
     the user clicks the button/link         jQuery = button:contains("Confirm")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create account")
@@ -167,8 +172,6 @@ Invited user accept the invitation and navigate to registration form
 
 comp admin allocate application to an assessor
     the user clicks the button/link        jQuery = tr:nth-child(1) a:contains("View progress")
-    the user clicks the button/link        jQuery = a:contains("21")
-    the user clicks the button/link        jQuery = a:contains("41")
     the user clicks the button/link        jQuery = tr:contains("Tom Fister") button:contains("Assign")
     the user clicks the button/link        jQuery = a:contains("Allocate applications")
     the user clicks the button/link        jQuery = a:contains("Manage assessments")
@@ -177,6 +180,6 @@ comp admin allocate application to an assessor
     the element should be disabled         jQuery = button:contains("Notify assessors")
 
 Invited user accept the invitation
-    the user clicks the button/link          Link = Park living
+    the user clicks the button/link          Link = Application for load 1
     the user selects the radio button        assessmentAccept  true
     the user clicks the button/link          jQuery = button:contains("Confirm")

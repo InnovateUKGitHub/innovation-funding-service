@@ -38,7 +38,7 @@ ${Intelligent_water}   ${application_ids['Intelligent water system']}
 View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
-    Given comp admin navigate to manage applications
+    Given comp admin navigate to manage applications     ${IN_ASSESSMENT_COMPETITION_NAME}
     Then the application list is correct before changes
     [Teardown]  the user clicks the button/link  link = Manage assessments
 
@@ -174,7 +174,7 @@ Remove and notify an assessor (Notified)
     [Documentation]    INFUND-7232
     [Tags]
     [Setup]    Log in as a different user         &{Comp_admin1_credentials}
-    Given comp admin navigate to manage applications
+    Given comp admin navigate to manage applications   ${IN_ASSESSMENT_COMPETITION_NAME}
     Then the user removes assessor from assigned application and notify
     And the previously assigned list is correct
 
@@ -188,7 +188,7 @@ Reassign and notify an assessor (Notified)
     [Documentation]    INFUND-7048
     [Tags]
     [Setup]    Log in as a different user          &{Comp_admin1_credentials}
-    Given comp admin navigate to manage applications
+    Given comp admin navigate to manage applications    ${IN_ASSESSMENT_COMPETITION_NAME}
     When the user resign assessor to an application
     Then the comp admin notify an assessor
 

@@ -127,6 +127,8 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
     [Documentation]    IFS-3977  IFS-3978
     [Tags]  HappyPath
     Given log in as a different user          &{monitoring_officer_one_credentials}
+    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    the user should see the element    id = dashboard-link-MONITORING_OFFICER
+    Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link    id = dashboard-link-MONITORING_OFFICER
     Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
 
 Monitoring officer see the project setup veiw for assigned project
@@ -300,7 +302,7 @@ The user should see the project set view
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Bank details")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Finance checks")
     the user should see the element    jQuery = .progress-list h2:contains("Spend profile")
-    the user should see the element    jQuery = .progress-list .read-only h2:contains("Grant offer letter")
+    the user should see the element    jQuery = .progress-list h2:contains("Grant offer letter")
 
 The user enters the details
     the user enters text to a text field    id = firstName  Tom
