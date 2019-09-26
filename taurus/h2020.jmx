@@ -227,7 +227,7 @@
       </ThreadGroup>
       <hashTree>
         <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="User number counter" enabled="true">
-          <stringProp name="CounterConfig.start">2</stringProp>
+          <stringProp name="CounterConfig.start">1</stringProp>
           <stringProp name="CounterConfig.end">${__P(H2020_users)}</stringProp>
           <stringProp name="CounterConfig.incr">1</stringProp>
           <stringProp name="CounterConfig.name">user_number</stringProp>
