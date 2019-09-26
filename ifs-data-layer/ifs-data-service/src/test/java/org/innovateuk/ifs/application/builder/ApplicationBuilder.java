@@ -139,5 +139,15 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((project, application) -> application.setProject(project), projects);
     }
 
+    public ApplicationBuilder withResubmission(Boolean... resubmissions) {
+        return withArray((resubmission, application) -> application.setResubmission(resubmission), resubmissions);
+    }
 
+    public ApplicationBuilder withPreviousApplicationNumber(String... numbers) {
+        return withArray((number, application) -> application.setPreviousApplicationNumber(number), numbers);
+    }
+
+    public ApplicationBuilder withPreviousApplicationTitle(String... titles) {
+        return withArray((title, application) -> application.setPreviousApplicationTitle(title), titles);
+    }
 }
