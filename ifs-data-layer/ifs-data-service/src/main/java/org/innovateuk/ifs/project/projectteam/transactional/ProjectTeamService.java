@@ -19,5 +19,4 @@ public interface ProjectTeamService {
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteTeamMember(long projectId, ProjectUserInviteResource inviteResource);
-
 }

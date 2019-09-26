@@ -10,6 +10,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
@@ -58,6 +59,9 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     @Mock
     private OrganisationRepository organisationRepositoryMock;
 
+    @Mock
+    private ProjectUserRepository projectUserRepositoryMock;
+
     @Test
     public void acceptProjectInvite_success() {
 
@@ -80,6 +84,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectUserInviteRepositoryMock.save(projectInvite)).thenReturn(projectInvite);
         when(projectServiceMock.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId())).thenReturn(serviceSuccess(projectUser));
+        when(projectUserRepositoryMock.save(projectUser)).thenReturn(projectUser);
 
         ServiceResult<Void> result = projectInviteService.acceptProjectInvite(projectInvite.getHash(), user.getId());
         assertTrue(result.isSuccess());

@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.project.projectteam.transactional;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
@@ -14,7 +13,6 @@ import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
-import org.innovateuk.ifs.invite.transactional.ProjectInviteServiceImpl;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -25,9 +23,9 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
@@ -46,9 +44,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
@@ -58,8 +53,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
+import static com.beust.jcommander.internal.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -79,7 +73,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implements ProjectTeamService {
 
     private static final String WEB_CONTEXT = "/project-setup";
-    private static final Log LOG = LogFactory.getLog(ProjectInviteServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ProjectTeamServiceImpl.class);
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
@@ -100,6 +94,9 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     private ProjectUserInviteMapper projectUserInviteMapper;
 
     @Autowired
+    private ProjectMapper projectMapper;
+
+    @Autowired
     private EligibilityProcessRepository eligibilityProcessRepository;
 
     @Autowired
@@ -114,11 +111,6 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     @Autowired
     private ViabilityProcessRepository viabilityProcessRepository;
 
-    @Autowired
-    private ProjectService projectService;
-
-    private LocalValidatorFactoryBean validator;
-
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -126,34 +118,28 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
         INVITE_PROJECT_MEMBER
     }
 
-    public ProjectTeamServiceImpl() {
-        validator = new LocalValidatorFactoryBean();
-        validator.setProviderClass(HibernateValidator.class);
-        validator.afterPropertiesSet();
-    }
-
     @Override
     @Transactional
     public ServiceResult<Void> removeInvite(long inviteId, long projectId) {
         return getInvite(inviteId)
                 .andOnSuccess(invite -> getProject(projectId)
-                    .andOnSuccess(project -> validateInvite(invite, project)
-                        .andOnSuccess(() -> deleteInvite(invite)
+                        .andOnSuccess(project -> validateInvite(invite, project)
+                                .andOnSuccess(() -> deleteInvite(invite)
+                                )
                         )
-                    )
                 );
     }
 
     private ServiceResult<ProjectUserInvite> getInvite(long inviteId) {
         return find(projectUserInviteRepository.findById(inviteId),
-                    notFoundError(ProjectUserInvite.class, inviteId));
+                notFoundError(ProjectUserInvite.class, inviteId));
     }
 
     private ServiceResult<Void> validateInvite(ProjectUserInvite invite, Project project) {
-        if(!invite.getTarget().equals(project)) {
+        if (!invite.getTarget().equals(project)) {
             return serviceFailure(PROJECT_INVITE_NOT_FOR_CORRECT_PROJECT);
         }
-        if(!invite.getStatus().equals(InviteStatus.SENT)) {
+        if (!invite.getStatus().equals(InviteStatus.SENT)) {
             return serviceFailure(PROJECT_INVITE_ALREADY_OPENED);
         }
         return serviceSuccess();
@@ -173,7 +159,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                                 () -> validateUserNotRemovingThemselves(composite.getUserId()).andOnSuccess(
                                         () -> migrateProcessesFromUserIfNecessary(composite.getUserId(), project).andOnSuccess(
                                                 migratedProject -> removeUserFromProject(composite.getUserId(), migratedProject)))
-                )));
+                        )));
     }
 
     private ServiceResult<Void> validateUserNotPm(Project project, long userId) {
@@ -197,7 +183,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     private boolean userHasRoleOnProject(ProjectParticipantRole role, long userId, Project project) {
         return simpleAnyMatch(project.getProjectUsersWithRole(role),
-                              pu -> pu.getUser().getId().equals(userId));
+                pu -> pu.getUser().getId().equals(userId));
     }
 
     private ServiceResult<Void> removeUserFromProject(long userId, Project project) {
@@ -256,21 +242,19 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
 
-    public ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId) {
+    private ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId) {
         if (projectId == null) {
             return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
         }
         List<ProjectUserInvite> invites = projectUserInviteRepository.findByProjectId(projectId);
         List<ProjectUserInviteResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
-        return serviceSuccess(Lists.newArrayList(inviteResources));
+        return serviceSuccess(inviteResources);
     }
 
     private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
         ProjectUserInviteResource inviteResource = projectUserInviteMapper.mapToResource(invite);
         Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
         inviteResource.setLeadOrganisation(organisation.getName());
-        ProjectResource project = projectService.getProjectById(inviteResource.getProject()).getSuccess();
-        inviteResource.setApplicationId(project.getApplication());
         return inviteResource;
     }
 
@@ -284,7 +268,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
     private ServiceResult<Void> inviteContact(long projectId, ProjectUserInviteResource requestedInvite, Notifications kindOfNotification) {
-        ProjectUserInviteResource inviteResource = getSavedInvite(projectId, requestedInvite).orElseThrow(() -> new RuntimeException("Unexpected missing invite."));
+        ProjectUserInviteResource inviteResource = getSavedInvite(projectId, requestedInvite).orElseThrow(() -> new ForbiddenActionException("Missing Invite Resource"));
 
         ProjectUserInvite invite = projectUserInviteMapper.mapToDomain(inviteResource);
         invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
@@ -302,18 +286,12 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                         validateTargetUserIsValid(projectUserInviteResource).andOnSuccess(() -> {
 
                             ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectUserInviteResource);
-                            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
-                            validator.validate(projectInvite, errors);
-                            if (errors.hasErrors()) {
-                                errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
-                                return serviceFailure(badRequestError(errors.toString()));
-                            } else {
-                                projectInvite.setHash(generateInviteHash());
-                                projectUserInviteRepository.save(projectInvite);
-                                return serviceSuccess();
-                            }
+                            projectInvite.setHash(generateInviteHash());
+                            projectUserInviteRepository.save(projectInvite);
+                            return serviceSuccess();
                         })));
     }
+
     private Optional<ProjectUserInviteResource> getSavedInvite(long projectId, ProjectUserInviteResource invite) {
         return simpleFindFirst(getInvitesByProject(projectId).getSuccess(),
                 i -> i.getEmail().equals(invite.getEmail()));
@@ -332,7 +310,6 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     private ServiceResult<Void> validateTargetUserIsValid(ProjectUserInviteResource invite) {
 
         String targetEmail = invite.getEmail();
-
         Optional<User> existingUser = userRepository.findByEmail(targetEmail);
 
         return existingUser.map(user ->
@@ -377,7 +354,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
 
-    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
+    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey) {
         if (project.getGrantOfferLetter() != null) {
             return serviceFailure(failKey);
         }
