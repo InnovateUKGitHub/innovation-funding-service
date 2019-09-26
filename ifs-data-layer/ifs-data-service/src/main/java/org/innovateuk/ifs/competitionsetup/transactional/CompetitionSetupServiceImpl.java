@@ -363,7 +363,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                                     return fileEntryMapper.mapToResource(created.getValue());
                                 })
                         )
-                        .toServiceResult()
+                                .toServiceResult()
                 );
     }
 
@@ -429,16 +429,14 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         List<CompetitionDocument> defaultCompetitionDocuments = new ArrayList<>();
 
-        if (competition.isGrant()) {
-            FileType pdfFileType = fileTypeRepository.findByName("PDF");
-            defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
-            defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
-        }
+        FileType pdfFileType = fileTypeRepository.findByName("PDF");
+        defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType), competition.isGrant()));
+        defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType), competition.isGrant()));
 
         return defaultCompetitionDocuments;
     }
 
-    private CompetitionDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
+    private CompetitionDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes, boolean isGrantCompetition) {
         return new CompetitionDocument(competition, COLLABORATION_AGREEMENT_TITLE, "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
                 "\n" +
                 "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
@@ -449,10 +447,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
                 "<li>legible at 100% magnification</li>\n" +
                 "<li>less than 10MB in file size</li></ul>",
-                false, true, fileTypes);
+                false, isGrantCompetition, fileTypes);
     }
 
-    private CompetitionDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
+    private CompetitionDocument createExploitationPlan(Competition competition, List<FileType> fileTypes, boolean isGrantCompetition) {
         return new CompetitionDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
                 "\n" +
                 "<p>It should also describe partner activities that will exploit the results of the project so that:</p>\n" +
@@ -466,7 +464,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
                 "<li>legible at 100% magnification</li>\n" +
                 "<li>less than 10MB in file size</li></ul>",
-                false, true, fileTypes);
+                false, isGrantCompetition, fileTypes);
     }
 
     private Competition setCompetitionAuditableFields(Competition competition, Competition existingCompetition) {
