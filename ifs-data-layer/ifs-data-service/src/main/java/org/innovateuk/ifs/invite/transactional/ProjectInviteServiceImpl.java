@@ -76,7 +76,6 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
         Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
         inviteResource.setLeadOrganisation(organisation.getName());
         ProjectResource project = projectService.getProjectById(inviteResource.getProject()).getSuccess();
-        inviteResource.setApplicationId(project.getApplication());
         return inviteResource;
     }
 

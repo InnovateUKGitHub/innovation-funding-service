@@ -141,7 +141,6 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         OrganisationResource organisationResource = newOrganisationResource().build();
         ProjectUserInviteResource projectUserInviteResource = new ProjectUserInviteResource(userName, email, projectId);
         projectUserInviteResource.setOrganisation(organisationResource.getId());
-        projectUserInviteResource.setApplicationId(projectResource.getApplication());
         projectUserInviteResource.setLeadOrganisationId(leadOrganisation.getId());
         projectUserInviteResource.setOrganisationName(organisationResource.getName());
 

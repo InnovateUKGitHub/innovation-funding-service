@@ -18,7 +18,6 @@ public class ProjectUserInviteResourceTest {
     String nameConfirmed;
     String email;
     Long project;
-    Long applicationId;
     String hash;
     Long organisation;
     InviteStatus status;
@@ -33,7 +32,6 @@ public class ProjectUserInviteResourceTest {
         nameConfirmed = "testnameConfirmed";
         email = "test@email.test";
         project = 4L;
-        applicationId = 2L;
         hash = "123abc";
         organisation = 3L;
         status = InviteStatus.OPENED;
@@ -45,14 +43,13 @@ public class ProjectUserInviteResourceTest {
         setInviteResource.setName(name);
         setInviteResource.setNameConfirmed(nameConfirmed);
         setInviteResource.setEmail(email);
-        setInviteResource.setApplicationId(applicationId);
         setInviteResource.setHash(hash);
         setInviteResource.setOrganisation(organisation);
         setInviteResource.setStatus(status);
         setInviteResource.setCompetitionName(competitionName);
         setInviteResource.setLeadApplicant(leadApplicant);
 
-        constructedInviteResource = new ProjectUserInviteResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status, leadApplicant, competitionName);
+        constructedInviteResource = new ProjectUserInviteResource(inviteId, userId, name, email, project, organisation, hash, status, leadApplicant, competitionName);
 
     }
 
@@ -61,7 +58,6 @@ public class ProjectUserInviteResourceTest {
         assertEquals(inviteId, constructedInviteResource.getId());
         assertEquals(name, constructedInviteResource.getName());
         assertEquals(email, constructedInviteResource.getEmail());
-        assertEquals(applicationId, constructedInviteResource.getApplicationId());
         assertEquals(hash, constructedInviteResource.getHash());
         assertEquals(organisation, constructedInviteResource.getOrganisation());
         assertEquals(status, constructedInviteResource.getStatus());
@@ -76,7 +72,6 @@ public class ProjectUserInviteResourceTest {
         assertEquals(name, setInviteResource.getName());
         assertEquals(nameConfirmed, setInviteResource.getNameConfirmed());
         assertEquals(email, setInviteResource.getEmail());
-        assertEquals(applicationId, setInviteResource.getApplicationId());
         assertEquals(hash, setInviteResource.getHash());
         assertEquals(organisation, setInviteResource.getOrganisation());
         assertEquals(status, setInviteResource.getStatus());

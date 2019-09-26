@@ -444,7 +444,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         String leadOrganisationName = leadOrganisation.getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("applicationId", inviteResource.getApplicationId());
+        globalArguments.put("projectId", projectId);
         globalArguments.put("leadOrganisation", leadOrganisationName);
         globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
         globalArguments.put("competitionName", inviteResource.getCompetitionName());

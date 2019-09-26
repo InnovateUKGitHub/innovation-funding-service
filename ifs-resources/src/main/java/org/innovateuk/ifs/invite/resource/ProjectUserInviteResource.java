@@ -16,7 +16,6 @@ public class ProjectUserInviteResource extends InviteResource {
     private String nameConfirmed;
     private String email;
     private Long project;
-    private Long applicationId;
     private Long organisation;
     private String projectName;
     private String hash;
@@ -32,14 +31,13 @@ public class ProjectUserInviteResource extends InviteResource {
         // no-arg constructor
     }
 
-    public ProjectUserInviteResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatus status, String leadApplicant, String competitionName) {
+    public ProjectUserInviteResource(Long id, Long user, String name, String email, Long project, Long organisation, String hash, InviteStatus status, String leadApplicant, String competitionName) {
         this.id = id;
         this.user = user;
         this.name = name;
         this.email = email;
         this.project = project;
         this.organisation = organisation;
-        this.applicationId  = applicationId;
         this.hash = hash;
         this.status = status;
         this.competitionName = competitionName;
@@ -107,12 +105,6 @@ public class ProjectUserInviteResource extends InviteResource {
     public void setOrganisation(Long organisation) {
         this.organisation = organisation;
     }
-
-    public Long getApplicationId() {
-        return applicationId; }
-
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId; }
 
     public String getProjectName() {
         return projectName;
@@ -193,7 +185,6 @@ public class ProjectUserInviteResource extends InviteResource {
                 .append(nameConfirmed, that.nameConfirmed)
                 .append(email, that.email)
                 .append(project, that.project)
-                .append(applicationId, that.applicationId)
                 .append(organisation, that.organisation)
                 .append(organisationName, that.organisationName)
                 .append(projectName, that.projectName)
@@ -215,7 +206,6 @@ public class ProjectUserInviteResource extends InviteResource {
                 .append(nameConfirmed)
                 .append(email)
                 .append(project)
-                .append(applicationId)
                 .append(organisation)
                 .append(organisationName)
                 .append(projectName)
@@ -237,7 +227,6 @@ public class ProjectUserInviteResource extends InviteResource {
                 .append("nameConfirmed", nameConfirmed)
                 .append("email", email)
                 .append("project", project)
-                .append("applicationId", applicationId)
                 .append("organisation", organisation)
                 .append("organisationName", organisationName)
                 .append("projectName", projectName)

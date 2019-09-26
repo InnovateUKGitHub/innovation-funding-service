@@ -18,7 +18,6 @@ public class ProjectInviteDocs {
             fieldWithPath("user").description("Id of the User for which the Invite is intended (if they exist in the system)"),
             fieldWithPath("project").description("Id of the Project for which the Invite is intended"),
             fieldWithPath("projectName").description("Name of the Project for which the Invite is intended"),
-            fieldWithPath("applicationId").description("Id of the Application that the Project belongs to"),
             fieldWithPath("competitionName").description("Name of the Competition that the Project belongs to"),
             fieldWithPath("email").description("The email address of the Invite recipient"),
             fieldWithPath("hash").description("The hash used to access the Invite"),
@@ -38,7 +37,6 @@ public class ProjectInviteDocs {
             withUser(654L).
             withProject(123L).
             withProjectName("My Project").
-            withApplicationId(456L).
             withCompetitionName("My Competition").
             withEmail("test@example.com").
             withHash(UUID.randomUUID().toString()).
