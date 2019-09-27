@@ -25,33 +25,33 @@
           </elementProp>
           <elementProp name="short_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">short_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(short_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="normal_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">normal_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(normal_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="micro_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">micro_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(micro_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="long_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">long_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(long_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="global_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">global_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(global_pause_deviation)}</stringProp>
             <stringProp name="Argument.desc">Deviation in the pauses added to every test step globally</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="longer_pause_deviation" elementType="Argument">
             <stringProp name="Argument.name">longer_pause_deviation</stringProp>
-            <stringProp name="Argument.value">120000</stringProp>
+            <stringProp name="Argument.value">${__P(longer_pause_deviation)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="org_id" elementType="Argument">
@@ -61,7 +61,7 @@
           </elementProp>
           <elementProp name="auth_url" elementType="Argument">
             <stringProp name="Argument.name">auth_url</stringProp>
-            <stringProp name="Argument.value">auth.local-dev:9443</stringProp>
+            <stringProp name="Argument.value">${__P(authorisation_url)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -76,7 +76,7 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">ifs.local-dev</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(server_url)}</stringProp>
         <stringProp name="HTTPSampler.port"></stringProp>
         <stringProp name="HTTPSampler.protocol">https</stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -109,7 +109,7 @@
         <boolProp name="useExpires">false</boolProp>
       </CacheManager>
       <hashTree/>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
