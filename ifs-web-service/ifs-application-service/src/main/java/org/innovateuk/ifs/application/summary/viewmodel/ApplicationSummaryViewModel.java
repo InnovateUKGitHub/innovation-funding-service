@@ -21,6 +21,7 @@ public class ApplicationSummaryViewModel {
     private final String innovationAreaName;
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
+    private final boolean loanCompetition;
 
     public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn) {
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
@@ -36,6 +37,7 @@ public class ApplicationSummaryViewModel {
         this.innovationAreaName = application.getInnovationArea().getName();
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
+        this.loanCompetition = competition.isLoan();
     }
 
     public ApplicationReadOnlyViewModel getApplicationReadOnlyViewModel() {
@@ -88,5 +90,9 @@ public class ApplicationSummaryViewModel {
 
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
+    }
+
+    public boolean isLoanCompetition() {
+        return loanCompetition;
     }
 }
