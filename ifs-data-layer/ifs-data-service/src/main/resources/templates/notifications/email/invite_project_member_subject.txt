@@ -1,1 +1,1 @@
-${competitionName}: ${projectName}: Invitation for project ${projectId}.
+${competitionName}: ${projectName}: Invitation for project ${applicationId}.

@@ -79,6 +79,9 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
     private NotificationService notificationServiceMock;
 
     @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
     private OrganisationRepository organisationRepositoryMock;
 
     @Mock
@@ -169,6 +172,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         o = organisation;
         o.setOrganisationType(businessOrganisationType);
 
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
@@ -203,7 +207,6 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         Project projectInDB = ProjectBuilder.newProject()
                 .withName("Project 1")
                 .withApplication(application)
-                .withId(222L)
                 .build();
 
         Organisation leadOrganisation = newOrganisation()
@@ -213,6 +216,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(leadOrganisation.getId())
@@ -233,7 +237,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         ProjectResource projectResource = new ProjectResource();
         projectResource.setName("Project 1");
-        projectResource.setApplication(applicationId);
+        projectResource.setApplication(application.getId());
 
         when(organisationRepositoryMock.findDistinctByUsers(any(User.class))).thenReturn(singletonList(organisation));
         when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -251,7 +255,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", projectInDB.getName());
-        globalArguments.put("projectId", projectInDB.getId());
+        globalArguments.put("applicationId", application.getId());
         globalArguments.put("leadOrganisation", organisation.getName());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("competitionName", "Competition 1");
@@ -281,7 +285,6 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         Project projectInDB = ProjectBuilder.newProject()
                 .withName("Project 1")
                 .withApplication(application)
-                .withId(222L)
                 .build();
 
         Organisation leadOrganisation = newOrganisation()
@@ -291,6 +294,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
                 .withLeadOrganisation(organisation.getId())
@@ -312,7 +316,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         ProjectResource projectResource = new ProjectResource();
         projectResource.setName("Project 1");
-        projectResource.setApplication(applicationId);
+        projectResource.setApplication(application.getId());
 
         when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
         ProjectUserInviteResource projectUserInviteResource = getMapper(ProjectUserInviteMapper.class).mapToResource(projectInvite);
@@ -331,7 +335,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         NotificationTarget to = new UserNotificationTarget("Abc Xyz", "Abc.xyz@gmail.com");
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", projectInDB.getName());
-        globalArguments.put("projectId", projectInDB.getId());
+        globalArguments.put("applicationId", application.getId());
         globalArguments.put("leadOrganisation", organisation.getName());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("competitionName", "Competition 1");

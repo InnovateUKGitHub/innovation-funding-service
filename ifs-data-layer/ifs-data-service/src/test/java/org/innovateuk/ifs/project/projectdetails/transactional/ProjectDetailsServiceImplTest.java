@@ -779,19 +779,20 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void inviteProjectManagerWhenUnableToSendNotification() {
-        Project projectInDB = ProjectBuilder.newProject()
-                .withName("Project 1")
-                .withApplication(application)
-                .build();
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withProject(projectInDB.getId())
                 .withLeadOrganisation(organisation.getId())
                 .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .withApplication(application)
                 .build();
 
         when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
@@ -802,7 +803,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("projectName", projectInDB.getName());
         globalArguments.put("competitionName", "Competition 1");
         globalArguments.put("leadOrganisation", organisation.getName());
-        globalArguments.put("projectId", projectInDB.getId());
+        globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
@@ -831,19 +832,20 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void inviteProjectManagerSuccess() {
-        Project projectInDB = ProjectBuilder.newProject()
-                .withName("Project 1")
-                .withApplication(application)
-                .build();
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withProject(projectInDB.getId())
                 .withLeadOrganisation(organisation.getId())
                 .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .withApplication(application)
                 .build();
 
         when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
@@ -855,7 +857,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("projectName", projectInDB.getName());
         globalArguments.put("competitionName", "Competition 1");
         globalArguments.put("leadOrganisation", organisation.getName());
-        globalArguments.put("projectId", projectInDB.getId());
+        globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
@@ -908,19 +910,20 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void inviteFinanceContactSuccess() {
-        Project projectInDB = ProjectBuilder.newProject()
-                .withName("Project 1")
-                .withApplication(application)
-                .build();
 
         ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
                 .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withProject(projectInDB.getId())
                 .withLeadOrganisation(organisation.getId())
                 .withOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withName("Project 1")
+                .withApplication(application)
                 .build();
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
@@ -931,7 +934,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("projectName", projectInDB.getName());
         globalArguments.put("competitionName", "Competition 1");
         globalArguments.put("leadOrganisation", organisation.getName());
-        globalArguments.put("projectId", projectInDB.getId());
+        globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 
@@ -941,7 +944,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         ProjectUserInvite projectInvite = newProjectUserInvite()
                 .withName("A B")
                 .withEmail("a@b.com")
-                .withProject(projectInDB)
                 .build();
 
         when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
@@ -1067,6 +1069,17 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void inviteProjectFinanceUser(){
+
+        ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
+                .withCompetitionName("Competition 1")
+                .withApplicationId(application.getId())
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation(organisation.getId())
+                .withOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
         ProcessRole[] roles = newProcessRole()
                 .withOrganisationId(organisation.getId())
                 .withRole(Role.LEADAPPLICANT)
@@ -1082,16 +1095,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withApplication(a)
                 .build();
 
-        ProjectUserInviteResource inviteResource = newProjectUserInviteResource()
-                .withCompetitionName("Competition 1")
-                .withName("Abc Xyz")
-                .withEmail("Abc.xyz@gmail.com")
-                .withProject(projectInDB.getId())
-                .withLeadOrganisation(organisation.getId())
-                .withOrganisationName("Invite Organisation 1")
-                .withHash("sample/url")
-                .build();
-
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
 
@@ -1101,7 +1104,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("projectName", projectInDB.getName());
         globalArguments.put("competitionName", "Competition 1");
         globalArguments.put("leadOrganisation", organisation.getName());
-        globalArguments.put("projectId", projectInDB.getId());
+        globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
 

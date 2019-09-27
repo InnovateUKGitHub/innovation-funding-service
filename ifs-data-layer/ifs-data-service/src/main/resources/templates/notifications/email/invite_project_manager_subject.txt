@@ -1,1 +1,1 @@
-${competitionName}: Project Manager invitation for project ${projectId}
+${competitionName}: Project Manager invitation for project ${applicationId}

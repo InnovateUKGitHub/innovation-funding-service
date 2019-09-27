@@ -249,7 +249,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
         }
         List<ProjectUserInvite> invites = projectUserInviteRepository.findByProjectId(projectId);
         List<ProjectUserInviteResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
-        return serviceSuccess(newArrayList(inviteResources));
+        return serviceSuccess(inviteResources);
     }
 
     private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
@@ -343,7 +343,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
         String leadOrganisationName = leadOrganisation.getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("projectId", projectId);
+        globalArguments.put("applicationId", inviteResource.getApplicationId());
         globalArguments.put("leadOrganisation", leadOrganisationName);
         globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
         globalArguments.put("competitionName", inviteResource.getCompetitionName());

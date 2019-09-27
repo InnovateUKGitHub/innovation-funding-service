@@ -81,6 +81,7 @@ public class ProjectInviteHelper {
         inviteResource.setEmail(email);
         inviteResource.setOrganisation(organisationId);
         inviteResource.setOrganisationName(organisationResource.getName());
+        inviteResource.setApplicationId(projectResource.getApplication());
         inviteResource.setLeadOrganisationId(leadOrganisation.getId());
 
         return inviteResource;
