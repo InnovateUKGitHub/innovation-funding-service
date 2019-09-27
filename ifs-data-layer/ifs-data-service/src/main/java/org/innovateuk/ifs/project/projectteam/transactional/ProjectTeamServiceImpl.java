@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
@@ -125,7 +124,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
         INVITE_PROJECT_MEMBER
     }
 
-    private ProjectTeamServiceImpl() {
+    public ProjectTeamServiceImpl() {
         validator = new LocalValidatorFactoryBean();
         validator.setProviderClass(HibernateValidator.class);
         validator.afterPropertiesSet();
@@ -283,13 +282,19 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
     private ServiceResult<Void> inviteContact(long projectId, ProjectUserInviteResource requestedInvite, Notifications kindOfNotification) {
-        ProjectUserInviteResource inviteResource = getSavedInvite(projectId, requestedInvite).orElseThrow(() -> new ForbiddenActionException("Missing Invite Resource"));
+        Optional<ProjectUserInviteResource> inviteResource = getSavedInvite(projectId, requestedInvite);
 
-        ProjectUserInvite invite = projectUserInviteMapper.mapToDomain(inviteResource);
+        if (!inviteResource.isPresent()) {
+            return serviceFailure(new Error(PROJECT_INVITE_NOT_FOUND, NOT_FOUND));
+        }
+        ProjectUserInvite invite = projectUserInviteMapper.mapToDomain(inviteResource.get());
         invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
         projectUserInviteRepository.save(invite);
 
-        Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(invite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, inviteResource));
+        Notification notification = new Notification(systemNotificationSource,
+                createInviteContactNotificationTarget(invite),
+                kindOfNotification,
+                createGlobalArgsForInviteContactEmail(projectId, inviteResource.get()));
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
@@ -304,7 +309,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                             Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
                             validator.validate(projectInvite, errors);
                             if (errors.hasErrors()) {
-                                errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
+                                errors.getFieldErrors();
                                 return serviceFailure(badRequestError(errors.toString()));
                             } else {
                                 projectInvite.setHash(generateInviteHash());
