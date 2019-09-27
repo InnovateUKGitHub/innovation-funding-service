@@ -5,7 +5,6 @@ import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
@@ -59,6 +58,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
@@ -147,7 +147,7 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
         if (!invite.getTarget().equals(project)) {
             return serviceFailure(PROJECT_INVITE_NOT_FOR_CORRECT_PROJECT);
         }
-        if (!invite.getStatus().equals(InviteStatus.SENT)) {
+        if (!invite.getStatus().equals(SENT)) {
             return serviceFailure(PROJECT_INVITE_ALREADY_OPENED);
         }
         return serviceSuccess();
@@ -342,7 +342,11 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     private ServiceResult<Void> validateUserNotAlreadyInvited(ProjectUserInviteResource invite) {
 
         List<ProjectUserInvite> existingInvites = projectUserInviteRepository.findByProjectIdAndEmail(invite.getProject(), invite.getEmail());
-        return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
+        if(existingInvites.isEmpty() || invite.getStatus().equals(SENT)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
+        }
     }
 
     private ServiceResult<Void> validateUserIsNotAlreadyOnProject(ProjectUserInviteResource invite, User user) {
