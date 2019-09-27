@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationSt
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
-import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -21,7 +20,6 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -41,7 +39,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.internal.ProjectSetupStage.DOCUMENTS;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -154,31 +151,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId).get();
-            sortProjectSetupColumns(competition);
             competition.releaseFeedback(ZonedDateTime.now());
             return serviceSuccess();
         } else {
             return serviceFailure(new Error(COMPETITION_CANNOT_RELEASE_FEEDBACK));
-        }
-    }
-
-    private void sortProjectSetupColumns(Competition competition) {
-        
-        boolean hasDocuments = competition.getCompetitionDocuments()
-                .stream()
-                .filter(CompetitionDocument::isEnabled)
-                .findAny()
-                .isPresent();
-
-        if (!hasDocuments) {
-            Optional<ProjectStages> projectStage = competition.getProjectStages()
-                    .stream()
-                    .filter(stage -> DOCUMENTS.equals(stage.getProjectSetupStage()))
-                    .findFirst();
-
-            if (projectStage.isPresent()) {
-                competition.removeProjectStage(projectStage.get());
-            }
         }
     }
 

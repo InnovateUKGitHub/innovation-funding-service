@@ -1,22 +1,26 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static java.util.Arrays.asList;
 import java.util.List;
+import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.DOCUMENTS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -75,7 +79,21 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
                     competitionDocumentResource -> competitionDocumentMapper.mapToDomain(competitionDocumentResource));
 
             List<CompetitionDocument> savedCompetitionDocuments = (List<CompetitionDocument>) competitionDocumentConfigRepository.saveAll(competitionDocuments);
-            return serviceSuccess(simpleMap(savedCompetitionDocuments, savedCompeitionDocument -> competitionDocumentMapper.mapToResource(savedCompeitionDocument)));
+
+            Competition competition = savedCompetitionDocuments.stream().findFirst().get().getCompetition();
+
+            if (savedCompetitionDocuments.isEmpty()) {
+                Optional<ProjectStages> projectStage = competition.getProjectStages()
+                        .stream()
+                        .filter(stage -> DOCUMENTS.equals(stage.getProjectSetupStage()))
+                        .findFirst();
+
+                if (projectStage.isPresent()) {
+                    competition.removeProjectStage(projectStage.get());
+                }
+            }
+
+            return serviceSuccess(simpleMap(savedCompetitionDocuments, savedCompetitionDocument -> competitionDocumentMapper.mapToResource(savedCompetitionDocument)));
         });
     }
 

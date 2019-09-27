@@ -99,6 +99,7 @@ public class CompetitionSetupDocumentController {
 
     @PostMapping("/landing-page")
     public String saveProjectDocumentLandingPage(@ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
+                                                 BindingResult bindingResult,
                                                  ValidationHandler validationHandler,
                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                  Model model) {

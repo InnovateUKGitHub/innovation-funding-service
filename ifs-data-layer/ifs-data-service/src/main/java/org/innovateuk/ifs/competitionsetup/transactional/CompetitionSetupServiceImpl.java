@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
@@ -85,6 +86,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private PublicContentRepository publicContentRepository;
     @Autowired
     private MilestoneRepository milestoneRepository;
+    @Autowired
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
 
     @Value("${ifs.data.service.file.storage.competition.terms.max.filesize.bytes}")
     private Long maxFileSize;
@@ -144,9 +147,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Competition existingCompetition = competitionRepository.findById(competitionResource.getId()).orElse(null);
         Competition competition = competitionMapper.mapToDomain(competitionResource);
         competition = setCompetitionAuditableFields(competition, existingCompetition);
-
         saveFunders(competitionResource);
         competition = competitionRepository.save(competition);
+        setDefaultProjectDocuments(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
     }
 
@@ -418,26 +421,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
-        competition.setCompetitionDocuments(createDefaultProjectDocuments(competition));
 
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 
-    private List<CompetitionDocument> createDefaultProjectDocuments(Competition competition) {
-
-        List<CompetitionDocument> defaultCompetitionDocuments = new ArrayList<>();
-
+    private void setDefaultProjectDocuments(Competition competition) {
         FileType pdfFileType = fileTypeRepository.findByName("PDF");
-        defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType), competition.isGrant()));
-        defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType), competition.isGrant()));
-
-        return defaultCompetitionDocuments;
+        createCollaborationAgreement(competition, singletonList(pdfFileType));
+        createExploitationPlan(competition, singletonList(pdfFileType));
     }
 
-    private CompetitionDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes, boolean isGrantCompetition) {
-        return new CompetitionDocument(competition, COLLABORATION_AGREEMENT_TITLE, "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
+    private void createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
+        competitionDocumentConfigRepository.save(new CompetitionDocument(competition, COLLABORATION_AGREEMENT_TITLE, "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
                 "\n" +
                 "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
                 "\n" +
@@ -447,11 +444,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
                 "<li>legible at 100% magnification</li>\n" +
                 "<li>less than 10MB in file size</li></ul>",
-                false, isGrantCompetition, fileTypes);
+                false, competition.isGrant(), fileTypes));
     }
 
-    private CompetitionDocument createExploitationPlan(Competition competition, List<FileType> fileTypes, boolean isGrantCompetition) {
-        return new CompetitionDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
+    private void createExploitationPlan(Competition competition, List<FileType> fileTypes) {
+        competitionDocumentConfigRepository.save(new CompetitionDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
                 "\n" +
                 "<p>It should also describe partner activities that will exploit the results of the project so that:</p>\n" +
                 "<ul class=\"list-bullet\"><li>changes in the commercial environment can be monitored and accounted for</li>\n" +
@@ -464,7 +461,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
                 "<li>legible at 100% magnification</li>\n" +
                 "<li>less than 10MB in file size</li></ul>",
-                false, isGrantCompetition, fileTypes);
+                false, competition.isGrant(), fileTypes));
     }
 
     private Competition setCompetitionAuditableFields(Competition competition, Competition existingCompetition) {

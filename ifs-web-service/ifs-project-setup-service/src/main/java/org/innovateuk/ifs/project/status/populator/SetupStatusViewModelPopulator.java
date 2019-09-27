@@ -196,7 +196,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         "Once all tasks are complete Innovate UK will review your application.",
                         String.format("/project/%d/setup", project.getId()),
                         projectSetupCompleteStatus,
-                        statusAccessor.canAccessSetupSection(),
+                        statusAccessor.canAccessProjectSetupCompleteSection(),
                         projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-review"
                 );
         }
