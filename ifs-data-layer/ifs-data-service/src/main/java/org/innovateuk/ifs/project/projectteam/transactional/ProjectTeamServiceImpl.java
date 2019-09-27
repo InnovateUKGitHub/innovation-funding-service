@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.projectteam.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -56,7 +54,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -77,7 +74,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implements ProjectTeamService {
 
     private static final String WEB_CONTEXT = "/project-setup";
-    private static final Log LOG = LogFactory.getLog(ProjectTeamServiceImpl.class);
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
@@ -252,7 +248,6 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                 .filter(pu -> pu.getOrganisation().getId().equals(leadOrgId))
                 .findAny().get();
     }
-
 
     private ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId) {
         if (projectId == null) {
