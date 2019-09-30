@@ -82,7 +82,7 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
 
             Competition competition = savedCompetitionDocuments.stream().findFirst().get().getCompetition();
 
-            if (savedCompetitionDocuments.isEmpty()) {
+            if (!hasAnyDocumentsEnabled(savedCompetitionDocuments)) {
                 Optional<ProjectStages> projectStage = competition.getProjectStages()
                         .stream()
                         .filter(stage -> DOCUMENTS.equals(stage.getProjectSetupStage()))
@@ -95,6 +95,13 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
 
             return serviceSuccess(simpleMap(savedCompetitionDocuments, savedCompetitionDocument -> competitionDocumentMapper.mapToResource(savedCompetitionDocument)));
         });
+    }
+
+    private boolean hasAnyDocumentsEnabled(List<CompetitionDocument> competitionDocumentResources) {
+        return competitionDocumentResources.stream()
+                .filter(CompetitionDocument::isEnabled)
+                .findAny()
+                .isPresent();
     }
 
     private ServiceResult<Void> validateCompetitionDocument(List<CompetitionDocumentResource> competitionDocumentResources) {
