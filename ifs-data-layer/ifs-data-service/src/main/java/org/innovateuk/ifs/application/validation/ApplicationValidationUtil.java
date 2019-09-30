@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationResearchMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
@@ -20,6 +22,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
@@ -51,6 +54,14 @@ public class ApplicationValidationUtil {
 
     @Autowired
     private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
+
+    @Autowired
+    private FormInputResponseRepository formInputResponseRepository;
+
+    @Transactional
+    public BindingResult validateResponse(FormInputResponseResource response, boolean ignoreEmpty) {
+        return validateResponse(formInputResponseRepository.findById(response.getId()).get(), ignoreEmpty);
+    }
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);

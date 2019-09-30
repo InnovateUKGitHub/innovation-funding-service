@@ -57,7 +57,7 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy = "application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "competition", referencedColumnName = "id")
     private Competition competition;
 

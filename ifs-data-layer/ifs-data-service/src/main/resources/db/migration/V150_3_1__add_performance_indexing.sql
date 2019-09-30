@@ -1,0 +1,1 @@
+alter table finance_row add index target_id (target_id);

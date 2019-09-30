@@ -27,4 +27,5 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     Question findFirstByCompetitionIdAndQuestionSetupType(long competitionId, QuestionSetupType
             questionSetupType);
     long countByCompetitionId(Long competitionId);
+    long countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
 }
