@@ -3,7 +3,7 @@
 
 <th:block th:fragment="active" xmlns:th="http://www.w3.org/1999/html">
     <div class="govuk-panel govuk-panel--confirmation-outline govuk-!-margin-bottom-9">
-        <h2 class="govuk-panel__title">Your project will be reviewed<br/> by Innovate UK</h2>
+        <h2 class="govuk-panel__title">Your project will be reviewed<br/> by the Innovation Loans team</h2>
         <div class="govuk-panel__body govuk-!-font-size-19">
             Project setup for the competition '<span th:text="${model.competitionName}"/>'<br/>
             was submitted on
@@ -15,26 +15,21 @@
     </div>
 
     <h2 class="govuk-heading-l">What happens next?</h2>
-
-    <p class="govuk-body">Thank you for completing project setup. Your application will be handled offline by our
-        Innovation
-        Loans team</p>
+    <p class="govuk-body">All further communication will be handled by email. We will:</p>
     <ul class="govuk-list govuk-list--bullet">
-        <li>Completion of documentation further to your conditional loan offer</li>
-        <li>Satisfaction of all loan conditions, including a management presentation to the Innonovate UK Loans Ltd
-            credit
-            committee
-        </li>
-        <li>Project start and first drawdown of the loan</li>
+        <li>complete and check all submitted documents</li>
+        <li>check that your project satisfies all loan conditions</li>
+        <li>present your project to the Innovate UK Loans Ltd credit committee</li>
+        <li>contact you with our decision</li>
     </ul>
 </th:block>
 
 <th:block th:fragment="successful" xmlns:th="http://www.w3.org/1999/html">
     <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
-        <h2 class="govuk-panel__title">We have approved your loan application</h2>
+        <h2 class="govuk-panel__title">We have approved your loan</h2>
         <div class="govuk-panel__body govuk-!-font-size-19">
-            Application accepted for '<span th:text="${model.competitionName}"/>'<br/>
-            was submitted on
+            Loan approved for '<span th:text="${model.competitionName}"/>'<br/>
+            on
             <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
             at
             <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
@@ -44,24 +39,27 @@
 
     <h2 class="govuk-heading-l">What happens next?</h2>
 
+    <p class="govuk-body">You will be contacted by:</p>
     <ul class="govuk-list govuk-list--bullet">
-        <li>Your monitoring officer will be in touch to speak to you about your  project</li>
-        <li>Your credit specialist will be in touch to speak to you about your loan</li>
+        <li>your monitoring officer about your project</li>
+        <li>your credit specialist about your loan</li>
     </ul>
 </th:block>
 
 <th:block th:fragment="unsuccessful" xmlns:th="http://www.w3.org/1999/html">
     <div class="govuk-panel govuk-panel--grey govuk-!-margin-bottom-9">
-        <h2 class="govuk-panel__title">Your loan application has not been successful in this competition</h2>
+        <h2 class="govuk-panel__title">We have not approved your loan</h2>
         <div class="govuk-panel__body govuk-!-font-size-19">
-            Application unsuccessful for '<span th:text="${model.competitionName}"/>'<br/>
-            was submitted on
+            Loan not approved for '<span th:text="${model.competitionName}"/>'<br/>
+            on
             <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
             at
             <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
             .
         </div>
     </div>
+
+    <p class="govuk-body">You will have been contacted with this decision by a member of our Innovation Loans team.</p>
 </th:block>
 
 </html>
