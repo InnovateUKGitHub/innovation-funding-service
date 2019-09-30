@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.invite.InviteService;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -42,7 +41,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -123,9 +121,7 @@ public class ApplicationOverviewModelPopulatorTest {
                 .build(2);
         sections.add(childSection);
         childSection.setParentSection(sections.get(1).getId());
-
-        List<ApplicationInviteResource> invites = newApplicationInviteResource().build(2);
-
+        
         Map<Long, Set<Long>> completedSectionsByOrganisation = emptyMap();
 
         when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
@@ -134,7 +130,6 @@ public class ApplicationOverviewModelPopulatorTest {
         when(questionRestService.findByCompetition(application.getCompetition())).thenReturn(restSuccess(questions));
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
         when(questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId())).thenReturn(restSuccess(questionStatuses));
-        when(inviteService.getPendingInvitationsByApplicationId(application.getId())).thenReturn(invites);
         when(sectionStatusRestService.getCompletedSectionIds(application.getId(), organisation.getId())).thenReturn(restSuccess(asList(sections.get(1).getId(), childSection.getId())));
         when(questionService.getNotificationsForUser(questionStatuses, user.getId())).thenReturn(questionStatuses);
         when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault())).thenReturn("Finance description");
@@ -166,7 +161,6 @@ public class ApplicationOverviewModelPopulatorTest {
         assertEquals(false, questionRow.isComplete());
         assertEquals(processRoles.get(1), questionRow.getAssignButtonsViewModel().get().getAssignee());
         assertEquals(processRoles, questionRow.getAssignButtonsViewModel().get().getAssignableApplicants());
-        assertEquals(invites, questionRow.getAssignButtonsViewModel().get().getPendingAssignableUsers());
 
         ApplicationOverviewSectionViewModel sectionWithChildSections = sectionIterator.next();
         assertEquals("Finances", sectionWithChildSections.getTitle());
