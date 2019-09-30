@@ -33,7 +33,7 @@
                             <input th:id="${checkboxId}"
                                    th:value="${document.id}"
                                    type="checkbox"
-                                   name="enabledIds"
+                                   th:name="${document.title}"
                                    class="govuk-checkboxes__input"
                                    th:checked="${document.enabled}"/>
                             <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
