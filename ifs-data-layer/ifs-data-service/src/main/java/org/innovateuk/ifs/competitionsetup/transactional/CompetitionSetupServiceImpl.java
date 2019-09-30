@@ -429,8 +429,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private void setDefaultProjectDocuments(Competition competition) {
         FileType pdfFileType = fileTypeRepository.findByName("PDF");
-        createCollaborationAgreement(competition, singletonList(pdfFileType));
-        createExploitationPlan(competition, singletonList(pdfFileType));
+
+        if (competitionDocumentConfigRepository.findByCompetitionId(competition.getId()).isEmpty()) {
+            createCollaborationAgreement(competition, singletonList(pdfFileType));
+            createExploitationPlan(competition, singletonList(pdfFileType));
+        }
     }
 
     private void createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
