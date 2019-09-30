@@ -24,7 +24,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
@@ -92,7 +91,6 @@ public class ProjectTeamViewModelPopulatorTest {
                 .build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(projectOrgs);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
@@ -100,11 +98,11 @@ public class ProjectTeamViewModelPopulatorTest {
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 
-        assertEquals(competition.getName(), model.getCompetitionName());
-        assertEquals((long) competition.getId(), model.getCompetitionId());
+        assertEquals(project.getCompetitionName(), model.getCompetitionName());
+        assertEquals(project.getCompetition(), model.getCompetitionId());
         assertEquals(project.getName(), model.getProjectName());
         assertEquals((long) project.getId(), model.getProjectId());
-        assertEquals(false, model.isUserLeadPartner());
+        assertFalse(model.isUserLeadPartner());
         assertEquals((long) loggedInUser.getId(), model.getLoggedInUserId());
         assertTrue(model.isInternalUserView());
         assertFalse(model.isReadOnly());
