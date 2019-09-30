@@ -243,7 +243,7 @@
             </collectionProp>
             <collectionProp name="UserParameters.thread_values">
               <collectionProp name="-1752657616">
-                <stringProp name="486989976">h2020.perf.applicant${__P(user_number)}@example.com</stringProp>
+                <stringProp name="486989976">h2020.perf.applicant${user_number}@example.com</stringProp>
               </collectionProp>
             </collectionProp>
             <boolProp name="UserParameters.per_iteration">false</boolProp>
