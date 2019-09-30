@@ -70,14 +70,29 @@ Checking release feedback button state is correct
     Then the user should see that the element is disabled                   jQuery = button:contains("Release feedback")
     [Teardown]    User sends the notification to enable release feedback
 
+Check the successful application overview before releasing feedback
+    [Documentation]  IFS-6532
+    Given Log in as a different user       &{successful_released_credentials}
+    And the user clicks the button/link    link = ${INFORM_COMPETITION_NAME_2}
+    When the user clicks the button/link   link = view application feedback
+    Then The user should see the element   jQuery = p:contains("You have been successful in this round of funding."):contains("Assessor feedback on your application will be available here on")
+
+Check the unsuccessful application overview before releasing feedback
+    [Documentation]  IFS-6532
+    [Setup]    log in as a different user   &{unsuccessful_released_credentials}
+    Given the user clicks the button/link   jQuery = a:contains("${electric_application_titile}")
+    Then the user should see the element    jQuery = p:contains("Assessor feedback on your application will be available here on")
+
 Release feedback
     [Documentation]    INFUND-8050
     [Tags]  HappyPath
-    Given The user clicks the button/link                jQuery = button:contains("Release feedback")
-    Then The user should not see the element             jQuery = h1:contains("Inform")
-    When The user clicks the button/link                 jQuery = a:contains("Live")
-    Then The user should not see the element             link = ${INFORM_COMPETITION_NAME}
-    And the user reads his email                         ${test_mailbox_two}+releasefeedback@gmail.com    ${INFORM_COMPETITION_NAME}: Feedback for application ${application_ids['High Performance Gasoline Stratified']} is now available.    The feedback provided by the independent assessors has been reviewed by Innovate UK
+    [Setup]  log in as a different user           &{Comp_admin1_credentials}
+    Given the user clicks the button/link         link = ${INFORM_COMPETITION_NAME}
+    And the user clicks the button/link           jQuery = button:contains("Release feedback")
+    And the user should not see the element       jQuery = h1:contains("Inform")
+    When the user clicks the button/link          jQuery = a:contains("Live")
+    Then the user should not see the element      link = ${INFORM_COMPETITION_NAME}
+    And the user reads his email                  ${test_mailbox_two}+releasefeedback@gmail.com    ${INFORM_COMPETITION_NAME}: Feedback for application ${application_ids['High Performance Gasoline Stratified']} is now available.    The feedback provided by the independent assessors has been reviewed by Innovate UK
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
