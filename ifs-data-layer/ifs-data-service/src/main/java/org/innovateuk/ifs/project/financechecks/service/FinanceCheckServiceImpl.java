@@ -130,7 +130,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
                 spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, project), bankDetailsApproved,
-                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId(), competition.isH2020()));
+                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId(), competition.isH2020(), competition.getFundingType()));
     }
 
     @Override
@@ -342,8 +342,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::getViabilityProcess)
@@ -355,8 +355,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::getEligibilityProcess)
