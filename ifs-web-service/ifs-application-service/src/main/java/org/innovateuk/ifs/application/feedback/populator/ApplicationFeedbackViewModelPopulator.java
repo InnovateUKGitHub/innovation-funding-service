@@ -58,7 +58,6 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                                                  FinanceService financeService,
                                                  AssessmentRestService assessmentRestService,
                                                  SectionService sectionService,
-                                                 QuestionService questionService,
                                                  QuestionRestService questionRestService,
                                                  AssessorFormInputResponseRestService assessorFormInputResponseRestService,
                                                  ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
@@ -66,7 +65,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                                                  InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
                                                  InterviewAssignmentRestService interviewAssignmentRestService,
                                                  ProjectService projectService) {
-        super(sectionService, questionService, questionRestService);
+        super(sectionService, questionRestService);
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionRestService = competitionRestService;
@@ -121,14 +120,14 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
 
         return new ApplicationFeedbackViewModel(
                 application,
-                competition,
+                competition, //TODO do we need the entire competition?
                 leadOrganisation,
                 partners,
                 organisationFinanceOverview.getTotalFundingSought(),
                 feedback,
                 hasFinanceSection,
-                getSections(competition.getId()),
-                getSectionQuestions(competition.getId()),
+                getSections(application.getCompetition()),
+                getSectionQuestions(application.getCompetition()),
                 scores,
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,

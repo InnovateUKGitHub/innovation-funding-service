@@ -38,12 +38,6 @@ public class CompetitionManagementApplicationsController {
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
 
     @Autowired
-    private ApplicationFundingDecisionService applicationFundingDecisionService;
-
-    @Autowired
-    private ProjectRestService projectRestService;
-
-    @Autowired
     private ApplicationsMenuModelPopulator applicationsMenuModelPopulator;
 
     @Autowired
@@ -55,8 +49,6 @@ public class CompetitionManagementApplicationsController {
     @Autowired
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
 
-    @Autowired
-    private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
 
     @Autowired
     private CompetitionRestService competitionRestService;

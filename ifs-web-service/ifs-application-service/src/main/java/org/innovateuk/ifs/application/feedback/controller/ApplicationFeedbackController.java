@@ -76,10 +76,11 @@ public class ApplicationFeedbackController {
     }
 
     private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
-        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
-        return application.isSubmitted()
-                && feedbackAvailable;
+        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased();
+        if (!competition.getCompetitionStatus().isFeedbackReleased()) {
+            feedbackAvailable = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
+        }
+        return application.isSubmitted() && feedbackAvailable;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")

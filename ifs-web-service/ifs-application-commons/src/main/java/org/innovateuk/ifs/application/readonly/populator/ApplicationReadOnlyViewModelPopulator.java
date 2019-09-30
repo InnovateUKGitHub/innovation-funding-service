@@ -84,12 +84,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 populator.questionTypes().forEach(type -> populatorMap.put(type, populator)));
     }
 
-    public ApplicationReadOnlyViewModel populate(long applicationId, UserResource user, ApplicationReadOnlySettings settings) {
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        return populate(application, competition, user, settings);
-    }
-
     public ApplicationReadOnlyViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, ApplicationReadOnlySettings settings) {
         Future<List<QuestionResource>> questionsFuture = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
         Future<List<FormInputResource>> formInputsFuture = async(() -> formInputRestService.getByCompetitionId(competition.getId()).getSuccess());
@@ -128,7 +122,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return new ApplicationSectionReadOnlyViewModel(section.getName(), asSet(finance));
     }
 
-    public ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         if (populatorMap.containsKey(question.getQuestionSetupType())) {
             return populatorMap.get(question.getQuestionSetupType()).populate(question, data, settings);
         } else {

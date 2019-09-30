@@ -60,9 +60,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private SectionRestService sectionRestService;
-
-    @Autowired
     private InviteService inviteService;
 
     @Autowired
@@ -84,7 +81,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                     .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
-        long leadOrganisationId = leadOrganisationId(processRoles);
+        long leadOrganisationId = application.getLeadOrganisationId();
 
         List<BreakdownTableRow> rows = organisations.stream()
                 .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
@@ -113,14 +110,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .distinct()
                 .map(BreakdownTableRow::pendingOrganisation)
                 .collect(toList());
-    }
-
-    private long leadOrganisationId(List<ProcessRoleResource> processRoles) {
-        return processRoles.stream()
-                .filter(role -> LEADAPPLICANT.equals(role.getRole()))
-                .findFirst()
-                .orElseThrow(ObjectNotFoundException::new)
-                .getOrganisationId();
     }
 
     private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {

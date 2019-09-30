@@ -31,7 +31,7 @@ public class YourProjectFinancesController {
                                        @PathVariable long organisationId,
                                        UserResource user,
                                        Model model) {
-        YourProjectFinancesViewModel viewModel = yourFinancesModelPopulator.populate(applicationId, sectionId, organisationId, user);
+        YourProjectFinancesViewModel viewModel = yourFinancesModelPopulator.populate(applicationId, sectionId, organisationId);
         model.addAttribute("model", viewModel);
         return VIEW;
     }
