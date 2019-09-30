@@ -46,12 +46,10 @@ public class SendNotificationsModelPopulatorTest {
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestServiceMock;
 
-    @Before
-    public void setUp() throws Exception {
-    }
+
 
     @Test
-    public void populateModel() throws Exception {
+    public void populateModel() {
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().withName(COMPETITION_NAME).build();
 
