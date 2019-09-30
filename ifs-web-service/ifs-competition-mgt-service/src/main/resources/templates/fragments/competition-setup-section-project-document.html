@@ -20,7 +20,8 @@
           method="post" novalidate="novalidate">
 
         <div th:if="${model.general.editable}">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('enabledIds')} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('enabledIds')} ? 'govuk-form-group--error'"
+                 data-target="documents-warning" data-target-inverted="true">
                 <fieldset class="govuk-fieldset">
                     <legend id="enabledIds"></legend>
                     <th:block th:if="${#fields.hasErrors('enabledIds')}">
@@ -28,14 +29,13 @@
                     </th:block>
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.competitionDocuments}"
-                             data-target="documents-warning" data-target-inverted="true"
-                             data-target-clear-validation="true" data-target-clear-form="true">
-                            <input th:value="${document.id}"
-                                    type="checkbox"
-                                    name="enabledIds"
-                                    class="govuk-checkboxes__input"
-                                    th:id="${'projectdocument-enabled-' + document.id}"
-                                    th:checked="${document.enabled}"/>
+                             th:with="checkboxId=|projectdocument-enabled-${document.id}|">
+                            <input th:id="${checkboxId}"
+                                   th:value="${document.id}"
+                                   type="checkbox"
+                                   name="enabledIds"
+                                   class="govuk-checkboxes__input"
+                                   th:checked="${document.enabled}"/>
                             <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
                                 <span th:text=${document.title}>document_title</span>
                                  <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}"
