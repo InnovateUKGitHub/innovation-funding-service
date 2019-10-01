@@ -6,8 +6,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * FormInputType is used to identify what response a FormInput needs.
@@ -19,6 +17,7 @@ public enum FormInputType implements IdentifiableEnum {
     TEXTAREA(2),
     FILEUPLOAD(4),
     APPLICATION_DETAILS(5), //TODO Remove IFS-6216
+    FINANCIAL_SUMMARY(16), //TODO Remove IFS-6216
     ASSESSOR_RESEARCH_CATEGORY(21),
     ASSESSOR_APPLICATION_IN_SCOPE(22),
     ASSESSOR_SCORE(23),
