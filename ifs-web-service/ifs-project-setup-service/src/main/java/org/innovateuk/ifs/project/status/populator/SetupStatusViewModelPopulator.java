@@ -17,7 +17,7 @@ import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelpe
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusStageViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
-import org.innovateuk.ifs.sections.SectionStatus;
+import org.innovateuk.ifs.sections.SectionState;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.sections.SectionStatus.TICK;
+import static org.innovateuk.ifs.sections.SectionState.TICK;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -159,11 +159,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
             case FINANCE_CHECKS:
                 SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
-                SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
+                SectionState financeChecksStatus = sectionStatus.financeChecksSectionStatus(
                         ownOrganisation.getFinanceChecksStatus(),
                         financeChecksAccess
                 );
-                boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
+                boolean pendingQueries = SectionState.FLAG.equals(financeChecksStatus);
 
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                        "We will review your financial information.",
@@ -190,7 +190,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
                 );
             case PROJECT_SETUP_COMPLETE:
-                SectionStatus projectSetupCompleteStatus = sectionStatus.projectSetupCompleteStatus(ownOrganisation.getProjectSetupCompleteStatus());
+                SectionState projectSetupCompleteStatus = sectionStatus.projectSetupCompleteStatus(ownOrganisation.getProjectSetupCompleteStatus());
                 return new SetupStatusStageViewModel(stage,
                         stage.getShortName(),
                         "Once all tasks are complete Innovate UK will review your application.",

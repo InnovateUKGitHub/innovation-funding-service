@@ -25,7 +25,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusStageViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
-import org.innovateuk.ifs.sections.SectionStatus;
+import org.innovateuk.ifs.sections.SectionState;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -62,7 +62,7 @@ import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentResour
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
-import static org.innovateuk.ifs.sections.SectionStatus.*;
+import static org.innovateuk.ifs.sections.SectionState.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
@@ -471,7 +471,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
         assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
-        assertStageStatus(viewModel, FINANCE_CHECKS, SectionStatus.HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, SectionState.HOURGLASS);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -539,7 +539,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         assertStageStatus(viewModel, ProjectSetupStage.MONITORING_OFFICER, HOURGLASS);
-        assertStageStatus(viewModel, FINANCE_CHECKS, SectionStatus.HOURGLASS);
+        assertStageStatus(viewModel, FINANCE_CHECKS, SectionState.HOURGLASS);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -1509,7 +1509,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(application.getId(), viewModel.getApplicationId());
     }
 
-    private void assertStageStatus(SetupStatusViewModel viewModel, ProjectSetupStage stage, SectionStatus status) {
+    private void assertStageStatus(SetupStatusViewModel viewModel, ProjectSetupStage stage, SectionState status) {
         SetupStatusStageViewModel found = viewModel.getStages().stream().filter(stageViewModel -> stageViewModel.getStage() == stage).findFirst().get();
         assertEquals(status, found.getStatus());
     }

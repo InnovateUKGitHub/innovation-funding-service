@@ -5,13 +5,13 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.sections.SectionAccess;
-import org.innovateuk.ifs.sections.SectionStatus;
+import org.innovateuk.ifs.sections.SectionState;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.sections.SectionStatus.*;
+import static org.innovateuk.ifs.sections.SectionState.*;
 
 /**
  * This is a helper class for determining the status of a given Project Setup section
@@ -19,9 +19,9 @@ import static org.innovateuk.ifs.sections.SectionStatus.*;
 @Component
 public class SetupSectionStatus {
 
-    public SectionStatus projectDetailsSectionStatus(final boolean projectDetailsProcessCompleted,
-                                                     final boolean awaitingProjectDetailsActionFromPartners,
-                                                     final boolean isLeadPartner) {
+    public SectionState projectDetailsSectionStatus(final boolean projectDetailsProcessCompleted,
+                                                    final boolean awaitingProjectDetailsActionFromPartners,
+                                                    final boolean isLeadPartner) {
         if (projectDetailsProcessCompleted && !(isLeadPartner && awaitingProjectDetailsActionFromPartners)) {
             return TICK;
         } else {
@@ -29,13 +29,13 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus projectTeamSectionStatus(final ProjectActivityStates projectTeamStatus) {
+    public SectionState projectTeamSectionStatus(final ProjectActivityStates projectTeamStatus) {
         return COMPLETE.equals(projectTeamStatus) ?
                 TICK : FLAG;
     }
 
-    public SectionStatus monitoringOfficerSectionStatus(final boolean monitoringOfficerAssigned,
-                                                        final boolean requiredProjectDetailsForMonitoringOfficerComplete) {
+    public SectionState monitoringOfficerSectionStatus(final boolean monitoringOfficerAssigned,
+                                                       final boolean requiredProjectDetailsForMonitoringOfficerComplete) {
         if (monitoringOfficerAssigned) {
             return TICK;
         } else {
@@ -44,7 +44,7 @@ public class SetupSectionStatus {
 
     }
 
-    public SectionStatus bankDetailsSectionStatus(final ProjectActivityStates bankDetails) {
+    public SectionState bankDetailsSectionStatus(final ProjectActivityStates bankDetails) {
         if (bankDetails == null) {
             return EMPTY;
         } else if (PENDING.equals(bankDetails)) {
@@ -56,8 +56,8 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus financeChecksSectionStatus(final ProjectActivityStates financeCheckState,
-                                                    final SectionAccess access) {
+    public SectionState financeChecksSectionStatus(final ProjectActivityStates financeCheckState,
+                                                   final SectionAccess access) {
 
         if (access.equals(SectionAccess.NOT_ACCESSIBLE)) {
             return EMPTY;
@@ -70,7 +70,7 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState) {
+    public SectionState spendProfileSectionStatus(final ProjectActivityStates spendProfileState) {
         if (PENDING.equals(spendProfileState)) {
             return HOURGLASS;
         } else if (ACTION_REQUIRED.equals(spendProfileState)) {
@@ -82,7 +82,7 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus projectSetupCompleteStatus(final ProjectActivityStates setupSectionState) {
+    public SectionState projectSetupCompleteStatus(final ProjectActivityStates setupSectionState) {
         if (setupSectionState.equals(COMPLETE)) {
             return TICK;
         } else if (setupSectionState.equals(PENDING)) {
@@ -92,9 +92,9 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus documentsSectionStatus(final boolean isProjectManager,
-                                                List<CompetitionDocumentResource> expectedDocuments,
-                                                List<ProjectDocumentResource> projectDocuments) {
+    public SectionState documentsSectionStatus(final boolean isProjectManager,
+                                               List<CompetitionDocumentResource> expectedDocuments,
+                                               List<ProjectDocumentResource> projectDocuments) {
 
         int actualNumberOfDocuments = projectDocuments.size();
         int expectedNumberOfDocuments = expectedDocuments.size();
@@ -113,8 +113,8 @@ public class SetupSectionStatus {
         return HOURGLASS;
     }
 
-    public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
-                                                       final boolean isLeadPartner) {
+    public SectionState grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
+                                                      final boolean isLeadPartner) {
         if (grantOfferLetterState == null || NOT_REQUIRED.equals(grantOfferLetterState)) {
             return EMPTY;
         } else if (COMPLETE.equals(grantOfferLetterState)) {
