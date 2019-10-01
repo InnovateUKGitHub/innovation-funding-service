@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -46,9 +45,6 @@ public class ProjectTeamViewModelPopulatorTest {
 
     @Mock
     private ProjectService projectService;
-
-    @Mock
-    private CompetitionRestService competitionRestService;
 
     @Mock
     private ProjectDetailsService projectDetailsService;

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -27,15 +26,11 @@ public class ProjectTeamViewModelPopulator {
 
     private final ProjectService projectService;
 
-    private final CompetitionRestService competitionRestService;
-
     private final ProjectDetailsService projectDetailsService;
 
     public ProjectTeamViewModelPopulator(ProjectService projectService,
-                                         CompetitionRestService competitionRestService,
                                          ProjectDetailsService projectDetailsService) {
         this.projectService = projectService;
-        this.competitionRestService = competitionRestService;
         this.projectDetailsService = projectDetailsService;
     }
 
