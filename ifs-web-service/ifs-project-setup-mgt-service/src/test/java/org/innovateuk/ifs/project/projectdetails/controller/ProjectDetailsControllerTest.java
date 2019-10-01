@@ -159,20 +159,20 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         String competitionName = "Comp 1";
         long projectId = 11L;
 
-        ProjectResource project = newProjectResource()
-                .withId(projectId)
-                .withName("Project 1")
-                .withTargetStartDate(LocalDate.of(2018, 3, 1))
-                .withDuration(36L)
-                .build();
-
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(competitionId)
                 .withName(competitionName)
                 .build();
 
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withName("Project 1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(36L)
+                .withCompetition(competition.getId())
+                .build();
+
         when(projectService.getById(projectId)).thenReturn(project);
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/duration"))
                 .andExpect(status().isOk())
@@ -183,8 +183,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         // Assert that the model has the correct values
         assertEquals(project, viewModel.getProject());
-        assertEquals(competitionId, (long) viewModel.getCompetitionId());
-        assertEquals(competitionName, viewModel.getCompetitionName());
+        assertEquals(project.getCompetition(), (long) viewModel.getCompetitionId());
+        assertEquals(project.getCompetitionName(), viewModel.getCompetitionName());
         assertNull(viewModel.getLeadOrganisation());
         assertFalse(viewModel.isLocationPerPartnerRequired());
 
@@ -192,7 +192,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(new ProjectDurationForm(), form);
 
         verify(projectService).getById(projectId);
-        verify(competitionRestService).getCompetitionById(competitionId);
     }
 
     @Test
