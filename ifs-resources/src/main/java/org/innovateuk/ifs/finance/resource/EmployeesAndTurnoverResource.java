@@ -4,6 +4,7 @@ package org.innovateuk.ifs.finance.resource;
 import java.math.BigDecimal;
 
 public class EmployeesAndTurnoverResource extends FinancialYearAccountsResource {
+
     private BigDecimal turnover;
 
     @Override

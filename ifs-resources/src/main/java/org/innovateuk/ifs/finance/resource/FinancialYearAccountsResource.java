@@ -11,6 +11,7 @@ import java.math.BigDecimal;
         @JsonSubTypes.Type(value = GrowthTableResource.class, name = "GrowthTable")
 })
 public abstract class FinancialYearAccountsResource {
+
     private Long employees;
 
     public Long getEmployees() {

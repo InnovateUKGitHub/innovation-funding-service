@@ -7,6 +7,12 @@ import java.time.LocalDate;
 @Entity
 public class GrowthTable extends FinancialYearAccounts {
 
+    private LocalDate financialYearEnd;
+    private BigDecimal annualTurnover;
+    private BigDecimal annualProfits;
+    private BigDecimal annualExport;
+    private BigDecimal researchAndDevelopment;
+
     public GrowthTable() {
         super();
     }
@@ -19,12 +25,6 @@ public class GrowthTable extends FinancialYearAccounts {
         this.annualExport = growthTable.getAnnualExport();
         this.researchAndDevelopment = growthTable.getResearchAndDevelopment();
     }
-
-    private LocalDate financialYearEnd;
-    private BigDecimal annualTurnover;
-    private BigDecimal annualProfits;
-    private BigDecimal annualExport;
-    private BigDecimal researchAndDevelopment;
 
     public LocalDate getFinancialYearEnd() {
         return financialYearEnd;

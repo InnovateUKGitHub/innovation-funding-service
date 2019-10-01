@@ -179,19 +179,9 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
                         dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
                     }
                     if (TRUE.equals(dbFinance.getApplication().getCompetition().getIncludeProjectGrowthTable())) {
-                        GrowthTable growthTable = dbFinance.getGrowthTable();
-                        GrowthTableResource growthTableResource = (GrowthTableResource) applicationFinance.getFinancialYearAccounts();
-                        growthTable.setAnnualExport(growthTableResource.getAnnualExport());
-                        growthTable.setAnnualProfits(growthTableResource.getAnnualProfits());
-                        growthTable.setAnnualTurnover(growthTableResource.getAnnualTurnover());
-                        growthTable.setResearchAndDevelopment(growthTableResource.getResearchAndDevelopment());
-                        growthTable.setFinancialYearEnd(growthTableResource.getFinancialYearEnd());
-                        growthTable.setEmployees(growthTableResource.getEmployees());
+                        updateGrowthTable(applicationFinance, dbFinance);
                     } else {
-                        EmployeesAndTurnover employeesAndTurnover = dbFinance.getEmployeesAndTurnover();
-                        EmployeesAndTurnoverResource employeesAndTurnoverResource = (EmployeesAndTurnoverResource) applicationFinance.getFinancialYearAccounts();
-                        employeesAndTurnover.setTurnover(employeesAndTurnoverResource.getTurnover());
-                        employeesAndTurnover.setEmployees(employeesAndTurnoverResource.getEmployees());
+                        updateEmployeesAndTurnover(applicationFinance, dbFinance);
                     }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
@@ -199,6 +189,24 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
                     return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
                 })
         );
+    }
+
+    private void updateEmployeesAndTurnover(ApplicationFinanceResource applicationFinance, ApplicationFinance dbFinance) {
+        EmployeesAndTurnover employeesAndTurnover = dbFinance.getEmployeesAndTurnover();
+        EmployeesAndTurnoverResource employeesAndTurnoverResource = (EmployeesAndTurnoverResource) applicationFinance.getFinancialYearAccounts();
+        employeesAndTurnover.setTurnover(employeesAndTurnoverResource.getTurnover());
+        employeesAndTurnover.setEmployees(employeesAndTurnoverResource.getEmployees());
+    }
+
+    private void updateGrowthTable(ApplicationFinanceResource applicationFinance, ApplicationFinance dbFinance) {
+        GrowthTable growthTable = dbFinance.getGrowthTable();
+        GrowthTableResource growthTableResource = (GrowthTableResource) applicationFinance.getFinancialYearAccounts();
+        growthTable.setAnnualExport(growthTableResource.getAnnualExport());
+        growthTable.setAnnualProfits(growthTableResource.getAnnualProfits());
+        growthTable.setAnnualTurnover(growthTableResource.getAnnualTurnover());
+        growthTable.setResearchAndDevelopment(growthTableResource.getResearchAndDevelopment());
+        growthTable.setFinancialYearEnd(growthTableResource.getFinancialYearEnd());
+        growthTable.setEmployees(growthTableResource.getEmployees());
     }
 
     /**

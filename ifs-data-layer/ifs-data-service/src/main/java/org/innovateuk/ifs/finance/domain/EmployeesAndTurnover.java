@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 @Entity
 public class EmployeesAndTurnover extends FinancialYearAccounts {
 
+    private BigDecimal turnover;
+
     public EmployeesAndTurnover() {
         super();
     }
@@ -14,8 +16,6 @@ public class EmployeesAndTurnover extends FinancialYearAccounts {
         super(employeesAndTurnover);
         this.turnover = employeesAndTurnover.getTurnover();
     }
-
-    private BigDecimal turnover;
 
     public BigDecimal getTurnover() {
         return turnover;
