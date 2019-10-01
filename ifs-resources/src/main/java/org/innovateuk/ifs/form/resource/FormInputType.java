@@ -6,6 +6,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * FormInputType is used to identify what response a FormInput needs.
