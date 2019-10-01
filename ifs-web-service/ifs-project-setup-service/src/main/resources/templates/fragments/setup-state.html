@@ -41,9 +41,24 @@
 
     <p class="govuk-body">You will be contacted by:</p>
     <ul class="govuk-list govuk-list--bullet">
-        <li>your monitoring officer about your project</li>
-        <li>your credit specialist about your loan</li>
+        <li>the Innovation Loans team with your loan offer letter, other documents and links</li>
+        <li>your monitoring officer to discuss your project</li>
     </ul>
+
+    <p class="govuk-body">Your loan will not become available until you have completed all the necessary documentation. <br/>
+        This includes
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>your loan agreement</li>
+        <li>your customer (KYC) identity checks</li>
+        <li>anti money laundering (AML) checks</li>
+        <li>security documentation</li>
+    </ul>
+
+    <div class="govuk-!-margin-top-9">
+        <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
+        <a th:href="@{~/survey/{competitionId}/feedback(competitionId=${model.competitionId}, type=PROJECT_SUBMISSION)}" class="govuk-button">Give us feedback</a>
+    </div>
 </th:block>
 
 <th:block th:fragment="unsuccessful" xmlns:th="http://www.w3.org/1999/html">
