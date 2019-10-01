@@ -29,22 +29,20 @@
         <h2 class="govuk-panel__title">We have approved your loan</h2>
         <div class="govuk-panel__body govuk-!-font-size-19">
             Loan approved for '<span th:text="${model.competitionName}"/>'<br/>
-            on
+            was submitted on
             <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
             at
             <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>
             .
         </div>
     </div>
-
+    <p class="govuk-body">The loan approval is subject to you meeting the conditions set out in your loan offer letter.</p>
     <h2 class="govuk-heading-l">What happens next?</h2>
-
     <p class="govuk-body">You will be contacted by:</p>
     <ul class="govuk-list govuk-list--bullet">
         <li>the Innovation Loans team with your loan offer letter, other documents and links</li>
         <li>your monitoring officer to discuss your project</li>
     </ul>
-
     <p class="govuk-body">Your loan will not become available until you have completed all the necessary documentation. <br/>
         This includes
     </p>
@@ -54,7 +52,6 @@
         <li>anti money laundering (AML) checks</li>
         <li>security documentation</li>
     </ul>
-
     <div class="govuk-!-margin-top-9">
         <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
         <a th:href="@{~/survey/{competitionId}/feedback(competitionId=${model.competitionId}, type=PROJECT_SUBMISSION)}" class="govuk-button">Give us feedback</a>
