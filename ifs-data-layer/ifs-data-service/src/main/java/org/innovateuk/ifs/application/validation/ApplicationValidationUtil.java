@@ -16,7 +16,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,7 +197,7 @@ public class ApplicationValidationUtil {
 
     private List<ValidationMessages> isMultipleStatusFormInputValid(Application application, Long markedAsCompleteById, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        if (formInput.getFormValidators().isEmpty() && !hasValidator(formInput)) {
+        if (formInput.getFormValidators().isEmpty()) {
             // no validator? question is valid!
         } else {
             ValidationMessages validationResult = applicationValidatorService.validateFormInputResponse(application, formInput.getId(), markedAsCompleteById);
@@ -208,10 +207,6 @@ public class ApplicationValidationUtil {
             }
         }
         return validationMessages;
-    }
-
-    private boolean hasValidator(FormInput formInput) {
-        return formInput.getType().equals(FormInputType.FINANCE_UPLOAD);
     }
 
 }

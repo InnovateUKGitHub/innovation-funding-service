@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -31,9 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.fromBindingResult;
-import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -92,10 +89,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         BindingResult result = applicationValidationUtil.validateResponse(response, false);
 
-        ValidationMessages validationMessages = fromBindingResult(result);
-        validationMessages.addAll(validateFileUploads(application, formInputId));
-
-        return validationMessages;
+        return fromBindingResult(result);
     }
 
 
@@ -118,19 +112,6 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     @Override
     public FinanceRowHandler getProjectCostHandler(FinanceRowItem costItem) {
         return projectFinanceRowService.getCostHandler(costItem);
-    }
-
-    private ValidationMessages validateFileUploads(Application application, Long formInputId) {
-        FormInput formInput = formInputRepository.findById(formInputId).get();
-
-        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && jesFinances(application)) {
-            if (financeFileIsNotPresent(application)) {
-                Error error = fieldError("jesFileUpload", null, "validation.application.jes.upload.required");
-                return new ValidationMessages(error);
-            }
-        }
-
-        return noErrors(formInputId);
     }
 
     //This method is duplicating work in FinanceUtil

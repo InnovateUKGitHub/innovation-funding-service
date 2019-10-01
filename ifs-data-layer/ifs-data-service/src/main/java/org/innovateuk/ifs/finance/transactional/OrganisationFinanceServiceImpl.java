@@ -273,8 +273,6 @@ public class OrganisationFinanceServiceImpl extends BaseTransactionalService imp
                                 processRole.getId()
                         ));
 
-        Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
-
         resetFundingLevel(applicationFinance);
     }
 
