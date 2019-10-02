@@ -17,7 +17,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -30,7 +29,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.fromBindingResult;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -114,15 +115,17 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return projectFinanceRowService.getCostHandler(costItem);
     }
 
-    //This method is duplicating work in FinanceUtil
-    private boolean jesFinances(Application application) {
-        Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
-        if(userResult.isPresent()) {
-            OrganisationResource organisationResource = organisationService.getByUserAndApplicationId(userResult.get().getId(), application.getId()).getSuccess();
-            return application.getCompetition().getIncludeJesForm() && OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
-        }
-
-        return false;
+    @Override
+    public ValidationMessages validateAcademicUpload(Application application, Long markedAsCompleteById) {
+        return getProcessRole(markedAsCompleteById).andOnSuccessReturn(role -> {
+            OrganisationResource organisation = organisationService.findById(role.getOrganisationId()).getSuccess();
+            if (application.getCompetition().applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
+                if (financeFileIsNotPresent(application)) {
+                    return new ValidationMessages(fieldError("jesFileUpload", null, "validation.application.jes.upload.required"));
+                }
+            }
+            return noErrors();
+        }).getSuccess();
     }
 
     private boolean financeFileIsNotPresent(Application application) {

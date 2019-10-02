@@ -6,6 +6,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * FormInputType is used to identify what response a FormInput needs.
@@ -30,6 +32,9 @@ public enum FormInputType implements IdentifiableEnum {
 
     private static List<FormInputType> PRINT_TYPES = asList(APPLICATION_DETAILS, TEXTAREA);
 
+    private static List<FormInputType> FINANCE_TYPES = asList(STAFF_COUNT, ORGANISATION_TURNOVER, FINANCIAL_YEAR_END, FINANCIAL_OVERVIEW_ROW, FINANCIAL_STAFF_COUNT);
+
+    private static List<FormInputType> FINANCIAL_SUMMARY_TYPES = singletonList(FINANCIAL_SUMMARY);
     private long id;
 
     FormInputType(long id) {
@@ -48,6 +53,11 @@ public enum FormInputType implements IdentifiableEnum {
     public boolean isDisplayablePrintType() {
         return PRINT_TYPES.contains(this);
     }
+
+    public boolean isDisplayableQuestionType() {
+        return !combineLists(FINANCE_TYPES, FINANCIAL_SUMMARY_TYPES).contains(this);
+    }
+
 
     public static FormInputType findByName(String name) {
         return stream(values())

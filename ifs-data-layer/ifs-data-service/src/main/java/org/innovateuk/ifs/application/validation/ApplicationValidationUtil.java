@@ -114,6 +114,7 @@ public class ApplicationValidationUtil {
                     .stream()
                     .filter(competitionFinanceTypes::contains)
                     .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
+            validationMessages.addAll(applicationValidatorService.validateAcademicUpload(application, markedAsCompleteById));
         } else if (SectionType.FUNDING_FINANCES == section.getType()) {
             asSet(FINANCE, OTHER_FUNDING)
                     .stream()
@@ -122,6 +123,7 @@ public class ApplicationValidationUtil {
         }
         return validationMessages;
     }
+
 
     public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
