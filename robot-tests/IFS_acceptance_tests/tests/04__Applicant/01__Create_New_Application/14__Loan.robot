@@ -277,7 +277,7 @@ the applicant should see the project setup complete stage enabled
     the user clicks the button/link  link = Project setup complete
     the user navigates to the page   ${loan_PS}/setup
     the user should see the element  jQuery = h1:contains("Project setup complete")
-    the user should see the element  jQuery = h2:contains("Your project will be reviewed by Innovate UK")
+    the user should see the element  jQuery = h2:contains("Your project will be reviewed")
     Log in as a different user       &{internal_finance_credentials}
 
 the applicant checks for project status
@@ -287,9 +287,9 @@ the applicant checks for project status
     the user should see the element   jQuery = .progress-list li:nth-child(7):contains("Completed")
     the user clicks the button/link   link = Project setup complete
     the user navigates to the page    ${loan_PS}/setup
-    the user should see the element   jQuery = h2:contains("We have approved your loan application")
+    the user should see the element   jQuery = h2:contains("We have approved your loan")
     the user navigates to the page    ${server}/project-setup/project/${loan_PS_project_Id2}/setup
-    the user should see the element   jQuery = h2:contains("Your loan application has not been successful in this competition")
+    the user should see the element   jQuery = h2:contains("We have not approved your loan")
 
 the user should see the finished finance checks
     the user navigates to the page    ${loan_PS}/finance-checks
