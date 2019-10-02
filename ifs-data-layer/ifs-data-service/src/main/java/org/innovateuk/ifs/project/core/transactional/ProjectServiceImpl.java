@@ -190,7 +190,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
+    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final long applicationId) {
         Optional<ProjectResource> existingProject = getByApplicationId(applicationId).getOptionalSuccessObject();
         if (existingProject.isPresent()) {
             return serviceSuccess(existingProject.get());
@@ -201,7 +201,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(final long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
 
