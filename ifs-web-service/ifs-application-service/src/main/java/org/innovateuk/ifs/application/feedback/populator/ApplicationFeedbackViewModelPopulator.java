@@ -118,6 +118,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
 
+        //TODO
         return new ApplicationFeedbackViewModel(
                 application,
                 competition,
