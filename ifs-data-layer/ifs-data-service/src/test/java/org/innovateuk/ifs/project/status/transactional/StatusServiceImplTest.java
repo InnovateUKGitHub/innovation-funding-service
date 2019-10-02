@@ -1526,9 +1526,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
-        when(eligibilityWorkflowHandlerMock.getState(any(PartnerOrganisation.class))).thenReturn(EligibilityState.REVIEW);
-        when(viabilityWorkflowHandlerMock.getState(any(PartnerOrganisation.class))).thenReturn(ViabilityState.REVIEW);
-
         ProjectPartnerStatusResource expectedLeadPartnerOrganisationStatus = newProjectPartnerStatusResource().
                 withName(organisations.get(0).getName()).
                 withOrganisationType(
@@ -1573,8 +1570,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 build();
 
         // try without filtering
-        ProjectTeamStatusResource result = service.getProjectTeamStatus(p.getId(), Optional.empty()).getSuccess();
-        assertEquals(expectedProjectTeamStatusResource, result);
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.empty());
+        assertTrue(result.isSuccess());
+        assertEquals(expectedProjectTeamStatusResource, result.getSuccess());
 
         List<ProjectPartnerStatusResource> expectedPartnerStatusesFilteredOnNonLead = newProjectPartnerStatusResource().
                 withName(organisations.get(2).getName()).

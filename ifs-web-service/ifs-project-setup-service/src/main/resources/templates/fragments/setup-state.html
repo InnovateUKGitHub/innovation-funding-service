@@ -28,7 +28,7 @@
         <h2 class="govuk-panel__title">We have approved your loan</h2>
         <div class="govuk-panel__body govuk-!-font-size-19">
             Loan approved for '<span th:text="${model.competitionName}"/>'<br/>
-            was submitted on
+            on
             <th:block th:text="${#temporals.format(model.submittedDate, 'd MMM yyyy')}"/>
             at
             <th:block th:text="${#strings.toLowerCase(#temporals.format(model.submittedDate, 'h:mma'))}"/>.
@@ -42,7 +42,7 @@
         <li>your monitoring officer to discuss your project</li>
     </ul>
     <p class="govuk-body">Your loan will not become available until you have completed all the necessary documentation. <br/>
-        This includes
+        This includes:
     </p>
     <ul class="govuk-list govuk-list--bullet">
         <li>your loan agreement</li>
