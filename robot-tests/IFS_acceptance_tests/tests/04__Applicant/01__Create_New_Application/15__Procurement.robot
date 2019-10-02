@@ -2,6 +2,8 @@
 Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-5097 Update to overhead costs in procurement application
+...
+...             IFS-6368 Loans - Remove Documents
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -15,10 +17,10 @@ ${appl_name}         Procurement app
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]
+    [Documentation]  IFS-6368
     [Tags]
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  release-feedback-completion-stage  no  2  true  single-or-collaborative
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  project-setup-completion-stage  no  2  true  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
@@ -109,13 +111,15 @@ the comp admin closes the assessment and releases feedback
     And moving competition to Project Setup           ${competitionId}
     Then the user should not see an error in the page
 
-the procurement comp moves to Previous tab
-    [Documentation]  IFS-2376
+the procurement comp moves to project setup tab
+    [Documentation]  IFS-2376  IFS-6368
     [Tags]
-    Given the user clicks the button/link  link = Dashboard
-    When the user clicks the button/link   jQuery = a:contains("Previous")
-    Then the user clicks the button/link   link = ${comp_name}
-    And the user should see the element    JQuery = h1:contains("${comp_name}")
+    Given the user clicks the button/link    link = Dashboard
+    When the user clicks the button/link     jQuery = a:contains("Project setup")
+    Then the user clicks the button/link     link = ${comp_name}
+    And the user should see the element      jQuery = h1:contains("${comp_name}")
+    And the user should not see the element  jQuery = th:contains("Documents")
+    And the user should not see the element  jQuery = #table-project-status th:contains("${comp_name}") ~ td:contains("Pending")
 
 *** Keywords ***
 Custom Suite Setup
@@ -173,7 +177,7 @@ Competition is closed
 
 the assessor submits the assessment
     the user clicks the button/link               link = Finances overview
-    then the user should see the element          jQuery = h2:contains("Project cost breakdown") ~ div:contains("Total VAT")
+    the user should see the element               jQuery = h2:contains("Project cost breakdown") ~ div:contains("Total VAT")
     the user clicks the button/link               link = Back to your assessment overview
     the assessor adds score and feedback for every question    11   # value 5: is the number of questions to loop through to submit feedback
     the user clicks the button/link               link = Review and complete your assessment
@@ -183,7 +187,7 @@ the assessor submits the assessment
     the user clicks the button/link               jQuery = li:contains("${appl_name}") label[for^="assessmentIds"]
     the user clicks the button/link               jQuery = .govuk-button:contains("Submit assessments")
     the user clicks the button/link               jQuery = button:contains("Yes I want to submit the assessments")
-    the user should see the element               jQuery = li:contains("${appl_name}") strong:contains("Recommended")   #
+    the user should see the element               jQuery = li:contains("${appl_name}") strong:contains("Recommended")
 
 Custom suite teardown
     Close browser and delete emails
