@@ -89,13 +89,14 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
 
+        setDefaultProjectDocuments(competition);
+
         initialiseFinanceTypes(competition);
         initialiseProjectSetupColumns(competition);
 
-        setDefaultProjectDocuments(competition);
-
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
     }
+
     private void setDefaultProjectDocuments(Competition competition) {
         FileType pdfFileType = fileTypeRepository.findByName("PDF");
 

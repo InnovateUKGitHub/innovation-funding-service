@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
@@ -80,7 +81,7 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
 
             List<CompetitionDocument> savedCompetitionDocuments = (List<CompetitionDocument>) competitionDocumentConfigRepository.saveAll(competitionDocuments);
 
-            Competition competition = savedCompetitionDocuments.stream().findFirst().get().getCompetition();
+            Competition competition = savedCompetitionDocuments.stream().findFirst().orElseThrow(ObjectNotFoundException::new).getCompetition();
 
             Optional<ProjectStages> projectStage = competition.getProjectStages()
                     .stream()
