@@ -77,7 +77,7 @@ public class ApplicationFeedbackController {
 
     private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
         boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased();
-        if (!competition.getCompetitionStatus().isFeedbackReleased()) {
+        if (!feedbackAvailable) {
             feedbackAvailable = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
         }
         return application.isSubmitted() && feedbackAvailable;

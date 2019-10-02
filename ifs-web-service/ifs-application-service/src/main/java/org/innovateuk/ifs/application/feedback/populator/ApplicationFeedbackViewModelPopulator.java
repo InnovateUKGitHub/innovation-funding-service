@@ -120,7 +120,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
 
         return new ApplicationFeedbackViewModel(
                 application,
-                competition, //TODO do we need the entire competition?
+                competition,
                 leadOrganisation,
                 partners,
                 organisationFinanceOverview.getTotalFundingSought(),
