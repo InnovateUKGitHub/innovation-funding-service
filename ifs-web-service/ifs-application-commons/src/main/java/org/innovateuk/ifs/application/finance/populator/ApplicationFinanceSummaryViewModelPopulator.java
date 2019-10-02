@@ -86,7 +86,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                     .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection))
                     .collect(toList());
 
-            rows.addAll(pendingOrganisations(applicationId));
+            if (!application.isSubmitted()) {
+                rows.addAll(pendingOrganisations(applicationId));
+            }
         }
 
         return new ApplicationFinanceSummaryViewModel(applicationId, rows, !open,
