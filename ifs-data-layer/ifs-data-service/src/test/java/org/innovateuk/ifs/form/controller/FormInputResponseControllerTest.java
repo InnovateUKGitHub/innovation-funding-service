@@ -128,7 +128,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 assertEquals("", firArgument.getValue());
                 return true;
             }
-        }))).thenReturn(serviceSuccess(formInputResponse));
+        }))).thenReturn(serviceSuccess(newFormInputResponseResource().build()));
 
         String contentString = String.format("{\"userId\":%s,\"applicationId\":%s,\"formInputId\":%s,\"value\":\"\"}",userId, appId, formInputId);
         mockMvc.perform(post("/forminputresponse/save-question-response/")
