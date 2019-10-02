@@ -167,6 +167,14 @@ public class FinanceCheckSummaryResource {
         this.h2020 = h2020;
     }
 
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public void setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+    }
+
     @JsonIgnore
     public boolean isFinanceChecksAllApproved() {
         return isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
@@ -176,7 +184,6 @@ public class FinanceCheckSummaryResource {
 
         List<Viability> relevantStatuses = asList(
                 Viability.APPROVED,
-                Viability.COMPLETED_OFFLINE,
                 Viability.NOT_APPLICABLE);
 
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
@@ -234,14 +241,6 @@ public class FinanceCheckSummaryResource {
     public Long getApplicationId() { return applicationId; }
 
     public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
-
-    public FundingType getFundingType() {
-        return fundingType;
-    }
-
-    public void setFundingType(FundingType fundingType) {
-        this.fundingType = fundingType;
-    }
 
     @JsonIgnore
     public boolean isLoan() {
