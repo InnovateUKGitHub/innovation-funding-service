@@ -209,7 +209,6 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return !questionStatuses.isEmpty();
     }
 
-
     private Optional<Boolean> isMarkedAsCompleteForOrganisation(QuestionStatus questionStatus, long organisationId) {
         Boolean markedAsComplete = null;
         if (questionStatus.getMarkedAsCompleteBy() != null &&
@@ -241,9 +240,29 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return pr != null && pr.getOrganisationId() == organisationId;
     }
 
-    protected ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
+    protected ServiceResult<List<ValidationMessages>> setComplete(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
         return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
                 -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete, updateApplicationCompleteStatus));
+    }
+
+    protected ServiceResult<List<ValidationMessages>>  setComplete(long [] questionIds, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
+        return find(processRole(processRoleId), openApplication(applicationId))
+                .andOnSuccess((markedAsCompleteBy, application) -> find(getQuestionsSupplier(questionIds))
+                        .andOnSuccess(questions -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, questions, processRoleId, markAsComplete, updateApplicationCompleteStatus))
+        );
+    }
+
+    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy,
+                                                                                Application application,
+                                                                                List<Question> questions,
+                                                                                long processRoleId,
+                                                                                boolean markAsComplete,
+                                                                                boolean updateApplicationCompleteStatus) {
+        List<ValidationMessages> validationMessages = new ArrayList<>();
+        questions
+                .forEach(question -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete, updateApplicationCompleteStatus)
+                .andOnSuccessReturn(validationMessages::addAll));
+        return serviceSuccess(validationMessages);
     }
 
     private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy,
@@ -310,7 +329,11 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return null;
     }
 
-    private Supplier<ServiceResult<Question>> getQuestionSupplier(Long questionId) {
+    private Supplier<ServiceResult<Question>> getQuestionSupplier(long questionId) {
         return () -> find(questionRepository.findById(questionId), notFoundError(Question.class, questionId));
+    }
+
+    private Supplier<ServiceResult<List<Question>>> getQuestionsSupplier(long [] questionIds) {
+        return () -> find(questionRepository.findAllById(questionIds), notFoundError(Question.class, questionIds));
     }
 }

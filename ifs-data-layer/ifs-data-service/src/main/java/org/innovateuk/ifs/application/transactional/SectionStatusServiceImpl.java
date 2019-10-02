@@ -4,6 +4,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.SectionStatus;
+import org.innovateuk.ifs.application.repository.SectionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
@@ -16,15 +18,19 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static java.util.Collections.singleton;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
@@ -49,6 +55,16 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Autowired
     private ApplicationValidationUtil validationUtil;
+
+    @Autowired
+    private SectionStatusRepository sectionStatusRepository;
+
+    @Autowired
+    private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private ApplicationProgressService applicationProgressService;
+
 
     @Override
     public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final long applicationId) {
@@ -134,6 +150,8 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     private void markSectionAsComplete(Section section, Application application, long markedAsCompleteById) {
+
+
         sectionService.getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
             questionStatusService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.
@@ -173,7 +191,11 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         });
     }
 
+
+  // org -> completedSections
     private Map<Long, Set<Long>> completedSections(Application application) {
+
+
 
         List<Section> sections = application.getCompetition().getSections();
         List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
@@ -246,4 +268,20 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                                 .collect(toList())
                 ));
     }
+
+    private void markSectionComplete(long applicationId, long sectionId, long processRoleId) {
+        find(sectionStatus(applicationId, sectionId), processRole(processRoleId))
+                .andOnSuccessReturnVoid((sectionStatus, processRole) -> sectionStatus.markAsComplete(processRole, ZonedDateTime.now()));
+
+        applicationProgressService.updateApplicationProgress(applicationId).getSuccess();
+
+    }
+
+    private Supplier<ServiceResult<SectionStatus>> sectionStatus(long applicationId, long sectionId) {
+        return () -> find(
+                sectionStatusRepository.getByApplicationIdAndSectionIdAndOrganisationIsNull(applicationId, sectionId),
+                notFoundError(ProcessRole.class, applicationId, sectionId)
+        );
+    }
+
 }

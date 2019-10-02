@@ -14,6 +14,7 @@ import java.util.List;
 public interface QuestionRepository extends PagingAndSortingRepository<Question, Long> {
 	@Override
     List<Question> findAll();
+	List<Question> findAllById(long [] id);
 	Question findFirstById(Long questionId);
     List<Question> findByCompetitionId(Long competitionId);
     Question findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long sectionId, Integer priority);
