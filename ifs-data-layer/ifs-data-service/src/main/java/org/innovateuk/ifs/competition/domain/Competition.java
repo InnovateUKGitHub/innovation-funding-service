@@ -730,7 +730,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
-        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+        return isH2020() || isProcurement();
     }
 
     public boolean isLoan() {
@@ -739,6 +739,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public boolean isGrant() {
         return FundingType.GRANT.equals(fundingType);
+    }
+
+    public boolean isProcurement() {
+        return FundingType.PROCUREMENT.equals(fundingType);
     }
 
     public void releaseFeedback(ZonedDateTime date) {

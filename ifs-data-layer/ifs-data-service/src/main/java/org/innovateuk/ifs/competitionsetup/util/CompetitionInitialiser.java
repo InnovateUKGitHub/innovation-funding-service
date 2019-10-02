@@ -13,6 +13,25 @@ import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 public final class CompetitionInitialiser {
 
+    public static Competition initialiseProjectSetupColumns(Competition competition) {
+        if (competition.getFundingType() == null) {
+            return competition;
+        }
+        switch (competition.getFundingType()) {
+            case GRANT:
+                addGrantProjectSetupColumns(competition);
+                break;
+            case LOAN:
+                addLoanProjectSetupColumns(competition);
+                break;
+            case PROCUREMENT:
+                addProcurementProjectSetupColumns(competition);
+            default:
+                break;
+        }
+        return competition;
+
+    }
     public static Competition initialiseFinanceTypes(Competition competition) {
         if (competition.getFundingType() == null) {
             return competition;
@@ -20,15 +39,12 @@ public final class CompetitionInitialiser {
         switch (competition.getFundingType()) {
             case GRANT:
                 addGrantFinanceTypes(competition);
-                addGrantProjectSetupColumns(competition);
                 break;
             case LOAN:
                 addLoanFinanceTypes(competition);
-                addLoanProjectSetupColumns(competition);
                 break;
             case PROCUREMENT:
                 addProcurementFinanceTypes(competition);
-                addProcurementProjectSetupColumns(competition);
             default:
                 break;
         }
