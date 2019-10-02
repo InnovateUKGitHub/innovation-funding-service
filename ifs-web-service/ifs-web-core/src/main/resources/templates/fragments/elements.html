@@ -11,7 +11,8 @@
 
 <th:block th:fragment="global-cookie-message">
     <div id="global-cookie-message">
-        <p class="govuk-body">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies" class="govuk-link">Find out more about cookies</a>.</p>
+        <p class="govuk-body">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies" class="govuk-link">Find
+            out more about cookies</a>.</p>
     </div>
 </th:block>
 
@@ -69,14 +70,15 @@
 <!-- =========================== Element: simple ordinal day =========================== -->
 
 <th:block th:fragment="ordinal-day (date)">
-    <th:block th:text="${#temporals.day(date)}" />
+    <th:block th:text="${#temporals.day(date)}"/>
 </th:block>
 
 <!-- =========================== Element: Competition Closing soon? =========================== -->
 <th:block th:fragment="competition-closing-warning (competition) ">
     <th:block th:if="${competition.isClosingSoon()}">
         <div class="warning-alert">
-            <p class="govuk-body">Please note that this competition will close shortly. You will not be able to submit after the competition closes and any edits you make will not be saved.</p>
+            <p class="govuk-body">Please note that this competition will close shortly. You will not be able to submit
+                after the competition closes and any edits you make will not be saved.</p>
         </div>
     </th:block>
 </th:block>
@@ -86,9 +88,10 @@
     <div th:class="*{size != null} ? 'progress-container '+${size} : 'progress-container'">
         <div class="progress-indicator">
             <div aria-hidden="true" class="progress-totals progress-totals--min">0%</div>
-            <div class="progress" th:attr="aria-valuenow=${percentage}" aria-valuemin="0" aria-valuemax="100" role="progressbar" th:style="'width:'+${percentage}+'%'">
+            <div class="progress" th:attr="aria-valuenow=${percentage}" aria-valuemin="0" aria-valuemax="100"
+                 role="progressbar" th:style="'width:'+${percentage}+'%'">
                 <div>
-                    <th:block th:text="${percentage}+'%'" />
+                    <th:block th:text="${percentage}+'%'"/>
                     <span class="govuk-visually-hidden"> Complete</span>
                 </div>
             </div>
@@ -99,13 +102,15 @@
 
 <!-- =========================== Element: Notification / event =========================== -->
 <th:block th:fragment="notification">
-    <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
-        <p class="govuk-body"><span th:text="${notification?.assignedByName + ' has assigned ' + questions + ' to you'}"></span></p>
+    <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}"
+         th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
+        <p class="govuk-body"><span
+            th:text="${notification?.assignedByName + ' has assigned ' + questions + ' to you'}"></span></p>
     </div>
-    <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" >
+    <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert">
         <p class="govuk-body"><span>Your changes have been saved</span></p>
     </div>
-    <div th:if="${assignedQuestion}" class="event-alert" >
+    <div th:if="${assignedQuestion}" class="event-alert">
         <p class="govuk-body"><span>You have successfully assigned the question</span></p>
     </div>
     <div th:if="${invitesSend}" class="event-alert">
@@ -117,13 +122,13 @@
     <div th:if="${inviteAlreadyAccepted}" class="event-alert">
         <p class="govuk-body"><span>Invite already accepted</span></p>
     </div>
-    <div th:if="${fileUploaded}" class="event-alert" >
+    <div th:if="${fileUploaded}" class="event-alert">
         <p class="govuk-body"><span>You have uploaded file successfully</span></p>
     </div>
-    <div th:if="${fileRemoved}" class="event-alert" >
+    <div th:if="${fileRemoved}" class="event-alert">
         <p class="govuk-body"><span>File has been removed successfully</span></p>
     </div>
-    <div th:if="${emailSent}" class="event-alert" >
+    <div th:if="${emailSent}" class="event-alert">
         <p class="govuk-body"><span>The email has been sent successfully</span></p>
     </div>
 </th:block>
@@ -131,10 +136,10 @@
 <!-- =========================== Element: Formatted Date =========================== -->
 <th:block th:fragment="pretty-date (date)">
     <th:block th:with="today=(${#temporals.createToday()})">
-        <th:block th:if="${date.toLocalDate().equals(today)}" th:text="today" />
-        <th:block th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="yesterday" />
+        <th:block th:if="${date.toLocalDate().equals(today)}" th:text="today"/>
+        <th:block th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="yesterday"/>
         <th:block th:unless="${date.toLocalDate().equals(today)} or ${date.toLocalDate().equals(today.minusDays(1))}">
-          <th:block th:text="${#temporals.format(date, 'd MMMM')}"/>
+            <th:block th:text="${#temporals.format(date, 'd MMMM')}"/>
         </th:block>
     </th:block>
     <th:block th:text="${#strings.toLowerCase(#temporals.format(date, 'h:mma'))}"/>
@@ -148,7 +153,7 @@
                 <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
             </legend>
             <th:block th:if="${#fields.hasErrors('stateAidAgreed')}">
-                <span class="govuk-error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}"/>
             </th:block>
             <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
@@ -158,7 +163,7 @@
                            type="checkbox"
                            value="yes"
                            data-switches-button-status="#mark-all-as-complete"
-                           data-autosave-disabled />
+                           data-autosave-disabled/>
                     <label for="agree-state-aid"
                            class="govuk-label govuk-checkboxes__label">
                         I confirm that by submitting my application my organisation will be
@@ -177,9 +182,10 @@
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <th:block th:fragment="application-agree-to-state-aid">
-    <div th:class="${#fields.hasErrors('stateAidAgreed')}? 'govuk-form-group govuk-form-group--error':'govuk-form-group'">
+    <div
+        th:class="${#fields.hasErrors('stateAidAgreed')}? 'govuk-form-group govuk-form-group--error':'govuk-form-group'">
         <th:block th:if="${#fields.hasErrors('stateAidAgreed')}">
-            <span class="govuk-error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
+            <span class="govuk-error-message" th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}"/>
         </th:block>
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">
@@ -189,7 +195,7 @@
                        type="checkbox"
                        value="yes"
                        data-switches-button-status="#mark-all-as-complete"
-                       data-autosave-disabled />
+                       data-autosave-disabled/>
                 <label for="stateAidAgreed"
                        class="govuk-label govuk-checkboxes__label">
                     By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
@@ -201,38 +207,54 @@
                 </label>
             </div>
         </div>
-
     </div>
 </th:block>
 
 <!-- =========================== Element: Competition status warning ================ -->
 
 <th:block th:fragment="competition-status-message (applicationState, competition, projectWithdrawn)">
-    <div class="warning-alert" th:if="${(applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).CREATED or applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).OPENED) and competition.competitionStatus.name() != 'OPEN'}">
+    <div class="warning-alert"
+         th:if="${(applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).CREATED or applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).OPENED) and competition.competitionStatus.name() != 'OPEN'}">
         <h2 class="govuk-heading-s govuk-!-margin-0">Application not submitted</h2>
-        <p class="govuk-body">This application has not been entered into the competition <th:block th:text="${competition.name}" /> as it was not submitted before the competition deadline.</p>
+        <p class="govuk-body">This application has not been entered into the competition
+            <th:block th:text="${competition.name}"/> as it was not submitted before the competition deadline.
+        </p>
     </div>
     <div class="warning-alert" th:if="${projectWithdrawn}">
         <h2 class="govuk-heading-s govuk-!-margin-0">This project has been withdrawn.</h2>
         <p class="govuk-body">The application was successful but withdrawn at project setup stage. The scores and written feedback from each assessor can be found below.</p>
     </div>
     <th:block th:unless="${projectWithdrawn}">
-		<div class="success-alert" th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).APPROVED}">
-	        <h2 class="govuk-heading-s govuk-!-margin-0">Congratulations, your application has been successful</h2>
-	        <p class="govuk-body">
-                <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
-                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
-                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}" />
-            </p>
-            <p class="govuk-body" th:if="${currentProject}">
-                <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}" class="govuk-link">Start to plan your project</a>
-            </p>
+        <div class="success-alert"
+             th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).APPROVED}">
+            <th:block th:unless="${competition.isLoan()}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Congratulations, your application has been successful</h2>
+            </th:block>
+            <th:block th:if="${competition.isLoan()}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Your application has progressed to project setup.</h2>
+            </th:block>
+            <th:block>
+                <p class="govuk-body">
+                    <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
+                    <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
+                    <th:block
+                        th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
+                        th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}"/>
+                </p>
+                <p class="govuk-body" th:if="${currentProject}">
+                    <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}"
+                       class="govuk-link">Start to plan your project</a>
+                </p>
+            </th:block>
         </div>
-        <div class="warning-alert" th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).REJECTED}">
+        <div class="warning-alert"
+             th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).REJECTED}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Your application has not been successful in this competition.</h2>
             <p class="govuk-body">
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
-                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}" />
+                <th:block
+                    th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
+                    th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}"/>
             </p>
         </div>
     </th:block>
@@ -241,7 +263,8 @@
 <!-- =========================== Element: H2020 Information panel ================ -->
 <th:block th:fragment="h2020-information-panel">
     <div class="message-alert govuk-!-margin-bottom-8">
-        <p class="govuk-body">This is a grant transfer service for existing EU funded Horizon 2020 projects only. Your submission will go through our application system.</p>
+        <p class="govuk-body">This is a grant transfer service for existing EU funded Horizon 2020 projects only. Your
+            submission will go through our application system.</p>
     </div>
 </th:block>
 
@@ -250,13 +273,15 @@
 <th:block th:fragment="general-pagination(pagination)">
     <ul class="pagination" th:if="${pagination.totalPages > 1}">
         <li class="prev" th:if="${pagination.hasPrevious}">
-            <a href="#" th:href="${pagination.pageNames[pagination.currentPage - 1].path}" class="govuk-link" rel="prev" title="Navigate to previous page">
+            <a href="#" th:href="${pagination.pageNames[pagination.currentPage - 1].path}" class="govuk-link" rel="prev"
+               title="Navigate to previous page">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title" th:text="${pagination.pageNames[pagination.currentPage - 1].title}">1 to 20</span>
             </a>
         </li>
         <li class="next" th:if="${pagination.hasNext}">
-            <a href="#" th:href="${pagination.pageNames[pagination.currentPage + 1].path}" class="govuk-link" rel="next" title="Navigate to next page">
+            <a href="#" th:href="${pagination.pageNames[pagination.currentPage + 1].path}" class="govuk-link" rel="next"
+               title="Navigate to next page">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title" th:text="${pagination.pageNames[pagination.currentPage + 1].title}">21 to 40</span>
             </a>
@@ -276,13 +301,13 @@
                 <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
                 <th:block th:unless="${err.global}">
                     <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-                    <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                    <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|"
+                       th:text="${err.message}">The error message</a>
                 </th:block>
             </li>
         </ul>
     </div>
 </th:block>
-
 </html>
 
 

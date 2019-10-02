@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -32,7 +31,6 @@ public class ApplicationOverviewData {
     private final Multimap<Long, QuestionStatusResource> statuses;
     private final ProcessRoleResource userProcessRole;
     private final ProcessRoleResource leadApplicant;
-    private final List<ApplicationInviteResource> invites;
     private final List<Long> completedSectionIds;
     private final UserResource user;
     private final Map<Long, Set<Long>> completedSectionsByOrganisation;
@@ -44,7 +42,6 @@ public class ApplicationOverviewData {
                                    List<ProcessRoleResource> processRoles,
                                    OrganisationResource organisation,
                                    List<QuestionStatusResource> statuses,
-                                   List<ApplicationInviteResource> invites,
                                    List<Long> completedSectionIds,
                                    Map<Long, Set<Long>> completedSectionsByOrganisation,
                                    UserResource user) {
@@ -57,7 +54,6 @@ public class ApplicationOverviewData {
         this.statuses = Multimaps.index(statuses, QuestionStatusResource::getQuestion);
         this.userProcessRole = processRoles.stream().filter(role -> role.getUser().equals(user.getId())).findFirst().orElseThrow(ObjectNotFoundException::new);
         this.leadApplicant = processRoles.stream().filter(role -> role.getRole().isLeadApplicant()).findAny().orElseThrow(ObjectNotFoundException::new);
-        this.invites = invites;
         this.completedSectionIds = completedSectionIds;
         this.completedSectionsByOrganisation = completedSectionsByOrganisation;
         this.user = user;
@@ -97,10 +93,6 @@ public class ApplicationOverviewData {
 
     public ProcessRoleResource getLeadApplicant() {
         return leadApplicant;
-    }
-
-    public List<ApplicationInviteResource> getInvites() {
-        return invites;
     }
 
     public List<Long> getCompletedSectionIds() {

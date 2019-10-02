@@ -37,7 +37,8 @@
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
                         </dd>
-                        <dt>Other public sector funding:</dt>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Other public sector funding:</dt>
+                        <dt th:if="${model.financeCheckSummaryResource.loan}">Other funding:</dt>
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}"/>
                         </dd>
@@ -95,7 +96,7 @@
                         <th:block th:if="${orgDetails.isLead()}"> (Lead)</th:block>
                     </th>
                     <td class="govuk-table__cell aligncentre">
-                        <a th:unless="${orgDetails.viability.notApplicable}"
+                        <a th:if="${!orgDetails.viability.notApplicable}"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                            th:classappend="${'viability-' + status.index}"
@@ -107,8 +108,7 @@
                     </td>
                     <td class="govuk-table__cell aligncentre cell-border-right">
                         <span th:if="${orgDetails.viability.notApplicable}"
-                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.rag.GREEN') :
-                              model.financeCheckSummaryResource.loan ? #messages.msg('ifs.project.setup.rag.UNSET') : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.rag.GREEN') : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                               th:classappend="${'viability-rag-' + status.index}"></span>
                         <span th:unless="${orgDetails.viability.notApplicable}"
                               th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"

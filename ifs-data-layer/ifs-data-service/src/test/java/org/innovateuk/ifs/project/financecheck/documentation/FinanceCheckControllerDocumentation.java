@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.documentation.FinanceCheckDocs.*;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
@@ -82,13 +81,10 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
     @Test
     public void getFinanceCheckSummary() throws Exception {
-        long projectId = 123;
-        long competitionId = 456;
+        Long projectId = 123L;
+        Long competitionId = 456L;
 
-        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L)
-                .withName("Organisation A", "Organisation B", "Organisation C")
-                .withEligibility(EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityState.APPROVED)
-                .build(3);
+        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L).withName("Organisation A", "Organisation B", "Organisation C").withEligibility(EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityState.APPROVED).build(3);
 
         FinanceCheckSummaryResource expected = newFinanceCheckSummaryResource().
                 withProjectId(projectId).
@@ -103,7 +99,6 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 withBankDetailslApproved(false).
                 withPartnerStatusResources(partnerStatusResources).
                 withH2020(false).
-                withFundingType(GRANT).
                 build();
 
         when(financeCheckServiceMock.getFinanceCheckSummary(123L)).thenReturn(serviceSuccess(expected));
