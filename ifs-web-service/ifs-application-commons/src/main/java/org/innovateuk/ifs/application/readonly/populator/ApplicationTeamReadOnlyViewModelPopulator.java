@@ -76,8 +76,9 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     }
 
     private boolean showInvites(ApplicationReadOnlyData data) {
-        return data.getApplicantProcessRole().isPresent()
-                || data.getUser().hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR);
+        return !data.getApplication().isSubmitted() &&
+                (data.getApplicantProcessRole().isPresent()
+                || data.getUser().hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR));
     }
 
     private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean internalUser) {
