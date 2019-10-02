@@ -2,12 +2,15 @@ CREATE TABLE section_status (
     id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
     application_id BIGINT(20),
     section_id BIGINT(20),
+
+    organisation_id BIGINT(20),
+
     marked_as_complete BOOLEAN DEFAULT FALSE,
     -- do we care who marked as complete? it's going to be tricky to migrate
     marked_as_complete_by_id BIGINT(20),
     marked_as_complete_on DATETIME,
 
-    UNIQUE KEY section_status_application_section_unique (application_id, section_id),
+    UNIQUE KEY section_status_application_section_unique (application_id, section_id, organisation_id),
 
     CONSTRAINT section_status_application_id_fk FOREIGN KEY (application_id) REFERENCES application (id),
     CONSTRAINT section_status_section_fk FOREIGN KEY (section_id) REFERENCES section (id),
@@ -23,13 +26,19 @@ DELIMITER //
 -- logic is pretty much SectionStatusServiceImpl.isSectionComplete
 -- TODO isFinanceOverviewComplete logic
 
-CREATE FUNCTION section_complete(application_id  BIGINT(20), section_id BIGINT(20))
+CREATE FUNCTION section_complete(application_id BIGINT(20), section_id BIGINT(20), organisation_id BIGINT(20))
     RETURNS BOOLEAN
 BEGIN
 
     IF EXISTS (SELECT 1 FROM question_status qs
                INNER JOIN question q ON qs.question_id = q.id
-               WHERE qs.application_id = application_id AND q.section_id = section_id AND NOT qs.marked_as_complete) THEN
+               LEFT JOIN process_role pr ON pr.id = qs.assignee_id
+               WHERE
+                 qs.application_id = application_id AND
+                 (pr.organisation_id IS NULL OR pr.organisation_id = organisation_id) AND
+                 q.section_id = section_id AND
+                 NOT qs.marked_as_complete
+    ) THEN
       RETURN FALSE;
     END IF;
 
@@ -37,7 +46,13 @@ BEGIN
     IF EXISTS (SELECT 1 FROM question_status qs
                INNER JOIN question q ON qs.question_id = q.id
                INNER JOIN section s ON s.id = q.section_id
-               WHERE s.parent_section_id = section_id AND NOT qs.marked_as_complete) THEN
+               LEFT JOIN process_role pr ON pr.id = qs.assignee_id
+               WHERE
+                 qs.application_id = application_id AND
+                 (pr.organisation_id IS NULL OR pr.organisation_id = organisation_id) AND
+                 s.parent_section_id = section_id AND
+                 NOT qs.marked_as_complete
+    ) THEN
       RETURN FALSE;
     END IF;
 
@@ -50,13 +65,15 @@ DELIMITER ;
 -- writing a migration script for this isn't going to be nice
 -- insert into section_status
 
-INSERT INTO section_status (application_id, section_id, marked_as_complete)
-    SELECT
+INSERT INTO section_status (application_id, section_id, organisation_id, marked_as_complete)
+    SELECT DISTINCT
         a.id                                                AS application_id,
         s.id                                                AS section_id,
-        section_complete(a.id, s.id)  AS section_complete
+        pr.organisation_id                                  AS organisation_id,
+        section_complete(a.id, s.id, pr.organisation_id)  AS section_complete
            -- who marked this section as complete? do we actually care?
     FROM application a
+    INNER JOIN process_role pr on pr.application_id = a.id
     INNER JOIN section s ON s.competition_id = a.competition;
 
 DROP FUNCTION section_complete;

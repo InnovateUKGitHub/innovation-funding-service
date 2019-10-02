@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
@@ -28,6 +29,11 @@ public class SectionStatus {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organisationId", referencedColumnName = "id")
+    private Organisation organisation;
 
     SectionStatus() {
     }
