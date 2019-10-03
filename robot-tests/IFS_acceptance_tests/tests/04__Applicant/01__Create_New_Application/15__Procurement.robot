@@ -10,6 +10,7 @@ Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 Resource        ../../07__Assessor/Assessor_Commons.robot
+Resource        ../../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${comp_name}         Procurement AT Comp
@@ -121,6 +122,27 @@ the procurement comp moves to project setup tab
     And the user should not see the element  jQuery = th:contains("Documents")
     And the user should not see the element  jQuery = #table-project-status th:contains("${comp_name}") ~ td:contains("Pending")
 
+Applicant completes project setup details
+    [Documentation]  IFS-6368
+    [Setup]  Requesting Project ID of this Project
+    Given the user completes the project details
+    And the user completes the project team details
+    And the user enters bank details
+
+Project finance completes all project setup steps
+    [Documentation]  IFS-6368
+    [Setup]  log in as a different user        &{internal_finance_credentials}
+    Given internal user assign MO to loan project
+    And internal user approve bank details
+    And internal user generate SP
+
+Internal user generate the GOL
+    [Documentation]  IFS-6368
+    Given applicant send project spend profile
+    When the internal user approve SP and issue GOL
+    Then applicant upload the GOL
+    And the internal user approve the GOL
+
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
@@ -210,3 +232,93 @@ the user checks the VAT calculations
     the user clicks the button/link                link = Application overview
     the user clicks the button/link                link = Your project finances
 
+the user completes the project details
+    log in as a different user            &{RTO_lead_applicant_credentials}
+    the user navigates to the page        ${server}/project-setup/project/${ProjectID}
+    the user should not see the element   jQuery = h2:contains("Documents")
+    the user clicks the button/link       link = Project details
+    the user clicks the button/link       link = Correspondence address
+    the user enter the Correspondence address
+    the user clicks the button/link       link = Return to set up your project
+    the user should see the element       css = ul li.complete:nth-child(1)
+
+Requesting Project ID of this Project
+    ${ApplicationID} =  get application id by name  ${appl_name}
+    ${ProjectID} =  get project id by name    ${appl_name}
+    Set suite variable    ${ApplicationID}
+    Set suite variable    ${ProjectID}
+
+the user enters bank details
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = accountNumber  ${Account_Two}
+    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link                      id = submit-bank-details
+
+internal user assign MO to loan project
+    the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
+    Search for MO                            Orvill  Orville Gibbs
+    The internal user assign project to MO   ${ApplicationID}  ${appl_name}
+
+internal user approve bank details
+    the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/review-all-bank-details
+    the user clicks the button/link          link = ${Crystalrover_Name}
+    the user clicks the button/link          jQuery = button:contains("Approve bank account details")
+    the user clicks the button/link          id = submit-approve-bank-details
+
+internal user generate SP
+    the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/finance-check
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user selects the checkbox            project-viable
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link          css = #confirm-button
+    the user clicks the button/link          css = [name="confirm-viability"]
+     the user clicks the button/link         link = Finance checks
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
+    the user selects the checkbox            project-eligible
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link          css = #confirm-button
+    the user clicks the button/link          css = [name="confirm-eligibility"]
+    the user clicks the button/link          link = Return to finance checks
+    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
+    the user clicks the button/link          css = .generate-spend-profile-main-button
+    the user clicks the button/link          css = #generate-spend-profile-modal-button
+
+applicant send project spend profile
+    Log in as a different user            &{RTO_lead_applicant_credentials}
+    the user navigates to the page        ${server}/project-setup/project/${ProjectID}
+    the user clicks the button/link       link = Spend profile
+    the user clicks the button/link       link = ${Crystalrover_Name}
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+    the user clicks the button/link       link = Review and send total project spend profile
+    the user clicks the button/link       link = Send project spend profile
+    the user clicks the button/link       id = submit-send-all-spend-profiles
+
+the internal user approve SP and issue GOL
+    log in as a different user        &{internal_finance_credentials}
+    the user navigates to the page    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
+    the user selects the checkbox     approvedByLeadTechnologist
+    the user clicks the button/link   id = accept-profile
+    the user clicks the button/link   jQuery = button:contains("Approve")
+    the user navigates to the page    ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
+    the user uploads the file          grantOfferLetter  ${valid_pdf}
+    the user selects the checkbox      confirmation
+    the user clicks the button/link    jQuery = button:contains("Send to project team")
+    the user clicks the button/link    jQuery = button:contains("Publish to project team")
+
+applicant upload the GOL
+    Log in as a different user            &{RTO_lead_applicant_credentials}
+    the user navigates to the page        ${server}/project-setup/project/${ProjectID}
+    the user clicks the button/link       link = Grant offer letter
+    the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
+    the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
+    the user clicks the button/link       id = submit-gol-for-review
+
+the internal user approve the GOL
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
+    the user selects the radio button   approvalType  acceptGOL
+    the user should see the element     css = #submit-button
