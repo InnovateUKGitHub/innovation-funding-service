@@ -56,16 +56,6 @@ public class ProjectInviteServiceSecurityTest extends BaseServiceSecurityTest<Pr
     }
 
     @Test
-    public void testSaveFinanceContact() {
-        final ProjectUserInviteResource invite = newProjectUserInviteResource().build();
-        assertAccessDenied(
-                () -> classUnderTest.saveProjectInvite(invite),
-                () -> verify(projectInvitePermissionRules)
-                        .partnersOnProjectCanSaveInvite(any(ProjectUserInviteResource.class), any(UserResource.class))
-        );
-    }
-
-    @Test
     public void testGetInvitesByProject() {
         long projectId = 1L;
 
