@@ -20,7 +20,6 @@ public class SetupCompleteViewModelPopulator {
         ProjectResource project = projectService.getById(projectId);
 
         return new SetupCompleteViewModel(
-                project.getCompetition(),
                 project,
                 getSubmittedTime(project));
     }

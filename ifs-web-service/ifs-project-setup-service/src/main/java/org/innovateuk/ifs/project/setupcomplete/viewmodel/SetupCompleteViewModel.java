@@ -14,8 +14,8 @@ public class SetupCompleteViewModel {
     private final ZonedDateTime submittedDate;
     private final ProjectState projectState;
 
-    public SetupCompleteViewModel(long competitionId, ProjectResource projectResource, ZonedDateTime submittedDate) {
-        this.competitionId = competitionId;
+    public SetupCompleteViewModel(ProjectResource projectResource, ZonedDateTime submittedDate) {
+        this.competitionId = projectResource.getCompetition();
         this.competitionName = projectResource.getCompetitionName();
         this.projectId = projectResource.getId();
         this.projectName = projectResource.getName();
