@@ -82,7 +82,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(competition.getCompetitionStatus(), summaryResource.getCompetitionStatus());
         assertEquals(83, summaryResource.getTotalNumberOfApplications());
         assertEquals(1, summaryResource.getApplicationsStarted());
-        assertEquals(1, summaryResource.getApplicationsInProgress());
+        assertEquals(0, summaryResource.getApplicationsInProgress());
         assertEquals(5, summaryResource.getApplicationsSubmitted());
         assertEquals(2, summaryResource.getIneligibleApplications());
         assertEquals(78, summaryResource.getApplicationsNotSubmitted());

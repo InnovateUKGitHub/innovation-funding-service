@@ -113,11 +113,11 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         long appId = 456L;
         long userId = 123L;
         long formInputId = 789L;
-
+        FormInputResponseResource responseResource = newFormInputResponseResource().build();
         FormInputResponse formInputResponse = newFormInputResponse().build();
         BindingResult bindingResult = new DataBinder(formInputResponse).getBindingResult();
         ValidationMessages expected = new ValidationMessages(bindingResult);
-        when(validationUtilMock.validateResponse(formInputResponse, false)).thenReturn(bindingResult);
+        when(validationUtilMock.validateResponse(responseResource, false)).thenReturn(bindingResult);
 
         when(formInputResponseServiceMock.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
             @Override
@@ -128,7 +128,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 assertEquals("", firArgument.getValue());
                 return true;
             }
-        }))).thenReturn(serviceSuccess(newFormInputResponseResource().build()));
+        }))).thenReturn(serviceSuccess(responseResource));
 
         String contentString = String.format("{\"userId\":%s,\"applicationId\":%s,\"formInputId\":%s,\"value\":\"\"}",userId, appId, formInputId);
         mockMvc.perform(post("/forminputresponse/save-question-response/")
