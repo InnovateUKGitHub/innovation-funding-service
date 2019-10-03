@@ -1,3 +1,7 @@
+ALTER TABLE finance_row
+ DROP FOREIGN KEY FK_3ocl28vkv3coj1t5hmgixvl6,
+ DROP COLUMN question_id;
+
 -- Project costs
 DELETE fi FROM form_input fi
     INNER JOIN question q
