@@ -85,48 +85,5 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         long completedQuestionStatuses = questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(application.getId());
         long totalQuestions = questionsWithMultipleStatuses * organisations + questionsWithSingleStatus;
         return percentage(completedQuestionStatuses, totalQuestions);
-
-
-
-
-//
-//
-//
-//
-//        List<Section> sections = application.getCompetition().getSections();
-//
-//        List<Question> questions = sections.stream()
-//                .flatMap(section -> section.getQuestions().stream())
-//                .filter(Question::isMarkAsCompletedEnabled)
-//                .collect(toList());
-//
-//        List<ProcessRole> processRoles = application.getProcessRoles();
-//
-//        Set<Organisation> organisations = processRoles.stream()
-//                .filter(p -> p.getRole() == LEADAPPLICANT
-//                        || p.getRole() == APPLICANT
-//                        || p.getRole() == COLLABORATOR)
-//                .map(processRole -> organisationRepository.findById(processRole.getOrganisationId()).orElse(null))
-//                .collect(Collectors.toSet());
-//
-//        Long countMultipleStatusQuestionsCompleted = organisations.stream()
-//                .mapToLong(org -> questions.stream()
-//                        .filter(Question::getMarkAsCompletedEnabled)
-//                        .filter(q -> q.hasMultipleStatuses() && questionStatusService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccess()).count())
-//                .sum();
-//
-//        Long countSingleStatusQuestionsCompleted = questions.stream()
-//                .filter(Question::getMarkAsCompletedEnabled)
-//                .filter(q -> !q.hasMultipleStatuses() && questionStatusService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess())
-//                .count();
-//
-//        Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
-//
-//        Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
-//        Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
-//
-//        Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-//
-//        return percentage(countCompleted, totalQuestions);
     }
 }

@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.finance.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * A class used to capture "Your organisation" information without a growth table
  */
@@ -56,5 +59,31 @@ public class OrganisationFinancesWithoutGrowthTableResource {
 
     public void setStateAidAgreed(Boolean stateAidAgreed) {
         this.stateAidAgreed = stateAidAgreed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrganisationFinancesWithoutGrowthTableResource that = (OrganisationFinancesWithoutGrowthTableResource) o;
+
+        return new EqualsBuilder()
+                .append(organisationSize, that.organisationSize)
+                .append(turnover, that.turnover)
+                .append(headCount, that.headCount)
+                .append(stateAidAgreed, that.stateAidAgreed)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(organisationSize)
+                .append(turnover)
+                .append(headCount)
+                .append(stateAidAgreed)
+                .toHashCode();
     }
 }

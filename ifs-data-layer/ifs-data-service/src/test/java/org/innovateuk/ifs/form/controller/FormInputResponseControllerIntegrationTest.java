@@ -42,7 +42,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         Long formInputId = 1L;
         List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccess();
 
-        assertThat(responses, hasSize(16));
+        assertThat(responses, hasSize(15));
 
         Optional<FormInputResponseResource> response = responses.stream().filter(r -> r.getFormInput().equals(formInputId)).findFirst();
 

@@ -25,5 +25,5 @@ public interface QuestionStatusRepository extends CrudRepository<QuestionStatus,
                                                                                               long markedAsCompleteById,
                                                                                               long assigneeId,
                                                                                               long assignedById);
-    int countByApplicationIdAndMarkedAsCompleteTrue(long applicationId);
+    long countByApplicationIdAndMarkedAsCompleteTrue(long applicationId);
 }

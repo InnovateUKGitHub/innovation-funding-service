@@ -209,32 +209,32 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         verify(formInputResponseRepository, only()).findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse, false);
-        verify(formInputRepository, only()).findById(formInputId);
     }
 
     @Test
     public void validateFormInputResponseWhenIsResearchUser() {
         Application application = newApplication().withCompetition(newCompetition().withIncludeJesForm(true).build()).build();
         long markedAsCompleteById = 4L;
+        long organisationId = 999L;
+        ProcessRole processRole = newProcessRole()
+                .withOrganisationId(organisationId)
+                .withId(markedAsCompleteById)
+                .build();
+
         FormInputResponse formInputResponse = newFormInputResponse().build();
-        BindingResult bindingResult = ValidatorTestUtil.getBindingResult(formInputResponse);
         OrganisationResource organisationResult = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
         UserResource loggedInUser = newUserResource().build();
         setLoggedInUser(loggedInUser);
         User user = newUser().build();
-        ValidationMessages expectedValidationMessage = ValidationMessages.fromBindingResult(bindingResult);
+        ValidationMessages expectedValidationMessage = new ValidationMessages();
         expectedValidationMessage.addError(fieldError("jesFileUpload", null, "validation.application.jes.upload.required"));
 
-        when(applicationValidationUtil.validateResponse(formInputResponse, false)).thenReturn(bindingResult);
-        when(organisationService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(ServiceResult.serviceSuccess(organisationResult));
+        when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
+        when(organisationService.findById(organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationResult));
         when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
         ValidationMessages actual = service.validateAcademicUpload(application, markedAsCompleteById);
 
         assertEquals(expectedValidationMessage, actual);
-
-        verify(applicationValidationUtil).validateResponse(formInputResponse, false);
-        verify(organisationService, times(2)).getByUserAndApplicationId(user.getId(), application.getId());
-        verify(userRepository, times(2)).findById(loggedInUser.getId());
     }
 
     @Test

@@ -19,7 +19,6 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -120,7 +119,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return getProcessRole(markedAsCompleteById).andOnSuccessReturn(role -> {
             OrganisationResource organisation = organisationService.findById(role.getOrganisationId()).getSuccess();
             if (application.getCompetition().applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
-                if (financeFileIsNotPresent(application)) {
+                if (financeFileIsNotPresent(application, organisation)) {
                     return new ValidationMessages(fieldError("jesFileUpload", null, "validation.application.jes.upload.required"));
                 }
             }
@@ -128,17 +127,15 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         }).getSuccess();
     }
 
-    private boolean financeFileIsNotPresent(Application application) {
+    private boolean financeFileIsNotPresent(Application application, OrganisationResource organisation) {
         List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
-        Optional<User> user = getCurrentlyLoggedInUser().getOptionalSuccessObject();
-        Optional<OrganisationResource> organisation = organisationService.getByUserAndApplicationId(user.get().getId(), application.getId()).getOptionalSuccessObject();
 
-        if (applicationFinances == null || !organisation.isPresent()) {
+        if (applicationFinances == null) {
             return true;
         }
 
         Optional<ApplicationFinance> applicationFinance =
-                simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisation.get().getId()));
+                simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisation.getId()));
 
         return applicationFinance.map(af -> af.getFinanceFileEntry() == null).orElse(true);
     }

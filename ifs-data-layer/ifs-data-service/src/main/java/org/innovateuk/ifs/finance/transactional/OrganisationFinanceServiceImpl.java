@@ -259,7 +259,7 @@ public class OrganisationFinanceServiceImpl extends BaseTransactionalService imp
         }
     }
 
-    public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
+    private void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
         final ProcessRoleResource processRole =
                 usersRolesService.getAssignableProcessRolesByApplicationId(applicationFinance.getApplication()).getSuccess().stream()
                         .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))

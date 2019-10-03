@@ -193,7 +193,7 @@ public class OrganisationFinanceServiceImplTest extends BaseServiceUnitTest<Orga
 
         OrganisationFinancesWithoutGrowthTableResource expectedOrganisationFinances = new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover, headcount, stateAidAgreed);
 
-        ServiceResult<OrganisationFinancesWithGrowthTableResource> result = service.getOrganisationWithGrowthTable(application.getId(), organisation.getId());
+        ServiceResult<OrganisationFinancesWithoutGrowthTableResource> result = service.getOrganisationWithoutGrowthTable(application.getId(), organisation.getId());
 
         assertEquals(expectedOrganisationFinances, result.getSuccess());
     }
