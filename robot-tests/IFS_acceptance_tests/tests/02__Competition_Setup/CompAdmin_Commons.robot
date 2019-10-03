@@ -21,7 +21,7 @@ The competition admin creates competition
     ...  ELSE  the user marks the application as done      ${projectGrowth}  ${compType}
     the user fills in the CS Assessors
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
-    the user fills in the CS Documents in other projects
+    ...  ELSE  the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
     the user fills in the Public content and publishes  ${extraKeyword}
     the user clicks the button/link             link = Return to setup overview
@@ -34,15 +34,15 @@ the user select no documents
     the user clicks the button/link          link = Documents
     the user should not see the element      jQuery = input:checked + label:contains("Collaboration agreement")
     the user should not see the element      jQuery = input:checked + label:contains("Exploitation plan")
-    the user should see the element          jQuery = .govuk-warning-text:contains("No documents have been selected. Documents will not be displayed in project set up.")
+    the user should see the element          jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
     the user clicks the button/link          jQuery = label:contains("Collaboration agreement")
-    the user should not see the element      jQuery = .govuk-warning-text:contains("No documents have been selected. Documents will not be displayed in project set up.")
+    the user should not see the element      jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
     the user clicks the button/link          jQuery = label:contains("Collaboration agreement")
-    the user should see the element          jQuery = .govuk-warning-text:contains("No documents have been selected. Documents will not be displayed in project set up.")
+    the user should see the element          jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
     the user clicks the button/link          jQuery = label:contains("Exploitation plan")
-    the user should not see the element      jQuery = .govuk-warning-text:contains("No documents have been selected. Documents will not be displayed in project set up.")
+    the user should not see the element      jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
     the user clicks the button/link          jQuery = label:contains("Exploitation plan")
-    the user should see the element          jQuery = .govuk-warning-text:contains("No documents have been selected. Documents will not be displayed in project set up.")
+    the user should see the element          jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
     the user clicks the button/link          id = doneButton
 
 the user edits the assessed question information
