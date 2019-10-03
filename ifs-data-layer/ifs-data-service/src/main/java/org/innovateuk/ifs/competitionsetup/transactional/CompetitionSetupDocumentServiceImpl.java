@@ -83,17 +83,17 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
 
             Competition competition = savedCompetitionDocuments.stream().findFirst().orElseThrow(ObjectNotFoundException::new).getCompetition();
 
-            Optional<ProjectStages> projectStage = competition.getProjectStages()
+            Optional<ProjectStages> projectDocumentStage = competition.getProjectStages()
                     .stream()
                     .filter(stage -> DOCUMENTS.equals(stage.getProjectSetupStage()))
                     .findFirst();
 
             if (!hasAnyDocumentsEnabled(savedCompetitionDocuments)) {
-                if (projectStage.isPresent()) {
-                    competition.removeProjectStage(projectStage.get());
+                if (projectDocumentStage.isPresent()) {
+                    competition.removeProjectStage(projectDocumentStage.get());
                 }
             } else {
-                if (!projectStage.isPresent()) {
+                if (!projectDocumentStage.isPresent()) {
                     competition.addProjectStage(new ProjectStages(competition, DOCUMENTS));
                 }
             }

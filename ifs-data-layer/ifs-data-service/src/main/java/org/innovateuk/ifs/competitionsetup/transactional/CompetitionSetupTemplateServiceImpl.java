@@ -98,9 +98,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     private void setDefaultProjectDocuments(Competition competition) {
-        FileType pdfFileType = fileTypeRepository.findByName("PDF");
-
         if (competitionDocumentConfigRepository.findByCompetitionId(competition.getId()).isEmpty()) {
+            FileType pdfFileType = fileTypeRepository.findByName("PDF");
             createCollaborationAgreement(competition, singletonList(pdfFileType));
             createExploitationPlan(competition, singletonList(pdfFileType));
         }
