@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.resource;
+package org.innovateuk.ifs.assessment.resource.dashboard;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -58,7 +58,7 @@ public class AssessorCompetitionDashboardResource {
         if (o == null || getClass() != o.getClass()) return false;
         AssessorCompetitionDashboardResource that = (AssessorCompetitionDashboardResource) o;
         return new EqualsBuilder()
-                .append(competitionId,that.competitionId)
+                .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(innovationLead, that.innovationLead)
                 .append(assessorAcceptDate, that.assessorAcceptDate)

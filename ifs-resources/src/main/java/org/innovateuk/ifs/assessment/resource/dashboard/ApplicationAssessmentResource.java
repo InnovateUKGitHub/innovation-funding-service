@@ -1,21 +1,22 @@
-package org.innovateuk.ifs.assessment.resource;
+package org.innovateuk.ifs.assessment.resource.dashboard;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 
 public class ApplicationAssessmentResource {
 
-    private Long applicationId;
-    private Long assessmentId;
+    private long applicationId;
+    private long assessmentId;
     private String competitionName;
     private String leadOrganisation;
     private AssessmentState state;
-    private int overallScore;
-    private Boolean recommended;
+    private Integer overallScore;
+    private boolean recommended;
 
     public ApplicationAssessmentResource() {}
 
-    public ApplicationAssessmentResource(Long applicationId, Long assessmentId, String competitionName, String leadOrganisation, AssessmentState state, int overallScore, Boolean recommended) {
+    public ApplicationAssessmentResource(long applicationId, long assessmentId, String competitionName, String leadOrganisation, AssessmentState state, Integer overallScore, boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.competitionName = competitionName;
@@ -25,15 +26,15 @@ public class ApplicationAssessmentResource {
         this.recommended = recommended;
     }
 
-    public Long getApplicationId() {
+    public long getApplicationId() {
         return applicationId;
     }
 
-    public Long getAssessmentId() {
+    public long getAssessmentId() {
         return assessmentId;
     }
 
-    public String getDisplayLabel() {
+    public String getCompetitionName() {
         return competitionName;
     }
 
@@ -45,11 +46,11 @@ public class ApplicationAssessmentResource {
         return state;
     }
 
-    public int getOverallScore() {
+    public Integer getOverallScore() {
         return overallScore;
     }
 
-    public Boolean getRecommended() {
+    public boolean isRecommended() {
         return recommended;
     }
 
@@ -67,7 +68,6 @@ public class ApplicationAssessmentResource {
                 .append(state, that.state)
                 .append(recommended, that.recommended)
                 .isEquals();
-
     }
 
     @Override
