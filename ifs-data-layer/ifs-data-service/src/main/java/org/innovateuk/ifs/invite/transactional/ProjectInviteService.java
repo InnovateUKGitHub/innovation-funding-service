@@ -5,18 +5,12 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-
 public interface ProjectInviteService {
-
-
-    @PreAuthorize("hasPermission(#projectUserInviteResource, 'SAVE_PROJECT_INVITE')")
-    ServiceResult<Void> saveProjectInvite(@P("projectUserInviteResource") ProjectUserInviteResource projectUserInviteResource);
 
     @PostFilter("hasPermission(filterObject, 'READ_PROJECT_INVITE')")
     ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId);

@@ -10,19 +10,6 @@ include::{snippets}/project-invite/get-by-hash/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project-invite/get-by-hash/curl-request.adoc[]
 
-
-=== Save Project Invite
-==== Request
-include::{snippets}/project-invite/save-project-invite/http-request.adoc[]
-include::{snippets}/project-invite/save-project-invite/request-fields.adoc[]
-
-==== Response
-include::{snippets}/project-invite/save-project-invite/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/project-invite/save-project-invite/curl-request.adoc[]
-
-
 === Get Project Invites for a Project
 ==== Request
 include::{snippets}/project-invite/get-invites-by-project/http-request.adoc[]

@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -27,7 +26,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,38 +52,6 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
                 withOrganisation(25L).
                 withProject(2L).
                 build();
-    }
-
-    @Test
-    public void saveProjectInviteWhenErrorWhilstSaving() throws Exception {
-
-
-        when(projectInviteServiceMock.saveProjectInvite(projectUserInviteResource)).
-                thenReturn(serviceFailure(PROJECT_INVITE_INVALID));
-
-
-        mockMvc.perform(post("/project-invite/save-invite")
-                .contentType(APPLICATION_JSON)
-                .content(toJson(projectUserInviteResource)))
-                .andExpect(status().isBadRequest());
-
-        verify(projectInviteServiceMock).saveProjectInvite(projectUserInviteResource);
-        
-    }
-
-    @Test
-    public void saveProjectInviteSuccess() throws Exception {
-
-        when(projectInviteServiceMock.saveProjectInvite(projectUserInviteResource)).thenReturn(serviceSuccess());
-
-
-        mockMvc.perform(post("/project-invite/save-invite")
-                .contentType(APPLICATION_JSON)
-                .content(toJson(projectUserInviteResource)))
-                .andExpect(status().isOk());
-
-        verify(projectInviteServiceMock).saveProjectInvite(projectUserInviteResource);
-
     }
 
     @Test
