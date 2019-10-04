@@ -19,7 +19,12 @@ public class AssessorCompetitionDashboardResource {
     public AssessorCompetitionDashboardResource() {
     }
 
-    public AssessorCompetitionDashboardResource(long competitionId, String competitionName, String innovationLead, ZonedDateTime assessorAcceptDate, ZonedDateTime assessorDeadlineDate, List<ApplicationAssessmentResource> applicationAssessments) {
+    public AssessorCompetitionDashboardResource(long competitionId,
+                                                String competitionName,
+                                                String innovationLead,
+                                                ZonedDateTime assessorAcceptDate,
+                                                ZonedDateTime assessorDeadlineDate,
+                                                List<ApplicationAssessmentResource> applicationAssessments) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.innovationLead = innovationLead;

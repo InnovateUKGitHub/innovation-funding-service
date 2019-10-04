@@ -16,7 +16,13 @@ public class ApplicationAssessmentResource {
 
     public ApplicationAssessmentResource() {}
 
-    public ApplicationAssessmentResource(long applicationId, long assessmentId, String competitionName, String leadOrganisation, AssessmentState state, Integer overallScore, boolean recommended) {
+    public ApplicationAssessmentResource(long applicationId,
+                                         long assessmentId,
+                                         String competitionName,
+                                         String leadOrganisation,
+                                         AssessmentState state,
+                                         Integer overallScore,
+                                         boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.competitionName = competitionName;
