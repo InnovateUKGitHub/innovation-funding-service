@@ -165,18 +165,20 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                     && currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
                 return Optional.of(applicantLink(application.getId()));
             }
+
             if (asessorProcessRoles().contains(currentUserRole.get().getRole())
                     && DETAILED.equals(competition.getAssessorFinanceView())) {
-                return Optional.of(assessorLink(currentUserRole.get(), organisation));
+                List<AssessmentResource> assessments = assessmentRestService.getByUserAndApplication(currentUserRole.get().getUser(), currentUserRole.get().getApplicationId())
+                        .getSuccess();
+                if (!assessments.isEmpty()) {
+                    return Optional.of(assessorLink(assessments.get(0), organisation));
+                }
             }
         }
         return Optional.empty();
     }
 
-    private String assessorLink(ProcessRoleResource processRole, OrganisationResource organisation) {
-        AssessmentResource assessment = assessmentRestService.getByUserAndApplication(processRole.getUser(), processRole.getApplicationId())
-                .getSuccess()
-                .get(0);
+    private String assessorLink(AssessmentResource assessment, OrganisationResource organisation) {
         return format("/assessment/%d/detailed-finances/organisation/%d", assessment.getId(), organisation.getId());
     }
 
