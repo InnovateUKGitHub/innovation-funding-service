@@ -34,6 +34,7 @@
         <h3 class="govuk-heading-m">Overview</h3>
         <div class="table-overflow govuk-!-margin-bottom-6">
             <table class="govuk-table">
+                <div th:unless="${model.loanCompetition}">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col">Start date</th>
@@ -44,6 +45,19 @@
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total % grant</th>
                     </tr>
                 </thead>
+                </div>
+                <div th:if="${model.loanCompetition}">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Start date</th>
+                        <th class="govuk-table__header" scope="col">Duration</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Loan applied for (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other funding (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total % loan</th>
+                    </tr>
+                    </thead>
+                </div>
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell" th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
@@ -51,7 +65,7 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
-                        <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="govuk-table__cell govuk-table__cell--numeric" />
+                        <td th:text="|${overview.totalPercentageGrantIntValue}%|" class="govuk-table__cell govuk-table__cell--numeric" />
                     </tr>
                 </tbody>
             </table>
@@ -60,7 +74,7 @@
 
     <!-- ===========================Project Finance Summaries =========================== -->
     <th:block th:fragment="project-finance-summaries(summaries)">
-        <div class="table-overflow govuk-!-margin-bottom-6">
+        <div class="table-overflow">
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
@@ -69,12 +83,13 @@
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">
                             Funding level (%)
                         </th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
-                            Funding sought (&pound;)
-                        </th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">
-                            Other public sector funding (&pound;)
-                        </th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Funding sought (&pound;)</th>
+                        <div th:unless="${model.loanCompetition}">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Other public sector funding (&pound;)</th>
+                        </div>
+                        <div th:if="${model.loanCompetition}">
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Other funding (&pound;)</th>
+                        </div>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
                             Contribution to project (&pound;)
                         </th>

@@ -222,6 +222,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     CANNOT_REMOVE_YOURSELF_FROM_PROJECT(BAD_REQUEST),
     PROJECT_INVITE_NOT_FOR_CORRECT_PROJECT(BAD_REQUEST),
     PROJECT_INVITE_ALREADY_OPENED(BAD_REQUEST),
+    PROJECT_INVITE_NOT_FOUND(NOT_FOUND),
 
     /**
      * Non IFS competitions.
@@ -325,6 +326,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     PROJECT_CANNOT_BE_PUT_ON_HOLD(BAD_REQUEST),
     PROJECT_CANNOT_BE_RESUMED(BAD_REQUEST),
+
+    /**
+     * Projects success
+     */
+    PROJECT_CANNOT_BE_MARKED_AS_SUCCESSFUL(BAD_REQUEST),
+    PROJECT_CANNOT_BE_MARKED_AS_UNSUCCESSFUL(BAD_REQUEST),
 
     /**
      * SIL CRM

@@ -2,9 +2,6 @@ package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -16,9 +13,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
+import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
@@ -84,17 +81,11 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     @Mock
     protected ProcessRoleService processRoleService;
     @Mock
-    protected DefaultFinanceModelManager defaultFinanceModelManager;
-    @Mock
     protected FormInputRestService formInputRestService;
-    @Mock
-    protected FinanceViewHandlerProvider financeViewHandlerProvider;
     @Mock
     protected FinanceService financeService;
     @Mock
     protected ApplicationFinanceRestService applicationFinanceRestService;
-    @Mock
-    protected DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
     protected UserService userService;
     @Mock
@@ -192,6 +183,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withMaxProjectDuration(36)
                 .withIncludeJesForm(true)
                 .build();
+
+        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
                 .getId());
@@ -576,8 +569,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0)
                 .getId(), SMALL, "ABC 123");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
-        FinanceRowCostCategory costCategory = new GrantClaimCategory();
-        costCategory.addCost(new GrantClaim(1L, 50, applicationFinanceResource.getId()));
+        FinanceRowCostCategory costCategory = new ExcludedCostCategory();
+        costCategory.addCost(new GrantClaimPercentage(1L, 50, applicationFinanceResource.getId()));
         organisationFinances.put(FinanceRowType.FINANCE, costCategory);
         applicationFinanceResource.setFinanceOrganisationDetails(organisationFinances);
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn
@@ -585,8 +578,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn
                 (applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeViewHandlerProvider.getFinanceFormHandler(competitionResource, 1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, 1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupQuestionStatus(ApplicationResource application) {

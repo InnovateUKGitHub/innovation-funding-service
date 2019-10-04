@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setOtherRows(otherRows(finance));
         form.setSubcontractingRows(subcontractingRows(finance));
         form.setTravelRows(travelRows(finance));
+        form.setVatForm(vat(finance));
         return form;
     }
 
@@ -54,7 +56,6 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         }
         return new OverheadForm();
     }
-
 
     private Map<String, LabourRowForm> labourCosts(LabourCostCategory costCategory) {
         Map<String, LabourRowForm> rows = costCategory.getCosts().stream()
@@ -160,6 +161,14 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return new HashMap<>();
     }
 
+     private VatForm vat(BaseFinanceResource finance) {
+        VatCostCategory costCategory = (VatCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
+         if (costCategory != null) {
+             Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));
+            return new VatForm(vat);
+         }
+         return new VatForm();
+    }
 
     protected abstract BaseFinanceResource getFinanceResource(long targetId, long organisationId);
 

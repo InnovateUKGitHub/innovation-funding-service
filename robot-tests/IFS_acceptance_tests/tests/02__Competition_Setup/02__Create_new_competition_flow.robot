@@ -178,12 +178,11 @@ User should have access to all the sections
     And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
 
 The user must select the Terms and Conditions they want Applicants to accept
-    [Documentation]  IFS-3086
+    [Documentation]  IFS-3086  IFS-6205
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When The user clicks the button/link     jQuery = label:contains("Advanced")
+    When the user should see the element     link = Loans
     And the user clicks the button/link      jQuery = button:contains("Done")
-    Then the user should see the element     link = Advanced Propulsion Centre (APC)
     And the user clicks the button/link      link = Competition setup
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
@@ -695,7 +694,7 @@ Innovation leads can be added to a competition
 User deletes the competition
     [Documentation]  IFS-1084
     [Tags]  HappyPath
-    Given the user navigates to the page        ${CA_UpcomingComp}
+    Given the comp admin creates competition
     And The user clicks the button/link         link = No competition title defined
     When the user clicks the button/link        link = Delete competition
     And the user clicks the button/link         css = .delete-modal button[type="submit"]
@@ -731,6 +730,12 @@ The Applicant see the correct Questions
     Given the user should see the element      jQuery = li:contains("${customQuestion}")
     And the user should not see the element    jQuery = li:contains("Costs and value for money")
     #default question that has been removed is not there.
+
+The Applicant is able to enter duration
+    [Documentation]  IFS-6398  IFS-6417
+    Given the user clicks the button/link  link = Application details
+    When the user fills new application details
+    the user should see the element       jQuery = li:contains("Application details") .task-status-complete
 
 *** Keywords ***
 the total should be correct
@@ -867,8 +872,7 @@ the user should not be able to edit the assessed question feedback
 
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
-    ${nextyear} =  get next year
-    Set suite variable  ${nextyear}
+    Set predefined date variables
     Connect to database  @{database}
 
 the user enters multiple innovation areas
@@ -899,6 +903,24 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
+
+the comp admin creates competition
+    the user navigates to the page        ${CA_UpcomingComp}
+    the user clicks the button/link       link = Create competition
+    the user navigates to the page        ${CA_UpcomingComp}
+
+the user fills new application details
+    the user enters text to a text field  id = name  New application
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  id = durationInMonths  45
+    the user clicks the button twice      css = label[for="resubmission-no"]
+    the user clicks the button/link       id = innovationAreaName
+    the user selects the radio button     innovationAreaChoice  NOT_APPLICABLE
+    the user clicks the button/link       jQuery = button:contains("Save")
+    the user clicks the button/link       css = button[name="mark_as_complete"]
+    the user clicks the button/link       link = Application overview
 
 Custom suite teardown
     The user closes the browser

@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.project.finance.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 
 /**
  * A resource object to return finance check status for a project (for all partner organisations).
@@ -31,13 +33,14 @@ public class FinanceCheckSummaryResource {
     private BigDecimal competitionMaximumResearchPercentage;
     private Long applicationId;
     private boolean h2020;
+    private FundingType fundingType;
 
     public FinanceCheckSummaryResource() {
     }
 
     public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
                                        List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean bankDetailsApproved,
-                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId, boolean h2020) {
+                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId, boolean h2020, FundingType fundingType) {
         this.projectId = overviewResource.getProjectId();
         this.projectName = overviewResource.getProjectName();
         this.competitionId = competitionId;
@@ -57,6 +60,7 @@ public class FinanceCheckSummaryResource {
         this.competitionMaximumResearchPercentage = overviewResource.getCompetitionMaximumResearchPercentage();
         this.applicationId = applicationId;
         this.h2020 = h2020;
+        this.fundingType = fundingType;
     }
 
     public Long getProjectId() {
@@ -163,6 +167,14 @@ public class FinanceCheckSummaryResource {
         this.h2020 = h2020;
     }
 
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public void setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+    }
+
     @JsonIgnore
     public boolean isFinanceChecksAllApproved() {
         return isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
@@ -229,4 +241,9 @@ public class FinanceCheckSummaryResource {
     public Long getApplicationId() { return applicationId; }
 
     public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
+
+    @JsonIgnore
+    public boolean isLoan() {
+        return fundingType == LOAN;
+    }
 }

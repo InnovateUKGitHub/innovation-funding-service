@@ -2,14 +2,14 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
@@ -27,16 +27,13 @@ public class StatusControllerTest extends BaseControllerMockMVCTest<StatusContro
     public void getCompetitionStatus() throws Exception {
         final Long competitionId = 123L;
         String applicationSearchString = "12";
-        final CompetitionProjectsStatusResource cpsr = newCompetitionProjectsStatusResource().
-                withCompetitionName("ABC").
-                withCompetitionNumber(competitionId).
-                withProjectStatusResources(newProjectStatusResource().withProjectNumber().build(3)).build();
-        ServiceResult<CompetitionProjectsStatusResource> expected = serviceSuccess(cpsr);
+        List<ProjectStatusResource> projectStatusResources = newProjectStatusResource().withProjectNumber().build(3);
+        ServiceResult<List<ProjectStatusResource>> expected = serviceSuccess(projectStatusResources);
         when(statusServiceMock.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(expected);
 
         mockMvc.perform(get("/project/competition/{competitionId}?applicationSearchString=" + applicationSearchString, 123L)).
                 andExpect(status().isOk()).
-                andExpect(content().json(toJson(cpsr)));
+                andExpect(content().json(toJson(projectStatusResources)));
 
         verify(statusServiceMock).getCompetitionStatus(competitionId, applicationSearchString);
     }

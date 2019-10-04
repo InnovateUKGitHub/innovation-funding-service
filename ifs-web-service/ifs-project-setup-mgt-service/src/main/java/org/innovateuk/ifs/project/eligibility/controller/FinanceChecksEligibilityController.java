@@ -33,7 +33,6 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.AjaxResult;
@@ -78,9 +77,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     private ProjectFinanceService projectFinanceService;
 
     @Autowired
-    private FinanceUtil financeUtil;
-
-    @Autowired
     private FinanceService financeService;
 
     @Autowired
@@ -122,7 +118,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             boolean eligibilityApproved = eligibility.get().getEligibility() == EligibilityState.APPROVED;
 
             FileDetailsViewModel jesFileDetailsViewModel = null;
-            boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition.get(), organisation.get().getOrganisationType());
+            boolean isUsingJesFinances = competition.get().applicantShouldUseJesFinances(organisation.get().getOrganisationTypeEnum());
             if (!isUsingJesFinances) {
                 model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType, competition.get().getFinanceRowTypes()));
                 if (form == null) {
@@ -139,22 +135,24 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview.get(),
-                                                                                     organisation.get().getName(),
-                                                                                     project.getName(),
-                                                                                     project.getApplication(),
-                                                                                     isLeadPartnerOrganisation,
-                                                                                     project.getId(),
-                                                                                     organisation.get().getId(),
-                                                                                     eligibilityApproved,
-                                                                                     eligibility.get().getEligibilityRagStatus(),
-                                                                                     eligibility.get().getEligibilityApprovalUserFirstName(),
-                                                                                     eligibility.get().getEligibilityApprovalUserLastName(),
-                                                                                     eligibility.get().getEligibilityApprovalDate(),
-                                                                                     false,
-                                                                                     isUsingJesFinances,
-                                                                                     jesFileDetailsViewModel,
-                                                                                     competition.get().isH2020(),
-                                                                                     project.getProjectState().isActive()));
+                    organisation.get().getName(),
+                    project.getName(),
+                    project.getApplication(),
+                    isLeadPartnerOrganisation,
+                    project.getId(),
+                    organisation.get().getId(),
+                    eligibilityApproved,
+                    eligibility.get().getEligibilityRagStatus(),
+                    eligibility.get().getEligibilityApprovalUserFirstName(),
+                    eligibility.get().getEligibilityApprovalUserLastName(),
+                    eligibility.get().getEligibilityApprovalDate(),
+                    false,
+                    isUsingJesFinances,
+                    jesFileDetailsViewModel,
+                    competition.get().isH2020(),
+                    project.getProjectState().isActive(),
+                    competition.get().isLoan()
+            ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
             future.get();

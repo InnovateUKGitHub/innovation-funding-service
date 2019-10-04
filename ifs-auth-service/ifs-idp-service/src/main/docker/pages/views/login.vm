@@ -312,11 +312,9 @@
               var IFS = { core: {}};
             }
         </script>
-        <script src="$resourcesDomain/js/ifs_modules/timeoutWarning.js?$timestamp" type="text/javascript"></script>
         <script src="$resourcesDomain/js/ifs_modules/formValidation.js?$timestamp" type="text/javascript"></script>
         <script src="$resourcesDomain/js/ifs_modules/passwordToggle.js?$timestamp" type="text/javascript"></script>
         <script type="text/javascript">
-            IFS.core.timeoutWarning.init();
             IFS.core.formValidation.init();
             IFS.core.passwordToggle.init();
         </script>

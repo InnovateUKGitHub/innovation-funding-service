@@ -34,7 +34,6 @@ function deploy() {
         oc create -f $(getBuildLocation)/mysql/survey-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mysql/eu-grant-registration-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f $(getBuildLocation)/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
     fi
 
     # The SIL stub is required in all environments, in one form or another, except for production
@@ -62,7 +61,7 @@ function shibInit() {
     LDAP_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }')
     echo "Ldap pod: ${LDAP_POD}"
 
-    while RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database 2>&1); echo $RESULT; echo $RESULT | grep "ERROR"; do
+     while RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database 2>&1); echo $RESULT; echo $RESULT | grep "ERROR"; do
         echo "Shibinit failed. Retrying.."
         sleep 10
     done

@@ -7,6 +7,8 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
+import org.innovateuk.ifs.review.repository.ReviewRepository;
+import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -44,6 +46,9 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Mock
     private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private ReviewRepository reviewRepository;
 
     @Override
     protected AssessmentPermissionRules supplyPermissionRulesUnderTest() {
@@ -101,6 +106,15 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         EnumSet.allOf(AssessmentState.class).forEach(state ->
                 assertFalse("other users should not be able to read any assessments",
                         rules.userCanReadAssessment(assessments.get(state), otherUser)));
+    }
+
+    @Test
+    public void ownerCanReadAssessmentIfInPanelNonDashboard() {
+        when(reviewRepository.existsByParticipantUserIdAndTargetIdAndActivityStateNot(assessorUser.getId(), assessments.get(SUBMITTED).getApplication(), ReviewState.WITHDRAWN)).thenReturn(true);
+        when(reviewRepository.existsByParticipantUserIdAndTargetIdAndActivityStateNot(otherUser.getId(), assessments.get(SUBMITTED).getApplication(), ReviewState.WITHDRAWN)).thenReturn(false);
+
+        assertTrue(rules.userIsPanelAssessor(assessments.get(SUBMITTED), assessorUser));
+        assertFalse(rules.userIsPanelAssessor(assessments.get(SUBMITTED), otherUser));
     }
 
     @Test
@@ -264,6 +278,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         return newAssessmentResource()
                 .withId(assessment.getId())
                 .withProcessRole(participant.getId())
+                .withApplication(1L)
                 .build();
     }
 }

@@ -63,9 +63,6 @@ public class ApplicationQuestionSaverTest {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
-    private ApplicationQuestionApplicationDetailsSaver detailsSaver;
-
-    @Mock
     private ApplicationQuestionFileSaver fileSaver;
 
     @Mock
@@ -102,7 +99,6 @@ public class ApplicationQuestionSaverTest {
         assertFalse(result.hasErrors());
         verify(fileSaver, never()).saveFileUploadQuestionsIfAny(anyList(), anyMap(), any(HttpServletRequest.class), anyLong(), anyLong());
         verify(nonFileSaver, never()).saveNonFileUploadQuestions(anyList(), any(HttpServletRequest.class), anyLong(), anyLong(), anyBoolean());
-        verify(detailsSaver, never()).handleApplicationDetailsValidationMessages(anyList());
     }
 
     @Test
@@ -121,7 +117,6 @@ public class ApplicationQuestionSaverTest {
         assertTrue(result.hasErrors());
         verify(fileSaver, times(1)).saveFileUploadQuestionsIfAny(anyList(), anyMap(), any(HttpServletRequest.class), anyLong(), anyLong());
         verify(nonFileSaver, times(1)).saveNonFileUploadQuestions(anyList(), any(HttpServletRequest.class), anyLong(), anyLong(), anyBoolean());
-        verify(detailsSaver, never()).handleApplicationDetailsValidationMessages(anyList());
     }
 
     @Test
@@ -140,7 +135,6 @@ public class ApplicationQuestionSaverTest {
         assertTrue(result.hasErrors());
         verify(fileSaver, times(1)).saveFileUploadQuestionsIfAny(anyList(), anyMap(), any(HttpServletRequest.class), anyLong(), anyLong());
         verify(nonFileSaver, times(1)).saveNonFileUploadQuestions(anyList(), any(HttpServletRequest.class), anyLong(), anyLong(), anyBoolean());
-        verify(detailsSaver, never()).handleApplicationDetailsValidationMessages(anyList());
     }
 
     @Test
@@ -173,7 +167,6 @@ public class ApplicationQuestionSaverTest {
         ValidationMessages messages = new ValidationMessages();
         messages.addError(new Error("RandomKey", HttpStatus.BAD_REQUEST));
         when(questionService.markAsComplete(questionId, applicationId, processRoleId)).thenReturn(asList(messages));
-        when(detailsSaver.handleApplicationDetailsValidationMessages(asList(messages))).thenReturn(messages);
 
         ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, Optional.empty());
 

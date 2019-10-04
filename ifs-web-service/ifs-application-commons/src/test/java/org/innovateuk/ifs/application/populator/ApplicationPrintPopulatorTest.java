@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -37,13 +38,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
+import static java.util.Arrays.asList;
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -93,6 +91,7 @@ public class ApplicationPrintPopulatorTest {
         Model model = mock(Model.class);
         UserResource user = UserResourceBuilder.newUserResource().build();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
+        competition.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
                 .withCompetition(competition.getId()).build();
         Optional<OrganisationResource> userOrganisation = Optional.of(newOrganisationResource()

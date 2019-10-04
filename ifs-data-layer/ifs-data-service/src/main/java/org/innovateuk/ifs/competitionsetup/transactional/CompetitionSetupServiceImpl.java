@@ -4,25 +4,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.mapper.GrantTermsAndConditionsMapper;
-import org.innovateuk.ifs.competition.repository.*;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
-import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
-import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -43,14 +40,15 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -65,8 +63,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private CompetitionMapper competitionMapper;
-    @Autowired
-    private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
     private InnovationLeadRepository innovationLeadRepository;
     @Autowired
@@ -84,8 +80,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
     @Autowired
-    private GrantTermsAndConditionsMapper termsAndConditionsMapper;
-    @Autowired
     private PublicContentRepository publicContentRepository;
     @Autowired
     private MilestoneRepository milestoneRepository;
@@ -100,14 +94,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private FileService fileService;
 
     @Autowired
-    private FileEntryService fileEntryService;
-
-    @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
-
-    @Autowired
-    private FileTypeRepository fileTypeRepository;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
@@ -151,7 +139,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Competition existingCompetition = competitionRepository.findById(competitionResource.getId()).orElse(null);
         Competition competition = competitionMapper.mapToDomain(competitionResource);
         competition = setCompetitionAuditableFields(competition, existingCompetition);
-
         saveFunders(competitionResource);
         competition = competitionRepository.save(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
@@ -167,24 +154,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             competitionResource, final Long existingInnovationLeadId) {
 
         return deleteExistingInnovationLead(competitionId, existingInnovationLeadId)
-                .andOnSuccess(() -> attachCorrectTermsAndConditions(competitionResource))
                 .andOnSuccess(() -> save(competitionId, competitionResource))
                 .andOnSuccess(this::saveInnovationLead);
-    }
-
-    private ServiceResult<Void> attachCorrectTermsAndConditions(CompetitionResource competitionResource) {
-
-        Long competitionTypeId = competitionResource.getCompetitionType();
-
-        // it is possible during autosave for this competition type to not yet be selected.  Therefore we need a null check
-        // here
-        if (competitionTypeId != null) {
-            CompetitionType competitionTypeSelected = competitionTypeRepository.findById(competitionTypeId).orElse(null);
-            GrantTermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
-            competitionResource.setTermsAndConditions(termsAndConditionsMapper.mapToResource(termsAndConditions));
-        }
-
-        return serviceSuccess();
     }
 
     private ServiceResult<Void> deleteExistingInnovationLead(Long competitionId, Long existingInnovationLeadId) {
@@ -386,7 +357,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                                     return fileEntryMapper.mapToResource(created.getValue());
                                 })
                         )
-                        .toServiceResult()
+                                .toServiceResult()
                 );
     }
 
@@ -441,54 +412,12 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
-        competition.setCompetitionDocuments(createDefaultProjectDocuments(competition));
 
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 
-    private List<CompetitionDocument> createDefaultProjectDocuments(Competition competition) {
-
-        FileType pdfFileType = fileTypeRepository.findByName("PDF");
-
-        List<CompetitionDocument> defaultCompetitionDocuments = new ArrayList<>();
-        defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
-        defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
-
-        return defaultCompetitionDocuments;
-    }
-
-    private CompetitionDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
-        return new CompetitionDocument(competition, COLLABORATION_AGREEMENT_TITLE, "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
-                "\n" +
-                "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
-                "\n" +
-                "<p>Guidance on completing a collaboration agreement can be found on the <a target=\"_blank\" href=\"http://www.ipo.gov.uk/lambert\">Lambert Agreement website</a>.</p>\n" +
-                "\n" +
-                "<p>Your collaboration agreement must be:</p>\n" +
-                "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
-                "<li>legible at 100% magnification</li>\n" +
-                "<li>less than 10MB in file size</li></ul>",
-                false, true, fileTypes);
-    }
-
-    private CompetitionDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
-        return new CompetitionDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
-                "\n" +
-                "<p>It should also describe partner activities that will exploit the results of the project so that:</p>\n" +
-                "<ul class=\"list-bullet\"><li>changes in the commercial environment can be monitored and accounted for</li>\n" +
-                "<li>adequate resources are committed to exploitation</li>\n" +
-                "<li>exploitation can be monitored by the stakeholders</li></ul>\n" +
-                "\n" +
-                "<p>You can download an <a href=\"/files/exploitation_plan.doc\" class=\"govuk-link\">exploitation plan template</a>.</p>\n" +
-                "\n" +
-                "<p>The uploaded exploitation plan must be:</p>\n" +
-                "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
-                "<li>legible at 100% magnification</li>\n" +
-                "<li>less than 10MB in file size</li></ul>",
-                false, true, fileTypes);
-    }
 
     private Competition setCompetitionAuditableFields(Competition competition, Competition existingCompetition) {
         Field createdBy = findField(Competition.class, "createdBy");

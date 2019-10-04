@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class ApplicationSummarisationServiceTest {
 	private ApplicationFinanceRowService financeRowCostsService;
 
 	@Mock
-	private FinanceService financeService;
+	private ApplicationFinanceService financeService;
 	
 	private Application application;
 	

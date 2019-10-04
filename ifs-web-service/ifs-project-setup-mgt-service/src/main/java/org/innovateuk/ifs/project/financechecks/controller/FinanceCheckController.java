@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,14 +51,14 @@ public class FinanceCheckController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
-    public String viewFinanceCheckSummary(@P("projectId")@PathVariable Long projectId, Model model,
+    public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
                                           @ModelAttribute(binding = false) FinanceCheckSummaryForm form) {
         return doViewFinanceCheckSummary(projectId, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping("/generate")
-    public String generateSpendProfile(@P("projectId")@PathVariable Long projectId, Model model,
+    public String generateSpendProfile(@PathVariable Long projectId, Model model,
                                        @ModelAttribute FinanceCheckSummaryForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
@@ -74,7 +73,7 @@ public class FinanceCheckController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping("/organisation/{organisationId}/jes-file")
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@P("projectId")@PathVariable("projectId") final Long projectId,
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@PathVariable("projectId") final Long projectId,
                                                                            @PathVariable("organisationId") Long organisationId) {
 
         ProjectResource project = projectService.getById(projectId);

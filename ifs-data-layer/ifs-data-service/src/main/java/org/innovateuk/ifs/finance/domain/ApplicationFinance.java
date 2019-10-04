@@ -27,6 +27,8 @@ public class ApplicationFinance extends Finance {
     @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
+    private String workPostcode;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
@@ -105,5 +107,13 @@ public class ApplicationFinance extends Finance {
         Set<Long> templateGrantClaimMaximumIds = getCompetition().getCompetitionType().getTemplate()
                 .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
         return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
+    }
+
+    public String getWorkPostcode() {
+        return workPostcode;
+    }
+
+    public void setWorkPostcode(String workPostcode) {
+        this.workPostcode = workPostcode;
     }
 }

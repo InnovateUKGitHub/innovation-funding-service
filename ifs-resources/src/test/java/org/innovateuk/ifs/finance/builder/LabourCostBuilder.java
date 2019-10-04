@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder> {
 
     public static LabourCostBuilder newLabourCost() {
-        return new LabourCostBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("LabourCost "));
+        return new LabourCostBuilder(emptyList()).with(uniqueIds());
     }
 
     public LabourCostBuilder withId(Long... value) {

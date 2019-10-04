@@ -5,10 +5,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +32,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     private ApplicationResource application;
 
     @Mock
-    private FinanceService financeServiceMock;
+    private ApplicationFinanceService financeServiceMock;
 
     @Mock
     private FinanceFileEntryService financeFileEntryServiceMock;
@@ -114,35 +113,12 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void addShouldReturnApplicationByApplicationIdAndOrganisationId() throws Exception {
-
-        when(financeRowCostsServiceMock.createApplicationFinance(any(ApplicationFinanceResourceId.class))).thenReturn(serviceSuccess(applicationFinanceResource));
-
-        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
-                .andExpect(status().isCreated());
-
-        verify(financeRowCostsServiceMock, times(1)).createApplicationFinance(any(ApplicationFinanceResourceId.class));
-    }
-
-    @Test
     public void addControllerShouldReturnNotFoundOnMissingParams() throws Exception {
         mockMvc.perform(post("/applicationfinance/add/{applicationId}/", "1"))
                 .andExpect(status().isNotFound());
 
         mockMvc.perform(post("/applicationfinance/add/"))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void addShouldReturnBadRequestOnWrongParamType() throws Exception {
-        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "1", "wronger"))
-                .andExpect(status().isBadRequest());
-
-        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "1"))
-                .andExpect(status().isBadRequest());
-
-        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "wronger"))
-                .andExpect(status().isBadRequest());
     }
 
     @Test

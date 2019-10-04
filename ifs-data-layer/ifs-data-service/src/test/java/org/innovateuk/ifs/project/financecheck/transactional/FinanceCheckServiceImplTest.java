@@ -10,11 +10,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -68,9 +67,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
@@ -137,7 +135,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private FinanceCheckQueriesService financeCheckQueriesServiceMock;
 
     @Mock
-    private FinanceService financeServiceMock;
+    private ApplicationFinanceService financeServiceMock;
 
     @Mock
     private OrganisationRepository organisationRepositoryMock;
@@ -218,7 +216,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
         Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
-        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().build(3);
+        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().withGrantClaimPercentage(20).build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
@@ -301,36 +299,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId).withName("Organisation1").build();
 
-
         Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
-
-        Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
-                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
-                        newLabourCost().
-                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
-                                withDescription("Developers", WORKING_DAYS_PER_YEAR).
-                                withLabourDays(1, 200).
-                                build(2)).
-                        build(),
-                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
-                        newMaterials().
-                                withCost(new BigDecimal("1.0")).
-                                withQuantity(1).
-                                build(1)).
-                        build(),
-                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
-                        newOtherFunding().
-                                withOtherPublicFunding("Yes", "").
-                                withFundingSource(OTHER_FUNDING, "other funding").
-                                withFundingAmount(null, BigDecimal.valueOf(2)).
-                                build(2)).
-                        build());
-
         projectFinances.forEach((type, category) -> category.calculateTotal());
-        applicationFinances.forEach((type, category) -> category.calculateTotal());
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withFinanceOrganisationDetails(applicationFinances).withGrantClaimPercentage(25).build();
-
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().
                 withProject(projectId).
                 withOrganisation(organisation.getId()).
@@ -341,19 +311,18 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(applicationFinanceResource));
 
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isSuccess());
 
         FinanceCheckEligibilityResource eligibility = result.getSuccess();
 
-        assertTrue(eligibility.getDurationInMonths() == 5L);
-        assertTrue(new BigDecimal("5000033.33").compareTo(eligibility.getTotalCost()) == 0);
-        assertTrue(new BigDecimal("25").compareTo(eligibility.getPercentageGrant()) == 0);
-        assertTrue((new BigDecimal("5000033.33").multiply(new BigDecimal("0.25"))).compareTo(eligibility.getFundingSought()) == 0);
-        assertTrue(new BigDecimal("1000").compareTo(eligibility.getOtherPublicSectorFunding()) == 0);
-        assertTrue((new BigDecimal("4999033.33").subtract(new BigDecimal("5000033.33").multiply(new BigDecimal("0.25")))).compareTo(eligibility.getContributionToProject()) == 0);
+        assertEquals((long) eligibility.getDurationInMonths(), 5L);
+        assertEquals(projectFinanceResource.getTotal(), eligibility.getTotalCost());
+        assertEquals(BigDecimal.valueOf(projectFinanceResource.getGrantClaimPercentage()), eligibility.getPercentageGrant());
+        assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());
+        assertEquals(projectFinanceResource.getTotalOtherFunding(), eligibility.getOtherPublicSectorFunding());
+        assertEquals(projectFinanceResource.getTotalContribution(), eligibility.getContributionToProject());
     }
 
     @Test
@@ -492,33 +461,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
         assertFalse(result.getSuccess());
-    }
-
-    @Test
-    public void testGetFinanceCheckEligibilityNoApplicationFinances(){
-
-        Competition competition = newCompetition().build();
-        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
-        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
-
-        Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId).withName("Organisation1").build();
-
-        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
-        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().
-                withProject(projectId).
-                withOrganisation(organisation.getId()).
-                withFinanceOrganisationDetails(projectFinances).
-                build();
-
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
-
-        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
-        assertTrue(result.isFailure());
-
     }
 
     @Test
@@ -827,7 +769,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                 build(1)).
                         build(),
                 FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
+                        newGrantClaimPercentage().
                                 withGrantClaimPercentage(30).
                                 build(1)).
                         build(),

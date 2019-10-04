@@ -38,23 +38,6 @@ public class ProjectInviteControllerDocumentation extends BaseControllerMockMVCT
     }
 
     @Test
-    public void saveProjectInvite() throws Exception {
-
-        ProjectUserInviteResource projectUserInviteResource = PROJECT_USER_INVITE_RESOURCE_BUILDER.build();
-
-        when(projectInviteServiceMock.saveProjectInvite(projectUserInviteResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project-invite/save-invite")
-                .contentType(APPLICATION_JSON)
-                .content(toJson(projectUserInviteResource)))
-                .andExpect(status().isOk())
-                .andDo(document("project-invite/{method-name}",
-                        requestFields(projectInviteFields)
-                ));
-
-    }
-
-    @Test
     public void getByHash() throws Exception {
 
         ProjectUserInviteResource projectInvite = PROJECT_USER_INVITE_RESOURCE_BUILDER.build();

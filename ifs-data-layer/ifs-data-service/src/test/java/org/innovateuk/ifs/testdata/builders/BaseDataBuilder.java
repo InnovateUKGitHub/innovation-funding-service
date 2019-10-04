@@ -34,7 +34,7 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
@@ -44,6 +44,10 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
+import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
+import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
@@ -75,6 +79,9 @@ import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.review.transactional.ReviewInviteService;
+import org.innovateuk.ifs.review.transactional.ReviewService;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -172,6 +179,13 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected AssessmentRepository assessmentRepository;
     protected AssessmentService assessmentService;
     protected AssessmentWorkflowHandler assessmentWorkflowHandler;
+    protected ReviewInviteRepository reviewInviteRepository;
+    protected ReviewInviteService reviewInviteService;
+    protected ReviewService reviewService;
+    protected InterviewInviteRepository interviewInviteRepository;
+    protected InterviewInviteService interviewInviteService;
+    protected InterviewAssignmentService interviewAssignmentService;
+    protected InterviewAllocationService interviewAllocationService;
     protected ProcessRoleRepository processRoleRepository;
     protected SectionRepository sectionRepository;
     protected QuestionRepository questionRepository;
@@ -195,7 +209,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
     protected ProjectDocumentsMapper projectDocumentsMapper;
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
-    protected FinanceService financeService;
+    protected ApplicationFinanceService financeService;
     protected GrantOfferLetterService grantOfferLetterService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
@@ -249,7 +263,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
         monitoringOfficerService = serviceLocator.getBean(LegacyMonitoringOfficerService.class);
         financeRowCostsService = serviceLocator.getBean(ApplicationFinanceRowService.class);
-        financeService = serviceLocator.getBean(FinanceService.class);
+        financeService = serviceLocator.getBean(ApplicationFinanceService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
         sectionStatusService = serviceLocator.getBean(SectionStatusService.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
@@ -263,6 +277,13 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);
         assessmentService = serviceLocator.getBean(AssessmentService.class);
         assessmentWorkflowHandler = serviceLocator.getBean(AssessmentWorkflowHandler.class);
+        reviewInviteRepository = serviceLocator.getBean(ReviewInviteRepository.class);
+        reviewInviteService = serviceLocator.getBean(ReviewInviteService.class);
+        reviewService = serviceLocator.getBean(ReviewService.class);
+        interviewInviteRepository = serviceLocator.getBean(InterviewInviteRepository.class);
+        interviewInviteService = serviceLocator.getBean(InterviewInviteService.class);
+        interviewAssignmentService = serviceLocator.getBean(InterviewAssignmentService.class);
+        interviewAllocationService = serviceLocator.getBean(InterviewAllocationService.class);
         processRoleRepository = serviceLocator.getBean(ProcessRoleRepository.class);
         sectionRepository = serviceLocator.getBean(SectionRepository.class);
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
@@ -360,8 +381,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
-        return fromCache(competitionId, questionsByCompetitionId, () ->
-                questionService.findByCompetition(competitionId).getSuccess());
+        return fromCache(competitionId, questionsByCompetitionId, () -> doAs(compAdmin(), () ->
+                questionService.findByCompetition(competitionId).getSuccess()));
     }
 
     protected List<FormInputResource> retrieveFormInputsByQuestionId(QuestionResource question) {

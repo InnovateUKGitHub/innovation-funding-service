@@ -7,8 +7,11 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.review.repository.ReviewRepository;
+import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -23,6 +26,8 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 @Component
 @PermissionRules
 public class AssessmentPermissionRules extends BasePermissionRules {
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @PermissionRule(value = "READ_DASHBOARD", description = "Assessors can view all Assessments on the competition " +
             "dashboard, except those rejected or withdrawn")
@@ -35,6 +40,13 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     public boolean userCanReadAssessment(AssessmentResource assessment, UserResource user) {
         Set<AssessmentState> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT);
         return isAssessorForAssessment(assessment, user, allowedStates);
+    }
+
+    @PermissionRule(value = "READ", description = "Assessors can directly read Assessments that are in panel")
+    public boolean userIsPanelAssessor(AssessmentResource assessment, UserResource user) {
+        Long assessmentUserId = processRoleRepository.findById(assessment.getProcessRole()).get().getUser().getId();
+        return user.getId().equals(assessmentUserId) &&
+                reviewRepository.existsByParticipantUserIdAndTargetIdAndActivityStateNot(assessmentUserId, assessment.getApplication(), ReviewState.WITHDRAWN);
     }
 
     @PermissionRule(value = "READ_SCORE", description = "Assessors can read the score of Assessments except those pending or rejected")

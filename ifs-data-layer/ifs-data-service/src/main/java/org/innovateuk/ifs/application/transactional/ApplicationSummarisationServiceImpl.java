@@ -3,13 +3,15 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -17,7 +19,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class ApplicationSummarisationServiceImpl implements ApplicationSummarisationService {
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Override
     public ServiceResult<BigDecimal> getTotalProjectCost(Application application) {
@@ -49,9 +51,11 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
 
         BigDecimal fundingSought;
         if (financeTotalsResult.isSuccess()) {
-            fundingSought = financeTotalsResult.getSuccess().stream()
-                    .filter(of -> of != null && of.getGrantClaimPercentage() != null)
-                    .map(of -> of.getTotalFundingSought()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            fundingSought = financeTotalsResult.getSuccess()
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .map(BaseFinanceResource::getTotalFundingSought)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
         } else {
             fundingSought = BigDecimal.ZERO;
         }

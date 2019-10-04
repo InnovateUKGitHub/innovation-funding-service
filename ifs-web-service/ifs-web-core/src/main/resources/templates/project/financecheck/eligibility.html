@@ -1,32 +1,75 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${summaryModel.applicationId}: ${summaryModel.projectName} - Eligibility check for ${summaryModel.organisationName}|" />
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|${summaryModel.applicationId}: ${summaryModel.projectName} - Eligibility check for ${summaryModel.organisationName}|"/>
 </head>
 
 <body class="govuk-template__body competition-management eligibility-form finance-row-form overheads">
-<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/modals :: modal-overlay"/>
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null" />
-    <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null"/>
+    <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Eligibility check for ${summaryModel.organisationName}|,subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle=|Eligibility check for ${summaryModel.organisationName}|,subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'"/>
 
         <th:block th:if="${summaryModel.isShowApprovalMessage()}">
-            <div class="success-alert">
-                <p class="govuk-body">The partner's finance eligibility has been approved by <span th:text="${summaryModel.getApproverName()}"/>, <span th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
-            </div>
+            <th:block th:if="${summaryModel.externalView}">
+                <th:block th:if="${summaryModel.loanCompetition}">
+                    <div class="message-alert">
+                        <p class="govuk-body">We have finished checking your finances.</p>
+                    </div>
+                </th:block>
+                <th:block th:unless="${summaryModel.loanCompetition}">
+                    <div class="success-alert">
+                        <p class="govuk-body">The partner's finance eligibility has been approved by <span
+                            th:text="${summaryModel.getApproverName()}"/>, <span
+                            th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+                    </div>
+                </th:block>
+            </th:block>
+        </th:block>
+
+        <th:block th:if="${summaryModel.isShowApprovalMessage()}">
+            <th:block th:unless="${summaryModel.externalView}">
+                <th:block th:if="${summaryModel.loanCompetition}">
+                    <div class="success-alert">
+                        <p class="govuk-body">The organisation’s finance eligibility has been approved by <span
+                            th:text="${summaryModel.getApproverName()}"/>, <span
+                            th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+                    </div>
+                </th:block>
+                <th:block th:unless="${summaryModel.loanCompetition}">
+                    <div class="success-alert">
+                        <p class="govuk-body">The partner's finance eligibility has been approved by <span
+                            th:text="${summaryModel.getApproverName()}"/>, <span
+                            th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+                    </div>
+                </th:block>
+            </th:block>
         </th:block>
 
         <th:block th:unless="${summaryModel.isShowApprovalMessage()}">
             <th:block th:if="${summaryModel.isExternalView()}">
-                <p class="govuk-body">Only your organisation can see this level of detail. All members of your organisation can access and edit your project finances. Your designated finance partner will be the main contact for queries. You will be consulted before any changes are approved.</p>
+                <th:block th:if="${summaryModel.loanCompetition}">
+                    <p class="govuk-body">All members of your organisation can access and edit your project
+                        finances. Your designated finance contact will be the main contact for queries. You will be
+                        consulted before any changes are approved.</p>
+                </th:block>
+                <th:block th:unless="${summaryModel.loanCompetition}">
+                    <p class="govuk-body">Only your organisation can see this level of detail. All members of
+                        your organisation can access and edit your project finances. Your designated finance partner
+                        will be the main contact for queries. You will be consulted before any changes are approved.</p>
+                </th:block>
             </th:block>
         </th:block>
 
@@ -37,23 +80,52 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Project duration</th>
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
-                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (&percnt;)</th>
-                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (&percnt;)
+                    </th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)
+                    </th>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
-                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
-                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>
+                        <th:block th:unless="${summaryModel.loanCompetition}">
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)
+                        </th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)
+                        </th>
+                    </th:block>
+                        <th:block th:if="${summaryModel.loanCompetition}">
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other funding (&pound;)
+                            </th>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>
+                        </th:block>
                     </th:block>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}">15 months</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'DEFAULT')}">200,123</th:block></td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.percentageGrant,1,'NONE')+'%'}">20&percnt;</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'DEFAULT')}">60,271</td>
+                    <td class="govuk-table__cell"
+                        th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}">15 months
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                        th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'DEFAULT')}">
+                        200,123
+                    </th:block>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.percentageGrant,1,'NONE')+'%'}">
+                        20&percnt;
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'DEFAULT')}">
+                        60,271
+                    </td>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'DEFAULT')}">138,164</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'DEFAULT')}">
+                            2,468
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'DEFAULT')}">
+                            138,164
+                        </td>
                     </th:block>
                 </tr>
                 </tbody>
@@ -63,8 +135,12 @@
         <th:block th:unless="${summaryModel.usingJesFinances}">
             <th:block th:if="${summaryModel.isExternalView()}">
                 <h2 class="govuk-heading-m">Detailed finances</h2>
-                <p class="govuk-body">These are your project finances. Changes that result from discussions with Innovate UK will be reflected here. Substantial changes to your project costs should be discussed with your Project Manager.</p>
-                <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}" class="govuk-link">View changes to finances</a></p>
+                <p class="govuk-body">These are your project finances. Changes that result from discussions with
+                    Innovate UK will be reflected here. Substantial changes to your project costs should be
+                    discussed with your Project Manager.</p>
+                <p class="govuk-body"><a
+                    th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}"
+                    class="govuk-link">View changes to finances</a></p>
             </th:block>
 
             <th:block th:unless="${summaryModel.isExternalView()}">
@@ -72,46 +148,61 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted during the request for a Horizon 2020 grant transfer.</p>
-                        <p class="govuk-body">The applicant will be able to see all saved changes. You must discuss all changes with them by raising queries through IFS.</p>
-                        <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">Review all changes to project finances</a></p>
+                        <p class="govuk-body">The applicant will be able to see all saved changes. You must discuss all changes with them by raising queries through the Innovation Funding Service.</p>
+                        <p class="govuk-body"><a
+                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+                            class="govuk-link">Review all changes to project finances</a></p>
                     </th:block>
 
                     <th:block th:if="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Detailed finances</h2>
                         <p class="govuk-body">These finances were initially submitted during the request for a Horizon 2020 grant transfer.</p>
-                        <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">View changes to finances</a></p></th:block>
-                    </th:block>
+                        <p class="govuk-body"><a
+                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+                            class="govuk-link">View changes to finances</a></p></th:block>
+                </th:block>
 
                 <th:block th:unless="${summaryModel.isH2020()}">
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
-                        <p class="govuk-body">These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
-                        <p class="govuk-body">All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
-                        <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">Review all changes to project finances</a></p>
+                        <p class="govuk-body">These finances were initially submitted at the application stage.
+                            All saved changes to finances will be viewable by the applicants.</p>
+                        <p class="govuk-body">All potential changes must be discussed with the lead applicant.
+                            You can do this by raising queries through the Innovation Funding Service.</p>
+                        <p class="govuk-body"><a
+                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+                            class="govuk-link">Review all changes to project finances</a></p>
                     </th:block>
 
                     <th:block th:if="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Detailed finances</h2>
-                        <p class="govuk-body">These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
-                        <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">View changes to finances</a></p>
+                        <p class="govuk-body">These finances were submitted by the applicant during the
+                            application stage. They include all changes made during the eligibility checks.</p>
+                        <p class="govuk-body"><a
+                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+                            class="govuk-link">View changes to finances</a></p>
                     </th:block>
                 </th:block>
 
             </th:block>
 
-            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data"
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
+                  enctype="multipart/form-data"
                   th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
-                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1" name="save-and-continue">Save form</button>
+                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"
+                        name="save-and-continue">
+                    Save form
+                </button>
 
                 <div class="govuk-accordion" data-module="accordion" id="accordion-finances">
-                    <th:block th:insert="application/your-project-costs-fragments :: labour" />
-                    <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads" />
-                    <th:block th:insert="application/your-project-costs-fragments :: overheads" />
-                    <th:block th:insert="application/your-project-costs-fragments :: materials" />
-                    <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
-                    <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
-                    <th:block th:insert="application/your-project-costs-fragments :: travel" />
-                    <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+                    <th:block th:insert="application/your-project-costs-fragments :: labour"/>
+                    <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads"/>
+                    <th:block th:insert="application/your-project-costs-fragments :: overheads"/>
+                    <th:block th:insert="application/your-project-costs-fragments :: materials"/>
+                    <th:block th:insert="application/your-project-costs-fragments :: capital_usage"/>
+                    <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs"/>
+                    <th:block th:insert="application/your-project-costs-fragments :: travel"/>
+                    <th:block th:insert="application/your-project-costs-fragments :: other_costs"/>
                 </div>
 
             </form>
@@ -133,8 +224,10 @@
         </th:block>
         <th:block th:if="${summaryModel.usingJesFinances}">
             <h2 class="govuk-heading-m">Je-S Form overview</h2>
-            <p class="govuk-body">These finances were initially submitted at the application stage, from the details in the Je-S form.</p>
-            <p class="govuk-body">If you need to make corrections, discuss this with the applicant. You can do this by raising queries through IFS. Saved changes will be visible to the applicant.</p>
+            <p class="govuk-body">These finances were initially submitted at the application stage, from the
+                details in the Je-S form.</p>
+            <p class="govuk-body">If you need to make corrections, discuss this with the applicant. You can do
+                this by raising queries through the Innovation Funding Service. Saved changes will be visible to the applicant.</p>
             <div class="upload-section">
                 <h3 class="govuk-heading-s govuk-!-margin-0">Download Je-S form:</h3>
                 <p class="uploaded-file govuk-body">
@@ -148,10 +241,12 @@
             </div>
         </th:block>
 
-        <input type="hidden" id="cacheTest" value="" />
-        <input type="hidden" id="projectId" th:value="${summaryModel.projectId}" />
-        <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}" />
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}" th:unless="${summaryModel.isExternalView()}">
+        <input type="hidden" id="cacheTest" value=""/>
+        <input type="hidden" id="projectId" th:value="${summaryModel.projectId}"/>
+        <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}"/>
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
+              th:object="${eligibilityForm}"
+              th:unless="${summaryModel.isExternalView()}">
 
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
@@ -164,7 +259,7 @@
                                    class="govuk-checkboxes__input"
                                    type="checkbox"
                                    th:field="*{confirmEligibilityChecked}"
-                                   data-switches-button-status="#confirm-button" />
+                                   data-switches-button-status="#confirm-button"/>
                             <label for="project-eligible"
                                    class="govuk-label govuk-checkboxes__label"
                                    th:text="${summaryModel.isH2020()?
@@ -182,29 +277,38 @@
                             id="rag-rating"
                             class="govuk-select"
                             data-switches-button-status="#confirm-button">
-                        <option value="UNSET" th:selected="${eligibilityForm.eligibilityRagStatus == null}">--</option>
+                        <option value="UNSET" th:selected="${eligibilityForm.eligibilityRagStatus == null}">--
+                        </option>
                         <option value="GREEN">Green</option>
                         <option value="AMBER">Amber</option>
                         <option value="RED">Red</option>
                     </select>
                 </div>
-                <button type="button" data-js-modal="modal-confirm-eligibility" class="govuk-button" id="confirm-button">Approve eligible costs</button>
-                <th:block th:insert="fragments/modals :: modal-confirm-eligibility" />
-                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                <button type="button" data-js-modal="modal-confirm-eligibility" class="govuk-button"
+                        id="confirm-button">Approve eligible costs
+                </button>
+                <th:block th:insert="fragments/modals :: modal-confirm-eligibility"/>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
             </th:block>
 
-            <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Return to finance checks</button>
-            <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}" th:classappend="${summaryModel.isApproved() ? 'govuk-!-margin-top-9' : ''}">Return to finance checks</a>
+            <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary"
+                    name="save-and-continue">
+                Return to finance checks
+            </button>
+            <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button-secondary"
+               th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}"
+               th:classappend="${summaryModel.isApproved() ? 'govuk-!-margin-top-9' : ''}">Return to finance checks</a>
         </form>
         <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button-secondary govuk-!-margin-right-4">Queries</a>
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="button-secondary">Notes</a>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
+               class="button-secondary govuk-!-margin-right-4">Queries</a>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+               class="button-secondary">Notes</a>
         </div>
-
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
 </body>
 </html>

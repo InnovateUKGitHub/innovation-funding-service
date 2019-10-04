@@ -32,16 +32,19 @@
                         th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalProjectCost,1,'DEFAULT')}"/>
                     </dd>
                     <th:block th:unless="${model.financeCheckSummaryResource.h2020}">
-                        <dt>Grant applied for:</dt>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Grant applied for:</dt>
+                        <dt th:if="${model.financeCheckSummaryResource.loan}">Funding sought:</dt>
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
                         </dd>
-                        <dt>Other public sector funding:</dt>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Other public sector funding:</dt>
+                        <dt th:if="${model.financeCheckSummaryResource.loan}">Other funding:</dt>
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}"/>
                         </dd>
                     </th:block>
-                    <dt>Total percentage grant:</dt>
+                    <dt th:unless="${model.financeCheckSummaryResource.loan}">Total percentage grant:</dt>
+                    <dt th:if="${model.financeCheckSummaryResource.loan}">Total percentage loan:</dt>
                     <dd th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalPercentageGrant,1,'NONE')+'%'}"></dd>
                 </dl>
                 <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View

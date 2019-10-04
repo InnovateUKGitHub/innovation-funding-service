@@ -7,6 +7,7 @@ public class ApplicationReadOnlySettings {
 
     private boolean includeStatuses = false;
     private boolean includeQuestionLinks = false;
+    private Long assessmentId = null;
 
     private ApplicationReadOnlySettings() {}
 
@@ -32,17 +33,31 @@ public class ApplicationReadOnlySettings {
         return this;
     }
 
+    public boolean isIncludeAssessment() {
+        return assessmentId != null;
+    }
+
+    public Long getAssessmentId() {
+        return assessmentId;
+    }
+
+    public ApplicationReadOnlySettings setAssessmentId(Long assesmentId) {
+        this.assessmentId = assesmentId;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ApplicationReadOnlySettings that = (ApplicationReadOnlySettings) o;
+        ApplicationReadOnlySettings settings = (ApplicationReadOnlySettings) o;
 
         return new EqualsBuilder()
-                .append(includeStatuses, that.includeStatuses)
-                .append(includeQuestionLinks, that.includeQuestionLinks)
+                .append(includeStatuses, settings.includeStatuses)
+                .append(includeQuestionLinks, settings.includeQuestionLinks)
+                .append(assessmentId, settings.assessmentId)
                 .isEquals();
     }
 
@@ -51,6 +66,7 @@ public class ApplicationReadOnlySettings {
         return new HashCodeBuilder(17, 37)
                 .append(includeStatuses)
                 .append(includeQuestionLinks)
+                .append(assessmentId)
                 .toHashCode();
     }
 }

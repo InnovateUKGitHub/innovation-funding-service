@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -25,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -46,6 +49,8 @@ public class TotalProjectSpendProfileController {
     private SpendProfileService spendProfileService;
     @Autowired
     private SpendProfileTableCalculator spendProfileTableCalculator;
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_TOTAL_SPEND_PROFILE_SECTION')")
     @GetMapping
@@ -81,7 +86,12 @@ public class TotalProjectSpendProfileController {
     private TotalSpendProfileViewModel buildTotalViewModel(final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
         TotalProjectSpendProfileTableViewModel tableView = buildTableViewModel(projectId);
-        SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, tableView.getMonthlyCostsPerOrganisationMap(), tableView.getMonths());
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+        SpendProfileSummaryModel summary = null;
+        if (!competition.getFundingType().equals(LOAN)) {
+            summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, tableView.getMonthlyCostsPerOrganisationMap(), tableView.getMonths());
+        }
         return new TotalSpendProfileViewModel(projectResource, tableView, summary);
     }
 

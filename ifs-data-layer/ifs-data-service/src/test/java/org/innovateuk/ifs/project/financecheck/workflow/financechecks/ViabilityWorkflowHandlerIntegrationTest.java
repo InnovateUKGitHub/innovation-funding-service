@@ -40,7 +40,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectCreated() {
+    public void projectCreated() {
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectUser projectUser = newProjectUser().build();
 
@@ -60,7 +60,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testViabilityApproved() {
+    public void viabilityApproved() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, internalUser)),
 
@@ -69,7 +69,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testViabilityNotApplicable() {
+    public void viabilityNotApplicable() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, internalUser)),
 

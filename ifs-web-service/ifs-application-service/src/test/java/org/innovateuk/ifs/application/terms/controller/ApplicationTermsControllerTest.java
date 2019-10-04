@@ -81,7 +81,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions", applicationId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
-                .andExpect(view().name("application/terms-and-conditions"));
+                .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
         verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, false);
     }
@@ -111,7 +111,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions?readonly=true", applicationId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
-                .andExpect(view().name("application/terms-and-conditions"));
+                .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
         verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, true);
     }
@@ -193,7 +193,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "agreed"))
-                .andExpect(view().name("application/terms-and-conditions"));
+                .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
         InOrder inOrder = inOrder(userRestServiceMock, questionStatusRestServiceMock, applicationTermsModelPopulatorMock);
         inOrder.verify(userRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
@@ -223,7 +223,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions/partner-status", application.getId(), questionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
-                .andExpect(view().name("application/terms-and-conditions-partner-status"));
+                .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions-partner-status"));
 
         InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());

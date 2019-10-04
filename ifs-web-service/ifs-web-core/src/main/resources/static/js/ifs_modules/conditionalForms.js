@@ -41,12 +41,25 @@ IFS.core.conditionalForms = (function () {
     },
     toggleVisibility: function (input, target, clearForm, clearValidation, isInverted) {
       target = jQuery(target)
-      var radioStatus = input.is(':checked')
-      if (isInverted) {
-        radioStatus = !radioStatus
+      var status = false
+      if (input.is(':radio')) {
+        status = input.is(':checked')
+        if (isInverted) {
+          status = !status
+        }
       }
 
-      if (radioStatus) {
+      if (input.is(':checkbox')) {
+        if (isInverted) {
+          // Inverted none checked
+          status = !input.is(':checked')
+        } else {
+          // All checked (is returns true if only one matches)
+          status = !input.is(':not(:checked)')
+        }
+      }
+
+      if (status) {
         target.attr('aria-hidden', 'false').removeClass('js-hidden')
       } else {
         target.attr('aria-hidden', 'true')

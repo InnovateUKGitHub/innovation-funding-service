@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
+import org.innovateuk.ifs.application.finance.populator.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
@@ -22,11 +22,12 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -40,35 +41,30 @@ import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES
 @Component
 public class AssessmentDetailedFinancesModelPopulator {
 
+    @Autowired
     private CompetitionRestService competitionRestService;
+    @Autowired
     private ApplicationRestService applicationRestService;
+    @Autowired
     private AssessmentService assessmentService;
+    @Autowired
     private UserRestService userRestService;
+    @Autowired
     private OrganisationRestService organisationRestService;
+    @Autowired
     private FileEntryRestService fileEntryRestService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private FinanceService financeService;
+    @Autowired
     private YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator;
+    @Autowired
     private ApplicationYourProjectCostsFormPopulator yourProjectCostsFormPopulator;
+    @Autowired
     private AcademicCostViewModelPopulator academicCostViewModelPopulator;
+    @Autowired
     private AcademicCostFormPopulator academicCostFormPopulator;
-    private FinanceUtil financeUtil;
-
-    public AssessmentDetailedFinancesModelPopulator(CompetitionRestService competitionRestService, ApplicationRestService applicationRestService, AssessmentService assessmentService, UserRestService userRestService, OrganisationRestService organisationRestService, FileEntryRestService fileEntryRestService, SectionService sectionService, FinanceService financeService, YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator, ApplicationYourProjectCostsFormPopulator yourProjectCostsFormPopulator, AcademicCostViewModelPopulator academicCostViewModelPopulator, AcademicCostFormPopulator academicCostFormPopulator, FinanceUtil financeUtil) {
-        this.competitionRestService = competitionRestService;
-        this.applicationRestService = applicationRestService;
-        this.assessmentService = assessmentService;
-        this.userRestService = userRestService;
-        this.organisationRestService = organisationRestService;
-        this.fileEntryRestService = fileEntryRestService;
-        this.sectionService = sectionService;
-        this.financeService = financeService;
-        this.yourProjectCostsViewModelPopulator = yourProjectCostsViewModelPopulator;
-        this.yourProjectCostsFormPopulator = yourProjectCostsFormPopulator;
-        this.academicCostViewModelPopulator = academicCostViewModelPopulator;
-        this.academicCostFormPopulator = academicCostFormPopulator;
-        this.financeUtil = financeUtil;
-    }
 
     public AssessmentDetailedFinancesViewModel populateModel(long assessmentId, long organisationId, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
@@ -143,7 +139,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     }
 
     private boolean isAcademicFinance(Long organisationType, CompetitionResource competition) {
-        return financeUtil.isUsingJesFinances(competition, organisationType);
+        return competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisationType));
     }
 }
 

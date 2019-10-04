@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -100,7 +100,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     private BigDecimal percentDivisor = new BigDecimal("100");
 
@@ -130,7 +130,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
                 spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, project), bankDetailsApproved,
-                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId(), competition.isH2020()));
+                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId(), competition.isH2020(), competition.getFundingType()));
     }
 
     @Override
@@ -160,22 +160,15 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
 
-        return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
-
-            financeService.financeDetails(application.getId(), organisationId).
-                    andOnSuccessReturn(applicationFinanceResource -> {
-
-                        BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage());
-                        BigDecimal fundingSought = projectFinance.getTotal().multiply(grantPercentage).divide(percentDivisor);
-                        return new FinanceCheckEligibilityResource(project.getId(),
+        return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
+                        new FinanceCheckEligibilityResource(project.getId(),
                                 organisationId,
                                 application.getDurationInMonths(),
                                 projectFinance.getTotal(),
-                                grantPercentage,
-                                fundingSought,
+                                BigDecimal.valueOf(projectFinance.getGrantClaimPercentage()),
+                                projectFinance.getTotalFundingSought(),
                                 projectFinance.getTotalOtherFunding(),
-                                projectFinance.getTotal().subtract(fundingSought).subtract(projectFinance.getTotalOtherFunding()));
-                    })
+                                projectFinance.getTotalContribution())
         );
     }
 
@@ -349,8 +342,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::getViabilityProcess)
@@ -362,8 +355,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::getEligibilityProcess)

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -28,7 +28,6 @@ import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
-import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -46,7 +45,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     private QuestionStatusService questionStatusService;
 
     @Autowired
-    private FinanceService financeService;
+    private ApplicationFinanceService financeService;
 
     @Autowired
     private ApplicationValidationUtil validationUtil;

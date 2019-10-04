@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.m
 @SecuredBySpring(value = "ACADEMIC_COSTS_APPLICANT", description = "Applicants can all fill out the Your project costs section of the application.")
 public class AcademicCostsController {
 
-    private static final String VIEW = "application/academic-costs";
+    private static final String VIEW = "application/sections/your-project-costs/academic-costs";
 
     @Autowired
     private AcademicCostFormPopulator formPopulator;

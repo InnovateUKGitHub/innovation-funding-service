@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.junit.Test;
@@ -33,9 +33,9 @@ public class ApplicationFinanceRowControllerTest extends BaseControllerMockMVCTe
     
     @Test
     public void create() throws Exception {
-        FinanceRowItem financeRowItem = new GrantClaim(1L);
+        FinanceRowItem financeRowItem = new GrantClaimPercentage(1L);
 
-        when(financeRowCostsServiceMock.create(1L, financeRowItem)).thenReturn(serviceSuccess(new GrantClaim(1L)));
+        when(financeRowCostsServiceMock.create(1L, financeRowItem)).thenReturn(serviceSuccess(new GrantClaimPercentage(1L)));
 
         mockMvc.perform(post("/application-finance-row")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +82,7 @@ public class ApplicationFinanceRowControllerTest extends BaseControllerMockMVCTe
     @Test
     public void updateShouldReturnEmptyResponseOnWrongId() throws Exception {
 
-        GrantClaim costItem = new GrantClaim(1L);
+        GrantClaimPercentage costItem = new GrantClaimPercentage(1L);
         when(financeRowCostsServiceMock.update(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
 
         mockMvc.perform(put("/application-finance-row/{id}", "123")
@@ -97,7 +97,7 @@ public class ApplicationFinanceRowControllerTest extends BaseControllerMockMVCTe
     @Test
     public void updateShouldReturnIsCorrectOnCorrectValues() throws Exception {
 
-        GrantClaim costItem = new GrantClaim(1L);
+        GrantClaimPercentage costItem = new GrantClaimPercentage(1L);
         when(financeRowCostsServiceMock.update(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
 
         mockMvc.perform(put("/application-finance-row/{id}", "123")

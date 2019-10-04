@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.finance.populator.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
@@ -106,7 +107,7 @@ public class ApplicationPrintPopulator {
         addQuestionsDetails(model, application, null);
         addUserDetails(model, user, userApplicationRoles);
         addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, user.getId(), completedSectionsByOrganisation, Optional.empty());
-        addFinanceDetails(model, competition.getId(), applicationId);
+        addFinanceDetails(model, competition, applicationId);
 
         return "application/print";
     }
@@ -120,28 +121,45 @@ public class ApplicationPrintPopulator {
         model.addAttribute("financeSection", section);
     }
 
-    private void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
-        addFinanceSections(competitionId, model);
+    private void addFinanceDetails(Model model, CompetitionResource competition, Long applicationId) {
+        addFinanceSections(competition.getId(), model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,
                 fileEntryRestService,
                 applicationId
         );
+        boolean fundingLevelFirst = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
 
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
-        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
+        model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType(competition));
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         model.addAttribute("organisationFinances", organisationFinances);
         model.addAttribute("academicFileEntries", organisationFinanceOverview.getAcademicOrganisationFileEntries());
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
+        model.addAttribute("fundingLevelFirst", fundingLevelFirst);
+        model.addAttribute("fundingSoughtFirst", !fundingLevelFirst);
         model.addAttribute(
                 "researchParticipationPercentage",
                 applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
         );
         model.addAttribute("isApplicant", true);
+        model.addAttribute("isVatRegistered", isVatRegistered(organisationFinances));
     }
+
+    private boolean isVatRegistered(Map<Long, BaseFinanceResource> organisationFinances) {
+        Optional<BaseFinanceResource> financeResource = organisationFinances.values()
+                .stream()
+                .findFirst();
+
+        if (financeResource.isPresent()) {
+            return financeResource.get().isVatRegistered();
+        }
+
+        return false;
+    }
+
     private void addSubSections(Optional<SectionResource> currentSection, Model model, List<SectionResource> parentSections,
                                 List<SectionResource> allSections, List<QuestionResource> questions, List<FormInputResource> formInputResources) {
         Map<Long, List<QuestionResource>> subsectionQuestions;

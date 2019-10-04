@@ -202,9 +202,9 @@
                                 </h3>
                             </div>
                             <div id="accordion-finance-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finance-heading-1">
-                                <div ifs:global="${model.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true, supportUserAndSummaryPage = false)"></div>
+                                <div th:replace="finance/finance-summary :: application-finances-summary(${model.applicationFinanceSummaryViewModel})"></div>
                                 <h4 class="govuk-heading-m">Funding breakdown</h4>
-                                <th:block ifs:global="${model.applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
+                                <th:block th:insert="finance/finance-summary :: finance-breakdown-table(${model.applicationFundingBreakdownViewModel})" />
                             </div>
                         </div>
                     </div>

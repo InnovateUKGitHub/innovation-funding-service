@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
@@ -19,11 +18,9 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.junit.Before;
@@ -40,11 +37,16 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
+import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newProjectFinanceRow;
+import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -91,40 +93,50 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Before
     public void setUp() throws Exception {
-        Long organisationId = 456L;
+        long organisationId = 456L;
+        long projectId = 123L;
+        long costItemId = 222L;
+        long projectFinanceId = 111L;
 
-        Long projectId = 123L;
+        Competition competition = newCompetition().withCompetitionStatus(CLOSED).build();
 
-        Long costItemId = 222L;
-
-        Long projectFinanceId = 111L;
-
-        Long questionId = 789L;
-
-        Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.CLOSED).build();
-
-        organisation = newOrganisation().withId(organisationId).withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
+        organisation = newOrganisation()
+                .withId(organisationId)
+                .withOrganisationType(newOrganisationType()
+                        .withOrganisationType(BUSINESS)
+                        .build())
+                .build();
 
         Application application = newApplication().withCompetition(competition).build();
 
         project = newProject().withId(projectId).withApplication(application).build();
 
-        newFinance = new ProjectFinance(organisation, SMALL, project);
+        newFinance = newProjectFinance()
+                .withOrganisation(organisation)
+                .withOrganisationSize(SMALL)
+                .withProject(project)
+                .build();
+
         newFinance.setId(projectFinanceId);
 
-        material = new Materials(newFinance.getId());
-        material.setCost(BigDecimal.valueOf(100));
-        material.setItem("Screws");
-        material.setQuantity(5);
+        material = newMaterials()
+                .withCost(BigDecimal.valueOf(100))
+                .withItem("Screws")
+                .withQuantity(5)
+                .withTargetId(newFinance.getId())
+                .build();
 
-
-        materialCost = newProjectFinanceRow().withId(costItemId).withType(FinanceRowType.MATERIALS).withTarget(newFinance).build();
+        materialCost = newProjectFinanceRow()
+                .withId(costItemId)
+                .withType(MATERIALS)
+                .withTarget(newFinance)
+                .build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
 
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
 
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         when(projectFinanceRowRepositoryMock.findById(costItemId)).thenReturn(Optional.of(materialCost));
 
@@ -136,13 +148,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGetCostItem() {
+    public void getCostItem() {
         ServiceResult<FinanceRowItem> result = service.get(materialCost.getId());
         assertTrue(result.isSuccess());
     }
 
     @Test
-    public void testAddCost() {
+    public void addCost() {
 
         ProjectFinance newFinanceExpectations = argThat(lambdaMatches(finance -> {
             assertEquals(project, finance.getProject());
@@ -154,6 +166,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinanceResource expectedFinance = newProjectFinanceResource().
                 with(id(newFinance.getId())).
                 withOrganisation(organisation.getId()).
+                withOrganisationSize(newFinance.getOrganisationSize()).
                 withProject(project.getId()).
                 build();
 
@@ -167,22 +180,22 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testUpdateCost() {
+    public void updateCost() {
         when(projectFinanceRowRepositoryMock.save(any(ProjectFinanceRow.class))).thenReturn(materialCost);
         ServiceResult<FinanceRowItem> result = service.update(materialCost.getId(), material);
         assertTrue(result.isSuccess());
     }
 
     @Test
-    public void testDeleteCost() {
+    public void deleteCost() {
         ServiceResult<Void> result = service.delete(materialCost.getId());
         assertTrue(result.isSuccess());
     }
 
     @Test
-    public void testGetCostHandler() {
+    public void getCostHandler() {
         when(organisationFinanceDefaultHandlerMock.toResource(materialCost)).thenReturn(material);
-        when(organisationFinanceDefaultHandlerMock.getCostHandler(FinanceRowType.MATERIALS)).thenReturn(new MaterialsHandler());
+        when(organisationFinanceDefaultHandlerMock.getCostHandler(MATERIALS)).thenReturn(new MaterialsHandler());
 
         FinanceRowHandler financeRowHandler = service.getCostHandler(material);
         assertNotNull(financeRowHandler);
@@ -190,19 +203,24 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testFinanceCheckDetails() {
+    public void financeCheckDetailsSuccessful() {
         ProjectFinanceResourceId projectFinanceResourceId = new ProjectFinanceResourceId(project.getId(), organisation.getId());
         ProjectFinanceResource expected = newProjectFinanceResource().build();
 
-        //successful test
         when(projectFinanceHandlerMock.getProjectOrganisationFinances(projectFinanceResourceId)).thenReturn(serviceSuccess(expected));
         ServiceResult<ProjectFinanceResource> result = service.financeChecksDetails(project.getId(), organisation.getId());
+
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), expected);
+    }
 
-        //unsuccessful test
+    @Test
+    public void financeCheckDetailsUnsuccessful() {
+        ProjectFinanceResourceId projectFinanceResourceId = new ProjectFinanceResourceId(project.getId(), organisation.getId());
+
         when(projectFinanceHandlerMock.getProjectOrganisationFinances(projectFinanceResourceId)).thenReturn(serviceFailure(notFoundError(ProjectFinanceResource.class)));
-        result = service.financeChecksDetails(project.getId(), organisation.getId());
+        ServiceResult<ProjectFinanceResource> result = service.financeChecksDetails(project.getId(), organisation.getId());
+
         assertTrue(result.isFailure());
         assertTrue(result.getErrors().contains(notFoundError(ProjectFinanceResource.class)));
     }

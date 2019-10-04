@@ -150,7 +150,6 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
-        when(projectDetailsService.saveProjectInvite(projectUserInviteResource)).thenReturn(serviceSuccess());
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(singletonList(projectUserInviteResource)));
         when(projectTeamRestService.inviteProjectMember(projectId, projectUserInviteResource)).thenReturn(restSuccess());
 

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.financechecks.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -33,7 +32,6 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -95,9 +93,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     private UserAuthenticationService userAuthenticationService;
 
     @Mock
-    private FinanceUtil financeUtil;
-
-    @Mock
     private FinanceChecksEligibilityProjectCostsFormPopulator formPopulator;
 
     @Mock
@@ -157,10 +152,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
-
-        FinanceViewModel financeViewModel = new FinanceViewModel();
-        financeViewModel.setOrganisationGrantClaimPercentage(74);
-
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(loggedInUser);
     }
 

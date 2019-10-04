@@ -2,18 +2,18 @@ To run load_test_representative
 ===============================
 For Example (JMeter)
 --------------------
-1) jmeter -Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1 -puat.properties -tload_test_representative.jmx
+1) jmeter -Jinvite_user=1 -Japplicant_users=1 -JH2020_users=1 -Jregistration_users=1 -puat.properties -tload_test_representative.jmx
 
 Where
 invite_user                     = number of users to run the invite_user group
 applicant_users                 = number of users to run the applicant_users group
+h2020_users                     = number of users to run the H2020_users group
 registration_users              = number of users to run the registration_users group
 front_door_users                = number of users to run the front door group
 competition_management_users    = number of users to run competition management group
 uat.properties     = file that contains properties on uat invariants. Currently:
                      server_url        = the url of the uat servers
                      authorisation_url = the url of the shibboleth authentication servers
-                     users_csv         = name of the csv file that contains the users to run in the application group test
                      competitions_csv  = name of the csv file that contains the competition ids to run the competition group test
                      invites_csv       = name of the csv file that contains the users to run in the invite group test
 
@@ -27,7 +27,6 @@ For Example (Blazemeter)
 3) Add Jmeter Properties e.g.
 server_url=ifs-uat.innovateuk.org
 authorisation_url=auth.ifs-uat.innovateuk.org
-users_csv=user_data.csv
 invites_csv=invite_data.csv
 competitions_csv=competition_data.csv
 
