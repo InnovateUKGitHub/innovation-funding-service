@@ -1,0 +1,2 @@
+This directory will most likely be removed in future. Try not adding any more scripts into integration directory.  The required data should be built in code in 'setup'.
+Add scripts to this directory that contain data for the integration test and nothing else.
