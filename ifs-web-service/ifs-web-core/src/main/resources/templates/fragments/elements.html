@@ -227,10 +227,10 @@
     <th:block th:unless="${projectWithdrawn}">
         <div class="success-alert"
              th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).APPROVED}">
-            <th:block th:unless="${model.loanCompetition}">
+            <th:block th:unless="${competition.isLoan()}">
                 <h2 class="govuk-heading-s govuk-!-margin-0">Congratulations, your application has been successful</h2>
             </th:block>
-            <th:block th:if="${model.loanCompetition}">
+            <th:block th:if="${competition.isLoan()}">
                 <h2 class="govuk-heading-s govuk-!-margin-0">Your application has progressed to project setup.</h2>
             </th:block>
             <th:block>

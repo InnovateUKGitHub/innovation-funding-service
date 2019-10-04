@@ -89,4 +89,5 @@ public class ApplicationSummaryViewModel {
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
     }
+
 }

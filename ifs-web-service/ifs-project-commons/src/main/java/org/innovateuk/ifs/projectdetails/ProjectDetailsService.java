@@ -29,7 +29,5 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> inviteProjectManager (Long projectId, ProjectUserInviteResource projectUserInviteResource);
 
-    ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource);
-
     ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId);
 }

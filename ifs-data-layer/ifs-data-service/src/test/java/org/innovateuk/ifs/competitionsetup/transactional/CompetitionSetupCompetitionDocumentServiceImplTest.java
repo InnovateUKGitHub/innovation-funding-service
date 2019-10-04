@@ -8,6 +8,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -16,16 +18,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests the CompetitionSetupDocumentServiceImpl with mocked repository.
@@ -91,15 +92,20 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
 
     @Test
     public void saveAll() {
-
+        Competition competition = newCompetition().build();
+        List<ProjectStages> stages = new ArrayList<>();
+        stages.add(new ProjectStages(competition, ProjectSetupStage.DOCUMENTS));
+        competition.setProjectStages(stages);
         List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withId(1L, 2L)
                 .withFileType(singletonList(1L))
                 .build(2);
         CompetitionDocument competitionDocument1 = new CompetitionDocument();
         competitionDocument1.setId(1L);
+        competitionDocument1.setCompetition(competition);
         CompetitionDocument competitionDocument2 = new CompetitionDocument();
         competitionDocument2.setId(2L);
+        competitionDocument2.setCompetition(competition);
         List<CompetitionDocument> competitionDocuments = new ArrayList<>();
         competitionDocuments.add(competitionDocument1);
         competitionDocuments.add(competitionDocument2);
@@ -117,6 +123,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertEquals(competitionDocumentResources.get(1), result.getSuccess().get(1));
 
         verify(competitionDocumentConfigRepositoryMock).saveAll(competitionDocuments);
+        assertTrue(competition.getProjectStages().stream().noneMatch(stage -> stage.getProjectSetupStage().equals(ProjectSetupStage.DOCUMENTS)));
     }
 
     @Test
