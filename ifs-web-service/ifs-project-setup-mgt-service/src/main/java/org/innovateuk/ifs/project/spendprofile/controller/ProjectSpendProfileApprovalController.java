@@ -92,14 +92,11 @@ public class ProjectSpendProfileApprovalController {
 
     private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        Long applicationId = project.getApplication();
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(project.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         UserResource user = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
         String leadTechnologist = competition.getLeadTechnologist() != null ? user.getName() : "";
         ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);
-        boolean projectIsActive = project.getProjectState().isActive();
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
@@ -107,9 +104,7 @@ public class ProjectSpendProfileApprovalController {
                                                         leadTechnologist,
                                                         approvalType,
                                                         organisationResources,
-                                                        applicationId,
-                                                        project.getName(),
-                                                        projectIsActive);
+                                                        project);
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {

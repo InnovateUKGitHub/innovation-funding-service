@@ -2,9 +2,11 @@ package org.innovateuk.ifs.financecheck.eligibility.viewmodel;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
 
@@ -32,13 +34,13 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean h2020;
     private final boolean projectIsActive;
     private final boolean loanCompetition;
+    private final boolean collaborativeProject;
 
-    public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview,
+    public FinanceChecksEligibilityViewModel(ProjectResource project,
+                                             CompetitionResource competition,
+                                             FinanceCheckEligibilityResource eligibilityOverview,
                                              String organisationName,
-                                             String projectName,
-                                             Long applicationId,
                                              boolean leadPartnerOrganisation,
-                                             Long projectId,
                                              Long organisationId,
                                              boolean eligibilityApproved,
                                              EligibilityRagStatus eligibilityRagStatus,
@@ -47,16 +49,17 @@ public class FinanceChecksEligibilityViewModel {
                                              LocalDate approvalDate,
                                              boolean externalView,
                                              boolean isUsingJesFinances,
-                                             FileDetailsViewModel jesFileDetailsViewModel,
-                                             boolean h2020,
-                                             boolean projectIsActive,
-                                             boolean loanCompetition) {
+                                             FileDetailsViewModel jesFileDetailsViewModel) {
+        this.projectName = project.getName();
+        this.applicationId = project.getApplication();
+        this.projectId = project.getApplication();
+        this.projectIsActive = project.getProjectState().isActive();
+        this.collaborativeProject = project.isCollaborativeProject();
+        this.h2020 = competition.isH2020();
+        this.loanCompetition = competition.isLoan();
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
-        this.projectName = projectName;
-        this.applicationId = applicationId;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
-        this.projectId = projectId;
         this.organisationId = organisationId;
         this.eligibilityApproved = eligibilityApproved;
         this.eligibilityRagStatus = eligibilityRagStatus;
@@ -66,9 +69,6 @@ public class FinanceChecksEligibilityViewModel {
         this.externalView = externalView;
         this.isUsingJesFinances = isUsingJesFinances;
         this.jesFileDetails = jesFileDetailsViewModel;
-        this.h2020 = h2020;
-        this.projectIsActive = projectIsActive;
-        this.loanCompetition = loanCompetition;
     }
 
     public boolean isApproved() {
@@ -222,5 +222,9 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 }

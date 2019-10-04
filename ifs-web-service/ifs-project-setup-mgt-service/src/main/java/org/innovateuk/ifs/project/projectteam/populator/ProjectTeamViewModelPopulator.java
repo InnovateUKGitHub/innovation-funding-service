@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
@@ -42,10 +41,9 @@ public class ProjectTeamViewModelPopulator {
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
-        ProjectResource projectResource = projectService.getById(projectId);
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+        ProjectResource project = projectService.getById(projectId);
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
@@ -61,19 +59,16 @@ public class ProjectTeamViewModelPopulator {
                 .sorted()
                 .collect(toList());
 
-        boolean projectIsNotActive = !projectResource.getProjectState().isActive();
+        boolean projectIsNotActive = !project.getProjectState().isActive();
 
         // support users and ifs admins can edit, other internal users have read only view only
         boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) || projectIsNotActive;
 
         return new ProjectTeamViewModel(
-                competitionResource.getName(),
-                competitionResource.getId(),
-                projectResource.getName(),
-                projectResource.getId(),
+                project,
                 partnerOrgModels,
                 null,
-                getProjectManager(projectResource.getId()).orElse(null),
+                getProjectManager(project.getId()).orElse(null),
                 false,
                 loggedInUser.getId(),
                 false,
