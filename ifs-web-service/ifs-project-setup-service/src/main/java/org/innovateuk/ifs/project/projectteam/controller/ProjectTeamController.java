@@ -118,5 +118,4 @@ public class ProjectTeamController {
                 failureView, successView, projectId, organisationId,
                 (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
     }
-
 }

@@ -90,7 +90,9 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
                 .collect(toList());
 
-        rows.addAll(pendingOrganisations(applicationId));
+        if (!application.isSubmitted()) {
+            rows.addAll(pendingOrganisations(applicationId));
+        }
 
         return new ApplicationFundingBreakdownViewModel(applicationId,
                 rows,

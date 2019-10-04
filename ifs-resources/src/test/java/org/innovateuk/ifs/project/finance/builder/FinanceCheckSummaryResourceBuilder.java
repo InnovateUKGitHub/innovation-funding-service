@@ -106,4 +106,5 @@ public class FinanceCheckSummaryResourceBuilder extends BaseBuilder<FinanceCheck
     public final FinanceCheckSummaryResourceBuilder withPartnerStatusResources(List<FinanceCheckPartnerStatusResource>... partnerStatusResourcesLst) {
         return withArray((competitionId, financeCheckResource) -> setField("partnerStatusResources", competitionId, financeCheckResource), partnerStatusResourcesLst);
     }
+
 }

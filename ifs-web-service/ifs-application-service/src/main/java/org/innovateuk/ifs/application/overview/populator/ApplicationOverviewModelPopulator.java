@@ -14,8 +14,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.invite.InviteService;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -51,14 +49,13 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private final OrganisationRestService organisationRestService;
     private final QuestionStatusRestService questionStatusRestService;
     private final SectionStatusRestService sectionStatusRestService;
-    private final InviteService inviteService;
     private final QuestionService questionService;
 
     public ApplicationOverviewModelPopulator(AsyncFuturesGenerator asyncFuturesGenerator, CompetitionRestService competitionRestService,
                                              SectionRestService sectionRestService, QuestionRestService questionRestService,
                                              UserRestService userRestService, MessageSource messageSource,
                                              OrganisationRestService organisationRestService, QuestionStatusRestService questionStatusRestService,
-                                             SectionStatusRestService sectionStatusRestService, InviteService inviteService,
+                                             SectionStatusRestService sectionStatusRestService,
                                              QuestionService questionService) {
         super(asyncFuturesGenerator);
         this.competitionRestService = competitionRestService;
@@ -69,7 +66,6 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         this.organisationRestService = organisationRestService;
         this.questionStatusRestService = questionStatusRestService;
         this.sectionStatusRestService = sectionStatusRestService;
-        this.inviteService = inviteService;
         this.questionService = questionService;
     }
 
@@ -80,7 +76,6 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         Future<List<QuestionResource>> questions = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
         Future<List<ProcessRoleResource>> processRoles = async(() -> userRestService.findProcessRole(application.getId()).getSuccess());
         Future<List<QuestionStatusResource>> statuses = async(() -> questionStatusRestService.findByApplicationAndOrganisation(application.getId(), resolve(organisation).getId()).getSuccess());
-        Future<List<ApplicationInviteResource>> invites = async(() -> inviteService.getPendingInvitationsByApplicationId(application.getId()));
         Future<List<Long>> completedSectionIds = async(() -> sectionStatusRestService.getCompletedSectionIds(application.getId(), resolve(organisation).getId()).getSuccess());
         Future<Map<Long, Set<Long>>> completedSectionsByOrganisation = async(() -> sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId()).getSuccess());
 
@@ -90,7 +85,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         });
 
         ApplicationOverviewData data = new ApplicationOverviewData(resolve(competition), application, resolve(sections),
-                resolve(questions), resolve(processRoles), resolve(organisation), resolve(statuses), resolve(invites),
+                resolve(questions), resolve(processRoles), resolve(organisation), resolve(statuses),
                 resolve(completedSectionIds), resolve(completedSectionsByOrganisation), user);
 
         Set<ApplicationOverviewSectionViewModel> sectionViewModels = data.getSections()
@@ -191,7 +186,6 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             viewModel.setCurrentApplicant(data.getUserProcessRole());
             viewModel.setLeadApplicant(data.getLeadApplicant());
             viewModel.setAssignableApplicants(new ArrayList<>(data.getProcessRoles().values()));
-            viewModel.setPendingAssignableUsers(data.getInvites());
             viewModel.setQuestion(question);
 
             viewModel.setAssignedBy(maybeStatus.map(status -> data.getProcessRoles().get(status.getAssignedBy())).orElse(null));

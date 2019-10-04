@@ -48,12 +48,6 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
     }
 
     @Override
-    public RestResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
-        String url = PROJECT_INVITE_BASE_URL + PROJECT_INVITE_SAVE;
-        return postWithRestResult(url, projectUserInviteResource, Void.class);
-    }
-
-    @Override
     public RestResult<List<ProjectUserInviteResource>> getInvitesByProject (Long projectId){
         String url = PROJECT_INVITE_BASE_URL + GET_PROJECT_INVITE_LIST + projectId;
         return getWithRestResult(url, projectInviteResourceListType());
