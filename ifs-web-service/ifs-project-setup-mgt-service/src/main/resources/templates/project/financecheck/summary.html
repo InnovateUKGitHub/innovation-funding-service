@@ -75,7 +75,8 @@
             th:if="${model.financeCheckSummaryResource.researchParticipationPercentage &gt; model.financeCheckSummaryResource.competitionMaximumResearchPercentage}"
             th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.financeCheckSummaryResource.researchParticipationPercentage},maxResearchPercentage=${model.financeCheckSummaryResource.competitionMaximumResearchPercentage})"/>
 
-        <h2 class="govuk-heading-m govuk-!-margin-top-7">Partner finances</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-7" th:if="${model.collaborativeProject}">Partner finances</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-7" th:unless="${model.collaborativeProject}">Finances</h2>
         <div class="table-overflow govuk-!-margin-bottom-6">
             <table class="govuk-table table-progress">
                 <thead class="govuk-table__head">
