@@ -12,6 +12,8 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
+import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Section;
 import org.junit.Test;
@@ -54,6 +56,12 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepositoryMock;
+
+    @Mock
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
+
+    @Mock
+    private FileTypeRepository fileTypeRepository;
 
     @Test
     public void initializeCompetitionByCompetitionTemplate_competitionTypeCantBeFoundShouldResultException() {

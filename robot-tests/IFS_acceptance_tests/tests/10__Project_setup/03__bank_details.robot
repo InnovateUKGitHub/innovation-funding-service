@@ -384,6 +384,15 @@ The project finance user confirms the approved Bank Details
     the user should not see the element    jQuery = a:contains("Dreambit")
     the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
     the user should see the element        jQuery = tr:contains("Complete") td:nth-child(6) a:contains("Complete")
+    the external user is able see approved bank details
+
+the external user is able see approved bank details
+    log in as a different user            &{lead_applicant_credentials_bd}
+    the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    the user should see the element       jQuery = li:contains("Bank details") .status-complete
+    log in as a different user            &{collaborator1_credentials_bd}
+    the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
+    the user should see the element       jQuery = li:contains("Bank details") .status-complete
 
 The bank details have been verified by the Experian
     [Arguments]  ${organisationId}

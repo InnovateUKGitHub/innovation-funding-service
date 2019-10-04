@@ -301,7 +301,7 @@ public class SetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
-    public SectionAccess canAccessSetupSection() {
+    public SectionAccess canAccessProjectSetupCompleteSection() {
         if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }
