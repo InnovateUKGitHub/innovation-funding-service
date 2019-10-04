@@ -25,7 +25,6 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
-import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
@@ -72,7 +71,6 @@ public class CompetitionSetupController {
     public static final String COMPETITION_ID_KEY = "competitionId";
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
-    private static final String SUBSECTION_PATH_KEY = "subsectionPath";
     private static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
     private static final String DASHBOARD_REDIRECT = "redirect:/dashboard";
     private static final String MODEL = "model";
@@ -90,9 +88,6 @@ public class CompetitionSetupController {
     private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Autowired
-    private TermsAndConditionsModelPopulator termsAndConditionsModelPopulator;
-
-    @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     @Autowired
@@ -100,8 +95,6 @@ public class CompetitionSetupController {
 
     public static final String SETUP_READY_KEY = "setupReady";
     public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
-
-    private static final String RESTRICT_INITIAL_DETAILS_EDIT = "restrictInitialDetailsEdit";
 
     @Autowired
     @Qualifier("mvcValidator")

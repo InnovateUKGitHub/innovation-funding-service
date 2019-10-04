@@ -22,6 +22,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6294 Loans - Project Setup Complete External Journey
 ...
 ...             IFS-6298 Loans - Project Setup Content Review
+...
+...             IFS-6368 Loans - Remove Documents
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -79,7 +81,6 @@ Applicant complete the project setup details
     [Documentation]  IFS-6369  IFS-6285
     Given the user completes the project details
     And the user completes the project team details
-    And the user submits the project document
     Then the user should not see the element    jQuery = h2:contains("Bank details")
 
 Funding sought validations
@@ -98,10 +99,9 @@ Found sought changes
     And the external user should see the funding changes
 
 Project finance completes all project setup steps
-    [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298
+    [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368
     [Setup]  log in as a different user        &{internal_finance_credentials}
-    Given internal user approve project documents
-    And internal user assign MO to loan project
+    Given internal user assign MO to loan project
     And internal user generate SP
     When the user navigates to the page         ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
     Then the user should not see the element    jQuery = th:contains("Bank details")
@@ -178,21 +178,6 @@ the user completes the project team details
     the user clicks the button/link     link = Set up your project
     the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
 
-the user submits the project document
-    the user navigates to the page       ${loan_PS}/document/all
-    the user clicks the button/link      link = Exploitation plan
-    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    the user clicks the button/link      id = submitDocumentButton
-    the user clicks the button/link      id = submitDocumentButtonConfirm
-    the user goes to documents page      Back to document overview  Set up your project
-    the user should see the element      jQuery = li:contains("Documents") span:contains("Awaiting review")
-
-internal user approve project documents
-    Log in as a different user            &{internal_finance_credentials}
-    the user navigates to the page        ${server}/project-setup-management/project/${loan_PS_project_Id}/document/all
-    the user clicks the button/link       link = Exploitation plan
-    internal user approve uploaded documents
-
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/monitoring-officer
     Search for MO                            Orvill  Orville Gibbs
@@ -200,11 +185,16 @@ internal user assign MO to loan project
 
 internal user generate SP
     the user navigates to the page           ${loan_finance_checks}
-    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) span:contains("Complete")
     the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(3) span:contains("Not set")
     the user should see the element          jQuery = dt:contains("Other funding")
     the user should see the element          jQuery = dt:contains("Funding sought")
     the user should see the element          jQuery = dt:contains("Total percentage loan")
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user selects the checkbox            project-viable
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link          css = #confirm-button
+    the user clicks the button/link          jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
+    the user clicks the button/link          link = Return to finance checks
     the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
     the user selects the checkbox            project-eligible
     the user selects the option from the drop-down menu  Green  id = rag-rating
@@ -212,7 +202,6 @@ internal user generate SP
     the user clicks the button/link          css = [name="confirm-eligibility"]
     the user should see the element          jQuery = .govuk-body:contains("The organisation’s finance eligibility has been approved by")
     the user clicks the button/link          link = Return to finance checks
-    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
     the user clicks the button/link          css = .generate-spend-profile-main-button
     the user clicks the button/link          css = #generate-spend-profile-modal-button
     the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check-overview
@@ -277,19 +266,19 @@ the applicant should see the project setup complete stage enabled
     the user clicks the button/link  link = Project setup complete
     the user navigates to the page   ${loan_PS}/setup
     the user should see the element  jQuery = h1:contains("Project setup complete")
-    the user should see the element  jQuery = h2:contains("Your project will be reviewed by Innovate UK")
+    the user should see the element  jQuery = h2:contains("Your project will be reviewed")
     Log in as a different user       &{internal_finance_credentials}
 
 the applicant checks for project status
     the user should see the element   jQuery = li:contains("${loan_PS_application1}") .status:contains("Live project")
     the user should see the element   jQuery = li:contains("${loan_PS_application2}") .status:contains("Unsuccessful")
     the user navigates to the page    ${loan_PS}
-    the user should see the element   jQuery = .progress-list li:nth-child(7):contains("Completed")
+    the user should see the element   jQuery = .progress-list li:nth-child(6):contains("Completed")
     the user clicks the button/link   link = Project setup complete
     the user navigates to the page    ${loan_PS}/setup
-    the user should see the element   jQuery = h2:contains("We have approved your loan application")
+    the user should see the element   jQuery = h2:contains("We have approved your loan")
     the user navigates to the page    ${server}/project-setup/project/${loan_PS_project_Id2}/setup
-    the user should see the element   jQuery = h2:contains("Your loan application has not been successful in this competition")
+    the user should see the element   jQuery = h2:contains("We have not approved your loan")
 
 the user should see the finished finance checks
     the user navigates to the page    ${loan_PS}/finance-checks

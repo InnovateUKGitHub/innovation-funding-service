@@ -314,8 +314,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::getEligibilityProcess)
@@ -327,8 +327,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
-        long organisationId = projectOrganisationCompositeId.getOrganisationId();
-        long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        Long projectId = projectOrganisationCompositeId.getProjectId();
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
@@ -393,7 +393,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityProcess viabilityProcess, ProjectFinance projectFinance) {
 
-        ViabilityResource viabilityResource = new ViabilityResource(viabilityProcess.getProcessState().getViability(), projectFinance.getViabilityStatus());
+        ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getProcessState()), projectFinance.getViabilityStatus());
 
         if (viabilityProcess.getLastModified() != null) {
             viabilityResource.setViabilityApprovalDate(viabilityProcess.getLastModified().toLocalDate());
@@ -402,6 +402,28 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
 
         return serviceSuccess(viabilityResource);
+    }
+
+    private Viability convertViabilityState(ViabilityState viabilityState) {
+
+        Viability viability;
+
+        switch (viabilityState) {
+            case REVIEW:
+                viability = Viability.REVIEW;
+                break;
+            case NOT_APPLICABLE:
+                viability = Viability.NOT_APPLICABLE;
+                break;
+            case APPROVED:
+                viability = Viability.APPROVED;
+                break;
+            default:
+                viability = Viability.REVIEW;
+        }
+
+        return viability;
+
     }
 
     private void setViabilityApprovalUser(ViabilityResource viabilityResource, User viabilityApprovalUser) {
