@@ -20,7 +20,8 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE  the user marks the application as done      ${projectGrowth}  ${compType}
     the user fills in the CS Assessors
-    the user fills in the CS Documents in other projects
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
+    ...  ELSE  the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
     the user fills in the Public content and publishes  ${extraKeyword}
     the user clicks the button/link             link = Return to setup overview
@@ -28,6 +29,21 @@ The competition admin creates competition
     the user clicks the button/link             css = button[type="submit"]
     the user navigates to the page              ${CA_UpcomingComp}
     the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
+
+the user select no documents
+    the user clicks the button/link          link = Documents
+    the user should not see the element      jQuery = input:checked + label:contains("Collaboration agreement")
+    the user should not see the element      jQuery = input:checked + label:contains("Exploitation plan")
+    the user should see the element          jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
+    the user clicks the button/link          jQuery = label:contains("Collaboration agreement")
+    the user should not see the element      jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
+    the user clicks the button/link          jQuery = label:contains("Collaboration agreement")
+    the user should see the element          jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
+    the user clicks the button/link          jQuery = label:contains("Exploitation plan")
+    the user should not see the element      jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
+    the user clicks the button/link          jQuery = label:contains("Exploitation plan")
+    the user should see the element          jQuery = .govuk-warning-text:contains("You have not selected any documents. The project manager will not be required to upload documents.")
+    the user clicks the button/link          id = doneButton
 
 the user edits the assessed question information
     the user enters text to a text field    id = question.maxWords    100
