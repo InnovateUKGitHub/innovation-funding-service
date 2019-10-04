@@ -320,5 +320,7 @@ applicant upload the GOL
 the internal user approve the GOL
     log in as a different user          &{internal_finance_credentials}
     the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
-    the user selects the radio button   approvalType  acceptGOL
-    the user should see the element     css = #submit-button
+    the user selects the radio button   APPROVED  acceptGOL
+    the user clicks the button/link     id = submit-button
+    the user clicks the button/link     id = accept-signed-gol
+    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
