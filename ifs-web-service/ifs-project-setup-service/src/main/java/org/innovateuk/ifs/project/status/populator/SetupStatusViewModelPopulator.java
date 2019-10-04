@@ -67,11 +67,15 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer))
                 .collect(toList());
 
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+        boolean isSingleApplication = partnerOrganisations.size() == 1;
+
         return new SetupStatusViewModel(
                 project,
                 monitoringOfficer,
                 stages,
-                competition.isLoan());
+                competition.isLoan(),
+                isSingleApplication);
     }
 
     private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer) {
