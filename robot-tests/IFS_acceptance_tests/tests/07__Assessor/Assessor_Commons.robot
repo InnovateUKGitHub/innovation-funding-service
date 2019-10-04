@@ -96,10 +96,10 @@ The internal user invites a user as an assessor
     the user clicks the button/link                      jQuery = .govuk-button:contains("Add assessors to list")
 
 the user should see the competition details
-    [Arguments]  ${comp_name}  ${comp_status}  ${sector}  ${area}  ${link}  ${link2}
+    [Arguments]  ${comp_name}  ${comp_status}  ${sector}  ${area}  ${link}  ${link2}  ${competitiontype}
     the user should see the element      jQuery =.govuk-caption-l:contains("${comp_name}")
     the user should see the element      jQuery =h1:contains("${comp_status}")
-    the user should see the element      jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
+    the user should see the element      jQuery = dt:contains("Competition type") ~ dd:contains("${competitiontype}")
     the user should see the element      jQuery = dt:contains("Innovation sector") ~ dd:contains("${sector}")
     the user should see the element      jQuery = dt:contains("Innovation area") ~ dd:contains("${area}")
     #The following checks test if the correct buttons are disabled

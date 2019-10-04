@@ -49,7 +49,7 @@ ${proj_app_with_ineligible}      ${application_ids['Application with ineligible'
 Competition Dashboard
     [Documentation]    INFUND-7365  INFUND-7561 INFUND-7950
     [Tags]
-    Given the user should see the competition details  ${INFORM_COMPETITION_NAME}  Inform  Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision
+    Given the user should see the competition details  ${INFORM_COMPETITION_NAME}  Inform  Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision  Programme
     Then the user should see milestones for the In inform competition
 
 Filtering on the Manage funding applications page

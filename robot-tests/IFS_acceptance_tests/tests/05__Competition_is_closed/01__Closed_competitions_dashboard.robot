@@ -20,7 +20,7 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 Competition dashboard
     [Documentation]    INFUND-6599  INFUND-7362  INFUND-7561
     Given The user clicks the button/link              link = ${CLOSED_COMPETITION_NAME2}
-    Then the user should see the competition details   ${CLOSED_COMPETITION_NAME2}   Closed  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition
+    Then the user should see the competition details   ${CLOSED_COMPETITION_NAME2}   Closed  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition  Advanced Propulsion Centre
     And the user should see the element                link = View and update competition setup
     And the user should see the milestones for the closed competitions
 
