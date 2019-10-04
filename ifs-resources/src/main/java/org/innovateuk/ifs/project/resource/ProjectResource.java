@@ -38,6 +38,7 @@ public class ProjectResource {
     private ZonedDateTime spendProfileSubmittedDate;
     private ZonedDateTime processLastModifiedDate;
     private ProjectState projectState;
+    private boolean collaborativeProject;
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
@@ -238,6 +239,14 @@ public class ProjectResource {
 
     public void setProcessLastModifiedDate(ZonedDateTime processLastModifiedDate) {
         this.processLastModifiedDate = processLastModifiedDate;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
+    public void setCollaborativeProject(boolean collaborativeProject) {
+        this.collaborativeProject = collaborativeProject;
     }
 
     @Override
