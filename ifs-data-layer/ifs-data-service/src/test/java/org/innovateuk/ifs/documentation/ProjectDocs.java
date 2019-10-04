@@ -35,7 +35,8 @@ public class ProjectDocs {
             fieldWithPath("grantOfferLetterRejectionReason").description("Rejection reason when the Grant Offer Letter has been rejected"),
             fieldWithPath("spendProfileSubmittedDate").description("Flag which indicates if Spend Profile has been review and submitted by the Project Manager."),
             fieldWithPath("projectState").description("The current state of the project in its workflow."),
-            fieldWithPath("processLastModifiedDate").description("The last date the project state was modified")
+            fieldWithPath("processLastModifiedDate").description("The last date the project state was modified"),
+            fieldWithPath("collaborativeProject").description("Does the project have collaboration")
     };
 
     public static final FieldDescriptor[] projectStatusResourceFields = {
