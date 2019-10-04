@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.management.competition.setup.projectdocument.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupDocumentRestService;
+import org.innovateuk.ifs.file.resource.FileTypeResource;
+import org.innovateuk.ifs.file.service.FileTypeRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.projectdocument.form.ProjectDocumentForm;
 import org.innovateuk.ifs.management.competition.setup.projectdocument.viewmodel.ProjectDocumentViewModel;
-import org.innovateuk.ifs.file.resource.FileTypeResource;
-import org.innovateuk.ifs.file.service.FileTypeRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,16 +26,12 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -119,33 +117,6 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
 
         verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
         assertEquals(viewModel, model.get("model"));
-    }
-
-    @Test
-    public void saveProjectDocumentLandingPageFailsWhenNoDocumentsSelected() throws Exception {
-
-        List<CompetitionDocumentResource> projectDocuments = newCompetitionDocumentResource()
-                .withTitle("Title")
-                .withEditable(true)
-                .withEnabled(true)
-                .build(2);
-
-        CompetitionResource competitionResource = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withProjectDocument(projectDocuments)
-                .build();
-
-        ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
-
-        mockMvc.perform(post(URL_PREFIX + "/landing-page"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("competition/setup"));
-
-        verify(competitionSetupDocumentRestService, never()).save(anyList());
     }
 
     @Test

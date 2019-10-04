@@ -23,10 +23,7 @@ import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
-import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectProcess;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.*;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
@@ -44,6 +41,7 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
@@ -313,6 +311,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         User internalUser = newUser().withRoles(singleton(COMP_ADMIN)).build();
         when(userRepositoryMock.findById(internalUser.getId())).thenReturn(Optional.of(internalUser));
         setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(COMP_ADMIN)).build());
+
+        competition.setProjectStages(EnumSet.allOf(ProjectSetupStage.class).stream().map(stage -> new ProjectStages(competition, stage)).collect(Collectors.toList()));
     }
 
     @Override
@@ -973,6 +973,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       false,
                                                       SETUP);
         project.setProjectDocuments(docs);
+        project.setApplication(application);
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);

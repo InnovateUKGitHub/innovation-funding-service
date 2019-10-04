@@ -30,6 +30,7 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
@@ -183,7 +184,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus, process.getProcessState()),
                 getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus, process.getProcessState()),
-                getDocumentsStatus(project, process.getProcessState()),
+                documentsState(project, process.getProcessState()),
                 getGrantOfferLetterState(project, process.getProcessState(), bankDetailsStatus),
                 getProjectSetupCompleteState(project, process.getProcessState()),
                 golWorkflowHandler.isSent(project),
@@ -403,7 +404,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
             ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
 
-            if (documentsApproved(project, processState)
+            if (COMPLETE.equals(documentsState(project, processState))
                     && COMPLETE.equals(spendProfileStatus)
                     && COMPLETE.equals(bankDetailsStatus)) {
                 if (golWorkflowHandler.isApproved(project)) {
@@ -430,8 +431,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates getProjectSetupCompleteState(Project project, ProjectState processState) {
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
         ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
-        if (documentsApproved(project, processState)
-                && COMPLETE.equals(spendProfileStatus)) {
+        if (COMPLETE.equals(documentsState(project, processState)) && COMPLETE.equals(spendProfileStatus)) {
             if (processState == LIVE || processState == UNSUCCESSFUL) {
                 return COMPLETE;
             } else {
@@ -442,8 +442,18 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private boolean documentsApproved(Project project, ProjectState state) {
-        return COMPLETE.equals(getDocumentsStatus(project, state));
+    private ProjectActivityStates documentsState(Project project, ProjectState state) {
+        if (!projectContainsStage(project, ProjectSetupStage.DOCUMENTS)) {
+            return COMPLETE;
+        }
+        return getDocumentsStatus(project, state);
+    }
+
+    private boolean projectContainsStage(Project project, ProjectSetupStage projectSetupStage) {
+        return project.getApplication().getCompetition().getProjectStages().stream()
+                .filter(stage -> stage.getProjectSetupStage().equals(projectSetupStage))
+                .findFirst()
+                .isPresent();
     }
 
     private ProjectActivityStates actionRequiredIfProjectActive(ProjectState projectState) {
@@ -537,6 +547,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectActivityStates createDocumentStatus(Project project) {
+
+        if (!projectContainsStage(project, ProjectSetupStage.DOCUMENTS)) {
+            return COMPLETE;
+        }
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
 

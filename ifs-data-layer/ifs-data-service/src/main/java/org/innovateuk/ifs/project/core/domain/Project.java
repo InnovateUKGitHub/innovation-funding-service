@@ -97,7 +97,6 @@ public class Project implements ProcessActivity {
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true, fetch = FetchType.LAZY)
     private ProjectProcess projectProcess;
 
-
     public Project() {}
 
     public Project(Application application, LocalDate targetStartDate, Address address,
@@ -342,4 +341,9 @@ public class Project implements ProcessActivity {
     public ProjectProcess getProjectProcess() {
         return projectProcess;
     }
+
+    public boolean isCollaborativeProject() {
+        return partnerOrganisations.size() != 1;
+    }
+
 }

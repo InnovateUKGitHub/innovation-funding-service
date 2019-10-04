@@ -47,7 +47,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
-import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -618,8 +617,5 @@ public class CompetitionSetupServiceImplTest {
         Competition savedCompetition = captor.getValue();
         assertEquals(false, savedCompetition.getSetupComplete());
         assertEquals(grantTermsAndConditions, savedCompetition.getTermsAndConditions());
-        assertEquals(2, savedCompetition.getCompetitionDocuments().size());
-        assertEquals(COLLABORATION_AGREEMENT_TITLE, savedCompetition.getCompetitionDocuments().get(0).getTitle());
-        assertEquals("Exploitation plan", savedCompetition.getCompetitionDocuments().get(1).getTitle());
     }
 }
