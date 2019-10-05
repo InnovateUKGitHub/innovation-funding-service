@@ -56,7 +56,13 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        return new AllDocumentsViewModel(project.getCompetition(), project.getApplication(), project.getId(), project.getName(), documents, isProjectManager(loggedInUserId, projectId));
+        return new AllDocumentsViewModel(project.getCompetition(),
+                project.getApplication(),
+                project.getId(),
+                project.getName(),
+                documents,
+                isProjectManager(loggedInUserId, projectId),
+                project.isCollaborativeProject());
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
