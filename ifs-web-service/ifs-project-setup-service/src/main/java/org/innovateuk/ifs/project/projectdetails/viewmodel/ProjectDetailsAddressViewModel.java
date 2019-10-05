@@ -9,11 +9,15 @@ public class ProjectDetailsAddressViewModel implements BasicProjectDetailsViewMo
     private Long applicationId;
     private Long projectId;
     private String projectName;
+    private boolean isLoanProject;
+    private boolean isCollaborativeProject;
 
     public ProjectDetailsAddressViewModel(ProjectResource projectResource) {
         this.projectId = projectResource.getId();
         this.projectName = projectResource.getName();
         this.applicationId = projectResource.getApplication();
+        this.isLoanProject = projectResource.isLoanProject();
+        this.isCollaborativeProject = projectResource.isCollaborativeProject();
     }
 
     public String getProjectName() {
@@ -30,5 +34,13 @@ public class ProjectDetailsAddressViewModel implements BasicProjectDetailsViewMo
 
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    public boolean isLoanProject() {
+        return isLoanProject;
+    }
+
+    public boolean isCollaborativeProject() {
+        return isCollaborativeProject;
     }
 }

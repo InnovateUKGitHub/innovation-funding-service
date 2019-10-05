@@ -38,6 +38,7 @@ public class ProjectResource {
     private ZonedDateTime spendProfileSubmittedDate;
     private ZonedDateTime processLastModifiedDate;
     private ProjectState projectState;
+    private boolean loanProject;
     private boolean collaborativeProject;
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
 
@@ -239,6 +240,14 @@ public class ProjectResource {
 
     public void setProcessLastModifiedDate(ZonedDateTime processLastModifiedDate) {
         this.processLastModifiedDate = processLastModifiedDate;
+    }
+
+    public boolean isLoanProject() {
+        return loanProject;
+    }
+
+    public void setLoanProject(boolean loanProject) {
+        this.loanProject = loanProject;
     }
 
     public boolean isCollaborativeProject() {

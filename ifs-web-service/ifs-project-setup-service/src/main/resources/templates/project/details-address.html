@@ -20,7 +20,8 @@
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Correspondence address',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-                <p class="govuk-body">This is the correspondence address for the lead organisation.</p>
+                <p class="govuk-body" th:if="${!model.isLoanProject() && model.isCollaborativeProject()}">This is the correspondence address for the lead organisation.</p>
+                <p class="govuk-body" th:unless="${!model.isLoanProject() && model.isCollaborativeProject()}">This is the correspondence address for your organisation.</p>
 
                 <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
                     <div id="custom-postcode" class="govuk-body">
