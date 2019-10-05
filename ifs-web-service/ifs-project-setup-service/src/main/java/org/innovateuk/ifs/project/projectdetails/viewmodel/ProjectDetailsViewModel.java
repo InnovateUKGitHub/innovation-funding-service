@@ -21,7 +21,7 @@ public class ProjectDetailsViewModel {
     private boolean readOnlyView;
 
     private boolean userLeadPartner;
-    private boolean loanCompetition;
+    private boolean isLoanProject;
     private boolean isCollaborativeProject;
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
@@ -32,9 +32,7 @@ public class ProjectDetailsViewModel {
                                          boolean userIsLeadPartner,
                                          boolean spendProfileGenerated,
                                          boolean grantOfferLetterGenerated,
-                                         boolean readOnlyView,
-                                         boolean loanCompetition,
-                                         boolean isCollaborativeProject) {
+                                         boolean readOnlyView) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
@@ -45,8 +43,8 @@ public class ProjectDetailsViewModel {
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
         this.readOnlyView = readOnlyView;
         this.userLeadPartner = userIsLeadPartner;
-        this.loanCompetition = loanCompetition;
-        this.isCollaborativeProject = isCollaborativeProject;
+        this.isLoanProject = project.isLoanProject();
+        this.isCollaborativeProject = project.isCollaborativeProject();
     }
 
     public ProjectResource getProject() {
@@ -95,8 +93,8 @@ public class ProjectDetailsViewModel {
         return grantOfferLetterGenerated;
     }
 
-    public boolean isLoanCompetition() {
-        return loanCompetition;
+    public boolean isLoanProject() {
+        return isLoanProject;
     }
 
     public boolean isCollaborativeProject() {

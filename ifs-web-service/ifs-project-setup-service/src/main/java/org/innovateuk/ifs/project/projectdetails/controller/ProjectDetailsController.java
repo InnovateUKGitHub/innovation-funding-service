@@ -92,9 +92,7 @@ public class ProjectDetailsController {
                         : Collections.emptyList(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
-                spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false,
-                competitionResource.isLoan(),
-                projectResource.isCollaborativeProject()));
+                spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
 
         return "project/details";
     }
@@ -125,8 +123,7 @@ public class ProjectDetailsController {
                         : Collections.emptyList(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
-                spendProfileGenerated, true, true,
-                competitionResource.isLoan(), projectResource.isCollaborativeProject()));
+                spendProfileGenerated, true, true));
 
         return "project/details";
     }
