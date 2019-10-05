@@ -70,9 +70,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return new SetupStatusViewModel(
                 project,
                 monitoringOfficer,
-                stages,
-                competition.isLoan(),
-                project.isCollaborativeProject());
+                stages);
     }
 
     private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer) {
