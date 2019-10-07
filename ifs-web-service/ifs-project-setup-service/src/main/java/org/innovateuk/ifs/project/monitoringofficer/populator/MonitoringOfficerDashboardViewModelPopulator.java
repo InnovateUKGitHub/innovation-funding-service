@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerDashboardViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectDashboardRowViewModel;
@@ -17,19 +15,15 @@ import static java.util.stream.Collectors.toList;
 public class MonitoringOfficerDashboardViewModelPopulator {
 
     private final MonitoringOfficerRestService monitoringOfficerRestService;
-    private final CompetitionRestService competitionRestService;
 
-    public MonitoringOfficerDashboardViewModelPopulator(MonitoringOfficerRestService monitoringOfficerRestService, CompetitionRestService competitionRestService) {
+    public MonitoringOfficerDashboardViewModelPopulator(MonitoringOfficerRestService monitoringOfficerRestService) {
         this.monitoringOfficerRestService = monitoringOfficerRestService;
-        this.competitionRestService = competitionRestService;
     }
 
     public MonitoringOfficerDashboardViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
-        List<ProjectDashboardRowViewModel> projectViews = projects.stream().map(project -> {
-            CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-            return new ProjectDashboardRowViewModel(project.getApplication(), competition.getName(), project.getId(), project.getName());
-        }).collect(toList());
+        List<ProjectDashboardRowViewModel> projectViews = projects.stream().map(project ->
+                new ProjectDashboardRowViewModel(project.getApplication(), project.getCompetitionName(), project.getId(), project.getName())).collect(toList());
         return new MonitoringOfficerDashboardViewModel(projectViews);
     }
 }

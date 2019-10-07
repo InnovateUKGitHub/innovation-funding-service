@@ -104,21 +104,19 @@ public class ProjectDetailsController {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
     @GetMapping("/{projectId}/duration")
-    public String viewEditProjectDuration(@PathVariable("competitionId") final long competitionId,
-                                          @PathVariable("projectId") final long projectId, Model model,
+    public String viewEditProjectDuration(@PathVariable("projectId") final long projectId, Model model,
                                           UserResource loggedInUser) {
 
 
         ProjectDurationForm form = new ProjectDurationForm();
-        return doViewEditProjectDuration(competitionId, projectId, model, form);
+        return doViewEditProjectDuration(projectId, model, form);
     }
 
-    private String doViewEditProjectDuration(long competitionId, long projectId, Model model, ProjectDurationForm form) {
+    private String doViewEditProjectDuration(long projectId, Model model, ProjectDurationForm form) {
 
         ProjectResource project = projectService.getById(projectId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        model.addAttribute("model", ProjectDetailsViewModel.editDurationViewModel(project, competition));
+        model.addAttribute("model", ProjectDetailsViewModel.editDurationViewModel(project));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";
@@ -128,15 +126,14 @@ public class ProjectDetailsController {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
     @PostMapping("/{projectId}/duration")
-    public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
-                                        @PathVariable("projectId") final long projectId,
+    public String updateProjectDuration(@PathVariable("projectId") final long projectId,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDurationForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler,
                                         Model model,
                                         UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewEditProjectDuration(competitionId, projectId, model, form);
+        Supplier<String> failureView = () -> doViewEditProjectDuration(projectId, model, form);
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.setupcomplete.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.setupcomplete.viewmodel.SetupCompleteViewModel;
@@ -18,15 +16,10 @@ public class SetupCompleteViewModelPopulator {
     @Autowired
     private ProjectService projectService;
 
-    @Autowired
-    private CompetitionRestService competitionRestService;
-
     public SetupCompleteViewModel populate(long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         return new SetupCompleteViewModel(
-                competition,
                 project,
                 getSubmittedTime(project));
     }
