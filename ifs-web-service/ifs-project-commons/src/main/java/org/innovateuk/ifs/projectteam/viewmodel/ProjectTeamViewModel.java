@@ -98,6 +98,10 @@ public class ProjectTeamViewModel {
         return readOnly;
     }
 
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
     public ProjectTeamViewModel openAddTeamMemberForm(long organisationId) {
         partnerOrgs.stream()
                 .filter(partner -> partner.getOrgId() == organisationId)
@@ -106,4 +110,3 @@ public class ProjectTeamViewModel {
         return this;
     }
 }
-
