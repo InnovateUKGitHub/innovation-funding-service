@@ -345,9 +345,4 @@ public class Project implements ProcessActivity {
     public boolean isCollaborativeProject() {
         return partnerOrganisations.size() != 1;
     }
-
-    public boolean isLoanProject() {
-        return getApplication().getCompetition().isLoan();
-    }
-
 }

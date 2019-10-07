@@ -17,16 +17,16 @@ public class AllDocumentsViewModel {
     private String projectName;
     private List<ProjectDocumentStatus> documents;
     private boolean projectManager;
-    private boolean isCollaborativeProject;
+    private boolean collaborativeProject;
 
-    public AllDocumentsViewModel(long competitionId, long applicationId, long projectId, String projectName, List<ProjectDocumentStatus> documents, boolean projectManager, boolean isCollaborativeProject) {
+    public AllDocumentsViewModel(long competitionId, long applicationId, long projectId, String projectName, List<ProjectDocumentStatus> documents, boolean projectManager, boolean collaborativeProject) {
         this.competitionId = competitionId;
         this.applicationId = applicationId;
         this.projectId = projectId;
         this.projectName = projectName;
         this.documents = documents;
         this.projectManager = projectManager;
-        this.isCollaborativeProject = isCollaborativeProject;
+        this.collaborativeProject = collaborativeProject;
     }
 
     public long getCompetitionId() {
@@ -54,7 +54,7 @@ public class AllDocumentsViewModel {
     }
 
     public boolean isCollaborativeProject() {
-        return isCollaborativeProject;
+        return collaborativeProject;
     }
 
     @Override
