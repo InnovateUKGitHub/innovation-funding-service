@@ -74,12 +74,11 @@ Check the comp admin see the assessor has rejected the application
 Comp admin can see the application is rejected on manage assessor page
     [Documentation]  IFS-396
     [Tags]
-    [Setup]  the user navigates to the page  ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
-    Given the user clicks the button/link    link = Manage assessors
-    And navigate to next page if not found   Paul Plum
-    When the user clicks the button/link     jQuery = td:contains("Paul Plum") ~ td a:contains("View progress")
-    Then the user should see the element     jQuery = td:contains("Not my area of expertise")
-    And the user should see the element      jQuery = td:contains("Unable to assess the application as i'm on holiday.")
+    [Setup]  the user navigates to the page                     ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
+    Given the user clicks the button/link                       link = Manage assessors
+    When the user clicks the button/link in the paginated list  jQuery = td:contains("Paul Plum") ~ td a:contains("View progress")
+    Then the user should see the element                        jQuery = td:contains("Not my area of expertise")
+    And the user should see the element                         jQuery = td:contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
 Custom Suite Setup
