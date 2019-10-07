@@ -13,7 +13,7 @@ public class ApplicationAssessmentResource {
     private String competitionName;
     private String leadOrganisation;
     private AssessmentState state;
-    private Optional<Integer> overallScore;
+    private int overallScore;
     private boolean recommended;
 
     public ApplicationAssessmentResource() {}
@@ -23,7 +23,7 @@ public class ApplicationAssessmentResource {
                                          String competitionName,
                                          String leadOrganisation,
                                          AssessmentState state,
-                                         Optional<Integer> overallScore,
+                                         int overallScore,
                                          boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
@@ -54,7 +54,7 @@ public class ApplicationAssessmentResource {
         return state;
     }
 
-    public Optional<Integer> getOverallScore() {
+    public int getOverallScore() {
         return overallScore;
     }
 
