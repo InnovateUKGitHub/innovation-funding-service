@@ -11,8 +11,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import static org.mapstruct.ReportingPolicy.IGNORE;
-
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
@@ -25,7 +23,10 @@ import static org.mapstruct.ReportingPolicy.IGNORE;
 public abstract class BankDetailsMapper extends BaseMapper<BankDetails, BankDetailsResource, Long> {
 
         @Mappings({
-                @Mapping(target = "address", source = "organisationAddress.address")
+                @Mapping(target = "address", source = "organisationAddress.address"),
+                @Mapping(target = "companyName", ignore = true),
+                @Mapping(target = "registrationNumber", ignore = true),
+                @Mapping(target = "organisationTypeName", ignore = true)
         })
         @Override
         public abstract BankDetailsResource mapToResource(BankDetails domain);

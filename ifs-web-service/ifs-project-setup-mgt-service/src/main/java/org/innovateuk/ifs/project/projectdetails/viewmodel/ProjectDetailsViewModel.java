@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.projectdetails.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
@@ -46,10 +45,10 @@ public class ProjectDetailsViewModel {
         this.financeReviewerEmail = financeReviewerEmail;
     }
 
-    public static ProjectDetailsViewModel editDurationViewModel(ProjectResource project, CompetitionResource competition) {
+    public static ProjectDetailsViewModel editDurationViewModel(ProjectResource project) {
         return new ProjectDetailsViewModel(project,
-                competition.getId(),
-                competition.getName(),
+                project.getCompetition(),
+                project.getCompetitionName(),
                 false,
                 null,
                 false,

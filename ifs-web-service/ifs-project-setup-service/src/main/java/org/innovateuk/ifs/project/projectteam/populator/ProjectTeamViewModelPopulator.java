@@ -1,19 +1,18 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
@@ -50,7 +49,6 @@ public class ProjectTeamViewModelPopulator {
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean isMonitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
