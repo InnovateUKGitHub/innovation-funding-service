@@ -30,6 +30,7 @@ public class FinanceChecksViabilityViewModel {
     private Long applicationId;
     private String projectName;
     private final boolean projectIsActive;
+    private final boolean loanCompetition;
 
     public FinanceChecksViabilityViewModel(String organisationName,
                                            boolean leadPartnerOrganisation,
@@ -50,7 +51,8 @@ public class FinanceChecksViabilityViewModel {
                                            String organisationSizeDescription,
                                            Long applicationId,
                                            String projectName,
-                                           boolean projectIsActive) {
+                                           boolean projectIsActive,
+                                           boolean loanCompetition) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -72,6 +74,7 @@ public class FinanceChecksViabilityViewModel {
         this.applicationId = applicationId;
         this.projectName = projectName;
         this.projectIsActive = projectIsActive;
+        this.loanCompetition = loanCompetition;
     }
 
     public String getOrganisationName() {
@@ -173,5 +176,9 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isProjectIsActive() {
         return projectIsActive;
+    }
+
+    public boolean isLoanCompetition() {
+        return loanCompetition;
     }
 }
