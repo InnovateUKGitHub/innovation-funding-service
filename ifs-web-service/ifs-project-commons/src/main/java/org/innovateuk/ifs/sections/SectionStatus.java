@@ -4,7 +4,7 @@ package org.innovateuk.ifs.sections;
 /**
  * An enum representing the status of a section
  */
-public enum SectionState {
+public enum SectionStatus {
     EMPTY(""),
     HOURGLASS("waiting"),
     FLAG("require-action"),
@@ -13,7 +13,7 @@ public enum SectionState {
 
     private final String status;
 
-    SectionState(String status) {
+    SectionStatus(String status) {
         this.status = status;
     }
 
