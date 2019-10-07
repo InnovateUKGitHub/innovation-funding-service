@@ -130,10 +130,10 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
 
-            ValidationMessages sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
+            ValidationMessages sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application); // we validate the section then mark as complete -- so arguably don't need to revalidate
 
             if (!sectionIsValid.hasErrors()) {
-                markSectionAsComplete(section, application, markedAsCompleteById);
+                markSectionAsCompleteNoValidate(section, application, markedAsCompleteById);
             }
 
             return serviceSuccess(sectionIsValid);
@@ -144,16 +144,17 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     @Transactional
     public ServiceResult<Void> markSectionAsNotRequired(long sectionId, long applicationId, long markedAsCompleteById) {
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
-            markSectionAsComplete(section, application, markedAsCompleteById);
+            markSectionAsCompleteNoValidate(section, application, markedAsCompleteById);
             return serviceSuccess();
         });
     }
 
-    private void markSectionAsComplete(Section section, Application application, long markedAsCompleteById) {
+    private void markSectionAsCompleteNoValidate(Section section, Application application, long markedAsCompleteById) {
 
 
         sectionService.getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
-            questionStatusService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
+//            questionStatusService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
+            questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.
             questionStatusService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
         }));
