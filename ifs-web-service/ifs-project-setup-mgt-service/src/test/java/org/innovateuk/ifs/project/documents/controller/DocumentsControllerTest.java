@@ -44,11 +44,11 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         long projectId = 1L;
         long applicationId = 2L;
-        long compeititonId = 3L;
+        long competitionId = 3L;
 
         AllDocumentsViewModel viewModel =
-                new AllDocumentsViewModel(compeititonId, applicationId, projectId,
-                        "Project 12", emptyList(), true);
+                new AllDocumentsViewModel(competitionId, applicationId, projectId,
+                        "Project 12", emptyList(), true, true);
 
 
         when(populator.populateAllDocuments(projectId, loggedInUser.getId())).thenReturn(viewModel);
