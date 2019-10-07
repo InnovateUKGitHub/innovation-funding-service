@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -168,18 +167,14 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
             if (asessorProcessRoles().contains(currentUserRole.get().getRole())
                     && DETAILED.equals(competition.getAssessorFinanceView())) {
-                List<AssessmentResource> assessments = assessmentRestService.getByUserAndApplication(currentUserRole.get().getUser(), currentUserRole.get().getApplicationId())
-                        .getSuccess();
-                if (!assessments.isEmpty()) {
-                    return Optional.of(assessorLink(assessments.get(0), organisation));
-                }
+                return Optional.of(assessorLink(application, organisation));
             }
         }
         return Optional.empty();
     }
 
-    private String assessorLink(AssessmentResource assessment, OrganisationResource organisation) {
-        return format("/assessment/%d/detailed-finances/organisation/%d", assessment.getId(), organisation.getId());
+    private String assessorLink(ApplicationResource application, OrganisationResource organisation) {
+        return format("/assessment/application/%d/detailed-finances/organisation/%d", application.getId(), organisation.getId());
     }
 
     private String internalLink(long applicationId, OrganisationResource organisation) {
