@@ -38,7 +38,7 @@ ${Intelligent_water}   ${application_ids['Intelligent water system']}
 View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
-    Given comp admin navigate to manage applications     ${IN_ASSESSMENT_COMPETITION_NAME}
+    Given comp admin navigate to manage applications     ${Assessment_Comp_title}
     Then the application list is correct before changes
     [Teardown]  the user clicks the button/link  link = Manage assessments
 
@@ -58,14 +58,14 @@ View assessor progress page
     [Documentation]  IFS-321
     [Tags]
     [Setup]  the user clicks the button/link  jQuery = a:contains("21 to 40")
-    Given the user clicks the button/link  jQuery = td:contains("Paul Plum") ~ td a:contains("View progress")
+    Given the user clicks the button/link  jQuery = td:contains("Maureen Moore") ~ td a:contains("View progress")
     Then the user should see details on assessors progress page
 
 Selecting Review assessor link shows the assessor page
     [Documentation]  IFS-1046
     [Tags]
     Given the user clicks the button/link  link = Review assessor
-    Then the user should see the element   jQuery = dt:contains("Name") ~ dd:contains("Paul Plum")
+    Then the user should see the element   jQuery = dt:contains("Name") ~ dd:contains("Maureen Moore")
 
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
@@ -200,14 +200,12 @@ Assessor should see the reassigned application
 
 *** Keywords ***
 the application list is correct before changes
-    the user should see the element    jQuery = tr:nth-child(1) td:contains(The Best Juggling Company)
-    the user should see the element    jQuery = tr:nth-child(1) td:contains(Park living)
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(1):contains("19")
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(2):contains("Park living")
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(3):contains("The Best Juggling Company")
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("2")
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(5):contains("1")
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(6):contains("0")
+    the user should see the element    jQuery = tr:nth-child(2) td:nth-child(1):contains("157")
+    the user should see the element    jQuery = tr:nth-child(2) td:nth-child(2):contains("Application for load 2")
+    the user should see the element    jQuery = tr:nth-child(2) td:nth-child(3):contains("Mo Juggling Mo Problems Ltd")
+    the user should see the element    jQuery = tr:nth-child(2) td:nth-child(4):contains("5")
+    the user should see the element    jQuery = tr:nth-child(2) td:nth-child(5):contains("5")
+    the user should see the element    jQuery = tr:nth-child(2) td:nth-child(6):contains("0")
 
 the available assessors information is correct
     the user should see the element  jQuery = tr:contains("Mabel Robinson") td:contains("3") + td:contains("0") + td:contains("0") + td:contains("Assign")
@@ -221,8 +219,7 @@ the previously assigned list is correct
     the user should see the element    jQuery = .assessors-previous td:contains("Paul Plum") ~ td:contains("8") + td:contains("8")
 
 the assessor list is correct before changes
-    the user clicks the button/link  link = 21 to 40
-    the user should see the element  jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("8") ~ td:contains("8") ~ td:contains("4") ~ td:contains("0") ~ td:contains("View progress")
+    the user should see the element  jQuery = td:contains("Load assessor") ~ td:contains("10") ~ td:contains("10") ~ td:contains("10") ~ td:contains("0") ~ td:contains("View progress")
 
 the user accepts the application
     the user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
@@ -231,6 +228,7 @@ the user accepts the application
     the user clicks the button/link  jQuery = button:contains("Confirm")
 
 the user filter assessors by first or last name
+    the user navigates to the page                         ${server}/management/assessment/competition/11/assessors
     the user enters text to a text field                   id = assessorNameFilter   Je
     the user clicks the button/link                        jQuery = .govuk-button:contains("Filter")
     the user should see the element                        jQuery = td:contains("Jeannie Newton")
@@ -239,11 +237,11 @@ the user filter assessors by first or last name
     the user should not see the element                    jQuery = td:contains("Alexis Colon")
 
 the user should see details on assessors progress page
-    the user should see the element    jQuery = h2:contains("Paul Plum")
-    the user should see the element    jQuery = h4:contains("Innovation area") ~ ul li:contains("Urban living") ~ li:contains("Smart infrastructure")
-    the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Academic")
-    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("2")
-    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
+    the user should see the element    jQuery = h2:contains("Maureen Moore")
+    the user should see the element    jQuery = h4:contains("Innovation area") ~ ul li:contains("Digital manufacturing")
+    the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Unknown")
+    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("22") + td:contains("Intelligent water system") + td:contains("Mo Juggling Mo Problems Ltd") + td:contains("3")
+    the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("22") ~ td:contains("Yes") + td:contains("Yes") + td:contains("-")
     the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
     the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
 
