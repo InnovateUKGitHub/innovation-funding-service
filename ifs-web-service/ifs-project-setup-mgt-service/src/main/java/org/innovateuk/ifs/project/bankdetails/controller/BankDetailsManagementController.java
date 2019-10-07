@@ -65,6 +65,10 @@ public class BankDetailsManagementController {
 
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
                 .getSuccess();
+        if (bankDetailsStatusSummary.getBankDetailsStatusResources().size() == 1) {
+            //Only one partner
+            return String.format("redirect:/project/%d/organisation/%d/review-bank-details", projectId, bankDetailsStatusSummary.getBankDetailsStatusResources().get(0).getOrganisationId());
+        }
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
     }
 
