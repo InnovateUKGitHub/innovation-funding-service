@@ -71,8 +71,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 project,
                 monitoringOfficer,
                 stages,
-                competition.isLoan(),
-                project.isCollaborativeProject());
+                competition.isLoan());
     }
 
     private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer) {
