@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.project.viability.controller;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
+import org.innovateuk.ifs.finance.resource.FinancialYearAccountsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
@@ -33,6 +32,7 @@ import java.util.function.Supplier;
 
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.VIABILITY_CHECKS_NOT_APPLICABLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -51,9 +51,6 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private OrganisationDetailsRestService organisationDetailsService;
 
     @Autowired
     private ProjectFinanceService financeService;
@@ -159,17 +156,6 @@ public class FinanceChecksViabilityController {
 
         String companyRegistrationNumber = organisation.getCompaniesHouseNumber();
 
-        Long headCount = null;
-        RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(applicationId, organisationId);
-        if (headCountResult.isSuccess()) {
-            headCount = headCountResult.getSuccess();
-        }
-        Long turnover = null;
-        RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(applicationId, organisationId);
-        if (turnOverResult.isSuccess()) {
-            turnover = turnOverResult.getSuccess();
-        }
-
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
@@ -183,8 +169,13 @@ public class FinanceChecksViabilityController {
                 otherPublicSectorFunding,
                 contributionToProject,
                 companyRegistrationNumber,
-                turnover,
-                headCount,
+                ofNullable(financesForOrganisation.getFinancialYearAccounts())
+                        .map(FinancialYearAccountsResource::getTurnover)
+                        .map(BigDecimal::longValue)
+                        .orElse(null),
+                ofNullable(financesForOrganisation.getFinancialYearAccounts())
+                        .map(FinancialYearAccountsResource::getEmployees)
+                        .orElse(null),
                 projectId,
                 viabilityConfirmed,
                 viabilityConfirmed,

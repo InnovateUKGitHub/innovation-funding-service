@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.FinancialYearAccountsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
@@ -45,6 +46,10 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
 
     public S withOrganisationSize(OrganisationSize... value) {
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
+    }
+
+    public S withFinancialYearAccounts(FinancialYearAccountsResource... financialYearAccounts) {
+        return withArray((v, finance) -> finance.setFinancialYearAccounts(v), financialYearAccounts);
     }
 
     @SafeVarargs

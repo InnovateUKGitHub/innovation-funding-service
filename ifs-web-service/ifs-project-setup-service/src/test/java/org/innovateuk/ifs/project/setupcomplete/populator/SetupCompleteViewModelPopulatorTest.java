@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.setupcomplete.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.setupcomplete.viewmodel.SetupCompleteViewModel;
@@ -11,12 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SetupCompleteViewModelPopulatorTest {
@@ -26,9 +25,6 @@ public class SetupCompleteViewModelPopulatorTest {
 
     @Mock
     private ProjectService projectServiceMock;
-
-    @Mock
-    private CompetitionRestService competitionRestServiceMock;
 
     @Test
     public void populate() {
@@ -49,7 +45,6 @@ public class SetupCompleteViewModelPopulatorTest {
                 .build();
 
         when(projectServiceMock.getById(projectId)).thenReturn(projectResource);
-        when(competitionRestServiceMock.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
         SetupCompleteViewModel viewModel = service.populate(projectId);
 
@@ -57,6 +52,5 @@ public class SetupCompleteViewModelPopulatorTest {
         assertEquals(viewModel.getProjectId(), projectId);
 
         verify(projectServiceMock).getById(projectId);
-        verify(competitionRestServiceMock).getCompetitionById(competitionId);
     }
 }

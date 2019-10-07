@@ -36,8 +36,8 @@ public class ProjectFinance extends Finance {
     public ProjectFinance() {
     }
 
-    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project) {
-        super(organisation, organisationSize);
+    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover) {
+        super(organisation, organisationSize, growthTable, employeesAndTurnover);
         this.project = project;
     }
 
@@ -81,4 +81,5 @@ public class ProjectFinance extends Finance {
         return ofNullable(project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, getOrganisation()))
                 .map(pu -> pu.isUser(userId)).orElse(false);
     }
+
 }

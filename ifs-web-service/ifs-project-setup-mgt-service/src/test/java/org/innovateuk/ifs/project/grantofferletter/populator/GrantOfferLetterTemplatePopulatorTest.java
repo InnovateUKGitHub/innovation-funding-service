@@ -174,7 +174,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         assertEquals(projectManager.getFirstName(), model.getProjectManagerFirstName());
         assertEquals(projectManager.getLastName(), model.getProjectManagerLastName());
         assertEquals(project.getName(), model.getProjectName());
-        assertEquals(competition.getName(), model.getCompetitionName());
+        assertEquals(project.getCompetitionName(), model.getCompetitionName());
         assertEquals(address.getAddressLine1(), model.getProjectAddress().get(0));
         assertEquals(address.getAddressLine2(), model.getProjectAddress().get(1));
         assertEquals(leadOrg.getName(), model.getLeadOrgName());
