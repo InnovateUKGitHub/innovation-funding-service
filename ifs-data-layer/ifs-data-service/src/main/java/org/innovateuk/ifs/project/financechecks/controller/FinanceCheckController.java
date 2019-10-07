@@ -42,15 +42,4 @@ public class FinanceCheckController {
     public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId){
         return financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId).toGetResponse();
     }
-
-    @GetMapping("/turnover/{applicationId}/{organisationId}")
-    public RestResult<Long> getTurnoverByOrganisationId(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
-        return financeCheckService.getTurnoverByOrganisationId(applicationId, organisationId).toGetResponse();
-    }
-
-    @GetMapping("/headcount/{applicationId}/{organisationId}")
-    public RestResult<Long> getHeadCountByOrganisationId(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
-        return financeCheckService.getHeadCountByOrganisationId(applicationId, organisationId).toGetResponse();
-    }
-
 }

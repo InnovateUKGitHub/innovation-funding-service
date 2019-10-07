@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.setupcomplete.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
@@ -15,9 +14,9 @@ public class SetupCompleteViewModel {
     private final ZonedDateTime submittedDate;
     private final ProjectState projectState;
 
-    public SetupCompleteViewModel(CompetitionResource competitionResource, ProjectResource projectResource, ZonedDateTime submittedDate) {
-        this.competitionId = competitionResource.getId();
-        this.competitionName = competitionResource.getName();
+    public SetupCompleteViewModel(ProjectResource projectResource, ZonedDateTime submittedDate) {
+        this.competitionId = projectResource.getCompetition();
+        this.competitionName = projectResource.getCompetitionName();
         this.projectId = projectResource.getId();
         this.projectName = projectResource.getName();
         this.submittedDate = submittedDate;
