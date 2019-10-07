@@ -154,8 +154,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
                                 : format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
-                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest)),
-                        "awaiting-assessment"
+                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest))
                 );
             case FINANCE_CHECKS:
                 SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
@@ -196,7 +195,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         "Once all tasks are complete Innovate UK will review your application.",
                         String.format("/project/%d/setup", project.getId()),
                         projectSetupCompleteStatus,
-                        statusAccessor.canAccessSetupSection(),
+                        statusAccessor.canAccessProjectSetupCompleteSection(),
                         projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-review"
                 );
         }

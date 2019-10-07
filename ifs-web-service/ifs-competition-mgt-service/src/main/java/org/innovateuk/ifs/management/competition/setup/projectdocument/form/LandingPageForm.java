@@ -12,7 +12,6 @@ import java.util.Set;
  */
 public class LandingPageForm extends BaseBindingResultTarget {
 
-    @NotNull(message = "{competition.setup.documents.required}")
     private Set<Long> enabledIds;
 
     public Set<Long> getEnabledIds() {

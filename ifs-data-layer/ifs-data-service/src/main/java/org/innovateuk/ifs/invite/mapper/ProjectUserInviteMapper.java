@@ -12,8 +12,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import static org.mapstruct.ReportingPolicy.IGNORE;
-
 @Mapper(
    componentModel = "spring",
    uses = {
@@ -34,7 +32,8 @@ public abstract class ProjectUserInviteMapper extends BaseMapper<ProjectUserInvi
             @Mapping(source = "target.name", target = "projectName"),
             @Mapping(source = "user.name", target = "nameConfirmed"),
             @Mapping(source = "user.id", target = "user"),
-            @Mapping(target = "leadOrganisation", ignore = true)
+            @Mapping(target = "leadOrganisation", ignore = true),
+            @Mapping(target = "applicationId", ignore = true)
     })
     @Override
     public abstract ProjectUserInviteResource mapToResource(ProjectUserInvite domain);

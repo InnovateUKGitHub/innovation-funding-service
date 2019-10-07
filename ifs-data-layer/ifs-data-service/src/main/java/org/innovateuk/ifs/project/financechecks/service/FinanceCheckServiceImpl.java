@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financechecks.service;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -31,7 +29,6 @@ import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.GraphBuilderContext;
-import org.innovateuk.ifs.util.ParsingFunctions;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,18 +44,14 @@ import java.util.function.Function;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 
 /**
  * A transactional service for finance check functionality
@@ -208,40 +201,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(actionRequired);
     }
 
-
-    @Override
-    public ServiceResult<Long> getTurnoverByOrganisationId(Long applicationId, Long organisationId) {
-        return getByApplicationAndOrganisationId(applicationId, organisationId, FINANCIAL_YEAR_END, ORGANISATION_TURNOVER);
-    }
-
-    @Override
-    public ServiceResult<Long> getHeadCountByOrganisationId(Long applicationId, Long organisationId) {
-        return getByApplicationAndOrganisationId(applicationId, organisationId, FINANCIAL_STAFF_COUNT, STAFF_COUNT);
-    }
-
-    private ServiceResult<Long> getByApplicationAndOrganisationId(Long applicationId, Long organisationId, FormInputType financeType, FormInputType nonFinanceType) {
-        Application app = applicationRepository.findById(applicationId).get();
-        return competitionSetupTransactionalService.isIncludeGrowthTable(app.getCompetition().getId()).
-                andOnSuccess((isIncludeGrowthTable) -> {
-                    if (isIncludeGrowthTable) {
-                        return getOnlyForApplication(app, organisationId, financeType)
-                                .andOnSuccess(result -> ParsingFunctions.validLongResult(result.getValue()));
-                    } else {
-                        return getOnlyForApplication(app, organisationId, nonFinanceType)
-                                .andOnSuccess(result -> ParsingFunctions.validLongResult(result.getValue()));
-                    }
-                });
-    }
-
-    private ServiceResult<FormInputResponse> getOnlyForApplication(Application app, Long organisationId, FormInputType formInputType) {
-        return getOnlyElementOrFail(formInputRepository.findByCompetitionIdAndTypeIn(app.getCompetition().getId(), singletonList(formInputType))).andOnSuccess((formInput) -> {
-            List<FormInputResponse> inputResponse = formInputResponseRepository.findByApplicationIdAndFormInputId(app.getId(), formInput.getId())
-                    .stream().filter(response -> organisationId.equals(response.getUpdatedBy().getOrganisationId())).collect(toList());
-            return getOnlyElementOrFail(inputResponse);
-        });
-    }
-
-
     private ProjectOrganisationCompositeId getCompositeId(PartnerOrganisation org)  {
         return new ProjectOrganisationCompositeId(org.getProject().getId(), org.getOrganisation().getId());
     }
@@ -355,8 +314,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::getEligibilityProcess)
@@ -368,8 +327,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
-        long organisationId = projectOrganisationCompositeId.getOrganisationId();
-        long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        Long projectId = projectOrganisationCompositeId.getProjectId();
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
@@ -434,7 +393,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityProcess viabilityProcess, ProjectFinance projectFinance) {
 
-        ViabilityResource viabilityResource = new ViabilityResource(viabilityProcess.getProcessState().getViability(), projectFinance.getViabilityStatus());
+        ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getProcessState()), projectFinance.getViabilityStatus());
 
         if (viabilityProcess.getLastModified() != null) {
             viabilityResource.setViabilityApprovalDate(viabilityProcess.getLastModified().toLocalDate());
@@ -443,6 +402,28 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
 
         return serviceSuccess(viabilityResource);
+    }
+
+    private Viability convertViabilityState(ViabilityState viabilityState) {
+
+        Viability viability;
+
+        switch (viabilityState) {
+            case REVIEW:
+                viability = Viability.REVIEW;
+                break;
+            case NOT_APPLICABLE:
+                viability = Viability.NOT_APPLICABLE;
+                break;
+            case APPROVED:
+                viability = Viability.APPROVED;
+                break;
+            default:
+                viability = Viability.REVIEW;
+        }
+
+        return viability;
+
     }
 
     private void setViabilityApprovalUser(ViabilityResource viabilityResource, User viabilityApprovalUser) {

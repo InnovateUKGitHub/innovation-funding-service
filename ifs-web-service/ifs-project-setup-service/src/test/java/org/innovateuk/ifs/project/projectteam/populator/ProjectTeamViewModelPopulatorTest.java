@@ -7,13 +7,13 @@ import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
@@ -95,7 +94,6 @@ public class ProjectTeamViewModelPopulatorTest {
                 .build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(projectOrgs);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
@@ -104,13 +102,13 @@ public class ProjectTeamViewModelPopulatorTest {
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 
-        assertEquals(competition.getName(), model.getCompetitionName());
-        assertEquals((long) competition.getId(), model.getCompetitionId());
+        assertEquals(project.getCompetitionName(), model.getCompetitionName());
+        assertEquals(project.getCompetition(), model.getCompetitionId());
         assertEquals(project.getName(), model.getProjectName());
         assertEquals((long) project.getId(), model.getProjectId());
-        assertEquals(false, model.isUserLeadPartner());
+        assertFalse(model.isUserLeadPartner());
         assertEquals((long) loggedInUser.getId(), model.getLoggedInUserId());
-        assertEquals(false, model.isInternalUserView());
+        assertFalse(model.isInternalUserView());
         assertEquals(2, model.getPartnerOrgs().size());
 
         ProjectOrganisationViewModel partnerOneViewModel = model.getPartnerOrgs().stream().filter(view -> view.getOrgId() == partnerOne.getId()).findAny().get();

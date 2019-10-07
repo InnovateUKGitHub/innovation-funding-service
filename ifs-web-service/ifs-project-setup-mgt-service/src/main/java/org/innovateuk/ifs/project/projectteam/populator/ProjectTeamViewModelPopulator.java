@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -28,22 +26,17 @@ public class ProjectTeamViewModelPopulator {
 
     private final ProjectService projectService;
 
-    private final CompetitionRestService competitionRestService;
-
     private final ProjectDetailsService projectDetailsService;
 
     public ProjectTeamViewModelPopulator(ProjectService projectService,
-                                         CompetitionRestService competitionRestService,
                                          ProjectDetailsService projectDetailsService) {
         this.projectService = projectService;
-        this.competitionRestService = competitionRestService;
         this.projectDetailsService = projectDetailsService;
     }
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
@@ -67,8 +60,8 @@ public class ProjectTeamViewModelPopulator {
         boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) || projectIsNotActive;
 
         return new ProjectTeamViewModel(
-                competitionResource.getName(),
-                competitionResource.getId(),
+                projectResource.getCompetitionName(),
+                projectResource.getCompetition(),
                 projectResource.getName(),
                 projectResource.getId(),
                 partnerOrgModels,

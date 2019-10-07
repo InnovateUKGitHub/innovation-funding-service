@@ -9,10 +9,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -32,6 +29,7 @@ public class ApplicationFinance extends Finance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
+
     public ApplicationFinance() {
     }
 

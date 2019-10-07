@@ -4,13 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
-import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
-import org.innovateuk.ifs.finance.mapper.FinanceRowMetaFieldMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
@@ -18,7 +15,6 @@ import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,15 +41,6 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     @Autowired
-    private FileEntryRepository fileEntryRepository;
-
-    @Autowired
-    private FinanceRowMetaFieldMapper financeRowMetaFieldMapper;
-
-    @Autowired
-    private ApplicationFinanceMapper applicationFinanceMapper;
-
-    @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
 
     @Autowired
@@ -64,9 +51,6 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private QuestionService questionService;
 
     @Override
     public ServiceResult<FinanceRowItem> get(final long financeRowId) {

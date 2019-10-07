@@ -1505,7 +1505,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private void assertStandardViewModelValuesCorrect(SetupStatusViewModel viewModel, boolean existingMonitoringOfficerExpected) {
         assertEquals(project.getId(), viewModel.getProjectId());
         assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(competition.getName(), viewModel.getCompetitionName());
+        assertEquals(project.getCompetitionName(), viewModel.getCompetitionName());
         assertEquals(application.getId(), viewModel.getApplicationId());
     }
 

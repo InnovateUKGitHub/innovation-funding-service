@@ -8,6 +8,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
+import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -90,6 +92,12 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private GrowthTableRepository growthTableRepository;
+
+    @Autowired
+    private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
 
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
@@ -233,6 +241,12 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         if (organisation != null) {
             ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
             if (finance != null) {
+                if (finance.getGrowthTable() != null) {
+                    growthTableRepository.delete(finance.getGrowthTable());
+                }
+                if (finance.getEmployeesAndTurnover() != null) {
+                    employeesAndTurnoverRepository.delete(finance.getEmployeesAndTurnover());
+                }
                 applicationFinanceRepository.delete(finance);
             }
         }
