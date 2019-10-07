@@ -18,6 +18,7 @@ ${computer_vision_application_name}    Computer vision and machine learning for 
 ${computer_vision_application}         ${application_ids["${computer_vision_application_name}"]}
 ${crowd_source_application_name}       Crowd sourced cycling navigator
 ${crowd_source_application}            ${application_ids["${crowd_source_application_name}"]}
+${Assessment_Comp_title}    Assessments of load capabilities
 
 *** Keywords ***
 Invited guest user log in

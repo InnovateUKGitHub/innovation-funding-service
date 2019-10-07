@@ -15,7 +15,7 @@ In Panel Dashboard
     [Tags]
     Given the user navigates to the page      ${CA_Live}
     When the user clicks the button/link      link = ${FUNDERS_PANEL_COMPETITION_NAME}
-    And the user should see the competition details  ${FUNDERS_PANEL_COMPETITION_NAME}  Panel   Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision
+    And the user should see the competition details  ${FUNDERS_PANEL_COMPETITION_NAME}  Panel   Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision  Programme
     Then the user should see milestones for In Panel Competitions
 
 Internal user can see grant terms and conditions
