@@ -8,14 +8,20 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
+import org.innovateuk.ifs.finance.domain.GrowthTable;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
+import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
+import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
+import org.innovateuk.ifs.finance.resource.GrowthTableResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
@@ -34,6 +40,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST;
@@ -65,6 +72,12 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
+
+    @Autowired
+    private GrowthTableRepository growthTableRepository;
 
     @Override
     @Transactional
@@ -131,6 +144,13 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
             return getOpenApplication(applicationId).andOnSuccess(application ->
                     find(organisation(organisationId)).andOnSuccess(organisation -> {
                         ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
+                        if (TRUE.equals(application.getCompetition().getIncludeProjectGrowthTable())) {
+                            applicationFinance.setGrowthTable(new GrowthTable());
+                            growthTableRepository.save(applicationFinance.getGrowthTable());
+                        } else {
+                            applicationFinance.setEmployeesAndTurnover(new EmployeesAndTurnover());
+                            employeesAndTurnoverRepository.save(applicationFinance.getEmployeesAndTurnover());
+                        }
                         initialize(applicationFinance);
                         return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
                     })
@@ -158,12 +178,35 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
                     if (applicationFinance.getWorkPostcode() != null) {
                         dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
                     }
+                    if (TRUE.equals(dbFinance.getApplication().getCompetition().getIncludeProjectGrowthTable())) {
+                        updateGrowthTable(applicationFinance, dbFinance);
+                    } else {
+                        updateEmployeesAndTurnover(applicationFinance, dbFinance);
+                    }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
                     dbFinance = applicationFinanceRepository.save(dbFinance);
                     return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
                 })
         );
+    }
+
+    private void updateEmployeesAndTurnover(ApplicationFinanceResource applicationFinance, ApplicationFinance dbFinance) {
+        EmployeesAndTurnover employeesAndTurnover = dbFinance.getEmployeesAndTurnover();
+        EmployeesAndTurnoverResource employeesAndTurnoverResource = (EmployeesAndTurnoverResource) applicationFinance.getFinancialYearAccounts();
+        employeesAndTurnover.setTurnover(employeesAndTurnoverResource.getTurnover());
+        employeesAndTurnover.setEmployees(employeesAndTurnoverResource.getEmployees());
+    }
+
+    private void updateGrowthTable(ApplicationFinanceResource applicationFinance, ApplicationFinance dbFinance) {
+        GrowthTable growthTable = dbFinance.getGrowthTable();
+        GrowthTableResource growthTableResource = (GrowthTableResource) applicationFinance.getFinancialYearAccounts();
+        growthTable.setAnnualExport(growthTableResource.getAnnualExport());
+        growthTable.setAnnualProfits(growthTableResource.getAnnualProfits());
+        growthTable.setAnnualTurnover(growthTableResource.getAnnualTurnover());
+        growthTable.setResearchAndDevelopment(growthTableResource.getResearchAndDevelopment());
+        growthTable.setFinancialYearEnd(growthTableResource.getFinancialYearEnd());
+        growthTable.setEmployees(growthTableResource.getEmployees());
     }
 
     /**

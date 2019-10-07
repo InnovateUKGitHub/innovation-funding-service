@@ -66,4 +66,5 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
     public void setWorkPostcode(String workPostcode) {
         this.workPostcode = workPostcode;
     }
+
 }
