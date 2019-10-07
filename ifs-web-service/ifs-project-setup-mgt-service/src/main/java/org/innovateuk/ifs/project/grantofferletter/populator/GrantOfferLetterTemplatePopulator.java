@@ -81,7 +81,6 @@ public class GrantOfferLetterTemplatePopulator {
         String projectName = projectResource.getName();
         long applicationId = projectResource.getApplication();
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        String competitionName = competitionResource.getName();
         ProjectUserResource projectUserResource = projectService.getProjectManager(projectId).get();
         OrganisationResource leadOrg = organisationRestService.getOrganisationById(projectUserResource.getOrganisation()).getSuccess();
         String leadOrgName = leadOrg.getName();
@@ -104,7 +103,7 @@ public class GrantOfferLetterTemplatePopulator {
                                                      projectManagerFirstName,
                                                      projectManagerLastName,
                                                      getAddressLines(projectResource),
-                                                     competitionName,
+                                                     projectResource.getCompetitionName(),
                                                      projectName,
                                                      leadOrgName,
                                                      allProjectNotes,

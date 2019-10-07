@@ -11,14 +11,12 @@ import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.documentation.FinanceCheckDocs.*;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
@@ -30,7 +28,6 @@ import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBui
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.project.financecheck.builder.CostResourceBuilder.newCostResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -82,13 +79,10 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
     @Test
     public void getFinanceCheckSummary() throws Exception {
-        long projectId = 123;
-        long competitionId = 456;
+        Long projectId = 123L;
+        Long competitionId = 456L;
 
-        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L)
-                .withName("Organisation A", "Organisation B", "Organisation C")
-                .withEligibility(EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityState.APPROVED)
-                .build(3);
+        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L).withName("Organisation A", "Organisation B", "Organisation C").withEligibility(EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityState.APPROVED).build(3);
 
         FinanceCheckSummaryResource expected = newFinanceCheckSummaryResource().
                 withProjectId(projectId).
@@ -103,7 +97,6 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 withBankDetailslApproved(false).
                 withPartnerStatusResources(partnerStatusResources).
                 withH2020(false).
-                withFundingType(GRANT).
                 build();
 
         when(financeCheckServiceMock.getFinanceCheckSummary(123L)).thenReturn(serviceSuccess(expected));
@@ -190,43 +183,6 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 ));
 
         verify(financeCheckServiceMock).getFinanceCheckEligibilityDetails(123L, 456L);
-    }
-
-    @Test
-    public void getTurnover() throws Exception {
-        Long applicationId = 1L;
-        Long organisationId = 2L;
-
-        when(financeCheckServiceMock.getTurnoverByOrganisationId(applicationId, organisationId)).thenReturn(serviceSuccess(2L));
-
-        MvcResult mvcResult = mockMvc.perform(get("/project/turnover/{applicationId}/{organisationId}", applicationId, organisationId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application for which the applicant's annual turnover is requested"),
-                                parameterWithName("organisationId").description("Id of the organisation for which the applicant's annual turnover is requested")
-                        )
-                )).andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("2"));
-    }
-
-    @Test
-    public void getHeadcount() throws Exception {
-        Long applicationId = 1L;
-        Long organisationId = 2L;
-
-        when(financeCheckServiceMock.getHeadCountByOrganisationId(applicationId, organisationId)).thenReturn(serviceSuccess(2L));
-
-        MvcResult mvcResult = mockMvc.perform(get("/project/headcount/{applicationId}/{organisationId}", applicationId, organisationId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("applicationId").description("Id of the application for which the applicant's staff headcount is requested"),
-                                parameterWithName("organisationId").description("Id of the organisation for which the applicant's staff headcount is requested")
-
-                        )
-                )).andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("2"));
     }
 
     @Override

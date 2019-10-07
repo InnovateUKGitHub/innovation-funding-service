@@ -55,11 +55,6 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
-    public ServiceResult<Void> saveProjectInvite (ProjectUserInviteResource projectUserInviteResource) {
-        return projectInviteRestService.saveProjectInvite(projectUserInviteResource).toServiceResult();
-    }
-
-    @Override
     public ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectUserInviteResource projectUserInviteResource) {
         return projectDetailsRestService.inviteFinanceContact (projectId, projectUserInviteResource).toServiceResult();
     }

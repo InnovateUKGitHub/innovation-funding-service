@@ -20,22 +20,22 @@
           method="post" novalidate="novalidate">
 
         <div th:if="${model.general.editable}">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('enabledIds')} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('enabledIds')} ? 'govuk-form-group--error'"
+                 data-target="documents-warning" data-target-inverted="true">
                 <fieldset class="govuk-fieldset">
                     <legend id="enabledIds"></legend>
                     <th:block th:if="${#fields.hasErrors('enabledIds')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('enabledIds')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.competitionDocuments}" >
-                            <input th:value="${document.id}"
-                                    type="checkbox"
-                                    name="enabledIds"
-                                    class="govuk-checkboxes__input"
-                                    th:id="${'projectdocument-enabled-' + document.id}"
-                                    th:checked="${document.enabled}"
-                                    required="required"
-                                    th:attr="data-required-errormessage=#{competition.setup.documents.required}"/>
+                        <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.competitionDocuments}"
+                             th:with="checkboxId=|projectdocument-enabled-${document.id}|">
+                            <input th:id="${checkboxId}"
+                                   th:value="${document.id}"
+                                   type="checkbox"
+                                   name="enabledIds"
+                                   class="govuk-checkboxes__input"
+                                   th:checked="${document.enabled}"/>
                             <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
                                 <span th:text=${document.title}>document_title</span>
                                  <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}"
@@ -51,6 +51,14 @@
                     <a th:href="@{/competition/setup/{competitionId}/section/project-document/add(competitionId=${model.general.competition.id})}">Add document type</a>
                 </p>
             </th:form>
+
+            <div class="govuk-warning-text" id="documents-warning">
+                <span class="govuk-warning-text__icon" aria-hidden="false">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    You have not selected any documents. The project manager will not be required to upload documents.
+                </strong>
+            </div>
 
             <button class="govuk-button" id="doneButton">Done</button>
         </div>

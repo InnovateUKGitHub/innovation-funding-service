@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
@@ -25,7 +27,6 @@ import java.util.function.Supplier;
 
 import static java.util.EnumSet.allOf;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isResearch;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -48,6 +49,9 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     @Autowired
     private CostCategoryTypeRepository costCategoryTypeRepository;
 
+    @Autowired
+    private CompetitionService competitionService;
+
     public final static String DESCRIPTION_PREFIX = "Cost Category Type for Categories ";
 
     @Override
@@ -56,8 +60,9 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
                 andOnSuccess((project, organisation) ->
                         find(projectFinanceResource(project.getId(), organisation.getId())).
                                 andOnSuccess((finances) -> {
+                                    CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
-                                    if (!isResearch(organisation.getOrganisationType())) {
+                                    if (!competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
                                         costCategoryGenerators = sort(financeOrganisationDetails.keySet());
                                     } else {
