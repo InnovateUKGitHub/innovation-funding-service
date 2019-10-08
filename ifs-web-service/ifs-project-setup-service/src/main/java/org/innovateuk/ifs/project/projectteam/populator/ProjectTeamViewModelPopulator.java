@@ -50,7 +50,6 @@ public class ProjectTeamViewModelPopulator {
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean isMonitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());

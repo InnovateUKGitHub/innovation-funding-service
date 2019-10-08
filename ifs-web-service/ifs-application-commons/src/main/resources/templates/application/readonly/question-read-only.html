@@ -142,7 +142,7 @@
             <th:block th:if="${organisation.lead && model.collaborativeProject}">(Lead)</th:block>
         </h2>
 
-        <th:block th:if="${organisation.type ProjectFinanceChecksController!= null}">
+        <th:block th:if="${organisation.type != null}">
             <h3 class="govuk-heading-s govuk-!-margin-top-2">Organisation type</h3>
             <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations
                 (RTOs)</p>
