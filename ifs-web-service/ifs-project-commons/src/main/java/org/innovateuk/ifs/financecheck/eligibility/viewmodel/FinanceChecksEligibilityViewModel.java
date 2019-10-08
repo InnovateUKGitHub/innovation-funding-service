@@ -52,7 +52,7 @@ public class FinanceChecksEligibilityViewModel {
                                              FileDetailsViewModel jesFileDetailsViewModel) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
-        this.projectId = project.getApplication();
+        this.projectId = project.getId();
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
         this.h2020 = competition.isH2020();
