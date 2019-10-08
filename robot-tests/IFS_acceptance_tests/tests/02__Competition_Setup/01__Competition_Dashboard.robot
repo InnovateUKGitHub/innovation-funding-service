@@ -59,7 +59,6 @@ PS projects title and lead
 PS projects status page
     [Documentation]    INFUND-2610, IFS-1881
     When the internal user navigates to the project setup competition       ${PROJECT_SETUP_COMPETITION_NAME}
-    And the user clicks the button/link                                     link = ${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element                                    jQuery = tr:nth-child(2):contains("${PS_PD_Application_Title}")
     And the user should see the element                                     link = All projects
     [Teardown]    The user navigates to the page                            ${COMP_ADMINISTRATOR_DASHBOARD}
