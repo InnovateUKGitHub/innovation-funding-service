@@ -11,56 +11,62 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
 
 @Service
 public class ProjectRestServiceImpl extends BaseRestService implements ProjectRestService {
 
-    private String projectRestURL = "/project";
+    private final static String PROJECT_REST_URL = "/project/";
 
     @Override
-    public RestResult<ProjectResource> getProjectById(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId, ProjectResource.class);
+    public RestResult<ProjectResource> getProjectById(long projectId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d", projectId), ProjectResource.class);
     }
 
     @Override
-    public RestResult<SpendProfileResource> getSpendProfile(final Long projectId, final Long organisationId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/", SpendProfileResource.class);
+    public RestResult<SpendProfileResource> getSpendProfile(long projectId, final long organisationId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/partner-organisation/%d/spend-profile/", projectId, organisationId), SpendProfileResource.class);
     }
 
     @Override
     public RestResult<List<ProjectResource>> findByUserId(long userId) {
-        return getWithRestResult(projectRestURL + "/user/" + userId, projectResourceListType());
+        return getWithRestResult(format(PROJECT_REST_URL + "user/%d", userId), projectResourceListType());
     }
 
     @Override
-    public RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/project-users", projectUserResourceList());
+    public RestResult<List<ProjectUserResource>> getProjectUsersForProject(long projectId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/project-users", projectId), projectUserResourceList());
     }
 
     @Override
-    public RestResult<ProjectResource> getByApplicationId(Long applicationId) {
-        return getWithRestResult(projectRestURL + "/application/" + applicationId, ProjectResource.class);
+    public RestResult<ProjectResource> getByApplicationId(long applicationId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "application/%d", applicationId), ProjectResource.class);
     }
 
     @Override
-    public RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/get-organisation-by-user/" + userId, OrganisationResource.class);
+    public RestResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/get-organisation-by-user/%d", projectId, userId), OrganisationResource.class);
     }
 
     @Override
-    public RestResult<ProjectUserResource> getProjectManager(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/project-manager", ProjectUserResource.class);
+    public RestResult<ProjectUserResource> getProjectManager(long projectId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/project-manager", projectId), ProjectUserResource.class);
     }
 
     @Override
-    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/partner/" + organisationId, PartnerOrganisationResource.class);
+    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(long projectId, long organisationId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/partner/%d", projectId, organisationId), PartnerOrganisationResource.class);
     }
 
     @Override
-    public RestResult<ProjectResource> createProjectFromApplicationId(Long applicationId) {
-        return postWithRestResult(projectRestURL + "/create-project/application/" + applicationId, ProjectResource.class);
+    public RestResult<ProjectResource> createProjectFromApplicationId(long applicationId) {
+        return postWithRestResult(format(PROJECT_REST_URL + "create-project/application/%d", applicationId), ProjectResource.class);
+    }
+
+    @Override
+    public RestResult<OrganisationResource> getLeadOrganisationByProject(long projectId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/lead-organisation", projectId), OrganisationResource.class);
     }
 }

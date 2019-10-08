@@ -21,13 +21,13 @@ public class ProjectController {
     private ProjectService projectService;
 
     @GetMapping("/{id}")
-    public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
+    public RestResult<ProjectResource> getProjectById(@PathVariable long id) {
         return projectService.getProjectById(id).toGetResponse();
     }
 
-    @GetMapping("/application/{application}")
-    public RestResult<ProjectResource> getByApplicationId(@PathVariable("application") final Long application) {
-        return projectService.getByApplicationId(application).toGetResponse();
+    @GetMapping("/application/{applicationId}")
+    public RestResult<ProjectResource> getByApplicationId(@PathVariable long applicationId) {
+        return projectService.getByApplicationId(applicationId).toGetResponse();
     }
 
     @GetMapping("/")
@@ -36,24 +36,28 @@ public class ProjectController {
     }
 
     @GetMapping(value = "/user/{userId}")
-    public RestResult<List<ProjectResource>> findByUserId(@PathVariable("userId") final Long userId) {
+    public RestResult<List<ProjectResource>> findByUserId(@PathVariable long userId) {
         return projectService.findByUserId(userId).toGetResponse();
     }
 
     @GetMapping("/{projectId}/project-users")
-    public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
+    public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
     }
 
     @GetMapping("/{projectId}/get-organisation-by-user/{userId}")
-    public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
-                                                                            @PathVariable("userId") final Long userId){
+    public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable long projectId,
+                                                                            @PathVariable long userId){
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
     }
 
     @PostMapping("/create-project/application/{applicationId}")
-    public RestResult<ProjectResource> createProjectFromApplication(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<ProjectResource> createProjectFromApplication(@PathVariable long applicationId) {
         return projectService.createProjectFromApplication(applicationId).toPostWithBodyResponse();
     }
 
+    @GetMapping("/{projectId}/lead-organisation")
+    public RestResult<OrganisationResource> getLeadOrganisation(@PathVariable long projectId){
+        return projectService.getLeadOrganisation(projectId).toGetResponse();
+    }
 }
