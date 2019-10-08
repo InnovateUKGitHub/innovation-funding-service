@@ -154,3 +154,18 @@ the internal sends the descision notification email to all applicants
     the user enters text to a text field  css=.editor  ${email}
     the user clicks the button/link       css=.govuk-button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       css=button[name="send-emails"]
+
+the internal user navigates to the project setup competition
+    [Arguments]  ${comp_name}
+    the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    link=${comp_name}
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'  the user clicks the button/link  jQuery=button:contains("Next")
+    \  ${i} =  Set Variable  ${i + 1}
+    the user clicks the button/link       link=${comp_name}
+
+
+
+
+
