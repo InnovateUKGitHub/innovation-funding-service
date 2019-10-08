@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -19,7 +17,6 @@ import org.mockito.Mock;
 
 import java.util.Collections;
 
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -36,9 +33,6 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
     private ProjectService projectService;
 
     @Mock
-    private ApplicationService applicationService;
-
-    @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Mock
@@ -52,19 +46,17 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
 
     @Test
     public void viewSpendProfileApprovalSuccess() throws Exception {
-        Long projectId = 123L;
-        Long applicationId = 20L;
-        Long competitionId = 2319L;
-        Long userId = 239L;
+        long projectId = 123L;
+        long applicationId = 20L;
+        long competitionId = 2319L;
+        long userId = 239L;
 
         UserResource user = newUserResource().withId(userId).build();
         CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().withId(competitionId).build();
         CompetitionResource competition = newCompetitionResource().withId(competitionId).withLeadTechnologist(userId).build();
-        ApplicationResource application = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
-        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withProjectState(SETUP).build();
+        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withCompetition(competitionId).withProjectState(SETUP).build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(applicationService.getById(applicationId)).thenReturn(application);
         when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummary));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(user));

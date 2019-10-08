@@ -29,6 +29,7 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_D
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
+import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -40,8 +41,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTest<BankDetailsManagementController> {
     private ProjectResource project;
@@ -295,9 +295,19 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testViewPartnerBankDetails() throws  Exception {
         Long projectId = 123L;
-        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().build();
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withBankDetailsStatusResources(newBankDetailsStatusResource().build(2)).build();
         when(bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)).thenReturn(restSuccess(bankDetailsStatusSummary));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/review-all-bank-details")).andExpect(status().isOk()).andExpect(view().name("project/bank-details-status")).andReturn();
         assertEquals(bankDetailsStatusSummary, result.getModelAndView().getModel().get("model"));
+    }
+
+    @Test
+    public void testViewPartnerBankDetails_redirect() throws  Exception {
+        long projectId = 123L;
+        long orgId = 7L;
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withBankDetailsStatusResources(newBankDetailsStatusResource().withOrganisationId(orgId).build(1)).build();
+        when(bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)).thenReturn(restSuccess(bankDetailsStatusSummary));
+        mockMvc.perform(get("/project/" + projectId + "/review-all-bank-details"))
+                .andExpect(redirectedUrl("/project/123/organisation/7/review-bank-details?isCompAdminUser=false"));
     }
 }
