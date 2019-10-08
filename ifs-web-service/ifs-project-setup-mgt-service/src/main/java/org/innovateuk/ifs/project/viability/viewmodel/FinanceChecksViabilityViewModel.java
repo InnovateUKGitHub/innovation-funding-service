@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.viability.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
@@ -32,8 +33,10 @@ public class FinanceChecksViabilityViewModel {
     private String projectName;
     private final boolean projectIsActive;
     private final boolean collaborativeProject;
+    private final boolean loanCompetition;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
+                                           CompetitionResource competition,
                                            String organisationName,
                                            boolean leadPartnerOrganisation,
                                            Integer totalCosts,
@@ -73,6 +76,7 @@ public class FinanceChecksViabilityViewModel {
         this.projectName = project.getName();
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
+        this.loanCompetition = competition.isLoan();
     }
 
     public String getOrganisationName() {
@@ -178,5 +182,9 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+    
+    public boolean isLoanCompetition() {
+        return loanCompetition;
     }
 }
