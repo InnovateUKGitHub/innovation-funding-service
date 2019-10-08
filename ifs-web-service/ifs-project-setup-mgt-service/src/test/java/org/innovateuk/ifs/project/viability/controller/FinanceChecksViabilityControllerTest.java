@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.viability.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -28,6 +30,7 @@ import java.util.Map;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
@@ -57,6 +60,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     private OrganisationRestService organisationRestService;
 
     @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
     private ProjectService projectService;
 
     @Mock
@@ -65,19 +71,27 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     @Mock
     private ApplicationService applicationService;
 
-    private OrganisationResource industrialOrganisation = newOrganisationResource().
-            withName("Industrial Org").
-            withCompaniesHouseNumber("123456789").
-            withId(1L).
-            build();
+    private OrganisationResource industrialOrganisation = newOrganisationResource()
+            .withName("Industrial Org")
+            .withCompaniesHouseNumber("123456789")
+            .withId(1L)
+            .build();
 
-    private OrganisationResource academicOrganisation = newOrganisationResource().
-            withName("Academic Org").
-            withCompaniesHouseNumber("987654321").
-            withId(2L).
-            build();
+    private OrganisationResource academicOrganisation = newOrganisationResource()
+            .withName("Academic Org")
+            .withCompaniesHouseNumber("987654321")
+            .withId(2L)
+            .build();
 
-    private ApplicationResource app = newApplicationResource().withId(456L).withCompetition(123L).build();
+    private CompetitionResource competitionResource = newCompetitionResource()
+            .withName("Competition")
+            .build();
+
+    private ApplicationResource app = newApplicationResource()
+            .withId(456L)
+            .withCompetition(competitionResource.getId())
+            .build();
+
     private ProjectResource project = newProjectResource()
             .withApplication(app)
             .withProjectState(SETUP)
@@ -152,12 +166,13 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    public void testViewViabilityIndustrial() throws Exception {
+    public void viewViabilityIndustrial() throws Exception {
 
         ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
 
         when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
         when(projectFinanceService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(viability);
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), industrialOrganisation.getId())).thenReturn(false);
@@ -200,12 +215,13 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    public void testViewViabilityAcademic() throws Exception {
+    public void viewViabilityAcademic() throws Exception {
 
         ViabilityResource viability = new ViabilityResource(Viability.REVIEW, ViabilityRagStatus.UNSET);
 
         when(organisationRestService.getOrganisationById(academicOrganisation.getId())).thenReturn(restSuccess(academicOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
         when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(viability);
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
@@ -246,7 +262,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    public void testConfirmViability() throws Exception {
+    public void confirmViability() throws Exception {
 
         Long projectId = 123L;
         Long organisationId = 456L;
@@ -271,7 +287,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    public void testSaveAndContinue() throws Exception {
+    public void saveAndContinue() throws Exception {
 
         Long projectId = 123L;
         Long organisationId = 456L;
@@ -296,7 +312,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    public void testSaveAndContinueWhenConfirmViabilityHasBeenUnselected() throws Exception {
+    public void saveAndContinueWhenConfirmViabilityHasBeenUnselected() throws Exception {
 
         Long projectId = 123L;
         Long organisationId = 456L;
