@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.viability.controller;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.FinancialYearAccountsResource;
@@ -54,6 +56,9 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private ProjectFinanceService financeService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -130,6 +135,7 @@ public class FinanceChecksViabilityController {
     private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId) {
 
         ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         Long applicationId = project.getApplication();
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -161,8 +167,7 @@ public class FinanceChecksViabilityController {
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
                 (OrganisationSize::getDescription).orElse(null);
 
-        return new FinanceChecksViabilityViewModel(project,
-                organisationName,
+        return new FinanceChecksViabilityViewModel(organisationName,
                 leadPartnerOrganisation,
                 totalCosts,
                 percentageGrant,
@@ -183,7 +188,11 @@ public class FinanceChecksViabilityController {
                 approver,
                 approvalDate,
                 organisationId,
-                organisationSizeDescription);
+                organisationSizeDescription,
+                applicationId,
+                project.getName(),
+                project.getProjectState().isActive(),
+                competition.isLoan());
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
