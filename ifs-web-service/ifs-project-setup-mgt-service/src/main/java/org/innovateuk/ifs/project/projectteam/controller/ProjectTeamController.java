@@ -9,6 +9,8 @@ import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopu
 import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,28 +27,22 @@ import static java.lang.String.format;
  * This controller will handle all requests that are related to the project team.
  */
 @Controller
-@RequestMapping("/competition/{competitionId}/project")
+@RequestMapping("/competition/{competitionId}/project/{projectId}/team")
+@PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+@SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can view the project team page")
 public class ProjectTeamController {
 
+    @Autowired
     private ProjectTeamViewModelPopulator projectTeamPopulator;
+    @Autowired
     private ProjectTeamRestService projectTeamRestService;
+    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Autowired
     private ProjectInviteHelper projectInviteHelper;
 
-    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
-                                 ProjectTeamRestService projectTeamRestService,
-                                 CookieFlashMessageFilter cookieFlashMessageFilter,
-                                 ProjectInviteHelper projectInviteHelper
-                                 ) {
-        this.projectTeamPopulator = projectTeamPopulator;
-        this.projectTeamRestService = projectTeamRestService;
-        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
-        this.projectInviteHelper = projectInviteHelper;
-    }
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can view the project team page")
-    @GetMapping("/{projectId}/team")
+    @GetMapping
     public String viewProjectTeam(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,
                                   BindingResult bindingResult,
                                   @PathVariable("projectId") long projectId,
@@ -56,9 +52,7 @@ public class ProjectTeamController {
         return "projectteam/project-team";
     }
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can remove invites")
-    @PostMapping(value = "/{projectId}/team", params = "remove-invite")
+    @PostMapping(params = "remove-invite")
     public String removeInvite(@PathVariable("projectId") long projectId,
                                @PathVariable("competitionId") long competitionId,
                                @RequestParam("remove-invite") long inviteId) {
@@ -66,9 +60,7 @@ public class ProjectTeamController {
         return format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
     }
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can add team members")
-    @PostMapping(value = "/{projectId}/team", params = "add-team-member")
+    @PostMapping(params = "add-team-member")
     public String openAddTeamMemberForm(@ModelAttribute(value = "form") ProjectTeamForm form,
                                         BindingResult bindingResult,
                                         @PathVariable("projectId") long projectId,
@@ -81,17 +73,13 @@ public class ProjectTeamController {
         return "projectteam/project-team";
     }
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can add team members")
-    @PostMapping(value = "/{projectId}/team", params = "close-add-team-member-form")
+    @PostMapping(params = "close-add-team-member-form")
     public String closeAddTeamMemberForm(@PathVariable("projectId") long projectId,
                                          @PathVariable("competitionId") long competitionId) {
         return format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
     }
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can add team members")
-    @PostMapping(value = "/{projectId}/team", params = "invite-to-project")
+    @PostMapping(params = "invite-to-project")
     public String inviteToProject(@Valid @ModelAttribute("form") ProjectTeamForm form,
                                   BindingResult bindingResult,
                                   ValidationHandler validationHandler,
@@ -109,13 +97,10 @@ public class ProjectTeamController {
         Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
 
         return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
-                          failureView, successView, projectId, organisationId,
-                          (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
+                          failureView, successView, projectId, organisationId);
     }
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can resend invites")
-    @PostMapping(value = "/{projectId}/team", params = "resend-invite")
+    @PostMapping(params = "resend-invite")
     public String resendInvite(@PathVariable("projectId") long projectId,
                                @PathVariable("competitionId") long competitionId,
                                @RequestParam("resend-invite") long inviteId,
