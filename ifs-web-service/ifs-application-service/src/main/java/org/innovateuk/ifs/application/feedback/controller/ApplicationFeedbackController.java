@@ -75,7 +75,6 @@ public class ApplicationFeedbackController {
             feedbackAvailable = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
         }
         return application.isSubmitted() && feedbackAvailable;
-
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
