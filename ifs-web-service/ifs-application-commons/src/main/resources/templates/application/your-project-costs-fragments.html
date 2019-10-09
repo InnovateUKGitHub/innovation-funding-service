@@ -421,7 +421,7 @@
                                     uploaded a completed overhead costs spreadsheet.</p>
                             </th:block>
                             <th:block th:unless="${model.internal and form.overhead.filename == null}" th:insert="question-type/types :: fileupload-fragment(${model.internal ? 'readonly' : 'edit'},
-                                @{'/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})},
+                                @{/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})},
                                 ${form.overhead.filename},
                                 overhead.file,
                                 overhead.file,
@@ -519,7 +519,7 @@
                         spreadsheet</h3>
                     <ul>
                         <li th:if="${form.overhead.filename} != null"><a
-                            th:href="@{${'/application/download/overheadfile/'+form.overhead.costId}}"
+                            th:href="@{/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})}"
                             th:text="${form.overhead.filename}" class="govuk-link">Overhead calculation
                             spreadsheet.pdf</a></li>
                     </ul>
