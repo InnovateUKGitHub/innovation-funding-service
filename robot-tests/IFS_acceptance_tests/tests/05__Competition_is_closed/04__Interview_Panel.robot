@@ -461,10 +461,10 @@ the comp admin allocate applicantions to interview panel
     the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("Remove")
 
 the comp admin assign an application for interview panel which was not assigned for assessment
-    Log in as a different user      &{Comp_admin1_credentials}
+    Log in as a different user           &{Comp_admin1_credentials}
     the comp admin navigates to allocate applications page
     the user clicks the button/link      jQuery = tr:contains("${computer_vision_application}") label
-    the user clicks the button/link     css = .govuk-button[name="addSelected"]
+    the user clicks the button/link      css = .govuk-button[name="addSelected"]
     the comp admin notify remaining applications to an assessor
     log in as a different user           ${assessor_joel_email}   ${short_password}
     the user clicks the button/link      link = ${CLOSED_COMPETITION_NAME}
