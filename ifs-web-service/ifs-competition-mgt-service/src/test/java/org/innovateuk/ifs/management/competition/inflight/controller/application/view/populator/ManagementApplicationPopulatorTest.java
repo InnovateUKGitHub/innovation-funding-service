@@ -85,7 +85,7 @@ public class ManagementApplicationPopulatorTest {
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(applicationReadOnlyViewModelPopulator.populate(application, competition, user, defaultSettings())).thenReturn(mock(ApplicationReadOnlyViewModel.class));
-        when(applicationOverviewIneligibilityModelPopulator.populateModel(application, competition)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
+        when(applicationOverviewIneligibilityModelPopulator.populateModel(application)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
 
         FormInputResource appendix = newFormInputResource().build();
         FileEntryResource file = newFileEntryResource()
