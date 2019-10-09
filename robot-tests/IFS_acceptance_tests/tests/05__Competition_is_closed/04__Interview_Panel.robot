@@ -218,7 +218,7 @@ Assessor can view feedback with detailed finances
 
 CompAdmin marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
-    [Tags]  HappyPath   Pending
+    [Tags]  HappyPath
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
     Then the user marks applications as successful and send funding decision email
@@ -226,7 +226,6 @@ CompAdmin marks appplications as successful and releases competition feedback
 
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
-    [Tags]  Pending
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     And the user clicks the button/link       link = view application feedback
