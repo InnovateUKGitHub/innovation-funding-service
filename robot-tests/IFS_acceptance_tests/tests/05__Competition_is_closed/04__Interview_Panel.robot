@@ -209,7 +209,12 @@ Assessor can view the list of allocated applications
     When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${CLOSED_COMPETITION}/interview
     Then the user should see the element     jQuery = h1:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery = h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ p:contains("Neural Industries")
-    And an assessor can view feedback overview of an application
+    And an assessor can view feedback overview of an application    ${CLOSED_COMPETITION_APPLICATION_TITLE}  The lead applicant has responded to feedback. Download and review all attachments before the interview panel.
+
+Assessor can view feedback with detailed finances
+    [Documentation]  IFS-6561
+    Given the comp admin assign an application for interview panel which was not assigned for assessment
+    Then an assessor can view feedback overview of an application   ${computer_vision_application_name}   The lead applicant has not responded to feedback
 
 CompAdmin marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
@@ -231,6 +236,7 @@ Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     Connect to database  @{database}
     the Interview Panel is activated in the db
+    execute sql string   UPDATE `${database_name}`.`competition` SET `assessor_finance_view` = 'DETAILED' WHERE `name` = '${CLOSED_COMPETITION_NAME}';
     ${today} =  get today short month
     set suite variable  ${today}
 
@@ -454,15 +460,25 @@ the comp admin allocate applicantions to interview panel
     the user clicks the button/link     css = .govuk-button[name="addSelected"]  #Allocate
     the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("Remove")
 
+the comp admin assign an application for interview panel which was not assigned for assessment
+    Log in as a different user           &{Comp_admin1_credentials}
+    the comp admin navigates to allocate applications page
+    the user clicks the button/link      jQuery = tr:contains("${computer_vision_application}") label
+    the user clicks the button/link      css = .govuk-button[name="addSelected"]
+    the comp admin notify remaining applications to an assessor
+    log in as a different user           ${assessor_joel_email}   ${short_password}
+    the user clicks the button/link      link = ${CLOSED_COMPETITION_NAME}
+
 the comp admin notify remaining applications to an assessor
     the user clicks the button/link     css = input[type="submit"]   #Notify
     the user should see the element     jQuery = a:contains("${CLOSED_COMPETITION_APPLICATION}")
     the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("Neural Industries") ~ td:contains("Remove")
 
 an assessor can view feedback overview of an application
-    the user clicks the button/link     link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    [Arguments]   ${application}  ${message}
+    the user clicks the button/link     link = ${application}
     the user should see the element     jQuery = h1:contains("Feedback overview")
-    the user should see the element     jQuery = .message-alert p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
+    the user should see the element     jQuery = .message-alert p:contains("${message}")
     assessor should see the competition terms and conditions     Back to feedback overview
 
 Custom suite teardown

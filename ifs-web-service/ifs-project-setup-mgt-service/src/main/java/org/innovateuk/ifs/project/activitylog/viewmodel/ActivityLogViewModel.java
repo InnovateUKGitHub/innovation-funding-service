@@ -60,4 +60,8 @@ public class ActivityLogViewModel {
     public String getOtherPartners() {
         return otherPartners;
     }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
 }

@@ -179,7 +179,7 @@ public class BankDetailsManagementController {
             Long projectId,
             OrganisationResource organisation,
             OrganisationAddressResource organisationAddressResource,
-            ChangeBankDetailsForm form){
+            ChangeBankDetailsForm form) {
         BankDetailsResource bankDetailsResource = new BankDetailsResource();
 
         bankDetailsResource.setId(existingBankDetailsResource.getId());
@@ -221,9 +221,7 @@ public class BankDetailsManagementController {
                                            Model model) {
         BankDetailsReviewViewModel bankDetailsReviewViewModel = bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, projectResource, bankDetailsResource);
         ChangeBankDetailsViewModel changeBankDetailsViewModel =
-                new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(),
-                                               bankDetailsReviewViewModel.getApplicationId(),
-                                               bankDetailsReviewViewModel.getProjectName(),
+                new ChangeBankDetailsViewModel(projectResource,
                                                bankDetailsReviewViewModel.getFinanceContactName(),
                                                bankDetailsReviewViewModel.getFinanceContactEmail(),
                                                bankDetailsReviewViewModel.getFinanceContactPhoneNumber(),
@@ -239,7 +237,6 @@ public class BankDetailsManagementController {
                                                bankDetailsReviewViewModel.getAddressScore(),
                                                bankDetailsReviewViewModel.getApproved(),
                                                bankDetailsReviewViewModel.getApprovedManually(),
-                                               bankDetailsReviewViewModel.isProjectActive(),
                                                updated);
         model.addAttribute("model", changeBankDetailsViewModel);
         return "project/change-bank-details";

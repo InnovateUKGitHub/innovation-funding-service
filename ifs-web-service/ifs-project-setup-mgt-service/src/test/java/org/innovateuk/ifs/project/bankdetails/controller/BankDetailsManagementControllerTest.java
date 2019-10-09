@@ -98,9 +98,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
         bankDetailsReviewViewModel = buildModelView(project, projectUsers.get(0), organisationResource, bankDetailsResource);
 
-        notUpdatedChangeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(),
-                                                                              bankDetailsReviewViewModel.getApplicationId(),
-                                                                              bankDetailsReviewViewModel.getProjectName(),
+        notUpdatedChangeBankDetailsViewModel = new ChangeBankDetailsViewModel(project,
                                                                               bankDetailsReviewViewModel.getFinanceContactName(),
                                                                               bankDetailsReviewViewModel.getFinanceContactEmail(),
                                                                               bankDetailsReviewViewModel.getFinanceContactPhoneNumber(),
@@ -116,15 +114,12 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                                                                               bankDetailsReviewViewModel.getAddressScore(),
                                                                               bankDetailsReviewViewModel.getApproved(),
                                                                               bankDetailsReviewViewModel.getApprovedManually(),
-                                                                              bankDetailsReviewViewModel.isProjectActive(),
                                                                               false);
     }
 
     private BankDetailsReviewViewModel buildModelView(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
         return new BankDetailsReviewViewModel(
-                project.getId(),
-                project.getApplication(),
-                project.getName(),
+                project,
                 financeContact.getUserName(),
                 financeContact.getEmail(),
                 financeContact.getPhoneNumber(),
@@ -139,8 +134,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 bankDetails.getRegistrationNumberMatched(),
                 bankDetails.getAddressScore(),
                 bankDetails.isApproved(),
-                bankDetails.isManualApproval(),
-                project.getProjectState().isActive());
+                bankDetails.isManualApproval());
     }
 
     @Override
