@@ -27,7 +27,7 @@ def do_keyword_with_pagination(keyword, *args):
 
     else:
 
-        next_button_clicked = wait_until.run_keyword_and_return_status_without_screenshots('The user clicks the button/link', 'css=li.next a')
+        next_button_clicked = wait_until.run_keyword_and_return_status_without_screenshots('Click Element', 'css=li.next a')
 
         if not next_button_clicked:
             return 'FAIL'

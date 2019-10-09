@@ -9,13 +9,13 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
  */
 public class AssessmentDetailedFinancesViewModel {
 
-    private final long assessmentId;
+    private final Long assessmentId;
     private final long applicationId;
     private final ApplicationResource application;
     private final String applicationName;
     private final boolean academic;
 
-    public AssessmentDetailedFinancesViewModel(long assessmentId, long applicationId, ApplicationResource application, String applicationName, boolean academic) {
+    public AssessmentDetailedFinancesViewModel(Long assessmentId, long applicationId, ApplicationResource application, String applicationName, boolean academic) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.application = application;
@@ -23,7 +23,7 @@ public class AssessmentDetailedFinancesViewModel {
         this.academic = academic;
     }
 
-    public long getAssessmentId() {
+    public Long getAssessmentId() {
         return assessmentId;
     }
 
