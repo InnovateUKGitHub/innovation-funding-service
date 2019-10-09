@@ -110,7 +110,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, competition.getCompetitionStatus().isFeedbackReleased());
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, application.getCompetitionStatus().isFeedbackReleased());
         } else {
             interviewFeedbackViewModel = null;
         }
