@@ -212,7 +212,7 @@ Assessor can view the list of allocated applications
     And an assessor can view feedback overview of an application    ${CLOSED_COMPETITION_APPLICATION_TITLE}  The lead applicant has responded to feedback. Download and review all attachments before the interview panel.
 
 Assessor can view feedback with detailed finances
-    [Documentation]
+    [Documentation]  IFS-6561
     Given the comp admin assign an application for interview panel which was not assigned for assessment
     Then an assessor can view feedback overview of an application   ${computer_vision_application_name}   The lead applicant has not responded to feedback
 
