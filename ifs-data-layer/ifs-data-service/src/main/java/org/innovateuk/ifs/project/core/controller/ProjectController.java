@@ -30,7 +30,7 @@ public class ProjectController {
         return projectService.getByApplicationId(applicationId).toGetResponse();
     }
 
-    @GetMapping("/")
+    @GetMapping
     public RestResult<List<ProjectResource>> findAll() {
         return projectService.findAll().toGetResponse();
     }
