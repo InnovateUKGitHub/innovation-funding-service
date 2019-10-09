@@ -51,14 +51,28 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
-${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
-&{assessor_madeleine_panel}    email=${assessor_madeleine_email}  password=${short_password}
+${ASSESSMENT_PANEL_COMP_NAME}     Smart monitoring in high-pressure engineering systems
+${ASSESSMENT_PANEL_COMP_ID}       ${competition_ids['${ASSESSMENT_PANEL_COMP_NAME}']}
+${assessment_panel}     ${server}/management/assessment/panel/competition/${ASSESSMENT_PANEL_COMP_ID}
+${ethan_taylor}       	Ethan Taylor
+${raoul_chagny}       	Raoul de Chagny
+${sam_gilbert}        	Sam Gilbert
+${sammy_klein}        	Sammy Klein
+${assessor_ethan_taylor}       apc-assessor-user2@example.com
+${assessor_raoul_chagny}       apc-assessor-user1@example.com
+${assessor_sam_gilbert}        sam.gilbert@gmail.com
+${assessor_sammy_klein}        sammy.klein@gmail.com
+${smart_monitoring_application_name1}       Smart monitoring in high-pressure engineering systems - Application 1
+${smart_monitoring_application_id1}         ${application_ids["${smart_monitoring_application_name1}"]}
+${smart_monitoring_application_name2}       Smart monitoring in high-pressure engineering systems - Application 2
+${smart_monitoring_application_id2}         ${application_ids["${smart_monitoring_application_name2}"]}
+&{assessor_sammy_panel}    email=${assessor_sammy_klein}  password=${short_password}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
     [Documentation]  IFS-786 INF-2637
     [Tags]  HappyPath
-    Given The user clicks the button/link  link = ${CLOSED_COMPETITION_NAME}
+    Given The user clicks the button/link  link = ${ASSESSMENT_PANEL_COMP_NAME}
     Then the user should see the element   jQuery = .disabled:contains("Manage assessment panel")
     And the user should see the element    jQuery = .disabled:contains("Manage interview panel")
 
@@ -95,16 +109,16 @@ CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Invite
-    Then the compadmin can remove an assessor or application from the invite list    ${assessor_madeleine}
+    Then the compadmin can remove an assessor or application from the invite list    ${sammy_klein}
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
     [Tags]
     [Setup]  the user clicks the button/link  link = Invite
     Given the user clicks the button/link     link = Review and send invites
-    And the user should see the element       jQuery = h2:contains("Recipients") ~ p:contains("${assessor_ben}")
+    And the user should see the element       jQuery = h2:contains("Recipients") ~ p:contains("${ethan_taylor}")
     When the user clicks the button/link      link = Cancel
-    Then the user should see the element      jQuery = td:contains("${assessor_ben}")
+    Then the user should see the element      jQuery = td:contains("${ethan_taylor}")
 
 Assessor recieves the invite to panel
     [Documentation]  IFS-1560  IFS-1564
@@ -113,8 +127,8 @@ Assessor recieves the invite to panel
     Given the user clicks the button/link     link = Review and send invites
     When the user clicks the button/link      jQuery = button:contains("Send invite")
     Then the user should see the element      jQuery = .govuk-grid-column-one-quarter:contains("3") small:contains("Invited")
-    And the user reads his email              ${assessor_ben_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
-    And the user reads his email              ${assessor_joel_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    And the user reads his email              ${assessor_ethan_taylor}  Invitation to assessment panel for '${ASSESSMENT_PANEL_COMP_NAME}'  We are inviting you to the assessment panel
+    And the user reads his email              ${assessor_raoul_chagny}  Invitation to assessment panel for '${ASSESSMENT_PANEL_COMP_NAME}'  We are inviting you to the assessment panel
 
 Bulk add assessor to invite list
     [Documentation]  IFS-31
@@ -122,7 +136,7 @@ Bulk add assessor to invite list
     [Setup]  the user clicks the button/link  link = Find
     Given the user selects the checkbox       select-all-check
     And the user clicks the button/link       jQuery = button:contains("Add selected to invite list")
-    And the user should see the element       jQuery = td:contains("${assessor_madeleine}") + td:contains("${assessor_madeleine_email}")
+    And the user should see the element       jQuery = td:contains("${sammy_klein}") + td:contains("${assessor_sammy_klein}")
     When the user clicks the button/link      link = Find
     Then the user should see the element      jQuery = td:contains("No available assessors found")
 
@@ -130,19 +144,19 @@ CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]
     [Setup]  the user clicks the button/link    link = Pending and declined
-    Given the user clicks the button/link       jQuery = tr:contains("${assessor_ben}") label
-    When the user clicks the button/link        jQuery = tr:contains("${assessor_joel}") label
-    Then the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_joel}
-    And the user should see the element         jQuery = td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
-    And the user should see the element         jQuery = td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
+    Given the user clicks the button/link       jQuery = tr:contains("${ethan_taylor}") label
+    When the user clicks the button/link        jQuery = tr:contains("${raoul_chagny}") label
+    Then the compAdmin resends the invites for interview panel     ${ethan_taylor}   ${raoul_chagny}
+    And the user should see the element         jQuery = td:contains("${ethan_taylor}") ~ td:contains("Invite sent: ${today}")
+    And the user should see the element         jQuery = td:contains("${raoul_chagny}") ~ td:contains("Invite sent: ${today}")
 
 Assesor is able to accept the invitation from dashboard
     [Documentation]  IFS-37  IFS-1135  IFS-1566  IFS-1138
     [Tags]  HappyPath
-    Given Assessor logs in and accepts the invitation   ${assessor_ben_email}
+    Given Assessor logs in and accepts the invitation   ${assessor_raoul_chagny}
     Then the user should not see the element  jQuery = h2:contains("Invitations to attend panel")
-    When the user clicks the button/link      jQuery = h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    Then the user should see the element      jQuery = dt:contains("Competition:") ~ dd:contains("${CLOSED_COMPETITION_NAME}")
+    When the user clicks the button/link      jQuery = h2:contains("Attend panel") + ul li h3:contains("${ASSESSMENT_PANEL_COMP_NAME}")
+    Then the user should see the element      jQuery = dt:contains("Competition:") ~ dd:contains("${ASSESSMENT_PANEL_COMP_NAME}")
     And the user should see the element       jQuery = dt:contains("Innovation Lead:") ~ dd:contains("Ian Cooper")
     And the user should see the element       jQuery = h2:contains("Applications for panel") + ul li p:contains("No applications have been assigned to this panel.")
     [Teardown]  Logout as user
@@ -152,7 +166,7 @@ Assesor is able to reject the invitation from email
     [Tags]
     Given assessor rejects the invitation from email
     Then the user clicks the button/link              link = Sign in
-    And Logging in and Error Checking                 ${assessor_joel_email}  ${short_password}
+    And Logging in and Error Checking                 ${assessor_ethan_taylor}  ${short_password}
     And the user should not see the element           jQuery = h2:contains("Invitations to attend panel")
 
 Comp Admin can see the rejected and accepted invitation
@@ -166,22 +180,22 @@ Assessor tries to accept expired invitation
     [Documentation]  IFS-2114
     [Tags]
     [Setup]  get the initial milestone value
-    Given we are moving the milestone to yesterday         ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
-    When the user reads his email and clicks the link      ${assessor_riley_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    Given we are moving the milestone to yesterday         ASSESSMENT_PANEL  ${ASSESSMENT_PANEL_COMP_ID}
+    When the user reads his email and clicks the link      ${assessor_sam_gilbert}  Invitation to assessment panel for '${ASSESSMENT_PANEL_COMP_NAME}'  We are inviting you to the assessment panel  1
     Then the user should see the element                   jQuery = h1:contains("This invitation is now closed")
-    [Teardown]  we are moving the milestone to tomorrow    ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
+    [Teardown]  we are moving the milestone to tomorrow    ASSESSMENT_PANEL  ${ASSESSMENT_PANEL_COMP_ID}
 
 Assign application link decativated if competition is in close state
     [Documentation]   IFS-25
     [Tags]  HappyPath
     [Setup]  Log in as a different user   &{Comp_admin1_credentials}
-    Given the user navigates to the page  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
+    Given the user navigates to the page  ${server}/management/assessment/panel/competition/${ASSESSMENT_PANEL_COMP_ID}
     Then the user should see the element  jQuery = .disabled:contains("Assign applications to panel")
 
 Assign application link activate if competition is in panel state
     [Documentation]   IFS-25
     [Tags]  HappyPath
-    [Setup]  the user navigates to the page      ${server}/management/competition/${CLOSED_COMPETITION}
+    [Setup]  the user navigates to the page      ${server}/management/competition/${ASSESSMENT_PANEL_COMP_ID}
     Given the user moves the closed competition to panel
     When the user clicks the button/link         link = Manage assessment panel
     And the user clicks the button/link          link = Assign applications to panel
@@ -190,37 +204,37 @@ Assign application link activate if competition is in panel state
 Manage Assessment Panel Assign and remove button functionality
     [Documentation]   IFS-2039
     [Tags]
-    Given the user clicks the button/link   jQuery = td:contains("${Neural_network_application}") ~ td:contains("Assign")
+    Given the user clicks the button/link   jQuery = td:contains("${smart_monitoring_application_id1}") ~ td:contains("Assign")
     Then the user should see the element    jQuery = h2:contains("Assigned applications (1)")
-    When the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td:contains("Remove")
+    When the user clicks the button/link    jQuery = td:contains("${smart_monitoring_application_id1}") ~ td:contains("Remove")
     Then the user should see the element    jQuery = h2:contains("Assigned applications (0)")
-    And the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("Assign")
+    And the user should see the element     jQuery = td:contains("${smart_monitoring_application_id1}") ~ td:contains("Assign")
 
 Filter by application number
     [Documentation]  IFS-2049
     [Tags]
     Given the user filters by application number
     When the user clicks the button/link           jQuery = a:contains("Clear")
-    Then the user should see the element           jQuery = td:contains("${computer_vision_application}")
+    Then the user should see the element           jQuery = td:contains("${smart_monitoring_application_id2}")
 
 Assign applications to panel
     [Documentation]  IFS-1125
     [Tags]  HappyPath
     Given comp admin assign applications to panel
-    Then the user reads his email            ${assessor_ben}  Applications ready for review  You have been allocated applications to review within the competition ${CLOSED_COMPETITION_NAME}.
+    Then the user reads his email            ${assessor_raoul_chagny}  Applications ready for review  You have been allocated applications to review within the competition ${ASSESSMENT_PANEL_COMP_NAME}.
 
 Assign applications to assessor upon accepting invite in panel
     [Documentation]   IFS-2549
     [Tags]  HappyPath
     #When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
     Given comp admin invites an assessor
-    Then Assessor logs in and accepts the invitation  ${assessor_madeleine_email}
-    And the user should see the element               jQuery = h3:contains("${CLOSED_COMPETITION_NAME}") ~ div:contains("applications awaiting review")
+    Then Assessor logs in and accepts the invitation  ${assessor_sammy_klein}
+    And the user should see the element               jQuery = h3:contains("${ASSESSMENT_PANEL_COMP_NAME}") ~ div:contains("applications awaiting review")
 
 Assessors view of competition dashboard and applications in panel status
     [Documentation]  IFS-1138  IFS-388
     [Tags]  HappyPath
-    Given Log in as a different user            ${assessor_ben_email}  ${short_password}
+    Given log in as a different user                     &{assessor_sammy_panel}
     Then the assessor reject the applications for panel
     And the assessor accept the applications for panel
 
@@ -228,8 +242,8 @@ Assessor can attend Panel and see applications he has not assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]  HappyPath
     # assessor view of application summary when he has not assessed application at first place.
-    Given the user clicks the button/link       link = ${computer_vision_application_name}
-    When the user should see the element        jQuery = h1 span:contains("${computer_vision_application_name}")
+    Given the user clicks the button/link       link = ${smart_monitoring_application_name2}
+    When the user should see the element        jQuery = h1 span:contains("${smart_monitoring_application_name2}")
     And the user should see the element         jQuery = h1:contains("Application summary")
     Then the user expands the section           Business opportunity
     And the user should not see the element     jQuery = span:contains("Question score")
@@ -238,22 +252,22 @@ Assessor can attend Panel and see applications he has not assessed
 Assessor can attend Panel and see applications that he has assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]  HappyPath
-    [Setup]  log in as a different user         &{assessor_madeleine_panel}
-    Given the assessor accept the application   ${CLOSED_COMPETITION_NAME}  ${CLOSED_COMPETITION_APPLICATION_TITLE}
-    When the user clicks the button/link        link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    [Setup]  log in as a different user         ${assessor_raoul_chagny}   ${short_password}
+    Given the user clicks the button/link       link = ${ASSESSMENT_PANEL_COMP_NAME}
+    When the user clicks the button/link        link = ${smart_monitoring_application_name1}
     And the user expands the section            Business opportunity
-    Then the user should see the element        jQuery = p:contains("This is the business opportunity feedback")
-    And the user should see the element         jQuery = div:contains("Score") span:contains(8)
-    And assessor should see the competition terms and conditions     Back to application summary
+    Then the user should see the element        jQuery = p:contains("This is the applicant response for what is the business opportunity that your project addresses?.")
+    And the user should see the element         jQuery = div:contains("Score") span:contains(7)
+    And assessor should see the competition terms and conditions    Innovate UK grant terms and conditions for an Advanced Propulsion Centre UK Ltd competition  Back to application summary
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138
     [Tags]
     ${fundersPanel} =  Get the proper milestone value from the db    FUNDERS_PANEL
-    Given we are moving the milestone to yesterday                   FUNDERS_PANEL  ${CLOSED_COMPETITION}
+    Given we are moving the milestone to yesterday                   FUNDERS_PANEL  ${ASSESSMENT_PANEL_COMP_ID}
     When the user clicks the button/link                             link = Dashboard
-    Then the user should not see the element                         jQuery = h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    [Teardown]  return back to original milestone                    FUNDERS_PANEL  ${fundersPanel}  ${CLOSED_COMPETITION}
+    Then the user should not see the element                         jQuery = h2:contains("Attend panel") + ul li h3:contains("${ASSESSMENT_PANEL_COMP_NAME}")
+    [Teardown]  return back to original milestone                    FUNDERS_PANEL  ${fundersPanel}  ${ASSESSMENT_PANEL_COMP_ID}
 
 *** Keywords ***
 Custom Suite Setup
@@ -264,13 +278,13 @@ Custom Suite Setup
     get the initial milestone value
 
 Custom Tear Down
-    return back to original milestone  FUNDERS_PANEL  ${assessmentPanelDate}  ${CLOSED_COMPETITION}
+    return back to original milestone  FUNDERS_PANEL  ${assessmentPanelDate}  ${ASSESSMENT_PANEL_COMP_ID}
     Disconnect from database
     the user closes the browser
 
 Get the proper milestone value from the db
     [Arguments]  ${type}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${CLOSED_COMPETITION}' AND type='${type}';
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${ASSESSMENT_PANEL_COMP_ID}' AND type='${type}';
     ${result} =  get from list  ${result}  0
     ${milestone} =  get from list  ${result}  0
     [Return]  ${milestone}
@@ -306,41 +320,41 @@ enable assessment panel for the competition
     the user clicks the button/link    link = Competition setup
     the user clicks the button/link    link = Competition
     the user clicks the button/link    link = All competitions
-    the user clicks the button/link    link = ${CLOSED_COMPETITION_NAME}
+    the user clicks the button/link    link = ${ASSESSMENT_PANEL_COMP_NAME}
 
 Assessor logs in and accepts the invitation
     [Arguments]  ${email_id}
     Log in as a different user           ${email_id}  ${short_password}
-    the user clicks the button/link      jQuery = h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    the user clicks the button/link      jQuery = h2:contains("Invitations to attend panel") ~ ul a:contains("${ASSESSMENT_PANEL_COMP_NAME}")
     the user selects the radio button    acceptInvitation  true
     The user clicks the button/link      css = button[type="submit"]  # Confirm
 
 assessor rejects the invitation from email
-    the user reads his email and clicks the link   ${assessor_joel_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    the user reads his email and clicks the link   ${assessor_ethan_taylor}  Invitation to assessment panel for '${ASSESSMENT_PANEL_COMP_NAME}'  We are inviting you to the assessment panel  1
     the user selects the radio button              acceptInvitation  false
     The user clicks the button/link                jQuery = button:contains("Confirm")
 
 comp admin can see the rejected invitations
-    the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/pending-and-declined
-    the user should see the element      jQuery = td:contains("${assessor_joel}") ~ td:contains("Invite declined")
+    the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${ASSESSMENT_PANEL_COMP_ID}/assessors/pending-and-declined
+    the user should see the element      jQuery = td:contains("${ethan_taylor}") ~ td:contains("Invite declined")
     the user should see the element      jQuery = .govuk-grid-column-one-quarter:contains(1) small:contains("Declined")
 
 comp admin can see the accepted invitations
     the user clicks the button/link       link = Accepted
-    the user should see the element       jQuery = td:contains("${assessor_ben}") ~ td:contains("Materials, process and manufacturing design technologies")
+    the user should see the element       jQuery = td:contains("${raoul_chagny}") ~ td:contains("Urban living, Smart infrastructure")
     the user should see the element       jQuery = .govuk-grid-column-one-quarter:contains(1) small:contains("Accepted")
     the user clicks the button/link       link = Pending and declined
-    the user should not see the element   jQuery = td:contains("${assessor_ben}")
+    the user should not see the element   jQuery = td:contains("${raoul_chagny}")
 
 the user filters by application number
-    the user enters text to a text field     id = filterSearch   ${Neural_network_application}
+    the user enters text to a text field     id = filterSearch   ${smart_monitoring_application_id1}
     the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
-    the user should see the element          jQuery = td:contains("${Neural_network_application}")
-    the user should not see the element      jQuery = td:contains("${computer_vision_application}")
+    the user should see the element          jQuery = td:contains("${smart_monitoring_application_id1}")
+    the user should not see the element      jQuery = td:contains("${smart_monitoring_application_id2}")
 
 comp admin assign applications to panel
-    the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td:contains("Assign")
-    the user clicks the button/link    jQuery = td:contains("${computer_vision_application_name}") ~ td:contains("Assign")
+    the user clicks the button/link    jQuery = td:contains("${smart_monitoring_application_id1}") ~ td:contains("Assign")
+    the user clicks the button/link    jQuery = td:contains("${smart_monitoring_application_name2}") ~ td:contains("Assign")
     the user should see the element    jQuery = h2:contains("Assigned applications (2)")
     the user clicks the button/link    link = Manage assessment panel
     the user clicks the button/link    jQuery = button:contains("Confirm actions")
@@ -352,18 +366,46 @@ comp admin invites an assessor
     the user clicks the button/link     jQuery = button:contains("Send invite")
 
 the assessor reject the applications for panel
-    the user clicks the button/link                jQuery = h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    the user should see the element                jQuery = h2:contains("Applications for panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
-    the user clicks the button/link                jQuery = .progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
+    the user clicks the button/link                jQuery = h2:contains("Attend panel") + ul li h3:contains("${ASSESSMENT_PANEL_COMP_NAME}")
+    the user should see the element                jQuery = h2:contains("Applications for panel") + ul li h3:contains("${smart_monitoring_application_name2}")
+    the user clicks the button/link                jQuery = .progress-list div:contains("${smart_monitoring_application_name2}") ~ div a:contains("Accept or reject")
     the user selects the radio button              reviewAccept  false
     the user should see the text in the element    reject-application  Use this space to tell us why.
     the user enters text to a text field           id = rejectComment   Conflict of interest
     the user clicks the button/link                jQuery = button:contains("Confirm")
+    the user should not see the element            jQuery = h2:contains("Applications for panel") + ul li h3:contains("${smart_monitoring_application_name2}")
 
 the assessor accept the applications for panel
-    the user should not see the element            jQuery = h2:contains("Applications for panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
-    the user clicks the button/link                jQuery = .progress-list div:contains("${computer_vision_application_name}") ~ div a:contains("Accept or reject")
+    Log in as a different user                     ${assessor_raoul_chagny}  ${short_password}
+    the user clicks the button/link                jQuery = h2:contains("Attend panel") + ul li h3:contains("${ASSESSMENT_PANEL_COMP_NAME}")
+    the user clicks the button/link                jQuery = .progress-list div:contains("${smart_monitoring_application_name1}") ~ div a:contains("Accept or reject")
     the user selects the radio button              reviewAccept  true
     the user should see the text in the element    accept-application    You will still have the option to reject after accepting and viewing the full application.
     the user clicks the button/link                jQuery = button:contains("Confirm")
-    the user should see the element                jQuery = .progress-list div:contains("${computer_vision_application_name}") ~ div strong:contains("Accepted")
+    the user should see the element                jQuery = .progress-list div:contains("${smart_monitoring_application_name1}") ~ div strong:contains("Accepted")
+    the user clicks the button/link                jQuery = .progress-list div:contains("${smart_monitoring_application_name2}") ~ div a:contains("Accept or reject")
+    the user selects the radio button              reviewAccept  true
+    the user should see the text in the element    accept-application    You will still have the option to reject after accepting and viewing the full application.
+    the user clicks the button/link                jQuery = button:contains("Confirm")
+
+the competition admin invites assessors to the competition
+    the competition admin selects assessors and add them to invite list
+    the competition admin should not see invited assessors on find tab
+
+the competition admin selects assessors and add them to invite list
+#competition admin selecting the assessor name checkboxs
+    the user clicks the button/link      jQuery = tr:contains("${ethan_taylor}") label
+    the user clicks the button/link      jQuery = tr:contains("${raoul_chagny}") label
+    the user clicks the button/link      jquery = tr:contains("${sam_gilbert}") label
+    the user clicks the button/link      jquery = tr:contains("${sammy_klein}") label
+    the user clicks the button/link      jQuery = button:contains("Add selected to invite list")
+    the user should see the element      jQuery = td:contains("${ethan_taylor}") + td:contains("${assessor_ethan_taylor}")
+    the user should see the element      jQuery = td:contains("${raoul_chagny}") + td:contains("${assessor_raoul_chagny}")
+    the user should see the element      jQuery = td:contains("${sam_gilbert}") + td:contains("${assessor_sam_gilbert}")
+    the user should see the element      jQuery = td:contains("${sammy_klein}") + td:contains("${assessor_sammy_klein}")
+
+the competition admin should not see invited assessors on find tab
+    When the user clicks the button/link      link = Find
+    Then the user should not see the element  jQuery = td:contains("${ethan_taylor}")
+    And the user should not see the element   jQuery = td:contains("${raoul_chagny}")
+    And the user should not see the element   jquery = tr:contains("${sam_gilbert}")

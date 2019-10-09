@@ -115,9 +115,9 @@ comp admin navigate to manage applications
     the user clicks the button/link       jQuery = a:contains("Manage applications")
 
 assessor should see the competition terms and conditions
-    [Arguments]  ${back_link}
+    [Arguments]  ${terms_and_conditions}  ${back_link}
     Given the user clicks the button/link        link = View award terms and conditions
-    Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    Then the user should see the element         jQuery = h1:contains("${terms_and_conditions}")
     [Teardown]  the user clicks the button/link  link = ${back_link}
 
 the assessor accept the application
