@@ -238,7 +238,13 @@ Innovation lead can see read only view of Your organisation
     Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link           jQuery = a:contains("Your organisation")
     Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
-    And the user should see the element            jQuery = dt:contains("employees") + dd:contains("4560")
+    And the user should see the element            jQuery = #financialYearEndMonthValue[value=1]
+    And the user should see the element            jQuery = #financialYearEndYearValue[value=2020]
+    And the user should see the element            jQuery = td:contains("Annual turnover") + td input[value=100000]
+    And the user should see the element            jQuery = td:contains("Annual profits") + td input[value=200000]
+    And the user should see the element            jQuery = td:contains("Annual export") + td input[value=300000]
+    And the user should see the element            jQuery = td:contains("Research and development spend") + td input[value=400000]
+    And the user should see the element            jQuery = dt:contains("employees") + dd:contains("60")
 
 Innovation lead can see read only view of Your funding
     [Documentation]  IFS-802

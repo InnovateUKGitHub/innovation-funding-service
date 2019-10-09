@@ -38,7 +38,7 @@ The IFS Admin searches for a project and clears all filters after searching for 
     [Documentation]  IFS-3565
     [Setup]  The user logs-in in new browser              &{ifs_admin_user_credentials}
     Given the user navigates to the page                                         ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
-    When the user enters a project to search for and clicks the filter button    74  # This is a partial search, which will show the Low-friction wheel coatings project
+    When the user enters a project to search for and clicks the filter button    ${WITHDRAWN_PROJECT_COMPETITION_NAME_1_NUMBER}
     Then the user should see the Low-friction wheel coatings project
     [Teardown]  the user clicks the button/link                                  css = button[class="govuk-button"]  # Filter
 

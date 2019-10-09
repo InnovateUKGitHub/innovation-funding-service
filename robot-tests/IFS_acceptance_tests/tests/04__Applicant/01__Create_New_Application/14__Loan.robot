@@ -22,6 +22,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6294 Loans - Project Setup Complete External Journey
 ...
 ...             IFS-6298 Loans - Project Setup Content Review
+...
+...             IFS-6368 Loans - Remove Documents
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -79,7 +81,6 @@ Applicant complete the project setup details
     [Documentation]  IFS-6369  IFS-6285
     Given the user completes the project details
     And the user completes the project team details
-    And the user submits the project document
     Then the user should not see the element    jQuery = h2:contains("Bank details")
 
 Funding sought validations
@@ -98,10 +99,9 @@ Found sought changes
     And the external user should see the funding changes
 
 Project finance completes all project setup steps
-    [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298
+    [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368
     [Setup]  log in as a different user        &{internal_finance_credentials}
-    Given internal user approve project documents
-    And internal user assign MO to loan project
+    Given internal user assign MO to loan project
     And internal user generate SP
     When the user navigates to the page         ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
     Then the user should not see the element    jQuery = th:contains("Bank details")
@@ -177,21 +177,6 @@ the user completes the project team details
     the user clicks the button/link     jQuery = button:contains("Save project manager")
     the user clicks the button/link     link = Set up your project
     the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
-
-the user submits the project document
-    the user navigates to the page       ${loan_PS}/document/all
-    the user clicks the button/link      link = Exploitation plan
-    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    the user clicks the button/link      id = submitDocumentButton
-    the user clicks the button/link      id = submitDocumentButtonConfirm
-    the user goes to documents page      Back to document overview  Set up your project
-    the user should see the element      jQuery = li:contains("Documents") span:contains("Awaiting review")
-
-internal user approve project documents
-    Log in as a different user            &{internal_finance_credentials}
-    the user navigates to the page        ${server}/project-setup-management/project/${loan_PS_project_Id}/document/all
-    the user clicks the button/link       link = Exploitation plan
-    internal user approve uploaded documents
 
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/monitoring-officer
@@ -288,7 +273,7 @@ the applicant checks for project status
     the user should see the element   jQuery = li:contains("${loan_PS_application1}") .status:contains("Live project")
     the user should see the element   jQuery = li:contains("${loan_PS_application2}") .status:contains("Unsuccessful")
     the user navigates to the page    ${loan_PS}
-    the user should see the element   jQuery = .progress-list li:nth-child(7):contains("Completed")
+    the user should see the element   jQuery = .progress-list li:nth-child(6):contains("Completed")
     the user clicks the button/link   link = Project setup complete
     the user navigates to the page    ${loan_PS}/setup
     the user should see the element   jQuery = h2:contains("We have approved your loan")

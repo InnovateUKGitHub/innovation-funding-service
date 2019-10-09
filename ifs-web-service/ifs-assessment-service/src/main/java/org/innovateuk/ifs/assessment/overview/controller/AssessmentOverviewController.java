@@ -35,7 +35,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 @Controller
-@RequestMapping(value = "/{assessmentId}")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentOverviewController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentOverviewController {
@@ -66,7 +65,7 @@ public class AssessmentOverviewController {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
-    @GetMapping
+    @GetMapping("/{assessmentId}")
     public String getOverview(Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessmentOverviewForm form,
                               @PathVariable("assessmentId") long assessmentId) {
@@ -74,27 +73,28 @@ public class AssessmentOverviewController {
         return "assessment/application-overview";
     }
 
-    @GetMapping("/finances")
+    @GetMapping("/{assessmentId}/finances")
     public String getFinancesSummary(Model model, @PathVariable("assessmentId") long assessmentId, UserResource user) {
         model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, user));
         return "assessment/application-finances-summary";
     }
 
-    @GetMapping("/terms-and-conditions")
+    @GetMapping("/{assessmentId}/terms-and-conditions")
     public String getTermsAndConditions(Model model, @PathVariable("assessmentId") long assessmentId) {
         model.addAttribute("model", assessmentTermsAndConditionsModelPopulator.populate(assessmentId));
         return "assessment/application-terms-and-conditions";
     }
 
-    @GetMapping("/detailed-finances/organisation/{organisationId}")
+    @GetMapping("/application/{applicationId}/detailed-finances/organisation/{organisationId}")
     public String getDetailedFinances(Model model,
-                                      @PathVariable("assessmentId") long assessmentId,
-                                      @PathVariable("organisationId") long organisationId) {
-        model.addAttribute("model", assessmentDetailedFinancesModelPopulator.populateModel(assessmentId, organisationId, model));
+                                      @PathVariable long applicationId,
+                                      @PathVariable long organisationId,
+                                      UserResource user) {
+        model.addAttribute("model", assessmentDetailedFinancesModelPopulator.populateModel(applicationId, organisationId, model, user));
         return "assessment/application-detailed-finances";
     }
 
-    @GetMapping("/application/{applicationId}/formInput/{formInputId}/download")
+    @GetMapping("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
@@ -113,7 +113,7 @@ public class AssessmentOverviewController {
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
-    @PostMapping("/reject")
+    @PostMapping("/{assessmentId}/reject")
     public String rejectInvitation(
             Model model,
             @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,

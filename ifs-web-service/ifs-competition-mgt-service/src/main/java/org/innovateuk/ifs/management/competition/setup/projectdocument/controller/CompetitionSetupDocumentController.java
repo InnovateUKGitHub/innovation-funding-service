@@ -69,8 +69,7 @@ public class CompetitionSetupDocumentController {
     @GetMapping("/landing-page")
     public String projectDocumentLandingPage(Model model,
                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                             @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
-                                             BindingResult bindingResult) {
+                                             @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form) {
 
         Redirect redirect = doViewProjectDocument(model, competitionId);
         return redirect.redirect ? redirect.url : "competition/setup";
@@ -81,7 +80,7 @@ public class CompetitionSetupDocumentController {
 
         Redirect redirect = new Redirect(false);
 
-        if(competitionResource.isNonIfs()) {
+        if (competitionResource.isNonIfs()) {
             redirect.redirect = true;
             redirect.url = "redirect:/non-ifs-competition/setup/" + competitionId;
             return redirect;
@@ -99,24 +98,24 @@ public class CompetitionSetupDocumentController {
     }
 
     @PostMapping("/landing-page")
-    public String saveProjectDocumentLandingPage( @ModelAttribute(LANDING_FORM_ATTR_NAME) @Valid LandingPageForm form,
-                                                  BindingResult bindingResult,
-                                                  ValidationHandler validationHandler,
-                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                  Model model) {
+    public String saveProjectDocumentLandingPage(@ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
+                                                 BindingResult bindingResult,
+                                                 ValidationHandler validationHandler,
+                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                 Model model) {
 
-        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId, form, bindingResult);
+        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId, form);
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId;
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            List<CompetitionDocumentResource> competitionDocumentResources =  competitionSetupDocumentRestService.findByCompetitionId(competitionId).getSuccess();
+            List<CompetitionDocumentResource> competitionDocumentResources = competitionSetupDocumentRestService.findByCompetitionId(competitionId).getSuccess();
             competitionDocumentResources.forEach(projectDocumentResource -> enableOrDisableProjectDocument(projectDocumentResource, form.getEnabledIds()));
 
             RestResult<List<CompetitionDocumentResource>> updateResult = competitionSetupDocumentRestService.save(competitionDocumentResources);
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, successView);
-                });
+        });
     }
 
     private void enableOrDisableProjectDocument(CompetitionDocumentResource competitionDocumentResource, Set<Long> enabledIds) {
@@ -125,7 +124,7 @@ public class CompetitionSetupDocumentController {
 
     @GetMapping("/add")
     public String viewAddProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                     Model model) {
+                                         Model model) {
 
         Redirect redirect = doViewProjectDocument(model, competitionId);
 
@@ -141,7 +140,7 @@ public class CompetitionSetupDocumentController {
     @GetMapping("/{projectDocumentId}/edit")
     public String viewEditProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                           @PathVariable("projectDocumentId") long projectDocumentId,
-                                         Model model) {
+                                          Model model) {
 
         Redirect redirect = doViewProjectDocument(model, competitionId);
         return redirect.redirect ? redirect.url : doViewEditProjectDocument(model, projectDocumentId);
@@ -172,8 +171,8 @@ public class CompetitionSetupDocumentController {
     }
 
     private void updateForm(ProjectDocumentForm form, String fileTypeName) {
-        updateForm(form,"PDF", fileTypeName, form1 -> form1.setPdf(true));
-        updateForm(form,"Spreadsheet", fileTypeName, form1 -> form1.setSpreadsheet(true));
+        updateForm(form, "PDF", fileTypeName, form1 -> form1.setPdf(true));
+        updateForm(form, "Spreadsheet", fileTypeName, form1 -> form1.setSpreadsheet(true));
     }
 
     private void updateForm(ProjectDocumentForm form, String fileType, String fileTypeName, Consumer<ProjectDocumentForm> fieldToSet) {
@@ -197,9 +196,9 @@ public class CompetitionSetupDocumentController {
             RestResult<CompetitionDocumentResource> updateResult = competitionSetupDocumentRestService.save(competitionDocumentResource);
 
             return validationHandler.addAnyErrors(updateResult,
-                                                    mappingErrorKeyToField(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE, "acceptedFileTypesId"),
-                                                    mappingErrorKeyToField(PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED, "title"),
-                                                    fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    mappingErrorKeyToField(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE, "acceptedFileTypesId"),
+                    mappingErrorKeyToField(PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED, "title"),
+                    fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId));
         });
     }
@@ -238,8 +237,8 @@ public class CompetitionSetupDocumentController {
 
     @PostMapping("/{projectDocumentId}/delete")
     public String deleteProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                          @PathVariable("projectDocumentId") long projectDocumentId,
-                                          Model model) {
+                                        @PathVariable("projectDocumentId") long projectDocumentId,
+                                        Model model) {
 
         competitionSetupDocumentRestService.delete(projectDocumentId);
         return format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId);

@@ -244,6 +244,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.projectStages = projectStages;
     }
 
+    public void addProjectStage(ProjectStages stage) {
+        this.projectStages.add(stage);
+    }
+
+    public void removeProjectStage(ProjectStages stage) {
+        this.projectStages.remove(stage);
+    }
+
     public List<Section> getSections() {
         return sections;
     }
@@ -722,11 +730,19 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
-        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+        return isH2020() || isProcurement();
     }
 
     public boolean isLoan() {
         return FundingType.LOAN.equals(fundingType);
+    }
+
+    public boolean isGrant() {
+        return FundingType.GRANT.equals(fundingType);
+    }
+
+    public boolean isProcurement() {
+        return FundingType.PROCUREMENT.equals(fundingType);
     }
 
     public void releaseFeedback(ZonedDateTime date) {

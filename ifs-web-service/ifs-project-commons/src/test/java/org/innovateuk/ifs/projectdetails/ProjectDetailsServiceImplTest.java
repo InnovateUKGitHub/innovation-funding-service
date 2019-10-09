@@ -141,19 +141,4 @@ public class ProjectDetailsServiceImplTest {
 
         verify(projectDetailsRestService).inviteProjectManager(1L, invite);
     }
-
-    @Test
-    public void testSaveProjectInvite() throws Exception {
-
-        ProjectUserInviteResource invite = ProjectUserInviteResourceBuilder.newProjectUserInviteResource().build();
-
-        when(projectInviteRestService.saveProjectInvite(invite)).thenReturn(restSuccess());
-
-        ServiceResult<Void> submitted = service.saveProjectInvite(invite);
-
-        assertTrue(submitted.isSuccess());
-
-        verify(projectInviteRestService).saveProjectInvite(invite);
-
-    }
 }
