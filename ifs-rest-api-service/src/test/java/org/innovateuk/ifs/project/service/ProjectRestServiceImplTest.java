@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -9,12 +10,16 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -24,91 +29,122 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
     @Override
     protected ProjectRestServiceImpl registerRestServiceUnderTest() {
-        ProjectRestServiceImpl projectService = new ProjectRestServiceImpl();
-        return projectService;
+        return new ProjectRestServiceImpl();
     }
 
     @Test
     public void getProjectById() {
-        ProjectResource returnedResponse = new ProjectResource();
-        setupGetWithRestResultExpectations(PROJECT_REST_URL + "/123", ProjectResource.class, returnedResponse);
-        ProjectResource result = service.getProjectById(123L).getSuccess();
+        ProjectResource returnedResponse = newProjectResource().build();
+
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d", returnedResponse.getId()), ProjectResource.class, returnedResponse);
+
+        ProjectResource result = service.getProjectById(returnedResponse.getId()).getSuccess();
+
         assertEquals(returnedResponse, result);
     }
 
     @Test
     public void getProjectUsers() {
-        List<ProjectUserResource> users = Stream.of(1,2,3).map(i -> new ProjectUserResource()).collect(Collectors.toList());
-        setupGetWithRestResultExpectations(PROJECT_REST_URL + "/123/project-users", projectUserResourceList(), users);
-        RestResult<List<ProjectUserResource>> result = service.getProjectUsersForProject(123L);
-        assertTrue(result.isSuccess());
+        long projectId = 11L;
+        List<ProjectUserResource> users = newProjectUserResource().build(3);
+
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/project-users", projectId), projectUserResourceList(), users);
+
+        RestResult<List<ProjectUserResource>> result = service.getProjectUsersForProject(projectId);
+
         assertEquals(users, result.getSuccess());
     }
 
     @Test
     public void findByUserId() {
-        List<ProjectResource> projects = Stream.of(1,2,3).map(i -> new ProjectResource()).collect(Collectors.toList());
+        long userId = 7L;
+        List<ProjectResource> projects = Stream.of(1,2,3).map(i -> new ProjectResource()).collect(toList());
 
-        setupGetWithRestResultExpectations(PROJECT_REST_URL + "/user/" + 1L, projectResourceListType(), projects);
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/user/%d", userId), projectResourceListType(), projects);
 
-        RestResult<List<ProjectResource>> result = service.findByUserId(1L);
+        List<ProjectResource> result = service.findByUserId(userId).getSuccess();
 
-        assertTrue(result.isSuccess());
-
-        assertEquals(projects, result.getSuccess());
-
+        assertEquals(projects, result);
     }
 
     @Test
     public void getByApplicationId() {
-        ProjectResource projectResource = new ProjectResource();
+        ProjectResource projectResource = newProjectResource().build();
 
-        setupGetWithRestResultExpectations(PROJECT_REST_URL + "/application/" + 123L, ProjectResource.class, projectResource);
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/application/%d", projectResource.getId()), ProjectResource.class, projectResource);
 
-        RestResult<ProjectResource> result = service.getByApplicationId(123L);
+        ProjectResource result = service.getByApplicationId(projectResource.getId()).getSuccess();
 
-        assertTrue(result.isSuccess());
-
-        assertEquals(projectResource, result.getSuccess());
+        assertEquals(projectResource, result);
     }
 
     @Test
     public void getProjectManager() {
-        ProjectUserResource returnedResponse = new ProjectUserResource();
-        setupGetWithRestResultExpectations(PROJECT_REST_URL + "/123/project-manager", ProjectUserResource.class, returnedResponse);
-        ProjectUserResource result = service.getProjectManager(123L).getSuccess();
+        long projectId = 23;
+        ProjectUserResource returnedResponse = newProjectUserResource().withProject(projectId).build();
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/project-manager", projectId), ProjectUserResource.class, returnedResponse);
+
+        ProjectUserResource result = service.getProjectManager(projectId).getSuccess();
+
         assertEquals(returnedResponse, result);
     }
 
     @Test
-    public void getProjectManagerNotFound() {
-        setupGetWithRestResultExpectations(PROJECT_REST_URL + "/123/project-manager", ProjectUserResource.class, null, NOT_FOUND);
-        Optional<ProjectUserResource> result = service.getProjectManager(123L).toOptionalIfNotFound().getSuccess();
+    public void getProjectManager_notFound() {
+        long projectId = 13;
+
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/project-manager", projectId), ProjectUserResource.class, null, NOT_FOUND);
+
+        Optional<ProjectUserResource> result = service.getProjectManager(projectId).toOptionalIfNotFound().getSuccess();
+
         assertFalse(result.isPresent());
     }
 
     @Test
     public void getPartnerOrganisation() {
-        PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
-        setupGetWithRestResultExpectations(PROJECT_REST_URL + "/123/partner/234", PartnerOrganisationResource.class, partnerOrg);
-        RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(123L, 234L);
-        assertTrue(result.isSuccess());
-        assertEquals(partnerOrg, result.getSuccess());
+        long projectId = 17;
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
+
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/partner/%d", projectId, partnerOrg.getId()), PartnerOrganisationResource.class, partnerOrg);
+
+        PartnerOrganisationResource result = service.getPartnerOrganisation(projectId, partnerOrg.getId()).getSuccess();
+
+        assertEquals(partnerOrg, result);
     }
 
     @Test
-    public void getPartnerOrganisationNotFound() {
-        setupGetWithRestResultExpectations(PROJECT_REST_URL + "/123/partner/234", PartnerOrganisationResource.class, null, NOT_FOUND);
-        RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(123L, 234L);
+    public void getPartnerOrganisation_notFound() {
+        long projectId = 17;
+        long partnerId = 19;
+
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/partner/%d", projectId, partnerId), PartnerOrganisationResource.class, null, NOT_FOUND);
+
+        RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(projectId, partnerId);
+
         assertTrue(result.isFailure());
     }
 
     @Test
     public void createProjectFromApplicationId() {
         ProjectResource projectResource = newProjectResource().build();
-        setupPostWithRestResultExpectations(PROJECT_REST_URL + "/create-project/application/123", ProjectResource.class, null,  projectResource, OK);
-        RestResult<ProjectResource> result = service.createProjectFromApplicationId(123L);
+        setupPostWithRestResultExpectations(format(PROJECT_REST_URL + "/create-project/application/%d", projectResource.getId()), ProjectResource.class, null,  projectResource, OK);
+
+        RestResult<ProjectResource> result = service.createProjectFromApplicationId(projectResource.getId());
+
         assertTrue(result.isSuccess());
-        setupPostWithRestResultVerifications(PROJECT_REST_URL + "/create-project/application/123", ProjectResource.class);
+
+        setupPostWithRestResultVerifications(format(PROJECT_REST_URL + "/create-project/application/%d", projectResource.getId()), ProjectResource.class);
+    }
+
+    @Test
+    public void getLeadOrganisationByProject() {
+        long projectId = 17;
+        OrganisationResource organisation = newOrganisationResource().build();
+
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/lead-organisation", projectId), OrganisationResource.class, organisation);
+
+        OrganisationResource result = service.getLeadOrganisationByProject(projectId).getSuccess();
+
+        assertEquals(organisation, result);
     }
 }
