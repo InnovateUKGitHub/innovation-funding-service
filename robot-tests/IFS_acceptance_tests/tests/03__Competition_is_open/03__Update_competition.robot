@@ -32,8 +32,9 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Application details are editable (Ready to Open)
     [Documentation]    INFUND-6937
     [Tags]
+    Change the milestone in the database to tomorrow  ${ready_to_open_competition_name2}  OPEN_DATE
     Given the user clicks the button/link    jQuery = a:contains(Upcoming)
-    And the user clicks the button/link      link = ${ready_to_open_competition_name}
+    And the user clicks the button/link      link = ${ready_to_open_competition_name2}
     And the user clicks the button/link      jQuery = a:contains(and update competition setup)
     And the user clicks the button/link      link = Application
     When the user clicks the button/link     link = Application details
@@ -82,11 +83,9 @@ Assessed Questions are editable (Ready to Open)
 Finances are editable (Ready to Open)
     [Documentation]  INFUND-6941
     [Tags]
-    Given the user navigates to the page         ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
     When The user clicks the button/link         link = Finances
     And the user should see the element          jQuery = h1:contains("Finances")
     When the user clicks the button/link         jQuery = a:contains("Edit this question")
-    Then if textarea is empty the proper validation messages are shown
     And the user clicks the button/link          jQuery = button:contains("Done")
     [Teardown]  the user clicks the button/link  link = Competition setup
 
@@ -264,14 +263,14 @@ Assessors not editable after Notifications Date (Open)
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future
-    the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-    the user should see the element    jQuery = li div:contains('${READY_TO_OPEN_COMPETITION_NAME}') ~ *:contains(24/02/2018)
+    the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME2}')
+    the user should see the element    jQuery = li div:contains('${READY_TO_OPEN_COMPETITION_NAME2}') ~ *:contains(24/02/2018)
     ${openDate} =    robot.libraries.DateTime.Convert Date    2018-02-24
     ${today} =    get current date
     Should Be True    '${today}'<'${openDate}'
 
 the user is able to change the value of the fields
-    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/detail/edit
+    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION2}/section/application/detail/edit
     the user enters text to a text field  id = minProjectDuration  2
     the user enters text to a text field  id = maxProjectDuration  30
     the user selects the radio button  useResubmissionQuestion    use-resubmission-question-no
@@ -297,7 +296,7 @@ return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
 
 the user moves the competition back again
-    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION2}/section/application/landing-page
     the user clicks the button/link    jQuery = button:contains("Done")   # this action  is marking appication section complete
     the user clicks the button/link    link = Competition setup
     the user clicks the button/link    jQuery = a:contains("Complete setup")
