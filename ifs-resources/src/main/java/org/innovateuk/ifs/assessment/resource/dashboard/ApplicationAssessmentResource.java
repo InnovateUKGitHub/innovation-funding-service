@@ -14,7 +14,7 @@ public class ApplicationAssessmentResource {
     private String leadOrganisation;
     private AssessmentState state;
     private int overallScore;
-    private boolean recommended;
+    private Boolean recommended;
 
     public ApplicationAssessmentResource() {}
 
@@ -24,7 +24,7 @@ public class ApplicationAssessmentResource {
                                          String leadOrganisation,
                                          AssessmentState state,
                                          int overallScore,
-                                         boolean recommended) {
+                                         Boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.competitionName = competitionName;
@@ -58,7 +58,7 @@ public class ApplicationAssessmentResource {
         return overallScore;
     }
 
-    public boolean isRecommended() {
+    public Boolean isRecommended() {
         return recommended;
     }
 

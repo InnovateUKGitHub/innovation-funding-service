@@ -35,7 +35,6 @@ public class ApplicationAssessmentServiceImpl extends BaseTransactionalService i
         return serviceSuccess(assessments.stream()
                 .map(assessment -> mapToResource(assessment))
                 .collect(toList()));
-
     }
 
     private ApplicationAssessmentResource mapToResource(Assessment assessment) {
@@ -43,9 +42,9 @@ public class ApplicationAssessmentServiceImpl extends BaseTransactionalService i
         Optional<Organisation> leadOrganisation = organisationRepository.findById(assessment.getTarget().getLeadOrganisationId());
 
         return new ApplicationAssessmentResource(
-                application.getId(),
+                assessment.getTarget().getId(),
                 assessment.getId(),
-                application.getCompetition().getName(),
+                assessment.getTarget().getCompetition().getName(),
                 leadOrganisation.get().getName(),
                 assessment.getProcessState(),
                 getOverallScore(assessment),
