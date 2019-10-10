@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.dashboard.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.dashboard.transactional.AssessorCompetitionDashboardService;
+import org.innovateuk.ifs.assessment.dashboard.repository.ApplicationAssessmentRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
@@ -26,15 +26,13 @@ public class AssessorCompetitionDashboardServiceImpl extends BaseTransactionalSe
     AssessmentRepository assessmentRepository;
 
     @Override
-    public ServiceResult<ApplicationAssessmentResource> getAssessorCompetitionDashboard(long userId, long competitionId) {
+    public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId) {
         List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
 
-        List<ApplicationAssessmentResource> applicationAssessmentResources = assessments.stream()
+        return serviceSuccess(assessments.stream()
                 .map(assessment -> mapToResource(assessment))
-                .collect(toList());
+                .collect(toList()));
 
-
-        return serviceSuccess(applicationAssessmentResources);
     }
 
     private ApplicationAssessmentResource mapToResource(Assessment assessment) {
@@ -49,14 +47,23 @@ public class AssessorCompetitionDashboardServiceImpl extends BaseTransactionalSe
                 application.getCompetition().getName(),
                 leadOrganisation.get().getName(),
                 assessment.getProcessState(),
-                assessment.,
-                getRecommended(assessment)
-                );
+                getOverallScore(assessment),
+                getRecommended(assessment));
+    }
+
+    private int getOverallScore(Assessment assessment) {
+        switch (assessment.getProcessState()) {
+            case READY_TO_SUBMIT:
+            case SUBMITTED:
+                AssessmentTotalScoreResource assessmentTotalScore = assessmentRepository.getTotalScore(assessment.getId());
+                return assessmentTotalScore.getTotalScorePercentage();
+            default:
+                return 0;
+        }
     }
 
     private Boolean getRecommended(Assessment assessment) {
         return ofNullable(assessment.getFundingDecision())
-                .map(fundingDecisionResource -> fundingDecisionResource.getFundingConfirmation()).orElse(null);
+                .map(fundingDecision -> fundingDecision.isFundingConfirmation()).orElse(null);
     }
-
 }
