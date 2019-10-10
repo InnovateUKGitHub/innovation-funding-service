@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.dashboard.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.dashboard.repository.ApplicationAssessmentRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
@@ -20,10 +19,10 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
-public class AssessorCompetitionDashboardServiceImpl extends BaseTransactionalService implements AssessorCompetitionDashboardService {
+public class ApplicationAssessmentServiceImpl extends BaseTransactionalService implements ApplicationAssessmentService {
 
     @Autowired
-    AssessmentRepository assessmentRepository;
+    private AssessmentRepository assessmentRepository;
 
     @Override
     public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId) {
@@ -36,10 +35,8 @@ public class AssessorCompetitionDashboardServiceImpl extends BaseTransactionalSe
     }
 
     private ApplicationAssessmentResource mapToResource(Assessment assessment) {
-
         Application application = assessment.getTarget();
         Optional<Organisation> leadOrganisation = organisationRepository.findById(assessment.getTarget().getLeadOrganisationId());
-        AssessmentTotalScoreResource score = assessmentRepository.getTotalScore(assessment.getId());
 
         return new ApplicationAssessmentResource(
                 application.getId(),

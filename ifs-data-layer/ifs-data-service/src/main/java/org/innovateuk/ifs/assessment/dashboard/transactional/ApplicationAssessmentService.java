@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 
 import java.util.List;
 
-public interface AssessorCompetitionDashboardService {
+public interface ApplicationAssessmentService {
 
     ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId);
 }
