@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface ApplicationAssessmentService {
 
-    @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
     ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId);
 }
