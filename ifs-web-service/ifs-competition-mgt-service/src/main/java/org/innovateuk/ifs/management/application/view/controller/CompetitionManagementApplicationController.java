@@ -47,7 +47,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
 public class CompetitionManagementApplicationController {
-    public static String PROJECT_SETUP_MANAGEMENT_SERVICE = "project-setup-management";
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -59,8 +58,6 @@ public class CompetitionManagementApplicationController {
     private ApplicationRestService applicationRestService;
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
-    @Autowired
-    private ApplicationSummaryRestService applicationSummaryRestService;
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Autowired

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -60,9 +59,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private SectionRestService sectionRestService;
-
-    @Autowired
     private InviteService inviteService;
 
     @Autowired
@@ -84,7 +80,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                     .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
-        long leadOrganisationId = leadOrganisationId(processRoles);
+        long leadOrganisationId = application.getLeadOrganisationId();
 
         List<BreakdownTableRow> rows = organisations.stream()
                 .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
@@ -115,14 +111,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .distinct()
                 .map(BreakdownTableRow::pendingOrganisation)
                 .collect(toList());
-    }
-
-    private long leadOrganisationId(List<ProcessRoleResource> processRoles) {
-        return processRoles.stream()
-                .filter(role -> LEADAPPLICANT.equals(role.getRole()))
-                .findFirst()
-                .orElseThrow(ObjectNotFoundException::new)
-                .getOrganisationId();
     }
 
     private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
@@ -165,19 +153,17 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                     && currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
                 return Optional.of(applicantLink(application.getId()));
             }
+
             if (asessorProcessRoles().contains(currentUserRole.get().getRole())
                     && DETAILED.equals(competition.getAssessorFinanceView())) {
-                return Optional.of(assessorLink(currentUserRole.get(), organisation));
+                return Optional.of(assessorLink(application, organisation));
             }
         }
         return Optional.empty();
     }
 
-    private String assessorLink(ProcessRoleResource processRole, OrganisationResource organisation) {
-        AssessmentResource assessment = assessmentRestService.getByUserAndApplication(processRole.getUser(), processRole.getApplicationId())
-                .getSuccess()
-                .get(0);
-        return format("/assessment/%d/detailed-finances/organisation/%d", assessment.getId(), organisation.getId());
+    private String assessorLink(ApplicationResource application, OrganisationResource organisation) {
+        return format("/assessment/application/%d/detailed-finances/organisation/%d", application.getId(), organisation.getId());
     }
 
     private String internalLink(long applicationId, OrganisationResource organisation) {
