@@ -59,19 +59,19 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     private QuestionRepository questionRepository;
 
 
-    protected Supplier<ServiceResult<Section>> section(final Long id) {
+    protected Supplier<ServiceResult<Section>> section(long id) {
         return () -> getSection(id);
     }
 
-    protected Supplier<ServiceResult<Application>> application(final Long id) {
+    protected Supplier<ServiceResult<Application>> application(long id) {
         return () -> getApplication(id);
     }
 
-    protected Supplier<ServiceResult<Project>> project(final Long id) {
+    protected Supplier<ServiceResult<Project>> project(long id) {
         return () -> getProject(id);
     }
 
-    protected ServiceResult<Project> getProject(final Long id) {
+    protected ServiceResult<Project> getProject(long id) {
         return find(projectRepository.findById(id), notFoundError(Project.class, id));
     }
 
@@ -101,39 +101,39 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
         );
     }
 
-    protected ServiceResult<Application> getApplication(final Long id) {
+    protected ServiceResult<Application> getApplication(long id) {
         return find(applicationRepository.findById(id), notFoundError(Application.class, id));
     }
 
-    protected ServiceResult<Section> getSection(final Long id) {
+    protected ServiceResult<Section> getSection(long id) {
         return find(sectionRepository.findById(id), notFoundError(Section.class, id));
     }
 
-    protected Supplier<ServiceResult<Competition>> competition(final Long id) {
+    protected Supplier<ServiceResult<Competition>> competition(long id) {
         return () -> getCompetition(id);
     }
 
-    protected ServiceResult<Competition> getCompetition(final Long id) {
+    protected ServiceResult<Competition> getCompetition(long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id));
     }
 
-    protected Supplier<ServiceResult<Organisation>> organisation(Long id) {
+    protected Supplier<ServiceResult<Organisation>> organisation(long id) {
         return () -> getOrganisation(id);
     }
 
-    protected ServiceResult<Organisation> getOrganisation(Long id) {
+    protected ServiceResult<Organisation> getOrganisation(long id) {
         return find(organisationRepository.findById(id), notFoundError(Organisation.class, id));
     }
 
-    protected ServiceResult<PartnerOrganisation> getPartnerOrganisation(final Long projectId, final Long organisationId) {
+    protected ServiceResult<PartnerOrganisation> getPartnerOrganisation(long projectId, long organisationId) {
         return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(PartnerOrganisation.class, projectId, organisationId));
     }
 
-    protected Supplier<ServiceResult<Question>> question(Long questionId) {
+    protected Supplier<ServiceResult<Question>> question(long questionId) {
         return () -> getQuestion(questionId);
     }
 
-    protected ServiceResult<Question> getQuestion(Long questionId) {
+    protected ServiceResult<Question> getQuestion(long questionId) {
         return find(questionRepository.findById(questionId), notFoundError(Question.class));
     }
 }
