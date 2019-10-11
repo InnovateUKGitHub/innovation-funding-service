@@ -99,7 +99,7 @@
             <th:block th:each="organisation: ${model.partnerOrgs}">
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
                     <th:block th:text="${organisation.orgName}"></th:block>
-                    <th:block th:if="${organisation.leadOrg}">(Lead)</th:block>
+                    <th:block th:if="${organisation.leadOrg && model.collaborativeProject}">(Lead)</th:block>
                 </h2>
                 <table class="govuk-table"
                        th:classappend="${organisation.editable and !model.isReadOnly() ? 'govuk-!-margin-bottom-2' : ''}">
