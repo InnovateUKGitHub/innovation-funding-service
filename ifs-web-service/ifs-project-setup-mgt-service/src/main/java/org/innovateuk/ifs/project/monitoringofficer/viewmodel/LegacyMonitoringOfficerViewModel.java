@@ -31,8 +31,7 @@ public class LegacyMonitoringOfficerViewModel {
 
     public LegacyMonitoringOfficerViewModel(ProjectResource project, String area, String projectManagerName,
                                             List<String> partnerOrganisationNames, String leadOrganisationName,
-                                            CompetitionSummaryResource competitionSummary,
-                                            boolean editMode, boolean editable) {
+                                            CompetitionSummaryResource competitionSummary, boolean editable) {
         this.projectId = project.getId();
         this.projectTitle = project.getName();
         this.applicationId = project.getApplication();
@@ -44,8 +43,8 @@ public class LegacyMonitoringOfficerViewModel {
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.leadOrganisationName = leadOrganisationName;
         this.competitionSummary = competitionSummary;
-        this.existingMonitoringOfficer = project.getProjectMonitoringOfficer() != null;
-        this.editMode = editMode;
+        this.existingMonitoringOfficer = true;
+        this.editMode = false;
         this.editable = editable;
         this.collaborativeProject = project.isCollaborativeProject();
     }

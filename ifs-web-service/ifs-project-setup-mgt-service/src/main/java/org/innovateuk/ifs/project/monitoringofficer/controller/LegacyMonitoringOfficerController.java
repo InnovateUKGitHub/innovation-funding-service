@@ -72,10 +72,10 @@ public class LegacyMonitoringOfficerController {
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
         ProjectResource project =  projectService.getById(projectId);
-        if (project.getProjectMonitoringOfficer() == null) {
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
+        if (!existingMonitoringOfficer.isPresent()) {
             return "redirect:/monitoring-officer/view-all";
         }
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
         LegacyMonitoringOfficerForm form = new LegacyMonitoringOfficerForm(existingMonitoringOfficer);
         return viewMonitoringOfficer(model, project, form, loggedInUser);
     }
@@ -109,7 +109,7 @@ public class LegacyMonitoringOfficerController {
         String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
         return new LegacyMonitoringOfficerViewModel(project, innovationAreas, projectManagerName,
-                partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, false, editable);
+                partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, editable);
     }
 
     private String getProjectManagerName(ProjectResource project) {
