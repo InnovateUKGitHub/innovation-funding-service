@@ -6,8 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
@@ -38,7 +36,6 @@ public class ApplicationFeedbackController {
     private InterviewResponseRestService interviewResponseRestService;
     private ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator;
     private ApplicationService applicationService;
-    private CompetitionRestService competitionRestService;
 
     public ApplicationFeedbackController() {
     }
@@ -47,13 +44,11 @@ public class ApplicationFeedbackController {
     public ApplicationFeedbackController(InterviewAssignmentRestService interviewAssignmentRestService,
                                          InterviewResponseRestService interviewResponseRestService,
                                          ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator,
-                                         ApplicationService applicationService,
-                                         CompetitionRestService competitionRestService) {
+                                         ApplicationService applicationService) {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewResponseRestService = interviewResponseRestService;
         this.applicationFeedbackViewModelPopulator = applicationFeedbackViewModelPopulator;
         this.applicationService = applicationService;
-        this.competitionRestService = competitionRestService;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view the application summary page")
@@ -67,19 +62,19 @@ public class ApplicationFeedbackController {
                            UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (!shouldDisplayFeedback(competition, application)) {
+        if (!shouldDisplayFeedback(application)) {
             return redirectToSummary(applicationId);
         }
         model.addAttribute("model", applicationFeedbackViewModelPopulator.populate(applicationId, user));
         return "application-feedback";
     }
 
-    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
-        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
-        return application.isSubmitted()
-                && feedbackAvailable;
+    private boolean shouldDisplayFeedback(ApplicationResource application) {
+        boolean feedbackAvailable = application.getCompetitionStatus().isFeedbackReleased();
+        if (!feedbackAvailable) {
+            feedbackAvailable = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
+        }
+        return application.isSubmitted() && feedbackAvailable;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")

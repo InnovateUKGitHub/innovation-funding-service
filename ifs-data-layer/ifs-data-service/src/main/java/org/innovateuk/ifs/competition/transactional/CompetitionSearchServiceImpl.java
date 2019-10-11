@@ -34,13 +34,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 @Service
 public class CompetitionSearchServiceImpl extends BaseTransactionalService implements CompetitionSearchService {
-    private static final String LITERAL_PERCENT = "%%";
 
     @Autowired
     private PublicContentRepository publicContentRepository;
-
-    @Autowired
-    private MilestoneService milestoneService;
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {

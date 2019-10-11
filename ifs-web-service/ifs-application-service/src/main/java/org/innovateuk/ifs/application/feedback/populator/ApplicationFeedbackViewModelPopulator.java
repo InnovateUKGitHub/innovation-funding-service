@@ -58,7 +58,6 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                                                  FinanceService financeService,
                                                  AssessmentRestService assessmentRestService,
                                                  SectionService sectionService,
-                                                 QuestionService questionService,
                                                  QuestionRestService questionRestService,
                                                  AssessorFormInputResponseRestService assessorFormInputResponseRestService,
                                                  ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
@@ -66,7 +65,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                                                  InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
                                                  InterviewAssignmentRestService interviewAssignmentRestService,
                                                  ProjectService projectService) {
-        super(sectionService, questionService, questionRestService);
+        super(sectionService, questionRestService);
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionRestService = competitionRestService;
@@ -111,7 +110,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, competition.getCompetitionStatus().isFeedbackReleased());
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, application.getCompetitionStatus().isFeedbackReleased());
         } else {
             interviewFeedbackViewModel = null;
         }
@@ -119,6 +118,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
 
+        
         return new ApplicationFeedbackViewModel(
                 application,
                 competition,
@@ -127,8 +127,8 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 organisationFinanceOverview.getTotalFundingSought(),
                 feedback,
                 hasFinanceSection,
-                getSections(competition.getId()),
-                getSectionQuestions(competition.getId()),
+                getSections(application.getCompetition()),
+                getSectionQuestions(application.getCompetition()),
                 scores,
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,

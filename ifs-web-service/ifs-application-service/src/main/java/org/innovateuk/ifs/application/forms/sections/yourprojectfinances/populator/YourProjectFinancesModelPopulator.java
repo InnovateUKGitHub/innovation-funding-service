@@ -39,9 +39,6 @@ public class YourProjectFinancesModelPopulator {
     private SectionStatusRestService sectionStatusRestService;
 
     @Autowired
-    private UserRestService userRestService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
 
     @Autowired
@@ -53,7 +50,7 @@ public class YourProjectFinancesModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
-    public YourProjectFinancesViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
+    public YourProjectFinancesViewModel populate(long applicationId, long sectionId, long organisationId) {
         SectionResource yourFinances = sectionRestService.getById(sectionId).getSuccess();
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
