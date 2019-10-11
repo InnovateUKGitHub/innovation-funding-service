@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.dashboard.transactional;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
@@ -38,7 +37,6 @@ public class ApplicationAssessmentServiceImpl extends BaseTransactionalService i
     }
 
     private ApplicationAssessmentResource mapToResource(Assessment assessment) {
-        Application application = assessment.getTarget();
         Optional<Organisation> leadOrganisation = organisationRepository.findById(assessment.getTarget().getLeadOrganisationId());
 
         return new ApplicationAssessmentResource(
