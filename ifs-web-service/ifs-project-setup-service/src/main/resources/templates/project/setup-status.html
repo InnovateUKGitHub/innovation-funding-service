@@ -53,7 +53,7 @@
         </th:block>
 
         <th:block th:if="${model.projectState.active}">
-            <th:block th:if="${!model.loanCompetition && model.isCollaborativeProject()}">
+            <th:block th:if="${model.isCollaborativeProject()}">
                 <div class="message-alert">
                     <th:block th:unless="${model.monitoringOfficer}">
                         <p class="govuk-body">You must complete your project and bank details within 30 days of our
@@ -73,8 +73,7 @@
                     </th:block>
                 </div>
             </th:block>
-
-            <th:block th:if="${model.loanCompetition || !model.isCollaborativeProject()}">
+            <th:block th:unless="${model.isCollaborativeProject()}">
                 <div class="message-alert">
                     <th:block th:unless="${model.monitoringOfficer}">
                         <p class="govuk-body">You must complete your project and bank details within 30 days of our
