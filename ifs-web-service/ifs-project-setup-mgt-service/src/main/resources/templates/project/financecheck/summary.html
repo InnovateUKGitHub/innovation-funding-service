@@ -94,7 +94,7 @@
                 <tr class="govuk-table__row" th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
                     <th class="govuk-table__header" scope="row">
                         <th:block th:text="${orgDetails.name}">org name</th:block>
-                        <th:block th:if="${orgDetails.isLead()}"> (Lead)</th:block>
+                        <th:block th:if="${orgDetails.lead && model.collaborativeProject}"> (Lead)</th:block>
                     </th>
                     <td class="govuk-table__cell aligncentre">
                         <a th:if="${!orgDetails.viability.notApplicable}"

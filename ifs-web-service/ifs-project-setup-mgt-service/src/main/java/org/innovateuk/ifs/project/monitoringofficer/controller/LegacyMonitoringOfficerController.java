@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
@@ -72,13 +71,13 @@ public class LegacyMonitoringOfficerController {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
-        if (!existingMonitoringOfficer.isPresent()) {
+        ProjectResource project =  projectService.getById(projectId);
+        if (project.getMonitoringOfficerUser() != null) {
             return "redirect:/monitoring-officer/view-all";
         }
-        boolean projectIsActive = projectService.getById(projectId).getProjectState().isActive();
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
         LegacyMonitoringOfficerForm form = new LegacyMonitoringOfficerForm(existingMonitoringOfficer);
-        return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser) && projectIsActive);
+        return viewMonitoringOfficer(model, project, form, loggedInUser);
     }
 
     private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
@@ -89,37 +88,28 @@ public class LegacyMonitoringOfficerController {
         }
     }
 
-    private String viewMonitoringOfficer(Model model, Long projectId, LegacyMonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned, boolean editable) {
-        return doViewMonitoringOfficer(model, projectId, form, existingMonitoringOfficerAssigned, editable);
-    }
-
-    private String doViewMonitoringOfficer(Model model, Long projectId, LegacyMonitoringOfficerForm form, boolean existingMonitoringOfficer, boolean editable) {
-        boolean editMode = false;
-
-        LegacyMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(projectId, editMode, existingMonitoringOfficer, editable);
+    private String viewMonitoringOfficer(Model model, ProjectResource project, LegacyMonitoringOfficerForm form, UserResource user) {
+        LegacyMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(project, user);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/monitoring-officer";
     }
 
-    private LegacyMonitoringOfficerViewModel populateMonitoringOfficerViewModel(Long projectId, boolean editMode, boolean existingMonitoringOfficer, boolean editable) {
-        ProjectResource projectResource = projectService.getById(projectId);
-        Long applicationId = projectResource.getApplication();
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
-        String projectManagerName = getProjectManagerName(projectResource);
+    private LegacyMonitoringOfficerViewModel populateMonitoringOfficerViewModel(ProjectResource project, UserResource user) {
+        boolean editable = isInternalAdmin(user) && project.getProjectState().isActive();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(project.getCompetition()).getSuccess();
+        String projectManagerName = getProjectManagerName(project);
 
-        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        final List<String> partnerOrganisationNames = simpleMap(new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectId),
+        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
+        final List<String> partnerOrganisationNames = simpleMap(new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(project.getId()),
                         leadOrganisation, OrganisationResource::getName).unwrap(), OrganisationResource::getName);
 
         String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
-        return new LegacyMonitoringOfficerViewModel(projectId, projectResource.getName(), applicationId,
-                innovationAreas, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
-                partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, existingMonitoringOfficer, editMode, editable);
+        return new LegacyMonitoringOfficerViewModel(project, innovationAreas, projectManagerName,
+                partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, false, editable);
     }
 
     private String getProjectManagerName(ProjectResource project) {

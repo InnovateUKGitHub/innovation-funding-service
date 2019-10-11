@@ -148,8 +148,11 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted during the request for a Horizon 2020 grant transfer.</p>
-                        <p class="govuk-body" th:if="${summaryModel.collaborativeProject}">The applicant will be able to see all saved changes. You must discuss all changes with them by raising queries through the Innovation Funding Service.</p>
-                        <p class="govuk-body" th:unless="${summaryModel.collaborativeProject}">The organisation will be able to see all saved changes to finances.</p>
+                        <p class="govuk-body">
+                            <th:block th:if="${summaryModel.collaborativeProject}">The applicant will be able to see all saved changes.</th:block>
+                            <th:block th:unless="${summaryModel.collaborativeProject}">The organisation will be able to see all saved changes to finances.</th:block>
+                            You must discuss all changes with them by raising queries through the Innovation Funding Service.
+                        </p>
                         <p class="govuk-body"><a
                             th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                             class="govuk-link">Review all changes to project finances</a></p>
@@ -167,7 +170,9 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted at the application stage.
-                            All saved changes to finances will be viewable by the applicants.</p>
+                            <th:block th:if="${summaryModel.collaborativeProject}">The applicant will be able to see all saved changes.</th:block>
+                            <th:block th:unless="${summaryModel.collaborativeProject}">The organisation will be able to see all saved changes to finances.</th:block>
+                        </p>
                         <p class="govuk-body" th:if="${summaryModel.collaborativeProject}">All potential changes must be discussed with the lead applicant.
                             You can do this by raising queries through the Innovation Funding Service.</p>
                         <p class="govuk-body" th:unless="${summaryModel.collaborativeProject}"> All potential changes must be discussed with the organisation.
