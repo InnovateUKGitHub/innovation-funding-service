@@ -10,3 +10,6 @@ update ignore growth_table gt
     SET gt.financial_year_end =        STR_TO_DATE(NULLIF(year_end_response.value, '-'), '%m-%Y')
 
     where comp.include_project_growth_table = 1;
+
+UPDATE  growth_table
+SET     financial_year_end = CONCAT(DATE_FORMAT(financial_year_end, '%Y-%m-'), '01');
