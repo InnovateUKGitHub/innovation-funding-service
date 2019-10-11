@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -239,8 +241,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
                             andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
+                            andOnSuccess(() -> setCompetitionProjectSetupStartedDate(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
+    }
+
+    private void setCompetitionProjectSetupStartedDate(Project newProject) {
+        Competition competition = newProject.getApplication().getCompetition();
+        if (competition.getProjectSetupStarted() == null) {
+            competition.setProjectSetupStarted(ZonedDateTime.now());
+        }
     }
 
     private PartnerOrganisation createPartnerOrganisation(Application application, Project project, Organisation org, ProcessRole leadApplicantRole) {
