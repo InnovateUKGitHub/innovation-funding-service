@@ -29,7 +29,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> getOrganisationById(Long organisationId) {
+    public RestResult<OrganisationResource> getOrganisationById(long organisationId) {
         return getWithRestResult(organisationRestURL + "/find-by-id/" + organisationId, OrganisationResource.class);
     }
 

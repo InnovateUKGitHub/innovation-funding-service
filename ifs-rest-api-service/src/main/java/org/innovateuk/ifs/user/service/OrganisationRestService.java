@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface OrganisationRestService {
     RestResult<List<OrganisationResource>> getOrganisationsByApplicationId(Long applicationId);
-    RestResult<OrganisationResource> getOrganisationById(Long organisationId);
+    RestResult<OrganisationResource> getOrganisationById(long organisationId);
     RestResult<OrganisationResource> getOrganisationByIdForAnonymousUserFlow(Long organisationId);
     RestResult<OrganisationResource> getByUserAndApplicationId(long userId, long applicationId);
     RestResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId);
