@@ -72,7 +72,7 @@ public class LegacyMonitoringOfficerController {
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
         ProjectResource project =  projectService.getById(projectId);
-        if (project.getMonitoringOfficerUser() != null) {
+        if (project.getProjectMonitoringOfficer() == null) {
             return "redirect:/monitoring-officer/view-all";
         }
         Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
