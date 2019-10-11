@@ -30,8 +30,6 @@ public class SendNotificationsModelPopulator {
     @Autowired
     private ApplicationNotificationTemplateRestService applicationNotificationTemplateRestService;
 
-    @Autowired
-    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
 
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form) {
 

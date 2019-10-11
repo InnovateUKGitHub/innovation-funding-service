@@ -42,21 +42,16 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 public class ApplicationOverviewController {
 
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
-    private QuestionService questionService;
+
     private UserRestService userRestService;
     private ApplicationRestService applicationRestService;
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     public ApplicationOverviewController(ApplicationOverviewModelPopulator applicationOverviewModelPopulator,
-                                 QuestionService questionService,
                                  UserRestService userRestService,
-                                 ApplicationRestService applicationRestService,
-                                 CookieFlashMessageFilter cookieFlashMessageFilter) {
+                                 ApplicationRestService applicationRestService) {
         this.applicationOverviewModelPopulator = applicationOverviewModelPopulator;
-        this.questionService = questionService;
         this.userRestService = userRestService;
         this.applicationRestService = applicationRestService;
-        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
     }
 
     @GetMapping("/{applicationId}")

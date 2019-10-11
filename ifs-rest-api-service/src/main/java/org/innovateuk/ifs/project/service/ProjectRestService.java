@@ -12,8 +12,6 @@ import java.util.List;
 public interface ProjectRestService {
     RestResult<ProjectResource> getProjectById(Long projectId);
 
-    RestResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
-
     RestResult<List<ProjectResource>> findByUserId(long userId);
 
     RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId);
