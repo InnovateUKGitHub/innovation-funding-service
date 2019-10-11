@@ -34,8 +34,6 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 public class ApplicationSummaryController {
 
     private ApplicationService applicationService;
-    private UserService userService;
-    private UserRestService userRestService;
     private CompetitionRestService competitionRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
@@ -46,15 +44,11 @@ public class ApplicationSummaryController {
 
     @Autowired
     public ApplicationSummaryController(ApplicationService applicationService,
-                                        UserService userService,
-                                        UserRestService userRestService,
                                         CompetitionRestService competitionRestService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator,
                                         EuGrantTransferRestService euGrantTransferRestService) {
         this.applicationService = applicationService;
-        this.userService = userService;
-        this.userRestService = userRestService;
         this.competitionRestService = competitionRestService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +24,6 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return getWithRestResult(format(PROJECT_REST_URL + "%d", projectId), ProjectResource.class);
     }
 
-    @Override
-    public RestResult<SpendProfileResource> getSpendProfile(long projectId, final long organisationId) {
-        return getWithRestResult(format(PROJECT_REST_URL + "%d/partner-organisation/%d/spend-profile/", projectId, organisationId), SpendProfileResource.class);
-    }
-
-    @Override
     public RestResult<List<ProjectResource>> findByUserId(long userId) {
         return getWithRestResult(format(PROJECT_REST_URL + "user/%d", userId), projectResourceListType());
     }

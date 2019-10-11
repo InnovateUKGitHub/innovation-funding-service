@@ -71,7 +71,7 @@ public class ManagementApplicationPopulator {
         }
 
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
-        ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application, competition);
+        ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
 
         Long projectId = null;
         if (application.getApplicationState() == ApplicationState.APPROVED) {

@@ -5,14 +5,11 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 
 import java.util.List;
 
 public interface ProjectRestService {
     RestResult<ProjectResource> getProjectById(long projectId);
-
-    RestResult<SpendProfileResource> getSpendProfile(long projectId, long organisationId);
 
     RestResult<List<ProjectResource>> findByUserId(long userId);
 
