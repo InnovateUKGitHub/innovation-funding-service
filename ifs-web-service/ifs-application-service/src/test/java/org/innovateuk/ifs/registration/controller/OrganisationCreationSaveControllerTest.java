@@ -110,7 +110,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-        when(organisationRestService.createAndLinkByInvite(any(), eq(INVITE_HASH))).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
+        when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
         when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(2L))).thenReturn(VIEW);
 
         mockMvc.perform(post("/organisation/create/save-organisation")
@@ -118,7 +118,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEW));
 
-        verify(organisationRestService).createAndLinkByInvite(any(), eq(INVITE_HASH));
+        verify(organisationRestService).createOrMatch(any());
         verify(organisationJourneyEnd).completeProcess(any(), any(), any(), eq(2L));
     }
 
