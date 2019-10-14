@@ -10,7 +10,6 @@ import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +27,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/team")
-@PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can view the project team page")
 public class ProjectTeamController {
 
@@ -41,7 +40,6 @@ public class ProjectTeamController {
     @Autowired
     private ProjectInviteHelper projectInviteHelper;
 
-
     @GetMapping
     public String viewProjectTeam(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,
                                   BindingResult bindingResult,
@@ -53,6 +51,8 @@ public class ProjectTeamController {
     }
 
     @PostMapping(params = "remove-invite")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "EDIT_PROJECT_TEAM", description = "IFS Admin and support users can edit project team.")
     public String removeInvite(@PathVariable("projectId") long projectId,
                                @PathVariable("competitionId") long competitionId,
                                @RequestParam("remove-invite") long inviteId) {
@@ -61,6 +61,8 @@ public class ProjectTeamController {
     }
 
     @PostMapping(params = "add-team-member")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "EDIT_PROJECT_TEAM", description = "IFS Admin and support users can edit project team.")
     public String openAddTeamMemberForm(@ModelAttribute(value = "form") ProjectTeamForm form,
                                         BindingResult bindingResult,
                                         @PathVariable("projectId") long projectId,
@@ -74,12 +76,16 @@ public class ProjectTeamController {
     }
 
     @PostMapping(params = "close-add-team-member-form")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "EDIT_PROJECT_TEAM", description = "IFS Admin and support users can edit project team.")
     public String closeAddTeamMemberForm(@PathVariable("projectId") long projectId,
                                          @PathVariable("competitionId") long competitionId) {
         return format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
     }
 
     @PostMapping(params = "invite-to-project")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "EDIT_PROJECT_TEAM", description = "IFS Admin and support users can edit project team.")
     public String inviteToProject(@Valid @ModelAttribute("form") ProjectTeamForm form,
                                   BindingResult bindingResult,
                                   ValidationHandler validationHandler,
@@ -101,6 +107,8 @@ public class ProjectTeamController {
     }
 
     @PostMapping(params = "resend-invite")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "EDIT_PROJECT_TEAM", description = "IFS Admin and support users can edit project team.")
     public String resendInvite(@PathVariable("projectId") long projectId,
                                @PathVariable("competitionId") long competitionId,
                                @RequestParam("resend-invite") long inviteId,
@@ -109,6 +117,5 @@ public class ProjectTeamController {
         cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
         return format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
     }
-
 }
 
