@@ -298,19 +298,22 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
     private ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
-        return projectInviteValidator.validate(projectUserInviteResource).andOnSuccess(() -> {
-            ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectUserInviteResource);
-            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
-            validator.validate(projectInvite, errors);
-            if (errors.hasErrors()) {
-                errors.getFieldErrors();
-                return serviceFailure(badRequestError(errors.toString()));
-            } else {
-                projectInvite.setHash(generateInviteHash());
-                projectUserInviteRepository.save(projectInvite);
-                return serviceSuccess();
-            }
-        });
+        if (projectUserInviteResource.getId() == null) {
+            return projectInviteValidator.validate(projectUserInviteResource).andOnSuccess(() -> {
+                ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectUserInviteResource);
+                Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
+                validator.validate(projectInvite, errors);
+                if (errors.hasErrors()) {
+                    errors.getFieldErrors();
+                    return serviceFailure(badRequestError(errors.toString()));
+                } else {
+                    projectInvite.setHash(generateInviteHash());
+                    projectUserInviteRepository.save(projectInvite);
+                    return serviceSuccess();
+                }
+            });
+        }
+        return serviceSuccess();
     }
 
     private Optional<ProjectUserInviteResource> getSavedInvite(long projectId, ProjectUserInviteResource invite) {

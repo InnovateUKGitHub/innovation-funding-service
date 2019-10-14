@@ -54,7 +54,7 @@ public class ProjectPartnerInviteServiceImpl extends RootTransactionalService im
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    private enum Notifications {
+    enum Notifications {
         INVITE_PROJECT_PARTNER_ORGANISATION
     }
 
