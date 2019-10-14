@@ -41,7 +41,6 @@ public class ProjectTeamViewModelPopulator {
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
 
-
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);

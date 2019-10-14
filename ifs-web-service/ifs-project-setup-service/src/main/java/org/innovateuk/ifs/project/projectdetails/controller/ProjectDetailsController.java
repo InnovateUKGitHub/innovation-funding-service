@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -53,9 +52,6 @@ public class ProjectDetailsController {
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
-
-    @Autowired
-    private ApplicationService applicationService;
 
     @Autowired
     private CompetitionRestService competitionRestService;

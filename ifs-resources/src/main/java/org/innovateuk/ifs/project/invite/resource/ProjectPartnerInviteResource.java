@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.invite.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class ProjectPartnerInviteResource {
 
     private String organisationName;
@@ -36,5 +39,29 @@ public class ProjectPartnerInviteResource {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectPartnerInviteResource that = (ProjectPartnerInviteResource) o;
+
+        return new EqualsBuilder()
+                .append(organisationName, that.organisationName)
+                .append(userName, that.userName)
+                .append(email, that.email)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(organisationName)
+                .append(userName)
+                .append(email)
+                .toHashCode();
     }
 }
