@@ -59,11 +59,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
-        return postWithRestResultAnonymous(organisationRestURL + "/create-and-link-by-invite?inviteHash=" + inviteHash, organisation, OrganisationResource.class);
-    }
-
-    @Override
     public RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation) {
         String organisationName;
         try {

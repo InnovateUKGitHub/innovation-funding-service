@@ -171,34 +171,6 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void createAndLinkByInvite() throws Exception {
-        String inviteHash = "123abc";
-        OrganisationResource organisationResource = organisationResourceBuilder.build();
-
-        when(organisationInitialCreationServiceMock.createAndLinkByInvite(organisationResource, inviteHash)).thenReturn(serviceSuccess(organisationResource));
-
-        mockMvc.perform(post("/organisation/create-and-link-by-invite")
-                .header("IFS_AUTH_TOKEN", "123abc")
-                .param("inviteHash", inviteHash)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(organisationResource)))
-                .andExpect(status().isCreated())
-                .andDo(document("organisation/{method-name}",
-                        requestParameters(
-                                parameterWithName("inviteHash").description("The hash for the invite that the found or created organisation has to be linked to")
-                        ),
-                        requestFields(organisationResourceFields)
-                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
-                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
-                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields),
-                        responseFields(organisationResourceFields)
-                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
-                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
-                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
-                ));
-    }
-
-    @Test
     public void updateNameAndRegistration() throws Exception {
         long organisationId = 1L;
         String name = "name";
