@@ -6,7 +6,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,6 @@ public class ApplicationAssessmentServiceImpl extends BaseTransactionalService i
 
     @Autowired
     private AssessmentRepository assessmentRepository;
-
-    @Autowired
-    private OrganisationRepository organisationRepository;
 
     @Override
     public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId) {
