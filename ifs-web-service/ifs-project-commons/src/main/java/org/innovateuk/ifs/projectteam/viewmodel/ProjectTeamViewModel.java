@@ -110,7 +110,7 @@ public class ProjectTeamViewModel {
     }
 
     public boolean isCanInvitePartnerOrganisation() {
-        return pcrEnabled && internalUserView;
+        return pcrEnabled && internalUserView && !readOnly;
     }
 }
 

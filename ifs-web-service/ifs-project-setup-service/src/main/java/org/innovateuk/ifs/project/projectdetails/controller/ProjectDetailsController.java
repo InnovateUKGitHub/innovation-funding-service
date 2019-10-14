@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -72,8 +71,7 @@ public class ProjectDetailsController {
     public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
                                      UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
         boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
@@ -103,8 +101,7 @@ public class ProjectDetailsController {
                                                UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
         boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());

@@ -341,4 +341,6 @@ public class Project implements ProcessActivity {
     public ProjectProcess getProjectProcess() {
         return projectProcess;
     }
+
+    public boolean isSpendProfileGenerated() { return !spendProfiles.isEmpty(); }
 }

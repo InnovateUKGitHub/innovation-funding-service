@@ -48,6 +48,9 @@ public class ProjectPartnerInviteServiceImpl extends RootTransactionalService im
     @Autowired
     private OrganisationRepository organisationRepository;
 
+    @Autowired
+    private ProjectInviteValidator projectInviteValidator;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -58,21 +61,23 @@ public class ProjectPartnerInviteServiceImpl extends RootTransactionalService im
     @Override
     @Transactional
     public ServiceResult<Void> invitePartnerOrganisation(long projectId, ProjectPartnerInviteResource invite) {
-        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccess(project -> {
-            InviteOrganisation inviteOrganisation = new InviteOrganisation();
-            inviteOrganisation.setOrganisationName(invite.getOrganisationName());
-            inviteOrganisation = inviteOrganisationRepository.save(inviteOrganisation);
+        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccess(project ->
+                projectInviteValidator.validate(projectId, invite).andOnSuccess(() -> {
+                    InviteOrganisation inviteOrganisation = new InviteOrganisation();
+                    inviteOrganisation.setOrganisationName(invite.getOrganisationName());
+                    inviteOrganisation = inviteOrganisationRepository.save(inviteOrganisation);
 
-            ProjectPartnerInvite projectPartnerInvite = new ProjectPartnerInvite();
-            projectPartnerInvite.setInviteOrganisation(inviteOrganisation);
-            projectPartnerInvite.setEmail(invite.getEmail());
-            projectPartnerInvite.setName(invite.getUserName());
-            projectPartnerInvite.setHash(generateInviteHash());
-            projectPartnerInvite.setTarget(project);
+                    ProjectPartnerInvite projectPartnerInvite = new ProjectPartnerInvite();
+                    projectPartnerInvite.setInviteOrganisation(inviteOrganisation);
+                    projectPartnerInvite.setEmail(invite.getEmail());
+                    projectPartnerInvite.setName(invite.getUserName());
+                    projectPartnerInvite.setHash(generateInviteHash());
+                    projectPartnerInvite.setTarget(project);
 
-            projectPartnerInvite = projectPartnerInviteRepository.save(projectPartnerInvite);
-            return sendInviteNotification(projectPartnerInvite);
-        });
+                    projectPartnerInvite = projectPartnerInviteRepository.save(projectPartnerInvite);
+                    return sendInviteNotification(projectPartnerInvite);
+                })
+        );
     }
 
     private ServiceResult<Void> sendInviteNotification(ProjectPartnerInvite projectPartnerInvite) {
@@ -91,6 +96,4 @@ public class ProjectPartnerInviteServiceImpl extends RootTransactionalService im
             return notificationService.sendNotificationWithFlush(notification, EMAIL);
         });
     }
-
-
 }

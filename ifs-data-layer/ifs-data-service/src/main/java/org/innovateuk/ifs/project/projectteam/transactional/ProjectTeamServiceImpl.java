@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.projectteam.transactional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -29,6 +28,7 @@ import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRep
 import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
+import org.innovateuk.ifs.project.invite.transactional.ProjectInviteValidator;
 import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -110,6 +110,9 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectInviteValidator projectInviteValidator;
 
     private LocalValidatorFactoryBean validator;
 
@@ -295,23 +298,19 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
     }
 
     private ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
-
-        return validateProjectInviteResource(projectUserInviteResource).andOnSuccess(() ->
-                validateUserNotAlreadyInvited(projectUserInviteResource).andOnSuccess(() ->
-                        validateTargetUserIsValid(projectUserInviteResource).andOnSuccess(() -> {
-
-                            ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectUserInviteResource);
-                            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
-                            validator.validate(projectInvite, errors);
-                            if (errors.hasErrors()) {
-                                errors.getFieldErrors();
-                                return serviceFailure(badRequestError(errors.toString()));
-                            } else {
-                                projectInvite.setHash(generateInviteHash());
-                                projectUserInviteRepository.save(projectInvite);
-                                return serviceSuccess();
-                            }
-                        })));
+        return projectInviteValidator.validate(projectUserInviteResource).andOnSuccess(() -> {
+            ProjectUserInvite projectInvite = projectUserInviteMapper.mapToDomain(projectUserInviteResource);
+            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
+            validator.validate(projectInvite, errors);
+            if (errors.hasErrors()) {
+                errors.getFieldErrors();
+                return serviceFailure(badRequestError(errors.toString()));
+            } else {
+                projectInvite.setHash(generateInviteHash());
+                projectUserInviteRepository.save(projectInvite);
+                return serviceSuccess();
+            }
+        });
     }
 
     private Optional<ProjectUserInviteResource> getSavedInvite(long projectId, ProjectUserInviteResource invite) {
@@ -319,15 +318,6 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                 i -> i.getEmail().equals(invite.getEmail()));
     }
 
-
-    private ServiceResult<Void> validateProjectInviteResource(ProjectUserInviteResource projectUserInviteResource) {
-
-        if (StringUtils.isEmpty(projectUserInviteResource.getEmail()) || StringUtils.isEmpty(projectUserInviteResource.getName())
-                || projectUserInviteResource.getProject() == null || projectUserInviteResource.getOrganisation() == null) {
-            return serviceFailure(PROJECT_INVITE_INVALID);
-        }
-        return serviceSuccess();
-    }
 
     private ServiceResult<Void> validateTargetUserIsValid(ProjectUserInviteResource invite) {
 
@@ -339,15 +329,6 @@ public class ProjectTeamServiceImpl extends AbstractProjectServiceImpl implement
                 orElse(serviceSuccess());
     }
 
-    private ServiceResult<Void> validateUserNotAlreadyInvited(ProjectUserInviteResource invite) {
-
-        List<ProjectUserInvite> existingInvites = projectUserInviteRepository.findByProjectIdAndEmail(invite.getProject(), invite.getEmail());
-        if(existingInvites.isEmpty() || invite.getStatus().equals(SENT)) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
-        }
-    }
 
     private ServiceResult<Void> validateUserIsNotAlreadyOnProject(ProjectUserInviteResource invite, User user) {
 

@@ -73,7 +73,7 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 true,
                 isReadOnly,
-                pcrEnabled);
+                pcrEnabled && !projectResource.isSpendProfileGenerated());
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
