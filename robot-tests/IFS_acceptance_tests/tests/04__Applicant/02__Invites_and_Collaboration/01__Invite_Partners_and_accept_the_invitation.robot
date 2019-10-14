@@ -353,4 +353,4 @@ the user accepts invitation
 the user still sees pending user
     the user clicks the button/link    link = Invite robot test application
     the user clicks the button/link    link = Application team
-    the user should see the element    jQuery = td:contains("Adrian Booth ("Pending for")
+    the user should see the element    jQuery = td:contains("Adrian Booth (Pending for")
