@@ -88,7 +88,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE;
 
-    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE + " ORDER BY c.name";
+    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE + " ORDER BY c.projectSetupStarted DESC";
 
     String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 

@@ -22,6 +22,7 @@ public class ProjectTeamViewModel {
     private final boolean grantOfferLetterGenerated;
     private final boolean internalUserView;
     private final boolean readOnly;
+    private final boolean canInvitePartnerOrganisation;
 
     public ProjectTeamViewModel(String competitionName,
                                 long competitionId,
@@ -34,7 +35,8 @@ public class ProjectTeamViewModel {
                                 long loggedInUserId,
                                 boolean grantOfferLetterGenerated,
                                 boolean internalUserView,
-                                boolean readOnly) {
+                                boolean readOnly,
+                                boolean canInvitePartnerOrganisation) {
 
         this.competitionName = competitionName;
         this.competitionId = competitionId;
@@ -48,6 +50,7 @@ public class ProjectTeamViewModel {
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
         this.internalUserView = internalUserView;
         this.readOnly = readOnly;
+        this.canInvitePartnerOrganisation = canInvitePartnerOrganisation;
     }
 
     public String getCompetitionName() {
@@ -104,6 +107,10 @@ public class ProjectTeamViewModel {
                 .findAny()
                 .ifPresent(partner -> partner.setOpenAddTeamMemberForm(true));
         return this;
+    }
+
+    public boolean isCanInvitePartnerOrganisation() {
+        return canInvitePartnerOrganisation;
     }
 }
 

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -61,6 +62,7 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -136,6 +138,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private Long applicationId = 456L;
     private Long userId = 7L;
 
+    private Competition competition;
     private Application application;
     private List<ApplicationFinance> applicationFinances;
     private Organisation organisation;
@@ -178,8 +181,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .build();
         applicationFinances = singletonList(applicationFinance);
 
+        competition = newCompetition().build();
+
         application = newApplication().
                 withId(applicationId).
+                withCompetition(competition).
                 withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
                 withDurationInMonths(5L).
@@ -275,6 +281,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccess());
+        assertNotNull(competition.getProjectSetupStarted());
 
         verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
         verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
@@ -428,6 +435,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         fundingDecisions.put(applicationId, FundingDecision.FUNDED);
         ServiceResult<Void> project = service.createProjectsFromFundingDecisions(fundingDecisions);
         assertTrue(project.isSuccess());
+        assertNotNull(competition.getProjectSetupStarted());
 
         verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
         verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
