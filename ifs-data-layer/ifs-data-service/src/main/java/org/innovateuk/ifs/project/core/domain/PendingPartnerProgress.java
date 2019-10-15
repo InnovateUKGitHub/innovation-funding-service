@@ -20,13 +20,14 @@ public class PendingPartnerProgress {
     private ZonedDateTime yourOrganisationCompletedOn;
     private ZonedDateTime yourFundingCompletedOn;
     private ZonedDateTime termsAndConditionsCompletedOn;
+    private ZonedDateTime completedOn;
 
     private PendingPartnerProgress() {}
 
     public PendingPartnerProgress(PartnerOrganisation partnerOrganisation) {
         this.partnerOrganisation = partnerOrganisation;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -47,6 +48,10 @@ public class PendingPartnerProgress {
         return termsAndConditionsCompletedOn;
     }
 
+    public ZonedDateTime getCompletedOn() {
+        return completedOn;
+    }
+
     public void markYourOrganisationComplete() {
         yourOrganisationCompletedOn = ZonedDateTime.now();
     }
@@ -57,6 +62,10 @@ public class PendingPartnerProgress {
 
     public void markTermsAndConditionsComplete() {
         termsAndConditionsCompletedOn = ZonedDateTime.now();
+    }
+
+    public void complete() {
+        this.completedOn = ZonedDateTime.now();
     }
 
     public void markYourOrganisationIncomplete() {
@@ -87,5 +96,9 @@ public class PendingPartnerProgress {
         return isYourOrganisationComplete() &&
                 isYourFundingComplete() &&
                 isTermsAndConditionsComplete();
+    }
+
+    public boolean isComplete() {
+        return completedOn != null;
     }
 }

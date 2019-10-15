@@ -6,5 +6,6 @@ CREATE TABLE pending_partner_progress (
   your_organisation_completed_on datetime,
   your_funding_completed_on datetime,
   terms_and_conditions_completed_on datetime,
+  completed_on datetime,
   CONSTRAINT fk_pending_partner_progress_partner_organisation_id FOREIGN KEY (partner_organisation_id) REFERENCES partner_organisation(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

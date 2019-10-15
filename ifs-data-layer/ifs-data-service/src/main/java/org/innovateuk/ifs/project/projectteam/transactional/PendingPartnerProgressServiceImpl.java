@@ -79,7 +79,7 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
     public ServiceResult<Void> completePartnerSetup(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccess(this::isReadyToJoinProject)
-                .andOnSuccessReturnVoid(pendingPartnerProgressRepository::delete);
+                .andOnSuccessReturnVoid(PendingPartnerProgress::complete);
     }
 
     private ServiceResult<PendingPartnerProgress> isReadyToJoinProject(PendingPartnerProgress progress) {
