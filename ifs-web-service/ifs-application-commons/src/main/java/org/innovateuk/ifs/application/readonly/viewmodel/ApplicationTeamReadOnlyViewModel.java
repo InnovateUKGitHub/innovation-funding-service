@@ -26,6 +26,8 @@ public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return internal;
     }
 
+    public boolean isCollaborativeProject() { return organisations.size() != 1; }
+
     @Override
     public String getFragment() {
         return "application-team";

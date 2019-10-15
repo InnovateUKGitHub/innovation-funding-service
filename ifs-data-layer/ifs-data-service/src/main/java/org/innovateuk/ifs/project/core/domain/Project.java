@@ -341,4 +341,9 @@ public class Project implements ProcessActivity {
     public ProjectProcess getProjectProcess() {
         return projectProcess;
     }
+
+    public boolean isCollaborativeProject() {
+        return partnerOrganisations.size() != 1;
+    }
+
 }
