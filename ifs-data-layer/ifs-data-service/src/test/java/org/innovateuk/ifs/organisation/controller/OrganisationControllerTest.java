@@ -59,25 +59,6 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
     }
 
     @Test
-    public void findByIdShouldReturnOrganisation_callsOrganisationServiceWithPresentOptional() throws Exception {
-        OrganisationResource organisationResource = newOrganisationResource().build();
-        String inviteHash = "thisisahash";
-
-        Gson gson = new Gson();
-        String json = gson.toJson(organisationResource, OrganisationResource.class);
-
-        when(organisationInitialCreationServiceMock.createAndLinkByInvite(organisationResource, inviteHash)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
-
-        mockMvc.perform(post("/organisation/create-and-link-by-invite")
-                .contentType(MediaType.APPLICATION_JSON).
-                        content(json).param("inviteHash", "thisisahash"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
-
-        verify(organisationInitialCreationServiceMock, only()).createAndLinkByInvite(organisationResource, inviteHash);
-    }
-
-    @Test
     public void getByUserAndApplicationId() throws Exception {
         when(organisationServiceMock.getByUserAndApplicationId(1L, 2L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 

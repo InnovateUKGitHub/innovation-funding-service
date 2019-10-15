@@ -14,29 +14,29 @@ import java.util.Optional;
  */
 public interface ProjectService {
 
-    List<ProjectUserResource> getProjectUsersForProject(Long projectId);
+    List<ProjectUserResource> getProjectUsersForProject(long projectId);
 
-    List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId);
+    List<OrganisationResource> getPartnerOrganisationsForProject(long projectId);
 
-    ProjectResource getById(Long projectId);
+    ProjectResource getById(long projectId);
 
-    ProjectResource getByApplicationId(Long applicationId);
+    ProjectResource getByApplicationId(long applicationId);
 
-    OrganisationResource getLeadOrganisation(Long projectId);
+    OrganisationResource getLeadOrganisation(long projectId);
 
-    boolean isUserLeadPartner(Long projectId, Long userId);
+    boolean isUserLeadPartner(long projectId, long userId);
 
-    List<ProjectUserResource> getLeadPartners(Long projectId);
+    List<ProjectUserResource> getLeadPartners(long projectId);
 
-    List<ProjectUserResource> getPartners(Long projectId);
+    List<ProjectUserResource> getPartners(long projectId);
 
-    List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId);
+    List<ProjectUserResource> getProjectUsersWithPartnerRole(long projectId);
 
-    Optional<ProjectUserResource> getProjectManager(Long projectId);
+    Optional<ProjectUserResource> getProjectManager(long projectId);
 
-    Boolean isProjectManager(Long userId, Long projectId);
+    Boolean isProjectManager(long userId, long projectId);
 
-    boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId);
+    boolean userIsPartnerInOrganisationForProject(long projectId, long organisationId, long userId);
 
-    Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException;
+    Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException;
 }

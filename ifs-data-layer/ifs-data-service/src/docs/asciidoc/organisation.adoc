@@ -82,16 +82,3 @@ include::{snippets}/organisation/update-name-and-registration/response-fields.ad
 
 ==== Curl Example
 include::{snippets}/organisation/update-name-and-registration/curl-request.adoc[]
-
-=== Create and link by invite
-==== Request
-include::{snippets}/organisation/create-and-link-by-invite/http-request.adoc[]
-include::{snippets}/organisation/create-and-link-by-invite/request-parameters.adoc[]
-include::{snippets}/organisation/create-and-link-by-invite/request-fields.adoc[]
-
-==== Response
-include::{snippets}/organisation/create-and-link-by-invite/http-response.adoc[]
-include::{snippets}/organisation/create-and-link-by-invite/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/organisation/create-and-link-by-invite/curl-request.adoc[]

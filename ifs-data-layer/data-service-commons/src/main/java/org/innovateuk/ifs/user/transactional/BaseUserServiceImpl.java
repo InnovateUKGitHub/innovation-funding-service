@@ -22,11 +22,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class BaseUserServiceImpl extends UserTransactionalService implements BaseUserService {
 
-    enum Notifications {
-        VERIFY_EMAIL_ADDRESS,
-        RESET_PASSWORD
-    }
-
     @Autowired
     private UserMapper userMapper;
 

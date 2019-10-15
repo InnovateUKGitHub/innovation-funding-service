@@ -67,19 +67,11 @@ public class ApplicationQuestionController {
     @Autowired
     private ApplicationService applicationService;
     @Autowired
-    private UserRestService userRestService;
-    @Autowired
-    private QuestionService questionService;
-    @Autowired
     private QuestionRestService questionRestService;
     @Autowired
     private ApplicantRestService applicantRestService;
     @Autowired
-    private ApplicationRedirectionService applicationRedirectionService;
-    @Autowired
     private ApplicationQuestionSaver applicationSaver;
-    @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {

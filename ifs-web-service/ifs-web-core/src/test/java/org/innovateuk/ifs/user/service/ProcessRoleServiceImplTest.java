@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.service;
 
-import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -10,6 +9,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -26,10 +26,10 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
 
     @Test
     public void findAssignableProcessRoles() throws Exception {
-        Long applicationId = 1L;
-        List<ProcessRoleResource> resources = Lists.newArrayList(new ProcessRoleResource());
-        RestResult<ProcessRoleResource[]> restResult = restSuccess(resources.toArray(new ProcessRoleResource[resources.size()]));
-        Future<RestResult<ProcessRoleResource[]>> arrayFuture = mock(Future.class);
+        long applicationId = 1;
+        List<ProcessRoleResource> resources = newArrayList(new ProcessRoleResource());
+        RestResult<ProcessRoleResource[]> restResult = restSuccess(resources.toArray(new ProcessRoleResource[0]));
+        Future arrayFuture = mock(Future.class);
         when(arrayFuture.get()).thenReturn(restResult);
         when(userRestService.findAssignableProcessRoles(applicationId)).thenReturn(arrayFuture);
 
@@ -43,10 +43,10 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
 
     @Test
     public void getById() throws Exception {
-        Long id = 1L;
+        long id = 1;
         ProcessRoleResource resource = new ProcessRoleResource();
         RestResult<ProcessRoleResource> restResult = restSuccess(resource);
-        Future<RestResult<ProcessRoleResource>> future = mock(Future.class);
+        Future future = mock(Future.class);
         when(future.get()).thenReturn(restResult);
         when(userRestService.findProcessRoleById(id)).thenReturn(future);
 
