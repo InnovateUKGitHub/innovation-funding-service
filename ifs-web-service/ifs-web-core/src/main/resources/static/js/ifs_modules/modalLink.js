@@ -7,7 +7,8 @@ IFS.core.modal = (function () {
     settings: {
       element: '[data-js-modal]',
       modalTargetSwitch: '[data-switches-modal-target]',
-      html5validationMode: {}
+      html5validationMode: {},
+      returnFocusTo: '[data-js-modal]'
     },
     init: function () {
       s = this.settings
@@ -52,7 +53,7 @@ IFS.core.modal = (function () {
     },
     openModal: function (event, button) {
       s = this.settings
-      s.element = jQuery(event.target).attr('data-js-modal')
+      s.returnFocusTo = button
       button = jQuery(button)
       var formValid = IFS.core.modal.checkForInputErrors(button)
       var target = jQuery(event.target).attr('data-js-modal')
@@ -140,7 +141,8 @@ IFS.core.modal = (function () {
       s = this.settings
       IFS.core.modal.enableTabPage()
       jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden', 'true')
-      jQuery(s.element).focus()
+      jQuery(s.returnFocusTo).focus()
+      s.returnFocusTo = null
     }
   }
 })()
