@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.core.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.core.mapper.PendingPartnerProgressMapper;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,57 +27,57 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
     private PendingPartnerProgressRepository pendingPartnerProgressRepository;
 
     @Override
-    public ServiceResult<PendingPartnerProgressResource> getPendingPartnerProgress(long projectId, long organisationId) {
-        return getPartnerProgress(projectId, organisationId)
+    public ServiceResult<PendingPartnerProgressResource> getPendingPartnerProgress(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccessReturn(pendingPartnerProgressMapper::mapToResource);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> markYourOrganisationComplete(long projectId, long organisationId) {
-        return getPartnerProgress(projectId, organisationId)
+    public ServiceResult<Void> markYourOrganisationComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::markYourOrganisationComplete);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> markYourFundingComplete(long projectId, long organisationId) {
-        return getPartnerProgress(projectId, organisationId)
+    public ServiceResult<Void> markYourFundingComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::markYourFundingComplete);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> markTermsAndConditionsComplete(long projectId, long organisationId) {
-        return getPartnerProgress(projectId, organisationId)
+    public ServiceResult<Void> markTermsAndConditionsComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::markTermsAndConditionsComplete);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> markYourOrganisationIncomplete(long projectId, long organisationId) {
-        return getPartnerProgress(projectId, organisationId)
+    public ServiceResult<Void> markYourOrganisationIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::markYourOrganisationIncomplete);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> markYourFundingIncomplete(long projectId, long organisationId) {
-        return getPartnerProgress(projectId, organisationId)
+    public ServiceResult<Void> markYourFundingIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::markYourFundingIncomplete);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> markTermsAndConditionsIncomplete(long projectId, long organisationId) {
-        return getPartnerProgress(projectId, organisationId)
+    public ServiceResult<Void> markTermsAndConditionsIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::markTermsAndConditionsIncomplete);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> completePartnerSetup(long projectId, long organisationId) {
-        return getPartnerProgress(projectId, organisationId)
+    public ServiceResult<Void> completePartnerSetup(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccess(this::isReadyToJoinProject)
                 .andOnSuccessReturnVoid(pendingPartnerProgressRepository::delete);
     }
@@ -88,8 +89,8 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
         return serviceFailure(PARTNER_NOT_READY_TO_JOIN_PROJECT);
     }
 
-    private ServiceResult<PendingPartnerProgress> getPartnerProgress(long projectId, long organisationId) {
-        return find(pendingPartnerProgressRepository.findByPartnerOrganisationProjectIdAndPartnerOrganisationOrganisationId(projectId, organisationId),
-                notFoundError(PendingPartnerProgress.class, projectId, organisationId));
+    private ServiceResult<PendingPartnerProgress> getPartnerProgress(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return find(pendingPartnerProgressRepository.findByPartnerOrganisationProjectIdAndPartnerOrganisationOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
+                notFoundError(PendingPartnerProgress.class, projectOrganisationCompositeId));
     }
 }
