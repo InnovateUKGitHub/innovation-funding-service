@@ -3,16 +3,16 @@ ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
 ext.activeProfile="local"
 
 ext.ifsDatasourceHost = "ifs-database"
-ext.ifsDatasourceUrl="jdbc:mysql://ifs-finance-database:3306/ifs_finance"
+ext.ifsDatasourceUrl="jdbc:mariadb://ifs-finance-database:3306/ifs_finance"
 ext.ifsDatasourceUsername="root"
 ext.ifsDatasourcePassword="password"
 
 
-ext.testIfsDatasourceUrl="jdbc:mysql://ifs-finance-database:3307/ifs_finance_test"
+ext.testIfsDatasourceUrl="jdbc:mariadb://ifs-finance-database:3307/ifs_finance_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-project.ext['flyway.url']='jdbc:mysql://ifs-finance-database:3307?characterEncoding=utf8'
+project.ext['flyway.url']='jdbc:mariadb://ifs-finance-database:3307?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs_finance'
 project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"
