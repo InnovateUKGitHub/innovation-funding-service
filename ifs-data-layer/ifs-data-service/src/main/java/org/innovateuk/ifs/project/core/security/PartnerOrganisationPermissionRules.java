@@ -42,6 +42,11 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
     }
 
+    @PermissionRule(value = "PENDING_PARTNER_PROGRESS", description = "Partners can view their own progress setting up their organisation")
+    public boolean partnersCanViewTheirOwnPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
+    }
+
     @PermissionRule(value = "REMOVE_PARTNER_ORGANISATION", description = "Internal users can remove partner organisations for any project")
     public boolean internalUsersCanRemovePartnerOrganisations(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return isInternal(user);
