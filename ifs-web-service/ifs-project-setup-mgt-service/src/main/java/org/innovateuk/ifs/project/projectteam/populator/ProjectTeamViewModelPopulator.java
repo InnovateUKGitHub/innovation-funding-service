@@ -73,7 +73,8 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 true,
                 isReadOnly,
-                canInvitePartnerOrganisation(projectResource, loggedInUser));
+                canInvitePartnerOrganisation(projectResource, loggedInUser),
+                pcrEnabled);
     }
 
     private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {

@@ -36,8 +36,6 @@ public class ProjectTeamController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Autowired
     private ProjectInviteHelper projectInviteHelper;
-    @Autowired
-    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
                                  ProjectTeamRestService projectTeamRestService,
@@ -124,13 +122,5 @@ public class ProjectTeamController {
 
         return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
                 failureView, successView, projectId, organisationId);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
-    @PostMapping(value = "/{projectId}/team", params = "remove-organisation")
-    public String removeOrganisation(@PathVariable("projectId") final long projectId,
-                                     @RequestParam("remove-organisation") final long orgId) {
-        partnerOrganisationRestService.removePartnerOrganisation(projectId, orgId).getSuccess();
-        return "redirect:/project/" + projectId + "/team";
     }
 }

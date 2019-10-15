@@ -46,9 +46,4 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
     public boolean internalUsersCanRemovePartnerOrganisations(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return isInternal(user);
     }
-
-    @PermissionRule(value = "REMOVE_PARTNER_ORGANISATION", description = "Partners can remove their own partner organisation")
-    public boolean partnersCanRemoveTheirOwnPartnerOrganisation(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
-    }
 }

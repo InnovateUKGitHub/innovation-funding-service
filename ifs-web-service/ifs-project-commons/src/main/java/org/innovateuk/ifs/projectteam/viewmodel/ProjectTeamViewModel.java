@@ -23,6 +23,7 @@ public class ProjectTeamViewModel {
     private final boolean internalUserView;
     private final boolean readOnly;
     private final boolean canInvitePartnerOrganisation;
+    private final boolean canRemovePartnerOrganisation;
 
     public ProjectTeamViewModel(String competitionName,
                                 long competitionId,
@@ -36,7 +37,8 @@ public class ProjectTeamViewModel {
                                 boolean grantOfferLetterGenerated,
                                 boolean internalUserView,
                                 boolean readOnly,
-                                boolean canInvitePartnerOrganisation) {
+                                boolean canInvitePartnerOrganisation,
+                                boolean canRemovePartnerOrganisation) {
 
         this.competitionName = competitionName;
         this.competitionId = competitionId;
@@ -51,6 +53,7 @@ public class ProjectTeamViewModel {
         this.internalUserView = internalUserView;
         this.readOnly = readOnly;
         this.canInvitePartnerOrganisation = canInvitePartnerOrganisation;
+        this.canRemovePartnerOrganisation = canRemovePartnerOrganisation;
     }
 
     public String getCompetitionName() {
@@ -111,6 +114,10 @@ public class ProjectTeamViewModel {
 
     public boolean isCanInvitePartnerOrganisation() {
         return canInvitePartnerOrganisation;
+    }
+
+    public boolean isCanRemovePartnerOrganisation() {
+        return canRemovePartnerOrganisation;
     }
 }
 

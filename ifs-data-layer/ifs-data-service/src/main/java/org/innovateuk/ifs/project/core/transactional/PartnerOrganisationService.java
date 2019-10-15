@@ -15,7 +15,6 @@ public interface PartnerOrganisationService {
     @PostAuthorize("hasPermission(returnObject, 'VIEW_PARTNER_ORGANISATION')")
     ServiceResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
 
-//    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'REMOVE_PARTNER_ORGANISATION')")
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.PartnerOrganisationResource', 'REMOVE_PARTNER_ORGANISATION')")
     ServiceResult<Void> removePartnerOrganisation(long projectId, long organisationId);
 }

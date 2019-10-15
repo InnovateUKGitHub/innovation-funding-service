@@ -224,7 +224,8 @@
                     </th:block>
 
                 </th:block>
-                <th:block th:if="${!organisation.editable and !model.isReadOnly()}">
+                <th:block >
+                    <!--th:if="${!organisation.editable and !model.isReadOnly() and model.canRemovePartnerOrganisation}">-->
                     <th:block
                         th:insert="fragments/modals :: modal-project-team-remove-organisation (${organisation})"/>
                     <button name="add-team-member"

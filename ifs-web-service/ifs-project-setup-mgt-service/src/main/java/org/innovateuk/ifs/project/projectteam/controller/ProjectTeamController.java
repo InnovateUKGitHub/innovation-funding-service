@@ -6,6 +6,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -39,6 +40,8 @@ public class ProjectTeamController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Autowired
     private ProjectInviteHelper projectInviteHelper;
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @GetMapping
     public String viewProjectTeam(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,
@@ -103,7 +106,7 @@ public class ProjectTeamController {
         Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
 
         return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
-                          failureView, successView, projectId, organisationId);
+                failureView, successView, projectId, organisationId);
     }
 
     @PostMapping(params = "resend-invite")
@@ -115,6 +118,15 @@ public class ProjectTeamController {
                                HttpServletResponse response) {
         projectInviteHelper.resendInvite(inviteId, projectId, (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
         cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
+        return format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
+    }
+
+    @PostMapping(params = "remove-organisation")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    public String removeOrganisation(@PathVariable("projectId") long projectId,
+                                     @PathVariable("competitionId") long competitionId,
+                                     @RequestParam("remove-organisation") final long orgId) {
+        partnerOrganisationRestService.removePartnerOrganisation(projectId, orgId).getSuccess();
         return format("redirect:/competition/%d/project/%d/team", competitionId, projectId);
     }
 }
