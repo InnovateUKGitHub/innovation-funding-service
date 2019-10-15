@@ -38,6 +38,7 @@ public class ProjectResource {
     private ZonedDateTime spendProfileSubmittedDate;
     private ZonedDateTime processLastModifiedDate;
     private ProjectState projectState;
+    private boolean collaborativeProject;
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
     private boolean spendProfileGenerated;
 
@@ -247,6 +248,14 @@ public class ProjectResource {
 
     public void setSpendProfileGenerated(boolean spendProfileGenerated) {
         this.spendProfileGenerated = spendProfileGenerated;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
+    public void setCollaborativeProject(boolean collaborativeProject) {
+        this.collaborativeProject = collaborativeProject;
     }
 
     @Override

@@ -71,25 +71,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void returnNullOrganisationType() {
-
-        ProcessRoleResource processRole = newProcessRoleResource()
-                .withApplication(3L)
-                .withUser(user)
-                .build();
-
-        when(userRestService.findProcessRole(user.getId(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
-        when(organisationRestService.getOrganisationById(null)).thenReturn(null);
-
-        Long returnedOrganisationType = service.getOrganisationType(user.getId(), processRole.getApplicationId());
-
-        verify(userRestService, times(1)).findProcessRole(user.getId(), processRole.getApplicationId());
-        verifyZeroInteractions(organisationRestService);
-        verifyNoMoreInteractions(userRestService);
-        assertNull(returnedOrganisationType);
-    }
-
-    @Test
     public void getOrganisationForUser() {
 
         OrganisationResource organisation = newOrganisationResource().withId(4L).build();

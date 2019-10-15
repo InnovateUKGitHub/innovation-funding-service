@@ -43,10 +43,10 @@ public class ProjectTeamViewModelPopulator {
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
-        ProjectResource projectResource = projectService.getById(projectId);
-        boolean isMonitoringOfficer = loggedInUser.getId().equals(projectResource.getMonitoringOfficerUser());
+        ProjectResource project = projectService.getById(projectId);
+        boolean isMonitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
@@ -79,13 +79,10 @@ public class ProjectTeamViewModelPopulator {
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
 
         return new ProjectTeamViewModel(
-                projectResource.getCompetitionName(),
-                projectResource.getCompetition(),
-                projectResource.getName(),
-                projectResource.getId(),
+                project,
                 partnerOrgModels,
                 loggedInUserOrgModel,
-                getProjectManager(projectResource.getId()).orElse(null),
+                getProjectManager(project.getId()).orElse(null),
                 isLead,
                 loggedInUser.getId(),
                 statusAccessor.isGrantOfferLetterGenerated(),

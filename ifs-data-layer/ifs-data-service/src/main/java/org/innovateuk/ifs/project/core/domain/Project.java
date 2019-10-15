@@ -343,4 +343,8 @@ public class Project implements ProcessActivity {
     }
 
     public boolean isSpendProfileGenerated() { return !spendProfiles.isEmpty(); }
+
+    public boolean isCollaborativeProject() {
+        return partnerOrganisations.size() != 1;
+    }
 }

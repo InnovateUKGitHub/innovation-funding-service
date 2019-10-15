@@ -15,7 +15,9 @@ import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -65,6 +67,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
@@ -135,21 +138,19 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Mock
     private ActivityLogService activityLogService;
 
-    private Long applicationId = 456L;
-    private Long userId = 7L;
+    @Mock
+    private OrganisationMapper organisationMapperMock;
+
+    private long applicationId = 456;
 
     private Competition competition;
     private Application application;
-    private List<ApplicationFinance> applicationFinances;
     private Organisation organisation;
     private User user;
     private User u;
-    private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
-    private List<PartnerOrganisation> po;
-    private List<ProjectUser> pu;
     private Organisation o;
-    private Project p;
+    private Project project;
 
     @Before
     public void setUp() {
@@ -158,11 +159,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
+        long userId = 7;
         user = newUser().
                 withId(userId).
                 build();
 
-        leadApplicantProcessRole = newProcessRole().
+        ProcessRole leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisation.getId()).
                 withRole(Role.LEADAPPLICANT).
                 withUser(user).
@@ -179,7 +181,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withOrganisation(organisation)
                 .withWorkPostcode("UB7 8QF")
                 .build();
-        applicationFinances = singletonList(applicationFinance);
+        List<ApplicationFinance> applicationFinances = singletonList(applicationFinance);
 
         competition = newCompetition().build();
 
@@ -198,7 +200,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         o = organisation;
         o.setOrganisationType(businessOrganisationType);
 
-        po = newPartnerOrganisation().
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
                 withOrganisation(o).
                 withLeadOrganisation(TRUE).
                 build(1);
@@ -209,7 +211,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withLastName("B").
                 build();
 
-        pu = newProjectUser().
+        List<ProjectUser> projectUsers = newProjectUser().
                 withRole(PROJECT_FINANCE_CONTACT).
                 withUser(u).
                 withOrganisation(o).
@@ -217,20 +219,20 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                         build()).
                 build(1);
 
-        p = newProject().
-                withProjectUsers(pu).
+        project = newProject().
+                withProjectUsers(projectUsers).
                 withApplication(application).
-                withPartnerOrganisations(po).
+                withPartnerOrganisations(partnerOrganisations).
                 withDateSubmitted(ZonedDateTime.now()).
                 withSpendProfileSubmittedDate(ZonedDateTime.now()).
                 build();
 
         ProjectDocument projectDocument = ProjectDocumentBuilder
                 .newProjectDocument()
-                .withProject(p)
+                .withProject(project)
                 .withStatus(DocumentStatus.APPROVED)
                 .build();
-        p.setProjectDocuments(singletonList(projectDocument));
+        project.setProjectDocuments(singletonList(projectDocument));
 
         when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
@@ -347,12 +349,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void addPartner_organisationNotOnProject(){
         Organisation organisationNotOnProject = newOrganisation().build();
-        when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(organisationRepositoryMock.findById(organisationNotOnProject.getId())).thenReturn(Optional.of(organisationNotOnProject));
         when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
         // Method under test
-        ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), u.getId(), organisationNotOnProject.getId());
+        ServiceResult<ProjectUser> shouldFail = service.addPartner(project.getId(), u.getId(), organisationNotOnProject.getId());
         // Expectations
         assertTrue(shouldFail.isFailure());
         assertTrue(shouldFail.getFailure().is(badRequestError("project does not contain organisation")));
@@ -360,14 +362,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void addPartner_partnerAlreadyExists(){
-        when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
 
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
         // Method under test
-        ServiceResult<ProjectUser> shouldFail = service.addPartner(p.getId(), u.getId(), o.getId());
+        ServiceResult<ProjectUser> shouldFail = service.addPartner(project.getId(), u.getId(), o.getId());
         // Expectations
         verifyZeroInteractions(projectUserRepositoryMock);
         assertTrue(shouldFail.isSuccess());
@@ -376,16 +378,16 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void addPartner(){
         User newUser = newUser().build();
-        when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.ofNullable(p));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.ofNullable(o));
         when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.ofNullable(u));
         when(userRepositoryMock.findById(newUser.getId())).thenReturn(Optional.ofNullable(u));
         List<ProjectUserInvite> projectInvites = newProjectUserInvite().withUser(user).build(1);
         projectInvites.get(0).open();
-        when(projectUserInviteRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
+        when(projectUserInviteRepositoryMock.findByProjectId(project.getId())).thenReturn(projectInvites);
 
         // Method under test
-        ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());
+        ServiceResult<ProjectUser> shouldSucceed = service.addPartner(project.getId(), newUser.getId(), o.getId());
         // Expectations
         assertTrue(shouldSucceed.isSuccess());
     }
@@ -452,7 +454,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void createProjectsFromFundingDecisions_saveFails() throws Exception {
-
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new DataIntegrityViolationException("dummy constraint violation"));
 
@@ -464,6 +465,24 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         } catch (Exception e) {
             assertEquals(e.getCause().getCause().getMessage(),"dummy constraint violation");
         }
+    }
+
+    @Test
+    public void getLeadOrganisation() {
+        OrganisationResource expectedOrganisationResource = newOrganisationResource().build();
+
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(organisationMapperMock.mapToResource(organisation)).thenReturn(expectedOrganisationResource);
+
+        OrganisationResource organisationResource = service.getLeadOrganisation(project.getId()).getSuccess();
+
+        assertEquals(expectedOrganisationResource, organisationResource);
+
+        InOrder inOrder = inOrder(projectRepositoryMock, organisationRepositoryMock, organisationMapperMock);
+        inOrder.verify(projectRepositoryMock).findById(project.getId());
+        inOrder.verify(organisationRepositoryMock).findById(project.getApplication().getLeadOrganisationId());
+        inOrder.verify(organisationMapperMock).mapToResource(organisation);
+        inOrder.verifyNoMoreInteractions();
     }
 
     private Project createProjectExpectationsFromOriginalApplication() {

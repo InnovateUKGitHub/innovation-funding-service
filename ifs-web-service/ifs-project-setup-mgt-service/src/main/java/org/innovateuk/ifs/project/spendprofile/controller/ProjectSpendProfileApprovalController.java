@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -19,8 +17,8 @@ import org.innovateuk.ifs.spendprofile.SpendProfileService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,9 +37,6 @@ public class ProjectSpendProfileApprovalController {
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private ApplicationService applicationService;
 
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -92,14 +87,11 @@ public class ProjectSpendProfileApprovalController {
 
     private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        Long applicationId = project.getApplication();
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(project.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         UserResource user = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
         String leadTechnologist = competition.getLeadTechnologist() != null ? user.getName() : "";
         ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);
-        boolean projectIsActive = project.getProjectState().isActive();
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
@@ -107,15 +99,11 @@ public class ProjectSpendProfileApprovalController {
                                                         leadTechnologist,
                                                         approvalType,
                                                         organisationResources,
-                                                        applicationId,
-                                                        project.getName(),
-                                                        projectIsActive);
+                                                        project);
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-
-        return "redirect:/competition/" + application.getCompetition() + "/status";
+        return "redirect:/competition/" + project.getCompetition() + "/status";
     }
 }

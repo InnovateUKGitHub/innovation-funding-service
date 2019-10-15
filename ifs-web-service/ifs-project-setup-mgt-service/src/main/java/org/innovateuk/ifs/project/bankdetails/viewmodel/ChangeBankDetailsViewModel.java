@@ -2,13 +2,12 @@ package org.innovateuk.ifs.project.bankdetails.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 
 public class ChangeBankDetailsViewModel extends BankDetailsReviewViewModel{
     private boolean updated;
 
-    public ChangeBankDetailsViewModel(Long projectId,
-                                      Long applicationId,
-                                      String projectName,
+    public ChangeBankDetailsViewModel(ProjectResource project,
                                       String financeContactName,
                                       String financeContactEmail,
                                       String financeContactPhoneNumber,
@@ -23,12 +22,9 @@ public class ChangeBankDetailsViewModel extends BankDetailsReviewViewModel{
                                       Short addressScore,
                                       Boolean approved,
                                       Boolean approvedManually,
-                                      boolean projectActive,
                                       boolean updated
 ) {
-        super(projectId,
-              applicationId,
-              projectName,
+        super(project,
               financeContactName,
               financeContactEmail,
               financeContactPhoneNumber,
@@ -43,8 +39,7 @@ public class ChangeBankDetailsViewModel extends BankDetailsReviewViewModel{
               registrationNumberMatched,
               addressScore,
               approved,
-              approvedManually,
-              projectActive);
+              approvedManually);
 
         this.updated = updated;
     }

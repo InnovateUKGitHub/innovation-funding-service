@@ -5,24 +5,25 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 
 import java.util.List;
 
 public interface ProjectRestService {
-    RestResult<ProjectResource> getProjectById(Long projectId);
+    RestResult<ProjectResource> getProjectById(long projectId);
 
     RestResult<List<ProjectResource>> findByUserId(long userId);
 
-    RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId);
+    RestResult<List<ProjectUserResource>> getProjectUsersForProject(long projectId);
 
-    RestResult<ProjectResource> getByApplicationId(Long applicationId);
+    RestResult<ProjectResource> getByApplicationId(long applicationId);
 
-    RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
+    RestResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId);
 
-    RestResult<ProjectUserResource> getProjectManager(Long projectId);
+    RestResult<ProjectUserResource> getProjectManager(long projectId);
 
-    RestResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
+    RestResult<PartnerOrganisationResource> getPartnerOrganisation(long projectId, long organisationId);
 
-    RestResult<ProjectResource> createProjectFromApplicationId(Long applicationId);
+    RestResult<ProjectResource> createProjectFromApplicationId(long applicationId);
+
+    RestResult<OrganisationResource> getLeadOrganisationByProject(long projectId);
 }

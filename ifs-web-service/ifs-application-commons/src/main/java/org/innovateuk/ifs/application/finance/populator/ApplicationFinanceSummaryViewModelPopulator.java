@@ -83,7 +83,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<FinanceSummaryTableRow> rows = emptyList();
         if (financeSection != null) {
             rows = organisations.stream()
-                    .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection))
+                    .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection, application))
                     .collect(toList());
 
             if (!application.isSubmitted()) {
@@ -122,12 +122,13 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 .getOrganisationId();
     }
 
-    private FinanceSummaryTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, Map<Long, Set<Long>> completedSections, long leadOrganisationId, SectionResource financeSection) {
+    private FinanceSummaryTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, Map<Long, Set<Long>> completedSections, long leadOrganisationId, SectionResource financeSection, ApplicationResource application) {
         Optional<ApplicationFinanceResource> finance = ofNullable(finances.get(organisation.getId()));
+        boolean lead = organisation.getId().equals(leadOrganisationId);
         return new FinanceSummaryTableRow(
                 organisation.getId(),
                 organisation.getName(),
-                organisation.getId().equals(leadOrganisationId) ? "Lead organisation" : "Partner",
+                organisationText(application, lead),
                 finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
                 finance.map(ApplicationFinanceResource::getGrantClaimPercentage).orElse(0),
                 finance.map(ApplicationFinanceResource::getTotalFundingSought).orElse(BigDecimal.ZERO),
@@ -137,6 +138,16 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                         .map(completedIds -> completedIds.contains(financeSection.getId()))
                         .orElse(false)
         );
+    }
+
+    private String organisationText(ApplicationResource application, boolean lead) {
+        if (!application.isCollaborativeProject()) {
+            return "Organisation";
+        } else if (lead) {
+            return "Lead organisation";
+        } else {
+            return "Partner";
+        }
     }
 
     private SectionResource getFinanceSection(long competitionId) {

@@ -86,17 +86,6 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     }
 
     @Test
-    public void createAndLinkByInvite() {
-        String inviteHash = "abc123";
-        OrganisationResource expected = newOrganisationResource().build();
-
-        setupPostWithRestResultAnonymousExpectations(format("%s/create-and-link-by-invite?inviteHash=%s", organisationsUrl, inviteHash), OrganisationResource.class, expected, expected, OK);
-
-        OrganisationResource response = service.createAndLinkByInvite(expected, inviteHash).getSuccess();
-        assertEquals(expected, response);
-    }
-
-    @Test
     public void getByUserAndApplicationId() {
         long userId = 1L;
         long applicationId = 2L;

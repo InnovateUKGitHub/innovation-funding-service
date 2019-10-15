@@ -265,7 +265,6 @@ internal user assign MO to loan project
 
 internal user approve bank details
     the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/review-all-bank-details
-    the user clicks the button/link          link = ${Crystalrover_Name}
     the user clicks the button/link          jQuery = button:contains("Approve bank account details")
     the user clicks the button/link          id = submit-approve-bank-details
 

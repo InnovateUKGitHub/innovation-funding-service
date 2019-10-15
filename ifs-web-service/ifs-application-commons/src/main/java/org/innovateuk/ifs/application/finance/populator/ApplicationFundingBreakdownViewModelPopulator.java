@@ -116,10 +116,11 @@ public class ApplicationFundingBreakdownViewModelPopulator {
     private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ApplicationFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
         Optional<String> financeLink = financesLink(organisation, processRoles, user, application, competition);
+        boolean lead = organisation.getId().equals(leadOrganisationId);
         return new BreakdownTableRow(
                 organisation.getId(),
                 organisation.getName(),
-                organisation.getId().equals(leadOrganisationId) ? "Lead organisation" : "Partner",
+                organisationText(application, lead),
                 financeLink.isPresent(),
                 financeLink.orElse(null),
                 finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
@@ -133,6 +134,16 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 finance.map(appFinance -> getCategoryOrZero(appFinance, OTHER_COSTS)).orElse(BigDecimal.ZERO),
                 finance.map(appFinance -> getCategoryOrZero(appFinance, VAT)).orElse(BigDecimal.ZERO)
         );
+    }
+
+    private String organisationText(ApplicationResource application, boolean lead) {
+        if (!application.isCollaborativeProject()) {
+            return "Organisation";
+        } else if (lead) {
+            return "Lead organisation";
+        } else {
+            return "Partner";
+        }
     }
 
     private Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
