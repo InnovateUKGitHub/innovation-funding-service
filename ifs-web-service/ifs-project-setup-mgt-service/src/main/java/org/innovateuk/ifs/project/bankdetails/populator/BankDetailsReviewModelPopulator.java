@@ -33,11 +33,8 @@ public class BankDetailsReviewModelPopulator {
                 projectUsers,
                 pr -> pr.isFinanceContact() && organisation.getId().equals(pr.getOrganisation())
         ));
-        boolean projectIsActive = project.getProjectState().isActive();
 
-        return new BankDetailsReviewViewModel(project.getId(),
-                                              project.getApplication(),
-                                              project.getName(),
+        return new BankDetailsReviewViewModel(project,
                                               financeContact.getUserName(),
                                               financeContact.getEmail(),
                                               financeContact.getPhoneNumber(),
@@ -52,8 +49,7 @@ public class BankDetailsReviewModelPopulator {
                                               bankDetails.getRegistrationNumberMatched(),
                                               bankDetails.getAddressScore(),
                                               bankDetails.isApproved(),
-                                              bankDetails.isManualApproval(),
-                                              projectIsActive);
+                                              bankDetails.isManualApproval());
     }
 
 

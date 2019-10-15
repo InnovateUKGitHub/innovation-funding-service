@@ -8,7 +8,4 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface OrganisationInitialCreationService {
     @PreAuthorize("hasPermission(#organisation, 'CREATE')")
     ServiceResult<OrganisationResource> createOrMatch(@P("organisation") OrganisationResource organisation);
-
-    @PreAuthorize("hasPermission(#organisation, 'CREATE')")
-    ServiceResult<OrganisationResource> createAndLinkByInvite(@P("organisation") OrganisationResource organisation, String inviteHash);
 }

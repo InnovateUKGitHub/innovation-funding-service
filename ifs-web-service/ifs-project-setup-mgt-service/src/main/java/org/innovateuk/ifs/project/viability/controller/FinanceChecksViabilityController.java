@@ -167,7 +167,9 @@ public class FinanceChecksViabilityController {
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
                 (OrganisationSize::getDescription).orElse(null);
 
-        return new FinanceChecksViabilityViewModel(organisationName,
+        return new FinanceChecksViabilityViewModel(project,
+                competition,
+                organisationName,
                 leadPartnerOrganisation,
                 totalCosts,
                 percentageGrant,
@@ -188,11 +190,7 @@ public class FinanceChecksViabilityController {
                 approver,
                 approvalDate,
                 organisationId,
-                organisationSizeDescription,
-                applicationId,
-                project.getName(),
-                project.getProjectState().isActive(),
-                competition.isLoan());
+                organisationSizeDescription);
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
