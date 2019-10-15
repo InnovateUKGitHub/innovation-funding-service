@@ -20,7 +20,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=|Eligibility check for ${summaryModel.organisationName}|,subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'"/>
+                  th:with="pageTitle=|Eligibility check for ${summaryModel.organisationName}|,subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation and summaryModel.collaborativeProject} ? '(Lead Partner)'"/>
 
         <th:block th:if="${summaryModel.isShowApprovalMessage()}">
             <th:block th:if="${summaryModel.externalView}">
@@ -148,7 +148,11 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted during the request for a Horizon 2020 grant transfer.</p>
-                        <p class="govuk-body">The applicant will be able to see all saved changes. You must discuss all changes with them by raising queries through the Innovation Funding Service.</p>
+                        <p class="govuk-body">
+                            <th:block th:if="${summaryModel.collaborativeProject}">The applicant will be able to see all saved changes.</th:block>
+                            <th:block th:unless="${summaryModel.collaborativeProject}">The organisation will be able to see all saved changes to finances.</th:block>
+                            You must discuss all changes with them by raising queries through the Innovation Funding Service.
+                        </p>
                         <p class="govuk-body"><a
                             th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                             class="govuk-link">Review all changes to project finances</a></p>
@@ -166,8 +170,12 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted at the application stage.
-                            All saved changes to finances will be viewable by the applicants.</p>
-                        <p class="govuk-body">All potential changes must be discussed with the lead applicant.
+                            <th:block th:if="${summaryModel.collaborativeProject}">The applicant will be able to see all saved changes.</th:block>
+                            <th:block th:unless="${summaryModel.collaborativeProject}">The organisation will be able to see all saved changes to finances.</th:block>
+                        </p>
+                        <p class="govuk-body" th:if="${summaryModel.collaborativeProject}">All potential changes must be discussed with the lead applicant.
+                            You can do this by raising queries through the Innovation Funding Service.</p>
+                        <p class="govuk-body" th:unless="${summaryModel.collaborativeProject}"> All potential changes must be discussed with the organisation.
                             You can do this by raising queries through the Innovation Funding Service.</p>
                         <p class="govuk-body"><a
                             th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
@@ -251,7 +259,10 @@
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
                 <p class="govuk-body">After making any necessary changes, the eligible costs should be approved.</p>
-                <p th:unless="${summaryModel.isH2020()}" class="govuk-body">Make sure the partner has reviewed and understood all changes before you approve.</p>
+                <th:block th:unless="${summaryModel.isH2020()}">
+                    <p th:if="${summaryModel.collaborativeProject}" class="govuk-body">Make sure the partner has reviewed and understood all changes before you approve.</p>
+                    <p th:unless="${summaryModel.collaborativeProject}" class="govuk-body">Make sure the organisation has reviewed and understood all changes before you approve.</p>
+                </th:block>
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item" data-target="add-rag-rating">
@@ -287,7 +298,7 @@
                 <button type="button" data-js-modal="modal-confirm-eligibility" class="govuk-button"
                         id="confirm-button">Approve eligible costs
                 </button>
-                <th:block th:insert="fragments/modals :: modal-confirm-eligibility"/>
+                <th:block th:insert="fragments/modals :: modal-confirm-eligibility (${summaryModel})"/>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
             </th:block>
 

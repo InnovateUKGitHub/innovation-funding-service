@@ -81,9 +81,9 @@
                 </thead>
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row" th:each="partnerOrganisation: ${model.partnerOrganisations}">
-                    <td class="govuk-table__cell">
-                        <th:block th:if="${partnerOrganisation.organisationName.equals(model.leadOrganisation)}" th:text="${partnerOrganisation.organisationName + ' (Lead)'}"></th:block>
-                        <th:block th:unless="${partnerOrganisation.organisationName.equals(model.leadOrganisation)}" th:text="${partnerOrganisation.organisationName}"></th:block>
+                    <td class="govuk-table__cell" th:with="showLead=${partnerOrganisation.organisationName.equals(model.leadOrganisation) && model.project.collaborativeProject}">
+                        <th:block th:if="${showLead}" th:text="${partnerOrganisation.organisationName + ' (Lead)'}"></th:block>
+                        <th:block th:unless="${showLead}" th:text="${partnerOrganisation.organisationName}"></th:block>
                     </td>
                     <td class="govuk-table__cell">
                         <th:block th:unless="${partnerOrganisation.postcode == null}"
