@@ -7,8 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ProjectPartnerInviteService {
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "INVITE_PROJECT_PARTNER_ORGANISATION", securedType = ProjectPartnerInviteResource.class,
-            description = "Only admins and support users can invite partner organisations." )
+            description = "Only project finance users can invite partner organisations.")
     ServiceResult<Void> invitePartnerOrganisation(long projectId, ProjectPartnerInviteResource invite);
 }
