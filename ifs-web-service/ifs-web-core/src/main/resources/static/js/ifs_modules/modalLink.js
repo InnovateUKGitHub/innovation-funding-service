@@ -51,6 +51,8 @@ IFS.core.modal = (function () {
       jQuery(targetButton).attr('data-js-modal', targetModal)
     },
     openModal: function (event, button) {
+      s = this.settings
+      s.element = jQuery(event.target).attr('data-js-modal')
       button = jQuery(button)
       var formValid = IFS.core.modal.checkForInputErrors(button)
       var target = jQuery(event.target).attr('data-js-modal')

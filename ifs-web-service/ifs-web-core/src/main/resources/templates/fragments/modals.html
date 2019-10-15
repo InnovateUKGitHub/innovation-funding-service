@@ -611,7 +611,8 @@
 
 <!-- Remove team member from application -->
 <th:block th:fragment="modal-application-team-remove-user (user) ">
-    <div class="warning-modal" th:classappend="${'modal-application-team-remove-' + user.id}" role="dialog" aria-hidden="true">
+    <div class="alignleft warning-modal" th:classappend="${'modal-application-team-remove-' + user.id}" role="dialog"
+         aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m" th:text="${'Remove ' + user.name}">Remove Stacey Shipman</h2>
