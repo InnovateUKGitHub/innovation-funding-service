@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.core.mapper;
+package org.innovateuk.ifs.project.projectteam.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseResourceMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.project.core.domain.PendingPartnerProgress;
+import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.mapstruct.Mapper;
 

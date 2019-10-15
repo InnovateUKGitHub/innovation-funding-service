@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.projectteam.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.core.domain.PendingPartnerProgress;
-import org.innovateuk.ifs.project.core.mapper.PendingPartnerProgressMapper;
+import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
+import org.innovateuk.ifs.project.projectteam.mapper.PendingPartnerProgressMapper;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -90,7 +90,7 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
     }
 
     private ServiceResult<PendingPartnerProgress> getPartnerProgress(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-        return find(pendingPartnerProgressRepository.findByPartnerOrganisationProjectIdAndPartnerOrganisationOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
+        return find(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
                 notFoundError(PendingPartnerProgress.class, projectOrganisationCompositeId));
     }
 }

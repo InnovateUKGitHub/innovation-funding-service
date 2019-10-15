@@ -1,4 +1,6 @@
-package org.innovateuk.ifs.project.core.domain;
+package org.innovateuk.ifs.project.projectteam.domain;
+
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;

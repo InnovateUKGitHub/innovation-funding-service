@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 
 import javax.persistence.*;
