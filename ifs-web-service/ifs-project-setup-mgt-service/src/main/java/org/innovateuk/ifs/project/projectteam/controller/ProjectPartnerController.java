@@ -21,8 +21,8 @@ import java.util.function.Supplier;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/team/partner")
-@PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
-@SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Admins and support users can invite new project team partners.")
+@PreAuthorize("hasAuthority('project_finance')")
+@SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance users can invite new project team partners.")
 public class ProjectPartnerController {
 
     @Autowired

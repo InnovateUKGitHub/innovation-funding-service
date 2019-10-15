@@ -73,7 +73,14 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 true,
                 isReadOnly,
-                pcrEnabled && !projectResource.isSpendProfileGenerated());
+                canInvitePartnerOrganisation(projectResource, loggedInUser));
+    }
+
+    private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {
+        return pcrEnabled
+                && user.hasRole(PROJECT_FINANCE)
+                && !project.isSpendProfileGenerated()
+                && project.getProjectState().isActive();
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {

@@ -281,7 +281,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         assertTrue(result.isFailure());
         assertEquals(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(projectUserInviteRepositoryMock, times(2)).save(projectInvite);
+        verify(projectUserInviteRepositoryMock, times(1)).save(projectInvite);
     }
 
     @Test
@@ -356,7 +356,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         assertTrue(result.isSuccess());
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
-        verify(projectUserInviteRepositoryMock, times(2)).save(projectInvite);
+        verify(projectUserInviteRepositoryMock, times(1)).save(projectInvite);
     }
 
     @Test
