@@ -21,6 +21,12 @@ public class PendingPartnerProgress {
     private ZonedDateTime yourFundingCompletedOn;
     private ZonedDateTime termsAndConditionsCompletedOn;
 
+    private PendingPartnerProgress() {}
+
+    public PendingPartnerProgress(PartnerOrganisation partnerOrganisation) {
+        this.partnerOrganisation = partnerOrganisation;
+    }
+    
     public Long getId() {
         return id;
     }
