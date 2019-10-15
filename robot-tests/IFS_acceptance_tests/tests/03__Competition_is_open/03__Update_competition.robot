@@ -102,7 +102,7 @@ Funding Information is editable (Open)
     [Documentation]    INFUND-7083
     [Tags]
     [Setup]    The user clicks the button/link  jQuery = a:contains(Dashboard)
-    Given the user clicks the button/link       link = ${openCompetitionBusinessRTO_name}
+    Given the user clicks the button/link       link = Photonics for All
     And the user clicks the button/link         link = View and update competition setup
     When the user clicks the button/link        link = Funding information
     And the user should see the element         jquery = h1:contains("Funding information")
