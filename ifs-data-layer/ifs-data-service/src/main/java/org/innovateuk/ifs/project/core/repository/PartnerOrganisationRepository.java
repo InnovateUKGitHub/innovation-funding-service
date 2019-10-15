@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface PartnerOrganisationRepository extends PagingAndSortingRepository<PartnerOrganisation, Long> {
     PartnerOrganisation findOneByProjectIdAndOrganisationId(Long projectId, Long organisationId);
+    void deleteOneByProjectIdAndOrganisationId(Long projectId, Long organisationId);
     List<PartnerOrganisation> findByProjectId(Long projectId);
 }

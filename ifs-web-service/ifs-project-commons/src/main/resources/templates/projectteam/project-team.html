@@ -213,7 +213,7 @@
                     </tbody>
                 </table>
                 <th:block th:if="${organisation.editable and !model.isReadOnly()}">
-                    <p class="govuk-body">
+                    <th:block class="govuk-body">
                         <button name="add-team-member"
                                 th:value="${organisation.orgId}"
                                 class="button-clear"
@@ -221,7 +221,17 @@
                                          aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
                             Add team member
                         </button>
-                    </p>
+                    </th:block>
+
+                </th:block>
+                <th:block th:if="${!organisation.editable and !model.isReadOnly()}">
+                    <th:block
+                        th:insert="fragments/modals :: modal-project-team-remove-organisation (${organisation})"/>
+                    <button name="add-team-member"
+                            class="button-clear"
+                            th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.orgId}">
+                        Remove organisation
+                    </button>
                 </th:block>
             </th:block>
         </form>

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,15 +31,18 @@ public class ProjectTeamController {
     private ProjectTeamRestService projectTeamRestService;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     private ProjectInviteHelper projectInviteHelper;
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
                                  ProjectTeamRestService projectTeamRestService,
                                  CookieFlashMessageFilter cookieFlashMessageFilter,
-                                 ProjectInviteHelper projectInviteHelper) {
+                                 ProjectInviteHelper projectInviteHelper,
+                                 PartnerOrganisationRestService partnerOrganisationRestService) {
         this.projectTeamPopulator = projectTeamPopulator;
         this.projectTeamRestService = projectTeamRestService;
         this.cookieFlashMessageFilter = cookieFlashMessageFilter;
         this.projectInviteHelper = projectInviteHelper;
+        this.partnerOrganisationRestService = partnerOrganisationRestService;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
@@ -117,5 +121,13 @@ public class ProjectTeamController {
         return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
                 failureView, successView, projectId, organisationId,
                 (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
+    @PostMapping(value = "/{projectId}/team", params = "remove-organisation")
+    public String removeOrganisation(@PathVariable("projectId") final long projectId,
+                                     @RequestParam("remove-organisation") final long orgId) {
+        partnerOrganisationRestService.removePartnerOrganisation(projectId, orgId).getSuccess();
+        return "redirect:/project/" + projectId + "/team";
     }
 }
