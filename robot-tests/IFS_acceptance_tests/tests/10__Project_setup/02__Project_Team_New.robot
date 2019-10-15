@@ -189,7 +189,6 @@ Comp Admin isn't able to add a new partner organisation
     Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     Then the user should not see the element       link = Add a partner organisation
 
-
 *** Keywords ***
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
