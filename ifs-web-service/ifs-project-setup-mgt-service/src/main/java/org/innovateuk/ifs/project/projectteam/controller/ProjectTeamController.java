@@ -122,7 +122,8 @@ public class ProjectTeamController {
     }
 
     @PostMapping(params = "remove-organisation")
-    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance')")
+    @SecuredBySpring(value = "EDIT_PROJECT_TEAM", description = "IFS Admin and project finance can edit project team.")
     public String removeOrganisation(@PathVariable("projectId") long projectId,
                                      @PathVariable("competitionId") long competitionId,
                                      @RequestParam("remove-organisation") final long orgId) {

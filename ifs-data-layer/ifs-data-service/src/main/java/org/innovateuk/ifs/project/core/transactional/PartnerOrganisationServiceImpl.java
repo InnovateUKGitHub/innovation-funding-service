@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -59,6 +61,12 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
 
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
@@ -160,11 +168,8 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
         if (pendingPartnerProgress.isPresent()) {
             pendingPartnerProgressRepository.deleteById(pendingPartnerProgress.get().getId());
         }
-        /*
-         *
-         * Need to reassign anything to leaf here
-         *
-         * */
+        projectFinanceRowRepository.deleteAllByTargetId(projectId);
+        projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
 
     }
 

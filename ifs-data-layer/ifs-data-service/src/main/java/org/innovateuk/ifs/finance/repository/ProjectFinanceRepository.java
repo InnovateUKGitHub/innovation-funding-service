@@ -13,4 +13,5 @@ import java.util.List;
 public interface ProjectFinanceRepository extends PagingAndSortingRepository<ProjectFinance, Long> {
     ProjectFinance findByProjectIdAndOrganisationId(Long projectId, Long organisationId);
     List<ProjectFinance> findByProjectId(Long projectId);
+    void deleteAllByProjectIdAndOrganisationId(long projectId, long organisationId);
 }

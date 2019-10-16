@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -60,6 +61,9 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Mock
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Spy
     @InjectMocks
@@ -204,5 +208,21 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                 .andExpect(status().is3xxRedirection());
 
         verify(projectTeamRestService).removeInvite(projectId, inviteId);
+    }
+
+    @Test
+    public void removeOrganisation() throws Exception {
+
+        long organisationId = 777L;
+        long projectId = 888L;
+        long competitionId = 999L;
+
+        when(partnerOrganisationRestService.removePartnerOrganisation(projectId, organisationId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/team")
+                .param("remove-organisation", String.valueOf(organisationId)))
+                .andExpect(status().is3xxRedirection());
+
+        verify(partnerOrganisationRestService).removePartnerOrganisation(projectId, organisationId);
     }
 }

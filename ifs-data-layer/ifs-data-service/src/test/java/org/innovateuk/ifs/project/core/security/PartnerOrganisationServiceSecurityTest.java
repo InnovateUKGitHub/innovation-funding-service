@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationServiceImpl;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
 
     private PartnerOrganisationPermissionRules partnerOrganisationPermissionRules;
     private static List<PartnerOrganisationResource> partnerOrganisations;
+    @Mock
+    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Before
     public void lookupPermissionRules() {
@@ -144,7 +148,6 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
 
         assertTrue(result.isSuccess());
     }
-
 
     @Override
     protected Class<? extends PartnerOrganisationService> getClassUnderTest() {
