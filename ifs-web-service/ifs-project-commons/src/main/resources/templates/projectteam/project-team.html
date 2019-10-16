@@ -220,26 +220,28 @@
                     </tr>
                     </tbody>
                 </table>
-                <th:block th:if="${organisation.editable and !model.isReadOnly()}">
-                    <th:block class="govuk-body">
-                        <button name="add-team-member"
-                                th:value="${organisation.orgId}"
-                                class="button-clear"
-                                th:attr="data-show-form=${'invite-user-' + organisation.orgId},
-                                         aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
-                            Add team member
-                        </button>
+                <p class="govuk-body">
+                    <th:block th:if="${organisation.editable and !model.isReadOnly()}">
+                        <th:block class="govuk-body">
+                            <button name="add-team-member"
+                                    th:value="${organisation.orgId}"
+                                    class="vertical-align-baseline button-clear govuk-!-margin-right-1"
+                                    th:attr="data-show-form=${'invite-user-' + organisation.orgId},
+                                             aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
+                                Add team member
+                            </button>
+                        </th:block>
                     </th:block>
-
-                </th:block>
-                <p th:if="${!organisation.leadOrg and !model.isReadOnly() and model.canRemovePartnerOrganisation}">
-                    <th:block
-                        th:insert="fragments/modals :: modal-project-team-remove-organisation (${organisation})"/>
-                    <button name="add-team-member"
-                            class="button-clear"
-                            th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.orgId}">
-                        Remove organisation
-                    </button>
+                    <th:block th:if="${organisation.editable and !organisation.leadOrg and !model.isReadOnly() and model.canRemovePartnerOrganisation}">
+                        <span class="vertical-align-baseline hint">|</span>
+                        <button name="remove-organisation"
+                                class="vertical-align-baseline button-clear govuk-!-margin-left-1"
+                                th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.orgId}">
+                            Remove organisation
+                        </button>
+                        <th:block
+                            th:insert="fragments/modals :: modal-project-team-remove-organisation (${organisation})"/>
+                    </th:block>
                 </p>
             </th:block>
         </form>

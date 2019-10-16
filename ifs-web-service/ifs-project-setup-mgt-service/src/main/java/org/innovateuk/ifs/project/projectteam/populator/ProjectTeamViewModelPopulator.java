@@ -58,7 +58,7 @@ public class ProjectTeamViewModelPopulator {
         boolean projectIsNotActive = !project.getProjectState().isActive();
 
         // support users and ifs admins can edit, other internal users have read only view only
-        boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) || projectIsNotActive;
+        boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT, PROJECT_FINANCE) || projectIsNotActive;
 
         return new ProjectTeamViewModel(
                 project,
