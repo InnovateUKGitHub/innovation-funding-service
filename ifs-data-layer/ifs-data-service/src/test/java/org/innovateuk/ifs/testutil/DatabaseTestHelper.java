@@ -43,7 +43,6 @@ public class DatabaseTestHelper {
      */
     public void assertingNoDatabaseChangesOccur(Runnable action) {
 
-        logVariables();
         assertingNoDatabaseChangesOccur(() -> {
             action.run();
             return null;
@@ -54,7 +53,7 @@ public class DatabaseTestHelper {
      * Assert that no database changes occur during the running of the given action
      */
     public <T> T assertingNoDatabaseChangesOccur(Supplier<T> action) {
-logVariables();
+
         try {
             String startingContent = getDatabaseContents();
 
@@ -83,8 +82,8 @@ logVariables();
         while (schemaResults.next()) {
 
             String tableName = schemaResults.getString(3);
-            CallableStatement tableResultsQuery = connection.prepareCall("SELECT * FROM " + tableName);
-            ResultSet tableResults = tableResultsQuery.executeQuery();
+            PreparedStatement preparedStatement  = connection.prepareStatement("SELECT * FROM " + tableName);
+            ResultSet tableResults = preparedStatement.executeQuery();
 
             String tableAsString = "";
 
