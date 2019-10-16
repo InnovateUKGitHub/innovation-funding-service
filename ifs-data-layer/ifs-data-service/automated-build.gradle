@@ -1,4 +1,4 @@
-ext.testIfsDatasourceUrl="jdbc:mariadb://127.0.0.1:3306/ifs_test"
+ext.testIfsDatasourceUrl="jdbc:mariadb://127.0.0.1:3306/ifs_test?characterEncoding=utf8&useMysqlMetadata=true"
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
 
