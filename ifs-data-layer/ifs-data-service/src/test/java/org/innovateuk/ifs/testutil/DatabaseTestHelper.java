@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.testutil;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +27,23 @@ public class DatabaseTestHelper {
     @Value("${spring.flyway.password}")
     private String databasePassword;
 
+    private static final Log LOG = LogFactory.getLog(DatabaseTestHelper.class);
+
+
+    private void logVariables() {
+        LOG.error("*******************");
+        LOG.error(databaseUrl);
+        LOG.error(databaseUser);
+        LOG.error(databasePassword);
+        LOG.error("*******************");
+    }
+
     /**
      * Assert that no database changes occur during the running of the given action
      */
     public void assertingNoDatabaseChangesOccur(Runnable action) {
 
+        logVariables();
         assertingNoDatabaseChangesOccur(() -> {
             action.run();
             return null;
@@ -40,7 +54,7 @@ public class DatabaseTestHelper {
      * Assert that no database changes occur during the running of the given action
      */
     public <T> T assertingNoDatabaseChangesOccur(Supplier<T> action) {
-
+logVariables();
         try {
             String startingContent = getDatabaseContents();
 
@@ -59,6 +73,7 @@ public class DatabaseTestHelper {
 
     private String getDatabaseContents() throws SQLException {
 
+        logVariables();
         Connection connection = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
         DatabaseMetaData schemaMetadata = connection.getMetaData();
         ResultSet schemaResults = schemaMetadata.getTables(null, null, "%", null);
