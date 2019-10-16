@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.terms.populator;
+package org.innovateuk.ifs.application.forms.questions.terms.populator;
 
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerRowViewModel;
