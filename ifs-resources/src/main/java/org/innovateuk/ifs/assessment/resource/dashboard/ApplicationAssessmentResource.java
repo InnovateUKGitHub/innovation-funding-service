@@ -4,8 +4,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 
-import java.util.Optional;
-
 public class ApplicationAssessmentResource {
 
     private long applicationId;
@@ -14,7 +12,7 @@ public class ApplicationAssessmentResource {
     private String leadOrganisation;
     private AssessmentState state;
     private int overallScore;
-    private boolean recommended;
+    private Boolean recommended;
 
     public ApplicationAssessmentResource() {}
 
@@ -24,7 +22,7 @@ public class ApplicationAssessmentResource {
                                          String leadOrganisation,
                                          AssessmentState state,
                                          int overallScore,
-                                         boolean recommended) {
+                                         Boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.competitionName = competitionName;
@@ -58,7 +56,7 @@ public class ApplicationAssessmentResource {
         return overallScore;
     }
 
-    public boolean isRecommended() {
+    public Boolean isRecommended() {
         return recommended;
     }
 
