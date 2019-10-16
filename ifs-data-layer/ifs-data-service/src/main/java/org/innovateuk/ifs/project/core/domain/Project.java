@@ -149,6 +149,12 @@ public class Project implements ProcessActivity {
         return getOnlyElement(matchingUser);
     }
 
+    public Optional<PartnerOrganisation> getLeadOrganisation() {
+        return getPartnerOrganisations().stream()
+                .filter(PartnerOrganisation::isLeadOrganisation)
+                .findFirst();
+    }
+
     public Long getId() {
         return id;
     }

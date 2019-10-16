@@ -51,7 +51,6 @@ public class ProjectInviteValidator {
     }
 
     private ServiceResult<Void> validateProjectInviteResource(ProjectUserInviteResource projectUserInviteResource) {
-
         if (StringUtils.isEmpty(projectUserInviteResource.getEmail()) || StringUtils.isEmpty(projectUserInviteResource.getName())
                 || projectUserInviteResource.getProject() == null || projectUserInviteResource.getOrganisation() == null) {
             return serviceFailure(PROJECT_INVITE_INVALID);
@@ -60,7 +59,6 @@ public class ProjectInviteValidator {
     }
 
     private ServiceResult<Void> validateProjectPartnerInviteResource(ProjectPartnerInviteResource invite) {
-
         if (StringUtils.isEmpty(invite.getEmail()) || StringUtils.isEmpty(invite.getUserName())
                 || StringUtils.isEmpty(invite.getOrganisationName())) {
             return serviceFailure(PROJECT_INVITE_INVALID);
@@ -87,7 +85,6 @@ public class ProjectInviteValidator {
     }
 
     private ServiceResult<Void> validateUserIsNotAlreadyOnProject(long projectId, User user) {
-
         List<ProjectUser> existingUserEntryForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, user.getId(), PROJECT_PARTNER);
 
         return existingUserEntryForProject.isEmpty() ? serviceSuccess() :
