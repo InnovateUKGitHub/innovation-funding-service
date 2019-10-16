@@ -9,7 +9,9 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_REMOVE_LEAD_ORGANISATION_FROM_PROJECT;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
@@ -35,19 +40,22 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 public class PartnerOrganisationServiceImpl implements PartnerOrganisationService {
 
     @Autowired
-    protected PartnerOrganisationRepository partnerOrganisationRepository;
+    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
-    protected PartnerOrganisationMapper partnerOrganisationMapper;
+    private PartnerOrganisationMapper partnerOrganisationMapper;
 
     @Autowired
-    protected ProjectUserInviteRepository projectUserInviteRepository;
+    private ProjectUserInviteRepository projectUserInviteRepository;
 
     @Autowired
-    protected ProjectUserRepository projectUserRepository;
+    private PendingPartnerProgressRepository pendingPartnerProgressRepository;
 
     @Autowired
-    protected NotificationService notificationService;
+    private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -74,11 +82,20 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Transactional
     public ServiceResult<Void> removePartnerOrganisation(long projectId, long organisationId) {
         return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
-                notFoundError(PartnerOrganisation.class, id)).andOnSuccessReturnVoid(projectPartner -> {
-                    removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
-                    sendNotifications(projectId, projectPartner.getOrganisation());
-                }
+                notFoundError(PartnerOrganisation.class, id)).andOnSuccessReturnVoid(
+                projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccess(
+                        () -> {
+                            removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
+                            sendNotifications(projectId, projectPartner.getOrganisation());
+                        })
         );
+    }
+
+
+    private ServiceResult<Void> validatePartnerNotLead(PartnerOrganisation partnerOrganisation) {
+        return partnerOrganisation.isLeadOrganisation() ?
+                serviceFailure(CANNOT_REMOVE_LEAD_ORGANISATION_FROM_PROJECT) :
+                serviceSuccess();
     }
 
     private void sendNotifications(long projectId, Organisation organisation) {
@@ -139,6 +156,16 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
         projectUserInviteRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         projectUserRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         partnerOrganisationRepository.deleteOneByProjectIdAndOrganisationId(projectId, organisationId);
+        Optional<PendingPartnerProgress> pendingPartnerProgress = pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(organisationId, projectId);
+        if (pendingPartnerProgress.isPresent()) {
+            pendingPartnerProgressRepository.deleteById(pendingPartnerProgress.get().getId());
+        }
+        /*
+         *
+         * Need to reassign anything to leaf here
+         *
+         * */
+
     }
 
     private NotificationTarget createProjectNotificationTarget(User user) {
