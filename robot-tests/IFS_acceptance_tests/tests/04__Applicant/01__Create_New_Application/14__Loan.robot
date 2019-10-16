@@ -81,7 +81,7 @@ Applicant complete the project setup details
     [Documentation]  IFS-6369  IFS-6285
     Given the user completes the project details
     And the user completes the project team details
-    Then the user should see the element            jQuery = .message-alert:contains("You must complete your project and bank details within 30 days of our")
+    Then the user should not see the element    jQuery = h2:contains("Bank details")
 
 Funding sought validations
     [Documentation]  IFS-6293
@@ -157,7 +157,7 @@ the user submits the loan application
 the user completes the project details
     log in as a different user            &{lead_applicant_credentials}
     the user navigates to the page        ${loan_PS}
-    the user should see the element       jQuery = .message-alert:contains("You must complete your project and bank details within 30 days of our")
+    the user should not see the element   css = .message-alert
     the user clicks the button/link       link = view application feedback
     the user should see the element       jQuery = h2:Contains("Your application has progressed to project setup.") ~ .govuk-body:contains("Scores and written feedback")
     the user clicks the button/link       link = Back to set up your project
