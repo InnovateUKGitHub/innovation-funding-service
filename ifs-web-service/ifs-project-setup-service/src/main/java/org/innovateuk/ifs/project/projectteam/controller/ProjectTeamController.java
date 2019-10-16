@@ -37,16 +37,6 @@ public class ProjectTeamController {
     @Autowired
     private ProjectInviteHelper projectInviteHelper;
 
-    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
-                                 ProjectTeamRestService projectTeamRestService,
-                                 CookieFlashMessageFilter cookieFlashMessageFilter,
-                                 ProjectInviteHelper projectInviteHelper) {
-        this.projectTeamPopulator = projectTeamPopulator;
-        this.projectTeamRestService = projectTeamRestService;
-        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
-        this.projectInviteHelper = projectInviteHelper;
-    }
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @GetMapping("/{projectId}/team")
     public String viewProjectTeam(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,

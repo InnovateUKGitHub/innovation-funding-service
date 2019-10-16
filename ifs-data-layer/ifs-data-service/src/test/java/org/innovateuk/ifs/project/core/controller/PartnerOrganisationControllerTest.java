@@ -14,6 +14,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,7 +55,7 @@ public class PartnerOrganisationControllerTest extends BaseControllerMockMVCTest
         long organisationId = 456;
 
         when(partnerOrganisationService.removePartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(get("/project/{projectId}/remove-organisation/{organisationId}", projectId, organisationId))
+        mockMvc.perform(post("/project/{projectId}/remove-organisation/{organisationId}", projectId, organisationId))
                 .andExpect(status().isOk());
 
         verify(partnerOrganisationService).removePartnerOrganisation(projectId,organisationId);
