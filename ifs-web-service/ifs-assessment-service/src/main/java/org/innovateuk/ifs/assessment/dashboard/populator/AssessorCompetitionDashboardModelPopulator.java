@@ -7,14 +7,14 @@ import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDash
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDashboardViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashboardResource;
+import org.innovateuk.ifs.assessment.service.AssessorCompetitionDashboardRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +37,9 @@ public class AssessorCompetitionDashboardModelPopulator {
     private ApplicationService applicationService;
     private OrganisationRestService organisationRestService;
 
+    @Autowired
+    private AssessorCompetitionDashboardRestService assessorCompetitionDashboardRestService;
+
     public AssessorCompetitionDashboardModelPopulator(CompetitionRestService competitionService,
                                                       AssessmentService assessmentService,
                                                       ApplicationService applicationService,
@@ -48,9 +51,8 @@ public class AssessorCompetitionDashboardModelPopulator {
     }
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        ZonedDateTime acceptDeadline = competition.getAssessorAcceptsDate();
-        ZonedDateTime submitDeadline = competition.getAssessorDeadlineDate();
+
+        AssessorCompetitionDashboardResource summary = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, userId).getSuccess();
 
         Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted =
                 getApplicationsPartitionedBySubmitted(userId, competitionId);
@@ -61,11 +63,11 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .anyMatch(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit);
 
         return new AssessorCompetitionDashboardViewModel(
-                competition.getId(),
-                competition.getName(),
-                competition.getLeadTechnologistName(),
-                acceptDeadline,
-                submitDeadline,
+                summary.getCompetitionId(),
+                summary.getCompetitionName(),
+                summary.getInnovationLead(),
+                summary.getAssessorAcceptDate(),
+                summary.getAssessorDeadlineDate(),
                 submitted,
                 outstanding,
                 submitVisible
