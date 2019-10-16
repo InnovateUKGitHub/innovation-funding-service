@@ -36,7 +36,7 @@ public class ApplicationAssessmentServiceImpl extends RootTransactionalService i
                 .collect(toList()));
     }
 
-    private ApplicationAssessmentResource mapToResource(Assessment assessment) {
+    public ApplicationAssessmentResource mapToResource(Assessment assessment) {
         Optional<Organisation> leadOrganisation = organisationRepository.findById(assessment.getTarget().getLeadOrganisationId());
 
         return new ApplicationAssessmentResource(
