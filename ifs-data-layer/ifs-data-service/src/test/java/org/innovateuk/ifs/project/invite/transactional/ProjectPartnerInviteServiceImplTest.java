@@ -62,7 +62,7 @@ public class ProjectPartnerInviteServiceImplTest {
         String organisationName = "Org";
         String userName = "Someone";
         String email = "someone@gmail.com";
-        Application application = spy(newApplication().build());
+        Application application = newApplication().build();
         Organisation leadOrg = newOrganisation()
                 .withName("Lead org")
                 .build();
@@ -76,7 +76,6 @@ public class ProjectPartnerInviteServiceImplTest {
                         .build(1))
                 .build();
 
-        when(application.getLeadOrganisationId()).thenReturn(leadOrg.getId());
         when(projectRepository.findById(projectId)).thenReturn(of(project));
         when(projectInviteValidator.validate(projectId, invite)).thenReturn(serviceSuccess());
         when(inviteOrganisationRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
