@@ -4,7 +4,7 @@ ext.testIfsDatasourceUrl="jdbc:mariadb://127.0.0.1:3306/eu_grant_registration_te
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
 
-project.ext['flyway.url']='jdbc:mariadb://127.0.0.1:3306?characterEncoding=utf8'
+project.ext['flyway.url']='jdbc:mariadb://127.0.0.1:3306?characterEncoding=utf8&useMysqlMetadata=true'
 project.ext['flyway.schemas']='eu_grant_registration,eu_grant_registration_test'
 project.ext['flyway.user']="ifs"
 project.ext['flyway.password']="ifs"
