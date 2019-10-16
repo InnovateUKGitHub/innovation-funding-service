@@ -20,7 +20,7 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 Competition dashboard
     [Documentation]    INFUND-6599  INFUND-7362  INFUND-7561
     Given The user clicks the button/link              link = ${CLOSED_COMPETITION_NAME2}
-    Then the user should see the competition details   ${CLOSED_COMPETITION_NAME2}   Closed  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition  Advanced Propulsion Centre
+    Then the user should see the competition details   ${CLOSED_COMPETITION_NAME2}   Closed  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition  Aerospace Technology Institute
     And the user should see the element                link = View and update competition setup
     And the user should see the milestones for the closed competitions
 
@@ -73,7 +73,7 @@ the counts of the key statistics of the closed competition should be correct
     ${APPLICATIONS_REQ} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Applications requiring additional assessors") .govuk-heading-l
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${APPLICATIONS_REQ}
     ${Assessor_without_app} =    Get text     jQuery = .govuk-grid-column-one-third:contains("Assessors without applications") .govuk-heading-l
-    Should Be Equal As Integers    ${Assessor_without_app}   2
+    Should Be Equal As Integers    ${Assessor_without_app}   4
 
 Reset competition's milestone
     Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `competition_id`='${competition_ids['${CLOSED_COMPETITION_NAME2}']}' and `type`='ASSESSORS_NOTIFIED';
