@@ -14,7 +14,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
-public class AssessorCompetitionDashboardServiceImpl extends RootTransactionalService implements AssessorCompetitionDashboardService {
+public class AssessmentCompetitionDashboardServiceImpl extends RootTransactionalService implements AssessmentCompetitionDashboardService {
 
     @Autowired
     private ApplicationAssessmentService applicationAssessmentService;

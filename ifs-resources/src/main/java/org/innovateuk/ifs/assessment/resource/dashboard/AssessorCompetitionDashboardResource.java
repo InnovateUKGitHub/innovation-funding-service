@@ -13,6 +13,7 @@ public class AssessorCompetitionDashboardResource {
     private String innovationLead;
     private ZonedDateTime assessorAcceptDate;
     private ZonedDateTime assessorDeadlineDate;
+    private Long processRole;
 
     private List<ApplicationAssessmentResource> applicationAssessments;
 
@@ -57,6 +58,10 @@ public class AssessorCompetitionDashboardResource {
         return applicationAssessments;
     }
 
+    public Long getProcessRole() {
+        return processRole;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,6 +74,7 @@ public class AssessorCompetitionDashboardResource {
                 .append(assessorAcceptDate, that.assessorAcceptDate)
                 .append(assessorDeadlineDate, that.assessorDeadlineDate)
                 .append(applicationAssessments, that.applicationAssessments)
+                .append(processRole, that.processRole)
                 .isEquals();
     }
 
@@ -81,6 +87,7 @@ public class AssessorCompetitionDashboardResource {
                 .append(assessorAcceptDate)
                 .append(assessorDeadlineDate)
                 .append(applicationAssessments)
+                .append(processRole)
                 .toHashCode();
     }
 }

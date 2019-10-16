@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
-import org.innovateuk.ifs.assessment.dashboard.transactional.AssessorCompetitionDashboardService;
+import org.innovateuk.ifs.assessment.dashboard.transactional.AssessmentCompetitionDashboardService;
 import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashboardResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/assessment")
-public class ApplicationAssessmentController {
+public class AssessmentCompetitionDashboardController {
 
     @Autowired
-    private AssessorCompetitionDashboardService assessorCompetitionDashboardService;
+    private AssessmentCompetitionDashboardService assessorCompetitionDashboardService;
 
     @GetMapping("/user/{userId}/competition/{competitionId}/dashboard")
     public RestResult<AssessorCompetitionDashboardResource> findByUserAndCompetition(
