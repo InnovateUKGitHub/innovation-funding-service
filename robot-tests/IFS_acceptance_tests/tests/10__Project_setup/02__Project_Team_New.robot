@@ -19,20 +19,30 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-5710 - Add project team section to setup your project page
 ...
+...             IFS-6485 - Add Partner
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
 
 *** Variables ***
-${newProjecTeamPage}       ${server}/project-setup/project/${PS_PD_Project_Id}/team
-${moProjectID}             ${project_ids["Super-EFFY - Super Efficient Forecasting of Freight Yields"]}
-${steakHolderCompId}       ${competition_ids["Rolling stock future developments"]}
-${steakHolderProjectId}    ${project_ids["High-speed rail and its effects on water quality"]}
-${leadNewMemberEmail}      test@test.nom
-${nonLeadNewMemberEmail}   testerina@test.nom
-${removeInviteEmail}       remove@test.nom
-${internalViewTeamPage}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
-${internalInviteeEmail}    internal@invitee.com
+${newProjecTeamPage}         ${server}/project-setup/project/${PS_PD_Project_Id}/team
+${moProjectID}               ${project_ids["Super-EFFY - Super Efficient Forecasting of Freight Yields"]}
+${addPartnerOrgCompId}       ${competition_ids["Project Setup Comp 7"]}
+${addNewPartnerOrgProjID}    ${project_ids["PSC application 7"]}
+${addNewPartnerOrgAppID}     ${application_ids["PSC application 7"]}
+${addNewPartnerOrgProjPage}  ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team/partner
+${steakHolderCompId}         ${competition_ids["Rolling stock future developments"]}
+${steakHolderProjectId}      ${project_ids["High-speed rail and its effects on water quality"]}
+${leadNewMemberEmail}        test@test.nom
+${nonLeadNewMemberEmail}     testerina@test.nom
+${removeInviteEmail}         remove@test.nom
+${internalViewTeamPage}      ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
+${internalInviteeEmail}      internal@invitee.com
+${ifsAdminAddOrgEmail}       admin@addorg.com
+${intFinanceAddOrgEmail}     finance@addorg.com
+${applicationName}           PSC application 7
+${orgInviterName}            Ward Ltd
 
 *** Test Cases ***
 Monitoring Officers has a read only view of the Project team page
@@ -159,7 +169,34 @@ New user is able to repspond to a query
     When the new user posts a response
     Then the user should not see an error in the page
 
+Ifs Admin is able to add a new partner organisation
+    [Documentation]  IFS-6485
+    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
+    Given the user navigates to the page           ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation  Testing Organisation  Name Surname  ${ifsAdminAddOrgEmail}
+    Then the user reads his email                  ${ifsAdminAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+
+Project finance is able to add a new partner organisation
+    [Documentation]  IFS-6485
+    [Setup]  log in as a different user            &{internal_finance_credentials}
+    Given the user navigates to the page           ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation  Testing Organisation  Name Surname  ${intFinanceAddOrgEmail}
+    Then the user reads his email                  ${intFinanceAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+
+Comp Admin isn't able to add a new partner organisation
+    [Documentation]  IFS-6485
+    [Setup]  log in as a different user            &{Comp_admin1_credentials}
+    Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
+    Then the user should not see the element       link = Add a partner organisation
+
 *** Keywords ***
+the user adds a new partner organisation
+    [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
+    the user enters text to a text field  id = organisationName  ${partnerOrgName}
+    the user enters text to a text field  id = userName  ${persFullName}
+    the user enters text to a text field  id = email  ${email}
+    the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
+
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
     the user clicks the button/link        jQuery =tr:contains("Empire") td:nth-child(6):contains("View")
@@ -173,9 +210,9 @@ the new user posts a response
     log in as a different user                 ${leadNewMemberEmail}   ${short_password}
     the user clicks the button/link            link = Magic material
     the user clicks the button/link            link = Finance checks
-    the user clicks the button/link      link = Respond
-    the user enters text to a text field  css = .editor    one more response to the eligibility query
-    the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
+    the user clicks the button/link            link = Respond
+    the user enters text to a text field       css = .editor    one more response to the eligibility query
+    the user clicks the button/link            jQuery = .govuk-button:contains("Post response")
 
 The Project team status for internal user is incomplete
     the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ public class InviteOrganisation {
 
     @OneToMany(mappedBy = "inviteOrganisation", cascade = ALL)
     private List<ApplicationInvite> invites = new ArrayList<>();
+
+    @OneToMany(mappedBy = "inviteOrganisation", cascade = ALL)
+    private List<ProjectPartnerInvite> projectPartnerInvites = new ArrayList<>();
 
     public InviteOrganisation() {
     	// no-arg constructor
@@ -85,5 +89,30 @@ public class InviteOrganisation {
     public void removeInvite(ApplicationInvite invite) {
         invite.setInviteOrganisation(null);
         invites.remove(invite);
+    }
+
+    public List<ProjectPartnerInvite> getProjectPartnerInvites() {
+        return projectPartnerInvites;
+    }
+
+    public void setProjectPartnerInvites(List<ProjectPartnerInvite> projectPartnerInvites) {
+        if (projectPartnerInvites == null) {
+            throw new NullPointerException("invites cannot be null");
+        }
+        this.projectPartnerInvites = projectPartnerInvites;
+    }
+
+    public boolean isOnLastProjectPartnerInvites() {
+        return projectPartnerInvites.size() == 1;
+    }
+
+    public void addProjectPartnerInvites(ProjectPartnerInvite projectPartnerInvite) {
+        projectPartnerInvite.setInviteOrganisation(this);
+        projectPartnerInvites.add(projectPartnerInvite);
+    }
+
+    public void removeProjectPartnerInvites(ProjectPartnerInvite projectPartnerInvite) {
+        projectPartnerInvite.setInviteOrganisation(null);
+        projectPartnerInvites.remove(projectPartnerInvite);
     }
 }
