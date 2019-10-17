@@ -21,6 +21,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-6485 - Add Partner
 ...
+...             IFS-6484 - Remove Partner
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -189,7 +191,18 @@ Comp Admin isn't able to add a new partner organisation
     Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     Then the user should not see the element       link = Add a partner organisation
 
+Ifs Admin is able to remove a partner organisation
+    [Documentation]  IFS-6485
+        [Setup]  log in as a different user            &{ifs_admin_user_credentials}
+        Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
+        When the user removes a partner organisation   
+        Then the user reads his email                  ${ifsAdminAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+
 *** Keywords ***
+the user removes a partner organisation
+[Arguments]  ${orgName}
+
+
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
     the user enters text to a text field  id = organisationName  ${partnerOrgName}
