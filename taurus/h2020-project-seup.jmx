@@ -18,7 +18,7 @@
           <collectionProp name="Arguments.arguments">
             <elementProp name="competition_id" elementType="Argument">
               <stringProp name="Argument.name">competition_id</stringProp>
-              <stringProp name="Argument.value">82</stringProp>
+              <stringProp name="Argument.value">${__P(competition_id,82)}</stringProp>
               <stringProp name="Argument.desc">H2020 perf test competition id</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
@@ -94,6 +94,22 @@
               <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
             </HtmlExtractor>
             <hashTree/>
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+              <stringProp name="ConstantTimer.delay">10000</stringProp>
+            </ConstantTimer>
+            <hashTree/>
+          </hashTree>
+          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller (application exists)" enabled="true">
+            <stringProp name="IfController.condition">!${__isVarDefined(application_id)}</stringProp>
+            <boolProp name="IfController.evaluateAll">false</boolProp>
+          </IfController>
+          <hashTree>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Stop if no fundable projects" enabled="true">
+              <intProp name="ActionProcessor.action">4</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">0</stringProp>
+            </TestAction>
+            <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Application overview " enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
@@ -117,7 +133,7 @@
           <hashTree>
             <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor (user_email)" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.refname">user_email</stringProp>
+              <stringProp name="RegexExtractor.refname">applicant_email</stringProp>
               <stringProp name="RegexExtractor.regex">class=\&quot;govuk-table__cell ifs-table__email\&quot;&gt;(.+)&lt;/td&gt;</stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.default"></stringProp>
@@ -262,8 +278,8 @@
               <stringProp name="1921668648">user_email</stringProp>
             </collectionProp>
             <collectionProp name="UserParameters.thread_values">
-              <collectionProp name="354042873">
-                <stringProp name="461884958">${user_email}</stringProp>
+              <collectionProp name="104658740">
+                <stringProp name="104658709">${applicant_email}</stringProp>
               </collectionProp>
             </collectionProp>
             <boolProp name="UserParameters.per_iteration">false</boolProp>
@@ -1277,8 +1293,8 @@
               <stringProp name="1921668648">user_email</stringProp>
             </collectionProp>
             <collectionProp name="UserParameters.thread_values">
-              <collectionProp name="1833103955">
-                <stringProp name="486989976">h2020.perf.applicant${user_number}@example.com</stringProp>
+              <collectionProp name="104658740">
+                <stringProp name="104658709">${applicant_email}</stringProp>
               </collectionProp>
             </collectionProp>
             <boolProp name="UserParameters.per_iteration">false</boolProp>
@@ -1733,8 +1749,8 @@
               <stringProp name="1921668648">user_email</stringProp>
             </collectionProp>
             <collectionProp name="UserParameters.thread_values">
-              <collectionProp name="1833103955">
-                <stringProp name="486989976">h2020.perf.applicant${user_number}@example.com</stringProp>
+              <collectionProp name="104658740">
+                <stringProp name="104658709">${applicant_email}</stringProp>
               </collectionProp>
             </collectionProp>
             <boolProp name="UserParameters.per_iteration">false</boolProp>
