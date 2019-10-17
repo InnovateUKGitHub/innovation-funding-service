@@ -27,6 +27,7 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.invite.transactional.ProjectInviteValidator;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
@@ -113,6 +114,9 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
     @Mock
     private ProjectService projectServiceMock;
+
+    @Mock
+    private ProjectInviteValidator projectInviteValidator;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -250,6 +254,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
         when(projectInviteMapperMock.mapToResource(projectInvite)).thenReturn(inviteResource);
         when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
+        when(projectInviteValidator.validate(any())).thenReturn(serviceSuccess());
 
         NotificationTarget to = new UserNotificationTarget("Abc Xyz", "Abc.xyz@gmail.com");
 
@@ -276,7 +281,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         assertTrue(result.isFailure());
         assertEquals(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(projectUserInviteRepositoryMock, times(2)).save(projectInvite);
+        verify(projectUserInviteRepositoryMock, times(1)).save(projectInvite);
     }
 
     @Test
@@ -329,6 +334,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         when(projectServiceMock.getProjectById(projectInDB.getId())).thenReturn(serviceSuccess(projectResource));
         when(projectInviteMapperMock.mapToResource(projectInvite)).thenReturn(inviteResource);
         when(projectInviteMapperMock.mapToDomain(projectUserInviteResource)).thenReturn(projectInvite);
+        when(projectInviteValidator.validate(any())).thenReturn(serviceSuccess());
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
@@ -350,7 +356,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         assertTrue(result.isSuccess());
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
-        verify(projectUserInviteRepositoryMock, times(2)).save(projectInvite);
+        verify(projectUserInviteRepositoryMock, times(1)).save(projectInvite);
     }
 
     @Test

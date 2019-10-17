@@ -3,12 +3,12 @@ package org.innovateuk.ifs.project.projectteam.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -24,7 +24,6 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -41,17 +40,14 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
 
     @Override
     protected ProjectTeamController supplyControllerUnderTest() {
-        return new ProjectTeamController(populator,
-                                         projectTeamRestService,
-                                         cookieFlashMessageFilter,
-                                         projectInviteHelper);
+        return new ProjectTeamController();
     }
 
     @Mock
     private ProjectTeamViewModelPopulator populator;
 
     @Mock
-    private ProjectDetailsService projectDetailsService;
+    private ProjectInviteRestService projectInviteRestService;
 
     @Mock
     private ProjectService projectService;
@@ -150,7 +146,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
-        when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(singletonList(projectUserInviteResource)));
+        when(projectInviteRestService.getInvitesByProject(projectId)).thenReturn(restSuccess(singletonList(projectUserInviteResource)));
         when(projectTeamRestService.inviteProjectMember(projectId, projectUserInviteResource)).thenReturn(restSuccess());
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/team", competitionId, projectId)
@@ -183,7 +179,7 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
                 .withStatus(SENT)
                 .withLeadOrganisation(leadOrganisation.getId()).build(1);
 
-        when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(projectInviteRestService.getInvitesByProject(projectId)).thenReturn(restSuccess(existingInvites));
         when(projectTeamRestService.inviteProjectMember(projectId, existingInvites.get(0))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/team", competitionId, projectId)
