@@ -55,6 +55,8 @@
 #
 # UUID_REPLACEMENT - replace the UUID with a new one
 #
+# DATE_REPLACEMENT - replace the date with the current date.
+#
 set -e
 
 REPLACE_REPLACEMENT_TOKEN_EXTRACTOR="s/^REPLACE('\(.*\)')$/\1/g"
