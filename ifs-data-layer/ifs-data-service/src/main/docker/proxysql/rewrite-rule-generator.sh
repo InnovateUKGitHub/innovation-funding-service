@@ -86,6 +86,8 @@ UUID_MASK_TOKEN_EXTRACTOR="s/^UUID('\(.*\)')$/\1/g"
 
 UUID_REPLACEMENT="UUID_REPLACEMENT"
 
+DATE_REPLACEMENT="DATE_REPLACEMENT"
+
 function generate_number_rewrite_rule() {
 
     column_name=$1
@@ -202,6 +204,11 @@ function generate_rewrite_from_rule() {
     # this case generates the SQL from a rewrite rule like "UUID_REPLACEMENT"
     if [[ "$replacement" == $UUID_REPLACEMENT ]]; then
          echo "UUID()"
+         exit 0
+    fi
+        # this case generates the SQL from a rewrite rule like "UUID_REPLACEMENT"
+    if [[ "$replacement" == $DATE_REPLACEMENT ]]; then
+         echo "DATE()"
          exit 0
     fi
 
