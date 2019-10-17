@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.project.invite.transactional;
 
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
@@ -78,17 +77,18 @@ public class ProjectPartnerInviteServiceImpl extends RootTransactionalService im
     }
 
     private ServiceResult<Void> sendInviteNotification(ProjectPartnerInvite projectPartnerInvite) {
-        PartnerOrganisation leadOrganisation = projectPartnerInvite.getTarget().getLeadOrganisation().orElseThrow(ObjectNotFoundException::new);
-        NotificationSource from = systemNotificationSource;
-        NotificationTarget to = new UserNotificationTarget(projectPartnerInvite.getName(), projectPartnerInvite.getEmail());
+        return find(projectPartnerInvite.getTarget().getLeadOrganisation(), notFoundError(Organisation.class)).andOnSuccess(leadOrganisation -> {
+            NotificationSource from = systemNotificationSource;
+            NotificationTarget to = new UserNotificationTarget(projectPartnerInvite.getName(), projectPartnerInvite.getEmail());
 
-        Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("inviteUrl", webBaseUrl);
-        notificationArguments.put("applicationId", projectPartnerInvite.getTarget().getApplication().getId());
-        notificationArguments.put("projectName", projectPartnerInvite.getTarget().getName());
-        notificationArguments.put("leadOrganisationName", leadOrganisation.getOrganisation().getName());
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("inviteUrl", webBaseUrl);
+            notificationArguments.put("applicationId", projectPartnerInvite.getTarget().getApplication().getId());
+            notificationArguments.put("projectName", projectPartnerInvite.getTarget().getName());
+            notificationArguments.put("leadOrganisationName", leadOrganisation.getOrganisation().getName());
 
-        Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
-        return notificationService.sendNotificationWithFlush(notification, EMAIL);
+            Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
+            return notificationService.sendNotificationWithFlush(notification, EMAIL);
+        });
     }
 }
