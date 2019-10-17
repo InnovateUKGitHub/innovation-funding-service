@@ -3,4 +3,3 @@ annual_profits|DECIMAL(10, 2)
 annual_export|DECIMAL(10, 2)
 research_and_development|DECIMAL(10, 2)
 employees|INTEGER(10)
-financial_year_end|DATE
