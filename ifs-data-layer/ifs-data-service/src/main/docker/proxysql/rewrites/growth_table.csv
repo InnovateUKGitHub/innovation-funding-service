@@ -3,3 +3,4 @@ annual_profits|INTEGER(10)
 annual_export|INTEGER(10)
 research_and_development|INTEGER(10)
 employees|INTEGER(50)
+financial_year_end|DATE_REPLACEMENT

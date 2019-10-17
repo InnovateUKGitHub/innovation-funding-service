@@ -208,7 +208,7 @@ function generate_rewrite_from_rule() {
     fi
         # this case generates the SQL from a rewrite rule like "UUID_REPLACEMENT"
     if [[ "$replacement" == $DATE_REPLACEMENT ]]; then
-         echo "DATE()"
+         echo "CURDATE()"
          exit 0
     fi
 
