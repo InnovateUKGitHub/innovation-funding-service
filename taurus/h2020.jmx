@@ -223,7 +223,7 @@
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="H2020 Grant Transfer" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="H2020 Grant Transfer" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">startnextloop</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -246,11 +246,11 @@
         </CounterConfig>
         <hashTree/>
         <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Applicant logs in, creates, then completes, application" enabled="true">
-          <stringProp name="IncludeController.includepath">/Users/tom/git/innovation-funding-service/taurus/h2020-application.jmx</stringProp>
+          <stringProp name="IncludeController.includepath">h2020-application.jmx</stringProp>
         </IncludeController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="H2020 Project Setup" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="H2020 Project Setup" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -279,7 +279,7 @@
         </CounterConfig>
         <hashTree/>
         <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Applicant and Comp Admin complete project setup" enabled="true">
-          <stringProp name="IncludeController.includepath">/Users/tom/git/innovation-funding-service/taurus/h2020-project-seup.jmx</stringProp>
+          <stringProp name="IncludeController.includepath">h2020-project-seup.jmx</stringProp>
         </IncludeController>
         <hashTree/>
         <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="false">
