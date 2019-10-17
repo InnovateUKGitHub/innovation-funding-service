@@ -539,4 +539,25 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         assertEquals(2, foundApplications.size());
     }
+
+    @Test
+    public void findByApplicationStateAndFundingDecision_funded() {
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withFundingDecision(FUNDED, null)
+                .withActivityState(SUBMITTED, APPROVED)
+                .build(2);
+
+        applicationRepository.saveAll(applications);
+
+        flushAndClearSession();
+
+        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
+
+        assertEquals(2, foundApplications.size());
+    }
 }
