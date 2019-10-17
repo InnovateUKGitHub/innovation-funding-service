@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,5 +28,10 @@ public class PartnerOrganisationLookupStrategy {
     @PermissionEntityLookupStrategy
     public PartnerOrganisationResource getPartnerOrganisationResource(Long partnerOrganisationId) {
         return partnerOrganisationMapper.mapToResource(partnerOrganisationRepository.findById(partnerOrganisationId).orElse(null));
+    }
+
+    @PermissionEntityLookupStrategy
+    public PartnerOrganisationResource getPartnerOrganisationResource(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return partnerOrganisationMapper.mapToResource(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()));
     }
 }
