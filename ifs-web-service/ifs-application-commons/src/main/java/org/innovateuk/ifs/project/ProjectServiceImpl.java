@@ -8,7 +8,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -47,24 +46,17 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectService projectService;
 
     @Override
-    public List<ProjectUserResource> getProjectUsersForProject(Long projectId) {
+    public List<ProjectUserResource> getProjectUsersForProject(long projectId) {
         return projectRestService.getProjectUsersForProject(projectId).getSuccess();
     }
 
     @Override
-    public ProjectResource getById(Long projectId) {
-        if (projectId == null) {
-            return null;
-        }
-
+    public ProjectResource getById(long projectId) {
         return projectRestService.getProjectById(projectId).getSuccess();
     }
 
     @Override
-    public ProjectResource getByApplicationId(Long applicationId) {
-        if(applicationId == null) {
-            return null;
-        }
+    public ProjectResource getByApplicationId(long applicationId) {
         RestResult<ProjectResource> restResult = projectRestService.getByApplicationId(applicationId);
         if(restResult.isSuccess()){
             return restResult.getSuccess();
@@ -74,18 +66,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public OrganisationResource getLeadOrganisation(Long projectId) {
-        ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRole(project.getApplication());
-        return organisationRestService.getOrganisationById(leadApplicantProcessRole.getOrganisationId()).getSuccess();
+    public OrganisationResource getLeadOrganisation(long projectId) {
+        return projectRestService.getLeadOrganisationByProject(projectId).getSuccess();
     }
 
     @Override
-    public List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId) {
+    public List<OrganisationResource> getPartnerOrganisationsForProject(long projectId) {
 
         List<PartnerOrganisationResource> partnerOrganisationResources = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
 
-        List<Long> organisationIds = removeDuplicates(simpleMap(partnerOrganisationResources, partnerOrganisationResource -> partnerOrganisationResource.getOrganisation()));
+        List<Long> organisationIds = removeDuplicates(simpleMap(partnerOrganisationResources, PartnerOrganisationResource::getOrganisation));
         List<RestResult<OrganisationResource>> organisationResults = simpleMap(organisationIds, organisationId -> organisationRestService.getOrganisationById(organisationId));
         RestResult<List<OrganisationResource>> organisationResultsCombined = aggregate(organisationResults);
 
@@ -93,47 +83,43 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectUserResource> getLeadPartners(Long projectId) {
+    public List<ProjectUserResource> getLeadPartners(long projectId) {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
         return simpleFilter(partnerUsers, projectUser -> projectUser.getOrganisation().equals(leadOrganisation.getId()));
     }
 
     @Override
-    public List<ProjectUserResource> getPartners(Long projectId) {
+    public List<ProjectUserResource> getPartners(long projectId) {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
         return simpleFilter(partnerUsers, projectUser -> !(projectUser.getOrganisation().equals(leadOrganisation.getId())));
     }
 
     @Override
-    public boolean isUserLeadPartner(Long projectId, Long userId) {
+    public boolean isUserLeadPartner(long projectId, long userId) {
         return simpleAnyMatch(getLeadPartners(projectId),
                               projectUser -> projectUser.getUser().equals(userId));
     }
 
     @Override
-    public List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
+    public List<ProjectUserResource> getProjectUsersWithPartnerRole(long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
         return simpleFilter(projectUsers, pu -> PARTNER.getId() == pu.getRole());
     }
 
     @Override
-    public Optional<ProjectUserResource> getProjectManager(Long projectId) {
+    public Optional<ProjectUserResource> getProjectManager(long projectId) {
         return projectRestService.getProjectManager(projectId).toServiceResult().getOptionalSuccessObject();
     }
 
     @Override
-    public final Boolean isProjectManager(Long userId, Long projectId) {
+    public final Boolean isProjectManager(long userId, long projectId) {
         return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
     }
 
     @Override
-    public boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
-        if(userId == null) {
-            return false;
-        }
-
+    public boolean userIsPartnerInOrganisationForProject(long projectId, long organisationId, long userId) {
         List<ProjectUserResource> thisProjectUsers = getProjectUsersForProject(projectId);
         List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
         List<ProjectUserResource> projectUsersForUserAndOrganisation = simpleFilter(projectUsersForOrganisation, user -> user.getUser().equals(userId));
@@ -142,11 +128,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException {
+    public Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
                 user.getId().equals(pu.getUser()) && Role.PARTNER.getId() == pu.getRole());
         return projectUser.map(ProjectUserResource::getOrganisation).orElseThrow(() -> new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(projectId)));
     }
-
 }

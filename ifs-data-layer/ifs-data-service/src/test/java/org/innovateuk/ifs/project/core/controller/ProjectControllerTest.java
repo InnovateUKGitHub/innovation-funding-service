@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.core.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -11,11 +12,11 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,27 +33,24 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void projectControllerShouldReturnProjectById() throws Exception {
-        Long project1Id = 1L;
-        Long project2Id = 2L;
+    public void getProjectById() throws Exception {
+        ProjectResource project1 = newProjectResource().build();
+        ProjectResource project2 = newProjectResource().build();
 
-        ProjectResource testProjectResource1 = newProjectResource().withId(project1Id).build();
-        ProjectResource testProjectResource2 = newProjectResource().withId(project2Id).build();
+        when(projectServiceMock.getProjectById(project1.getId())).thenReturn(serviceSuccess(project1));
+        when(projectServiceMock.getProjectById(project2.getId())).thenReturn(serviceSuccess(project2));
 
-        when(projectServiceMock.getProjectById(project1Id)).thenReturn(serviceSuccess(testProjectResource1));
-        when(projectServiceMock.getProjectById(project2Id)).thenReturn(serviceSuccess(testProjectResource2));
-
-        mockMvc.perform(get("/project/{id}", project1Id))
+        mockMvc.perform(get("/project/{id}", project1.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(testProjectResource1)));
+                .andExpect(content().json(toJson(project1)));
 
-        mockMvc.perform(get("/project/2"))
+        mockMvc.perform(get("/project/{id}", project2.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(testProjectResource2)));
+                .andExpect(content().json(toJson(project2)));
     }
 
     @Test
-    public void projectControllerShouldReturnAllProjects() throws Exception {
+    public void findAll() throws Exception {
         int projectNumber = 3;
         List<ProjectResource> projects = newProjectResource().build(projectNumber);
         when(projectServiceMock.findAll()).thenReturn(serviceSuccess(projects));
@@ -64,19 +62,18 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     @Test
     public void getProjectUsers() throws Exception {
-
         List<ProjectUserResource> projectUsers = newProjectUserResource().build(3);
 
-        when(projectServiceMock.getProjectUsers(123L)).thenReturn(serviceSuccess(projectUsers));
+        when(projectServiceMock.getProjectUsers(123)).thenReturn(serviceSuccess(projectUsers));
 
-        mockMvc.perform(get("/project/{projectId}/project-users", 123L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectUsers)));
+        mockMvc.perform(get("/project/{projectId}/project-users", 123))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectUsers)));
     }
 
     @Test
-    public void testCreateProjectFromApplication() throws Exception {
-        Long applicationId = 1L;
+    public void createProjectFromApplication() throws Exception {
+        long applicationId = 1;
         ProjectResource expectedProject = newProjectResource().build();
 
         when(projectServiceMock.createProjectFromApplication(applicationId)).thenReturn(serviceSuccess(expectedProject));
@@ -86,5 +83,19 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(content().json(toJson(expectedProject)));
 
         verify(projectServiceMock).createProjectFromApplication(applicationId);
+    }
+
+    @Test
+    public void getLeadOrganisation() throws Exception {
+        long projectId = 5;
+        OrganisationResource organisationResource = newOrganisationResource().build();
+
+        when(projectServiceMock.getLeadOrganisation(projectId)).thenReturn(serviceSuccess(organisationResource));
+
+        mockMvc.perform(get("/project/{projectId}/lead-organisation", projectId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(organisationResource)));
+
+        verify(projectServiceMock, only()).getLeadOrganisation(projectId);
     }
 }

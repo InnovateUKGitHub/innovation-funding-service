@@ -323,7 +323,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testDownloadAttachmentFailsNoContent() throws Exception {
 
         when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks/attachment/1"))
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-checks/attachment/{attachmentId}", 123, 1))
                 .andExpect(status().isForbidden())
                 .andExpect(view().name("forbidden"))
                 .andReturn();
@@ -332,7 +332,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         // Assert that there is no content
         assertEquals("", response.getContentAsString());
-        assertEquals(null, response.getHeader("Content-Disposition"));
+        assertNull(response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
     }
 
@@ -352,7 +352,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         // Assert that there is no content
         assertEquals("", response.getContentAsString());
-        assertEquals(null, response.getHeader("Content-Disposition"));
+        assertNull(response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
     }
 

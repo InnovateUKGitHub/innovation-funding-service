@@ -24,14 +24,11 @@ import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 public abstract class AbstractApplicationModelPopulator {
 
     private SectionService sectionService;
-    private QuestionService questionService;
     private QuestionRestService questionRestService;
 
     protected AbstractApplicationModelPopulator(SectionService sectionService,
-                                                QuestionService questionService,
                                                 QuestionRestService questionRestService) {
         this.sectionService = sectionService;
-        this.questionService = questionService;
         this.questionRestService = questionRestService;
     }
 
@@ -56,63 +53,11 @@ public abstract class AbstractApplicationModelPopulator {
                 Function.identity()));
     }
 
-    protected ApplicationCompletedViewModel getCompletedDetails(ApplicationResource application,
-                                                                Optional<OrganisationResource> userOrganisation) {
-        long userOrganisationId = userOrganisation.get().getId();
-
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of
-        // question ids
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation
-                (application.getId());
-        Set<Long> combinedMarkedAsCompleteSections =
-                getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
-        Set<Long> completedSectionsByUserOrganisation = completedSectionsByOrganisation.get(userOrganisationId);
-
-        boolean financeSectionCompleted = getCompletedSectionsContains(completedSectionsByUserOrganisation, application.getCompetition(), FINANCE);
-        boolean financeOverviewSectionCompleted = getCompletedSectionsContains(completedSectionsByUserOrganisation, application.getCompetition(), OVERVIEW_FINANCES);
-
-        return new ApplicationCompletedViewModel(combinedMarkedAsCompleteSections,
-                markedAsComplete, completedSectionsByUserOrganisation, financeSectionCompleted,
-                financeOverviewSectionCompleted);
-    }
-
-    private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application,
-                                                         Optional<OrganisationResource> userOrganisation) {
-        long organisationId = userOrganisation
-                .map(OrganisationResource::getId)
-                .orElse(0L);
-
-        return questionService.getMarkedAsComplete(application.getId(), organisationId);
-    }
-
-    private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
-        Set<Long> combinedMarkedAsComplete = completedSectionsByOrganisation.values()
-                .stream()
-                .flatMap(Set::stream)
-                .collect(Collectors.toSet());
-
-        completedSectionsByOrganisation.forEach((organisationId, completedSections) ->
-                combinedMarkedAsComplete.retainAll(completedSections));
-
-        return combinedMarkedAsComplete;
-    }
-
     private Optional<Long> getSectionIdByType(long competitionId, SectionType sectionType) {
         return sectionService.getSectionsForCompetitionByType(competitionId, sectionType)
                 .stream()
                 .findFirst()
                 .map(SectionResource::getId);
-    }
-
-    private boolean getCompletedSectionsContains(Set<Long> completedSectionsByUserOrganisation, long competitionId, SectionType sectionType) {
-
-        Optional<Long> sectionId = getSectionIdByType(competitionId, sectionType);
-
-        boolean containsSection = true;
-        if (sectionId.isPresent()) {
-            containsSection = completedSectionsByUserOrganisation.contains(sectionId.get());
-        }
-        return containsSection;
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource>

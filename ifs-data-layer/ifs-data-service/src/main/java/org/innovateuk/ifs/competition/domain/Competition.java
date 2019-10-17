@@ -173,6 +173,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionTermsFileEntryId", referencedColumnName = "id")
     private FileEntry competitionTerms;
 
+    private ZonedDateTime projectSetupStarted;
+
     public Competition() {
         setupComplete = false;
     }
@@ -902,5 +904,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public List<ProjectSetupStage> getProjectSetupStages() {
         return projectStages.stream().map(ProjectStages::getProjectSetupStage).collect(toList());
+    }
+
+    public ZonedDateTime getProjectSetupStarted() {
+        return projectSetupStarted;
+    }
+
+    public void setProjectSetupStarted(ZonedDateTime projectSetupStarted) {
+        this.projectSetupStarted = projectSetupStarted;
     }
 }

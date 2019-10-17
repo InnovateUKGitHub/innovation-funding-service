@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.organisation.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.InviteOrganisation;
-import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
-import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -30,12 +26,6 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     @Autowired
     private OrganisationMatchingServiceImpl organisationMatchingService;
 
-    @Autowired
-    private ApplicationInviteService applicationInviteService;
-
-    @Autowired
-    private InviteOrganisationRepository inviteOrganisationRepository;
-
     @Override
     @Transactional
     public ServiceResult<OrganisationResource> createOrMatch(OrganisationResource organisationToCreate) {
@@ -46,77 +36,6 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
                 matchedOrganisation.orElseGet(() -> createNewOrganisation(organisationToCreate));
 
         return serviceSuccess(organisationMapper.mapToResource(resultingOrganisation));
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<OrganisationResource> createAndLinkByInvite(
-            OrganisationResource organisationToCreate,
-            String inviteHash
-    ) {
-        ApplicationInvite invite = applicationInviteService.findOneByHash(inviteHash).getSuccess();
-
-        InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
-        Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();
-
-        if (linkedOrganisation == null) {
-            linkedOrganisation = organisationMatchingService.findOrganisationMatch(organisationToCreate)
-                    .filter(match -> isNotExistingCollaboratorOrLeadOrganisation(match, invite))
-                    .map(match -> linkOrganisation(invite.getInviteOrganisation(), match).getOrganisation())
-                    .orElseGet(() -> createOrganisationAndLinkToInviteOrganisation(
-                            organisationToCreate,
-                            inviteOrganisation
-                    ));
-        }
-
-        return serviceSuccess(organisationMapper.mapToResource(linkedOrganisation));
-    }
-
-    /**
-     * This may seem counter-intuitive, but we need to avoid a
-     * new collaborator being able to add themselves to any other
-     * existing organisations that are collaborating on the
-     * application or even the lead organisation.
-     *
-     * We should only link the {@link ApplicationInvite#inviteOrganisation}
-     * to the matched organisation if neither of these criteria
-     * are met. Otherwise we create a new organisation and link
-     * that instead.
-     */
-    private boolean isNotExistingCollaboratorOrLeadOrganisation(
-            Organisation organisationMatch,
-            ApplicationInvite invite
-    ) {
-        // Check the lead organisation directly from the
-        // `ApplicationInvite` as this information won't exist
-        // in an `InviteOrganisation`.
-        if (organisationMatch.getId().equals(invite.getTarget().getLeadOrganisationId())) {
-            return false;
-        }
-
-        Optional<InviteOrganisation> existingCollaboratorInviteOrganisation =
-                inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesApplicationId(
-                        organisationMatch.getId(),
-                        invite.getTarget().getId()
-                );
-
-        return !existingCollaboratorInviteOrganisation.isPresent();
-    }
-
-    private Organisation createOrganisationAndLinkToInviteOrganisation(
-            OrganisationResource organisationResource,
-            InviteOrganisation inviteOrganisation
-    ) {
-        Organisation createdOrganisation = createNewOrganisation(organisationResource);
-        return linkOrganisation(inviteOrganisation, createdOrganisation).getOrganisation();
-    }
-
-    private InviteOrganisation linkOrganisation(
-            InviteOrganisation inviteOrganisation,
-            Organisation organisation
-    ) {
-        inviteOrganisation.setOrganisation(organisation);
-        return inviteOrganisationRepository.save(inviteOrganisation);
     }
 
     private Organisation createNewOrganisation(OrganisationResource organisationResource) {
