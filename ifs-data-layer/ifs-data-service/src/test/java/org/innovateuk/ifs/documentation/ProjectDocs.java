@@ -36,6 +36,7 @@ public class ProjectDocs {
             fieldWithPath("spendProfileSubmittedDate").description("Flag which indicates if Spend Profile has been review and submitted by the Project Manager."),
             fieldWithPath("projectState").description("The current state of the project in its workflow."),
             fieldWithPath("processLastModifiedDate").description("The last date the project state was modified"),
+            fieldWithPath("spendProfileGenerated").description("Has the spend profile been generated."),
             fieldWithPath("collaborativeProject").description("Does the project have collaboration")
     };
 
