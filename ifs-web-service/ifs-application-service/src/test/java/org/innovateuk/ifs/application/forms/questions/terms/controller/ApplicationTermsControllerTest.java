@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.terms.controller;
+package org.innovateuk.ifs.application.forms.questions.terms.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
-import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
+import org.innovateuk.ifs.application.forms.questions.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;

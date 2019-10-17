@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.terms.form;
+package org.innovateuk.ifs.application.forms.questions.terms.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
