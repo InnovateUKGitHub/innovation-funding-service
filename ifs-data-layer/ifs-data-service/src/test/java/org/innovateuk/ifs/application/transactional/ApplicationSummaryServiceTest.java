@@ -410,7 +410,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
+        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
                 eq(COMP_ID),
                 eq(asLinkedSet(APPROVED, REJECTED, SUBMITTED)),
                 eq(""),
@@ -442,7 +442,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
+        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
                 eq(COMP_ID),
                 eq(asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED)),
                 eq(""),
@@ -473,7 +473,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
+        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
                 eq(COMP_ID),
                 eq(singleton(ApplicationState.INELIGIBLE_INFORMED)),
                 eq(""),
@@ -552,7 +552,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 .withFundingDecision(UNFUNDED)
                 .build(2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(
+        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
                 eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(applications);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
