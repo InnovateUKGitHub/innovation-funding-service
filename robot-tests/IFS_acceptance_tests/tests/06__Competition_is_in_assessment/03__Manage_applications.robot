@@ -31,7 +31,7 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 *** Variables ***
 ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Cryptocurrencies_id}  ${application_ids['Living with Cryptocurrencies']}
-${Paul_Plum_id}        ${user_ids['${assessor2_credentials["email"]}']}
+${Paul_Plum_id}        ${user_ids['maureen.moore@gmail.com']}
 ${Intelligent_water}   ${application_ids['Intelligent water system']}
 
 *** Test Cases ***
@@ -66,11 +66,12 @@ Selecting Review assessor link shows the assessor page
     [Tags]
     Given the user clicks the button/link  link = Review assessor
     Then the user should see the element   jQuery = dt:contains("Name") ~ dd:contains("Maureen Moore")
+    [Teardown]  Assign application to maureen
 
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
     [Tags]
-    [Setup]  Log in as a different user   &{assessor2_credentials}
+    [Setup]  Log in as a different user   maureen.moore@gmail.com  Passw0rd
     Given the user accepts the application
     And Log in as a different user        &{Comp_admin1_credentials}
     When the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
@@ -155,17 +156,18 @@ Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
     [Tags]
     Given the user clicks the button/link  jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
-    Then the user clicks the button/link   jQuery = td:contains("Felix Wilson") ~ td:contains("Remove")
+    Then the user clicks the button/link   jQuery = td:contains("Maureen Moore") ~ td:contains("Remove")
 
 Notify an assigned user
     [Documentation]    INFUND-7050
     [Tags]
-    Given the user clicks the button/link  jQuery = tr:contains("Felix Wilson") button:contains("Assign")
+    Given the user clicks the button/link  link = 21 to 40
+    Given the user clicks the button/link  jQuery = tr:contains("Maureen Moore") button:contains("Assign")
     Then the comp admin notify an assessor
 
 Assessor should see the assigned application
     [Documentation]    INFUND-7050
-    [Setup]    Log in as a different user  &{assessor2_credentials}
+    [Setup]    Log in as a different user  maureen.moore@gmail.com  Passw0rd
     Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element   Link = Living with Cryptocurrencies
 
@@ -179,7 +181,7 @@ Remove and notify an assessor (Notified)
 
 Assessor should not see the removed application
     [Documentation]    INFUND-7232
-    [Setup]    Log in as a different user     &{assessor2_credentials}
+    [Setup]    Log in as a different user     maureen.moore@gmail.com  Passw0rd
     When The user clicks the button/link      link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should not see the element  Link = Living with Cryptocurrencies
 
@@ -193,7 +195,7 @@ Reassign and notify an assessor (Notified)
 
 Assessor should see the reassigned application
     [Documentation]    INFUND-7050
-    [Setup]    Log in as a different user  &{assessor2_credentials}
+    [Setup]    Log in as a different user   maureen.moore@gmail.com  Passw0rd
     Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element   Link = Living with Cryptocurrencies
 
@@ -211,11 +213,11 @@ the available assessors information is correct
     # TODO Add some skills too IFS-1298
 
 the assigned list is correct before notification
-    the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Felix Wilson") ~ td:contains("Academic") ~ td:contains("Assembly / disassembly / joining, Forming technologies") ~ td:contains("8") + td:contains("8")
+    the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Maureen Moore") ~ td:contains("Digital manufacturing") ~ td:contains("6") + td:contains("3")
 
 the previously assigned list is correct
-    the user should see the element    jQuery = .assessors-previous td:contains("Felix Wilson") + td:contains("Academic") + td:contains("Assembly / disassembly / joining, Forming technologies")
-    the user should see the element    jQuery = .assessors-previous td:contains("Felix Wilson") ~ td:contains("7") + td:contains("7")
+    the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("Digital manufacturing")
+    the user should see the element    jQuery = .assessors-previous td:contains("Maureen Moore") ~ td:contains("5") + td:contains("2")
 
 the assessor list is correct before changes
     the user should see the element  jQuery = td:contains("Jerrilyn Stevens") ~ td:contains("10") ~ td:contains("10") ~ td:contains("10") ~ td:contains("0") ~ td:contains("View progress")
@@ -260,8 +262,7 @@ the user should see details on application progress page
     the user should see the element       jQuery = p:contains("No assessors were previously assigned to this application.")
 
 the user assign application to an assessor
-    the user clicks the button/link   link = 1 to 20
-    the user clicks the button/link   jQuery = tr:contains("Felix Wilson") button:contains("Assign")
+    the user clicks the button/link   jQuery = tr:contains("Maureen Moore") button:contains("Assign")
     the user should see the element   jQuery = h2:contains("Assigned (1)")
     the assigned list is correct before notification
     the user clicks the button/link    link = Allocate applications
@@ -274,18 +275,30 @@ the comp admin notify an assessor
     the user clicks the button/link    jQuery = button:contains("Notify assessors")
     the element should be disabled     jQuery = button:contains("Notify assessors")
 
+the comp admin notify an assessor2
+    the user clicks the button/link    link = Allocate assessors
+    the user clicks the button/link    link = Manage assessments
+    the user clicks the button/link    link = Competition
+    the user clicks the button/link    jQuery = button:contains("Notify assessors")
+    the element should be disabled     jQuery = button:contains("Notify assessors")
+
 the user removes assessor from assigned application and notify
     the user clicks the button/link          jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
-    the user clicks the button/link          jQuery = td:contains("Felix Wilson") ~ td:contains("Remove")
+    the user clicks the button/link          jQuery = td:contains("Maureen Moore") ~ td:contains("Remove")
     the user clicks the button/link          jQuery = .button-clear:contains("Cancel")
     the user should not see the element      jQuery = button:contains("Remove assessor")
-    the user clicks the button/link          jQuery = td:contains("Felix Wilson") ~ td:contains("Remove")
+    the user clicks the button/link          jQuery = td:contains("Maureen Moore") ~ td:contains("Remove")
     the user clicks the button/link          jQuery = button:contains("Remove assessor")
     the user should see the element          jQuery = h2:contains("Previously assigned (1)")
 
 the user resign assessor to an application
     the user clicks the button/link          jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
     the user should see the element          jQuery = h2:contains("Previously assigned (1)")
-    the user clicks the button/link          jQuery = tr:contains("Felix Wilson") button:contains("Reassign")
+    the user clicks the button/link          jQuery = tr:contains("Maureen Moore") button:contains("Reassign")
     the user should see the element          jQuery = h2:contains("Assigned (1)")
     the assigned list is correct before notification
+
+Assign application to maureen
+    the user clicks the button/link  link = Back to assessor progress
+    the user clicks the button/link  jQuery = td:contains("${Molecular_id}") ~ td:contains("Assign")
+    then the comp admin notify an assessor2
