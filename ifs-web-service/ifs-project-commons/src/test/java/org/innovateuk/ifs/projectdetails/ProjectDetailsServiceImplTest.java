@@ -2,8 +2,6 @@ package org.innovateuk.ifs.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder;
-import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -18,8 +16,6 @@ import java.time.LocalDate;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -112,33 +108,5 @@ public class ProjectDetailsServiceImplTest {
         assertTrue(result.isSuccess());
 
         verify(projectDetailsRestService).updateProjectAddress(leadOrgId, projectId, addressResource);
-    }
-
-    @Test
-    public void testInviteProjectFinanceUser() throws Exception {
-
-        ProjectUserInviteResource invite = ProjectUserInviteResourceBuilder.newProjectUserInviteResource().build();
-
-        when(projectDetailsRestService.inviteFinanceContact(anyLong(), any())).thenReturn(restSuccess());
-
-        ServiceResult<Void> submitted = service.inviteFinanceContact(1L, invite);
-
-        assertTrue(submitted.isSuccess());
-
-        verify(projectDetailsRestService).inviteFinanceContact(1L, invite);
-    }
-
-    @Test
-    public void testInviteProjectManagerUser() throws Exception {
-
-        ProjectUserInviteResource invite = ProjectUserInviteResourceBuilder.newProjectUserInviteResource().build();
-
-        when(projectDetailsRestService.inviteProjectManager(anyLong(), any())).thenReturn(restSuccess());
-
-        ServiceResult<Void> submitted = service.inviteProjectManager(1L, invite);
-
-        assertTrue(submitted.isSuccess());
-
-        verify(projectDetailsRestService).inviteProjectManager(1L, invite);
     }
 }

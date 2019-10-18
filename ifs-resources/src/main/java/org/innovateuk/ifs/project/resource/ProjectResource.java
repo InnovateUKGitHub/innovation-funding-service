@@ -40,6 +40,7 @@ public class ProjectResource {
     private ProjectState projectState;
     private boolean collaborativeProject;
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
+    private boolean spendProfileGenerated;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -239,6 +240,14 @@ public class ProjectResource {
 
     public void setProcessLastModifiedDate(ZonedDateTime processLastModifiedDate) {
         this.processLastModifiedDate = processLastModifiedDate;
+    }
+
+    public boolean isSpendProfileGenerated() {
+        return spendProfileGenerated;
+    }
+
+    public void setSpendProfileGenerated(boolean spendProfileGenerated) {
+        this.spendProfileGenerated = spendProfileGenerated;
     }
 
     public boolean isCollaborativeProject() {

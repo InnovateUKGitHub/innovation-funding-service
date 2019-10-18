@@ -4,13 +4,13 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -54,7 +54,7 @@ public class ProjectTeamViewModelPopulatorTest {
     private StatusService statusService;
 
     @Mock
-    private ProjectDetailsService projectDetailsService;
+    private ProjectInviteRestService projectInviteRestService;
 
     @Test
     public void populate() {
@@ -98,7 +98,7 @@ public class ProjectTeamViewModelPopulatorTest {
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(projectOrgs);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
-        when(projectDetailsService.getInvitesByProject(project.getId())).thenReturn(serviceSuccess(invites));
+        when(projectInviteRestService.getInvitesByProject(project.getId())).thenReturn(restSuccess(invites));
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 
