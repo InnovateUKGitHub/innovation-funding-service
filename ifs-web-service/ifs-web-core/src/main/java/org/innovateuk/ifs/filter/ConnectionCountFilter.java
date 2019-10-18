@@ -39,7 +39,7 @@ public class ConnectionCountFilter extends OncePerRequestFilter {
     public boolean canAcceptConnection(){
         boolean healthy = max > count.intValue();
 
-        LOG.debug("incoming connection used = " + count + "/" + max + " healthy = "+ healthy);
+        LOG.trace("incoming connection used = " + count + "/" + max + " healthy = "+ healthy);
 
         return healthy;
     }
