@@ -8,29 +8,27 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  * View model for an organisation, used on the Project Team page for Project Setup
  */
 public class ProjectOrganisationViewModel implements Comparable<ProjectOrganisationViewModel> {
-
-    private List<ProjectOrganisationUserRowViewModel> users;
-
-    private String orgName;
-
-    private long orgId;
-
-    private boolean leadOrg;
+    private final List<ProjectOrganisationUserRowViewModel> users;
+    private final String name;
+    private final long id;
+    private final boolean lead;
+    private final boolean editable;
+    private final Long partnerInviteId;
 
     private boolean openAddTeamMemberForm;
 
-    private boolean editable;
-
     public ProjectOrganisationViewModel(List<ProjectOrganisationUserRowViewModel> users,
-                                        String orgName,
-                                        long orgId,
-                                        boolean leadOrg,
-                                        boolean editable) {
+                                        String name,
+                                        long id,
+                                        boolean lead,
+                                        boolean editable,
+                                        Long partnerInviteId) {
         this.users = users;
-        this.orgName = orgName;
-        this.leadOrg = leadOrg;
-        this.orgId = orgId;
+        this.name = name;
+        this.lead = lead;
+        this.id = id;
         this.editable = editable;
+        this.partnerInviteId = partnerInviteId;
         this.openAddTeamMemberForm = false;
     }
 
@@ -48,63 +46,50 @@ public class ProjectOrganisationViewModel implements Comparable<ProjectOrganisat
         return users;
     }
 
-    public void setUsers(List<ProjectOrganisationUserRowViewModel> users) {
-        this.users = users;
+    public String getName() {
+        return name;
     }
 
-    public String getOrgName() {
-        return orgName;
+    public long getId() {
+        return id;
     }
 
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
-    }
-
-    public boolean isLeadOrg() {
-        return leadOrg;
-    }
-
-    public void setLeadOrg(boolean leadOrg) {
-        this.leadOrg = leadOrg;
-    }
-
-    public long getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(long orgId) {
-        this.orgId = orgId;
+    public boolean isLead() {
+        return lead;
     }
 
     public boolean isOpenAddTeamMemberForm() {
         return openAddTeamMemberForm;
     }
 
-    public void setOpenAddTeamMemberForm(boolean openAddTeamMemberForm) {
-        this.openAddTeamMemberForm = openAddTeamMemberForm;
-    }
-
     public boolean isEditable() {
         return editable;
     }
 
-    public void setEditable(boolean editable) {
-        this.editable = editable;
+    public Long getPartnerInviteId() {
+        return partnerInviteId;
     }
 
+    public void setOpenAddTeamMemberForm(boolean openAddTeamMemberForm) {
+        this.openAddTeamMemberForm = openAddTeamMemberForm;
+    }
+
+    public boolean isPartnerInvite() {
+        return partnerInviteId != null;
+    }
     @Override
     public int compareTo(ProjectOrganisationViewModel that) {
-        if(this.editable && this.leadOrg) {
+        if(this.editable && this.lead) {
             return -1;
-        } else if (that.editable && that.leadOrg) {
+        } else if (that.editable && that.lead) {
             return 1;
         } else if (this.editable) {
             return -1;
         } else if (that.editable) {
             return 1;
-        } else if (this.leadOrg) {
+        } else if (this.lead) {
             return -1;
-        } else if (that.leadOrg) {
+        } else if (that.lead) {
             return 1;
         }
         return 0;

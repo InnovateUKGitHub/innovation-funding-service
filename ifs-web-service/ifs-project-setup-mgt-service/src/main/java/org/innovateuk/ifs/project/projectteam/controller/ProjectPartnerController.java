@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.projectteam.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.invite.resource.ProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.project.projectteam.form.ProjectPartnerInviteForm;
 import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectPartnerInviteViewModel;
@@ -53,7 +53,7 @@ public class ProjectPartnerController {
 
         return validationHandler.failNowOrSucceedWith(failure, () -> {
             validationHandler.addAnyErrors(
-                    projectPartnerInviteRestService.invitePartnerOrganisation(projectId, new ProjectPartnerInviteResource(form.getOrganisationName(), form.getUserName(), form.getEmail())));
+                    projectPartnerInviteRestService.invitePartnerOrganisation(projectId, new SendProjectPartnerInviteResource(form.getOrganisationName(), form.getUserName(), form.getEmail())));
             return validationHandler.failNowOrSucceedWith(failure, success);
         });
     }

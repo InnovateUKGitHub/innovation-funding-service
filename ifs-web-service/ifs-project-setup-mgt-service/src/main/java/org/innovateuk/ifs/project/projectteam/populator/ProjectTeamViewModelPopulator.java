@@ -46,19 +46,20 @@ public class ProjectTeamViewModelPopulator {
 
         List<ProjectUserInviteResource> invitedUsers = projectInviteRestService.getInvitesByProject(projectId).getSuccess();
 
+        boolean projectIsNotActive = !project.getProjectState().isActive();
+
+        // support users and ifs admins can edit, other internal users have read only view only
+        boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) || projectIsNotActive;
+
         List<ProjectOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
                 .map(org -> mapToProjectOrganisationViewModel(projectUsers,
                                                               invitedUsers,
                                                               org,
                                                               org.equals(leadOrganisation),
-                                                              true))  // all organisations editable for internal users
+                                                              !isReadOnly))
                 .sorted()
                 .collect(toList());
 
-        boolean projectIsNotActive = !project.getProjectState().isActive();
-
-        // support users and ifs admins can edit, other internal users have read only view only
-        boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) || projectIsNotActive;
 
         return new ProjectTeamViewModel(
                 project,
@@ -90,7 +91,7 @@ public class ProjectTeamViewModelPopulator {
                                                                       user -> user.getOrganisation().equals(organisation.getId()));
         List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
                                                                               invite -> invite.getOrganisation().equals(organisation.getId()));
-        return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable);
+        return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable, null);
     }
 
     private List<ProjectOrganisationUserRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> usersForOrganisation, List<ProjectUserInviteResource> invitesForOrganisation) {

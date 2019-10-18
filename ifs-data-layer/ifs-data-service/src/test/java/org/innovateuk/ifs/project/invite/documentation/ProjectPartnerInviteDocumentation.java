@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.invite.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.invite.controller.ProjectPartnerInviteController;
-import org.innovateuk.ifs.project.invite.resource.ProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.transactional.ProjectPartnerInviteService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,7 +29,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
     @Test
     public void invitePartnerOrganisation() throws Exception {
         long projectId = 123L;
-        ProjectPartnerInviteResource invite = new ProjectPartnerInviteResource("asd", "asd", "asd");
+        SendProjectPartnerInviteResource invite = new SendProjectPartnerInviteResource("asd", "asd", "asd");
         when(projectPartnerInviteService.invitePartnerOrganisation(projectId, invite)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/project-partner-invite", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc")

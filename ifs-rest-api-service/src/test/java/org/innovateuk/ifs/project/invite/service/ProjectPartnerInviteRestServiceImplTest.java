@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.invite.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.invite.resource.ProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -14,7 +14,7 @@ public class ProjectPartnerInviteRestServiceImplTest extends BaseRestServiceUnit
     @Test
     public void invitePartnerOrganisation() {
         long projectId = 1L;
-        ProjectPartnerInviteResource invite = new ProjectPartnerInviteResource("", "", "");
+        SendProjectPartnerInviteResource invite = new SendProjectPartnerInviteResource("", "", "");
         setupPostWithRestResultExpectations(format("/project/%d/project-partner-invite", projectId), invite, HttpStatus.OK);
 
         RestResult<Void> result = service.invitePartnerOrganisation(projectId, invite);

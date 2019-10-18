@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
@@ -31,9 +30,6 @@ public class ProjectTeamViewModelPopulator {
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private CompetitionRestService competitionRestService;
 
     @Autowired
     private StatusService statusService;
@@ -101,7 +97,7 @@ public class ProjectTeamViewModelPopulator {
                 user -> user.getOrganisation().equals(organisation.getId()));
         List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
                 invite -> invite.getOrganisation().equals(organisation.getId()));
-        return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable);
+        return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable, null);
     }
 
     private ProjectOrganisationViewModel getLoggedInUserOrgModel(List<ProjectOrganisationViewModel> partnerOrgModels,
@@ -111,7 +107,7 @@ public class ProjectTeamViewModelPopulator {
             return null;
         }
         return partnerOrgModels.stream()
-                .filter(org -> org.getOrgId() == loggedInUserOrg.getId())
+                .filter(org -> org.getId() == loggedInUserOrg.getId())
                 .findFirst()
                 .orElse(null);
     }

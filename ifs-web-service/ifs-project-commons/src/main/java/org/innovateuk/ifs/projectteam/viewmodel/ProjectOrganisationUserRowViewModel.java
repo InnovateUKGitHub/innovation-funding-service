@@ -15,6 +15,7 @@ public class ProjectOrganisationUserRowViewModel {
     private final String name;
     private final long id;
     private final boolean invite;
+    private final boolean removeable;
 
     private boolean isProjectManager;
     private boolean isFinanceContact;
@@ -24,13 +25,15 @@ public class ProjectOrganisationUserRowViewModel {
                                                long id,
                                                boolean isProjectManager,
                                                boolean isFinanceContact,
-                                               boolean invite) {
+                                               boolean invite,
+                                               boolean removeable) {
         this.email = email;
         this.name = name;
         this.id = id;
         this.isProjectManager = isProjectManager;
         this.isFinanceContact = isFinanceContact;
         this.invite = invite;
+        this.removeable = removeable;
     }
 
     public String getEmail() {
@@ -59,6 +62,10 @@ public class ProjectOrganisationUserRowViewModel {
 
     public void setProjectManager(boolean isProjectManager) {
         this.isProjectManager = isProjectManager;
+    }
+
+    public boolean isRemoveable() {
+        return removeable;
     }
 
     public boolean isInvite() {

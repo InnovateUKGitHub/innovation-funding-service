@@ -9,7 +9,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
-import org.innovateuk.ifs.project.invite.resource.ProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -66,7 +66,7 @@ public class ProjectPartnerInviteServiceImplTest {
         Organisation leadOrg = newOrganisation()
                 .withName("Lead org")
                 .build();
-        ProjectPartnerInviteResource invite = new ProjectPartnerInviteResource(organisationName, userName, email);
+        SendProjectPartnerInviteResource invite = new SendProjectPartnerInviteResource(organisationName, userName, email);
         Project project = newProject()
                 .withName("Project")
                 .withApplication(application)
