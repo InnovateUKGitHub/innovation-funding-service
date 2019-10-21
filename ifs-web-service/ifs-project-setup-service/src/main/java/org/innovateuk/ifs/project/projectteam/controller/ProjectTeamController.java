@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopu
 import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,20 +27,14 @@ import java.util.function.Supplier;
 @RequestMapping("/project")
 public class ProjectTeamController {
 
+    @Autowired
     private ProjectTeamViewModelPopulator projectTeamPopulator;
+    @Autowired
     private ProjectTeamRestService projectTeamRestService;
+    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Autowired
     private ProjectInviteHelper projectInviteHelper;
-
-    public ProjectTeamController(ProjectTeamViewModelPopulator projectTeamPopulator,
-                                 ProjectTeamRestService projectTeamRestService,
-                                 CookieFlashMessageFilter cookieFlashMessageFilter,
-                                 ProjectInviteHelper projectInviteHelper) {
-        this.projectTeamPopulator = projectTeamPopulator;
-        this.projectTeamRestService = projectTeamRestService;
-        this.cookieFlashMessageFilter = cookieFlashMessageFilter;
-        this.projectInviteHelper = projectInviteHelper;
-    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @GetMapping("/{projectId}/team")
@@ -115,8 +110,6 @@ public class ProjectTeamController {
         Supplier<String> successView = () -> String.format("redirect:/project/%d/team", projectId);
 
         return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
-                failureView, successView, projectId, organisationId,
-                (project, projectInviteResource) -> projectTeamRestService.inviteProjectMember(project, projectInviteResource).toServiceResult());
+                failureView, successView, projectId, organisationId);
     }
-
 }

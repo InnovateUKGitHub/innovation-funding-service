@@ -64,6 +64,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
                 .contentType(APPLICATION_JSON)
                 .content(toJson(finances)))
                 .andExpect(status().isOk());
+
     }
 
     @Test

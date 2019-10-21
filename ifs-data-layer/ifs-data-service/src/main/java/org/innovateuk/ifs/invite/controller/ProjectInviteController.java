@@ -7,7 +7,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.*;
@@ -23,12 +22,6 @@ public class ProjectInviteController {
     @Autowired
     private ProjectInviteService projectInviteService;
 
-    @PostMapping(PROJECT_INVITE_SAVE)
-    public RestResult<Void> saveProjectInvites(@RequestBody @Valid ProjectUserInviteResource projectUserInviteResource) {
-
-        return projectInviteService.saveProjectInvite(projectUserInviteResource).toPostResponse();
-    }
-
     @GetMapping(GET_INVITE_BY_HASH + "{hash}")
     public RestResult<ProjectUserInviteResource> getProjectInviteByHash(@PathVariable("hash") String hash) {
         return projectInviteService.getInviteByHash(hash).toGetResponse();
@@ -40,7 +33,7 @@ public class ProjectInviteController {
     }
 
     @PutMapping(value = ACCEPT_INVITE  + "{hash}/{userId}")
-    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
+    public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return projectInviteService.acceptProjectInvite(hash, userId).toPostResponse();
     }
 

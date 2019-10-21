@@ -79,7 +79,7 @@ downloadAccUserCsv() {
 #    Remove first line of column names
     tail -n +2 users.csv > tempusers.csv && mv tempusers.csv users.csv
 #    Create new Csv with emails and new generated UUID
-    cat users.csv | awk -F "\"*,\"*" '("uuidgen" | getline uuid) > 0 {print uuid, $3} {close("uuidgen")}' | sed 's/\ /,/g' > emailsAndUUids.csv
+    cat users.csv | awk -v SUFFIX="${ACC_SUFFIX}" -F "\"*,\"*" '("uuidgen" | getline uuid) > 0 {print uuid, $3 SUFFIX} {close("uuidgen")}' | sed 's/\ /,/g' > emailsAndUUids.csv
 }
 # Main
 

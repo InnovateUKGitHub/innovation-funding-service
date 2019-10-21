@@ -75,7 +75,8 @@
             th:if="${model.financeCheckSummaryResource.researchParticipationPercentage &gt; model.financeCheckSummaryResource.competitionMaximumResearchPercentage}"
             th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.financeCheckSummaryResource.researchParticipationPercentage},maxResearchPercentage=${model.financeCheckSummaryResource.competitionMaximumResearchPercentage})"/>
 
-        <h2 class="govuk-heading-m govuk-!-margin-top-7">Partner finances</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-7" th:if="${model.collaborativeProject}">Partner finances</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-7" th:unless="${model.collaborativeProject}">Finances</h2>
         <div class="table-overflow govuk-!-margin-bottom-6">
             <table class="govuk-table table-progress">
                 <thead class="govuk-table__head">
@@ -93,10 +94,10 @@
                 <tr class="govuk-table__row" th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
                     <th class="govuk-table__header" scope="row">
                         <th:block th:text="${orgDetails.name}">org name</th:block>
-                        <th:block th:if="${orgDetails.isLead()}"> (Lead)</th:block>
+                        <th:block th:if="${orgDetails.lead && model.collaborativeProject}"> (Lead)</th:block>
                     </th>
                     <td class="govuk-table__cell aligncentre">
-                        <a th:unless="${orgDetails.viability.notApplicable}"
+                        <a th:if="${!orgDetails.viability.notApplicable}"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                            th:classappend="${'viability-' + status.index}"
@@ -108,8 +109,7 @@
                     </td>
                     <td class="govuk-table__cell aligncentre cell-border-right">
                         <span th:if="${orgDetails.viability.notApplicable}"
-                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.rag.GREEN') :
-                              model.financeCheckSummaryResource.loan ? #messages.msg('ifs.project.setup.rag.UNSET') : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.rag.GREEN') : #messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                               th:classappend="${'viability-rag-' + status.index}"></span>
                         <span th:unless="${orgDetails.viability.notApplicable}"
                               th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"

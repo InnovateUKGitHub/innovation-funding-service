@@ -1,15 +1,18 @@
 package org.innovateuk.ifs.projectteam.util;
 
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -18,8 +21,6 @@ import java.util.function.Supplier;
 
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * A helper class to handle project invites, sent by either internal or external users
@@ -27,19 +28,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @Component
 public class ProjectInviteHelper {
 
-    private final ProjectDetailsService projectDetailsService;
+    @Autowired
+    private ProjectTeamRestService projectTeamRestService;
 
-    private final ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
-    private final OrganisationRestService organisationRestService;
+    @Autowired
+    private OrganisationRestService organisationRestService;
 
-    public ProjectInviteHelper(ProjectDetailsService projectDetailsService,
-                               ProjectService projectService,
-                               OrganisationRestService organisationRestService) {
-        this.projectDetailsService = projectDetailsService;
-        this.projectService = projectService;
-        this.organisationRestService = organisationRestService;
-    }
+    @Autowired
+    private ProjectInviteRestService projectInviteRestService;
+
 
     public String sendInvite(String inviteName,
                              String inviteEmail,
@@ -48,26 +48,15 @@ public class ProjectInviteHelper {
                              Supplier<String> failureView,
                              Supplier<String> successView,
                              long projectId,
-                             long organisation,
-                             BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
+                             long organisation) {
 
-        validateIfTryingToInviteSelf(loggedInUser.getEmail(), inviteEmail, validationHandler);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            validateIfTryingToInviteSelf(loggedInUser.getEmail(), inviteEmail, validationHandler);
             ProjectUserInviteResource invite = createProjectInviteResourceForNewContact(projectId, inviteName, inviteEmail, organisation);
-            ServiceResult<Void> saveResult = projectDetailsService.saveProjectInvite(invite);
 
-            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
-                Optional<ProjectUserInviteResource> savedInvite = getSavedInvite(projectId, invite);
-
-                if (savedInvite.isPresent()) {
-                    ServiceResult<Void> inviteResult = sendInvite.apply(projectId, savedInvite.get());
-                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
-                } else {
-                    return validationHandler.failNowOrSucceedWith(failureView, successView);
-                }
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                RestResult<Void> inviteResult = projectTeamRestService.inviteProjectMember(projectId, invite);
+                return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
             });
-        });
     }
 
     private void validateIfTryingToInviteSelf(String loggedInUserEmail,
@@ -99,13 +88,8 @@ public class ProjectInviteHelper {
         return inviteResource;
     }
 
-    private Optional<ProjectUserInviteResource> getSavedInvite(long projectId, ProjectUserInviteResource invite) {
-        return simpleFindFirst(projectDetailsService.getInvitesByProject(projectId).getSuccess(),
-                               i -> i.getEmail().equals(invite.getEmail()));
-    }
-
     public void resendInvite(long id, long projectId, BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
-        Optional<ProjectUserInviteResource> existingInvite = projectDetailsService
+        Optional<ProjectUserInviteResource> existingInvite = projectInviteRestService
                 .getInvitesByProject(projectId)
                 .getSuccess()
                 .stream()

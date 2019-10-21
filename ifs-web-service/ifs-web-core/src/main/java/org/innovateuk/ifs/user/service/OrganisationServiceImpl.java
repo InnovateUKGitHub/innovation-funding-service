@@ -43,6 +43,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     public Optional<OrganisationResource> getOrganisationForUser(long userId, List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
             .filter(uar -> uar.getUser().equals(userId))
+            .filter(uar -> uar.getOrganisationId() != null)
             .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getOptionalSuccessObject())
             .filter(Optional::isPresent)
             .map(Optional::get)

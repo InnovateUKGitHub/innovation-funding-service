@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.validation.constraints.PositiveYearMonth;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.YearMonth;
 
 /**
@@ -26,26 +27,26 @@ public class YourOrganisationWithGrowthTableForm {
     private Long headCountAtLastFinancialYear;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
-    private Long annualTurnoverAtLastFinancialYear;
+    private BigDecimal annualTurnoverAtLastFinancialYear;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
-    private Long annualProfitsAtLastFinancialYear;
+    private BigDecimal annualProfitsAtLastFinancialYear;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
-    private Long annualExportAtLastFinancialYear;
+    private BigDecimal annualExportAtLastFinancialYear;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
-    private Long researchAndDevelopmentSpendAtLastFinancialYear;
+    private BigDecimal researchAndDevelopmentSpendAtLastFinancialYear;
 
     YourOrganisationWithGrowthTableForm(
             OrganisationSize organisationSize,
             Boolean stateAidAgreed,
             YearMonth financialYearEnd,
             Long headCountAtLastFinancialYear,
-            Long annualTurnoverAtLastFinancialYear,
-            Long annualProfitsAtLastFinancialYear,
-            Long annualExportAtLastFinancialYear,
-            Long researchAndDevelopmentSpendAtLastFinancialYear) {
+            BigDecimal annualTurnoverAtLastFinancialYear,
+            BigDecimal annualProfitsAtLastFinancialYear,
+            BigDecimal annualExportAtLastFinancialYear,
+            BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
 
         this.organisationSize = organisationSize;
         this.stateAidAgreed = stateAidAgreed;
@@ -92,35 +93,35 @@ public class YourOrganisationWithGrowthTableForm {
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
     }
 
-    public Long getAnnualTurnoverAtLastFinancialYear() {
+    public BigDecimal getAnnualTurnoverAtLastFinancialYear() {
         return annualTurnoverAtLastFinancialYear;
     }
 
-    public void setAnnualTurnoverAtLastFinancialYear(Long annualTurnoverAtLastFinancialYear) {
+    public void setAnnualTurnoverAtLastFinancialYear(BigDecimal annualTurnoverAtLastFinancialYear) {
         this.annualTurnoverAtLastFinancialYear = annualTurnoverAtLastFinancialYear;
     }
 
-    public Long getAnnualProfitsAtLastFinancialYear() {
+    public BigDecimal getAnnualProfitsAtLastFinancialYear() {
         return annualProfitsAtLastFinancialYear;
     }
 
-    public void setAnnualProfitsAtLastFinancialYear(Long annualProfitsAtLastFinancialYear) {
+    public void setAnnualProfitsAtLastFinancialYear(BigDecimal annualProfitsAtLastFinancialYear) {
         this.annualProfitsAtLastFinancialYear = annualProfitsAtLastFinancialYear;
     }
 
-    public Long getAnnualExportAtLastFinancialYear() {
+    public BigDecimal getAnnualExportAtLastFinancialYear() {
         return annualExportAtLastFinancialYear;
     }
 
-    public void setAnnualExportAtLastFinancialYear(Long annualExportAtLastFinancialYear) {
+    public void setAnnualExportAtLastFinancialYear(BigDecimal annualExportAtLastFinancialYear) {
         this.annualExportAtLastFinancialYear = annualExportAtLastFinancialYear;
     }
 
-    public Long getResearchAndDevelopmentSpendAtLastFinancialYear() {
+    public BigDecimal getResearchAndDevelopmentSpendAtLastFinancialYear() {
         return researchAndDevelopmentSpendAtLastFinancialYear;
     }
 
-    public void setResearchAndDevelopmentSpendAtLastFinancialYear(Long researchAndDevelopmentSpendAtLastFinancialYear) {
+    public void setResearchAndDevelopmentSpendAtLastFinancialYear(BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
     }
 }

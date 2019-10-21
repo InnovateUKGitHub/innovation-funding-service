@@ -38,12 +38,6 @@ public interface FinanceCheckService {
     @PostAuthorize("hasPermission(returnObject, 'READ_ELIGIBILITY')")
     ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<Long> getTurnoverByOrganisationId(Long applicationId, Long organisationId);
-
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<Long> getHeadCountByOrganisationId(Long applicationId, Long organisationId);
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
     ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
 

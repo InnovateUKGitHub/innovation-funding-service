@@ -74,11 +74,7 @@ public class ActivityLogViewModelPopulator {
                 .collect(toList());
 
         return new ActivityLogViewModel(
-                project.getCompetition(),
-                project.getApplication(),
-                project.getId(),
-                project.getName(),
-                project.getCompetitionName(),
+                project,
                 partnerOrganisationResources.stream()
                         .filter(PartnerOrganisationResource::isLeadOrganisation)
                         .findFirst()

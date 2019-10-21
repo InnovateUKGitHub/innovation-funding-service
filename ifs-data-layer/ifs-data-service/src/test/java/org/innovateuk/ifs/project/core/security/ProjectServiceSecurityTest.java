@@ -47,10 +47,9 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
     @Test
     public void testGetProjectById() {
-        final Long projectId = 1L;
+        final long projectId = 1L;
 
-        when(classUnderTestMock.getProjectById(projectId))
-                .thenReturn(serviceSuccess(newProjectResource().withId(projectId).build()));
+        when(classUnderTestMock.getProjectById(projectId)).thenReturn(serviceSuccess(newProjectResource().withId(projectId).build()));
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(newProjectResource().build());
 
         assertAccessDenied(
@@ -65,13 +64,13 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testCreateProjectFromApplicationAllowedIfCompAdminRole() {
+    public void createProjectFromApplication_allowedIfCompAdminRole() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.createProjectFromApplication(123L);
     }
 
     @Test
-    public void testCreateProjectFromApplicationDeniedForApplicant() {
+    public void createProjectFromApplication_deniedForApplicant() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
         try {
             classUnderTest.createProjectFromApplication(123L);
@@ -82,13 +81,13 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testCreateProjectFromFundingDecisionsAllowedIfGlobalCompAdminRole() {
+    public void createProjectFromFundingDecisions_allowedIfGlobalCompAdminRole() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
     }
 
     @Test
-    public void testCreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
+    public void createProjectFromFundingDecisions_allowedIfNoGlobalRolesAtAll() {
         try {
             classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
             Assert.fail("Should not have been able to create project from application without the global Comp Admin " +
@@ -99,7 +98,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testCreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
+    public void createProjectFromFundingDecisions_deniedIfNotCorrectGlobalRoles() {
         NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(role)).build());
@@ -114,8 +113,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectUsers() {
-
+    public void getProjectUsers() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -130,7 +128,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testAddPartnerDeniedIfNotSystemRegistrar() {
+    public void addPartner_deniedIfNotSystemRegistrar() {
         NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
@@ -143,7 +141,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testAddPartnerAllowedIfSystemRegistrar() {
+    public void addPartner_allowedIfSystemRegistrar() {
         Project project = newProject()
                 .withId(1L)
                 .build();
@@ -165,8 +163,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void
-    test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
+    public void createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
         NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {

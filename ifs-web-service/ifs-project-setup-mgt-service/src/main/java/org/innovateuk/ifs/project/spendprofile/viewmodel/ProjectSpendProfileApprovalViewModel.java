@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.util.List;
 
@@ -20,21 +21,22 @@ public class ProjectSpendProfileApprovalViewModel {
     private final Long applicationId;
     private final String projectName;
     private final boolean projectIsActive;
+    private final boolean collaborativeProject;
+
 
     public ProjectSpendProfileApprovalViewModel(CompetitionSummaryResource competitionSummary,
                                                 String leadTechnologist,
                                                 ApprovalType approvalType,
                                                 List<OrganisationResource> organisations,
-                                                Long applicationId,
-                                                String projectName,
-                                                boolean projectIsActive) {
+                                                ProjectResource project) {
         this.competitionSummary = competitionSummary;
         this.leadTechnologist = leadTechnologist;
         this.approvalType = approvalType;
         this.organisations = organisations;
-        this.applicationId = applicationId;
-        this.projectName = projectName;
-        this.projectIsActive = projectIsActive;
+        this.applicationId = project.getApplication();
+        this.projectName = project.getName();
+        this.projectIsActive = project.getProjectState().isActive();
+        this.collaborativeProject = project.isCollaborativeProject();
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -75,6 +77,10 @@ public class ProjectSpendProfileApprovalViewModel {
 
     public boolean isProjectIsActive() {
         return projectIsActive;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 
     @Override

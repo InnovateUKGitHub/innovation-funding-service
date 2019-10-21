@@ -13,6 +13,25 @@ import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 public final class CompetitionInitialiser {
 
+    public static Competition initialiseProjectSetupColumns(Competition competition) {
+        if (competition.getFundingType() == null) {
+            return competition;
+        }
+        switch (competition.getFundingType()) {
+            case GRANT:
+                addGrantProjectSetupColumns(competition);
+                break;
+            case LOAN:
+                addLoanProjectSetupColumns(competition);
+                break;
+            case PROCUREMENT:
+                addProcurementProjectSetupColumns(competition);
+            default:
+                break;
+        }
+        return competition;
+
+    }
     public static Competition initialiseFinanceTypes(Competition competition) {
         if (competition.getFundingType() == null) {
             return competition;
@@ -20,15 +39,12 @@ public final class CompetitionInitialiser {
         switch (competition.getFundingType()) {
             case GRANT:
                 addGrantFinanceTypes(competition);
-                addDefaultProjectSetupColumns(competition);
                 break;
             case LOAN:
                 addLoanFinanceTypes(competition);
-                addLoanProjectSetupColumns(competition);
                 break;
             case PROCUREMENT:
                 addProcurementFinanceTypes(competition);
-                addDefaultProjectSetupColumns(competition);
             default:
                 break;
         }
@@ -81,7 +97,7 @@ public final class CompetitionInitialiser {
         ));
     }
 
-    private static void addDefaultProjectSetupColumns(Competition competition) {
+    private static void addGrantProjectSetupColumns(Competition competition) {
 
         List<ProjectStages> stages = asList(
                 createProjectSetupStage(competition, PROJECT_DETAILS),
@@ -103,11 +119,25 @@ public final class CompetitionInitialiser {
         List<ProjectStages> stages = asList(
                 createProjectSetupStage(competition, PROJECT_DETAILS),
                 createProjectSetupStage(competition, PROJECT_TEAM),
-                createProjectSetupStage(competition, DOCUMENTS),
                 createProjectSetupStage(competition, MONITORING_OFFICER),
                 createProjectSetupStage(competition, FINANCE_CHECKS),
                 createProjectSetupStage(competition, SPEND_PROFILE),
                 createProjectSetupStage(competition, PROJECT_SETUP_COMPLETE)
+        );
+
+        competition.setProjectStages(stages);
+    }
+
+    private static void addProcurementProjectSetupColumns(Competition competition) {
+
+        List<ProjectStages> stages = asList(
+                createProjectSetupStage(competition, PROJECT_DETAILS),
+                createProjectSetupStage(competition, PROJECT_TEAM),
+                createProjectSetupStage(competition, MONITORING_OFFICER),
+                createProjectSetupStage(competition, BANK_DETAILS),
+                createProjectSetupStage(competition, FINANCE_CHECKS),
+                createProjectSetupStage(competition, SPEND_PROFILE),
+                createProjectSetupStage(competition, GRANT_OFFER_LETTER)
         );
 
         competition.setProjectStages(stages);

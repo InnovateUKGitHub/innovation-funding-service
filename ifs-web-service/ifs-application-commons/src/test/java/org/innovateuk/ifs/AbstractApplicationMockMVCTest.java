@@ -136,11 +136,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
     public static final String INVITE_HASH =
             "b157879c18511630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
-    public static final String INVITE_HASH_EXISTING_USER =
-            "cccccccccc630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
-    public static final String INVALID_INVITE_HASH = "aaaaaaa7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
-    public static final String ACCEPTED_INVITE_HASH =
-            "BBBBBBBBB7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
 
     public void setupOrganisationTypes() {
 

@@ -30,6 +30,7 @@ import org.innovateuk.ifs.assessment.overview.viewmodel.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
@@ -125,6 +126,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Mock
     private SectionRestService sectionRestService;
+
+    @Mock
+    private AssessmentRestService assessmentRestService;
 
     @Spy
     @InjectMocks
@@ -463,7 +467,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .build();
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
         when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
@@ -472,7 +476,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(yourProjectCostsFormPopulator.populateForm(applicationResource.getId(), organisations.get(0).getId())).thenReturn(new YourProjectCostsForm());
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
 
-        MvcResult result = mockMvc.perform(get("/{assessmentId}/detailed-finances/organisation/{organisationId}", assessmentResource.getId(), organisation.getId()))
+        MvcResult result = mockMvc.perform(get("/application/{applicationId}/detailed-finances/organisation/{organisationId}", applicationResource.getId(), organisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("costsViewModel", viewModel))
                 .andExpect(model().attribute("form", instanceOf(YourProjectCostsForm.class)))
@@ -524,7 +528,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 assessmentResource.getId(), applicationResource.getId(), applicationResource, "Application name", false);
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
         when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
@@ -533,7 +537,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisations.get(1)));
 
-        MvcResult result = mockMvc.perform(get("/{assessmentId}/detailed-finances/organisation/{organisationId}", assessmentResource.getId(), organisation.getId()))
+        MvcResult result = mockMvc.perform(get("/application/{applicationId}/detailed-finances/organisation/{organisationId}", applicationResource.getId(), organisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("costsViewModel", viewModel))
                 .andExpect(model().attribute("form", instanceOf(AcademicCostForm.class)))

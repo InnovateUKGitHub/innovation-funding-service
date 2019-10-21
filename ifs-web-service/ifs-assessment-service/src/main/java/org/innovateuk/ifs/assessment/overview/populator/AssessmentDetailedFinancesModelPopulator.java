@@ -12,9 +12,9 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentDetailedFinancesViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -25,6 +25,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     @Autowired
     private ApplicationRestService applicationRestService;
     @Autowired
-    private AssessmentService assessmentService;
+    private AssessmentRestService assessmentRestService;
     @Autowired
     private UserRestService userRestService;
     @Autowired
@@ -66,26 +67,27 @@ public class AssessmentDetailedFinancesModelPopulator {
     @Autowired
     private AcademicCostFormPopulator academicCostFormPopulator;
 
-    public AssessmentDetailedFinancesViewModel populateModel(long assessmentId, long organisationId, Model model) {
-        AssessmentResource assessment = assessmentService.getById(assessmentId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
+    public AssessmentDetailedFinancesViewModel populateModel(long applicationId, long organisationId, Model model, UserResource user) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        List<AssessmentResource> assessments = assessmentRestService.getByUserAndApplication(user.getId(), applicationId).getSuccess();
+        Long assessmentId = assessments.isEmpty() ? null : assessments.get(0).getId();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        ApplicationResource application = applicationRestService.getApplicationById(assessment.getApplication()).getSuccess();
-        List<ProcessRoleResource> applicationRoles = userRestService.findProcessRole(assessment.getApplication()).getSuccess();
+        List<ProcessRoleResource> applicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
 
         boolean academic = isAcademicFinance(organisation.getOrganisationType(), competition);
         SectionResource costSection = sectionService.getSectionsForCompetitionByType(competition.getId(), PROJECT_COST_FINANCES).get(0);
 
         if (academic) {
-            addAcademicFinance(model, assessment.getApplication(), costSection.getId(), organisationId);
+            addAcademicFinance(model, applicationId, costSection.getId(), organisationId);
         } else {
-            addIndustrialFinance(model, assessment.getApplication(), costSection.getId(), organisationId);
+            addIndustrialFinance(model, applicationId, costSection.getId(), organisationId);
         }
         addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competition.getAssessorFinanceView());
-        addFinanceDetails(model, assessment.getApplication());
+        addFinanceDetails(model, applicationId);
 
-        return new AssessmentDetailedFinancesViewModel(assessmentId, assessment.getApplication(), application,
-                assessment.getApplicationName(), academic);
+        return new AssessmentDetailedFinancesViewModel(assessmentId, applicationId, application,
+                application.getName(), academic);
     }
 
     private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId) {

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.projectdetails;
+ package org.innovateuk.ifs.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -52,24 +52,5 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     @Override
     public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address) {
         return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, address).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> saveProjectInvite (ProjectUserInviteResource projectUserInviteResource) {
-        return projectInviteRestService.saveProjectInvite(projectUserInviteResource).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectUserInviteResource projectUserInviteResource) {
-        return projectDetailsRestService.inviteFinanceContact (projectId, projectUserInviteResource).toServiceResult();
-    }
-
-    @Override public ServiceResult<Void> inviteProjectManager(final Long projectId, final ProjectUserInviteResource projectUserInviteResource) {
-        return projectDetailsRestService.inviteProjectManager (projectId, projectUserInviteResource).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<List<ProjectUserInviteResource>>  getInvitesByProject (Long projectId) {
-        return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
 }

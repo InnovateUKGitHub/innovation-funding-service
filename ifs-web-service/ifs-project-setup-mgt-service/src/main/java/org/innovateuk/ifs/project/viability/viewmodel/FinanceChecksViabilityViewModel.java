@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.viability.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
 
@@ -30,8 +32,12 @@ public class FinanceChecksViabilityViewModel {
     private Long applicationId;
     private String projectName;
     private final boolean projectIsActive;
+    private final boolean collaborativeProject;
+    private final boolean loanCompetition;
 
-    public FinanceChecksViabilityViewModel(String organisationName,
+    public FinanceChecksViabilityViewModel(ProjectResource project,
+                                           CompetitionResource competition,
+                                           String organisationName,
                                            boolean leadPartnerOrganisation,
                                            Integer totalCosts,
                                            Integer percentageGrant,
@@ -47,10 +53,7 @@ public class FinanceChecksViabilityViewModel {
                                            String approverName,
                                            LocalDate approvalDate,
                                            Long organisationId,
-                                           String organisationSizeDescription,
-                                           Long applicationId,
-                                           String projectName,
-                                           boolean projectIsActive) {
+                                           String organisationSizeDescription) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -69,9 +72,11 @@ public class FinanceChecksViabilityViewModel {
         this.approvalDate = approvalDate;
         this.organisationId = organisationId;
         this.organisationSizeDescription = organisationSizeDescription;
-        this.applicationId = applicationId;
-        this.projectName = projectName;
-        this.projectIsActive = projectIsActive;
+        this.applicationId = project.getApplication();
+        this.projectName = project.getName();
+        this.projectIsActive = project.getProjectState().isActive();
+        this.collaborativeProject = project.isCollaborativeProject();
+        this.loanCompetition = competition.isLoan();
     }
 
     public String getOrganisationName() {
@@ -173,5 +178,13 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isProjectIsActive() {
         return projectIsActive;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
+    public boolean isLoanCompetition() {
+        return loanCompetition;
     }
 }

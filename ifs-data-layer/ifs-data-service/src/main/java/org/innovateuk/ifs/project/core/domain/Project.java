@@ -97,7 +97,6 @@ public class Project implements ProcessActivity {
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true, fetch = FetchType.LAZY)
     private ProjectProcess projectProcess;
 
-
     public Project() {}
 
     public Project(Application application, LocalDate targetStartDate, Address address,
@@ -148,6 +147,12 @@ public class Project implements ProcessActivity {
         }
 
         return getOnlyElement(matchingUser);
+    }
+
+    public Optional<PartnerOrganisation> getLeadOrganisation() {
+        return getPartnerOrganisations().stream()
+                .filter(PartnerOrganisation::isLeadOrganisation)
+                .findFirst();
     }
 
     public Long getId() {
@@ -341,5 +346,11 @@ public class Project implements ProcessActivity {
 
     public ProjectProcess getProjectProcess() {
         return projectProcess;
+    }
+
+    public boolean isSpendProfileGenerated() { return !spendProfiles.isEmpty(); }
+
+    public boolean isCollaborativeProject() {
+        return partnerOrganisations.size() != 1;
     }
 }

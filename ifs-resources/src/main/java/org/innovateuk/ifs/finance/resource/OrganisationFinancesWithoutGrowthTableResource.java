@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.math.BigDecimal;
 
 /**
  * A class used to capture "Your organisation" information without a growth table
@@ -9,14 +10,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class OrganisationFinancesWithoutGrowthTableResource {
 
     private OrganisationSize organisationSize;
-    private Long turnover;
+    private BigDecimal turnover;
     private Long headCount;
 
     private Boolean stateAidAgreed;
 
     public OrganisationFinancesWithoutGrowthTableResource(
             OrganisationSize organisationSize,
-            Long turnover,
+            BigDecimal turnover,
             Long headCount,
             Boolean stateAidAgreed) {
 
@@ -37,11 +38,11 @@ public class OrganisationFinancesWithoutGrowthTableResource {
         this.organisationSize = organisationSize;
     }
 
-    public Long getTurnover() {
+    public BigDecimal getTurnover() {
         return turnover;
     }
 
-    public void setTurnover(Long turnover) {
+    public void setTurnover(BigDecimal turnover) {
         this.turnover = turnover;
     }
 

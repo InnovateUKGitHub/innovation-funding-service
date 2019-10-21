@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
@@ -13,9 +13,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
-import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,31 +29,24 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @Component
 public class ProjectTeamViewModelPopulator {
 
-    private final ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
-    private final CompetitionRestService competitionRestService;
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
-    private final StatusService statusService;
+    @Autowired
+    private StatusService statusService;
 
-    private final ProjectDetailsService projectDetailsService;
-
-    public ProjectTeamViewModelPopulator(ProjectService projectService,
-                                         CompetitionRestService competitionRestService,
-                                         StatusService statusService,
-                                         ProjectDetailsService projectDetailsService) {
-        this.projectService = projectService;
-        this.competitionRestService = competitionRestService;
-        this.statusService = statusService;
-        this.projectDetailsService = projectDetailsService;
-    }
+    @Autowired
+    private ProjectInviteRestService projectInviteRestService;
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
-        ProjectResource projectResource = projectService.getById(projectId);
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        boolean isMonitoringOfficer = loggedInUser.getId().equals(projectResource.getMonitoringOfficerUser());
+        ProjectResource project = projectService.getById(projectId);
+        boolean isMonitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
@@ -68,7 +61,7 @@ public class ProjectTeamViewModelPopulator {
                                               org -> org.getId().equals(loggedInProjectUser.getOrganisation())).get();
         }
 
-        List<ProjectUserInviteResource> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccess();
+        List<ProjectUserInviteResource> invitedUsers = projectInviteRestService.getInvitesByProject(projectId).getSuccess();
 
         boolean isLead = leadOrganisation.equals(loggedInUserOrg);
 
@@ -86,18 +79,16 @@ public class ProjectTeamViewModelPopulator {
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
 
         return new ProjectTeamViewModel(
-                competitionResource.getName(),
-                competitionResource.getId(),
-                projectResource.getName(),
-                projectResource.getId(),
+                project,
                 partnerOrgModels,
                 loggedInUserOrgModel,
-                getProjectManager(projectResource.getId()).orElse(null),
+                getProjectManager(project.getId()).orElse(null),
                 isLead,
                 loggedInUser.getId(),
                 statusAccessor.isGrantOfferLetterGenerated(),
                 false,
-                isMonitoringOfficer);
+                isMonitoringOfficer,
+                false);
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {

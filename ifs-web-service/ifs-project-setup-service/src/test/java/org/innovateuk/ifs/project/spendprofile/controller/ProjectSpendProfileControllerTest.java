@@ -101,9 +101,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void viewSpendProfileWhenProjectDetailsNotInDB() throws Exception {
-
-        Long organisationId = 1L;
-
+        long organisationId = 1L;
         ProjectResource projectResource = newProjectResource().build();
 
         when(projectService.getById(projectResource.getId())).
@@ -118,9 +116,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void viewSpendProfileWhenSpendProfileDetailsNotInDB() throws Exception {
-
-        Long organisationId = 1L;
-
+        long organisationId = 1L;
         ProjectResource projectResource = newProjectResource().build();
 
         when(projectService.getById(projectResource.getId())).
@@ -137,10 +133,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void viewSpendProfileSuccessfulViewModelPopulation() throws Exception {
-
-        Long organisationId = 1L;
-        Long projectId = 1L;
-        Long competitionId = 1L;
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -178,9 +173,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void viewSpendProfileConfirm() throws Exception {
-        Long organisationId = 1L;
-        Long projectId = 1L;
-        Long competitionId = 1L;
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -216,10 +211,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void saveSpendProfileWhenErrorWhilstSaving() throws Exception {
-
-        Long projectId = 1L;
-        Long organisationId = 2L;
-        Long competitionId = 3L;
+        long projectId = 1L;
+        long organisationId = 2L;
+        long competitionId = 3L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -289,10 +283,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void saveSpendProfileSuccess() throws Exception {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
+        long projectId = 1L;
+        long organisationId = 1L;
         SpendProfileTableResource table = new SpendProfileTableResource();
 
         when(spendProfileService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
@@ -309,9 +301,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void saveSpendProfileSuccessLeadPartner() throws Exception {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        long projectId = 1L;
+        long organisationId = 1L;
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
@@ -319,7 +310,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceSuccess());
 
-        when(projectService.isUserLeadPartner(eq(projectId),any())).thenReturn(true);
+        when(projectService.isUserLeadPartner(eq(projectId),anyLong())).thenReturn(true);
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -331,9 +322,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void markAsCompleteSpendProfileWhenSpendHigherThanEligible() throws Exception {
-        Long organisationId = 1L;
-        Long projectId = 2L;
-        Long competitionId = 1L;
+        long organisationId = 1L;
+        long projectId = 2L;
+        long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -381,8 +372,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void markAsCompleteSpendProfileSuccess() throws Exception {
-        final Long projectId = 1L;
-        final Long organisationId = 2L;
+        long projectId = 1L;
+        long organisationId = 2L;
 
         when(spendProfileService.markSpendProfileComplete(projectId, organisationId)).thenReturn(serviceSuccess());
 
@@ -395,9 +386,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void markAsIncompleteSpendProfileSuccess() throws Exception {
-
-        Long projectId = 1L;
-        Long organisationId = 2L;
+        long projectId = 1L;
+        long organisationId = 2L;
 
         when(spendProfileService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceSuccess());
 
@@ -411,10 +401,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void editSpendProfileSuccess() throws Exception {
-
-        Long organisationId = 1L;
-        Long projectId = 1L;
-        Long competitionId = 1L;
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -461,7 +450,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     }
 
     private ProjectTeamStatusResource buildProjectTeamStatusResource() {
-
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(2);
         ProjectPartnerStatusResource leadProjectPartnerStatusResource = newProjectPartnerStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.ACTION_REQUIRED)
@@ -590,10 +578,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void viewSpendProfileSuccessfulViewModelPopulationInLeadPartnerOrganisation() throws Exception {
-
-        Long organisationId = 1L;
-        Long projectId = 1L;
-        Long competitionId = 1L;
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -660,7 +647,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void monitoringOfficerSeesSpendProfileReviewPage() throws Exception {
-
         long organisationId = 1L;
         long projectId = 1L;
         long competitionId = 1L;
