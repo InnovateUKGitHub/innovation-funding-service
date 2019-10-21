@@ -117,4 +117,3 @@ public class ProjectTeamViewModel {
         return canInvitePartnerOrganisation;
     }
 }
-
