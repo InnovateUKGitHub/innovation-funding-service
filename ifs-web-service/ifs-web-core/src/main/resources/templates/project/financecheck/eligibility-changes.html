@@ -36,11 +36,11 @@
                     </thead>
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30&percnt;</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30&percnt;</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
                     </tr>
                     </tbody>
                 </table>
@@ -76,14 +76,14 @@
         <div class="table-overflow">
             <table class="govuk-table project-changes" id="project-finance-changes-submitted">
                 <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header width-15-percent" scope="col">Action</th>
-                        <th class="govuk-table__header width-15-percent" scope="col">Section</th>
-                        <th class="govuk-table__header width-15-percent" scope="col">Detail</th>
-                        <th class="govuk-table__header width-20-percent" scope="col">Submitted</th>
-                        <th class="govuk-table__header width-20-percent" scope="col">Updated</th>
-                        <th class="govuk-table__header govuk-table__header--numeric width-15-percent" scope="col">Cost</th>
-                    </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header width-15-percent" scope="col">Action</th>
+                    <th class="govuk-table__header width-15-percent" scope="col">Section</th>
+                    <th class="govuk-table__header width-15-percent" scope="col">Detail</th>
+                    <th class="govuk-table__header width-20-percent" scope="col">Submitted</th>
+                    <th class="govuk-table__header width-20-percent" scope="col">Updated</th>
+                    <th class="govuk-table__header govuk-table__header--numeric width-15-percent" scope="col">Cost</th>
+                </tr>
                 </thead>
                 <tfoot class="govuk-table__foot">
                 <tr class="govuk-table__row">
