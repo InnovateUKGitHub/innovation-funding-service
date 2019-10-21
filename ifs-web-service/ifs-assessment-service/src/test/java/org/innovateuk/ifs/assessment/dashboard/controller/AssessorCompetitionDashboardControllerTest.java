@@ -190,7 +190,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
 
         List<OrganisationResource> organisations = buildTestOrganisations();
 
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+//        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(assessmentService.getTotalScore(assessments.get(3).getId())).thenReturn(totalScore);
@@ -206,7 +206,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andReturn();
 
         InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, organisationRestService);
-        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+//        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
 
         assessments.forEach(assessment -> {

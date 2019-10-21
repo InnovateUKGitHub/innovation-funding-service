@@ -1,29 +1,18 @@
 package org.innovateuk.ifs.assessment.dashboard.populator;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDashboardViewModel;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
+import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashboardResource;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionDashboardRestService;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.partitioningBy;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 
 /**
@@ -32,32 +21,21 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 @Component
 public class AssessorCompetitionDashboardModelPopulator {
 
-    private CompetitionRestService competitionRestService;
     private AssessmentService assessmentService;
-    private ApplicationService applicationService;
-    private OrganisationRestService organisationRestService;
 
     @Autowired
     private AssessorCompetitionDashboardRestService assessorCompetitionDashboardRestService;
 
-    public AssessorCompetitionDashboardModelPopulator(CompetitionRestService competitionService,
-                                                      AssessmentService assessmentService,
-                                                      ApplicationService applicationService,
-                                                      OrganisationRestService organisationRestService) {
-        this.competitionRestService = competitionService;
+    public AssessorCompetitionDashboardModelPopulator(AssessmentService assessmentService) {
         this.assessmentService = assessmentService;
-        this.applicationService = applicationService;
-        this.organisationRestService = organisationRestService;
     }
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
 
         AssessorCompetitionDashboardResource summary = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, userId).getSuccess();
 
-        Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted =
-                getApplicationsPartitionedBySubmitted(userId, competitionId);
-        List<AssessorCompetitionDashboardApplicationViewModel> submitted = applicationsPartitionedBySubmitted.get(TRUE);
-        List<AssessorCompetitionDashboardApplicationViewModel> outstanding = applicationsPartitionedBySubmitted.get(FALSE);
+        List<AssessorCompetitionDashboardApplicationViewModel> outstanding = getOutstandingAssessments(summary.getApplicationAssessments());
+        List<AssessorCompetitionDashboardApplicationViewModel> submitted = getSubmittedAssessments(summary.getApplicationAssessments());
 
         boolean submitVisible = outstanding.stream()
                 .anyMatch(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit);
@@ -74,41 +52,45 @@ public class AssessorCompetitionDashboardModelPopulator {
         );
     }
 
-    private Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> getApplicationsPartitionedBySubmitted(Long userId, Long competitionId) {
-        return assessmentService.getByUserAndCompetition(userId, competitionId).stream()
-                .collect(partitioningBy(this::isAssessmentSubmitted, mapping(this::createApplicationViewModel, Collectors.toList())));
+    private List<AssessorCompetitionDashboardApplicationViewModel> getSubmittedAssessments(List<ApplicationAssessmentResource> assessmentResources) {
+        return assessmentResources.stream()
+                .filter(this::isAssessmentSubmitted)
+                .map(this::createApplicationViewModel)
+                .collect(Collectors.toList());
     }
 
-    private boolean isAssessmentSubmitted(AssessmentResource assessmentResource) {
-        return SUBMITTED == assessmentResource.getAssessmentState();
+    private List<AssessorCompetitionDashboardApplicationViewModel> getOutstandingAssessments(List<ApplicationAssessmentResource> assessmentResources) {
+        return assessmentResources.stream()
+                .filter(resource -> !isAssessmentSubmitted(resource))
+                .map(this::createApplicationViewModel)
+                .collect(Collectors.toList());
     }
 
-    private AssessorCompetitionDashboardApplicationViewModel createApplicationViewModel(AssessmentResource assessment) {
-        ApplicationResource application = applicationService.getById(assessment.getApplication());
-        OrganisationResource organisationResource = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
+    private boolean isAssessmentSubmitted(ApplicationAssessmentResource assessmentResource) {
+        return SUBMITTED == assessmentResource.getState();
+    }
 
-        return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
-                assessment.getId(),
-                application.getName(),
-                organisationResource.getName(),
-                assessment.getAssessmentState(),
+    private AssessorCompetitionDashboardApplicationViewModel createApplicationViewModel(ApplicationAssessmentResource assessment) {
+
+        return new AssessorCompetitionDashboardApplicationViewModel(
+                assessment.getApplicationId(),
+                assessment.getAssessmentId(),
+                assessment.getCompetitionName(),
+                assessment.getLeadOrganisation(),
+                assessment.getState(),
                 getOverallScore(assessment),
-                getRecommended(assessment));
+                assessment.isRecommended()
+        );
     }
 
-    private int getOverallScore(AssessmentResource assessmentResource) {
-        switch (assessmentResource.getAssessmentState()) {
+    private int getOverallScore(ApplicationAssessmentResource assessmentResource) {
+        switch (assessmentResource.getState()) {
             case READY_TO_SUBMIT:
             case SUBMITTED:
-                AssessmentTotalScoreResource assessmentTotalScore = assessmentService.getTotalScore(assessmentResource.getId());
+                AssessmentTotalScoreResource assessmentTotalScore = assessmentService.getTotalScore(assessmentResource.getAssessmentId());
                 return assessmentTotalScore.getTotalScorePercentage();
             default:
                 return 0;
         }
-    }
-
-    private Boolean getRecommended(AssessmentResource assessment) {
-        return ofNullable(assessment.getFundingDecision())
-                .map(fundingDecisionResource -> fundingDecisionResource.getFundingConfirmation()).orElse(null);
     }
 }

@@ -60,6 +60,10 @@ public class ApplicationAssessmentResource {
         return recommended;
     }
 
+    public boolean isReadyToSubmit() {
+        return state == AssessmentState.READY_TO_SUBMIT;
+    }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
