@@ -24,16 +24,15 @@ public class AssessmentCompetitionDashboardServiceImpl extends RootTransactional
 
     @Override
     public ServiceResult<AssessorCompetitionDashboardResource> getAssessorCompetitionDashboardResource(long userId, long competitionId) {
-        List<ApplicationAssessmentResource> applicationAssessmentResource = applicationAssessmentService.getApplicationAssessmentResource(userId, competitionId).getSuccess();
+        List<ApplicationAssessmentResource> assessments = applicationAssessmentService.getApplicationAssessmentResource(userId, competitionId).getSuccess();
         Competition competition = competitionRepository.findById(competitionId).get();
-
         AssessorCompetitionDashboardResource assessorCompetitionDashboardResource = new AssessorCompetitionDashboardResource(
                 competitionId,
                 competition.getName(),
                 competition.getLeadTechnologist().getName(),
                 competition.getAssessorAcceptsDate(),
                 competition.getAssessorDeadlineDate(),
-                applicationAssessmentResource);
+                assessments);
 
         return serviceSuccess(assessorCompetitionDashboardResource);
     }
