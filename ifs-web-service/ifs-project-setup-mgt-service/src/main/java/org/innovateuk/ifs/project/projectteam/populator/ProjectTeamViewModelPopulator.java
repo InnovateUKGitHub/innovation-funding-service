@@ -66,9 +66,23 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 true,
                 !project.getProjectState().isActive(),
-                !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT),
+                canAddTeamMember(project, loggedInUser),
                 canInvitePartnerOrganisation(project, loggedInUser),
-                pcrEnabled && isInternalAdmin(loggedInUser));
+                canRemovePartnerOrganisation(project, loggedInUser));
+    }
+
+    private boolean canAddTeamMember(ProjectResource project, UserResource user) {
+        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT)
+                && !project.isSpendProfileGenerated()
+                && project.getProjectState().isActive();
+    }
+
+    private boolean canRemovePartnerOrganisation(ProjectResource project, UserResource user) {
+        return pcrEnabled
+                && isInternalAdmin(user)
+                && !project.isSpendProfileGenerated()
+                && project.getProjectState().isActive();
+
     }
 
     private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {

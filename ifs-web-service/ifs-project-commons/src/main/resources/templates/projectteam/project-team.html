@@ -221,7 +221,7 @@
                     </tbody>
                 </table>
                 <p class="govuk-body">
-                    <th:block th:if="${organisation.editable and !model.isReadOnly() and model.canAddTeamMember}">
+                    <th:block th:if="${model.canAddTeamMember}">
                         <th:block class="govuk-body">
                             <button name="add-team-member"
                                     th:value="${organisation.orgId}"
@@ -232,8 +232,9 @@
                             </button>
                         </th:block>
                     </th:block>
-                    <th:block th:if="${organisation.editable and !organisation.leadOrg and !model.isReadOnly() and model.canRemovePartnerOrganisation}">
-                        <span class="vertical-align-baseline hint">|</span>
+                    <span th:if="${!organisation.leadOrg and model.canRemovePartnerOrganisation and model.canAddTeamMember}"
+                          class="vertical-align-baseline hint">|</span>
+                    <th:block th:if="${!organisation.leadOrg and model.canRemovePartnerOrganisation}">
                         <button name="remove-organisation"
                                 class="vertical-align-baseline button-clear govuk-!-margin-left-1"
                                 th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.orgId}">

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
@@ -99,7 +100,6 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
         );
     }
 
-
     private ServiceResult<Void> validatePartnerNotLead(PartnerOrganisation partnerOrganisation) {
         return partnerOrganisation.isLeadOrganisation() ?
                 serviceFailure(CANNOT_REMOVE_LEAD_ORGANISATION_FROM_PROJECT) :
@@ -168,9 +168,15 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
         if (pendingPartnerProgress.isPresent()) {
             pendingPartnerProgressRepository.deleteById(pendingPartnerProgress.get().getId());
         }
-        projectFinanceRowRepository.deleteAllByTargetId(projectId);
-        projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
+        deleteProjectFinance(projectId, organisationId);
+    }
 
+    private void deleteProjectFinance(long projectId, long organisationId) {
+        find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
+                notFoundError(ProjectFinance.class)).andOnSuccessReturnVoid(projectFinance -> {
+            projectFinanceRowRepository.deleteById(projectFinance.getId());
+            projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
+        });
     }
 
     private NotificationTarget createProjectNotificationTarget(User user) {
