@@ -66,10 +66,9 @@ if [ ! -f "docker-compose" ]; then
     curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o docker-compose
 fi
 chmod +x docker-compose
-
 # Download the clair container scan yaml
 if [ ! -f "docker-compose.yaml" ]; then
-    wget -q https://raw.githubusercontent.com/usr42/clair-container-scan/master/docker-compose.yaml
+    curl -L https://raw.githubusercontent.com/usr42/clair-container-scan/master/docker-compose.yaml -o docker-compose.yaml
 fi
 
 [ "$PULL" = 1 ] && redirect_all docker-compose pull
