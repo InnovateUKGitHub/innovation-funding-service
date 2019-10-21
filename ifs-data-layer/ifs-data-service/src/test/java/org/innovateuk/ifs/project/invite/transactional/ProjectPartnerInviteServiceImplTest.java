@@ -6,7 +6,6 @@ import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
@@ -25,6 +24,7 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,9 +53,6 @@ public class ProjectPartnerInviteServiceImplTest {
     private SystemNotificationSource systemNotificationSource;
 
     @Mock
-    private OrganisationRepository organisationRepository;
-
-    @Mock
     private ProjectInviteValidator projectInviteValidator;
 
     @Test
@@ -65,7 +62,7 @@ public class ProjectPartnerInviteServiceImplTest {
         String organisationName = "Org";
         String userName = "Someone";
         String email = "someone@gmail.com";
-        Application application = spy(newApplication().build());
+        Application application = newApplication().build();
         Organisation leadOrg = newOrganisation()
                 .withName("Lead org")
                 .build();
@@ -73,10 +70,12 @@ public class ProjectPartnerInviteServiceImplTest {
         Project project = newProject()
                 .withName("Project")
                 .withApplication(application)
+                .withPartnerOrganisations(newPartnerOrganisation()
+                        .withOrganisation(leadOrg)
+                        .withLeadOrganisation(true)
+                        .build(1))
                 .build();
 
-        when(application.getLeadOrganisationId()).thenReturn(leadOrg.getId());
-        when(organisationRepository.findById(leadOrg.getId())).thenReturn(of(leadOrg));
         when(projectRepository.findById(projectId)).thenReturn(of(project));
         when(projectInviteValidator.validate(projectId, invite)).thenReturn(serviceSuccess());
         when(inviteOrganisationRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
