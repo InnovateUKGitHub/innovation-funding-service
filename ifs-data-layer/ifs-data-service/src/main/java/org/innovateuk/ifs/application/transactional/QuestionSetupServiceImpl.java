@@ -50,7 +50,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
         return setupStatusService.saveSetupStatus(setupStatus);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public ServiceResult<Map<Long, Boolean>> getQuestionStatuses(Long competitionId, CompetitionSetupSection parentSection) {
         Long parentSectionStatusId = getParentIdStatusObjectOrCreateOne(competitionId, parentSection);
