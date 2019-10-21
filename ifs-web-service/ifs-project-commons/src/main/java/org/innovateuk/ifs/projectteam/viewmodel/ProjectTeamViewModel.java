@@ -24,6 +24,7 @@ public class ProjectTeamViewModel {
     private final boolean internalUserView;
     private final boolean readOnly;
     private final boolean canInvitePartnerOrganisation;
+    private final boolean canAddTeamMember;
     private final boolean collaborativeProject;
     private final boolean canRemovePartnerOrganisation;
 
@@ -36,6 +37,7 @@ public class ProjectTeamViewModel {
                                 boolean grantOfferLetterGenerated,
                                 boolean internalUserView,
                                 boolean readOnly,
+                                boolean canAddTeamMember,
                                 boolean canInvitePartnerOrganisation,
                                 boolean canRemovePartnerOrganisation) {
 
@@ -52,6 +54,7 @@ public class ProjectTeamViewModel {
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
         this.internalUserView = internalUserView;
         this.readOnly = readOnly;
+        this.canAddTeamMember = canAddTeamMember;
         this.canInvitePartnerOrganisation = canInvitePartnerOrganisation;
         this.canRemovePartnerOrganisation = canRemovePartnerOrganisation;
     }
@@ -122,6 +125,10 @@ public class ProjectTeamViewModel {
 
     public boolean isCanRemovePartnerOrganisation() {
         return canRemovePartnerOrganisation;
+    }
+
+    public boolean isCanAddTeamMember() {
+        return canAddTeamMember;
     }
 }
 

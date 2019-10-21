@@ -221,7 +221,7 @@
                     </tbody>
                 </table>
                 <p class="govuk-body">
-                    <th:block th:if="${organisation.editable and !model.isReadOnly()}">
+                    <th:block th:if="${organisation.editable and !model.isReadOnly() and model.canAddTeamMember}">
                         <th:block class="govuk-body">
                             <button name="add-team-member"
                                     th:value="${organisation.orgId}"

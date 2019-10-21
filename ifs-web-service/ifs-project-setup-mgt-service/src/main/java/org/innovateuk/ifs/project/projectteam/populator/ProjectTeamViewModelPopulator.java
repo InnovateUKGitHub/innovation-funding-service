@@ -22,6 +22,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 @Component
 public class ProjectTeamViewModelPopulator {
@@ -55,11 +56,6 @@ public class ProjectTeamViewModelPopulator {
                 .sorted()
                 .collect(toList());
 
-        boolean projectIsNotActive = !project.getProjectState().isActive();
-
-        // support users and ifs admins can edit, other internal users have read only view only
-        boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT, PROJECT_FINANCE) || projectIsNotActive;
-
         return new ProjectTeamViewModel(
                 project,
                 partnerOrgModels,
@@ -69,9 +65,10 @@ public class ProjectTeamViewModelPopulator {
                 loggedInUser.getId(),
                 false,
                 true,
-                isReadOnly,
+                !project.getProjectState().isActive(),
+                !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT),
                 canInvitePartnerOrganisation(project, loggedInUser),
-                pcrEnabled);
+                pcrEnabled && isInternalAdmin(loggedInUser));
     }
 
     private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {
