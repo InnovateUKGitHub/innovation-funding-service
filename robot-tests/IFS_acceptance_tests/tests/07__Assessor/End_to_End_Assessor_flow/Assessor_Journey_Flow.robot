@@ -9,7 +9,6 @@ Resource          ../Assessor_Commons.robot
 Resource          ../../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
-${Assessment_Comp_title}    Assessments of load capabilities
 ${Assessment_Comp__Id}  ${competition_ids['${Assessment_Comp_title}']}
 ${Assessor_dashboard}    ${server}/assessment/assessor/dashboard/competition/${Assessment_Comp__Id}
 
