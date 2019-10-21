@@ -18,8 +18,8 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 @Component
 public class ApplicationOverviewIneligibilityModelPopulator {
 
-    public ApplicationOverviewIneligibilityViewModel populateModel(final ApplicationResource applicationResource, CompetitionResource competitionResource) {
-        boolean readOnly = isCompetitionBeyondAssessment(competitionResource);
+    public ApplicationOverviewIneligibilityViewModel populateModel(final ApplicationResource applicationResource) {
+        boolean readOnly = isCompetitionBeyondAssessment(applicationResource);
         if (isApplicationIneligible(applicationResource)) {
             IneligibleOutcomeResource ineligibleOutcome = applicationResource.getIneligibleOutcome();
             return new ApplicationOverviewIneligibilityViewModel(
@@ -36,7 +36,7 @@ public class ApplicationOverviewIneligibilityModelPopulator {
         return EnumSet.of(INELIGIBLE, INELIGIBLE_INFORMED).contains(applicationResource.getApplicationState());
     }
 
-    private boolean isCompetitionBeyondAssessment(final CompetitionResource competitionResource) {
-        return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionResource.getCompetitionStatus());
+    private boolean isCompetitionBeyondAssessment(final ApplicationResource applicationResource) {
+        return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(applicationResource.getCompetitionStatus());
     }
 }

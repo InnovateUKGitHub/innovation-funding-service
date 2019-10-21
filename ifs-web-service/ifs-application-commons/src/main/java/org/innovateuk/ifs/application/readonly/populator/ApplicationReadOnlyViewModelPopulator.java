@@ -128,7 +128,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return new ApplicationSectionReadOnlyViewModel(section.getName(), asSet(finance));
     }
 
-    public ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         if (populatorMap.containsKey(question.getQuestionSetupType())) {
             return populatorMap.get(question.getQuestionSetupType()).populate(question, data, settings);
         } else {

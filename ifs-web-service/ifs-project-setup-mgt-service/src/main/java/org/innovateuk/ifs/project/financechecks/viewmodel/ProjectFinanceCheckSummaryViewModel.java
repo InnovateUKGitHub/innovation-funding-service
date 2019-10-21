@@ -10,11 +10,14 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     private FinanceCheckSummaryResource financeCheckSummaryResource;
     private boolean projectIsActive;
+    private boolean collaborativeProject;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
-                                               boolean projectIsActive) {
+                                               boolean projectIsActive,
+                                               boolean collaborativeProject) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
+        this.collaborativeProject = collaborativeProject;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -48,5 +51,9 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     public boolean isProjectIsActive() {
         return projectIsActive;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 }

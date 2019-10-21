@@ -101,7 +101,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
             .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
     ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(singletonList(statusResource)).build();
-    OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
+    OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).withName("Org 2").build();
     ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(organisationId).withId(projectFinanceId).build();
 
     ProjectResource project = newProjectResource().withId(projectId).withName("Project1").
@@ -163,9 +163,9 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         controller.setThreadViewModelPopulator(threadViewModelPopulator);
 
         when(userRestService.retrieveUserById(financeTeamUser.getId())).thenReturn(restSuccess(financeTeamUser));
-        when(organisationRestService.getByUserAndProjectId(financeTeamUser.getId(), projectId)).thenReturn(restSuccess(innovateOrganisationResource));
+        when(organisationRestService.getOrganisationById(innovateOrganisationResource.getId())).thenReturn(restSuccess(innovateOrganisationResource));
         when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
-        when(organisationRestService.getByUserAndProjectId(financeContactUser.getId(), projectId)).thenReturn(restSuccess(leadOrganisationResource));
+        when(organisationRestService.getOrganisationById(leadOrganisationResource.getId())).thenReturn(restSuccess(leadOrganisationResource));
         when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
         when(applicationService.getById(applicationId)).thenReturn(applicationResource);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
@@ -255,7 +255,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertEquals("file1.txt", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(0).attachments.get(0).name);
         assertEquals("Response", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).body);
         assertEquals(financeContactUser.getId(), model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).author.getId());
-        assertEquals("B Z - Org1", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).getUsername());
+        assertEquals("B Z - Org 2", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(20L).isAfter(model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).createdOn));
         assertEquals(0, model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).attachments.size());
 
@@ -273,7 +273,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertTrue(ZonedDateTime.now().plusMinutes(15L).isAfter(model.getClosedQueries().get(0).getViewModelPosts().get(0).createdOn));
         assertEquals(0, model.getClosedQueries().get(0).getViewModelPosts().get(0).attachments.size());
         assertEquals(financeContactUser.getId(), model.getClosedQueries().get(0).getViewModelPosts().get(1).author.getId());
-        assertEquals("B Z - Org1", model.getClosedQueries().get(0).getViewModelPosts().get(1).getUsername());
+        assertEquals("B Z - Org 2", model.getClosedQueries().get(0).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(model.getClosedQueries().get(0).getViewModelPosts().get(1).createdOn));
         assertEquals(0, model.getClosedQueries().get(0).getViewModelPosts().get(1).attachments.size());
 
@@ -323,7 +323,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testDownloadAttachmentFailsNoContent() throws Exception {
 
         when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks/attachment/1"))
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-checks/attachment/{attachmentId}", 123, 1))
                 .andExpect(status().isForbidden())
                 .andExpect(view().name("forbidden"))
                 .andReturn();
@@ -332,7 +332,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         // Assert that there is no content
         assertEquals("", response.getContentAsString());
-        assertEquals(null, response.getHeader("Content-Disposition"));
+        assertNull(response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
     }
 
@@ -352,7 +352,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         // Assert that there is no content
         assertEquals("", response.getContentAsString());
-        assertEquals(null, response.getHeader("Content-Disposition"));
+        assertNull(response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
     }
 

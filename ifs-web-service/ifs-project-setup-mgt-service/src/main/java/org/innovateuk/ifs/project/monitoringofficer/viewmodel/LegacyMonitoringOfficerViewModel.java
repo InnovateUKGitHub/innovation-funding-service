@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,25 +27,26 @@ public class LegacyMonitoringOfficerViewModel {
     private boolean editMode;
     private boolean editable;
     private List<String> primaryAddressLines;
+    private boolean collaborativeProject;
 
-    public LegacyMonitoringOfficerViewModel(Long projectId, String projectTitle, Long applicationId, String area, AddressResource primaryAddress,
-                                            LocalDate targetProjectStartDate, String projectManagerName,
+    public LegacyMonitoringOfficerViewModel(ProjectResource project, String area, String projectManagerName,
                                             List<String> partnerOrganisationNames, String leadOrganisationName,
-                                            CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer,
-                                            boolean editMode, boolean editable) {
-        this.projectId = projectId;
-        this.projectTitle = projectTitle;
-        this.applicationId = applicationId;
+                                            CompetitionSummaryResource competitionSummary, boolean editable) {
+        this.projectId = project.getId();
+        this.projectTitle = project.getName();
+        this.applicationId = project.getApplication();
         this.area = area;
+        AddressResource primaryAddress = project.getAddress();
         this.primaryAddressLines = primaryAddress != null ? primaryAddress.getNonEmptyLines() : emptyList();
-        this.targetProjectStartDate = targetProjectStartDate;
+        this.targetProjectStartDate = project.getTargetStartDate();
         this.projectManagerName = projectManagerName;
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.leadOrganisationName = leadOrganisationName;
         this.competitionSummary = competitionSummary;
-        this.existingMonitoringOfficer = existingMonitoringOfficer;
-        this.editMode = editMode;
+        this.existingMonitoringOfficer = true;
+        this.editMode = false;
         this.editable = editable;
+        this.collaborativeProject = project.isCollaborativeProject();
     }
 
     public Long getProjectId() {
@@ -117,5 +119,9 @@ public class LegacyMonitoringOfficerViewModel {
 
     public boolean isEditable() {
         return editable;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 }
