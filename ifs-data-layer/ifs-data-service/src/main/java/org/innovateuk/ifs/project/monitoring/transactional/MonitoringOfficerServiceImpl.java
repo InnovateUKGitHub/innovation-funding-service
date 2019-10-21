@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
@@ -17,8 +16,8 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,23 +38,17 @@ public class MonitoringOfficerServiceImpl extends BaseTransactionalService imple
 
     private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
-    private final MonitoringOfficerRepository monitoringOfficerRepository;
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
-    private final MonitoringOfficerInviteService monitoringOfficerInviteService;
-    private final ProjectMapper projectMapper;
-    private final LegacyMonitoringOfficerService legacyMonitoringOfficerService;
-    private final UserMapper userMapper;
+    @Autowired
+    private MonitoringOfficerRepository monitoringOfficerRepository;
+    @Autowired
+    private MonitoringOfficerInviteService monitoringOfficerInviteService;
+    @Autowired
+    private ProjectMapper projectMapper;
+    @Autowired
+    private LegacyMonitoringOfficerService legacyMonitoringOfficerService;
+    @Autowired
+    private UserMapper userMapper;
 
-    public MonitoringOfficerServiceImpl(MonitoringOfficerRepository monitoringOfficerRepository, ProjectRepository projectRepository, UserRepository userRepository, MonitoringOfficerInviteService monitoringOfficerInviteService, ProjectMapper projectMapper, LegacyMonitoringOfficerService legacyMonitoringOfficerService, UserMapper userMapper) {
-        this.monitoringOfficerRepository = monitoringOfficerRepository;
-        this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
-        this.monitoringOfficerInviteService = monitoringOfficerInviteService;
-        this.projectMapper = projectMapper;
-        this.legacyMonitoringOfficerService = legacyMonitoringOfficerService;
-        this.userMapper = userMapper;
-    }
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findAll() {
@@ -143,9 +136,5 @@ public class MonitoringOfficerServiceImpl extends BaseTransactionalService imple
 
     private ServiceResult<User> getMonitoringOfficerUser(long userId) {
         return find(userRepository.findByIdAndRoles(userId, MONITORING_OFFICER), notFoundError(User.class, userId));
-    }
-
-    private ServiceResult<Project> getProject(long projectId) {
-        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId));
     }
 }
