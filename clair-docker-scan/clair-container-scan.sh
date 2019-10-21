@@ -27,6 +27,9 @@ log() {
 
 redirect_all() {
     if [ "$VERBOSE" = 1 ]; then
+    echo "qqRP"
+    echo `pwd`
+    echo `ls -lrt`
         "$@"
     else
         "$@" 2>/dev/null >/dev/null
