@@ -30,7 +30,7 @@ public class AsyncExecutionConnectionCountHealthIndicator implements HealthIndic
         int poolSize = executor.getPoolSize();
         int maxPoolSize = executor.getMaxPoolSize();
 
-        LOG.debug(activeExecutorThreads + " / " + poolSize + " active executor threads - max pool size " + maxPoolSize);
+        LOG.trace(activeExecutorThreads + " / " + poolSize + " active executor threads - max pool size " + maxPoolSize);
 
         if ((maxPoolSize - activeExecutorThreads) > maxThread) {
             return Health.up().build();

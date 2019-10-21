@@ -234,6 +234,11 @@
             </th:block>
         </form>
 
+        <p th:if="${model.canInvitePartnerOrganisation}"
+           class="govuk-body">
+            <a th:href="@{/competition/{competitionId}/project/{projectId}/team/partner(competitionId=${model.competitionId}, projectId=${model.projectId})}"
+               class="govuk-link">Add a partner organisation</a>
+        </p>
         <th:block th:unless="${model.isInternalUserView()}">
             <a th:href="@{/project/{id}(id=${model.projectId})}" class="button-secondary">Return to setup your project</a>
         </th:block>

@@ -24,6 +24,10 @@ public abstract class ProjectInvite<T extends ProjectInvite<T>> extends Invite<P
         this.project = project;
     }
 
+    public Project getProject() {
+        return project;
+    }
+
     @Override
     public Project getTarget() {
         return project;

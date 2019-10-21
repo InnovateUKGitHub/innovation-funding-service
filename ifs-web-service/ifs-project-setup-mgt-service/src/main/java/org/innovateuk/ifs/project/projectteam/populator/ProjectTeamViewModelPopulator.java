@@ -2,15 +2,17 @@ package org.innovateuk.ifs.project.projectteam.populator;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,15 +26,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @Component
 public class ProjectTeamViewModelPopulator {
 
-    private final ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
-    private final ProjectDetailsService projectDetailsService;
+    @Autowired
+    private ProjectInviteRestService projectInviteRestService;
 
-    public ProjectTeamViewModelPopulator(ProjectService projectService,
-                                         ProjectDetailsService projectDetailsService) {
-        this.projectService = projectService;
-        this.projectDetailsService = projectDetailsService;
-    }
+    @Value("${ifs.project.team.change.enabled:false}")
+    private boolean pcrEnabled;
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
@@ -43,7 +44,7 @@ public class ProjectTeamViewModelPopulator {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
 
-        List<ProjectUserInviteResource> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccess();
+        List<ProjectUserInviteResource> invitedUsers = projectInviteRestService.getInvitesByProject(projectId).getSuccess();
 
         List<ProjectOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
                 .map(org -> mapToProjectOrganisationViewModel(projectUsers,
@@ -68,7 +69,15 @@ public class ProjectTeamViewModelPopulator {
                 loggedInUser.getId(),
                 false,
                 true,
-                isReadOnly);
+                isReadOnly,
+                canInvitePartnerOrganisation(project, loggedInUser));
+    }
+
+    private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {
+        return pcrEnabled
+                && user.hasRole(PROJECT_FINANCE)
+                && !project.isSpendProfileGenerated()
+                && project.getProjectState().isActive();
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
