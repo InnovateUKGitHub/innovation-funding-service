@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Postcode web API implementation
@@ -56,7 +57,7 @@ public class PostcoderWeb implements AddressLookupService {
         if (StringUtils.isEmpty(lookup)) {
             return ServiceResult.serviceSuccess(new ArrayList<>());
         } else if (StringUtils.isEmpty(postcodeLookupUrl) || StringUtils.isEmpty(postcodeLookupKey)) {
-            return ServiceResult.serviceSuccess(exampleAddresses());
+            return ServiceResult.serviceSuccess(Collections.emptyList());
         } else {
             return doAPILookup(lookup);
         }

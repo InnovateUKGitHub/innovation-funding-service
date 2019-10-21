@@ -191,16 +191,19 @@ Comp Admin isn't able to add a new partner organisation
     Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     Then the user should not see the element       link = Add a partner organisation
 
-Ifs Admin is able to remove a partner organisation
+Project finance is able to remove a partner organisation
     [Documentation]  IFS-6485
-        [Setup]  log in as a different user            &{ifs_admin_user_credentials}
-        Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
-        When the user removes a partner organisation   
-        Then the user reads his email                  ${ifsAdminAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+        [Setup]  log in as a different user             &{internal_finance_credentials}
+        Given the user navigates to the page            ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
+        When the user removes a partner organisation    Red planet
+        Then the user reads his email                   ${ifsAdminAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
 
 *** Keywords ***
 the user removes a partner organisation
-[Arguments]  ${orgName}
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}") ~p:first button:contains("Remove organisation")
+    the user clicks the button/link             j.warning-modal[aria-hidden=false] button:contains("Remove organisation")
+    the user should not see the element         jQuery = h2:contains(${orgName})
 
 
 the user adds a new partner organisation
@@ -347,6 +350,6 @@ The user fills in account details
 Custom suite setup
     The guest user opens the browser
 
-Custom suite teardown
-    The user closes the browser
+#Custom suite teardown
+#    The user closes the browser
 
