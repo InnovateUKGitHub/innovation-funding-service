@@ -64,8 +64,8 @@ cd build
 # Download docker if it is not present.
 
 echo "qqRP"
-echo pwd
-echo ls -lrt
+echo `pwd`
+echo `ls -lrt`
 
 if [ ! -f "docker-compose" ]; then
     curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o docker-compose
