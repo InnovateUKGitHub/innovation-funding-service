@@ -27,9 +27,6 @@ log() {
 
 redirect_all() {
     if [ "$VERBOSE" = 1 ]; then
-    echo "qqRP"
-    echo `pwd`
-    echo `ls -lrt`
         "$@"
     else
         "$@" 2>/dev/null >/dev/null
@@ -76,7 +73,7 @@ if [ ! -f "docker-compose.yaml" ]; then
 fi
 
 [ "$PULL" = 1 ] && redirect_all docker-compose pull
-redirect_stderr log docker-compose run --rm scanner "$@"
+redirect_stderr log ./docker-compose run --rm scanner "$@"
 ret=$?
-redirect_all docker-compose down
+redirect_all ./docker-compose down
 exit $ret
