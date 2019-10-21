@@ -117,6 +117,7 @@ public class ProjectPartnerInviteServiceImpl extends RootTransactionalService im
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> resendInvite(long inviteId) {
         return find(projectPartnerInviteRepository.findById(inviteId), notFoundError(ProjectPartnerInvite.class, inviteId))
                 .andOnSuccess(this::sendInviteNotification)
@@ -124,6 +125,7 @@ public class ProjectPartnerInviteServiceImpl extends RootTransactionalService im
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> deleteInvite(long inviteId) {
         return find(projectPartnerInviteRepository.findById(inviteId), notFoundError(ProjectPartnerInvite.class, inviteId))
                 .andOnSuccessReturnVoid(projectPartnerInviteRepository::delete);

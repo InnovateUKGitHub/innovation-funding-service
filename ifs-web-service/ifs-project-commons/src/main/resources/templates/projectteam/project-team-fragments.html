@@ -3,56 +3,53 @@
 
 <th:block th:fragment="project-user-row(model, organisation, user)">
         <td class="govuk-table__cell"
-            th:text="${user.displayName}"></td>
+            th:text="${user.name}"></td>
         <td class="govuk-table__cell ifs-table__email"
             th:text="${user.email}"></td>
         <td class="govuk-table__cell"
-            th:classappend="|${user.hasRole ?: 'alignright'}|">
-            <th:block th:if="${organisation.editable and user.removeable}">
+            th:classappend="|${!user.hasRole ?: 'alignright'}|">
+            <th:block th:if="${user.removeable}">
                 <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})"/>
                 <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
                    th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
                    class="govuk-link">Remove</a>
-                </th:block>
             </th:block>
-            <th:block th:if="${user.isFinanceContact() or user.isProjectManager()}">
-                <span th:text="${user.getRolesNames()}"
-                      th:classappend="${user.invite ? 'hint' : ''}">Roles</span>
+            <th:block th:if="${user.hasRole}">
+                <span th:text="${user.getRolesNames()}">Roles</span>
             </th:block>
         </td>
 </th:block>
 
-
-<th:block th:fragment="project-invite-row(model)">
+<th:block th:fragment="project-invite-row(model, organisation, invite)">
     <td class="govuk-table__cell hint"
-        th:text="${user.displayName}"></td>
+        th:text="${invite.name}"></td>
     <td class="govuk-table__cell ifs-table__email hint"
-        th:text="${user.email}"></td>
+        th:text="${invite.email}"></td>
     <td class="govuk-table__cell hint">
-        <th:block th:if="${organisation.editable}">
-            <button class="button-clear govuk-!-margin-right-1" type="submit"
-                    name="resend-invite" th:value="${user.id}">Resend invite
-            </button>
-
-            <th:block th:if="${user.removeable}">
-                <span>|</span>
-                <button class="button-clear govuk-!-margin-left-1" type="submit"
-                        name="remove-invite" th:value="${user.id}"
-                        th:unless="${model.internal}">Remove
-                </button>
-            </th:block>
-        </th:block>
+        <button th:if="${invite.canResend}" class="button-clear govuk-!-margin-right-1" type="submit"
+                name="resend-invite" th:value="${invite.id}">Resend invite
+        </button>
+        <span th:if="${invite.canResend and invite.removeable}">|</span>
+        <button th:if="${invite.removeable}" class="button-clear govuk-!-margin-left-1" type="submit"
+                name="remove-invite" th:value="${invite.id}">Remove
+        </button>
     </td>
 </th:block>
 
-
-<th:block th:fragment="partner-invite-row(model)">
+<th:block th:fragment="partner-invite-row(model, organisation, invite)">
     <td class="govuk-table__cell hint"
-        th:text="${user.displayName}"></td>
+        th:text="${invite.name}"></td>
     <td class="govuk-table__cell ifs-table__email hint"
-        th:text="${user.email)}"></td>
-    <td class="govuk-table__cell hint"
-        th:text="${user.getEmail()}"></td>
+        th:text="${invite.email}"></td>
+    <td class="govuk-table__cell hint">
+        <button th:if="${invite.canResend}" class="button-clear govuk-!-margin-right-1" type="submit"
+                name="resend-partner-invite" th:value="${invite.id}">Resend invite
+        </button>
+        <span th:if="${invite.canResend and invite.removeable}">|</span>
+        <button th:if="${invite.removeable}" class="button-clear govuk-!-margin-left-1" type="submit"
+                name="remove-partner-invite" th:value="${invite.id}">Remove
+        </button>
+    </td>
 </th:block>
 
 <th:block th:fragment="assign-role(model)">
@@ -84,16 +81,16 @@
         </tr>
         <tr class="govuk-table__row">
             <td class="govuk-table__cell">
-                <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrg.orgId})}"
+                <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrganisation.id})}"
                    class="govuk-link">Your finance contact</a>
             </td>
             <td class="govuk-table__cell"
-                th:text="${model.loggedInUserOrg.getFinanceContact() != null ? model.loggedInUserOrg.getFinanceContact().name : '-'}">
+                th:text="${model.loggedInUserOrganisation.getFinanceContact() != null ? model.loggedInUserOrganisation.getFinanceContact().name : '-'}">
             </td>
             <td class="govuk-table__cell alignright">
-                <strong th:if="${model.loggedInUserOrg.getFinanceContact() == null}"
+                <strong th:if="${model.loggedInUserOrganisation.getFinanceContact() == null}"
                         class="incomplete-status">Incomplete</strong>
-                <strong th:unless="${model.loggedInUserOrg.getFinanceContact() == null}"
+                <strong th:unless="${model.loggedInUserOrganisation.getFinanceContact() == null}"
                         class="complete-status">Complete</strong>
             </td>
         </tr>
@@ -102,7 +99,7 @@
 </th:block>
 
 <th:block th:fragment="invite-form (model, organisation)">
-    <table th:id="${'invite-user-' + organisation.orgId}"
+    <table th:id="${'invite-user-' + organisation.id}"
            class="govuk-table govuk-!-margin-bottom-2"
            th:attr="aria-hidden=${organisation.openAddTeamMemberForm} ? 'false' : 'true'">
         <thead class="govuk-table__head">
@@ -156,14 +153,14 @@
             <td class="govuk-table__cell">
                 <button name="invite-to-project"
                         class="govuk-button govuk-!-margin-top-6"
-                        th:value="${organisation.orgId}">
+                        th:value="${organisation.id}">
                     Invite to project
                 </button>
             </td>
             <td class="govuk-table__cell alignright">
                 <button name="close-add-team-member-form"
                         class="button-clear govuk-!-margin-top-6 govuk-!-margin-left-6"
-                        th:attr="data-hide-form=${'invite-user-' + organisation.orgId}">
+                        th:attr="data-hide-form=${'invite-user-' + organisation.id}">
                     Remove
                 </button>
             </td>
@@ -172,9 +169,9 @@
     </table>
     <p class="govuk-body">
         <button name="add-team-member"
-                th:value="${organisation.orgId}"
+                th:value="${organisation.id}"
                 class="button-clear"
-                th:attr="data-show-form=${'invite-user-' + organisation.orgId},
+                th:attr="data-show-form=${'invite-user-' + organisation.id},
                                      aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
             Add team member
         </button>

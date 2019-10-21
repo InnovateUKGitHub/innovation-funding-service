@@ -10,8 +10,8 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamUserViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamOrganisationViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -104,7 +104,7 @@ public class ProjectTeamViewModelPopulatorTest {
         assertFalse(model.isReadOnly());
         assertEquals(2, model.getPartnerOrgs().size());
 
-        ProjectOrganisationViewModel partnerOneViewModel =
+        ProjectTeamOrganisationViewModel partnerOneViewModel =
                 model.getPartnerOrgs()
                         .stream()
                         .filter(view -> view.getOrgId() == partnerOne.getId())
@@ -114,10 +114,10 @@ public class ProjectTeamViewModelPopulatorTest {
         assertEquals(2, partnerOneViewModel.getUsers().size());
         assertNotNull(partnerOneViewModel.getProjectManager());
 
-        ProjectOrganisationUserRowViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
+        ProjectTeamUserViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
         assertEquals(partnerOneUser.getId(), 123L);
 
-        ProjectOrganisationUserRowViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(1);
+        ProjectTeamUserViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(1);
         assertEquals((long) invites.get(0).getId(), partnerOneInvitee.getId());
         assertEquals("Mr Invite (Pending)", partnerOneInvitee.getDisplayName());
 

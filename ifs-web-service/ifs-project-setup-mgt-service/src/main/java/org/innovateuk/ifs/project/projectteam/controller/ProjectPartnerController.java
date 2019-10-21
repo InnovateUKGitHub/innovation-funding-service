@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/team/partner")
 @PreAuthorize("hasAuthority('project_finance')")
-@SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance users can invite new project team partners.")
+@SecuredBySpring(value = "PROJECT_PARTNER_CHANGES", description = "Project finance can change the partner organisations.")
 public class ProjectPartnerController {
 
     @Autowired

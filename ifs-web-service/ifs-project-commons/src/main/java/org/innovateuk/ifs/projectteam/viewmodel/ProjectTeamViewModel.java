@@ -14,8 +14,8 @@ public class ProjectTeamViewModel {
     private final long competitionId;
     private final String projectName;
     private final long projectId;
-    private final List<ProjectOrganisationViewModel> partners;
-    private final ProjectOrganisationViewModel loggedInUserOrganisation;
+    private final List<ProjectTeamOrganisationViewModel> partners;
+    private final ProjectTeamOrganisationViewModel loggedInUserOrganisation;
     private final ProjectUserResource projectManager;
     private final boolean userLeadPartner;
     private final long loggedInUserId;
@@ -27,8 +27,8 @@ public class ProjectTeamViewModel {
     private final boolean collaborativeProject;
 
     public ProjectTeamViewModel(ProjectResource project,
-                                List<ProjectOrganisationViewModel> partners,
-                                ProjectOrganisationViewModel loggedInUserOrganisation,
+                                List<ProjectTeamOrganisationViewModel> partners,
+                                ProjectTeamOrganisationViewModel loggedInUserOrganisation,
                                 ProjectUserResource projectManager,
                                 boolean userLeadPartner,
                                 long loggedInUserId,
@@ -69,7 +69,7 @@ public class ProjectTeamViewModel {
         return projectId;
     }
 
-    public List<ProjectOrganisationViewModel> getPartners() {
+    public List<ProjectTeamOrganisationViewModel> getPartners() {
         return partners;
     }
 
@@ -93,7 +93,7 @@ public class ProjectTeamViewModel {
         return projectManager;
     }
 
-    public ProjectOrganisationViewModel getLoggedInUserOrganisation() {
+    public ProjectTeamOrganisationViewModel getLoggedInUserOrganisation() {
         return loggedInUserOrganisation;
     }
 

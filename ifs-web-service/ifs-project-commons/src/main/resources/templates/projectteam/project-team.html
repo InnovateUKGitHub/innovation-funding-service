@@ -60,7 +60,7 @@
                     <th:block th:if="${organisation.lead && model.collaborativeProject}">(Lead)</th:block>
                 </h2>
                 <table class="govuk-table"
-                       th:classappend="${organisation.editable ? 'govuk-!-margin-bottom-2' : ''}">
+                       th:classappend="${organisation.canAddUsers ? 'govuk-!-margin-bottom-2' : ''}">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
@@ -82,7 +82,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <th:block th:if="${organisation.editable}">
+                <th:block th:if="${organisation.canAddUsers}">
                     <th:block th:insert="projectteam/project-team-fragments :: invite-form(${model}, ${organisation})" />
                 </th:block>
             </th:block>
