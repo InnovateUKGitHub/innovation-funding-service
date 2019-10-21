@@ -101,17 +101,19 @@
                     </th:block>
                 </th:block>
 
+                <th:block th:each="rowType : ${model.changes.keySet()}">
+                    <th:block th:unless="${rowType.cost}" th:each="changePairLst : ${model.changes.get(rowType)}">
+                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
+                            <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
+                        </th:block>
+                    </th:block>
+                </th:block>
+
                 </tbody>
             </table>
         </div>
 
-        <th:block th:each="rowType : ${model.changes.keySet()}">
-            <th:block th:unless="${rowType.cost}" th:each="changePairLst : ${model.changes.get(rowType)}">
-                <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
-                    <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
-                </th:block>
-            </th:block>
-        </th:block>
+
 
 
         <a th:if="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
