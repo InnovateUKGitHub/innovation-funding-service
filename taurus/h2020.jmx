@@ -9,7 +9,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="auth_url" elementType="Argument">
             <stringProp name="Argument.name">auth_url</stringProp>
-            <stringProp name="Argument.value">${__P(auth_url,auth.local-dev:9443)}</stringProp>
+            <stringProp name="Argument.value">${__P(authorisation_url,auth.local-dev:9443)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -105,7 +105,7 @@
         <boolProp name="useExpires">false</boolProp>
       </CacheManager>
       <hashTree/>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -243,7 +243,7 @@
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">30</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">20</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -252,12 +252,6 @@
         <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Applicant and Comp Admin complete project setup" enabled="true">
           <stringProp name="IncludeController.includepath">h2020-project-seup.jmx</stringProp>
         </IncludeController>
-        <hashTree/>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="false">
-          <boolProp name="displayJMeterProperties">true</boolProp>
-          <boolProp name="displayJMeterVariables">true</boolProp>
-          <boolProp name="displaySystemProperties">true</boolProp>
-        </DebugSampler>
         <hashTree/>
         <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="User number counter" enabled="false">
           <stringProp name="CounterConfig.start">1</stringProp>
