@@ -35,13 +35,13 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30&percnt;</td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
-                        </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30&percnt;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -101,17 +101,18 @@
                     </th:block>
                 </th:block>
 
-                <th:block th:each="rowType : ${model.changes.keySet()}">
-                    <th:block th:unless="${rowType.cost}" th:each="changePairLst : ${model.changes.get(rowType)}">
-                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
-                            <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
-                        </th:block>
-                    </th:block>
-                </th:block>
-
                 </tbody>
             </table>
         </div>
+
+        <th:block th:each="rowType : ${model.changes.keySet()}">
+            <th:block th:unless="${rowType.cost}" th:each="changePairLst : ${model.changes.get(rowType)}">
+                <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
+                    <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
+                </th:block>
+            </th:block>
+        </th:block>
+
 
         <a th:if="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
         <a th:unless="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to eligibility</a>
