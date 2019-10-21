@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Map;
@@ -21,32 +20,34 @@ import java.util.Map;
 public interface ProjectService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId);
+    ServiceResult<ProjectResource> getProjectById(long projectId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId);
+    ServiceResult<ProjectResource> getByApplicationId(long applicationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findAll();
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a project (by making decision)" )
-    ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId);
+    ServiceResult<ProjectResource> createProjectFromApplication(long applicationId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create projects (by making decisions)" )
     ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<ProjectResource>> findByUserId(Long userId);
+    ServiceResult<List<ProjectResource>> findByUserId(long userId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
-    ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
+    ServiceResult<List<ProjectUserResource>> getProjectUsers(long projectId);
 
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
+    ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ADD_PARTNER')")
-    ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId);
+    ServiceResult<ProjectUser> addPartner(long projectId, long userId, long organisationId);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<OrganisationResource> getLeadOrganisation(long projectId);
 }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -91,12 +93,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ActivityLogService activityLogService;
 
     @Override
-    public ServiceResult<ProjectResource> getProjectById(Long projectId) {
+    public ServiceResult<ProjectResource> getProjectById(long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<ProjectResource> getByApplicationId(Long applicationId) {
+    public ServiceResult<ProjectResource> getByApplicationId(long applicationId) {
         return getProjectByApplication(applicationId).andOnSuccessReturn(projectMapper::mapToResource);
     }
 
@@ -118,7 +120,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     @Transactional
-    public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
+    public ServiceResult<List<ProjectResource>> findByUserId(long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
         return serviceSuccess(projectUsers
                 .stream()
@@ -130,16 +132,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
+    public ServiceResult<List<ProjectUserResource>> getProjectUsers(long projectId) {
         return serviceSuccess(simpleMap(getProjectUsersByProjectId(projectId), projectUserMapper::mapToResource));
     }
 
     @Override
     @Transactional
-    public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
+    public ServiceResult<ProjectUser> addPartner(long projectId, long userId, long organisationId) {
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
-                    if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
+                    if (project.getOrganisations(o -> o.getId() == organisationId).isEmpty()) {
                         return serviceFailure(badRequestError("project does not contain organisation"));
                     }
                     return addProjectPartner(project, user, organisation);
@@ -158,7 +160,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
+    public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId) {
         ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
         if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findById(projectUser.getOrganisation().getId()).orElse(null)));
@@ -178,7 +180,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     @Transactional
-    public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
+    public ServiceResult<ProjectResource> createProjectFromApplication(long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
 
@@ -190,7 +192,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final long applicationId) {
+    @Override
+    public ServiceResult<OrganisationResource> getLeadOrganisation(long projectId) {
+        return getProject(projectId)
+                .andOnSuccessReturn(p -> p.getApplication().getLeadOrganisationId())
+                .andOnSuccess(this::getOrganisation)
+                .andOnSuccessReturn(o -> organisationMapper.mapToResource(o));
+    }
+
+    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(long applicationId) {
         Optional<ProjectResource> existingProject = getByApplicationId(applicationId).getOptionalSuccessObject();
         if (existingProject.isPresent()) {
             return serviceSuccess(existingProject.get());
@@ -201,8 +211,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    private ServiceResult<ProjectResource> createProjectFromApplicationId(final long applicationId) {
-
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
 
             Project project = new Project();
@@ -239,8 +248,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
                             andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
+                            andOnSuccess(() -> setCompetitionProjectSetupStartedDate(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
+    }
+
+    private void setCompetitionProjectSetupStartedDate(Project newProject) {
+        Competition competition = newProject.getApplication().getCompetition();
+        if (competition.getProjectSetupStarted() == null) {
+            competition.setProjectSetupStarted(ZonedDateTime.now());
+        }
     }
 
     private PartnerOrganisation createPartnerOrganisation(Application application, Project project, Organisation org, ProcessRole leadApplicantRole) {

@@ -47,23 +47,21 @@ Project setup Competitions and Calculations
 
 PS projects title and lead
     [Documentation]    INFUND-2610, IFS-1881
-    Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    When the user clicks the button/link    link = ${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    link = All projects
-    And the user should see the element     jQuery = tr:nth-child(1) th:contains("Elbow grease")
-    And the user should see the element     jQuery = tr:nth-child(1) th:contains("Lead: Big Riffs And Insane Solos Ltd")
-    And the user should see the element     jQuery = tr:nth-child(2) th:contains("${PS_PD_Application_Id}")
-    And the user should see the element     jQuery = tr:nth-child(2) th:contains("Lead: ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user should see the element     jQuery = tr:nth-child(3) th:contains("Office Chair for Life")
-    And the user should see the element     jQuery = tr:nth-child(3) th:contains("Lead: Guitar Gods Ltd")
+    When the internal user navigates to the project setup competition       ${PROJECT_SETUP_COMPETITION_NAME}
+    Then the user should see the element                                    link = All projects
+    And the user should see the element                                     jQuery = tr:nth-child(1) th:contains("Elbow grease")
+    And the user should see the element                                     jQuery = tr:nth-child(1) th:contains("Lead: Big Riffs And Insane Solos Ltd")
+    And the user should see the element                                     jQuery = tr:nth-child(2) th:contains("${PS_PD_Application_Id}")
+    And the user should see the element                                     jQuery = tr:nth-child(2) th:contains("Lead: ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    And the user should see the element                                     jQuery = tr:nth-child(3) th:contains("Office Chair for Life")
+    And the user should see the element                                     jQuery = tr:nth-child(3) th:contains("Lead: Guitar Gods Ltd")
 
 PS projects status page
     [Documentation]    INFUND-2610, IFS-1881
-    Given the user navigates to the page            ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link             link = ${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element            jQuery = tr:nth-child(2):contains("${PS_PD_Application_Title}")
-    And the user should see the element             link = All projects
-    [Teardown]    The user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    When the internal user navigates to the project setup competition       ${PROJECT_SETUP_COMPETITION_NAME}
+    Then the user should see the element                                    jQuery = tr:nth-child(2):contains("${PS_PD_Application_Title}")
+    And the user should see the element                                     link = All projects
+    [Teardown]    The user navigates to the page                            ${COMP_ADMINISTRATOR_DASHBOARD}
 
 Upcoming competitions
     [Documentation]    INFUND-3832
@@ -120,8 +118,8 @@ Non IFS competitions do not appear in search results
 The user should see competitions in project set up
     # We have used the JQuery selector for the link because the title will change according to the competitions number
     the user should see the element       jQuery = .govuk-heading-m:contains("Project setup ")
-    the user should see the element        link = ${PROJECT_SETUP_COMPETITION_NAME}
-    the user should see the element        jQuery =.govuk-body:contains("3 projects")
+    the user should see the element        link = Project setup loan comp
+    the user should see the element        jQuery =.govuk-body:contains("5 projects")
     the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
     # this step verifies that the ready to open competitions are not visible in other tabs
 

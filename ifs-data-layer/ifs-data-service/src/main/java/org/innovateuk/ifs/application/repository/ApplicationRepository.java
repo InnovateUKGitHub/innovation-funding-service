@@ -32,10 +32,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
             "a.competition.id = :compId " +
             "AND (a.applicationProcess.activityState IN :states) " +
-            "AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
+            "AND (:filter IS NULL OR str(a.id) LIKE CONCAT('%', :filter, '%') ) " +
             "AND (:funding IS NULL " +
-            "	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
-            "	OR (a.fundingDecision = :funding)) " +
+            "	OR ( str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL AND a.applicationProcess.activityState <> org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
+            "	OR a.fundingDecision = :funding " +
+            "   OR ( str(:funding) = 'FUNDED' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
+            ") " +
             "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
 
     String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
@@ -100,19 +102,19 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     Application findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
 
     @Query(COMP_STATUS_FILTER)
-    Page<Application> findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(@Param("compId") long competitionId,
-                                                                                       @Param("states") Collection<ApplicationState> applicationStates,
-                                                                                       @Param("filter") String filter,
-                                                                                       @Param("funding") FundingDecisionStatus funding,
-                                                                                       @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
-                                                                                       Pageable pageable);
+    Page<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                               @Param("states") Collection<ApplicationState> applicationStates,
+                                                               @Param("filter") String filter,
+                                                               @Param("funding") FundingDecisionStatus funding,
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
+                                                               Pageable pageable);
 
     @Query(COMP_STATUS_FILTER)
-    List<Application> findByCompetitionIdAndApplicationProcessActivityStateInAndIdLike(@Param("compId") long competitionId,
-                                                                                       @Param("states") Collection<ApplicationState> applicationStates,
-                                                                                       @Param("filter") String filter,
-                                                                                       @Param("funding") FundingDecisionStatus funding,
-                                                                                       @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+    List<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                               @Param("states") Collection<ApplicationState> applicationStates,
+                                                               @Param("filter") String filter,
+                                                               @Param("funding") FundingDecisionStatus funding,
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
 
     @Query(COMP_NOT_STATUS_FILTER)
     Page<Application> findByCompetitionIdAndApplicationProcessActivityStateNotIn(@Param("compId") long competitionId,

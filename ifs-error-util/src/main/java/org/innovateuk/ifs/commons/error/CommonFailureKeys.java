@@ -334,6 +334,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_CANNOT_BE_MARKED_AS_UNSUCCESSFUL(BAD_REQUEST),
 
     /**
+     * Project partner progress.
+     */
+    PARTNER_NOT_READY_TO_JOIN_PROJECT(BAD_REQUEST),
+
+    /**
      * SIL CRM
      */
     CONTACT_NOT_UPDATED(INTERNAL_SERVER_ERROR),

@@ -159,7 +159,7 @@
                     <p class="govuk-body" th:text="${model.projectManagerName}">David Smith</p>
                 </th:block>
 
-                <th:block th:if="${model.partnerOrganisationNames}">
+                <th:block th:if="${model.partnerOrganisationNames != null && model.collaborativeProject}">
                     <h3 class="govuk-heading-m govuk-!-margin-0">Project partners</h3>
                     <ul class="govuk-list govuk-list--bullet">
                         <li th:each="organisationName : ${model.partnerOrganisationNames}">

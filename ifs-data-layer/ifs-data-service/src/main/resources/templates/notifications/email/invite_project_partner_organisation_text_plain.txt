@@ -1,0 +1,13 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+You have been invited to join the project ${projectName} by ${leadOrganisationName}. Sign in to accept this invitation.
+If you have not used this service before you must create an account.
+
+To accept the invite please copy and paste this URL into your browser: ${inviteUrl}
+
+Yours sincerely,
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>
