@@ -183,7 +183,7 @@ public class FinanceChecksViabilityViewModel {
     public boolean isCollaborativeProject() {
         return collaborativeProject;
     }
-    
+
     public boolean isLoanCompetition() {
         return loanCompetition;
     }

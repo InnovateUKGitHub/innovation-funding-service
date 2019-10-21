@@ -24,7 +24,7 @@
             <p class="govuk-body govuk-!-margin-top-6">Only the Project Manager can upload and submit additional documents to support your grant application.</p>
         </th:block>
 
-        <p class="govuk-body govuk-!-margin-top-6">These documents should be reviewed by all partners in the project team.</p>
+        <p class="govuk-body govuk-!-margin-top-6" th:unless="${!model.isCollaborativeProject()}">These documents should be reviewed by all partners in the project team.</p>
 
         <ul class="task-list">
             <li th:each="document : ${model.documents}">
