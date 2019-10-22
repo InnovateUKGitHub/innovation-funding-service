@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashb
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
-public class AssessmentCompetitionDashboardServiceImpl extends RootTransactionalService implements AssessmentCompetitionDashboardService {
+public class AssessmentCompetitionDashboardServiceImpl implements AssessmentCompetitionDashboardService {
 
     @Autowired
     private ApplicationAssessmentService applicationAssessmentService;

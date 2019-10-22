@@ -7,7 +7,6 @@ import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentRes
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
-public class ApplicationAssessmentServiceImpl extends RootTransactionalService implements ApplicationAssessmentService {
+public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentService {
 
     @Autowired
     private AssessmentRepository assessmentRepository;
