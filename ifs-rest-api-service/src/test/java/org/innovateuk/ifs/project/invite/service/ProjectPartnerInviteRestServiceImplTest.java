@@ -56,7 +56,7 @@ public class ProjectPartnerInviteRestServiceImplTest extends BaseRestServiceUnit
     public void deleteInvite() {
         long projectId = 1L;
         long inviteId = 2L;
-        setupDeleteWithRestResultExpectations(format("/project/%d/project-partner-invite/%d/resend", projectId, inviteId), HttpStatus.OK);
+        setupDeleteWithRestResultExpectations(format("/project/%d/project-partner-invite/%d", projectId, inviteId), HttpStatus.OK);
 
         RestResult<Void> result = service.deleteInvite(projectId, inviteId);
 
