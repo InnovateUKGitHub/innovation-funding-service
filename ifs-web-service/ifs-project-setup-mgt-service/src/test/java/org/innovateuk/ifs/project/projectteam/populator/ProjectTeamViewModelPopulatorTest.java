@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamUserViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.AbstractProjectTeamRowViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamOrganisationViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -84,6 +85,7 @@ public class ProjectTeamViewModelPopulatorTest {
                 .withName("Mr Invite")
                 .withOrganisation(partnerOne.getId())
                 .withStatus(InviteStatus.SENT)
+                .withSentOn(ZonedDateTime.now().minusHours(2).minusDays(10))
                 .build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -102,24 +104,24 @@ public class ProjectTeamViewModelPopulatorTest {
         assertEquals((long) loggedInUser.getId(), model.getLoggedInUserId());
         assertTrue(model.isInternalUserView());
         assertFalse(model.isReadOnly());
-        assertEquals(2, model.getPartnerOrgs().size());
+        assertEquals(2, model.getPartners().size());
 
         ProjectTeamOrganisationViewModel partnerOneViewModel =
-                model.getPartnerOrgs()
+                model.getPartners()
                         .stream()
-                        .filter(view -> view.getOrgId() == partnerOne.getId())
+                        .filter(view -> view.getId() == partnerOne.getId())
                         .findAny()
                         .get();
 
         assertEquals(2, partnerOneViewModel.getUsers().size());
         assertNotNull(partnerOneViewModel.getProjectManager());
 
-        ProjectTeamUserViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
+        AbstractProjectTeamRowViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
         assertEquals(partnerOneUser.getId(), 123L);
 
-        ProjectTeamUserViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(1);
+        AbstractProjectTeamRowViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(1);
         assertEquals((long) invites.get(0).getId(), partnerOneInvitee.getId());
-        assertEquals("Mr Invite (Pending)", partnerOneInvitee.getDisplayName());
+        assertEquals("Mr Invite (pending for 10 days)", partnerOneInvitee.getName());
 
         assertFalse(partnerOneViewModel.isOpenAddTeamMemberForm());
         model.openAddTeamMemberForm(partnerOne.getId());
