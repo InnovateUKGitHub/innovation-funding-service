@@ -21,6 +21,7 @@ public class ProjectDetailsViewModel {
     private boolean readOnlyView;
 
     private boolean userLeadPartner;
+    private boolean collaborativeProject;
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                          List<Long> usersPartnerOrganisations,
@@ -41,6 +42,7 @@ public class ProjectDetailsViewModel {
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
         this.readOnlyView = readOnlyView;
         this.userLeadPartner = userIsLeadPartner;
+        this.collaborativeProject = project.isCollaborativeProject();
     }
 
     public ProjectResource getProject() {
@@ -89,4 +91,7 @@ public class ProjectDetailsViewModel {
         return grantOfferLetterGenerated;
     }
 
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
 }

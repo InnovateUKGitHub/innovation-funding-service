@@ -132,9 +132,15 @@ The Stakeholder can search for application
     And the user clicks the button/link           link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     Then the user should see the element          jQuery = span:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
 
+The stakeholder is able to view finances
+    [Documentation]  IFS-6648
+    Given the user clicks the button/link  jQuery = button:contains("Finances summary")
+    When the user clicks the button/link   jQuery = div:contains("Empire") ~ a:contains("View finances")
+    Then the user should see the element   jQuery = h1:contains("Your project finances")
+    [Teardown]  the user clicks the button/link  link = Back to application overview
+
 The Stakeholder is able to view application T&C's
     [Documentation]  IFS-6632
-    Given the user clicks the button/link         jQuery = button:contains("Award terms and conditions")
     When the user clicks the button/link          link = View terms and conditions
     Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user clicks the button/link           jQuery = a:contains("Back to application overview")

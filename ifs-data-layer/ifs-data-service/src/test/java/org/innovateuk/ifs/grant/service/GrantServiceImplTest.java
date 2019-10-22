@@ -13,13 +13,12 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -33,7 +32,6 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
 /**
@@ -128,7 +126,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         when(projectRepository.findOneByApplicationId(APPLICATION_ID)).thenReturn(project);
         when(grantMapper.mapToGrant(project)).thenReturn(grant);
         when(grantEndpoint.send(grant)).thenReturn(serviceSuccess());
-        when(grantProcessService.findReadyToSend()).thenReturn(singletonList(process));
+        when(grantProcessService.findOneReadyToSend()).thenReturn(of(process));
 
         ServiceResult<Void> result = service.sendReadyProjects();
 
