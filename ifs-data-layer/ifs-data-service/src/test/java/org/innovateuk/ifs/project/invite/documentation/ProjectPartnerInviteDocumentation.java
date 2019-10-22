@@ -94,7 +94,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         when(projectPartnerInviteService.deleteInvite(inviteId)).thenReturn(serviceSuccess());
         mockMvc.perform(delete("/project/{projectId}/project-partner-invite/{inviteId}", projectId, inviteId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project the invite belongs to"),
