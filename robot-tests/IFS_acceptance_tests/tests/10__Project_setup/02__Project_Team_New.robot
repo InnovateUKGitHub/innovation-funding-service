@@ -350,6 +350,6 @@ The user fills in account details
 Custom suite setup
     The guest user opens the browser
 
-#Custom suite teardown
-#    The user closes the browser
+Custom suite teardown
+    The user closes the browser
 
