@@ -265,12 +265,6 @@
           </HTTPSamplerProxy>
           <hashTree/>
         </hashTree>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler 2" enabled="true">
-          <boolProp name="displayJMeterProperties">true</boolProp>
-          <boolProp name="displayJMeterVariables">true</boolProp>
-          <boolProp name="displaySystemProperties">true</boolProp>
-        </DebugSampler>
-        <hashTree/>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login as applicant" enabled="true"/>
         <hashTree>
           <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
@@ -278,7 +272,7 @@
               <stringProp name="1921668648">user_email</stringProp>
             </collectionProp>
             <collectionProp name="UserParameters.thread_values">
-              <collectionProp name="104658740">
+              <collectionProp name="210853705">
                 <stringProp name="104658709">${applicant_email}</stringProp>
               </collectionProp>
             </collectionProp>
@@ -1293,7 +1287,7 @@
               <stringProp name="1921668648">user_email</stringProp>
             </collectionProp>
             <collectionProp name="UserParameters.thread_values">
-              <collectionProp name="104658740">
+              <collectionProp name="210853705">
                 <stringProp name="104658709">${applicant_email}</stringProp>
               </collectionProp>
             </collectionProp>
@@ -1749,7 +1743,7 @@
               <stringProp name="1921668648">user_email</stringProp>
             </collectionProp>
             <collectionProp name="UserParameters.thread_values">
-              <collectionProp name="104658740">
+              <collectionProp name="210853705">
                 <stringProp name="104658709">${applicant_email}</stringProp>
               </collectionProp>
             </collectionProp>
