@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.projectteam.viewmodel;
 
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 
 import java.util.List;
@@ -22,11 +23,10 @@ public class ProjectTeamViewModel {
     private final boolean grantOfferLetterGenerated;
     private final boolean internalUserView;
     private final boolean readOnly;
+    private final boolean canInvitePartnerOrganisation;
+    private final boolean collaborativeProject;
 
-    public ProjectTeamViewModel(String competitionName,
-                                long competitionId,
-                                String projectName,
-                                long projectId,
+    public ProjectTeamViewModel(ProjectResource project,
                                 List<ProjectOrganisationViewModel> partnerOrgs,
                                 ProjectOrganisationViewModel loggedInUserOrg,
                                 ProjectUserResource projectManager,
@@ -34,12 +34,14 @@ public class ProjectTeamViewModel {
                                 long loggedInUserId,
                                 boolean grantOfferLetterGenerated,
                                 boolean internalUserView,
-                                boolean readOnly) {
+                                boolean readOnly,
+                                boolean canInvitePartnerOrganisation) {
 
-        this.competitionName = competitionName;
-        this.competitionId = competitionId;
-        this.projectName = projectName;
-        this.projectId = projectId;
+        this.competitionName = project.getCompetitionName();
+        this.competitionId = project.getCompetition();
+        this.projectName = project.getName();
+        this.projectId = project.getId();
+        this.collaborativeProject = project.isCollaborativeProject();
         this.partnerOrgs = partnerOrgs;
         this.loggedInUserOrg = loggedInUserOrg;
         this.projectManager = projectManager;
@@ -48,6 +50,7 @@ public class ProjectTeamViewModel {
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
         this.internalUserView = internalUserView;
         this.readOnly = readOnly;
+        this.canInvitePartnerOrganisation = canInvitePartnerOrganisation;
     }
 
     public String getCompetitionName() {
@@ -98,6 +101,10 @@ public class ProjectTeamViewModel {
         return readOnly;
     }
 
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
     public ProjectTeamViewModel openAddTeamMemberForm(long organisationId) {
         partnerOrgs.stream()
                 .filter(partner -> partner.getOrgId() == organisationId)
@@ -105,5 +112,8 @@ public class ProjectTeamViewModel {
                 .ifPresent(partner -> partner.setOpenAddTeamMemberForm(true));
         return this;
     }
-}
 
+    public boolean isCanInvitePartnerOrganisation() {
+        return canInvitePartnerOrganisation;
+    }
+}

@@ -51,7 +51,7 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationQuestionController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'assessor', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'assessor', 'monitoring_officer')")
 public class ApplicationQuestionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
@@ -67,19 +67,11 @@ public class ApplicationQuestionController {
     @Autowired
     private ApplicationService applicationService;
     @Autowired
-    private UserRestService userRestService;
-    @Autowired
-    private QuestionService questionService;
-    @Autowired
     private QuestionRestService questionRestService;
     @Autowired
     private ApplicantRestService applicantRestService;
     @Autowired
-    private ApplicationRedirectionService applicationRedirectionService;
-    @Autowired
     private ApplicationQuestionSaver applicationSaver;
-    @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {

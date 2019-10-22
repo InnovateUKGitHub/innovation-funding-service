@@ -97,6 +97,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
             withName("My Project").
             withApplication(applicationId).
             withAddress(projectAddress).
+            withCompetition(competitionId).
             withTargetStartDate(LocalDate.of(2017, 01, 05));
 
     @Mock
@@ -217,6 +218,10 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                         withIsLeadPartner(true).
                         build()).
                 build();
+
+        if (existingMonitoringOfficer) {
+            project.setProjectMonitoringOfficer(1L);
+        }
 
         when(monitoringOfficerService.findMonitoringOfficerForProject(projectId)).thenReturn(existingMonitoringOfficer ? restSuccess(mo) : restFailure(NOT_FOUND));
 

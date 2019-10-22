@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.terms.controller;
+package org.innovateuk.ifs.application.forms.questions.terms.controller;
 
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
-import org.innovateuk.ifs.application.terms.form.ApplicationTermsForm;
+import org.innovateuk.ifs.application.forms.questions.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -31,9 +31,9 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder')")
 @SecuredBySpring(value = "Controller",
-        description = "Only applicants are allowed to view the application terms",
+        description = "Most roles are allowed to view the application terms",
         securedType = ApplicationTermsController.class)
 public class ApplicationTermsController {
 

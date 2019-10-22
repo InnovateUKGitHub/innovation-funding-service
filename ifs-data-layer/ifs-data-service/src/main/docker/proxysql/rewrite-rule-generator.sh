@@ -55,6 +55,8 @@
 #
 # UUID_REPLACEMENT - replace the UUID with a new one
 #
+# DATE_REPLACEMENT - replace the date with the current date.
+#
 set -e
 
 REPLACE_REPLACEMENT_TOKEN_EXTRACTOR="s/^REPLACE('\(.*\)')$/\1/g"
@@ -85,6 +87,8 @@ EMAIL_WITH_ID_MASK_TOKEN_EXTRACTOR="s/^EMAIL_WITH_ID('\(.*\)')$/\1/g"
 UUID_MASK_TOKEN_EXTRACTOR="s/^UUID('\(.*\)')$/\1/g"
 
 UUID_REPLACEMENT="UUID_REPLACEMENT"
+
+DATE_REPLACEMENT="DATE_REPLACEMENT"
 
 function generate_number_rewrite_rule() {
 
@@ -202,6 +206,11 @@ function generate_rewrite_from_rule() {
     # this case generates the SQL from a rewrite rule like "UUID_REPLACEMENT"
     if [[ "$replacement" == $UUID_REPLACEMENT ]]; then
          echo "UUID()"
+         exit 0
+    fi
+        # this case generates the SQL from a rewrite rule like "UUID_REPLACEMENT"
+    if [[ "$replacement" == $DATE_REPLACEMENT ]]; then
+         echo "CURDATE()"
          exit 0
     fi
 

@@ -134,12 +134,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
-            model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview.get(),
+            model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
                     organisation.get().getName(),
-                    project.getName(),
-                    project.getApplication(),
                     isLeadPartnerOrganisation,
-                    project.getId(),
                     organisation.get().getId(),
                     eligibilityApproved,
                     eligibility.get().getEligibilityRagStatus(),
@@ -148,10 +145,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     eligibility.get().getEligibilityApprovalDate(),
                     false,
                     isUsingJesFinances,
-                    jesFileDetailsViewModel,
-                    competition.get().isH2020(),
-                    project.getProjectState().isActive(),
-                    competition.get().isLoan()
+                    jesFileDetailsViewModel
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);

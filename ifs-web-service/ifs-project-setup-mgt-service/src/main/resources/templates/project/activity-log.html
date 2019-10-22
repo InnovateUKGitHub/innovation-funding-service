@@ -22,10 +22,16 @@
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Competition name:</dt>
                     <dd th:text="${model.competitionName}"></dd>
-                    <dt>Lead partner:</dt>
-                    <dd th:text="${model.leadPartner}">PLACEHOLDER</dd>
-                    <dt>Other partners:</dt>
-                    <dd th:text="${model.otherPartners}">PLACEHOLDER</dd>
+                    <th:block th:if="${model.collaborativeProject}">
+                        <dt>Lead partner:</dt>
+                        <dd th:text="${model.leadPartner}">PLACEHOLDER</dd>
+                        <dt>Other partners:</dt>
+                        <dd th:text="${model.otherPartners}">PLACEHOLDER</dd>
+                    </th:block>
+                    <th:block th:unless="${model.collaborativeProject}">
+                        <dt>Organisation:</dt>
+                        <dd th:text="${model.leadPartner}">PLACEHOLDER</dd>
+                    </th:block>
                 </dl>
                 <h2 class="govuk-heading-m">Activities</h2>
                 <p class="govuk-body">The most recent activities are at the top.</p>
