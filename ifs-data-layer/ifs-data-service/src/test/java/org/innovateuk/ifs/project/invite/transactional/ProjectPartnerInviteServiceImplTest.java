@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.notifications.resource.*;
@@ -105,6 +106,9 @@ public class ProjectPartnerInviteServiceImplTest {
         Notification notification = new Notification(systemNotificationSource, singletonList(to), ProjectPartnerInviteServiceImpl.Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
         when(notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL)).thenReturn(serviceSuccess());
 
+        User loggedInUser = newUser().build();
+        when(loggedInUserSupplier.get()).thenReturn(loggedInUser);
+
         ServiceResult<Void> result = service.invitePartnerOrganisation(projectId, invite);
 
         assertTrue(result.isSuccess());
@@ -124,6 +128,7 @@ public class ProjectPartnerInviteServiceImplTest {
         invite.setEmail(email);
         invite.setId(inviteId);
         invite.setName(userName);
+        setField(invite, "status", InviteStatus.SENT);
         setField(invite, "sentOn", sentOn);
         invite.setInviteOrganisation(inviteOrganisation);
         inviteOrganisation.setOrganisationName(organisationName);
@@ -136,7 +141,7 @@ public class ProjectPartnerInviteServiceImplTest {
         assertEquals(inviteId, resource.getId());
         assertEquals(email, resource.getEmail());
         assertEquals(userName, resource.getUserName());
-        assertEquals(organisationName, resource.getEmail());
+        assertEquals(organisationName, resource.getOrganisationName());
         assertEquals(sentOn, resource.getSentOn());
     }
 

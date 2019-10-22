@@ -91,7 +91,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
     public void deleteInvite() throws Exception {
         long projectId = 123L;
         long inviteId = 321L;
-        when(projectPartnerInviteService.resendInvite(inviteId)).thenReturn(serviceSuccess());
+        when(projectPartnerInviteService.deleteInvite(inviteId)).thenReturn(serviceSuccess());
         mockMvc.perform(delete("/project/{projectId}/project-partner-invite/{inviteId}", projectId, inviteId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
