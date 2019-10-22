@@ -8,4 +8,5 @@ import java.util.List;
 public interface ActivityLogRepository extends CrudRepository<ActivityLog, Long> {
 
     List<ActivityLog> findByApplicationIdOrderByCreatedOnDesc(long applicationId);
+    void deleteAllByApplicationIdAndOrganisationId(long applicationId, long organisationId);
 }

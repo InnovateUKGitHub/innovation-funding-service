@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -16,6 +16,8 @@ import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressReposito
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.threads.repository.NoteRepository;
+import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +69,13 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
-    private ProjectFinanceRowRepository projectFinanceRowRepository;
+    private NoteRepository noteRepository;
+
+    @Autowired
+    private QueryRepository queryRepository;
+
+    @Autowired
+    private ActivityLogRepository activityLogRepository;
 
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
@@ -174,8 +182,15 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private void deleteProjectFinance(long projectId, long organisationId) {
         find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
                 notFoundError(ProjectFinance.class)).andOnSuccessReturnVoid(projectFinance -> {
-            projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
+                    deleteThreads(projectFinance.getId(), projectFinance.getProject().getApplication().getId(), organisationId);
+                    projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         });
+    }
+
+    private void deleteThreads(long projectFinanceId, long applicationId, long organisationId) {
+        activityLogRepository.deleteAllByApplicationIdAndOrganisationId(applicationId, organisationId);
+        noteRepository.deleteAllByClassPk(projectFinanceId);
+        queryRepository.deleteAllByClassPk(projectFinanceId);
     }
 
     private NotificationTarget createProjectNotificationTarget(User user) {
