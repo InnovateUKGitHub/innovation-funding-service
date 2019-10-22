@@ -107,8 +107,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
@@ -1468,6 +1467,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withProject(p)
                 .withOrganisation(leadOrganisation, partnerOrganisation1, partnerOrganisation2)
                 .withPostcode(null, "TW14 9QG", " ")
+                .withLeadOrganisation(true, false, false)
                 .build(3);
 
         when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
@@ -1759,8 +1759,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonLeadOrg).withInvite(newProjectUserInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(false).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).build();
+        Project p = spy(newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).build());
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+
+        when(p.getLeadOrganisation()).thenReturn(Optional.of(newPartnerOrganisation().build()));
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(true).build();
         SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(true).build();
