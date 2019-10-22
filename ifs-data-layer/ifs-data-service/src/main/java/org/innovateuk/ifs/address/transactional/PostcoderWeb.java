@@ -57,7 +57,7 @@ public class PostcoderWeb implements AddressLookupService {
         if (StringUtils.isEmpty(lookup)) {
             return ServiceResult.serviceSuccess(new ArrayList<>());
         } else if (StringUtils.isEmpty(postcodeLookupUrl) || StringUtils.isEmpty(postcodeLookupKey)) {
-            return ServiceResult.serviceSuccess(Collections.emptyList());
+            return ServiceResult.serviceSuccess(exampleAddresses());
         } else {
             return doAPILookup(lookup);
         }
