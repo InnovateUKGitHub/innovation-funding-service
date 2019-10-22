@@ -43,7 +43,8 @@
                 </thead>
                 <tbody class="govuk-table__body">
                   <th:block th:each="partner : ${model.projectTeamStatusResource.partnerStatuses}">
-                      <tr class="govuk-table__row" th:insert="project/fragments :: consortium-partner-status-row(${partner}, ${model.projectTeamStatusResource.isLeadOrganisation(partner.organisationId)})"/>
+                      <tr class="govuk-table__row" th:classappend="${partner.pendingPartner ? 'hint' : ''}"
+                          th:insert="project/fragments :: consortium-partner-status-row(${partner})"/>
                   </th:block>
                   </tbody>
             </table>

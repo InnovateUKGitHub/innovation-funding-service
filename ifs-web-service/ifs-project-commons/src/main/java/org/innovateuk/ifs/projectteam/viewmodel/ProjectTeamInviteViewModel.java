@@ -20,7 +20,7 @@ public class ProjectTeamInviteViewModel extends AbstractProjectTeamRowViewModel 
 
     @Override
     public String getName() {
-        return String.format("%s (Pending for %d days)", super.getName(), getDaysPending());
+        return String.format("%s (pending for %d days)", super.getName(), getDaysPending());
     }
 
     public boolean isCanResend() { return canResend; }
