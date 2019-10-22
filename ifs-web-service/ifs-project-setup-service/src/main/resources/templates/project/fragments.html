@@ -4,7 +4,7 @@
 <th:block th:fragment="consortium-partner-status-row(partner)">
     <th class="govuk-table__header" scope="row">
         <th:block th:text="${partner.name}"/>
-        <th:block th:if="${partner.isLead}"> (Lead)</th:block>
+        <th:block th:if="${partner.lead}"> (Lead)</th:block>
         <th:block th:if="${partner.pendingPartner}"> (pending)</th:block>
     </th>
 

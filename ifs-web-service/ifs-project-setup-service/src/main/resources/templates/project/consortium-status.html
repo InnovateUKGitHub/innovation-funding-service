@@ -14,6 +14,9 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project team status',size='govuk-heading-xl'" />
+        <div th:if="${model.hasPendingPartner()}" class="message-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">Some partners have not finished joining the project which means they cannot access project setup.</p>
+        </div>
         <p class="govuk-body">Additional information is needed before your project can begin. This table will help you to keep track of what tasks have been completed and what is outstanding.</p>
 
         <div class="table-overflow">
