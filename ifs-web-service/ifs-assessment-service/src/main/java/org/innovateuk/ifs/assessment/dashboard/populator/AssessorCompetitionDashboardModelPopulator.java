@@ -21,31 +21,28 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 @Component
 public class AssessorCompetitionDashboardModelPopulator {
 
+    @Autowired
     private AssessmentService assessmentService;
 
     @Autowired
     private AssessorCompetitionDashboardRestService assessorCompetitionDashboardRestService;
 
-    public AssessorCompetitionDashboardModelPopulator(AssessmentService assessmentService) {
-        this.assessmentService = assessmentService;
-    }
-
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
 
-        AssessorCompetitionDashboardResource summary = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, userId).getSuccess();
+        AssessorCompetitionDashboardResource competitionDetails = assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(competitionId, userId).getSuccess();
 
-        List<AssessorCompetitionDashboardApplicationViewModel> outstanding = getOutstandingAssessments(summary.getApplicationAssessments());
-        List<AssessorCompetitionDashboardApplicationViewModel> submitted = getSubmittedAssessments(summary.getApplicationAssessments());
+        List<AssessorCompetitionDashboardApplicationViewModel> outstanding = getOutstandingAssessments(competitionDetails.getApplicationAssessments());
+        List<AssessorCompetitionDashboardApplicationViewModel> submitted = getSubmittedAssessments(competitionDetails.getApplicationAssessments());
 
         boolean submitVisible = outstanding.stream()
                 .anyMatch(AssessorCompetitionDashboardApplicationViewModel::isReadyToSubmit);
 
         return new AssessorCompetitionDashboardViewModel(
-                summary.getCompetitionId(),
-                summary.getCompetitionName(),
-                summary.getInnovationLead(),
-                summary.getAssessorAcceptDate(),
-                summary.getAssessorDeadlineDate(),
+                competitionDetails.getCompetitionId(),
+                competitionDetails.getCompetitionName(),
+                competitionDetails.getInnovationLead(),
+                competitionDetails.getAssessorAcceptDate(),
+                competitionDetails.getAssessorDeadlineDate(),
                 submitted,
                 outstanding,
                 submitVisible
@@ -68,6 +65,10 @@ public class AssessorCompetitionDashboardModelPopulator {
 
     private boolean isAssessmentSubmitted(ApplicationAssessmentResource assessmentResource) {
         return SUBMITTED == assessmentResource.getState();
+    }
+
+    private boolean isAssessmentNotSubmitted(ApplicationAssessmentResource assessmentResource) {
+        return !(SUBMITTED == assessmentResource.getState());
     }
 
     private AssessorCompetitionDashboardApplicationViewModel createApplicationViewModel(ApplicationAssessmentResource assessment) {

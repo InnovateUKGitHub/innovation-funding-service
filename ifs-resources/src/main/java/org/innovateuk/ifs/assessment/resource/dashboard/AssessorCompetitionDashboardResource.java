@@ -13,8 +13,6 @@ public class AssessorCompetitionDashboardResource {
     private String innovationLead;
     private ZonedDateTime assessorAcceptDate;
     private ZonedDateTime assessorDeadlineDate;
-    public boolean isReadyToSubmit;
-
     private List<ApplicationAssessmentResource> applicationAssessments;
 
     public AssessorCompetitionDashboardResource() {
@@ -56,10 +54,6 @@ public class AssessorCompetitionDashboardResource {
 
     public List<ApplicationAssessmentResource> getApplicationAssessments() {
         return applicationAssessments;
-    }
-
-    public boolean isReadyToSubmit() {
-        return isReadyToSubmit;
     }
 
     @Override
