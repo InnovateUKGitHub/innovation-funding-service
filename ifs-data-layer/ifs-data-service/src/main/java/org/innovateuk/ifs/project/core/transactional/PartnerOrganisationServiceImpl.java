@@ -82,6 +82,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Autowired
     private ActivityLogRepository activityLogRepository;
 
+    @Autowired
+    private RemovePartnerNotificationService removePartnerNotificationService;
+
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
     }
@@ -108,7 +111,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccess(
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
-                            sendNotifications(projectId, projectPartner.getOrganisation());
+                            removePartnerNotificationService.sendNotifications(projectId, projectPartner.getOrganisation());
                         })
         );
     }
@@ -117,57 +120,6 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
         return partnerOrganisation.isLeadOrganisation() ?
                 serviceFailure(CANNOT_REMOVE_LEAD_ORGANISATION_FROM_PROJECT) :
                 serviceSuccess();
-    }
-
-    private void sendNotifications(long projectId, Organisation organisation) {
-        sendNotificationToProjectTeam(projectId, organisation);
-        sendNotificationToMonitoringOfficer(projectId, organisation);
-    }
-
-    private void sendNotificationToProjectTeam(long projectId, Organisation organisation) {
-        Optional<ProjectUser> projectManager = projectUserRepository.findByProjectIdAndRole(projectId, PROJECT_MANAGER);
-        if (projectManager.isPresent()) {
-            sendNotificationToUser(projectManager.get(), organisation);
-        } else {
-            sendNotificationToProjectUsers(projectId, organisation);
-        }
-    }
-
-    private void sendNotificationToMonitoringOfficer(long projectId, Organisation organisation) {
-        Optional<ProjectUser> monitoringOfficer = projectUserRepository.findByProjectIdAndRole(projectId, MONITORING_OFFICER);
-        if (monitoringOfficer.isPresent()) {
-            sendNotificationToUser(monitoringOfficer.get(), organisation);
-        }
-    }
-
-    private void sendNotificationToProjectUsers(long projectId, Organisation organisation) {
-        long leadOrganisationId = partnerOrganisationRepository.findByProjectId(projectId)
-                .stream()
-                .filter(PartnerOrganisation::isLeadOrganisation)
-                .map(partnerOrganisation -> partnerOrganisation.getOrganisation().getId())
-                .findAny()
-                .get();
-
-        List<ProjectUser> projectUsers = projectUserRepository.findByProjectIdAndOrganisationId(projectId, leadOrganisationId);
-        projectUsers.forEach(user -> sendNotificationToUser(user, organisation));
-    }
-
-    private void sendNotificationToUser(ProjectUser projectUser, Organisation organisation) {
-        NotificationSource from = systemNotificationSource;
-        NotificationTarget to = createProjectNotificationTarget(projectUser.getUser());
-
-        Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("applicationId", projectUser.getProcess().getApplication().getId());
-        notificationArguments.put("projectName", projectUser.getProcess().getName());
-        notificationArguments.put("organisationName", organisation.getName());
-        notificationArguments.put("projectTeamLink", getProjectTeamLink(projectUser.getProcess().getId()));
-
-        Notification notification = new Notification(from, singletonList(to), REMOVE_PROJECT_ORGANISATION, notificationArguments);
-        notificationService.sendNotificationWithFlush(notification, EMAIL);
-    }
-
-    private String getProjectTeamLink(long projectId) {
-        return format("/project-setup/project/%d/team", projectId);
     }
 
     private void removePartnerOrg(long projectId, long organisationId) {
@@ -194,14 +146,5 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
         activityLogRepository.deleteAllByApplicationIdAndOrganisationId(applicationId, organisationId);
         noteRepository.deleteAllByClassPk(projectFinanceId);
         queryRepository.deleteAllByClassPk(projectFinanceId);
-    }
-
-    private NotificationTarget createProjectNotificationTarget(User user) {
-        String fullName = getProjectManagerFullName(user);
-        return new UserNotificationTarget(fullName, user.getEmail());
-    }
-
-    private String getProjectManagerFullName(User projectManager) {
-        return projectManager.getFirstName() + " " + projectManager.getLastName();
     }
 }
