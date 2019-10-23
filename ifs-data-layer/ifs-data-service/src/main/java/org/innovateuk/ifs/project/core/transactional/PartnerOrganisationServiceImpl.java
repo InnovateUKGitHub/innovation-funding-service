@@ -4,6 +4,7 @@ import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -68,6 +69,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
 
     @Autowired
     private NoteRepository noteRepository;
@@ -181,6 +185,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
         find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
                 notFoundError(ProjectFinance.class)).andOnSuccessReturnVoid(projectFinance -> {
                     deleteThreads(projectFinance.getId(), projectFinance.getProject().getApplication().getId(), organisationId);
+                    projectFinanceRowRepository.deleteAllByTargetId(projectFinance.getId());
                     projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         });
     }
