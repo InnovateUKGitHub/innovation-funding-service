@@ -76,7 +76,6 @@ ext.SURVEY_DB_PORT=3306
 ext.SURVEY_DB_URL="jdbc:mysql://" + SURVEY_DB_HOST + ":" + SURVEY_DB_PORT + "/" + SURVEY_DB_NAME
 
 ext.AUTH_KEY="supersecretkey"
-ext.WEB_USER_ID="c0d02979-e66e-11e7-ac43-0242ac120002"
 
 ext.DATA_SERVICE_HOST="data-service"
 

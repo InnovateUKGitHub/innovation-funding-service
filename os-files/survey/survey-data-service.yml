@@ -14,7 +14,7 @@ items:
       metadata:
         name: web-system-user
       data:
-        USER_ID: "${WEB_USER_ID}"
+        SYSTEM_USER_UUID: "${SYSTEM_USER_UUID}"
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -78,7 +78,7 @@ items:
                   valueFrom:
                     configMapKeyRef:
                       name: web-system-user
-                      key: USER_ID
+                      key: SYSTEM_USER_UUID
                 - name: JAVA_OPTS
                   value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
