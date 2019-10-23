@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class ApplicationAssessmentResourceBuilderTest {
 
     @Test
-    public void testOne() throws Exception {
+    public void one() {
         ApplicationAssessmentResource applicationAssessmentResource = newApplicationAssessmentResource()
                 .withApplicationId(1L)
                 .withAssessmentId(2L)
@@ -24,7 +24,7 @@ public class ApplicationAssessmentResourceBuilderTest {
     }
 
     @Test
-    public void testMany() throws Exception {
+    public void many() {
         List<ApplicationAssessmentResource> applicationAssessmentResources = newApplicationAssessmentResource()
                 .withApplicationId(1L, 2L)
                 .withAssessmentId(80L, 81L)

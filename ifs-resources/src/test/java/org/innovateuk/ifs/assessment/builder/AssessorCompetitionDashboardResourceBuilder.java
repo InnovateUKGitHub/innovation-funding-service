@@ -30,16 +30,16 @@ public class AssessorCompetitionDashboardResourceBuilder extends BaseBuilder<Ass
         return new AssessorCompetitionDashboardResource();
     }
 
-    public AssessorCompetitionDashboardResourceBuilder withCompetitionId(Long... competitionId) {
-        return withArraySetFieldByReflection("competitionId", competitionId);
+    public AssessorCompetitionDashboardResourceBuilder withCompetitionId(Long... competitionIds) {
+        return withArraySetFieldByReflection("competitionId", competitionIds);
     }
 
-    public AssessorCompetitionDashboardResourceBuilder withCompetitionName(String... competitionName) {
-        return withArraySetFieldByReflection("competitionName", competitionName);
+    public AssessorCompetitionDashboardResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
-    public AssessorCompetitionDashboardResourceBuilder withInnovationLead(String... innovationLead) {
-        return withArraySetFieldByReflection("innovationLead", innovationLead);
+    public AssessorCompetitionDashboardResourceBuilder withInnovationLead(String... innovationLeads) {
+        return withArraySetFieldByReflection("innovationLead", innovationLeads);
     }
 
     public AssessorCompetitionDashboardResourceBuilder withAssessorAcceptDate(ZonedDateTime... assessorAcceptDate) {

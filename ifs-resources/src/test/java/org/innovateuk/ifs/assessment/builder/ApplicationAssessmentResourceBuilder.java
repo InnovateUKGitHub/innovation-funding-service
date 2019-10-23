@@ -29,24 +29,24 @@ public class ApplicationAssessmentResourceBuilder extends BaseBuilder<Applicatio
         return new ApplicationAssessmentResource();
     }
 
-    public ApplicationAssessmentResourceBuilder withApplicationId(Long... applicationId) {
-        return withArraySetFieldByReflection("applicationId", applicationId);
+    public ApplicationAssessmentResourceBuilder withApplicationId(Long... applicationIds) {
+        return withArraySetFieldByReflection("applicationId", applicationIds);
     }
 
-    public ApplicationAssessmentResourceBuilder withAssessmentId(Long... assessmentId) {
-        return withArraySetFieldByReflection("assessmentId", assessmentId);
+    public ApplicationAssessmentResourceBuilder withAssessmentId(Long... assessmentIds) {
+        return withArraySetFieldByReflection("assessmentId", assessmentIds);
     }
 
-    public ApplicationAssessmentResourceBuilder withCompetitionName(String... competitionName) {
-        return withArraySetFieldByReflection("competitionName", competitionName);
+    public ApplicationAssessmentResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
     public ApplicationAssessmentResourceBuilder withLeadOrganisation(String... leadOrganisation) {
         return withArraySetFieldByReflection("leadOrganisation", leadOrganisation);
     }
 
-    public ApplicationAssessmentResourceBuilder withState(AssessmentState... state) {
-        return withArraySetFieldByReflection("state", state);
+    public ApplicationAssessmentResourceBuilder withState(AssessmentState... states) {
+        return withArraySetFieldByReflection("state", states);
     }
 
     public ApplicationAssessmentResourceBuilder withOverallScore(Integer... overallScore) {
