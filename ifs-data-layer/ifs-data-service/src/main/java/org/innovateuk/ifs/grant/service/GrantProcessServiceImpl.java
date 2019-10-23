@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GrantProcessServiceImpl implements GrantProcessService {
@@ -21,6 +22,11 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     @Override
     public List<GrantProcess> findReadyToSend() {
         return grantProcessRepository.findByPendingIsTrue();
+    }
+
+    @Override
+    public Optional<GrantProcess> findOneReadyToSend() {
+        return grantProcessRepository.findFirstByPendingIsTrue();
     }
 
     @Override

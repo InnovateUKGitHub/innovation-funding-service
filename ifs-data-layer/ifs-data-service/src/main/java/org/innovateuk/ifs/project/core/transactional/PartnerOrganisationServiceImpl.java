@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_REMOVE_LEAD_ORGANISATION_FROM_PROJECT;
@@ -144,10 +145,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                 .get();
 
         List<ProjectUser> projectUsers = projectUserRepository.findByProjectIdAndOrganisationId(projectId, leadOrganisationId);
-
-        for (ProjectUser user : projectUsers) {
-            sendNotificationToUser(user, organisation);
-        }
+        projectUsers.forEach(user -> sendNotificationToUser(user, organisation));
     }
 
     private void sendNotificationToUser(ProjectUser projectUser, Organisation organisation) {
@@ -165,7 +163,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     }
 
     private String getProjectTeamLink(long projectId) {
-        return String.format("/project-setup/project/%s/team", projectId);
+        return format("/project-setup/project/%d/team", projectId);
     }
 
     private void removePartnerOrg(long projectId, long organisationId) {

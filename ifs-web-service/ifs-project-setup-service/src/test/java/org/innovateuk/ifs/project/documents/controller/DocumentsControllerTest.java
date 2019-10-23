@@ -9,6 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
@@ -27,6 +28,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_P
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,10 +50,14 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
     public void viewAllDocuments() throws Exception {
 
         long projectId = 1L;
-        long compeititonId = 2L;
-        long applicationId = 3L;
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withApplication(3L)
+                .withCompetition(2L)
+                .withName("Project 12")
+                .build();
 
-        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(compeititonId, applicationId, projectId, "Project 12", emptyList(), true);
+        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(project, emptyList(), true);
 
         when(populator.populateAllDocuments(projectId, loggedInUser.getId())).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/all"))

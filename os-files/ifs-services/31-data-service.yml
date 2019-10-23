@@ -61,6 +61,8 @@ items:
             value: "100"
           - name: IFS_EARLY_METRICS_URL
             value: "${IFS_EARLY_METRICS_URL}"
+          - name: IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS
+            value: "${IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS}"
           ports:
           - containerPort: 8080
           resources:

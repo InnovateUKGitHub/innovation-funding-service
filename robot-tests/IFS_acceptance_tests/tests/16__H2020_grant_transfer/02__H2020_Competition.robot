@@ -69,9 +69,10 @@ Application validation checks
     Then the user is able to verify validation on each page
 
 An internal user is able to progress an H2020 grant transfer to project set up
-    [Documentation]  IFS-5700
+    [Documentation]  IFS-5700  IFS-6629
     [Setup]  log in as a different user   &{Comp_admin1_credentials}
-    Given the inernal user is able to progress an application to project set up
+    Given the internal user is able to progress an application to project set up
+    And the user is able to filter on status
     Then the user is able to see that the application is now in project setup
 
 *** Keywords ***
@@ -89,7 +90,7 @@ The user is able to see that the application is now in project setup
     the user clicks the button/link   jQuery = a:contains("Project setup")
     the user should see the element   link = H2020 Grant Transfer
 
-The inernal user is able to progress an application to project set up
+The internal user is able to progress an application to project set up
     the user clicks the button/link       link = H2020 Grant Transfer
     the user should see the element       jQuery = h1:contains("Open")
     the user clicks the button/link       link = Input and review funding decision
@@ -98,12 +99,13 @@ The inernal user is able to progress an application to project set up
     the user clicks the button/link       link = Competition
     the user clicks the button/link       jQuery = a:contains("Manage funding notifications")
     ${id} =  get application id by name   Project name
+    Set suite variable  ${id}
     the user selects the checkbox         app-row-${id}
     the user clicks the button/link       jQuery = button:contains("Write and send email")
     the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user clicks the button/link       link = Competition
-    the user clicks the button/link       link = All competitions
+    the user clicks the button/link       link = Manage funding notifications
 
 The user starts an H2020 applcation
    the user navigates to the page                  ${server}/competition/${competitionId}/overview
@@ -412,3 +414,12 @@ Validate the user is unable to submit an incomplete application
 Custom Suite Teardown
     the user closes the browser
     disconnect from database
+
+the user is able to filter on status
+    the user selects the option from the drop-down menu  Unsuccessful  id = fundingFilter
+    the user clicks the button/link                      jQuery = button:contains("Filter")
+    the user should not see the element                  jQuery = td:contains("${id}")
+    the user selects the option from the drop-down menu  Successful  id = fundingFilter
+    the user clicks the button/link                      jQuery = button:contains("Filter")
+    the user should see the element                      jQuery = td:contains("${id}")
+    the user clicks the button/link                      link = Dashboard

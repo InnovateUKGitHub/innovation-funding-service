@@ -18,13 +18,13 @@ public class PartnerOrganisationController {
     private PartnerOrganisationService partnerOrganisationService;
 
     @GetMapping("/partner-organisation")
-    public RestResult<List<PartnerOrganisationResource>> getFinanceCheck(@PathVariable final Long projectId) {
+    public RestResult<List<PartnerOrganisationResource>> getFinanceCheck(@PathVariable final long projectId) {
         return partnerOrganisationService.getProjectPartnerOrganisations(projectId).toGetResponse();
     }
 
     @GetMapping("/partner/{organisationId}")
-    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(@PathVariable Long projectId,
-                                                                          @PathVariable Long organisationId) {
+    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(@PathVariable long projectId,
+                                                                          @PathVariable long organisationId) {
         return partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).toGetResponse();
     }
 
