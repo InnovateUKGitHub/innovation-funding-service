@@ -181,7 +181,7 @@ The user fills in the public content summary
     the user enters text to a text field    id = projectSize   10 millions
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
-    the user should see the element         jQuery = div:contains("Summary") ~ .task-status-completef
+    the user should see the element         jQuery = div:contains("Summary") ~ .task-status-complete
 
 The user fills in public content eligibility
     the user clicks the button/link          link = Eligibility
