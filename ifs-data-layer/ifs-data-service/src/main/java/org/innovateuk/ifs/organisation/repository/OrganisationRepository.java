@@ -25,7 +25,5 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
             "AND pu.project.id = :projectId")
     Organisation findByUserAndProjectId(long userId, long projectId);
     List<Organisation> findAllById(Iterable<Long> ids);
-
-
     long countDistinctByProcessRolesApplicationId(long applicationId);
 }

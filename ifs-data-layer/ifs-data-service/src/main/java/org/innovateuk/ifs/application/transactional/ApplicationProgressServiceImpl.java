@@ -80,8 +80,8 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     private BigDecimal calculateApplicationProgress(Application application) {
         long competitionId = application.getCompetition().getId();
         long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
-        long questionsWithMultipleStatuses = questionRepository.countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, true);
-        long questionsWithSingleStatus = questionRepository.countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, false);
+        long questionsWithMultipleStatuses = questionRepository.countQuestionsWithMultipleStatuses(competitionId);
+        long questionsWithSingleStatus = questionRepository.countQuestionsWithSingleStatus(competitionId);
         long completedQuestionStatuses = questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(application.getId());
         long totalQuestions = questionsWithMultipleStatuses * organisations + questionsWithSingleStatus;
         return percentage(completedQuestionStatuses, totalQuestions);

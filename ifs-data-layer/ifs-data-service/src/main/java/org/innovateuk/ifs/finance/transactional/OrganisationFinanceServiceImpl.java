@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -39,9 +40,11 @@ import static java.lang.Boolean.TRUE;
 import static java.time.YearMonth.parse;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.math.NumberUtils.isDigits;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOVER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class OrganisationFinanceServiceImpl extends BaseTransactionalService implements OrganisationFinanceService {
@@ -450,7 +453,7 @@ public class OrganisationFinanceServiceImpl extends BaseTransactionalService imp
     }
 
     private long getCompetitionId(long applicationId) {
-        ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
-        return application.getCompetition();
+        Application application = find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).getSuccess();
+        return application.getCompetition().getId();
     }
 }

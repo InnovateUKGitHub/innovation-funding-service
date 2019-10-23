@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassigne
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
@@ -34,7 +35,7 @@ import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class MonitoringOfficerServiceImpl extends BaseTransactionalService implements MonitoringOfficerService {
+public class MonitoringOfficerServiceImpl extends RootTransactionalService implements MonitoringOfficerService {
 
     private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
