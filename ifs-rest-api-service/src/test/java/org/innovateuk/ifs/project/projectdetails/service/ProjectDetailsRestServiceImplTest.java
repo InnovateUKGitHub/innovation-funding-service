@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.projectdetails.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -65,31 +64,5 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         assertTrue(result.isSuccess());
 
-    }
-
-    @Test
-    public void testInviteProjectManager() {
-        long projectId = 123L;
-        ProjectUserInviteResource invite = new ProjectUserInviteResource();
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/invite-project-manager";
-        setupPostWithRestResultExpectations(expectedUrl, invite, OK);
-
-        RestResult<Void> result = service.inviteProjectManager(projectId, invite);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testInviteFinanceContact() {
-        long projectId = 123L;
-        ProjectUserInviteResource invite = new ProjectUserInviteResource();
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/invite-finance-contact";
-        setupPostWithRestResultExpectations(expectedUrl, invite, OK);
-
-        RestResult<Void> result = service.inviteFinanceContact(projectId, invite);
-
-        assertTrue(result.isSuccess());
     }
 }
