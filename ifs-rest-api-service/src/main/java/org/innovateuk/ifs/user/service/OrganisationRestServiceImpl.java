@@ -29,7 +29,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> getOrganisationById(Long organisationId) {
+    public RestResult<OrganisationResource> getOrganisationById(long organisationId) {
         return getWithRestResult(organisationRestURL + "/find-by-id/" + organisationId, OrganisationResource.class);
     }
 
@@ -56,11 +56,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     @Override
     public RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation) {
         return postWithRestResultAnonymous(organisationRestURL + "/create-or-match", organisation, OrganisationResource.class);
-    }
-
-    @Override
-    public RestResult<OrganisationResource> createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
-        return postWithRestResultAnonymous(organisationRestURL + "/create-and-link-by-invite?inviteHash=" + inviteHash, organisation, OrganisationResource.class);
     }
 
     @Override

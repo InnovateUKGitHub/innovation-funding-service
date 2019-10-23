@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 
 import javax.persistence.*;
@@ -23,6 +24,9 @@ public class PartnerOrganisation implements ProcessActivity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisation_id", referencedColumnName = "id", nullable = false)
     private Organisation organisation;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "partnerOrganisation")
+    private PendingPartnerProgress pendingPartnerProgress;
 
     private boolean leadOrganisation;
 

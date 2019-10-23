@@ -33,7 +33,7 @@ public class ProjectInviteController {
     }
 
     @PutMapping(value = ACCEPT_INVITE  + "{hash}/{userId}")
-    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
+    public RestResult<Void> acceptInvite(@PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return projectInviteService.acceptProjectInvite(hash, userId).toPostResponse();
     }
 

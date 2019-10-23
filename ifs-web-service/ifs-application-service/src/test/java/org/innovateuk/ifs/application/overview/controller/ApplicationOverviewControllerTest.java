@@ -41,18 +41,14 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
     @Mock
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
     @Mock
-    private QuestionService questionService;
-    @Mock
     private UserRestService userRestService;
     @Mock
     private ApplicationRestService applicationRestService;
-    @Mock
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Override
     protected ApplicationOverviewController supplyControllerUnderTest() {
         return new ApplicationOverviewController(applicationOverviewModelPopulator,
-                questionService, userRestService, applicationRestService, cookieFlashMessageFilter);
+                userRestService, applicationRestService);
     }
 
     @Test

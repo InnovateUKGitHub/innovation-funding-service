@@ -140,4 +140,38 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
 
         assertFalse(rules.internalUsersCanView(partnerOrg, user));
     }
+
+    @Test
+    public void partnersCannotViewOtherPendingPartnerProgress() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        UserResource user = newUserResource().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+                .withProject(projectId)
+                .withOrganisation(organisationId)
+                .build();
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+
+        assertFalse(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
+    }
+
+    @Test
+    public void partnersCanViewTheirOwnPendingPartnerProgress() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        UserResource user = newUserResource().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+                .withProject(projectId)
+                .withOrganisation(organisationId)
+                .build();
+        ProjectUser projectUser = newProjectUser()
+                .build();
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+
+        assertTrue(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
+    }
 }

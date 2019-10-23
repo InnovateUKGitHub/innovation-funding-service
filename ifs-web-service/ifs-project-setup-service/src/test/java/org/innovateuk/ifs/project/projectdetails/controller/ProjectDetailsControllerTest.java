@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -65,9 +64,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private SetupStatusViewModelPopulator setupStatusViewModelPopulatorMock;
 
     @Mock
-    private ApplicationService applicationService;
-
-    @Mock
     private CompetitionRestService competitionRestService;
 
     @Mock
@@ -104,8 +100,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         CompetitionResource competitionResource = newCompetitionResource()
                 .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource project = newProjectResource().withId(projectId).build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withCompetition(competitionResource.getId())
+                .build();
 
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
@@ -123,7 +121,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                         .withGrantOfferStatus(ProjectActivityStates.NOT_REQUIRED).build()).
                 build();
 
-        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -161,8 +158,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         CompetitionResource competitionResource = newCompetitionResource()
                 .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource project = newProjectResource().withId(projectId).build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withCompetition(competitionResource.getId())
+                .build();
 
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
@@ -179,7 +178,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                         .build()).
                 build();
 
-        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -216,8 +214,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         CompetitionResource competitionResource = newCompetitionResource()
                 .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource project = newProjectResource().withId(projectId).build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withCompetition(competitionResource.getId())
+                .build();
 
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
@@ -231,7 +231,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()).
                 build();
 
-        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -300,7 +299,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(projectDetailsService.updateProjectStartDate(projectResource.getId(), LocalDate.of(2017, 6, 3))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/details/start-date", projectResource.getId()).

@@ -115,9 +115,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
     @Test
     public void testUpload() throws Exception {
-        CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
-        competition.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
@@ -125,7 +122,8 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
                 .build();
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.APPROVED);
-        app.setCompetition(competition.getId());
+        app.setCompetitionStatus(ASSESSOR_FEEDBACK);
+        app.setCompetition(competitionResource.getId());
         setupMocksForGet(app, aggregateResource, expectedFeedback);
 
         when(interviewResponseRestService.uploadResponse(app.getId(), "application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
@@ -145,9 +143,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
     @Test
     public void testRemove() throws Exception {
-        CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
-        competition.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
@@ -155,7 +150,8 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
                 .build();
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.APPROVED);
-        app.setCompetition(competition.getId());
+        app.setCompetitionStatus(ASSESSOR_FEEDBACK);
+        app.setCompetition(competitionResource.getId());
         setupMocksForGet(app, aggregateResource, expectedFeedback);
 
         UserResource userResource = newUserResource().build();

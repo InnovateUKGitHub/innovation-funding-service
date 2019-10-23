@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.activitylog.viewmodel;
 
+import org.innovateuk.ifs.project.resource.ProjectResource;
+
 import java.util.List;
 
 public class ActivityLogViewModel {
@@ -11,18 +13,20 @@ public class ActivityLogViewModel {
     private final String competitionName;
     private final String leadPartner;
     private final String otherPartners;
+    private final boolean collaborativeProject;
 
     private final List<ActivityLogEntryViewModel> activities;
 
-    public ActivityLogViewModel(long competitionId, long applicationId, long projectId, String projectName, String competitionName, String leadPartner, String otherPartners, List<ActivityLogEntryViewModel> activities) {
-        this.competitionId = competitionId;
-        this.applicationId = applicationId;
-        this.projectId = projectId;
-        this.projectName = projectName;
-        this.competitionName = competitionName;
+    public ActivityLogViewModel(ProjectResource project, String leadPartner, String otherPartners, List<ActivityLogEntryViewModel> activities) {
+        this.competitionId = project.getCompetition();
+        this.applicationId = project.getApplication();
+        this.projectId = project.getId();
+        this.projectName = project.getName();
+        this.competitionName = project.getCompetitionName();
         this.leadPartner = leadPartner;
         this.otherPartners = otherPartners;
         this.activities = activities;
+        this.collaborativeProject = project.isCollaborativeProject();
     }
 
     public List<ActivityLogEntryViewModel> getActivities() {
@@ -55,5 +59,9 @@ public class ActivityLogViewModel {
 
     public String getOtherPartners() {
         return otherPartners;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 }

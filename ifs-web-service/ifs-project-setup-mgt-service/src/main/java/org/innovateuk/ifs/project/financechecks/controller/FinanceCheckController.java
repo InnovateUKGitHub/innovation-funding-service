@@ -93,8 +93,8 @@ public class FinanceCheckController {
 
     private String doViewFinanceCheckSummary(Long projectId, Model model) {
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
-        boolean projectIsActive = projectService.getById(projectId).getProjectState().isActive();
-        model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource, projectIsActive));
+        ProjectResource project = projectService.getById(projectId);
+        model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource, project.getProjectState().isActive(), project.isCollaborativeProject()));
         return "project/financecheck/summary";
     }
 

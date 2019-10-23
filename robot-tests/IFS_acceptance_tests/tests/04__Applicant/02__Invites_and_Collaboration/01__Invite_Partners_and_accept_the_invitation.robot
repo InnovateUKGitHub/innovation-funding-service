@@ -138,6 +138,16 @@ Cannot mark as complete with pending invites
     Given the user clicks the button/link                 id = application-question-complete
     Then The user should see a field and summary error    You cannot mark as complete until Adrian Booth has either accepted the invitation or is removed
 
+Partner is still marked as pending after accepting invitation but not completing
+    [Documentation]  IFS-6589
+    [Setup]  Logout as user
+    Given the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
+    When the user accepts invitation
+    And the user clicks the button/link     link = Sign in
+    And Logging in and Error Checking       &{lead_applicant_credentials}
+    Then the user still sees pending user
+    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invite")
+
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
     [Tags]
@@ -158,10 +168,7 @@ Business organisation (partner accepts invitation)
     [Tags]  HappyPath
     Given log in as a different user                    ${invite_email}  ${short_password}
     When the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user selects the radio button               organisationType    1
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Save and continue")
-    And the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
+    And the user accepts invitation
     And the invited user fills the create account form  Adrian  Booth
     And the user reads his email                        ${invite_email}  Please verify your email address  Once verified you can sign into your account
 
@@ -336,3 +343,14 @@ Custom Suite Setup
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user accepts invitation
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, accept invitation")
+    the user selects the radio button                     organisationType    1
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
+
+the user still sees pending user
+    the user clicks the button/link    link = Invite robot test application
+    the user clicks the button/link    link = Application team
+    the user should see the element    jQuery = td:contains("Adrian Booth (Pending for")

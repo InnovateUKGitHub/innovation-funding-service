@@ -139,10 +139,10 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
-    public String viewFinanceChecks(Model model, @PathVariable("projectId") final Long projectId,
+    public String viewFinanceChecks(Model model, @PathVariable final long projectId,
                                     UserResource loggedInUser) {
 
-        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
+        long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
         model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, null, null));
 
@@ -151,7 +151,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/{queryId}/new-response")
-    public String viewNewResponse(@PathVariable("projectId") Long projectId,
+    public String viewNewResponse(@PathVariable long projectId,
                                   @PathVariable Long queryId,
                                   Model model,
                                   HttpServletRequest request,
@@ -172,7 +172,7 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @PostMapping("/{queryId}/new-response")
     public String saveResponse(Model model,
-                               @PathVariable("projectId") final Long projectId,
+                               @PathVariable final long projectId,
                                @PathVariable final Long queryId,
                                @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksQueryResponseForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
@@ -229,7 +229,7 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @PostMapping(value = "/{queryId}/new-response", params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
-                                            @PathVariable("projectId") final Long projectId,
+                                            @PathVariable("projectId") final long projectId,
                                             @PathVariable Long queryId,
                                             @ModelAttribute(FORM_ATTR) FinanceChecksQueryResponseForm form,
                                             @SuppressWarnings("unused") BindingResult bindingResult,
@@ -266,9 +266,9 @@ public class ProjectFinanceChecksController {
     @GetMapping("/{queryId}/new-response/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable("projectId") Long projectId,
+    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable long projectId,
                                                                  @PathVariable Long queryId,
-                                                                 @PathVariable Long attachmentId,
+                                                                 @PathVariable long attachmentId,
                                                                  UserResource loggedInUser,
                                                                  HttpServletRequest request) {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
@@ -283,16 +283,13 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/attachment/{attachmentId}")
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable("projectId") Long projectId,
-                                                         @PathVariable Long attachmentId) {
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAttachment(Long projectId,  @PathVariable long attachmentId) {
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @PostMapping(value = "/{queryId}/new-response", params = "removeAttachment")
-    public String removeAttachment(@PathVariable("projectId") Long projectId,
+    public String removeAttachment(@PathVariable long projectId,
                                    @PathVariable Long queryId,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueryResponseForm form,
@@ -307,7 +304,7 @@ public class ProjectFinanceChecksController {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         if (attachments.contains(attachmentId)) {
-            attachments.remove(attachments.indexOf(attachmentId));
+            attachments.remove(attachmentId);
             financeCheckService.deleteFile(attachmentId);
         }
         saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
@@ -320,7 +317,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/{queryId}/new-response/cancel")
-    public String cancelNewForm(@PathVariable("projectId") Long projectId,
+    public String cancelNewForm(@PathVariable long projectId,
                                 @PathVariable Long queryId,
                                 HttpServletRequest request,
                                 HttpServletResponse response,
@@ -411,7 +408,7 @@ public class ProjectFinanceChecksController {
                 success -> {
                     List<ThreadViewModel> queryThreads =
                             threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
-                                    threadViewModelPopulator.anonymousProjectFinanceOrNamedExternalUser(projectId));
+                                    threadViewModelPopulator.anonymousProjectFinanceOrNamedExternalUser(organisationId));
 
                     return queryThreads
                             .stream()
@@ -467,12 +464,9 @@ public class ProjectFinanceChecksController {
         model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
         model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
 
-        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview,
+        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, eligibilityOverview,
                 organisation.getName(),
-                project.getName(),
-                application.getId(),
                 isLeadPartnerOrganisation,
-                project.getId(),
                 organisation.getId(),
                 eligibilityApproved,
                 eligibility.getEligibilityRagStatus(),
@@ -481,10 +475,7 @@ public class ProjectFinanceChecksController {
                 eligibility.getEligibilityApprovalDate(),
                 true,
                 false,
-                null,
-                competition.isH2020(),
-                project.getProjectState().isActive(),
-                competition.isLoan()));
+                null));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

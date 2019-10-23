@@ -474,11 +474,10 @@ Internal user should see completed project in previous tab
 Verify support users permissions in project setup tab
     [Documentation]  IFS-1307
     [Tags]
-    [Setup]    log in as a different user    &{support_user_credentials}
-    Given the user clicks the button/link    jQuery = a:contains("Project setup")
-    When the user clicks the button/link     link = ${PROJECT_SETUP_COMPETITION_NAME}
+    [Setup]    log in as a different user                                   &{support_user_credentials}
+    When the internal user navigates to the project setup competition       ${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see project setup compeletion status
-    And the user should see the element      jQuery = .success-alert h2:contains("These documents have been approved.")
+    And the user should see the element                                     jQuery = .success-alert h2:contains("These documents have been approved.")
 
 Support user should see completed project in previous tab
    [Documentation]  IFS-6054

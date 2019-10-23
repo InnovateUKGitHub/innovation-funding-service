@@ -24,7 +24,7 @@ public class ConnectionCountService {
         int max = connManager.getMaxTotal();
         int connections = connManager.getTotalStats().getLeased();
         boolean healthy = max > connections;
-        LOG.debug("outgoing connection used = " + connections + "/" + max + " healthy = "+ healthy);
+        LOG.trace("outgoing connection used = " + connections + "/" + max + " healthy = "+ healthy);
         return healthy;
     }
 
