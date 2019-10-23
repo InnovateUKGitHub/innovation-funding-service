@@ -22,8 +22,9 @@ import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionDashboard
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.PENDING;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessorCompetitionDashboardModelPopulatorTest {
@@ -65,13 +66,14 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
                 .withState(PENDING, PENDING)
                 .build(2);
 
+
         AssessorCompetitionDashboardResource assessorCompetitionDashboardResource = newAssessorCompetitionDashboardResource()
                 .withCompetitionId(compId)
                 .withCompetitionName("Competition Name")
                 .withInnovationLead("Innovation Lead")
                 .withAssessorAcceptDate(ZonedDateTime.now().minusDays(2))
                 .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(4))
-                .withApplicationAssessments(submittedAssessments, outstandingAssessments)
+                .withApplicationAssessments(combineLists(submittedAssessments, outstandingAssessments))
                 .build();
 
         when(assessorCompetitionDashboardRestService.getAssessorCompetitionDashboard(compId, userId))
@@ -80,6 +82,17 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
         when(assessmentService.getTotalScore(assessorCompetitionDashboardResource.getApplicationAssessments().get(1).getAssessmentId())).thenReturn(totalScores.get(1));
 
         AssessorCompetitionDashboardViewModel viewModel = assessorCompetitionDashboardModelPopulator.populateModel(compId, userId);
+        assertEquals(viewModel.getCompetitionId(), assessorCompetitionDashboardResource.getCompetitionId());
+        assertEquals(viewModel.getCompetitionTitle(), assessorCompetitionDashboardResource.getCompetitionName());
+        assertEquals(viewModel.getLeadTechnologist(), assessorCompetitionDashboardResource.getInnovationLead());
+        assertEquals(viewModel.getAcceptDeadline(), assessorCompetitionDashboardResource.getAssessorAcceptDate());
+        assertEquals(viewModel.getSubmitDeadline(), assessorCompetitionDashboardResource.getAssessorDeadlineDate());
+        assertEquals(viewModel.getSubmitted().size(), 2);
         assertEquals(viewModel.getOutstanding().size(), 2);
+
+        verify(assessorCompetitionDashboardRestService, times(1)).getAssessorCompetitionDashboard(compId, userId);
+        verify(assessmentService, times(1)).getTotalScore(assessorCompetitionDashboardResource.getApplicationAssessments().get(0).getAssessmentId());
+        verify(assessmentService, times(1)).getTotalScore(assessorCompetitionDashboardResource.getApplicationAssessments().get(0).getAssessmentId());
+        verifyNoMoreInteractions(assessorCompetitionDashboardRestService);
     }
 }
