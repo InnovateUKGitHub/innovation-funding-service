@@ -10,7 +10,7 @@ import static java.lang.String.format;
 @Service
 public class AssessorCompetitionDashboardRestServiceImpl extends BaseRestService implements AssessorCompetitionDashboardRestService {
 
-    private final String baseUrl = "/assessment/user/%s/competition/%s";
+    private final String baseUrl = "/assessment/user/%d/competition/%d";
 
     @Override
     public RestResult<AssessorCompetitionDashboardResource> getAssessorCompetitionDashboard(long competitionId, long userId) {
