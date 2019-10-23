@@ -67,10 +67,6 @@ public class AssessorCompetitionDashboardModelPopulator {
         return SUBMITTED == assessmentResource.getState();
     }
 
-    private boolean isAssessmentNotSubmitted(ApplicationAssessmentResource assessmentResource) {
-        return !(SUBMITTED == assessmentResource.getState());
-    }
-
     private AssessorCompetitionDashboardApplicationViewModel createApplicationViewModel(ApplicationAssessmentResource assessment) {
 
         return new AssessorCompetitionDashboardApplicationViewModel(
