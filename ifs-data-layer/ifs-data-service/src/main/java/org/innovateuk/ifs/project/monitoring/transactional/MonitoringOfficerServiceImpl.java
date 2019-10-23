@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
@@ -49,7 +50,8 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     private LegacyMonitoringOfficerService legacyMonitoringOfficerService;
     @Autowired
     private UserMapper userMapper;
-
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findAll() {
