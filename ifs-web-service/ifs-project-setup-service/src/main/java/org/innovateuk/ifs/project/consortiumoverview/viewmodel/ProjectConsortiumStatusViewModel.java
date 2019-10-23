@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.consortiumoverview.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 
 import java.util.List;
@@ -62,9 +63,14 @@ public class ProjectConsortiumStatusViewModel {
         return stages.contains(ProjectSetupStage.GRANT_OFFER_LETTER);
     }
 
-     public boolean hasProjectSetupComplete() {
+    public boolean hasProjectSetupComplete() {
         return stages.contains(ProjectSetupStage.PROJECT_SETUP_COMPLETE);
     }
+
+    public boolean hasPendingPartner() {
+        return projectTeamStatusResource.getPartnerStatuses().stream().anyMatch(ProjectPartnerStatusResource::isPendingPartner);
+    }
+
 
     @Override
     public boolean equals(Object o) {

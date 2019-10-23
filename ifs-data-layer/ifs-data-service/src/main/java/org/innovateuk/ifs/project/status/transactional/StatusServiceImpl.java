@@ -472,21 +472,20 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findById(projectId).get();
         ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).orElse(null);
+        PartnerOrganisation lead = project.getLeadOrganisation().get();
 
         Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
                 userId -> simpleFindFirst(project.getProjectUsers(),
                         pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
 
-        List<Organisation> partnerOrganisationsToInclude =
-                simpleFilter(project.getOrganisations(), partner ->
-                        partner.getId().equals(leadOrganisation.getId()) ||
-                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId()))
+        List<PartnerOrganisation> partnerOrganisationsToInclude =
+                simpleFilter(project.getPartnerOrganisations(), partner ->
+                        partner.isLeadOrganisation() ||
+                                (partnerUserForFilterUser.map(pu -> partner.getOrganisation().getId().equals(pu.getOrganisation().getId()))
                                         .orElse(true)));
 
-        List<Organisation> sortedOrganisationsToInclude
-                = new PrioritySorting<>(partnerOrganisationsToInclude, leadOrganisation, Organisation::getName).unwrap();
+        List<PartnerOrganisation> sortedOrganisationsToInclude
+                = new PrioritySorting<>(partnerOrganisationsToInclude, lead, p -> p.getOrganisation().getName()).unwrap();
 
         List<ProjectPartnerStatusResource> projectPartnerStatusResources =
                 simpleMap(sortedOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
@@ -499,21 +498,40 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return serviceSuccess(projectTeamStatusResource);
     }
 
-    private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).orElse(null);
+    private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, PartnerOrganisation partnerOrganisation) {
+        Organisation organisation = partnerOrganisation.getOrganisation();
+        OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(organisation.getOrganisationType().getId());
+        boolean isLead = partnerOrganisation.isLeadOrganisation();
+        if (partnerOrganisation.isPendingPartner()) {
+            return new ProjectPartnerStatusResource(
+                    organisation.getId(),
+                    organisation.getName(),
+                    organisationType,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    NOT_STARTED,
+                    false,
+                    isLead,
+                    true);
+        }
         Optional<MonitoringOfficerResource> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
-        Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
-        Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
-        OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
+        Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
+        Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
 
-        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(), partnerOrganisation.getId()).getSuccess();
-        boolean isLead = partnerOrganisation.equals(leadOrganisation);
+        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(), organisation.getId()).getSuccess();
 
-        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
-        ProjectActivityStates partnerProjectLocationStatus = createPartnerProjectLocationStatus(project, partnerOrganisation);
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
-        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
+        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+        ProjectActivityStates partnerProjectLocationStatus = createPartnerProjectLocationStatus(project, organisation);
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
+        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, organisation, isQueryActionRequired);
         ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : partnerProjectLocationStatus;
         ProjectActivityStates projectTeamStatus = isLead? createProjectTeamStatus(project) : financeContactStatus;
         ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer.isPresent(), projectDetailsStatus) : NOT_REQUIRED;
@@ -528,8 +546,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                         getSuccess();
 
         return new ProjectPartnerStatusResource(
-                partnerOrganisation.getId(),
-                partnerOrganisation.getName(),
+                organisation.getId(),
+                organisation.getName(),
                 organisationType,
                 projectDetailsStatus,
                 projectTeamStatus,
@@ -543,7 +561,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 partnerProjectLocationStatus,
                 projectSetupCompleteStatus,
                 grantOfferLetterSentToProjectTeam,
-                isLead);
+                isLead,
+                false);
     }
 
     private ProjectActivityStates createDocumentStatus(Project project) {
