@@ -2,19 +2,19 @@ apiVersion: v1
 kind: List
 items:
   - apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: survey-db-config
-      data:
-        DB_URL: "${SURVEY_DB_URL}"
-        DB_USER: "${SURVEY_DB_USER}"
-        DB_PASS: "${SURVEY_DB_PASS}"
+    kind: ConfigMap
+    metadata:
+      name: survey-db-config
+    data:
+      DB_URL: "${SURVEY_DB_URL}"
+      DB_USER: "${SURVEY_DB_USER}"
+      DB_PASS: "${SURVEY_DB_PASS}"
   - apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: web-system-user
-      data:
-        SYSTEM_USER_UUID: "${SYSTEM_USER_UUID}"
+    kind: ConfigMap
+    metadata:
+      name: web-system-user
+    data:
+      SYSTEM_USER_UUID: "${SYSTEM_USER_UUID}"
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:

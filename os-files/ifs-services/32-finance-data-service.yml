@@ -2,19 +2,19 @@ apiVersion: v1
 kind: List
 items:
   - apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: finance-db-config
-      data:
-        FINANCE_DB_URL: "${FINANCE_DB_URL}"
-        FINANCE_DB_USER: "${FINANCE_DB_USER}"
-        FINANCE_DB_PASS: "${FINANCE_DB_PASS}"
+    kind: ConfigMap
+    metadata:
+      name: finance-db-config
+    data:
+      FINANCE_DB_URL: "${FINANCE_DB_URL}"
+      FINANCE_DB_USER: "${FINANCE_DB_USER}"
+      FINANCE_DB_PASS: "${FINANCE_DB_PASS}"
   - apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: auth-key
-      data:
-        AUTH_KEY: "${AUTH_KEY}"
+    kind: ConfigMap
+    metadata:
+      name: auth-key
+    data:
+      AUTH_KEY: "${AUTH_KEY}"
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
