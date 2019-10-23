@@ -252,10 +252,10 @@
                         </th:block>
                     </th:block>
                     <span th:if="${!organisation.leadOrg and model.canRemovePartnerOrganisation and model.canAddTeamMember}"
-                          class="vertical-align-baseline hint">|</span>
+                          class="vertical-align-baseline hint govuk-!-margin-right-1">|</span>
                     <th:block th:if="${!organisation.leadOrg and model.canRemovePartnerOrganisation}">
                         <button name="remove-organisation"
-                                class="vertical-align-baseline button-clear govuk-!-margin-left-1"
+                                class="vertical-align-baseline button-clear"
                                 th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.orgId}">
                             Remove organisation
                         </button>
