@@ -3,6 +3,8 @@ package org.innovateuk.ifs.projectteam.viewmodel;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
+import static java.lang.String.format;
+
 public class ProjectTeamInviteViewModel extends AbstractProjectTeamRowViewModel {
     private final boolean canResend;
     private final ZonedDateTime pendingSince;
@@ -20,7 +22,7 @@ public class ProjectTeamInviteViewModel extends AbstractProjectTeamRowViewModel 
 
     @Override
     public String getName() {
-        return String.format("%s (pending for %d days)", super.getName(), getDaysPending());
+        return format("%s (pending for %d days)", super.getName(), getDaysPending());
     }
 
     public boolean isCanResend() { return canResend; }
