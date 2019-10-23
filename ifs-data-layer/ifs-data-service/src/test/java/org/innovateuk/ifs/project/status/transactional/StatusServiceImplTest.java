@@ -101,6 +101,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
@@ -370,6 +371,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<PartnerOrganisation> partnerOrganisations = PartnerOrganisationBuilder.newPartnerOrganisation()
                 .withProject(p)
                 .withOrganisation(leadOrganisation, partnerOrganisation1, partnerOrganisation2)
+                .withLeadOrganisation(true, false, false)
                 .withPostcode(null, "TW14 9QG", " ")
                 .build(3);
 
@@ -662,12 +664,13 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonLeadOrg).withInvite(newProjectUserInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(false).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).build();
+        Project p = spy(newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).build());
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(true).build();
         SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(true).build();
 
+        when(p.getLeadOrganisation()).thenReturn(Optional.of(newPartnerOrganisation().build()));
         when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));

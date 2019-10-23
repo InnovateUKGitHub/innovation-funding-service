@@ -272,12 +272,17 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
                         build()).
                 build(1);
 
+        projectProcess = newProjectProcess()
+                .withActivityState(LIVE)
+                .build();
+
         p = newProject().
                 withProjectUsers(pu).
                 withApplication(application).
                 withPartnerOrganisations(po).
                 withDateSubmitted(ZonedDateTime.now()).
                 withSpendProfileSubmittedDate(ZonedDateTime.now()).
+                withProjectProcess(projectProcess).
                 build();
 
         puResource = newProjectUserResource().
@@ -287,9 +292,6 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
                 withRoleName(PROJECT_PARTNER.getName()).
                 build(1);
 
-        projectProcess = newProjectProcess()
-                .withActivityState(LIVE)
-                .build();
 
         bankDetails = newBankDetails().withOrganisation(o).withApproval(true).build();
         spendProfile = newSpendProfile().withOrganisation(o).withGeneratedDate(Calendar.getInstance()).withMarkedComplete(true).build();
@@ -386,7 +388,10 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
                 .withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2))
                 .build(3);
 
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withOrganisation(organisations.get(0), organisations.get(1)).build(3);
         List<Project> projects = newProject()
+                .withProjectProcess(projectProcess)
+                .withPartnerOrganisations(partnerOrganisations)
                 .withApplication(applications.get(0), applications.get(1), applications.get(2)).withProjectUsers(projectUsers)
                 .build(3);
 
@@ -396,7 +401,6 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
 
         SpendProfile spendProfile = newSpendProfile().build();
 
-        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withOrganisation(organisations.get(0), organisations.get(1)).build(3);
         List<PartnerOrganisationResource> partnerOrganisationResources =
                 newPartnerOrganisationResource()
                         .withId(partnerOrganisations.get(0).getId(),
@@ -1118,7 +1122,7 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
         verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
         ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
-        assertEquals(ProjectActivityStates.COMPLETE, returnedProjectStatusResource.getDocumentsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getDocumentsStatus());
     }
 
     @Test
@@ -1198,7 +1202,7 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
-        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+        assertEquals(Integer.valueOf(2), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getBankDetailsStatus());
@@ -1270,6 +1274,7 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
                 .withCompetitionDocuments(competitionDocuments)
                 .withLocationPerPartner(locationPerPartnerRequired)
                 .build();
+        competition.setProjectStages(EnumSet.allOf(ProjectSetupStage.class).stream().map(stage -> new ProjectStages(competition, stage)).collect(Collectors.toList()));
 
         Application application = newApplication()
                 .withCompetition(competition)
@@ -1288,18 +1293,19 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
                 .withProject(project)
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
+        ProjectProcess projectProcess = newProjectProcess().withProject(project).withActivityState(projectState).build();
 
         Project project = newProject()
                 .withId(projectId)
                 .withApplication(application)
                 .withPartnerOrganisations(singletonList(partnerOrganisation))
                 .withProjectDocuments(projectDocuments)
+                .withProjectProcess(projectProcess)
                 .build();
 
         BankDetails bankDetail = newBankDetails().withProject(project).build();
         SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
-        ProjectProcess projectProcess = newProjectProcess().withProject(project).withActivityState(projectState).build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectProcessRepositoryMock.findOneByTargetId(projectId)).thenReturn(projectProcess);
