@@ -22,7 +22,6 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 @Component
 public class ProjectTeamViewModelPopulator {
@@ -79,7 +78,7 @@ public class ProjectTeamViewModelPopulator {
 
     private boolean canRemovePartnerOrganisation(ProjectResource project, UserResource user) {
         return pcrEnabled
-                && isInternalAdmin(user)
+                && user.hasRole(PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
 
