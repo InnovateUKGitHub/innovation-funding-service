@@ -70,18 +70,8 @@ public class AssessorCompetitionDashboardModelPopulator {
                 assessment.getCompetitionName(),
                 assessment.getLeadOrganisation(),
                 assessment.getState(),
-                getOverallScore(assessment),
+                assessment.getOverallScore(),
                 assessment.isRecommended()
         );
-    }
-
-    private int getOverallScore(ApplicationAssessmentResource assessmentResource) {
-        switch (assessmentResource.getState()) {
-            case READY_TO_SUBMIT:
-            case SUBMITTED:
-                return assessmentResource.getOverallScore();
-            default:
-                return 0;
-        }
     }
 }
