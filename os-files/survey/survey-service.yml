@@ -46,7 +46,7 @@ items:
               imagePullPolicy: Always
               env:
                 - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-                  value: "${GOOGLE_ANALYTICS_TRACKING_ID}"
+                  value: "${GA_TRACKING_ID}"
                 - name: IFS_WEB_SYSTEM_USER_UID
                   value: "${SYSTEM_USER_UUID}"
                 - name: SPRING_APPLICATION_JSON
