@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 
@@ -99,4 +100,6 @@ public abstract class Finance {
     public void setGrowthTable(GrowthTable growthTable) {
         this.growthTable = growthTable;
     }
+
+    public abstract Competition getCompetition();
 }

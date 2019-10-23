@@ -29,4 +29,8 @@ public interface ProjectPartnerInviteService {
     @SecuredBySpring(value = "INVITE_PROJECT_PARTNER_ORGANISATION", securedType = SendProjectPartnerInviteResource.class,
             description = "Only project finance users can invite partner organisations.")
     ServiceResult<Void> deleteInvite(long inviteId);
+
+    ServiceResult<SentProjectPartnerInviteResource> getInviteByHash(String hash);
+
+    ServiceResult<Void> acceptInvite(long inviteId, long organisationId);
 }

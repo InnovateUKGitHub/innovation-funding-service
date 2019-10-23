@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class AbstractAcceptInviteController {
+public abstract class AbstractAcceptInviteController {
 
     private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
 

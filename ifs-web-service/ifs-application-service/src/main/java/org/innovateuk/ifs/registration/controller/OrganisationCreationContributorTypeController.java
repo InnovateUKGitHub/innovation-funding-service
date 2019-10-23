@@ -2,10 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
@@ -43,24 +40,18 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
                                          HttpServletResponse response,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
                                          @RequestParam(value = "invalid", required = false) String invalid) {
-        String hash = registrationCookieService.getInviteHashCookieValue(request).get();
         registrationCookieService.deleteOrganisationCreationCookie(response);
-        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invalid != null) {
             validator.validate(form, bindingResult);
         }
 
-        if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
-            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccess();
-            types = types.stream()
-                        .filter(t -> t.getParentOrganisationType() == null)
-                        .collect(Collectors.toList());
-            model.addAttribute("form", form);
-            model.addAttribute("model", new ContributorOrganisationTypeViewModel(types));
-        } else {
-            return "redirect:/login";
-        }
+        List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccess();
+        types = types.stream()
+                    .filter(t -> t.getParentOrganisationType() == null)
+                    .collect(Collectors.toList());
+        model.addAttribute("form", form);
+        model.addAttribute("model", new ContributorOrganisationTypeViewModel(types));
         return TEMPLATE_PATH + "/contributor-organisation-type";
     }
 

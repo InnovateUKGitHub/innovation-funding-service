@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
+import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -19,6 +16,7 @@ import java.util.Map;
 public interface OrganisationTypeFinanceHandler {
     //actions
     Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType);
+    Iterable<ProjectFinanceRow> initialiseCostType(ProjectFinance projectFinance, FinanceRowType costType);
     ApplicationFinanceRow updateCost(ApplicationFinanceRow financeRow);
     ApplicationFinanceRow addCost(ApplicationFinanceRow financeRow);
 

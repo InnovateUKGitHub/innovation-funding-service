@@ -13,6 +13,9 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
+import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -78,6 +81,9 @@ public class RegistrationController {
 
     @Autowired
     private NavigationUtils navigationUtils;
+
+    @Autowired
+    private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
@@ -175,6 +181,19 @@ public class RegistrationController {
                 throw new InviteAlreadyAcceptedException();
             }
         }
+        Optional<InviteAndIdCookie> projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request);
+        if (projectInvite.isPresent()) {
+            RestResult<SentProjectPartnerInviteResource> invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.get().getId(), projectInvite.get().getHash());
+            if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
+                SentProjectPartnerInviteResource inviteResource = invite.getSuccess();
+                registrationForm.setEmail(inviteResource.getEmail());
+                model.addAttribute("invitee", true);
+                return true;
+            } else {
+                LOG.debug("Invite already accepted.");
+                throw new InviteAlreadyAcceptedException();
+            }
+        }
         return false;
     }
 
@@ -258,11 +277,16 @@ public class RegistrationController {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
         if (inviteHash.isPresent()) {
             Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
-            RestResult<Void> restResult = inviteRestService.acceptInvite(inviteHash.get(), userResource.getId(), organisationId.get());
-            if (restResult.isSuccess()) {
-                registrationCookieService.deleteInviteHashCookie(response);
-            }
-            restResult.isSuccess();
+            inviteRestService.acceptInvite(inviteHash.get(), userResource.getId(), organisationId.get()).getSuccess();
+            registrationCookieService.deleteInviteHashCookie(response);
+        }
+
+        Optional<InviteAndIdCookie> projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request);
+        if (projectInvite.isPresent()) {
+            SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.get().getId(), projectInvite.get().getHash()).getSuccess();
+            Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
+            projectPartnerInviteRestService.acceptInvite(projectInvite.get().getId(), invite.getId(), organisationId.get()).getSuccess();
+            registrationCookieService.deleteProjectInviteHashCookie(response);
         }
     }
 
