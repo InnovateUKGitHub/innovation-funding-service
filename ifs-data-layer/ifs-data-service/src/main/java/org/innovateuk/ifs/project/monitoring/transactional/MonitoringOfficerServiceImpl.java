@@ -14,7 +14,6 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -82,7 +81,7 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     @Transactional
     public ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId) {
         return getMonitoringOfficerUser(userId)
-                .andOnSuccess(user -> getProject(projectId)
+                .andOnSuccess(user -> find(projectRepository.findById(projectId), notFoundError(Project.class))
                         .andOnSuccess(project -> (monitoringOfficerInviteService.inviteMonitoringOfficer(user, project))
                                 .andOnSuccessReturnVoid(() -> monitoringOfficerRepository.save(new MonitoringOfficer(user, project)))
                         )
