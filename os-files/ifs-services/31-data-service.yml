@@ -59,12 +59,27 @@ items:
                     configMapKeyRef:
                       name: db-config
                       key: DB_URL
+                - name: SPRING_FLYWAY_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: db-config
+                      key: DB_URL
                 - name: SPRING_DATASOURCE_USERNAME
                   valueFrom:
                     configMapKeyRef:
                       name: db-config
                       key: DB_USER
+                - name: SPRING_FLYWAY_USER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: db-config
+                      key: DB_USER
                 - name: SPRING_DATASOURCE_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: db-config
+                      key: DB_PASS
+                - name: SPRING_FLYWAY_PASSWORD
                   valueFrom:
                     configMapKeyRef:
                       name: db-config

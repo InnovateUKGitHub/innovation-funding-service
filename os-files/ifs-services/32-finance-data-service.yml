@@ -64,12 +64,27 @@ items:
                     configMapKeyRef:
                       name: finance-db-config
                       key: FINANCE_DB_URL
+                - name: SPRING_FLYWAY_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: finance-db-config
+                      key: FINANCE_DB_URL
                 - name: SPRING_DATASOURCE_USERNAME
                   valueFrom:
                     configMapKeyRef:
                       name: finance-db-config
                       key: FINANCE_DB_USER
+                - name: SPRING_FLYWAY_USER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: finance-db-config
+                      key: FINANCE_DB_USER
                 - name: SPRING_DATASOURCE_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: finance-db-config
+                      key: FINANCE_DB_PASS
+                - name: SPRING_FLYWAY_PASSWORD
                   valueFrom:
                     configMapKeyRef:
                       name: finance-db-config
