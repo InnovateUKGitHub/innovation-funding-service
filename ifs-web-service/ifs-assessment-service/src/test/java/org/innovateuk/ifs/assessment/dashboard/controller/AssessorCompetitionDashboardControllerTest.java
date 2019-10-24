@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AssessorCompetitionDashboardControllerTest extends AbstractApplicationMockMVCTest<AssessorCompetitionDashboardController> {
 
     @Mock
-    private AssessmentService assessmentServiceMock;
+    private AssessmentService assessmentService;
 
     @Mock
     private AssessorCompetitionDashboardModelPopulator assessorCompetitionDashboardModelPopulator;
@@ -89,7 +89,7 @@ public class AssessorCompetitionDashboardControllerTest extends AbstractApplicat
 
         List<Long> assessmentIds = asList(1L, 2L);
 
-        when(assessmentServiceMock.submitAssessments(assessmentIds)).thenReturn(serviceFailure(new Error("Test Error", null)));
+        when(assessmentService.submitAssessments(assessmentIds)).thenReturn(serviceFailure(new Error("Test Error", null)));
         when(assessorCompetitionDashboardModelPopulator.populateModel(anyLong(), anyLong())).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competitionResource.getId())
@@ -105,7 +105,7 @@ public class AssessorCompetitionDashboardControllerTest extends AbstractApplicat
         AssessorCompetitionDashboardAssessmentForm form = (AssessorCompetitionDashboardAssessmentForm) requireNonNull(result.getModelAndView()).getModel().get("form");
         assertEquals(assessmentIds, form.getAssessmentIds());
 
-        verify(assessmentServiceMock, times(1)).submitAssessments(assessmentIds);
+        verify(assessmentService, times(1)).submitAssessments(assessmentIds);
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(1, bindingResult.getGlobalErrorCount());
