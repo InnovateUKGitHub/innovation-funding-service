@@ -12,7 +12,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="Login" enabled="false"/>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="Login" enabled="true"/>
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login" enabled="true"/>
         <hashTree>

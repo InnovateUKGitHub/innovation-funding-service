@@ -119,7 +119,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    @Transactional
+    @Transactional (readOnly = true)
     public ServiceResult<List<ProjectResource>> findByUserId(long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
         return serviceSuccess(projectUsers

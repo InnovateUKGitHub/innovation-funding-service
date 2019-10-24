@@ -3,6 +3,7 @@ package org.innovateuk.ifs.documents.viewModel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentStatus;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.util.List;
 
@@ -17,14 +18,16 @@ public class AllDocumentsViewModel {
     private String projectName;
     private List<ProjectDocumentStatus> documents;
     private boolean projectManager;
+    private boolean collaborativeProject;
 
-    public AllDocumentsViewModel(long competitionId, long applicationId, long projectId, String projectName, List<ProjectDocumentStatus> documents, boolean projectManager) {
-        this.competitionId = competitionId;
-        this.applicationId = applicationId;
-        this.projectId = projectId;
-        this.projectName = projectName;
+    public AllDocumentsViewModel(ProjectResource project, List<ProjectDocumentStatus> documents, boolean projectManager) {
+        this.competitionId = project.getCompetition();
+        this.applicationId = project.getApplication();
+        this.projectId = project.getId();
+        this.projectName = project.getName();
         this.documents = documents;
         this.projectManager = projectManager;
+        this.collaborativeProject = project.isCollaborativeProject();
     }
 
     public long getCompetitionId() {
@@ -49,6 +52,10 @@ public class AllDocumentsViewModel {
 
     public boolean isProjectManager() {
         return projectManager;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 
     @Override

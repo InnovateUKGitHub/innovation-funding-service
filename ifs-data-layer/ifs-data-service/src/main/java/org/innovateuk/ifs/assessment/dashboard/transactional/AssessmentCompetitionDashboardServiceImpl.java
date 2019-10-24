@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashb
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
-public class AssessmentCompetitionDashboardServiceImpl extends RootTransactionalService implements AssessmentCompetitionDashboardService {
+public class AssessmentCompetitionDashboardServiceImpl implements AssessmentCompetitionDashboardService {
 
     @Autowired
     private ApplicationAssessmentService applicationAssessmentService;
@@ -24,16 +23,15 @@ public class AssessmentCompetitionDashboardServiceImpl extends RootTransactional
 
     @Override
     public ServiceResult<AssessorCompetitionDashboardResource> getAssessorCompetitionDashboardResource(long userId, long competitionId) {
-        List<ApplicationAssessmentResource> applicationAssessmentResource = applicationAssessmentService.getApplicationAssessmentResource(userId, competitionId).getSuccess();
+        List<ApplicationAssessmentResource> assessments = applicationAssessmentService.getApplicationAssessmentResource(userId, competitionId).getSuccess();
         Competition competition = competitionRepository.findById(competitionId).get();
-
         AssessorCompetitionDashboardResource assessorCompetitionDashboardResource = new AssessorCompetitionDashboardResource(
                 competitionId,
                 competition.getName(),
                 competition.getLeadTechnologist().getName(),
                 competition.getAssessorAcceptsDate(),
                 competition.getAssessorDeadlineDate(),
-                applicationAssessmentResource);
+                assessments);
 
         return serviceSuccess(assessorCompetitionDashboardResource);
     }
