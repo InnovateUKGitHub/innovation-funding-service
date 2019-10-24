@@ -134,8 +134,6 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     private void markSectionAsCompleteNoValidate(Section section, Application application, long markedAsCompleteById) {
-
-
         sectionService.getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
             questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.

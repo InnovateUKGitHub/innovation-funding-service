@@ -70,7 +70,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     @Override
     @Transactional
     public ServiceResult<Void> markAsCompleteNoValidate(QuestionApplicationCompositeId ids, long markedAsCompleteById) {
-        return setCompleteNoValidate(ids.questionId, ids.applicationId, markedAsCompleteById, false, true);
+        return setCompleteNoValidate(ids.questionId, ids.applicationId, markedAsCompleteById, true, true);
     }
 
     @Override
