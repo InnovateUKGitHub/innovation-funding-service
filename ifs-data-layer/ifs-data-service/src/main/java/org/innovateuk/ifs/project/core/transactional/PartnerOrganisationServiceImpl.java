@@ -82,6 +82,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Autowired
     private ActivityLogRepository activityLogRepository;
 
+    @Autowired
+    private PartnerChangeService partnerChangeService;
+
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
     }
@@ -109,6 +112,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
                             sendNotifications(projectId, projectPartner.getOrganisation());
+                            partnerChangeService.updateProjectRemovedPartner(projectId, organisationId);
                         })
         );
     }
