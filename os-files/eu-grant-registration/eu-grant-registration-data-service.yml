@@ -58,17 +58,32 @@ items:
                   valueFrom:
                     configMapKeyRef:
                       name: grant-db-config
-                      key: DB_URL
+                      key: GRANT_DB_URL
+                - name: SPRING_FLYWAY_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: grant-db-config
+                      key: GRANT_DB_URL
                 - name: SPRING_DATASOURCE_USERNAME
                   valueFrom:
                     configMapKeyRef:
                       name: grant-db-config
-                      key: DB_USER
+                      key: GRANT_DB_USER
+                - name: SPRING_FLYWAY_USER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: grant-db-config
+                      key: GRANT_DB_USER
                 - name: SPRING_DATASOURCE_PASSWORD
                   valueFrom:
                     configMapKeyRef:
                       name: grant-db-config
-                      key: DB_PASS
+                      key: GRANT_DB_PASS
+                - name: SPRING_FLYWAY_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: grant-db-config
+                      key: GRANT_DB_PASS
                 - name: SPRING_FLYWAY_LOCATIONS
                   valueFrom:
                     configMapKeyRef:
