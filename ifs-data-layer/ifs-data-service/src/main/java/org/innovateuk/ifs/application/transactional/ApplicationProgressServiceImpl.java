@@ -57,7 +57,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean applicationReadyForSubmit(final long id) {
         return find(applicationRepository.findById(id), notFoundError(Application.class, id)).andOnSuccess(application -> {
             BigDecimal progressPercentage = calculateApplicationProgress(application);

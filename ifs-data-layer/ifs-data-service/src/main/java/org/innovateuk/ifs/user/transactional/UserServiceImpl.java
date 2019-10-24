@@ -146,6 +146,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> sendPasswordResetNotification(UserResource user) {
         if (UserStatus.ACTIVE.equals(user.getStatus())) {
             String hash = getAndSavePasswordResetToken(user);
@@ -174,6 +175,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> changePassword(String hash, String password) {
         return tokenService.getPasswordResetToken(hash).andOnSuccess(token ->
             find(user(token.getClassPk())).andOnSuccess(user -> {
@@ -209,6 +211,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateDetails(UserResource userResource) {
         return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()))
                 .andOnSuccess( user -> updateUser(user, userResource));
@@ -279,6 +282,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> agreeNewTermsAndConditions(long userId) {
         return termsAndConditionsService.getLatestSiteTermsAndConditions().andOnSuccess(latest ->
                 getUser(userId).andOnSuccess(user -> {
@@ -289,6 +293,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand) {
         return getUser(grantRoleCommand.getUserId())
                 .andOnSuccessReturnVoid(user -> user.getRoles().add(grantRoleCommand.getTargetRole()));
