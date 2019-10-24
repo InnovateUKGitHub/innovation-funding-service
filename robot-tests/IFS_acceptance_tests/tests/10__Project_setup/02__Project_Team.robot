@@ -185,21 +185,35 @@ Project finance is able to add a new partner organisation
     When the user adds a new partner organisation  Testing Organisation  Name Surname  ${intFinanceAddOrgEmail}
     Then the user reads his email                  ${intFinanceAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
 
-Comp Admin isn't able to add a new partner organisation
-    [Documentation]  IFS-6485
+Comp Admin isn't able to add or remove a partner organisation
+    [Documentation]  IFS-6485 IFS-6485
     [Setup]  log in as a different user            &{Comp_admin1_credentials}
     Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     Then the user should not see the element       link = Add a partner organisation
+    And the user should not see the element        jQuery = h2:contains("Red Planet") ~p:first button:contains("Remove organisation")
 
 Project finance is able to remove a partner organisation
     [Documentation]  IFS-6485
-        [Setup]  log in as a different user             &{internal_finance_credentials}
-        Given the user navigates to the page            ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
-        When the user removes a partner organisation    Red Planet
-#        Then the user reads his email                   ${ifsAdminAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+        [Setup]  log in as a different user                    &{internal_finance_credentials}
+        Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
+        When the user removes a partner organisation           Red Planet
+        Then the relevant users recieve an email notification  Red Planet
 
+Ifs Admin is able to remove a partner organisation
+    [Documentation]  IFS-6485
+    [Setup]  log in as a different user                    &{ifs_admin_user_credentials}
+    Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
+    When the user removes a partner organisation           SmithZone
+    Then the relevant users recieve an email notification  SmithZone
 
 *** Keywords ***
+
+the relevant users recieve an email notification
+    [Arguments]  ${orgName}
+    the user reads his email       troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
+    the user reads his email       sian.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
+    the user reads his email       megan.rowland@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
+
 the user removes a partner organisation
     [Arguments]  ${orgName}
     the user clicks the button/link             jQuery = h2:contains("${orgName}") ~p:first button:contains("Remove organisation")
@@ -351,6 +365,6 @@ The user fills in account details
 Custom suite setup
     The guest user opens the browser
 
-#Custom suite teardown
-#    The user closes the browser
+Custom suite teardown
+    The user closes the browser
 
