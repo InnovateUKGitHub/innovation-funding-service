@@ -4,7 +4,7 @@
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="IFS H2020 Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
-      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments">
           <elementProp name="auth_url" elementType="Argument">
@@ -222,17 +222,8 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="User number counter" enabled="true">
-          <stringProp name="CounterConfig.start">1</stringProp>
-          <stringProp name="CounterConfig.end">${__P(H2020_users)}</stringProp>
-          <stringProp name="CounterConfig.incr">1</stringProp>
-          <stringProp name="CounterConfig.name">user_number</stringProp>
-          <stringProp name="CounterConfig.format"></stringProp>
-          <boolProp name="CounterConfig.per_user">false</boolProp>
-        </CounterConfig>
-        <hashTree/>
-        <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Applicant logs in, creates, then completes, application" enabled="true">
-          <stringProp name="IncludeController.includepath">h2020-application.jmx</stringProp>
+        <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="H2020 Grant Transfer Fragment" enabled="true">
+          <stringProp name="IncludeController.includepath">fragments/h2020-application-fragment.jmx</stringProp>
         </IncludeController>
         <hashTree/>
       </hashTree>
@@ -250,22 +241,10 @@
       </ThreadGroup>
       <hashTree>
         <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Applicant and Comp Admin complete project setup" enabled="true">
-          <stringProp name="IncludeController.includepath">h2020-project-seup.jmx</stringProp>
+          <stringProp name="IncludeController.includepath">fragments/h2020-project-setup-fragment.jmx</stringProp>
         </IncludeController>
         <hashTree/>
       </hashTree>
-      <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-        <collectionProp name="Asserion.test_strings">
-          <stringProp name="-218476159">2[0-9]+</stringProp>
-          <stringProp name="669027522">3[0-9]+</stringProp>
-        </collectionProp>
-        <stringProp name="Assertion.custom_message"></stringProp>
-        <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-        <boolProp name="Assertion.assume_success">false</boolProp>
-        <intProp name="Assertion.test_type">34</intProp>
-        <stringProp name="Assertion.scope">all</stringProp>
-      </ResponseAssertion>
-      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
