@@ -67,7 +67,7 @@ public class AssessorCompetitionDashboardModelPopulator {
         return new AssessorCompetitionDashboardApplicationViewModel(
                 assessment.getApplicationId(),
                 assessment.getAssessmentId(),
-                assessment.getCompetitionName(),
+                assessment.getApplicationName(),
                 assessment.getLeadOrganisation(),
                 assessment.getState(),
                 assessment.getOverallScore(),

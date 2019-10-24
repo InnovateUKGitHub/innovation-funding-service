@@ -41,7 +41,7 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
         return new ApplicationAssessmentResource(
                 assessment.getTarget().getId(),
                 assessment.getId(),
-                assessment.getTarget().getCompetition().getName(),
+                assessment.getTarget().getName(),
                 leadOrganisation.get().getName(),
                 assessment.getProcessState(),
                 getOverallScore(assessment),

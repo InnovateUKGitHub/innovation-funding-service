@@ -56,7 +56,7 @@ public class AssessmentCompetitionDashboardServiceImplTest extends BaseServiceUn
                 .build();
         ApplicationAssessmentResource applicationAssessmentResource = newApplicationAssessmentResource()
                 .withApplicationId(1L)
-                .withCompetitionName("Test Competition")
+                .withApplicationName("Test Application")
                 .withAssessmentId(2L)
                 .withLeadOrganisation("Lead Company")
                 .withState(ACCEPTED)

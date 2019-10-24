@@ -8,7 +8,7 @@ public class ApplicationAssessmentResource {
 
     private long applicationId;
     private long assessmentId;
-    private String competitionName;
+    private String applicationName;
     private String leadOrganisation;
     private AssessmentState state;
     private int overallScore;
@@ -18,14 +18,14 @@ public class ApplicationAssessmentResource {
 
     public ApplicationAssessmentResource(long applicationId,
                                          long assessmentId,
-                                         String competitionName,
+                                         String applicationName,
                                          String leadOrganisation,
                                          AssessmentState state,
                                          int overallScore,
                                          Boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
-        this.competitionName = competitionName;
+        this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
         this.state = state;
         this.overallScore = overallScore;
@@ -40,8 +40,8 @@ public class ApplicationAssessmentResource {
         return assessmentId;
     }
 
-    public String getCompetitionName() {
-        return competitionName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
     public String getLeadOrganisation() {
@@ -72,7 +72,7 @@ public class ApplicationAssessmentResource {
                 .append(overallScore, that.overallScore)
                 .append(applicationId, that.applicationId)
                 .append(assessmentId, that.assessmentId)
-                .append(competitionName, that.competitionName)
+                .append(applicationName, that.applicationName)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
                 .append(recommended, that.recommended)
@@ -85,7 +85,7 @@ public class ApplicationAssessmentResource {
                 .append(overallScore)
                 .append(applicationId)
                 .append(assessmentId)
-                .append(competitionName)
+                .append(applicationName)
                 .append(leadOrganisation)
                 .append(state)
                 .append(recommended)

@@ -40,7 +40,7 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
         List<ApplicationAssessmentResource> submittedAssessments = newApplicationAssessmentResource()
                 .withApplicationId(1L, 2L)
                 .withAssessmentId(1L, 2L)
-                .withCompetitionName("Competition Name")
+                .withApplicationName("Application Name")
                 .withLeadOrganisation("Organisation 1", "Organisation 2")
                 .withState(SUBMITTED, SUBMITTED)
                 .withOverallScore(50, 55)
@@ -50,7 +50,7 @@ public class AssessorCompetitionDashboardModelPopulatorTest {
         List<ApplicationAssessmentResource> outstandingAssessments = newApplicationAssessmentResource()
                 .withApplicationId(3L, 4L)
                 .withAssessmentId(3L, 4L)
-                .withCompetitionName("Competition Name")
+                .withApplicationName("Application Name")
                 .withLeadOrganisation("Organisation 3", "Organisation 4")
                 .withState(PENDING, PENDING)
                 .build(2);
