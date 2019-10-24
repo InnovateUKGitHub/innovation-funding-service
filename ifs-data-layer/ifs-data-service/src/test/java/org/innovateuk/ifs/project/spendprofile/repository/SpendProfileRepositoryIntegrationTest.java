@@ -90,7 +90,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         assertEquals(costCategoryType.getId(), retrieved.getCostCategoryType().getId());
         assertEquals(project.getId(), retrieved.getProject().getId());
         assertEquals(organisation.getId(), retrieved.getOrganisation().getId());
-        assertEquals(generatedBy, retrieved.getGeneratedBy());
+        assertEquals(generatedBy.getId(), retrieved.getGeneratedBy().getId());
         assertEquals(generatedDate, retrieved.getGeneratedDate());
 
         List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts, Cost::getValue);
@@ -146,7 +146,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         assertEquals(costCategoryType.getId(), retrieved.getCostCategoryType().getId());
         assertEquals(project.getId(), retrieved.getProject().getId());
         assertEquals(organisation.getId(), retrieved.getOrganisation().getId());
-        assertEquals(generatedBy, retrieved.getGeneratedBy());
+        assertEquals(generatedBy.getId(), retrieved.getGeneratedBy().getId());
         assertEquals(generatedDate, retrieved.getGeneratedDate());
 
         List<BigDecimal> expectedEligibleCostValues = simpleMap(eligibleCosts, Cost::getValue);

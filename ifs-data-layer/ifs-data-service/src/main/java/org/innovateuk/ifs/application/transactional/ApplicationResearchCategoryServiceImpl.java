@@ -11,8 +11,6 @@ import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
@@ -26,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -129,14 +126,12 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     }
 
     private void resetFundingLevels(Long competitionId, Long applicationId) {
-        Optional<Question> financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getOptionalSuccessObject();
-
         financeService.financeDetails(applicationId)
                 .getOptionalSuccessObject()
                 .ifPresent(applicationFinanceResources ->
                         applicationFinanceResources.forEach(applicationFinance -> {
                             GrantClaim grantClaim = applicationFinance.getGrantClaim();
-                            if (grantClaim != null && financeQuestion.isPresent()) {
+                            if (grantClaim != null) {
                                 grantClaim.reset();
                                 financeRowCostsService.update(grantClaim.getId(), grantClaim);
                             }
