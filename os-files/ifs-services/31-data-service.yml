@@ -92,16 +92,16 @@ items:
                   value: "${IFS_EARLY_METRICS_URL}"
                 - name: IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS
                   value: "${IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS}"
-                - name: IFS_FINANCE-TOTALS_ENABLED
-                  value: "${IFS_FINANCE-TOTALS_ENABLED}"
+                - name: IFS_FINANCE_TOTALS_ENABLED
+                  value: "${IFS_FINANCE_TOTALS_ENABLED}"
                 - name: IFS_FINANCE-TOTALS_AUTHSECRETKEY
                   value: "${AUTH_KEY}"
                 - name: SIL_REST_BASEURL
                   value: "${SIL_REST_BASEURL}"
-                - name: IFS_DATA_POSTCODE-LOOKUP_KEY
-                  value: "${SIL_REST_BASEURL}"
-                - name: IFS_DATA_COMPANIES-HOUSE_KEY
-                  value: "${IFS_DATA_COMPANIES-HOUSE_KEY}"
+                - name: IFS_DATA_POSTCODE_LOOKUP_KEY
+                  value: "${IFS_DATA_POSTCODE_LOOKUP_KEY}"
+                - name: IFS_DATA_COMPANIES_HOUSE_KEY
+                  value: "${IFS_DATA_COMPANIES_HOUSE_KEY}"
                 - name: IFS_DATA_SERVICE_FILE_STORAGE_BASE
                   value: "${IFS_DATA_SERVICE_FILE_STORAGE_BASE}"
               ports:
