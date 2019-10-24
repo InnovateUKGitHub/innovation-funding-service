@@ -83,11 +83,6 @@ public class ApplicationController {
         return applicationService.saveApplicationDetails(id, application).toPostWithBodyResponse();
     }
 
-    @GetMapping("/get-progress-percentage-by-application-id/{applicationId}")
-    public RestResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getProgressPercentageByApplicationId(applicationId).toGetResponse();
-    }
-
     @PutMapping("/update-application-state")
     public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
                                                    @RequestParam("state") final ApplicationState state) {

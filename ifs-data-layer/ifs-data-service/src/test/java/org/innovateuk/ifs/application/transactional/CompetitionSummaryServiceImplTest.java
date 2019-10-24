@@ -18,9 +18,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.builder.CompletedPercentageResourceBuilder.newCompletedPercentageResource;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -65,26 +63,6 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 COMP_ID, CREATED_AND_OPEN_STATUSES, new BigDecimal(50L))
         )
                 .thenReturn(1);
-        when(applicationServiceMock.getProgressPercentageByApplicationId(1L))
-                .thenReturn(serviceSuccess(
-                        newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("20")).build()
-                ));
-        when(applicationServiceMock.getProgressPercentageByApplicationId(2L))
-                .thenReturn(serviceSuccess(
-                        newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
-                ));
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateNotInAndCompletionGreaterThan(
-                COMP_ID, SUBMITTED_AND_INELIGIBLE_STATES, new BigDecimal(50L))
-        )
-                .thenReturn(1);
-        when(applicationServiceMock.getProgressPercentageByApplicationId(3L))
-                .thenReturn(serviceSuccess(
-                        newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("20")).build()
-                ));
-        when(applicationServiceMock.getProgressPercentageByApplicationId(4L))
-                .thenReturn(serviceSuccess(
-                        newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
-                ));
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateIn(COMP_ID, SUBMITTED_AND_INELIGIBLE_STATES)).thenReturn(5);
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateIn(COMP_ID, INELIGIBLE_STATES)).thenReturn(2);
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityState(COMP_ID, ApplicationState.APPROVED)).thenReturn(8);
@@ -104,7 +82,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(competition.getCompetitionStatus(), summaryResource.getCompetitionStatus());
         assertEquals(83, summaryResource.getTotalNumberOfApplications());
         assertEquals(1, summaryResource.getApplicationsStarted());
-        assertEquals(1, summaryResource.getApplicationsInProgress());
+        assertEquals(0, summaryResource.getApplicationsInProgress());
         assertEquals(5, summaryResource.getApplicationsSubmitted());
         assertEquals(2, summaryResource.getIneligibleApplications());
         assertEquals(78, summaryResource.getApplicationsNotSubmitted());

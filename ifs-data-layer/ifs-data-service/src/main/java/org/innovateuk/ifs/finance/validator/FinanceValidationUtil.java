@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class FinanceValidationUtil {
         return results;
     }
 
+    @Transactional(readOnly = true)
     public ValidationMessages validateCostItem(FinanceRowItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
         invokeValidator(costItem, bindingResult);

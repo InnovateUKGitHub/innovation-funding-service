@@ -3,10 +3,7 @@ package org.innovateuk.ifs.category.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Represents an Innovation Area. {@link InnovationArea}s have a sector {@link InnovationSector}
@@ -15,7 +12,7 @@ import javax.persistence.ManyToOne;
 @DiscriminatorValue("INNOVATION_AREA")
 public class InnovationArea extends Category {
 
-    @ManyToOne(optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name="parent_id")
     private InnovationSector sector;
 

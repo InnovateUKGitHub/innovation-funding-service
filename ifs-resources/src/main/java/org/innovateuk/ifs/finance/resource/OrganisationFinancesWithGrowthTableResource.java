@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.finance.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.math.BigDecimal;
 import java.time.YearMonth;
 
@@ -93,5 +96,39 @@ public class OrganisationFinancesWithGrowthTableResource {
 
     public void setResearchAndDevelopmentSpendAtLastFinancialYear(BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrganisationFinancesWithGrowthTableResource that = (OrganisationFinancesWithGrowthTableResource) o;
+
+        return new EqualsBuilder()
+                .append(organisationSize, that.organisationSize)
+                .append(stateAidAgreed, that.stateAidAgreed)
+                .append(financialYearEnd, that.financialYearEnd)
+                .append(headCountAtLastFinancialYear, that.headCountAtLastFinancialYear)
+                .append(annualTurnoverAtLastFinancialYear, that.annualTurnoverAtLastFinancialYear)
+                .append(annualProfitsAtLastFinancialYear, that.annualProfitsAtLastFinancialYear)
+                .append(annualExportAtLastFinancialYear, that.annualExportAtLastFinancialYear)
+                .append(researchAndDevelopmentSpendAtLastFinancialYear, that.researchAndDevelopmentSpendAtLastFinancialYear)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(organisationSize)
+                .append(stateAidAgreed)
+                .append(financialYearEnd)
+                .append(headCountAtLastFinancialYear)
+                .append(annualTurnoverAtLastFinancialYear)
+                .append(annualProfitsAtLastFinancialYear)
+                .append(annualExportAtLastFinancialYear)
+                .append(researchAndDevelopmentSpendAtLastFinancialYear)
+                .toHashCode();
     }
 }

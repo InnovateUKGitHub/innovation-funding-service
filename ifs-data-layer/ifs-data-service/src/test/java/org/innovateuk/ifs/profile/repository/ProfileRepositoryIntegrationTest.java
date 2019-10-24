@@ -50,6 +50,6 @@ public class ProfileRepositoryIntegrationTest extends BaseRepositoryIntegrationT
 
         Profile retrievedProfile = repository.findById(savedProfile.getId()).get();
 
-        assertTrue(retrievedProfile.getInnovationAreas().contains(innovationArea));
+        assertTrue(retrievedProfile.getInnovationAreas().stream().anyMatch(ia -> ia.getId().equals(innovationArea.getId())));
     }
 }

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.user.domain.User;
 
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -13,7 +14,7 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 public abstract class CompetitionInvite<I extends Invite<Competition, I>> extends Invite<Competition, I> implements Serializable, ResendableInvite {
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Competition competition;
 

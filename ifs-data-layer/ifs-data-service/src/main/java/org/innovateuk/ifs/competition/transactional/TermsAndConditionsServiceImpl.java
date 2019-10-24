@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Service for operations around the usage and processing of TermsAndConditions
  */
 @Service
+@Transactional(readOnly = true)
 public class TermsAndConditionsServiceImpl implements TermsAndConditionsService {
 
     private GrantTermsAndConditionsMapper grantTermsAndConditionsMapper;

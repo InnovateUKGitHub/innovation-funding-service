@@ -2,26 +2,19 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.domain.Section;
-import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
@@ -37,13 +30,16 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     private OrganisationRepository organisationRepository;
 
     @Autowired
-    private QuestionStatusService questionStatusService;
-
-    @Autowired
     private SectionStatusService sectionStatusService;
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private QuestionStatusRepository questionStatusRepository;
 
     @Override
     @Transactional
@@ -82,40 +78,12 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     }
 
     private BigDecimal calculateApplicationProgress(Application application) {
-        List<Section> sections = application.getCompetition().getSections();
-
-        List<Question> questions = sections.stream()
-                .flatMap(section -> section.getQuestions().stream())
-                .filter(Question::isMarkAsCompletedEnabled)
-                .collect(toList());
-
-        List<ProcessRole> processRoles = application.getProcessRoles();
-
-        Set<Organisation> organisations = processRoles.stream()
-                .filter(p -> p.getRole() == LEADAPPLICANT
-                        || p.getRole() == APPLICANT
-                        || p.getRole() == COLLABORATOR)
-                .map(processRole -> organisationRepository.findById(processRole.getOrganisationId()).orElse(null))
-                .collect(Collectors.toSet());
-
-        Long countMultipleStatusQuestionsCompleted = organisations.stream()
-                .mapToLong(org -> questions.stream()
-                        .filter(Question::getMarkAsCompletedEnabled)
-                        .filter(q -> q.hasMultipleStatuses() && questionStatusService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccess()).count())
-                .sum();
-
-        Long countSingleStatusQuestionsCompleted = questions.stream()
-                .filter(Question::getMarkAsCompletedEnabled)
-                .filter(q -> !q.hasMultipleStatuses() && questionStatusService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess())
-                .count();
-
-        Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
-
-        Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
-        Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
-
-        Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-
-        return percentage(countCompleted, totalQuestions);
+        long competitionId = application.getCompetition().getId();
+        long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
+        long questionsWithMultipleStatuses = questionRepository.countQuestionsWithMultipleStatuses(competitionId);
+        long questionsWithSingleStatus = questionRepository.countQuestionsWithSingleStatus(competitionId);
+        long completedQuestionStatuses = questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(application.getId());
+        long totalQuestions = questionsWithMultipleStatuses * organisations + questionsWithSingleStatus;
+        return percentage(completedQuestionStatuses, totalQuestions);
     }
 }
