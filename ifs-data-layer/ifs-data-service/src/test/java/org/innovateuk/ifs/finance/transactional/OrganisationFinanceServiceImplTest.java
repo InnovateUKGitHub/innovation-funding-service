@@ -257,7 +257,7 @@ public class OrganisationFinanceServiceImplTest extends BaseServiceUnitTest<Orga
         User loggedInUser = newUser().build();
         EmployeesAndTurnoverResource employeesAndTurnover = new EmployeesAndTurnoverResource();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .wi     thFinancialYearAccounts(employeesAndTurnover)
+                .withFinancialYearAccounts(employeesAndTurnover)
                 .build();
 
         when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
