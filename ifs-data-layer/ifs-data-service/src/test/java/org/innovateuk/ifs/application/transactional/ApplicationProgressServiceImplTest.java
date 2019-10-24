@@ -58,8 +58,8 @@ public class ApplicationProgressServiceImplTest {
     @Before
     public void setup() {
         when(organisationRepository.countDistinctByProcessRolesApplicationId(APPLICATION.getId())).thenReturn(2L);
-        when(questionRepository.countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(COMPETITION.getId(), true)).thenReturn(1L);
-        when(questionRepository.countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(COMPETITION.getId(), false)).thenReturn(1L);
+        when(questionRepository.countQuestionsWithMultipleStatuses(COMPETITION.getId())).thenReturn(1L);
+        when(questionRepository.countQuestionsWithSingleStatus(COMPETITION.getId())).thenReturn(1L);
         when(applicationRepository.findById(APPLICATION.getId())).thenReturn(Optional.of(APPLICATION));
     }
 

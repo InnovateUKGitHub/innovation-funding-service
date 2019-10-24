@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -30,6 +31,7 @@ import java.math.BigDecimal;
 import java.time.Month;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -65,6 +67,8 @@ public class OrganisationFinanceServiceImplTest extends BaseServiceUnitTest<Orga
     private FormInputResponseService formInputResponseService;
     @Mock
     private ApplicationService applicationService;
+    @Mock
+    private ApplicationRepository applicationRepository;
     @Mock
     private ApplicationFinanceService financeService;
     @Mock
@@ -203,8 +207,7 @@ public class OrganisationFinanceServiceImplTest extends BaseServiceUnitTest<Orga
         boolean stateAid = true;
         Competition competition = newCompetition().withStateAid(stateAid).build();
         CompetitionResource competitionResource = newCompetitionResource().build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
+        Application application = newApplication().withCompetition(competition).build();
         Organisation organisation = newOrganisation().build();
         OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource = new OrganisationFinancesWithGrowthTableResource();
         User loggedInUser = newUser().build();
@@ -213,7 +216,7 @@ public class OrganisationFinanceServiceImplTest extends BaseServiceUnitTest<Orga
                 .withFinancialYearAccounts(growthTable)
                 .build();
 
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
         when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
         when(financeService.financeDetails(application.getId(), organisation.getId()))
@@ -248,17 +251,16 @@ public class OrganisationFinanceServiceImplTest extends BaseServiceUnitTest<Orga
 
         Competition competition = newCompetition().withStateAid(stateAid).build();
         CompetitionResource competitionResource = newCompetitionResource().build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
+        Application application = newApplication().withCompetition(competition).build();
         Organisation organisation = newOrganisation().build();
         OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource = newOrganisationFinancesWithoutGrowthTableResource().build();
         User loggedInUser = newUser().build();
         EmployeesAndTurnoverResource employeesAndTurnover = new EmployeesAndTurnoverResource();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withFinancialYearAccounts(employeesAndTurnover)
+                .wi     thFinancialYearAccounts(employeesAndTurnover)
                 .build();
 
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
         when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
         when(financeService.financeDetails(application.getId(), organisation.getId()))
