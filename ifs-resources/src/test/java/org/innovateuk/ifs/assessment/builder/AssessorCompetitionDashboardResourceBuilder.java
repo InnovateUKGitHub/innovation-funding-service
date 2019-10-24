@@ -42,12 +42,12 @@ public class AssessorCompetitionDashboardResourceBuilder extends BaseBuilder<Ass
         return withArraySetFieldByReflection("innovationLead", innovationLeads);
     }
 
-    public AssessorCompetitionDashboardResourceBuilder withAssessorAcceptDate(ZonedDateTime... assessorAcceptDate) {
-        return withArraySetFieldByReflection("assessorAcceptDate", assessorAcceptDate);
+    public AssessorCompetitionDashboardResourceBuilder withAssessorAcceptDate(ZonedDateTime... assessorAcceptDates) {
+        return withArraySetFieldByReflection("assessorAcceptDate", assessorAcceptDates);
     }
 
-    public AssessorCompetitionDashboardResourceBuilder withAssessorDeadlineDate(ZonedDateTime... assessorDeadlineDate) {
-        return withArraySetFieldByReflection("assessorDeadlineDate", assessorDeadlineDate);
+    public AssessorCompetitionDashboardResourceBuilder withAssessorDeadlineDate(ZonedDateTime... assessorDeadlineDates) {
+        return withArraySetFieldByReflection("assessorDeadlineDate", assessorDeadlineDates);
     }
 
     public AssessorCompetitionDashboardResourceBuilder withApplicationAssessments(List<ApplicationAssessmentResource>... applicationAssessments) {

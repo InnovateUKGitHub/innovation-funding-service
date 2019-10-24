@@ -49,8 +49,8 @@ public class ApplicationAssessmentResourceBuilder extends BaseBuilder<Applicatio
         return withArraySetFieldByReflection("state", states);
     }
 
-    public ApplicationAssessmentResourceBuilder withOverallScore(Integer... overallScore) {
-        return withArraySetFieldByReflection("overallScore", overallScore);
+    public ApplicationAssessmentResourceBuilder withOverallScore(Integer... overallScores) {
+        return withArraySetFieldByReflection("overallScore", overallScores);
     }
 
     public ApplicationAssessmentResourceBuilder withRecommended(Boolean... recommended) {
