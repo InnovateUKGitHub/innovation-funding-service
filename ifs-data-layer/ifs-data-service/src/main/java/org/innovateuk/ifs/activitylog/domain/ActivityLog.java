@@ -116,10 +116,6 @@ public class ActivityLog {
         return ofNullable(query);
     }
 
-    public void setQuery(Query query) {
-        this.query = query;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

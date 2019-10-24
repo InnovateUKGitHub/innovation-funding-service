@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.activitylog.repository;
 
 import org.innovateuk.ifs.activitylog.domain.ActivityLog;
-import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
