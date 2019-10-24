@@ -253,8 +253,9 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
 
     private ServiceResult<Void> setCompleteNoValidate(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
-        return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
-                -> setCompleteNoValidateOnFindAndSuccess(markedAsCompleteBy, application, question, markAsComplete, updateApplicationCompleteStatus));
+        return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId))
+                .andOnSuccess((markedAsCompleteBy, application, question)
+                    -> setCompleteNoValidateOnFindAndSuccess(markedAsCompleteBy, application, question, markAsComplete, updateApplicationCompleteStatus));
     }
 
     private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy,
@@ -263,9 +264,12 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
                                                                                 boolean markAsComplete,
                                                                                 boolean updateApplicationCompleteStatus) {
         List<ValidationMessages> validationMessages = markAsComplete ? validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId()) : new ArrayList<>();
-        // TODO qqRP should validation failures mean we don't do anything else?
-        setCompleteNoValidateOnFindAndSuccess(markedAsCompleteBy, application, question, markAsComplete, updateApplicationCompleteStatus);
-        return serviceSuccess(validationMessages);
+        if(!validationMessages.isEmpty()){
+            return serviceSuccess(validationMessages);
+        } else {
+            setCompleteNoValidateOnFindAndSuccess(markedAsCompleteBy, application, question, markAsComplete, updateApplicationCompleteStatus);
+        }
+        return serviceSuccess(new ArrayList<>());
     }
 
     private Optional<QuestionStatus > getQuestionStatus(Question question, Application application, ProcessRole markedAsCompleteBy){
