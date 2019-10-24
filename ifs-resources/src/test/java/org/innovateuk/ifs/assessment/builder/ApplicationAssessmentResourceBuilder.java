@@ -41,8 +41,8 @@ public class ApplicationAssessmentResourceBuilder extends BaseBuilder<Applicatio
         return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
-    public ApplicationAssessmentResourceBuilder withLeadOrganisation(String... leadOrganisation) {
-        return withArraySetFieldByReflection("leadOrganisation", leadOrganisation);
+    public ApplicationAssessmentResourceBuilder withLeadOrganisation(String... leadOrganisations) {
+        return withArraySetFieldByReflection("leadOrganisation", leadOrganisations);
     }
 
     public ApplicationAssessmentResourceBuilder withState(AssessmentState... states) {
