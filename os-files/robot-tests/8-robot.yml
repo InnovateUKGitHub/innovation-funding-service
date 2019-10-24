@@ -23,10 +23,10 @@ items:
           resources:
             limits:
               cpu: 2000m
-              memory: 4000M
+              memory: 2000M
             requests:
               cpu: 100m
-              memory: 800M
+              memory: 400M
           ports: {}
           restartPolicy:
             never: {}
