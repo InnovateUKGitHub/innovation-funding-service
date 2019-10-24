@@ -139,7 +139,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     }
 
     private void sendNotificationToProjectUsers(Project project, Organisation organisation) {
-        long leadOrganisationId = project.getLeadOrganisation().get().getId();
+        long leadOrganisationId = project.getLeadOrganisation().get().getOrganisation().getId();
 
         List<ProjectUser> projectUsers = projectUserRepository.findByProjectIdAndOrganisationId(project.getId(), leadOrganisationId);
         projectUsers.forEach(pu -> sendNotificationToUser(pu.getUser(), project, organisation));
