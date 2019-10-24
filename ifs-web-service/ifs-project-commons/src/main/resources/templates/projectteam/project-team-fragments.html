@@ -38,16 +38,12 @@
 
 <th:block th:fragment="partner-invite-row(model, organisation, invite)">
     <td class="govuk-table__cell hint"
-        th:text="${invite.name}"></td>  
+        th:text="${invite.name}"></td>
     <td class="govuk-table__cell ifs-table__email hint"
         th:text="${invite.email}"></td>
     <td class="govuk-table__cell hint alignright">
         <button th:if="${invite.canResend}" class="button-clear govuk-!-margin-right-1" type="submit"
                 name="resend-partner-invite" th:value="${invite.id}">Resend invite
-        </button>
-        <span th:if="${invite.canResend and invite.removeable}">|</span>
-        <button th:if="${invite.removeable}" class="button-clear govuk-!-margin-left-1" type="submit"
-                name="remove-partner-invite" th:value="${invite.id}">Remove
         </button>
     </td>
 </th:block>

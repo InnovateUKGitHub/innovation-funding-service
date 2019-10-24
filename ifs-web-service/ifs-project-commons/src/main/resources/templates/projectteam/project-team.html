@@ -104,9 +104,14 @@
                 <th:block th:if="${organisation.canAddUsers}">
                     <th:block th:insert="projectteam/project-team-fragments :: invite-form(${model}, ${organisation})" />
                 </th:block>
+                <p class="govuk-!-margin-bottom-6" th:if="${organisation.partnerInvite and model.canInvitePartnerOrganisation}">
+                    <button class="button-clear" type="submit"
+                            name="remove-partner-invite" th:value="${organisation.id}">Remove organisation
+                    </button>
+                </p>
             </th:block>
-
         </form>
+
 
         <p th:if="${model.canInvitePartnerOrganisation}"
            class="govuk-body">
