@@ -62,7 +62,7 @@ osStageLocal.tag = registrationServiceVersion
 createContainer.hostName = "registration-svc"
 createContainer.containerName = "registration-svc"
 createContainer.containerId = "registration-svc"
-createContainer.env = ["SHIBBOLETH_API_KEYS=${shibboleth.api.key}"]
+createContainer.env = ["SHIBBOLETH_API_KEYS=1234567890"]
 
 
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
