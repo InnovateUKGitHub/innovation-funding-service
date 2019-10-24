@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 /**
  * Testing how the secured methods in ProjectService interact with Spring Security
  */
-public class InternalUserStatusServiceSecurityTest extends BaseServiceSecurityTest<InternalUserProjectStatusService> {
+public class InternalUserProjectStatusServiceSecurityTest extends BaseServiceSecurityTest<InternalUserProjectStatusService> {
 
     private StatusPermissionRules statusPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
