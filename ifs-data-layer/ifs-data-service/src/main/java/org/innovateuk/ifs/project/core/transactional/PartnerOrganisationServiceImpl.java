@@ -117,14 +117,13 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private void deleteProjectFinance(long projectId, long organisationId) {
         find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
                 notFoundError(ProjectFinance.class)).andOnSuccessReturnVoid(projectFinance -> {
-                    deleteThreads(projectFinance.getId(), projectFinance.getProject().getApplication().getId(), organisationId);
+                    deleteThreads(projectFinance.getId());
                     projectFinanceRowRepository.deleteAllByTargetId(projectFinance.getId());
                     projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         });
     }
 
-    private void deleteThreads(long projectFinanceId, long applicationId, long organisationId) {
-        activityLogRepository.deleteAllByApplicationIdAndOrganisationId(applicationId, organisationId);
+    private void deleteThreads(long projectFinanceId) {
         noteRepository.deleteAllByClassPk(projectFinanceId);
         queryRepository.deleteAllByClassPk(projectFinanceId);
     }
