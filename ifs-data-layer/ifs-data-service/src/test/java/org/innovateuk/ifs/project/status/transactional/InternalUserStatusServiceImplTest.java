@@ -102,7 +102,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<InternalUserProjectStatusService> {
+public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTest<InternalUserProjectStatusService> {
 
     private Application application;
     private Competition competition;
@@ -1122,7 +1122,7 @@ public class InternalUserStatusServiceImplTest extends BaseServiceUnitTest<Inter
         verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
         ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
-        assertEquals(PENDING, returnedProjectStatusResource.getDocumentsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getDocumentsStatus());
     }
 
     @Test

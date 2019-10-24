@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
@@ -106,15 +105,14 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
-        ProjectProcess process = project.getProjectProcess();
         boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
-        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired, process.getProcessState(), partnerProjectLocationStatus);
+        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired, partnerProjectLocationStatus);
         ProjectActivityStates projectTeamStatus = getProjectTeamStatus(project);
-        ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, process.getProcessState());
-        ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project, process.getProcessState());
-        ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, process.getProcessState());
-        ProjectActivityStates documentsStatus = documentsState(project, process.getProcessState());
+        ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
+        ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project);
+        ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus);
+        ProjectActivityStates documentsStatus = documentsState(project);
 
         return new ProjectStatusResource(
                 project.getName(),
@@ -129,14 +127,14 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 bankDetailsStatus,
                 financeChecksStatus,
                 spendProfileStatus,
-                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus, process.getProcessState()),
+                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus),
                 documentsStatus,
-                getGrantOfferLetterState(project, process.getProcessState(), bankDetailsStatus, spendProfileStatus),
-                getProjectSetupCompleteState(project, process.getProcessState(), spendProfileStatus, documentsStatus),
+                getGrantOfferLetterState(project, bankDetailsStatus, spendProfileStatus, documentsStatus),
+                getProjectSetupCompleteState(project, spendProfileStatus, documentsStatus),
                 golWorkflowHandler.isSent(project),
-                process.getProcessState());
+                project.getProjectState());
     }
-    private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectState processState, ProjectActivityStates partnerProjectLocationStatus) {
+    private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectActivityStates partnerProjectLocationStatus) {
         if (locationPerPartnerRequired && PENDING.equals(partnerProjectLocationStatus)) {
             return PENDING;
         }
@@ -162,18 +160,18 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 PENDING : COMPLETE;
     }
 
-    private ProjectActivityStates getFinanceChecksStatus(Project project, ProjectState processState) {
+    private ProjectActivityStates getFinanceChecksStatus(Project project) {
         boolean noSpendProfilesGenerated = project.getSpendProfiles().isEmpty();
 
         if(noSpendProfilesGenerated) {
-            return processState.isActive() ?
+            return project.getProjectState().isActive() ?
                     ACTION_REQUIRED : PENDING;
         }
 
         return COMPLETE;
     }
 
-    private ProjectActivityStates getBankDetailsStatus(Project project, ProjectState processState) {
+    private ProjectActivityStates getBankDetailsStatus(Project project) {
 
         // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
@@ -189,14 +187,14 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 if (bankDetails.isPresent()) {
                     started = true;
                     if (organisationBankDetailsStatus.equals(PENDING)) {
-                        return processState.isActive() ?
+                        return project.getProjectState().isActive() ?
                                 ACTION_REQUIRED : PENDING;
                     }
                 }
             }
         }
         if (!started) {
-            return notStartedIfProjectActive(processState);
+            return notStartedIfProjectActive(project.getProjectState());
         } else if (incomplete) {
             return PENDING;
         } else {
@@ -209,7 +207,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         return result.orElse(false);
     }
 
-    private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus, ProjectState processState) {
+    private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
         ApprovalType approvalType = spendProfileService.getSpendProfileStatus(project.getId()).getSuccess();
 
         switch (approvalType) {
@@ -219,22 +217,21 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 return REJECTED;
             default:
                 if (project.getSpendProfileSubmittedDate() != null) {
-                    return actionRequiredIfProjectActive(processState);
+                    return actionRequiredIfProjectActive(project.getProjectState());
                 }
 
                 if (financeCheckStatus.equals(COMPLETE)) {
                     return PENDING;
                 }
 
-                return notStartedIfProjectActive(processState);
+                return notStartedIfProjectActive(project.getProjectState());
         }
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project,
                                                              ProjectActivityStates projectDetailsStatus,
                                                              final boolean locationPerPartnerRequired,
-                                                             final ProjectActivityStates partnerProjectLocationStatus,
-                                                             ProjectState processState) {
+                                                             final ProjectActivityStates partnerProjectLocationStatus) {
 
         boolean monitoringOfficerExists = monitoringOfficerService.findMonitoringOfficerForProject(project.getId()).isSuccess();
 
@@ -242,7 +239,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                                                         projectDetailsStatus,
                                                         locationPerPartnerRequired,
                                                         partnerProjectLocationStatus,
-                                                        processState);
+                                                        project.getProjectState());
     }
 
     private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final boolean monitoringOfficerExists,
@@ -282,11 +279,11 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         }
     }
 
-    private ProjectActivityStates getDocumentsStatus(Project project, ProjectState processState) {
+    private ProjectActivityStates getDocumentsStatus(Project project) {
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
         List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
 
-        if (project.isCollaborativeProject()) {
+        if (!project.isCollaborativeProject()) {
 
             List<String> documentNames = expectedDocuments.stream()
                     .map(DocumentConfig::getTitle)
@@ -296,14 +293,14 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 return getDocumentsState(projectDocuments,
                                          projectDocuments.size(),
                                          expectedDocuments.size() - 1,
-                                         processState);
+                                         project.getProjectState());
             }
         }
 
         return getDocumentsState(projectDocuments,
                                  projectDocuments.size(),
                                  expectedDocuments.size(),
-                                 processState);
+                                 project.getProjectState());
     }
 
     private ProjectActivityStates getDocumentsState(List<ProjectDocument> projectDocuments,
@@ -331,54 +328,54 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         return PENDING;
     }
 
-    private ProjectActivityStates getGrantOfferLetterState(Project project, ProjectState processState, ProjectActivityStates bankDetailsStatus, ProjectActivityStates spendProfileStatus) {
+    private ProjectActivityStates getGrantOfferLetterState(Project project, ProjectActivityStates bankDetailsStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates documentsStatus) {
         if (!projectContainsStage(project, ProjectSetupStage.GRANT_OFFER_LETTER)) {
             return COMPLETE;
         }
-        if (COMPLETE.equals(documentsState(project, processState))
+        if (COMPLETE.equals(documentsStatus)
                 && COMPLETE.equals(spendProfileStatus)
                 && COMPLETE.equals(bankDetailsStatus)) {
             if (golWorkflowHandler.isApproved(project)) {
                 return COMPLETE;
             } else if (golWorkflowHandler.isRejected(project)) {
-                return processState.isActive() ?
+                return project.getProjectState().isActive() ?
                         REJECTED : PENDING;
             } else {
                 if (golWorkflowHandler.isReadyToApprove(project)) {
-                    return actionRequiredIfProjectActive(processState);
+                    return actionRequiredIfProjectActive(project.getProjectState());
                 } else {
                     if (golWorkflowHandler.isSent(project)) {
                         return PENDING;
                     } else {
-                        return actionRequiredIfProjectActive(processState);
+                        return actionRequiredIfProjectActive(project.getProjectState());
                     }
                 }
             }
         } else {
-            return notStartedIfProjectActive(processState);
+            return notStartedIfProjectActive(project.getProjectState());
         }
     }
 
-    private ProjectActivityStates getProjectSetupCompleteState(Project project, ProjectState processState, ProjectActivityStates spendProfileStatus, ProjectActivityStates documentStatus) {
+    private ProjectActivityStates getProjectSetupCompleteState(Project project, ProjectActivityStates spendProfileStatus, ProjectActivityStates documentStatus) {
         if (!projectContainsStage(project, ProjectSetupStage.PROJECT_SETUP_COMPLETE))  {
             return COMPLETE;
         }
         if (COMPLETE.equals(documentStatus) && COMPLETE.equals(spendProfileStatus)) {
-            if (processState == LIVE || processState == UNSUCCESSFUL) {
+            if (project.getProjectState() == LIVE || project.getProjectState() == UNSUCCESSFUL) {
                 return COMPLETE;
             } else {
-                return actionRequiredIfProjectActive(processState);
+                return actionRequiredIfProjectActive(project.getProjectState());
             }
         } else {
-            return notStartedIfProjectActive(processState);
+            return notStartedIfProjectActive(project.getProjectState());
         }
     }
 
-    private ProjectActivityStates documentsState(Project project, ProjectState state) {
+    private ProjectActivityStates documentsState(Project project) {
         if (!projectContainsStage(project, ProjectSetupStage.DOCUMENTS)) {
             return COMPLETE;
         }
-        return getDocumentsStatus(project, state);
+        return getDocumentsStatus(project);
     }
 
     private boolean projectContainsStage(Project project, ProjectSetupStage projectSetupStage) {
