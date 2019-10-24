@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -10,11 +9,13 @@ import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
@@ -36,7 +37,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_REMOVE_L
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.core.transactional.PartnerOrganisationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -78,10 +78,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private QueryRepository queryRepository;
-
-    @Autowired
-    private ActivityLogRepository activityLogRepository;
-
+    
     @Autowired
     private PartnerChangeService partnerChangeService;
 
@@ -111,7 +108,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccess(
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
-                            sendNotifications(projectId, projectPartner.getOrganisation());
+                            sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
                             partnerChangeService.updateProjectRemovedPartner(projectId, organisationId);
                         })
         );
@@ -123,48 +120,43 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                 serviceSuccess();
     }
 
-    private void sendNotifications(long projectId, Organisation organisation) {
-        sendNotificationToProjectTeam(projectId, organisation);
-        sendNotificationToMonitoringOfficer(projectId, organisation);
+    private void sendNotifications(Project project, Organisation organisation) {
+        sendNotificationToProjectTeam(project, organisation);
+        sendNotificationToMonitoringOfficer(project, organisation);
     }
 
-    private void sendNotificationToProjectTeam(long projectId, Organisation organisation) {
-        Optional<ProjectUser> projectManager = projectUserRepository.findByProjectIdAndRole(projectId, PROJECT_MANAGER);
+    private void sendNotificationToProjectTeam(Project project, Organisation organisation) {
+        Optional<ProjectUser> projectManager = projectUserRepository.findByProjectIdAndRole(project.getId(), PROJECT_MANAGER);
         if (projectManager.isPresent()) {
-            sendNotificationToUser(projectManager.get(), organisation);
+            sendNotificationToUser(projectManager.get().getUser(), project, organisation);
         } else {
-            sendNotificationToProjectUsers(projectId, organisation);
+            sendNotificationToProjectUsers(project, organisation);
         }
     }
 
-    private void sendNotificationToMonitoringOfficer(long projectId, Organisation organisation) {
-        Optional<ProjectUser> monitoringOfficer = projectUserRepository.findByProjectIdAndRole(projectId, MONITORING_OFFICER);
+    private void sendNotificationToMonitoringOfficer(Project project, Organisation organisation) {
+        Optional<MonitoringOfficer> monitoringOfficer = project.getProjectMonitoringOfficer();
         if (monitoringOfficer.isPresent()) {
-            sendNotificationToUser(monitoringOfficer.get(), organisation);
+            sendNotificationToUser(monitoringOfficer.get().getUser(), project, organisation);
         }
     }
 
-    private void sendNotificationToProjectUsers(long projectId, Organisation organisation) {
-        long leadOrganisationId = partnerOrganisationRepository.findByProjectId(projectId)
-                .stream()
-                .filter(PartnerOrganisation::isLeadOrganisation)
-                .map(partnerOrganisation -> partnerOrganisation.getOrganisation().getId())
-                .findAny()
-                .get();
+    private void sendNotificationToProjectUsers(Project project, Organisation organisation) {
+        long leadOrganisationId = project.getLeadOrganisation().get().getOrganisation().getId();
 
-        List<ProjectUser> projectUsers = projectUserRepository.findByProjectIdAndOrganisationId(projectId, leadOrganisationId);
-        projectUsers.forEach(user -> sendNotificationToUser(user, organisation));
+        List<ProjectUser> projectUsers = projectUserRepository.findByProjectIdAndOrganisationId(project.getId(), leadOrganisationId);
+        projectUsers.forEach(pu -> sendNotificationToUser(pu.getUser(), project, organisation));
     }
 
-    private void sendNotificationToUser(ProjectUser projectUser, Organisation organisation) {
+    private void sendNotificationToUser(User user, Project project, Organisation organisation) {
         NotificationSource from = systemNotificationSource;
-        NotificationTarget to = createProjectNotificationTarget(projectUser.getUser());
+        NotificationTarget to = createProjectNotificationTarget(user);
 
         Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("applicationId", projectUser.getProcess().getApplication().getId());
-        notificationArguments.put("projectName", projectUser.getProcess().getName());
+        notificationArguments.put("applicationId", project.getApplication().getId());
+        notificationArguments.put("projectName", project.getName());
         notificationArguments.put("organisationName", organisation.getName());
-        notificationArguments.put("projectTeamLink", getProjectTeamLink(projectUser.getProcess().getId()));
+        notificationArguments.put("projectTeamLink", getProjectTeamLink(project.getId()));
 
         Notification notification = new Notification(from, singletonList(to), REMOVE_PROJECT_ORGANISATION, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -188,14 +180,13 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private void deleteProjectFinance(long projectId, long organisationId) {
         find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
                 notFoundError(ProjectFinance.class)).andOnSuccessReturnVoid(projectFinance -> {
-                    deleteThreads(projectFinance.getId(), projectFinance.getProject().getApplication().getId(), organisationId);
+                    deleteThreads(projectFinance.getId());
                     projectFinanceRowRepository.deleteAllByTargetId(projectFinance.getId());
                     projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         });
     }
 
-    private void deleteThreads(long projectFinanceId, long applicationId, long organisationId) {
-        activityLogRepository.deleteAllByApplicationIdAndOrganisationId(applicationId, organisationId);
+    private void deleteThreads(long projectFinanceId) {
         noteRepository.deleteAllByClassPk(projectFinanceId);
         queryRepository.deleteAllByClassPk(projectFinanceId);
     }
