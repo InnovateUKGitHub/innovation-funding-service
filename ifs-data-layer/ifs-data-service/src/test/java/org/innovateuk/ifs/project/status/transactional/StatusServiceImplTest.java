@@ -103,7 +103,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.*;
 
 public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 

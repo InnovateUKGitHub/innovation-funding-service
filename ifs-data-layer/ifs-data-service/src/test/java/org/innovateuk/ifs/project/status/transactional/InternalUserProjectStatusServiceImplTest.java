@@ -1070,7 +1070,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         List<ProjectDocument> docs = newProjectDocument()
                 .withStatus(DocumentStatus.APPROVED, DocumentStatus.APPROVED)
                 .build(2);
-        List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().build(2);
         competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
@@ -1080,15 +1079,14 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       SETUP);
+        project.setPartnerOrganisations(newPartnerOrganisation().withOrganisation(newOrganisation().build()).build(2));
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
-        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
         ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(ProjectActivityStates.COMPLETE, returnedProjectStatusResource.getDocumentsStatus());
