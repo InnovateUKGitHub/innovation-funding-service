@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationResearchMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
@@ -14,12 +16,12 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
@@ -51,6 +53,14 @@ public class ApplicationValidationUtil {
 
     @Autowired
     private ApplicationResearchMarkAsCompleteValidator applicationResearchMarkAsCompleteValidator;
+
+    @Autowired
+    private FormInputResponseRepository formInputResponseRepository;
+
+    @Transactional
+    public BindingResult validateResponse(FormInputResponseResource response, boolean ignoreEmpty) {
+        return validateResponse(formInputResponseRepository.findById(response.getId()).get(), ignoreEmpty);
+    }
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
@@ -104,6 +114,7 @@ public class ApplicationValidationUtil {
                     .stream()
                     .filter(competitionFinanceTypes::contains)
                     .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
+            validationMessages.addAll(applicationValidatorService.validateAcademicUpload(application, markedAsCompleteById));
         } else if (SectionType.FUNDING_FINANCES == section.getType()) {
             asSet(FINANCE, OTHER_FUNDING)
                     .stream()
@@ -112,6 +123,7 @@ public class ApplicationValidationUtil {
         }
         return validationMessages;
     }
+
 
     public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
@@ -187,7 +199,7 @@ public class ApplicationValidationUtil {
 
     private List<ValidationMessages> isMultipleStatusFormInputValid(Application application, Long markedAsCompleteById, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        if (formInput.getFormValidators().isEmpty() && !hasValidator(formInput)) {
+        if (formInput.getFormValidators().isEmpty()) {
             // no validator? question is valid!
         } else {
             ValidationMessages validationResult = applicationValidatorService.validateFormInputResponse(application, formInput.getId(), markedAsCompleteById);
@@ -197,10 +209,6 @@ public class ApplicationValidationUtil {
             }
         }
         return validationMessages;
-    }
-
-    private boolean hasValidator(FormInput formInput) {
-        return formInput.getType().equals(FormInputType.FINANCE_UPLOAD);
     }
 
 }

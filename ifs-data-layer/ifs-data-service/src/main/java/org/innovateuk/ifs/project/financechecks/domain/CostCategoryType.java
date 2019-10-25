@@ -19,7 +19,7 @@ public class CostCategoryType {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = ALL, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = ALL, optional = false)
     private CostCategoryGroup costCategoryGroup;
 
     public CostCategoryType() {

@@ -20,7 +20,7 @@ public class ProcessHistory extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="process_id", referencedColumnName = "id")
     private final Process process;
 

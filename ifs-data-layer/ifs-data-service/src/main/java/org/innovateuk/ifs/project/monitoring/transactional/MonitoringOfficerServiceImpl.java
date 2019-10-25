@@ -14,10 +14,11 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.LegacyMonitoringOfficerService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,27 +35,22 @@ import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
+public class MonitoringOfficerServiceImpl extends RootTransactionalService implements MonitoringOfficerService {
 
     private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
-    private final MonitoringOfficerRepository monitoringOfficerRepository;
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
-    private final MonitoringOfficerInviteService monitoringOfficerInviteService;
-    private final ProjectMapper projectMapper;
-    private final LegacyMonitoringOfficerService legacyMonitoringOfficerService;
-    private final UserMapper userMapper;
-
-    public MonitoringOfficerServiceImpl(MonitoringOfficerRepository monitoringOfficerRepository, ProjectRepository projectRepository, UserRepository userRepository, MonitoringOfficerInviteService monitoringOfficerInviteService, ProjectMapper projectMapper, LegacyMonitoringOfficerService legacyMonitoringOfficerService, UserMapper userMapper) {
-        this.monitoringOfficerRepository = monitoringOfficerRepository;
-        this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
-        this.monitoringOfficerInviteService = monitoringOfficerInviteService;
-        this.projectMapper = projectMapper;
-        this.legacyMonitoringOfficerService = legacyMonitoringOfficerService;
-        this.userMapper = userMapper;
-    }
+    @Autowired
+    private MonitoringOfficerRepository monitoringOfficerRepository;
+    @Autowired
+    private MonitoringOfficerInviteService monitoringOfficerInviteService;
+    @Autowired
+    private ProjectMapper projectMapper;
+    @Autowired
+    private LegacyMonitoringOfficerService legacyMonitoringOfficerService;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findAll() {
@@ -85,7 +81,7 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     @Transactional
     public ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId) {
         return getMonitoringOfficerUser(userId)
-                .andOnSuccess(user -> getProject(projectId)
+                .andOnSuccess(user -> find(projectRepository.findById(projectId), notFoundError(Project.class))
                         .andOnSuccess(project -> (monitoringOfficerInviteService.inviteMonitoringOfficer(user, project))
                                 .andOnSuccessReturnVoid(() -> monitoringOfficerRepository.save(new MonitoringOfficer(user, project)))
                         )
@@ -142,9 +138,5 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
 
     private ServiceResult<User> getMonitoringOfficerUser(long userId) {
         return find(userRepository.findByIdAndRoles(userId, MONITORING_OFFICER), notFoundError(User.class, userId));
-    }
-
-    private ServiceResult<Project> getProject(long projectId) {
-        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId));
     }
 }

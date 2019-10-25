@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.hibernate.Hibernate.initialize;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -108,6 +109,7 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     }
 
     private ActivityLogResource toResource(ActivityLog activityLog) {
+        initialize(activityLog.getCreatedBy().getRoles());
         return new ActivityLogResource(
                 activityLog.getType(),
                 activityLog.getCreatedBy().getId(),

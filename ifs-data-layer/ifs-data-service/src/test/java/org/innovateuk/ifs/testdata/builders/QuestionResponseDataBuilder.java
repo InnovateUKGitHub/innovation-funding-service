@@ -144,8 +144,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
         FormInputResponseCommand updateRequest = new FormInputResponseCommand(
                 applicantFormInput.get().getId(), data.getApplication().getId(), user.getId(), value);
 
-        FormInputResponse response = formInputResponseService.saveQuestionResponse(updateRequest).getSuccess();
-        formInputResponseRepository.save(response);
+        formInputResponseService.saveQuestionResponse(updateRequest).getSuccess();
     }
 
     private List<FormInputResource> getFormInputsForQuestion(String questionName, ApplicationQuestionResponseData data) {
