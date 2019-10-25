@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
+import java.time.ZonedDateTime;
+
 /**
  * DTO to transfer Project User Invite related Entities
  */
@@ -26,6 +28,7 @@ public class ProjectUserInviteResource extends InviteResource {
     private String organisationName;
     private String leadApplicant;
     private String competitionName;
+    private ZonedDateTime sentOn;
 
 
     public ProjectUserInviteResource() {
@@ -176,6 +179,14 @@ public class ProjectUserInviteResource extends InviteResource {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public ZonedDateTime getSentOn() {
+        return sentOn;
+    }
+
+    public void setSentOn(ZonedDateTime sentOn) {
+        this.sentOn = sentOn;
     }
 
     @Override
