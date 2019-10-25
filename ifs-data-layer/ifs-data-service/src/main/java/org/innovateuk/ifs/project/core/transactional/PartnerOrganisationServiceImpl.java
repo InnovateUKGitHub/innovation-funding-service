@@ -24,6 +24,7 @@ import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,6 +84,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
@@ -165,7 +169,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     }
 
     private String getProjectTeamLink(long projectId) {
-        return format("/project-setup/project/%d/team", projectId);
+        return format(webBaseUrl +"/project-setup/project/%d/team", projectId);
     }
 
     private void removePartnerOrg(long projectId, long organisationId) {
