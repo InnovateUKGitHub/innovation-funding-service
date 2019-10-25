@@ -45,12 +45,7 @@ ext.IFS_EARLY_METRICS_URL="https://" + project.properties['openshiftEnv']+".apps
 
 ext.FILE_UPLOAD_CLAIM="file-upload-claim"
 
-ext.DB_NAME="ifs"
-ext.DB_USER="root"
-ext.DB_PASS="password"
 ext.DB_ANON_PASS="password"
-ext.DB_HOST="ifs-database"
-ext.DB_PORT=3306
 
 ext.LDAP_HOST="ldap"
 ext.LDAP_PASS="default"
@@ -83,6 +78,9 @@ ext.GRANT_DB_URL='jdbc:mysql://eu-grant-registration-database:3306/eu_grant_regi
 ext.DB_USER="root"
 ext.DB_PASS="password"
 ext.DB_URL='jdbc:mysql://ifs-database:3306/ifs'
+ext.DB_HOST="ifs-database"
+ext.DB_NAME="ifs"
+ext.DB_PORT=3306
 
 ext.AUTH_KEY="supersecretkey"
 
