@@ -74,7 +74,7 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
     }
 
     @Test
-    public void sendNotifications() {
+    public void sendNotificationsWhenProjectManagerAndMonitoringOfficerArePresent() {
         User orville = newUser().withId(3L).withFirstName("Orville").withLastName("Gibbs").build();
         monitoringOfficer = newMonitoringOfficer()
                 .withId(81L)

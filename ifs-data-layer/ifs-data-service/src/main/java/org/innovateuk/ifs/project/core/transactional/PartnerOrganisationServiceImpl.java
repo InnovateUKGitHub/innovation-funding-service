@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
+import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
@@ -16,6 +19,7 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +53,12 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private ProjectUserRepository projectUserRepository;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
@@ -61,10 +71,13 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private QueryRepository queryRepository;
 
     @Autowired
-    private ActivityLogRepository activityLogRepository;
+    private BankDetailsRepository bankDetailsRepository;
 
     @Autowired
     private RemovePartnerNotificationService removePartnerNotificationService;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
@@ -112,6 +125,14 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
             pendingPartnerProgressRepository.deleteById(pendingPartnerProgress.get().getId());
         }
         deleteProjectFinance(projectId, organisationId);
+        deleteBankDetails(projectId, organisationId);
+    }
+
+    private void deleteBankDetails(long projectId, long organisationId) {
+        Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if (bankDetails.isPresent()) {
+            bankDetailsRepository.delete(bankDetails.get());
+        }
     }
 
     private void deleteProjectFinance(long projectId, long organisationId) {
