@@ -194,10 +194,10 @@ Comp Admin isn't able to add or remove a partner organisation
 
 Project finance is able to remove a partner organisation
     [Documentation]  IFS-6485
-        [Setup]  log in as a different user                    &{internal_finance_credentials}
-        Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
-        When the user removes a partner organisation           Red Planet
-        Then the relevant users recieve an email notification  Red Planet
+    [Setup]  log in as a different user                    &{internal_finance_credentials}
+    Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
+    When the user removes a partner organisation           Red Planet
+    Then the relevant users recieve an email notification  Red Planet
 
 Ifs Admin is able to remove a partner organisation
     [Documentation]  IFS-6485
