@@ -44,6 +44,6 @@ public class ProjectPartnerInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<Void> acceptInvite(long projectId, long inviteId, long organisationId) {
-        return postWithRestResultAnonymous(format(inviteIdUrl + "organisation/%d/accept", projectId, inviteId, organisationId), Void.class);
+        return postWithRestResultAnonymous(format(inviteIdUrl + "/organisation/%d/accept", projectId, inviteId, organisationId), Void.class);
     }
 }

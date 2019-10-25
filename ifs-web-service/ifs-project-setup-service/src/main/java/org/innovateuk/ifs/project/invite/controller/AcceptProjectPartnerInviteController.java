@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService
 import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -38,18 +39,22 @@ public class AcceptProjectPartnerInviteController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Autowired
+    private NavigationUtils navigationUtils;
+
     @GetMapping("/{hash}/accept")
     public String inviteEntryPage(
             @PathVariable long projectId,
             @PathVariable String hash,
             UserResource loggedInUser,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            HttpServletRequest request) {
 
         registrationCookieService.deleteAllRegistrationJourneyCookies(response);
 
         return projectPartnerInviteRestService.getInviteByHash(projectId, hash).andOnSuccessReturn(invite -> {
             if (!SENT.equals(invite.getStatus())) {
-                return alreadyAcceptedView(response);
+                return alreadyAcceptedView(response, request);
             }
             if (loggedInAsNonInviteUser(invite, loggedInUser)) {
                 return "registration/logged-in-with-another-user-failure";
@@ -75,9 +80,41 @@ public class AcceptProjectPartnerInviteController {
         ).orElseThrow(ObjectNotFoundException::new);
     }
 
-    private String alreadyAcceptedView(HttpServletResponse response) {
+    @GetMapping("/existing-user")
+    public String existingUserPage(@PathVariable long projectId,
+                                    HttpServletRequest request,
+                                    UserResource user,
+                                    Model model) {
+        return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
+                projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
+                    model.addAttribute("projectName", invite.getProjectName());
+                    model.addAttribute("loggedIn", user != null);
+                    model.addAttribute("projectId", projectId);
+                    return "project/partner-invite/existing-user";
+                }).getSuccess()
+        ).orElseThrow(ObjectNotFoundException::new);
+    }
+
+    @GetMapping("/authenticate")
+    @PreAuthorize("isAuthenticated()")
+    public String forceLogin(@PathVariable long projectId,
+                                   HttpServletRequest request,
+                                   UserResource user,
+                                   Model model) {
+        return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
+                projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
+                    if (loggedInAsNonInviteUser(invite, user)) {
+                        return "registration/logged-in-with-another-user-failure";
+                    }
+                    //Force user to be logged in.
+                    return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/select");
+                }).getSuccess()
+        ).orElseThrow(ObjectNotFoundException::new);
+    }
+
+    private String alreadyAcceptedView(HttpServletResponse response, HttpServletRequest request) {
         cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-        return "redirect:/login";
+        return navigationUtils.getRedirectToSameDomainUrl(request, "not-found");
     }
 
     private final boolean loggedInAsNonInviteUser(SentProjectPartnerInviteResource invite, UserResource loggedInUser) {

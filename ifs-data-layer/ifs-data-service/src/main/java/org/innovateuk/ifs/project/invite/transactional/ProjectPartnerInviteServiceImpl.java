@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.invite.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.notifications.resource.*;
@@ -128,6 +129,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     @Override
     public ServiceResult<List<SentProjectPartnerInviteResource>> getPartnerInvites(long projectId) {
         return serviceSuccess(projectPartnerInviteRepository.findByProjectId(projectId).stream()
+                .filter(invite -> invite.getStatus() == InviteStatus.SENT)
                 .map(this::mapToSentResource)
                 .collect(toList()));
     }

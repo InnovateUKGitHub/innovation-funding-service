@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public abstract class AbstractAcceptInviteController {
 
-    private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
+    private static final String ALREADY_ACCEPTED_VIEW = "redirect:/not-found";
 
     public static final String INVITE_ALREADY_ACCEPTED = "inviteAlreadyAccepted";
 

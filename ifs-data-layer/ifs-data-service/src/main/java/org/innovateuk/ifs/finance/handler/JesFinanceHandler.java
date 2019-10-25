@@ -96,7 +96,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
     }
 
     @Override
-    public Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
+    public Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(long projectFinanceId) {
         return noChangesAsAcademicFinancesAreNotEditable();
     }
 

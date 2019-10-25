@@ -30,5 +30,5 @@ public interface OrganisationTypeFinanceHandler {
     FinanceRowHandler getCostHandler(FinanceRowType costType);
     Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId);
     Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId);
-    Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId);
+    Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(long projectFinanceId);
 }
