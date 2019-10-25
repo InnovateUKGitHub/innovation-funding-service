@@ -25,7 +25,7 @@ public class CostTimePeriod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Cost cost;
 
     @Column(nullable = false)

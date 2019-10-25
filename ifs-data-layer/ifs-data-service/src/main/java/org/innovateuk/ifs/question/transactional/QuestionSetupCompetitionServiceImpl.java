@@ -29,6 +29,7 @@ import java.util.Optional;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.sort;
 import static java.util.Comparator.comparing;
+import static org.hibernate.Hibernate.initialize;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
@@ -89,6 +90,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
         switch (formInput.getType()) {
             case FILEUPLOAD:
+                initialize(formInput.getAllowedFileTypes());
                 setupResource.setAppendix(formInput.getActive());
                 setupResource.setAllowedAppendixResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
@@ -99,6 +101,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setMaxWords(formInput.getWordCount());
                 break;
             case TEMPLATE_DOCUMENT:
+                initialize(formInput.getAllowedFileTypes());
                 setupResource.setTemplateDocument(formInput.getActive());
                 setupResource.setAllowedTemplateResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setTemplateTitle(formInput.getDescription());

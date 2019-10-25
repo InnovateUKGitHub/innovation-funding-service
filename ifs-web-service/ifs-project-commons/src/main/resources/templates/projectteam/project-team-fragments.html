@@ -7,7 +7,7 @@
         <td class="govuk-table__cell ifs-table__email"
             th:text="${user.email}"></td>
         <td class="govuk-table__cell"
-            th:classappend="|${!user.hasRole ?: 'alignright'}|">
+            th:classappend="${!user.hasRole} ? 'alignright'">
             <th:block th:if="${user.removeable}">
                 <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})"/>
                 <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
@@ -25,7 +25,7 @@
         th:text="${invite.name}"></td>
     <td class="govuk-table__cell ifs-table__email hint"
         th:text="${invite.email}"></td>
-    <td class="govuk-table__cell hint">
+    <td class="govuk-table__cell hint alignright">
         <button th:if="${invite.canResend}" class="button-clear govuk-!-margin-right-1" type="submit"
                 name="resend-invite" th:value="${invite.id}">Resend invite
         </button>
@@ -41,13 +41,9 @@
         th:text="${invite.name}"></td>
     <td class="govuk-table__cell ifs-table__email hint"
         th:text="${invite.email}"></td>
-    <td class="govuk-table__cell hint">
+    <td class="govuk-table__cell hint alignright">
         <button th:if="${invite.canResend}" class="button-clear govuk-!-margin-right-1" type="submit"
                 name="resend-partner-invite" th:value="${invite.id}">Resend invite
-        </button>
-        <span th:if="${invite.canResend and invite.removeable}">|</span>
-        <button th:if="${invite.removeable}" class="button-clear govuk-!-margin-left-1" type="submit"
-                name="remove-partner-invite" th:value="${invite.id}">Remove
         </button>
     </td>
 </th:block>

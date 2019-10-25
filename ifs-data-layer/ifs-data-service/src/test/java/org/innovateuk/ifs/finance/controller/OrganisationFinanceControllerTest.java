@@ -1,60 +1,14 @@
 package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.application.transactional.FormInputResponseService;
-import org.innovateuk.ifs.application.transactional.SectionStatusService;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.finance.resource.*;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
-import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.transactional.FormInputService;
-import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.form.transactional.SectionService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.transactional.UsersRolesService;
-import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.junit.Before;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
+import org.innovateuk.ifs.finance.transactional.OrganisationFinanceService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import java.math.BigDecimal;
-import java.time.Month;
-import java.time.YearMonth;
-import java.util.List;
-
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
-import static org.innovateuk.ifs.finance.builder.GrowthTableResourceBuilder.newGrowthTableResource;
-import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
-import static org.innovateuk.ifs.finance.controller.OrganisationFinanceController.*;
-import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
-import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.form.resource.FormInputType.FINANCIAL_OVERVIEW_ROW;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -65,36 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest<OrganisationFinanceController> {
 
     @Mock
-    private CompetitionService competitionService;
-    @Mock
-    private QuestionService questionService;
-    @Mock
-    private FormInputService formInputService;
-    @Mock
-    private FormInputResponseService formInputResponseService;
-    @Mock
-    private ApplicationService applicationService;
-    @Mock
-    private ApplicationFinanceService financeService;
-    @Mock
-    private ApplicationFinanceRowService financeRowCostsService;
-    @Mock
-    private OrganisationService organisationService;
-    @Mock
-    private AuthenticationHelper authenticationHelper;
-    @Mock
-    private GrantClaimMaximumService grantClaimMaximumService;
-    @Mock
-    private SectionService sectionService;
-    @Mock
-    private UsersRolesService usersRolesService;
-    @Mock
-    private SectionStatusService sectionStatusService;
-
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-    }
+    private OrganisationFinanceService organisationFinanceService;
 
     @Override
     protected OrganisationFinanceController supplyControllerUnderTest() {
@@ -103,236 +28,67 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void getOrganisationWithGrowthTable() throws Exception {
-        long competitionId = 5;
-        boolean stateAidAgreed = true;
-        YearMonth financialYearEnd = YearMonth.of(2019, Month.JANUARY);
-        OrganisationSize organisationSize = MEDIUM;
-
-        BigDecimal annualTurnover = BigDecimal.valueOf(123);
-        BigDecimal annualProfits = BigDecimal.valueOf(234);
-        BigDecimal annualExports = BigDecimal.valueOf(456);
-        BigDecimal researchAndDevelopment = BigDecimal.valueOf(789);
-        long financialHeadCount = 11;
-
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competitionId)
-                .withStateAidAgreed(stateAidAgreed)
-                .build();
-        Organisation organisation = newOrganisation().build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withOrganisationSize(organisationSize)
-                .withFinancialYearAccounts(newGrowthTableResource()
-                .withAnnualTurnovers(annualTurnover)
-                .withAnnualProfits(annualProfits)
-                .withAnnualExport(annualExports)
-                .withResearchAndDevelopment(researchAndDevelopment)
-                .withEmployees(financialHeadCount)
-                .withFinancialYearEnd(financialYearEnd.atEndOfMonth())
-                .build())
-                .build();
-        Question financeOverviewQuestion = newQuestion().build();
-
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(financeService.financeDetails(application.getId(), organisation.getId())).thenReturn(serviceSuccess(applicationFinanceResource));
-
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId,  FINANCIAL_OVERVIEW_ROW)).thenReturn(serviceSuccess(financeOverviewQuestion));
-
         OrganisationFinancesWithGrowthTableResource expectedOrganisationFinances = new OrganisationFinancesWithGrowthTableResource();
-        expectedOrganisationFinances.setOrganisationSize(organisationSize);
-        expectedOrganisationFinances.setStateAidAgreed(stateAidAgreed);
-        expectedOrganisationFinances.setFinancialYearEnd(financialYearEnd);
+        long applicationId = 1L;
+        long organisationId = 2L;
 
-        expectedOrganisationFinances.setAnnualTurnoverAtLastFinancialYear(annualTurnover);
-        expectedOrganisationFinances.setAnnualProfitsAtLastFinancialYear(annualProfits);
-        expectedOrganisationFinances.setAnnualExportAtLastFinancialYear(annualExports);
-        expectedOrganisationFinances.setResearchAndDevelopmentSpendAtLastFinancialYear(researchAndDevelopment);
-        expectedOrganisationFinances.setHeadCountAtLastFinancialYear(financialHeadCount);
+        when(organisationFinanceService.getOrganisationWithGrowthTable(applicationId, organisationId)).thenReturn(serviceSuccess(expectedOrganisationFinances));
 
-        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", application.getId(), organisation.getId()))
+        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", applicationId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedOrganisationFinances)));
     }
 
     @Test
-    public void getOrganisationWithGrowthTableWhenFinancialYearEndIsNull() throws Exception {
-        ApplicationResource applicationResource = newApplicationResource()
-                .withId(1L)
-                .withCompetition(2L)
-                .build();
-        Organisation organisation = newOrganisation()
-                .withId(3L)
-                .build();
-        Question question = newQuestion()
-                .withId(4L)
-                .build();
-
-        when(formInputResponseService.findResponseByApplicationIdQuestionIdOrganisationIdAndFormInputType(anyLong(), anyLong(), anyLong(), any(FormInputType.class)))
-                .thenReturn(serviceSuccess(new FormInputResponseResource()));
-        when(applicationService.getApplicationById(anyLong()))
-                .thenReturn(serviceSuccess(applicationResource));
-        when(financeService.financeDetails(anyLong(), anyLong()))
-                .thenReturn(serviceSuccess(new ApplicationFinanceResource()));
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), any(FormInputType.class)))
-                .thenReturn(serviceSuccess(question));
-        when(formInputResponseService.findResponseByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(anyLong(), anyLong(), anyLong(), any(FormInputType.class), anyString()))
-                .thenReturn(serviceSuccess(newFormInputResponseResource().build()));
-
-        OrganisationFinancesWithGrowthTableResource expected = new OrganisationFinancesWithGrowthTableResource();
-        expected.setFinancialYearEnd(null);
-
-        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", applicationResource.getId(), organisation.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expected)));
-    }
-
-    @Test
     public void getOrganisationWithoutGrowthTable() throws Exception {
-        long competitionId = 5;
-        OrganisationSize organisationSize = OrganisationSize.LARGE;
-        BigDecimal turnover = BigDecimal.valueOf(123);
-        long headcount = 13;
-        boolean stateAidAgreed = true;
-        Application application = newApplication().build();
-        Organisation organisation = newOrganisation().build();
-        ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competitionId)
-                .withStateAidAgreed(stateAidAgreed)
-                .build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withOrganisationSize(organisationSize)
-                .withFinancialYearAccounts(newEmployeesAndTurnoverResource()
-                .withTurnover(turnover)
-                .withEmployees(headcount).build())
-                .build();
+        OrganisationFinancesWithoutGrowthTableResource expectedOrganisationFinances = new OrganisationFinancesWithoutGrowthTableResource();
+        long applicationId = 1L;
+        long organisationId = 2L;
 
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(financeService.financeDetails(application.getId(), organisation.getId())).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(organisationFinanceService.getOrganisationWithoutGrowthTable(applicationId, organisationId)).thenReturn(serviceSuccess(expectedOrganisationFinances));
 
-        OrganisationFinancesWithoutGrowthTableResource expectedOrganisationFinances = new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover, headcount, stateAidAgreed);
-
-        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/without-growth-table", application.getId(), organisation.getId()))
+        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/without-growth-table", applicationId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedOrganisationFinances)));
     }
 
     @Test
     public void updateOrganisationWithGrowthTable() throws Exception {
+        OrganisationFinancesWithGrowthTableResource finances = new OrganisationFinancesWithGrowthTableResource();
+        long applicationId = 1L;
+        long organisationId = 2L;
 
-        boolean stateAid = true;
-        Competition competition = newCompetition().withStateAid(stateAid).build();
-        CompetitionResource competitionResource = newCompetitionResource().build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
-        Organisation organisation = newOrganisation().build();
-        OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource = new OrganisationFinancesWithGrowthTableResource();
-        User loggedInUser = newUser().build();
-        GrowthTableResource growthTable = new GrowthTableResource();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withFinancialYearAccounts(growthTable)
-                .build();
+        when(organisationFinanceService.updateOrganisationWithGrowthTable(applicationId, organisationId, finances)).thenReturn(serviceSuccess());
 
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
-        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.financeDetails(application.getId(), organisation.getId()))
-                .thenReturn(serviceSuccess(applicationFinanceResource));
-        when(financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource)).thenReturn(serviceSuccess(applicationFinanceResource));
-
-        getQuestionAndFormInputResponsesWithDescription(competition.getId(), FormInputType.FINANCIAL_YEAR_END, ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION);
-
-        Question financialOverviewRowQuestion = newQuestion().build();
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FINANCIAL_OVERVIEW_ROW)).thenReturn(serviceSuccess(financialOverviewRowQuestion));
-        List<FormInputResource> financialOverviewFormInputResponses = newFormInputResource()
-                .withType(FINANCIAL_OVERVIEW_ROW)
-                .withDescription(ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION, ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION,
-                        ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION, RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION)
-                .build(4);
-        when(formInputService.findByQuestionId(financialOverviewRowQuestion.getId())).thenReturn(serviceSuccess(financialOverviewFormInputResponses));
-
-        getQuestionAndFormInputResponses(competition.getId(), FormInputType.FINANCIAL_STAFF_COUNT);
-
-        mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", application.getId(), organisation.getId())
+        mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", applicationId, organisationId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(organisationFinancesWithGrowthTableResource)))
+                .content(toJson(finances)))
                 .andExpect(status().isOk());
-
-        assertEquals(organisationFinancesWithGrowthTableResource.getHeadCountAtLastFinancialYear(), growthTable.getEmployees());
-        assertEquals(organisationFinancesWithGrowthTableResource.getAnnualExportAtLastFinancialYear(), growthTable.getAnnualExport());
 
     }
 
     @Test
     public void updateOrganisationWithoutGrowthTable() throws Exception {
+        OrganisationFinancesWithoutGrowthTableResource finances = new OrganisationFinancesWithoutGrowthTableResource();
+        long applicationId = 1L;
+        long organisationId = 2L;
 
-        boolean stateAid = true;
+        when(organisationFinanceService.updateOrganisationWithoutGrowthTable(applicationId, organisationId, finances)).thenReturn(serviceSuccess());
 
-        Competition competition = newCompetition().withStateAid(stateAid).build();
-        CompetitionResource competitionResource = newCompetitionResource().build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
-        Organisation organisation = newOrganisation().build();
-        OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource = newOrganisationFinancesWithoutGrowthTableResource().build();
-        User loggedInUser = newUser().build();
-        EmployeesAndTurnoverResource growthTable = new EmployeesAndTurnoverResource();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withFinancialYearAccounts(growthTable)
-                .build();
-
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
-        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.financeDetails(application.getId(), organisation.getId()))
-                .thenReturn(serviceSuccess(applicationFinanceResource));
-        when(financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource)).thenReturn(serviceSuccess(applicationFinanceResource));
-
-        getQuestionAndFormInputResponses(competition.getId(), FormInputType.ORGANISATION_TURNOVER);
-        getQuestionAndFormInputResponses(competition.getId(), FormInputType.STAFF_COUNT);
-
-        mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/without-growth-table", application.getId(), organisation.getId())
+        mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/without-growth-table", applicationId, organisationId)
                 .contentType(APPLICATION_JSON)
-                .content(toJson(organisationFinancesWithoutGrowthTableResource)))
+                .content(toJson(finances)))
                 .andExpect(status().isOk());
-
-        assertEquals(organisationFinancesWithoutGrowthTableResource.getHeadCount(), growthTable.getEmployees());
-        assertEquals(organisationFinancesWithoutGrowthTableResource.getTurnover(), growthTable.getTurnover());
-
     }
 
     @Test
     public void isShowStateAidAgreement() throws Exception {
+        long applicationId = 1L;
+        long organisationId = 2L;
 
-        boolean stateAid = true;
+        when(organisationFinanceService.isShowStateAidAgreement(applicationId, organisationId)).thenReturn(serviceSuccess(true));
 
-        Competition competition = newCompetition().withStateAid(stateAid).build();
-        CompetitionResource competitionResource = newCompetitionResource().build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
-        Organisation organisation = newOrganisation().build();
-        User loggedInUser = newUser().build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
-
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
-        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.financeDetails(application.getId(), organisation.getId()))
-                .thenReturn(serviceSuccess(applicationFinanceResource));
-
-        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/show-state-aid", application.getId(), organisation.getId()))
+        mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/show-state-aid", applicationId, organisationId))
                 .andExpect(status().isOk());
-    }
-
-    private void getQuestionAndFormInputResponsesWithDescription(long competitionId, FormInputType formInputType, String description) {
-        Question question = newQuestion().build();
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(question));
-        List<FormInputResource> formInputResponses = newFormInputResource().withType(formInputType).withDescription(description).build(1);
-        when(formInputService.findByQuestionId(question.getId())).thenReturn(serviceSuccess(formInputResponses));
-    }
-
-    private void getQuestionAndFormInputResponses(long competitionId, FormInputType formInputType) {
-        Question question = newQuestion().build();
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(question));
-        List<FormInputResource> formInputResponses = newFormInputResource().withType(formInputType).build(1);
-        when(formInputService.findByQuestionId(question.getId())).thenReturn(serviceSuccess(formInputResponses));
     }
 }

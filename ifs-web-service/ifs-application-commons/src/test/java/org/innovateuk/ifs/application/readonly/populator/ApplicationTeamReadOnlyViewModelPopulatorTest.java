@@ -155,6 +155,6 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
 
         ApplicationTeamUserReadOnlyViewModel inviteViewModel = inviteOrganisationViewModel.getUsers().get(0);
         assertTrue(inviteViewModel.isInvite());
-        assertEquals("New user (Pending for 10 days)", inviteViewModel.getName());
+        assertEquals("New user (pending for 10 days)", inviteViewModel.getName());
     }
 }

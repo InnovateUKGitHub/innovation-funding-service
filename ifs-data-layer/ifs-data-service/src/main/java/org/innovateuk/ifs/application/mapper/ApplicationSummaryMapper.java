@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.mapper;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
@@ -40,11 +39,7 @@ public abstract class ApplicationSummaryMapper {
 
         ApplicationSummaryResource result = new ApplicationSummaryResource();
 
-        ServiceResult<CompletedPercentageResource> percentageResult = applicationService.getProgressPercentageByApplicationId(source.getId());
-        if (percentageResult.isSuccess()) {
-            result.setCompletedPercentage(percentageResult.getSuccess().getCompletedPercentage().intValue());
-        }
-
+        result.setCompletedPercentage(source.getCompletion().intValue());
         result.setStatus(status(source, result.getCompletedPercentage()));
         result.setId(source.getId());
         result.setName(source.getName());

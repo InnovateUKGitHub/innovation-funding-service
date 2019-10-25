@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
@@ -72,7 +71,7 @@ public class FormInputResponseController {
         return result.toPostWithBodyResponse();
     }
 
-    private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponse response, boolean ignoreEmpty) {
+    private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponseResource response, boolean ignoreEmpty) {
         BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
         if (bindingResult.hasErrors()) {
             LOG.debug("Got validation errors: ");
