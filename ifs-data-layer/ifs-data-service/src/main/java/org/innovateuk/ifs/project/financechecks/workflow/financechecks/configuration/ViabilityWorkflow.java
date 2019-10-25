@@ -52,6 +52,11 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
                 .withExternal()
                     .source(REVIEW)
                     .event(VIABILITY_APPROVED)
-                    .target(APPROVED);
+                    .target(APPROVED)
+                    .and()
+                .withExternal()
+                    .source(APPROVED)
+                    .event(VIABILITY_RESET)
+                    .target(REVIEW);
     }
 }

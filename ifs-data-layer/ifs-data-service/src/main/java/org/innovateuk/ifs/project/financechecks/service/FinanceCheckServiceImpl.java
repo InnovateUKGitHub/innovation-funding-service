@@ -343,6 +343,22 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
+    public ServiceResult<Void> resetViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+            getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
+                    .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
+                    .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability)
+                        .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
+                    )
+                ));
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
@@ -476,6 +492,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         if (Viability.APPROVED == viability) {
             viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
+        } else if(Viability.REVIEW == viability){
+            viabilityWorkflowHandler.viabilityReset(partnerOrganisation, currentUser);
         }
 
         return serviceSuccess();
