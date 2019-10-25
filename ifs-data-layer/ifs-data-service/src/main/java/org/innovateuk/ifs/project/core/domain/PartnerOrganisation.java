@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 /**
  * Represents an Organisation taking part in a Project in the capacity of a Partner Organisation
@@ -64,5 +65,15 @@ public class PartnerOrganisation implements ProcessActivity {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public PendingPartnerProgress getPendingPartnerProgress() {
+        return pendingPartnerProgress;
+    }
+
+    public boolean isPendingPartner() {
+        return Optional.ofNullable(getPendingPartnerProgress())
+                .map(p -> !p.isComplete())
+                .orElse(false);
     }
 }

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="consortium-partner-status-row(partner, isLead)">
+<th:block th:fragment="consortium-partner-status-row(partner)">
     <th class="govuk-table__header" scope="row">
         <th:block th:text="${partner.name}"/>
-        <th:block th:if="${isLead}"> (Lead)</th:block>
+        <th:block th:if="${partner.lead}"> (Lead)</th:block>
+        <th:block th:if="${partner.pendingPartner}"> (pending)</th:block>
     </th>
 
     <th:block th:if="${model.hasProjectDetails()}"

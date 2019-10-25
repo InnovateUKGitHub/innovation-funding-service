@@ -3,15 +3,15 @@ package org.innovateuk.ifs.project.invite.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class ProjectPartnerInviteResource {
+public class SendProjectPartnerInviteResource {
 
     private String organisationName;
     private String userName;
     private String email;
 
-    private ProjectPartnerInviteResource() {}
+    protected SendProjectPartnerInviteResource() {}
 
-    public ProjectPartnerInviteResource(String organisationName, String userName, String email) {
+    public SendProjectPartnerInviteResource(String organisationName, String userName, String email) {
         this.organisationName = organisationName;
         this.userName = userName;
         this.email = email;
@@ -47,7 +47,7 @@ public class ProjectPartnerInviteResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectPartnerInviteResource that = (ProjectPartnerInviteResource) o;
+        SendProjectPartnerInviteResource that = (SendProjectPartnerInviteResource) o;
 
         return new EqualsBuilder()
                 .append(organisationName, that.organisationName)

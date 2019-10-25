@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.projectteam.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.invite.resource.ProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.project.projectteam.form.ProjectPartnerInviteForm;
 import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectPartnerInviteViewModel;
@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/team/partner")
 @PreAuthorize("hasAuthority('project_finance')")
-@SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance users can invite new project team partners.")
+@SecuredBySpring(value = "PROJECT_PARTNER_CHANGES", description = "Project finance can change the partner organisations.")
 public class ProjectPartnerController {
 
     @Autowired
@@ -53,7 +53,7 @@ public class ProjectPartnerController {
 
         return validationHandler.failNowOrSucceedWith(failure, () -> {
             validationHandler.addAnyErrors(
-                    projectPartnerInviteRestService.invitePartnerOrganisation(projectId, new ProjectPartnerInviteResource(form.getOrganisationName(), form.getUserName(), form.getEmail())));
+                    projectPartnerInviteRestService.invitePartnerOrganisation(projectId, new SendProjectPartnerInviteResource(form.getOrganisationName(), form.getUserName(), form.getEmail())));
             return validationHandler.failNowOrSucceedWith(failure, success);
         });
     }

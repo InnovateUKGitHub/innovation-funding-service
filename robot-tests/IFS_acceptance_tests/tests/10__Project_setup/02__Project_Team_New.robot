@@ -93,7 +93,7 @@ The lead partner is able to add a new team member
     [Documentation]  IFS-5719
     Given the user clicks the button/link  jQuery = button:contains("Add team member")
     When the user adds a new team member   Tester   ${leadNewMemberEmail}
-    Then the user should see the element   jQuery = td:contains("Tester (Pending)") ~ td:contains("${leadNewMemberEmail}")
+    Then the user should see the element   jQuery = td:contains("Tester (pending for 0 days)") ~ td:contains("${leadNewMemberEmail}")
     [Teardown]   Logout as user
 
 A new team member is able to accept the invitation from lead partner and see project set up
@@ -108,7 +108,7 @@ Non Lead partner is able to add a new team member
     Given the user navigates to the page   ${newProjecTeamPage}
     And the user clicks the button/link    jQuery = button:contains("Add team member")
     When the user adds a new team member   Testerina   ${nonLeadNewMemberEmail}
-    Then the user should see the element   jQuery = td:contains("Testerina (Pending)") ~ td:contains("${nonLeadNewMemberEmail}")
+    Then the user should see the element   jQuery = td:contains("Testerina (pending for 0 days)") ~ td:contains("${nonLeadNewMemberEmail}")
     [Teardown]   the user logs out if they are logged in
 
 A new team member is able to accept the invitation from non lead partner and see projec set up
@@ -273,17 +273,17 @@ The user is able to add team memebers to all partner organisations
     the user enters text to a text field   jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first [name=name]  cssAdded1
     the user enters text to a text field   jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first [name=email]  1${removeInviteEmail}
     the user clicks the button/link        jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first button:contains("Invite to project")
-    the user should see the element        jQuery = td:contains("cssAdded1 (Pending)")
+    the user should see the element        jQuery = td:contains("cssAdded1 (pending for 0 days)")
     the user clicks the button/link        jQuery = h2:contains("EGGS")~ p:first button:contains("Add team member")
     the user enters text to a text field   jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first [name=name]  cssAdded2
     the user enters text to a text field   jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first [name=email]  2${removeInviteEmail}
     the user clicks the button/link        jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first button:contains("Invite to project")
-    the user should see the element        jQuery = td:contains("cssAdded2 (Pending)")
+    the user should see the element        jQuery = td:contains("cssAdded2 (pending for 0 days)")
     the user clicks the button/link        jQuery = h2:contains("Ludlow")~ p:first button:contains("Add team member")
     the user enters text to a text field   jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first [name=name]  cssAdded3
     the user enters text to a text field   jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first [name=email]  3${removeInviteEmail}
     the user clicks the button/link        jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first button:contains("Invite to project")
-    the user should see the element        jQuery = td:contains("cssAdded3 (Pending)")
+    the user should see the element        jQuery = td:contains("cssAdded3 (pending for 0 days)")
 
 The user should see the read only view of Project team page
     the user should see the element       jQuery = h1:contains("Project team")
@@ -292,8 +292,8 @@ The user should see the read only view of Project team page
     the user should not see the element   jQuery = button:contains("Resend invite")
 
 The user is able to re-send an invitation
-    the user should see the element   jQuery = td:contains("Removed (Pending)")~ td button:contains("Resend invite")
-    the user clicks the button/link   jQuery = td:contains("Removed (Pending)")~ td button:contains("Resend invite")
+    the user should see the element   jQuery = td:contains("Removed (pending for 0 days)")~ td button:contains("Resend invite")
+    the user clicks the button/link   jQuery = td:contains("Removed (pending for 0 days)")~ td button:contains("Resend invite")
 
 Removed invitee is not able to accept the invite
     [Arguments]    ${email}
@@ -301,8 +301,8 @@ Removed invitee is not able to accept the invite
     the user should see the element                jQuery = h1:contains("Sorry, you are unable to accept this invitation.")
 
 The user is abe to remove the pending invitation
-    the user clicks the button/link       jQuery = td:contains("Removed (Pending)")~ td button:contains("Remove")
-    the user should not see the element   jQuery = td:contains("Removed (Pending)")~ td button:contains("Remove")
+    the user clicks the button/link       jQuery = td:contains("Removed (pending for 0 days)")~ td button:contains("Remove")
+    the user should not see the element   jQuery = td:contains("Removed (pending for 0 days)")~ td button:contains("Remove")
 
 The user is able to access the project
     [Arguments]  ${email}
