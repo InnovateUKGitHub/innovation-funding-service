@@ -422,9 +422,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserRepositoryMock.findByProjectId(projects.get(1).getId())).thenReturn(projectUsers);
         when(projectUserRepositoryMock.findByProjectId(projects.get(2).getId())).thenReturn(projectUsers);
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projects.get(0).getId(), organisations.get(0).getId())).thenReturn(bankDetails.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projects.get(1).getId(), organisations.get(1).getId())).thenReturn(bankDetails.get(1));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projects.get(2).getId(), organisations.get(2).getId())).thenReturn(bankDetails.get(2));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projects.get(0).getId(), organisations.get(0).getId())).thenReturn(Optional.of(bankDetails.get(0)));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projects.get(1).getId(), organisations.get(1).getId())).thenReturn(Optional.of(bankDetails.get(1)));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projects.get(2).getId(), organisations.get(2).getId())).thenReturn(Optional.of(bankDetails.get(2)));
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(0).getId(), organisations.get(0).getId())).thenReturn(Optional.of(spendProfile));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projects.get(1).getId(), organisations.get(1).getId())).thenReturn(Optional.of(spendProfile));
@@ -771,7 +771,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       SETUP);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
@@ -813,7 +813,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(false);
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
@@ -854,7 +854,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       SETUP);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
@@ -892,7 +892,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       SETUP);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
 
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
@@ -932,7 +932,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                       SETUP);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectUsersHelperMock.getFinanceContact(any(long.class), any(long.class))).thenReturn(pu);
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
 
@@ -1149,7 +1149,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(new BankDetails());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(new BankDetails()));
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
@@ -1193,7 +1193,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId2)).thenReturn(null);
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId2)).thenReturn(pu);
@@ -1237,7 +1237,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         project.setTargetStartDate(LocalDate.now());
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
@@ -1312,7 +1312,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectProcessRepositoryMock.findOneByTargetId(projectId)).thenReturn(projectProcess);
         when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(singletonList(organisation));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(bankDetail));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(project.getId())).thenReturn(serviceSuccess(monitoringOfficer));
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
@@ -1352,7 +1352,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
         when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(true));
@@ -1474,7 +1474,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
 
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(bankDetails.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), organisations.get(0).getId())).thenReturn(Optional.of(bankDetails.get(0)));
 
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
 
@@ -1687,7 +1687,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
@@ -1721,7 +1721,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
@@ -1770,7 +1770,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), nonLeadOrg.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(anyLong(), anyLong())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(anyLong(), anyLong())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), nonLeadOrg.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
@@ -1809,7 +1809,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
@@ -1835,7 +1835,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
@@ -1857,7 +1857,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.empty());
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.REVIEW);
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
@@ -1880,7 +1880,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.empty());
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.REVIEW);
@@ -1905,7 +1905,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
@@ -1930,7 +1930,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
@@ -1953,7 +1953,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
@@ -1977,7 +1977,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.of(bankDetails));
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));

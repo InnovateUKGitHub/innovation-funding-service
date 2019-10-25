@@ -8,6 +8,8 @@ import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
+import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -78,6 +80,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private QueryRepository queryRepository;
+
+    @Autowired
+    private BankDetailsRepository bankDetailsRepository;
 
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
@@ -172,6 +177,14 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
             pendingPartnerProgressRepository.deleteById(pendingPartnerProgress.get().getId());
         }
         deleteProjectFinance(projectId, organisationId);
+        deleteBankDetails(projectId, organisationId);
+    }
+
+    private void deleteBankDetails(long projectId, long organisationId) {
+        Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if (bankDetails.isPresent()) {
+            bankDetailsRepository.delete(bankDetails.get());
+        }
     }
 
     private void deleteProjectFinance(long projectId, long organisationId) {
