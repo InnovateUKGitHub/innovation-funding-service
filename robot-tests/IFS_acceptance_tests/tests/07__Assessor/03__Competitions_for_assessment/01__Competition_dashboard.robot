@@ -53,7 +53,7 @@ Accept an application for assessment
     Given the user should see the element                     jQuery = .in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
     When the user accepts the invitation
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the user should see the element                       jQuery = .in-progress li:nth-child(6):contains("Intelligent water system"):contains("Accepted")
+    And the user should see the element                       jQuery = .in-progress li:nth-child(7):contains("Intelligent water system"):contains("Accepted")
 
 Reject an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128  INFUND-6358  INFUND-3726
@@ -102,7 +102,7 @@ The order of the applications should be correct according to the status
     element should contain    css = li:nth-child(1) .msg-deadline-waiting    Pending
     element should contain    css = li:nth-child(2) .msg-deadline-waiting    Pending
     element should contain    css = li:nth-child(3) .msg-deadline-waiting    Pending
-    element should contain    css = .progress-list li:nth-child(4) .msg-progress    Accepted
+    element should contain    css = .progress-list li:nth-child(4) .msg-progress    In progress
     element should contain    css = .progress-list li:nth-child(5) .msg-progress    Accepted
     element should contain    css = .progress-list li:nth-child(6) .msg-progress    Accepted
 
