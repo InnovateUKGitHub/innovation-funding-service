@@ -1,24 +1,20 @@
 package org.innovateuk.ifs.assessment.dashboard.transactional;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.AssessorCompetitionDashboardResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
-public class AssessmentCompetitionDashboardServiceImpl implements AssessmentCompetitionDashboardService {
+public class AssessmentCompetitionDashboardServiceImpl extends RootTransactionalService implements AssessmentCompetitionDashboardService {
 
     @Autowired
     private ApplicationAssessmentService applicationAssessmentService;
@@ -28,12 +24,7 @@ public class AssessmentCompetitionDashboardServiceImpl implements AssessmentComp
 
     @Override
     public ServiceResult<AssessorCompetitionDashboardResource> getAssessorCompetitionDashboardResource(long userId, long competitionId) {
-        Set<AssessmentState> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
-
-        List<ApplicationAssessmentResource> assessments = applicationAssessmentService.getApplicationAssessmentResource(userId, competitionId).getSuccess()
-                .stream()
-                .filter(assessment -> allowedStates.contains(assessment.getState()))
-                .collect(toList());
+        List<ApplicationAssessmentResource> assessments = applicationAssessmentService.getApplicationAssessmentResource(userId, competitionId).getSuccess();
 
         Competition competition = competitionRepository.findById(competitionId).get();
         AssessorCompetitionDashboardResource assessorCompetitionDashboardResource = new AssessorCompetitionDashboardResource(

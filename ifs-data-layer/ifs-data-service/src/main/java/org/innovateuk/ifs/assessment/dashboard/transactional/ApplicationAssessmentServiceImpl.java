@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.dashboard.transactional;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.assessment.resource.dashboard.ApplicationAssessmentResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -10,11 +11,14 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -28,10 +32,13 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
 
     @Override
     public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId) {
+        Set<AssessmentState> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+
         List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
 
         return serviceSuccess(assessments.stream()
-                .map(assessment -> mapToResource(assessment))
+                .map(this::mapToResource)
+                .filter(assessment -> allowedStates.contains(assessment.getState()))
                 .collect(toList()));
     }
 
