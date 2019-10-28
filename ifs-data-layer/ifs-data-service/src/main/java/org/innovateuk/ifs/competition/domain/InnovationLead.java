@@ -3,14 +3,14 @@ package org.innovateuk.ifs.competition.domain;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.User;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * A {@link InnovationLead} in a {@link Competition}.
  */
 @Entity
-@Table(name = "competition_user")
+@DiscriminatorValue("INNOVATION_LEAD")
 public class InnovationLead extends CompetitionParticipant<InnovationLeadInvite> {
 
     private InnovationLead() {

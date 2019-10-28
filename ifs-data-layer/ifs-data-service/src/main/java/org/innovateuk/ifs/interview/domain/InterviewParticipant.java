@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  * A {@link InterviewParticipant} in a {@link Competition}.
  */
 @Entity
-@Table(name = "competition_user")
+@DiscriminatorValue("INTERVIEW_PARTICIPANT")
 public class InterviewParticipant extends CompetitionParticipant<InterviewInvite> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

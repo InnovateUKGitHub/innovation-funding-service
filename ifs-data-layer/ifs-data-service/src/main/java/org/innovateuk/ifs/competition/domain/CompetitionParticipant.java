@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.DiscriminatorOptions;
 import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -14,7 +15,11 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 /**
  * A {@link Participant} in a {@link Competition}.
  */
-@MappedSuperclass
+@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorOptions(force = true)
+@Entity
+@Table(name = "competition_user")
 public abstract class CompetitionParticipant<I extends Invite<Competition, I>> extends Participant<Competition, CompetitionParticipantRole>
         implements InvitedParticipant<Competition, I, CompetitionParticipantRole> {
 
