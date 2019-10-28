@@ -273,15 +273,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
-        return getApplicationById(applicationId).andOnSuccessReturn(applicationResource -> {
-            CompletedPercentageResource resource = new CompletedPercentageResource();
-            resource.setCompletedPercentage(applicationResource.getCompletion());
-            return resource;
-        });
-    }
-
-    @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId,
                                                                                    Collection<ApplicationState> applicationStates) {
         List<Application> applicationResults =

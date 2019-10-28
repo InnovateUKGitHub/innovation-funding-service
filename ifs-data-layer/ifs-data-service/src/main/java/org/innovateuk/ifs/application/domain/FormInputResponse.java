@@ -25,15 +25,15 @@ public class FormInputResponse {
     @Column(length = 5000)
     private String value;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "updatedById", referencedColumnName = "id")
     private ProcessRole updatedBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "formInputId", referencedColumnName = "id")
     private FormInput formInput;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 

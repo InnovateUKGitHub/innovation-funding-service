@@ -15,12 +15,10 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
-
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -126,7 +124,6 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
 
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
         when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(Optional.of(researchCategory));
-        when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FormInputType.FINANCE)).thenReturn(serviceSuccess(financeQuestion));
         when(usersRolesServiceMock.getAssignableProcessRolesByApplicationId(application.getId())).thenReturn(serviceSuccess(EMPTY_LIST));
 
         ServiceResult<ApplicationResource> result = service.setResearchCategory(application.getId(), researchCategoryId);

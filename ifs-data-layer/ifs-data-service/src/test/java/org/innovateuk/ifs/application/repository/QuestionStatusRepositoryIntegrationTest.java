@@ -53,14 +53,14 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
     @Test
     public void findByApplicationIdAndAssigneeOrganisationId() {
         List<QuestionStatus> questionStatuses = repository.findByApplicationId(applicationId);
-        assertEquals(36, questionStatuses.size());
+        assertEquals(21, questionStatuses.size());
     }
 
     @Test
     public void findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById() throws Exception {
         List<Question> questions = newQuestion()
-                .withId(102L, 104L, 106L)
-                .build(3);
+                .withId(98L, 108L)
+                .build(2);
         Application application = newApplication()
                 .withId(applicationId)
                 .build();
@@ -75,8 +75,8 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
         completedQuestionStatus.setAssignee(otherProcessRole, otherProcessRole, ZonedDateTime.now());
 
         List<QuestionStatus> questionStatusesToSave = asList(
-                new QuestionStatus(questions.get(1), application, targetProcessRole, otherProcessRole, ZonedDateTime.now()),
-                new QuestionStatus(questions.get(2), application, otherProcessRole, targetProcessRole, ZonedDateTime.now()),
+                new QuestionStatus(questions.get(0), application, targetProcessRole, otherProcessRole, ZonedDateTime.now()),
+                new QuestionStatus(questions.get(1), application, otherProcessRole, targetProcessRole, ZonedDateTime.now()),
                 completedQuestionStatus
         );
 

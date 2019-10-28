@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectteam.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.invite.resource.ProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectPartnerInviteViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -60,7 +60,7 @@ public class ProjectPartnerControllerTest extends BaseControllerMockMVCTest<Proj
         long projectId = 999L;
         long competitionId = 888L;
 
-        ProjectPartnerInviteResource invite = new ProjectPartnerInviteResource("org", "name", "blah@gmail.com");
+        SendProjectPartnerInviteResource invite = new SendProjectPartnerInviteResource("org", "name", "blah@gmail.com");
 
         when(projectPartnerInviteRestService.invitePartnerOrganisation(projectId, invite)).thenReturn(restSuccess());
 

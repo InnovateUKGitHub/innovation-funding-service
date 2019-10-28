@@ -13,6 +13,7 @@ import org.innovateuk.ifs.threads.repository.ProjectStateCommentsRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
 import org.innovateuk.ifs.threads.service.MappingMessageThreadService;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class ProjectStateCommentsServiceImpl implements ProjectStateCommentsService {
+public class ProjectStateCommentsServiceImpl extends BaseTransactionalService implements ProjectStateCommentsService {
 
     private MappingMessageThreadService<ProjectStateComments, ProjectStateCommentsResource, ProjectStateCommentsMapper, Project> service;
     private ProjectStateCommentsRepository projectStateCommentsRepository;
