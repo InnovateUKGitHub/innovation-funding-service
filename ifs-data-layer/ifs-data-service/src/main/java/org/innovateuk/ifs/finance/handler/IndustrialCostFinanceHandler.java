@@ -173,7 +173,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
     }
 
     private boolean isUpdate(Optional<ApplicationFinanceRow> applicationCost, Optional<ProjectFinanceRow> projectCost) {
-        return (applicationCost.isPresent() && projectCost.isPresent() && !applicationCost.get().getId().equals(projectCost.get().getApplicationRowId()));
+        return applicationCost.isPresent() && projectCost.isPresent() && !applicationCost.get().matches(projectCost.get());
     }
 
     private boolean isRemoved(Optional<ApplicationFinanceRow> applicationCost, Optional<ProjectFinanceRow> projectCost) {
