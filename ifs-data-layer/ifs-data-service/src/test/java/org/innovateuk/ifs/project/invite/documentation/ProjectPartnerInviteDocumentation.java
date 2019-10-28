@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResour
 import org.innovateuk.ifs.project.invite.transactional.ProjectPartnerInviteService;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.List;
 
@@ -32,6 +33,14 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
     protected ProjectPartnerInviteController supplyControllerUnderTest() {
         return new ProjectPartnerInviteController();
     }
+
+    private static FieldDescriptor[] sentResourceDocs = {
+                fieldWithPath("id").description("Id of the invite"),
+                fieldWithPath("sentOn").description("Date the invite was sent"),
+                fieldWithPath("email").description("Email address that invite was sent to."),
+                fieldWithPath("organisationName").description("Organisation name for invite"),
+                fieldWithPath("userName").description("Users name of invite")
+    };
 
     @Test
     public void invitePartnerOrganisation() throws Exception {
@@ -63,11 +72,8 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("projectId").description("Id of project to get invites from")
                         ),
                         responseFields(
-                                fieldWithPath("[].id").description("Id of the invite"),
-                                fieldWithPath("[].sentOn").description("Date the invite was sent"),
-                                fieldWithPath("[].email").description("Email address that invite was sent to."),
-                                fieldWithPath("[].organisationName").description("Organisation name for invite"),
-                                fieldWithPath("[].userName").description("Users name of invite"))
+                                fieldWithPath("[]").description("An array of invites")
+                        ).andWithPrefix("[].", sentResourceDocs)
                 ));
     }
 
@@ -99,6 +105,43 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project the invite belongs to"),
                                 parameterWithName("inviteId").description("Id of the invite")
+                        )
+                ));
+    }
+
+    @Test
+    public void getInviteByHash() throws Exception {
+        long projectId = 123L;
+        String hash = "hash";
+        when(projectPartnerInviteService.getInviteByHash(hash)).thenReturn(serviceSuccess(newSentProjectPartnerInviteResource().build()));
+        mockMvc.perform(get("/project/{projectId}/project-partner-invite/{hash}", projectId, hash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isNoContent())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project the invite belongs to"),
+                                parameterWithName("hash").description("Hash of the invite")
+                        ),
+                        responseFields(
+                                sentResourceDocs
+                        )
+                ));
+    }
+
+    @Test
+    public void acceptInvite() throws Exception {
+        long projectId = 123L;
+        long inviteId = 321L;;
+        long organisationId = 321L;
+        when(projectPartnerInviteService.acceptInvite(inviteId, organisationId)).thenReturn(serviceSuccess());
+        mockMvc.perform(get("/project/{projectId}/project-partner-invite/{inviteId}/organisation/{organisationId}/accept", projectId, inviteId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isNoContent())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project the invite belongs to"),
+                                parameterWithName("inviteId").description("Id of the invite"),
+                                parameterWithName("organisationId").description("organisation id to join the project")
                         )
                 ));
     }

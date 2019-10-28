@@ -166,8 +166,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     public ServiceResult<Void> acceptInvite(long inviteId, long organisationId) {
         return find(projectPartnerInviteRepository.findById(inviteId), notFoundError(ProjectPartnerInvite.class, inviteId))
                 .andOnSuccess(invite ->
-                        find(project(invite.getProject().getId()), organisation(organisationId))
-                                .andOnSuccessReturnVoid((project, organisation) -> {
+                        find(organisation(organisationId))
+                                .andOnSuccessReturnVoid((organisation) -> {
+                                    Project project = invite.getProject();
                                     invite.getInviteOrganisation().setOrganisation(organisation);
 
                                     PartnerOrganisation partnerOrganisation = new PartnerOrganisation(project, organisation, false);
