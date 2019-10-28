@@ -55,12 +55,8 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_NOT_APPLICABLE), partnerOrganisation);
     }
 
-//    public boolean viabilityReset(PartnerOrganisation partnerOrganisation, User internalUser) {
-//        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_RESET), partnerOrganisation);
-//    }
-
     public boolean viabilityReset(PartnerOrganisation partnerOrganisation, User internalUser) {
-        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_RESET), new ViabilityProcess(internalUser, partnerOrganisation, ViabilityState.REVIEW));
+        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_RESET), partnerOrganisation);
     }
 
     public ViabilityProcess getProcess(PartnerOrganisation partnerOrganisation) {

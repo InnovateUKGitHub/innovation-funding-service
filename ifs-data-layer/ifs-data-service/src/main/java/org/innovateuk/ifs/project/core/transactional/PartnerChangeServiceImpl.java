@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
@@ -12,13 +14,14 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class PartnerChangeServiceImpl implements PartnerChangeService {
+public class PartnerChangeServiceImpl extends BaseTransactionalService implements PartnerChangeService {
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
@@ -29,52 +32,35 @@ public class PartnerChangeServiceImpl implements PartnerChangeService {
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    @Autowired
-    private ViabilityWorkflowHandler viabilityWorkflowHandler;
-
     @Override
-    public ServiceResult<Void> updateProjectAfterChangingPartner(long projectId, long organisationId) {
-        //resetProjectFinanceForRemainingOrganisations(projectId);
-        resetProjectFinanceForRemainingOrganisationsWithService(projectId, organisationId);
-        resetProjectDocuments(projectId);
-
-        return ServiceResult.serviceSuccess();
+    @Transactional
+    public ServiceResult<Void> updateProjectAfterChangingPartners(long projectId) {
+        return resetProjectFinanceForUnchangedPartners(projectId)
+            .andOnSuccess(() -> rejectProjectDocuments(projectId));
     }
 
-    private ServiceResult<Void> resetProjectFinanceForRemainingOrganisationsWithService(long projectId, long organisationId) {
+    private ServiceResult<Void> resetProjectFinanceForUnchangedPartners(long projectId) {
         List<ProjectFinance> projectFinances = projectFinanceRepository.findByProjectId(projectId);
 
         projectFinances.forEach(projectFinance -> {
-            long partnerId = projectFinance.getOrganisation().getId();
-            financeCheckService.resetViability(new ProjectOrganisationCompositeId(projectId, partnerId), Viability.REVIEW,
-                ViabilityRagStatus.UNSET);
-            //financeCheckService.saveEligibility(new ProjectOrganisationCompositeId(projectId, partnerId), EligibilityState.REVIEW, EligibilityRagStatus
-            // .UNSET);
+            Organisation partner = projectFinance.getOrganisation();
+            long partnerId = partner.getId();
+
+            financeCheckService.resetViability(new ProjectOrganisationCompositeId(projectId, partnerId), Viability.REVIEW, ViabilityRagStatus.UNSET);
+            financeCheckService.resetEligibility(new ProjectOrganisationCompositeId(projectId, partnerId), EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
         });
         return ServiceResult.serviceSuccess();
     }
 
-//    private ServiceResult<Void> resetProjectFinanceForRemainingOrganisations(long projectId) {
-//        List<ProjectFinance> projectFinances = projectFinanceRepository.findByProjectId(projectId);
-//
-//        // get organisation
-//        // get current user
-//        //viabilityWorkflowHandler.viabilityToReview();
-//
-//        projectFinances.forEach(projectFinance -> {
-//            projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
-//            projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
-//        });
-//        projectFinanceRepository.save(projectFinances.get(0));
-//
-//        return ServiceResult.serviceSuccess();
-//    }
+    private ServiceResult<Void> rejectProjectDocuments(long projectId) {
+        List<ProjectDocument> documents = projectDocumentRepository.findAllByProjectId(projectId).stream()
+            .filter(document -> !document.getStatus().equals(DocumentStatus.REJECTED))
+            .collect(Collectors.toList());
 
-    private ServiceResult<Void> resetProjectDocuments(long projectId) {
-        List<ProjectDocument> documents = projectDocumentRepository.findAllByProjectId(projectId);
-
-        documents.forEach(document -> document.setStatus(DocumentStatus.REJECTED));
-        projectDocumentRepository.saveAll(documents);
+        if (!documents.isEmpty()) {
+            documents.forEach(notRejectedDocument -> notRejectedDocument.setStatus(DocumentStatus.REJECTED));
+            projectDocumentRepository.saveAll(documents);
+        }
 
         return ServiceResult.serviceSuccess();
     }

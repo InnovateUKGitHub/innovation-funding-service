@@ -5,6 +5,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface PartnerChangeService {
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.PartnerOrganisationResource', 'REMOVE_PARTNER_ORGANISATION')")
-    ServiceResult<Void> updateProjectAfterChangingPartner(long projectId, long organisationId);
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.PartnerOrganisationResource', 'UPDATE_PROJECT')")
+    ServiceResult<Void> updateProjectAfterChangingPartners(long projectId);
 }

@@ -48,10 +48,8 @@ public interface FinanceCheckService {
     @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "viabilityActivityType")
     ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus);
 
-    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
-    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "viabilityActivityType")
-    ServiceResult<Void> resetViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability,
-                                      ViabilityRagStatus viabilityRagStatus);
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'RESET_VIABILITY')")
+    ServiceResult<Void> resetViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     default Optional<ActivityType> viabilityActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
@@ -64,6 +62,9 @@ public interface FinanceCheckService {
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_ELIGIBILITY')")
     @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "eligibilityActivtyType")
     ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'RESET_ELIGIBILITY')")
+    ServiceResult<Void> resetEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     default Optional<ActivityType> eligibilityActivtyType(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {

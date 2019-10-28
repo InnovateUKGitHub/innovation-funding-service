@@ -32,8 +32,7 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
     public void configure(StateMachineStateConfigurer<ViabilityState, ViabilityEvent> states) throws Exception {
         states.withStates()
                 .initial(REVIEW)
-                .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED))
-                .end(APPROVED);
+                .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED));
     }
 
     @Override
