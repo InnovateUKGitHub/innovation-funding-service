@@ -201,7 +201,7 @@ Assessor should see the reassigned application
 
 *** Keywords ***
 the application list is correct before changes
-    the user should see the element    jQuery = tr:nth-child(2) td:nth-child(1):contains("157")
+    the user should see the element    jQuery = tr:nth-child(2) td:nth-child(1):contains("158")
     the user should see the element    jQuery = tr:nth-child(2) td:nth-child(2):contains("Application for load 2")
     the user should see the element    jQuery = tr:nth-child(2) td:nth-child(3):contains("Mo Juggling Mo Problems Ltd")
     the user should see the element    jQuery = tr:nth-child(2) td:nth-child(4):contains("4")
