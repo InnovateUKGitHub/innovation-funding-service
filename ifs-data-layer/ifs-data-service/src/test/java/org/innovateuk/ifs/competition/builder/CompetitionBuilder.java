@@ -13,6 +13,7 @@ import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.LocalDateTime;
