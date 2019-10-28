@@ -396,7 +396,7 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors, HttpStatus statusCode) {
-        return new RestResult<>(left(RestFailure.error(errors, statusCode)), statusCode);
+        return new RestResult<>(left(RestFailure.error(errors, statusCode)), null);
     }
 
     public static <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
