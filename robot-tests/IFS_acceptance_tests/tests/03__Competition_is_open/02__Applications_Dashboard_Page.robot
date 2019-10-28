@@ -113,7 +113,7 @@ Comp admin can link to the comp page from application overview
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443, INFUND-2483
     [Tags]
-    Given the user navigates to the page             ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
+    Given the user navigates to the page             ${COMP_MANAGEMENT_APPLICATION_2_OVERVIEW}
     When the user clicks the button/link             jQuery = button:contains("Finances summary")
     Then the user should not see the element         link = your project finances
     And the user should see the element              jQuery = h2:contains("Finances summary")
@@ -121,11 +121,11 @@ Comp admin should be able to view but not edit the finances for every partner
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     When Log in as a different user                  &{collaborator1_credentials}
-    Then the user navigates to Your-finances page    ${OPEN_COMPETITION_APPLICATION_NAME}
+    Then the user navigates to Your-finances page    ${newOpenComp}
     And the applicant edits the Subcontracting costs section
     And the user reloads the page
     When Log in as a different user                  &{Comp_admin1_credentials}
-    And the user navigates to the page               ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
+    And the user navigates to the page               ${COMP_MANAGEMENT_APPLICATION_2_OVERVIEW}
     Then the user should see the correct finances change
 
 *** Keywords ***

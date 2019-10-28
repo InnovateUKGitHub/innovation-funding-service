@@ -31,6 +31,8 @@ ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']
 ${openCompetitionRTOCloseDate}   ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
 ${openCompetitionRTOApplication1Name}  Hydrology the dynamics of Earth\'s surface water
 ${openCompetitionRTOApplication1Id}    ${application_ids["${openCompetitionRTOApplication1Name}"]}
+${newOpenComp}                       Climate change for the masses
+${newOpenCompId}                     ${application_ids["${newOpenComp}"]}
 
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
@@ -152,6 +154,7 @@ ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/team
 
+${COMP_MANAGEMENT_APPLICATION_2_OVERVIEW}    ${SERVER}/management/competition/${openCompetitionRTO}/application/${newOpenCompId}
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${openCompetitionRTO}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${openCompetitionRTO}
 ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}    ${SERVER}/management/competition/setup/${NOT_EDITABLE_COMPETITION}
