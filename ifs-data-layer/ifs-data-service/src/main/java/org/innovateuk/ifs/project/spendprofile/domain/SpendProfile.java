@@ -25,24 +25,24 @@ public class SpendProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Organisation organisation;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Project project;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private CostCategoryType costCategoryType;
 
-    @ManyToOne(cascade = ALL, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = ALL, optional = false)
     @JoinColumn(name = "eligible_costs_cost_group_id")
     private CostGroup eligibleCosts;
 
-    @ManyToOne(cascade = ALL, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = ALL, optional = false)
     @JoinColumn(name = "spend_profile_figures_cost_group_id")
     private CostGroup spendProfileFigures;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User generatedBy;
 
     @Temporal(TemporalType.TIMESTAMP)

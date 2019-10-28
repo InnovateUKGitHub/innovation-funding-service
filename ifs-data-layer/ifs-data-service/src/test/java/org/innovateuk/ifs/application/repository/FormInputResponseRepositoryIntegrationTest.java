@@ -99,7 +99,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
         // test that we can find processrole "1"'s responses to any applications
         long processRoleId = 1L;
         List<FormInputResponse> responses = repository.findByUpdatedById(processRoleId);
-        assertEquals(16, responses.size());
+        assertEquals(15, responses.size());
 
         // check the details of one of the retrieved FormInputResponses
         FormInputResponse response = responses.get(0);
