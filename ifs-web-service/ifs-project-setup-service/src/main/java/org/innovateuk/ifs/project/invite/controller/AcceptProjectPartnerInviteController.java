@@ -97,6 +97,8 @@ public class AcceptProjectPartnerInviteController {
 
     @GetMapping("/authenticate")
     @PreAuthorize("isAuthenticated()")
+    @SecuredBySpring(value = "FORCE_LOGIN_FOR_EXISTING_USER_INVITE",
+            description = "User must be logged into account to accept invite for an existing user.")
     public String forceLogin(@PathVariable long projectId,
                                    HttpServletRequest request,
                                    UserResource user,
