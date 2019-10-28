@@ -1,6 +1,6 @@
-@import "govuk-frontend/settings/all";
-@import "govuk-frontend/tools/all";
-@import "govuk-frontend/helpers/all";
+@import "govuk-frontend/govuk/settings/all";
+@import "govuk-frontend/govuk/tools/all";
+@import "govuk-frontend/govuk/helpers/all";
 
 $button-shadow-size: $govuk-border-width-form-element;
 // Button styling and overrides

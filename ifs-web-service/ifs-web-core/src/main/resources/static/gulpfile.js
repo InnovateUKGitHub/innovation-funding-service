@@ -11,7 +11,7 @@ var compass = require('compass-importer')
 
 // Path variables
 var nodeModulesPath = __dirname + '/../../../../../node_modules/'
-var govukFrontendPath = nodeModulesPath + 'govuk-frontend/'
+var govukFrontendPath = nodeModulesPath + 'govuk-frontend/govuk/'
 var sassFiles = [
   __dirname + '/sass/**/*.scss',
   govukFrontendPath + 'settings/**/*.scss',

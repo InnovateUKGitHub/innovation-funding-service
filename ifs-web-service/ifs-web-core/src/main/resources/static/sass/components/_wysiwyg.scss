@@ -1,10 +1,10 @@
 // //magic sprites in stead of fontAwesome as a font.
 // //Good ie7 support plus better performance, SVG would be even better but isn't supported
 // //font icons are blocking and this is just a couple of bytes of background images
-//@import "govuk-frontend/settings/all";
-//@import "govuk-frontend/tools/all";
-//@import "govuk-frontend/helpers/all";
-@import "govuk-frontend/core/lists";
+//@import "govuk-frontend/govuk/settings/all";
+//@import "govuk-frontend/govuk/tools/all";
+//@import "govuk-frontend/govuk/helpers/all";
+@import "govuk-frontend/govuk/core/lists";
 
 .hallotoolbar {
   .list {
