@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -43,23 +41,6 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
             verify(statusPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
             verify(statusPermissionRules).stakeholdersCanViewTeamStatus(project, getLoggedInUser());
             verify(statusPermissionRules).monitoringOfficersCanViewTeamStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(statusPermissionRules);
-        });
-    }
-
-    @Test
-    public void getCompetitionStatus(){
-
-        Long competitionId = 1L;
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
-
-        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competition);
-
-        assertAccessDenied(() -> classUnderTest.getCompetitionStatus(competitionId, "12"), () -> {
-            verify(statusPermissionRules).internalAdminTeamCanViewCompetitionStatus(competition, getLoggedInUser());
-            verify(statusPermissionRules).supportCanViewCompetitionStatus(competition, getLoggedInUser());
-            verify(statusPermissionRules).assignedInnovationLeadCanViewCompetitionStatus(competition, getLoggedInUser());
-            verify(statusPermissionRules).assignedStakeholderCanViewCompetitionStatus(competition, getLoggedInUser());
             verifyNoMoreInteractions(statusPermissionRules);
         });
     }

@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.project.core.repository;
 
+import org.innovateuk.ifs.config.repository.RefreshableCrudRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 import java.util.Set;
 
-public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
+public interface ProjectRepository extends RefreshableCrudRepository<Project, Long> {
 
     String PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID = "SELECT DISTINCT pp.target FROM ProjectProcess pp " +
             " WHERE pp.target.application.competition.id = :competitionId " +
