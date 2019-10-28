@@ -156,7 +156,7 @@ User Saves the Assessment as Not Recommended
 Submit Assessments
     [Documentation]    INFUND-5739  INFUND-3743  INFUND-6358
     [Tags]  HappyPath
-    Given the user should see the element          jQuery = .in-progress li:nth-child(7):contains("Intelligent Building")
+    Given the user should see the element          jQuery = .in-progress li:nth-child(5):contains("Intelligent Building")
     And the user should see that the element is disabled    id = submit-assessment-button
     When the user submits the assessment
     Then the user should see correct details after assessment submitted
@@ -229,10 +229,10 @@ the user should see correct details
     the application should have the correct status      css = .progress-list li:nth-child(7)    Assessed
 
 the user should see assessment as not recommended details
-    The user should see the element                      css = li:nth-child(6) .negative
-    the user should see the element                      css = li:nth-child(6) input[type = "checkbox"] ~ label
-    the application should have the correct status       css = .progress-list li:nth-child(6)    Assessed
-    the application should have the correct status       css = .progress-list li:nth-child(7)    Assessed
+    The user should see the element                      css = li:nth-child(4) .negative
+    the user should see the element                      css = li:nth-child(4) input[type = "checkbox"] ~ label
+    the application should have the correct status       css = .progress-list li:nth-child(4)    Assessed
+    the application should have the correct status       css = .progress-list li:nth-child(5)    Assessed
 
 the user should see correct details after assessment submitted
     the application should have the correct status    css = div.submitted    Submitted assessment
