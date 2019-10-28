@@ -8,6 +8,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_PAYLOAD_TOO_LARGE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.http.HttpStatus.*;
@@ -38,7 +39,7 @@ public final class CommonErrors {
     }
 
     public static Error payloadTooLargeError(long maxFileSizeBytes) {
-        return new Error(PAYLOAD_TOO_LARGE,
+        return new Error(FILES_PAYLOAD_TOO_LARGE,
                 asList(maxFileSizeBytes, FileUtils.byteCountToDisplaySize(maxFileSizeBytes).replace(" ", "")),
                 PAYLOAD_TOO_LARGE);
     }

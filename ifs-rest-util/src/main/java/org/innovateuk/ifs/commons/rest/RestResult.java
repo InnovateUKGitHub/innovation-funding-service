@@ -254,6 +254,10 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
             throw new CompetitionFeedbackCantSendException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(FILES_PAYLOAD_TOO_LARGE)) {
+            throw new PayloadTooLargeException(error.getErrorKey(), error.getArguments());
+        }
+
         throw new RuntimeException();
     }
 
@@ -392,7 +396,7 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors, HttpStatus statusCode) {
-        return new RestResult<>(left(RestFailure.error(errors, statusCode)), null);
+        return new RestResult<>(left(RestFailure.error(errors, statusCode)), statusCode);
     }
 
     public static <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
