@@ -224,9 +224,9 @@ the user enter text more than maximum word count limit
 the user should see correct details
     the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
     the user should see the element                     jQuery = .status-msg:contains("Assessed")
-    the user should see the element                     css = li:nth-child(7) .positive
-    the user should see the element                     css = li:nth-child(7) input[type = "checkbox"] ~ label
-    the application should have the correct status      css = .progress-list li:nth-child(7)    Assessed
+    the user should see the element                     css = li:nth-child(4) .positive
+    the user should see the element                     css = li:nth-child(4) input[type = "checkbox"] ~ label
+    the application should have the correct status      css = .progress-list li:nth-child(4)    Assessed
 
 the user should see assessment as not recommended details
     The user should see the element                      css = li:nth-child(4) .negative
@@ -242,7 +242,7 @@ the user should see correct details after assessment submitted
     the user should not see the element               link = Intelligent Building
 
 the user submits the assessment
-    the user clicks the button/link            css = .in-progress li:nth-child(7) input[type = "checkbox"] ~ label
+    the user clicks the button/link            css = .in-progress li:nth-child(3) input[type = "checkbox"] ~ label
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
     the user clicks the button/link            jQuery = button:contains("Cancel")
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
