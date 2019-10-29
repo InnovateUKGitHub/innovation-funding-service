@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.REMOVE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DB_STRING_LENGTH;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH_MESSAGE;
