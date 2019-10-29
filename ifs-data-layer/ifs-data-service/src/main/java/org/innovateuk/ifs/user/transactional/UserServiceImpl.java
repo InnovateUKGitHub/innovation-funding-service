@@ -15,6 +15,7 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
+import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -190,12 +191,13 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         );
     }
 
-    private ServiceResult<Void> updateUserEmail(User existingUser, String emailToUpdate) {
+    private ServiceResult<User> updateUserEmail(User existingUser, String emailToUpdate) {
         userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
         existingUser.setEmail(emailToUpdate);
-        userRepository.save(existingUser);
+        User user = userRepository.save(existingUser);
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
-                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate));
+                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate))
+                .andOnSuccessReturn(() -> user);
     }
 
     private void logEmailChange(String oldEmail, String newEmail){
@@ -212,18 +214,19 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateDetails(UserResource userResource) {
+    public ServiceResult<UserResource> updateDetails(UserResource userResource) {
         return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()))
-                .andOnSuccess( user -> updateUser(user, userResource));
+                .andOnSuccess(user -> updateUser(user, userResource))
+                .andOnSuccessReturn(userMapper::mapToResource);
     }
 
-    private ServiceResult<Void> updateUser(User existingUser, UserResource updatedUserResource) {
+    private ServiceResult<User> updateUser(User existingUser, UserResource updatedUserResource) {
         existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUser.setTitle(updatedUserResource.getTitle());
         existingUser.setLastName(updatedUserResource.getLastName());
         existingUser.setFirstName(updatedUserResource.getFirstName());
         existingUser.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
-        return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
+        return serviceSuccess(userRepository.save(existingUser));
     }
 
     private boolean userNotYetVerified(UserResource user) {
@@ -283,27 +286,34 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     @Transactional
-    public ServiceResult<Void> agreeNewTermsAndConditions(long userId) {
+    @UserUpdate
+    public ServiceResult<UserResource> agreeNewTermsAndConditions(long userId) {
         return termsAndConditionsService.getLatestSiteTermsAndConditions().andOnSuccess(latest ->
-                getUser(userId).andOnSuccess(user -> {
+                getUser(userId).andOnSuccessReturn(user -> {
                     user.getTermsAndConditionsIds().add(latest.getId());
-                    userRepository.save(user);
-                    return serviceSuccess();
-                }));
+                    return userRepository.save(user);
+                }))
+                .andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand) {
+    @UserUpdate
+    public ServiceResult<UserResource> grantRole(GrantRoleCommand grantRoleCommand) {
         return getUser(grantRoleCommand.getUserId())
-                .andOnSuccessReturnVoid(user -> user.getRoles().add(grantRoleCommand.getTargetRole()));
+                .andOnSuccessReturn(user -> {
+                    user.getRoles().add(grantRoleCommand.getTargetRole());
+                    return user;
+                }).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateEmail(long userId, String email) {
+    @UserUpdate
+    public ServiceResult<UserResource> updateEmail(long userId, String email) {
         return find(userRepository.findById(userId), notFoundError(User.class, userId))
-                .andOnSuccess( user -> updateUserEmail(user, email));
+                .andOnSuccess(user -> updateUserEmail(user, email))
+                .andOnSuccessReturn(userMapper::mapToResource);
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {

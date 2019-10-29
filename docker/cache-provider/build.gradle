@@ -1,0 +1,9 @@
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+
+buildscript {
+    repositories { jcenter() }
+}
+
+buildDocker.inputDir = project.file("$project.projectDir/docker")
+createContainer.containerName = "cache-provider"
+createContainer.containerId = "cache-provider"
