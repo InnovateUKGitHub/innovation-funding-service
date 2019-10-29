@@ -39,7 +39,7 @@ public final class CommonErrors {
     }
 
     public static Error payloadTooLargeError(long maxFileSizeBytes) {
-        return new Error(FILES_PAYLOAD_TOO_LARGE,
+        return new Error(PAYLOAD_TOO_LARGE,
                 asList(maxFileSizeBytes, FileUtils.byteCountToDisplaySize(maxFileSizeBytes).replace(" ", "")),
                 PAYLOAD_TOO_LARGE);
     }

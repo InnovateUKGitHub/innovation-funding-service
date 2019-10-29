@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
-@ResponseStatus(code = HttpStatus.PAYLOAD_TOO_LARGE, reason = "Payload too large")
 public class PayloadTooLargeException extends IFSRuntimeException {
 
     public PayloadTooLargeException() {

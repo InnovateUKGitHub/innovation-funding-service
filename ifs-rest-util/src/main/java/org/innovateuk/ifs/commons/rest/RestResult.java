@@ -254,10 +254,6 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
             throw new CompetitionFeedbackCantSendException(error.getErrorKey(), error.getArguments());
         }
 
-        if (restFailure.has(FILES_PAYLOAD_TOO_LARGE)) {
-            throw new PayloadTooLargeException(error.getErrorKey(), error.getArguments());
-        }
-
         throw new RuntimeException();
     }
 
