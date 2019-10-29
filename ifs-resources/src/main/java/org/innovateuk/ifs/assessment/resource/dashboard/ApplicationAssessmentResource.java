@@ -4,7 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 
-public class ApplicationAssessmentResource {
+import static java.lang.Integer.compare;
+
+public class ApplicationAssessmentResource implements Comparable<ApplicationAssessmentResource> {
 
     private long applicationId;
     private long assessmentId;
@@ -90,5 +92,10 @@ public class ApplicationAssessmentResource {
                 .append(state)
                 .append(recommended)
                 .toHashCode();
+    }
+
+    @Override
+    public int compareTo(ApplicationAssessmentResource o) {
+        return compare(this.getState().getPriority(), o.getState().getPriority());
     }
 }

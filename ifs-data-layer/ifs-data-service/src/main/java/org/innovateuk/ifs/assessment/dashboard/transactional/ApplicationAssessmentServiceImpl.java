@@ -38,7 +38,7 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
         return serviceSuccess(assessments.stream()
                 .map(this::mapToResource)
                 .filter(assessment -> allowedStates.contains(assessment.getState()))
-                .sorted(Comparator.comparing(ApplicationAssessmentResource::getState))
+                .sorted()
                 .collect(toList()));
     }
 
