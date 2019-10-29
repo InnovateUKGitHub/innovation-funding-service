@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -34,13 +31,14 @@ public class ApplicationAssessmentServiceImpl implements ApplicationAssessmentSe
 
     @Override
     public ServiceResult<List<ApplicationAssessmentResource>> getApplicationAssessmentResource(long userId, long competitionId) {
-        Set<AssessmentState> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        Set<AssessmentState> allowedStates = EnumSet.of(PENDING, OPEN, ACCEPTED, READY_TO_SUBMIT, SUBMITTED);
 
-        List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
+        List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndTargetCompetitionId(userId, competitionId);
 
         return serviceSuccess(assessments.stream()
                 .map(this::mapToResource)
                 .filter(assessment -> allowedStates.contains(assessment.getState()))
+                .sorted(Comparator.comparing(ApplicationAssessmentResource::getState))
                 .collect(toList()));
     }
 

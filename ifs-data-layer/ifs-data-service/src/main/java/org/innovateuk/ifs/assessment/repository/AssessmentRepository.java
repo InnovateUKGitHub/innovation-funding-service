@@ -64,7 +64,7 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     @Override
     Assessment findOneByParticipantId(Long participantId);
 
-    List<Assessment> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(Long userId, Long competitionId);
+    List<Assessment> findByParticipantUserIdAndTargetCompetitionId(Long userId, Long competitionId);
 
     List<Assessment> findByParticipantUserIdAndActivityStateNotIn(long userId, Collection<AssessmentState> states);
 
