@@ -166,11 +166,22 @@
     <p class="govuk-body">
         <button name="add-team-member"
                 th:value="${organisation.id}"
-                class="button-clear"
+                class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
                 th:attr="data-show-form=${'invite-user-' + organisation.id},
                                      aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
             Add team member
         </button>
+        <span th:if="${!organisation.lead and model.canInvitePartnerOrganisation and model.canAddTeamMember}"
+              class="vertical-align-baseline govuk-!-margin-left-1 hint">|</span>
+        <th:block th:if="${!organisation.lead and model.canInvitePartnerOrganisation}">
+            <button name="remove-organisation"
+                    class="vertical-align-baseline button-clear govuk-!-margin-left-1 govuk-!-margin-bottom-6"
+                    th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.id}">
+                Remove organisation
+            </button>
+            <th:block
+                th:insert="fragments/modals :: modal-project-team-remove-organisation (${organisation})"/>
+        </th:block>
     </p>
 </th:block>
 

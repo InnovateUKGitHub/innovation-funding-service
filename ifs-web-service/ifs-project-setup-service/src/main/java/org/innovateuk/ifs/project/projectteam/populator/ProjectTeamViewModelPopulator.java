@@ -90,7 +90,6 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 isMonitoringOfficer,
                 true,
-                false,
                 false);
     }
 
