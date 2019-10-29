@@ -69,6 +69,14 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     @Override
     @Transactional
+    public ServiceResult<Void> markAsCompleteNoValidate(QuestionApplicationCompositeId ids, long markedAsCompleteById) {
+        return find(processRole(markedAsCompleteById), openApplication(ids.applicationId), getQuestionSupplier(ids.questionId))
+                .andOnSuccess((markedAsCompleteBy, application, question)
+                        -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, true, true));
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                                     final long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
@@ -209,7 +217,6 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return !questionStatuses.isEmpty();
     }
 
-
     private Optional<Boolean> isMarkedAsCompleteForOrganisation(QuestionStatus questionStatus, long organisationId) {
         Boolean markedAsComplete = null;
         if (questionStatus.getMarkedAsCompleteBy() != null &&
@@ -241,35 +248,45 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return pr != null && pr.getOrganisationId() == organisationId;
     }
 
-    protected ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
-        return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
-                -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete, updateApplicationCompleteStatus));
+    protected ServiceResult<List<ValidationMessages>> setComplete(long questionId, long applicationId, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
+        return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId))
+                .andOnSuccess((markedAsCompleteBy, application, question) -> {
+                            List<ValidationMessages> validation = validateApplicationQuestion(markAsComplete, question, application, processRoleId);
+                            if (validation.isEmpty()) {
+                                setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, markAsComplete, updateApplicationCompleteStatus);
+                            }
+                            return serviceSuccess(validation);
+                        }
+                );
     }
 
-    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy,
-                                                                                Application application,
-                                                                                Question question,
-                                                                                long processRoleId,
-                                                                                boolean markAsComplete,
-                                                                                boolean updateApplicationCompleteStatus) {
-        QuestionStatus questionStatus;
+    private List<ValidationMessages> validateApplicationQuestion(boolean markAsComplete, Question question, Application application, long processRoleId) {
+        if (markAsComplete) {
+            return validationUtil.isQuestionValid(question, application, processRoleId);
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    private Optional<QuestionStatus> getQuestionStatus(Question question, Application application, ProcessRole markedAsCompleteBy) {
         if (question.hasMultipleStatuses()) {
-            //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
+            // The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
             List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(application.getId(), markedAsCompleteBy.getOrganisationId());
-            Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
+            return otherOrganisationMembers.stream()
                     .map(m -> getQuestionStatusByMarkedAsCompleteId(question, application.getId(), m.getId()))
                     .filter(Objects::nonNull)
                     .findFirst();
-            questionStatus = optionalQuestionStatus.orElse(null);
         } else {
-            questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
+            return Optional.ofNullable(getQuestionStatusByMarkedAsCompleteId(question, application.getId(), markedAsCompleteBy.getId()));
         }
-        if (questionStatus == null) {
-            questionStatus = new QuestionStatus(question, application);
-        }
+    }
 
-        List<ValidationMessages> validationMessages = markAsComplete ?
-                validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId()) : new ArrayList<>();
+    private ServiceResult<Void> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy,
+                                                                      Application application,
+                                                                      Question question,
+                                                                      boolean markAsComplete,
+                                                                      boolean updateApplicationCompleteStatus) {
+        QuestionStatus questionStatus = getQuestionStatus(question, application, markedAsCompleteBy).orElse(new QuestionStatus(question, application));
 
         if (markAsComplete) {
             questionStatus.markAsComplete(markedAsCompleteBy, now());
@@ -283,7 +300,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
             applicationProgressService.updateApplicationProgress(application.getId()).getSuccess();
         }
 
-        return serviceSuccess(validationMessages);
+        return serviceSuccess();
     }
 
     private QuestionStatus getQuestionStatusByApplicationIdAndAssigneeId(Question question, long applicationId, long assigneeId) {
@@ -310,7 +327,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return null;
     }
 
-    private Supplier<ServiceResult<Question>> getQuestionSupplier(Long questionId) {
+    private Supplier<ServiceResult<Question>> getQuestionSupplier(long questionId) {
         return () -> find(questionRepository.findById(questionId), notFoundError(Question.class, questionId));
     }
 }
