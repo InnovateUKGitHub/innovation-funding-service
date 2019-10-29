@@ -19,6 +19,7 @@ items:
           deploymentconfig: cache-provider
       spec:
         containers:
+        - env:
           image: innovateuk/cache-provider:5.0.6
           name: cache-provider
           imagePullPolicy: IfNotPresent
