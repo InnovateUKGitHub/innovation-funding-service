@@ -14,14 +14,14 @@ public class ProjectTeamViewModel {
     private final long competitionId;
     private final String projectName;
     private final long projectId;
-    private final List<ProjectOrganisationViewModel> partnerOrgs;
-    private final ProjectOrganisationViewModel loggedInUserOrg;
+    private final List<ProjectTeamOrganisationViewModel> partners;
+    private final ProjectTeamOrganisationViewModel loggedInUserOrganisation;
     private final ProjectUserResource projectManager;
     private final boolean userLeadPartner;
     private final long loggedInUserId;
 
     private final boolean grantOfferLetterGenerated;
-    private final boolean internalUserView;
+    private final boolean internal;
     private final boolean readOnly;
     private final boolean canInvitePartnerOrganisation;
     private final boolean canAddTeamMember;
@@ -29,13 +29,13 @@ public class ProjectTeamViewModel {
     private final boolean canRemovePartnerOrganisation;
 
     public ProjectTeamViewModel(ProjectResource project,
-                                List<ProjectOrganisationViewModel> partnerOrgs,
-                                ProjectOrganisationViewModel loggedInUserOrg,
+                                List<ProjectTeamOrganisationViewModel> partners,
+                                ProjectTeamOrganisationViewModel loggedInUserOrganisation,
                                 ProjectUserResource projectManager,
                                 boolean userLeadPartner,
                                 long loggedInUserId,
                                 boolean grantOfferLetterGenerated,
-                                boolean internalUserView,
+                                boolean internal,
                                 boolean readOnly,
                                 boolean canAddTeamMember,
                                 boolean canInvitePartnerOrganisation,
@@ -46,13 +46,13 @@ public class ProjectTeamViewModel {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.collaborativeProject = project.isCollaborativeProject();
-        this.partnerOrgs = partnerOrgs;
-        this.loggedInUserOrg = loggedInUserOrg;
+        this.partners = partners;
+        this.loggedInUserOrganisation = loggedInUserOrganisation;
         this.projectManager = projectManager;
         this.userLeadPartner = userLeadPartner;
         this.loggedInUserId = loggedInUserId;
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
-        this.internalUserView = internalUserView;
+        this.internal = internal;
         this.readOnly = readOnly;
         this.canAddTeamMember = canAddTeamMember;
         this.canInvitePartnerOrganisation = canInvitePartnerOrganisation;
@@ -75,8 +75,8 @@ public class ProjectTeamViewModel {
         return projectId;
     }
 
-    public List<ProjectOrganisationViewModel> getPartnerOrgs() {
-        return partnerOrgs;
+    public List<ProjectTeamOrganisationViewModel> getPartners() {
+        return partners;
     }
 
     public boolean isUserLeadPartner() {
@@ -88,7 +88,7 @@ public class ProjectTeamViewModel {
     }
 
     public boolean isInternalUserView() {
-        return internalUserView;
+        return internal;
     }
 
     public boolean isGrantOfferLetterGenerated() {
@@ -99,8 +99,12 @@ public class ProjectTeamViewModel {
         return projectManager;
     }
 
-    public ProjectOrganisationViewModel getLoggedInUserOrg() {
-        return loggedInUserOrg;
+    public ProjectTeamOrganisationViewModel getLoggedInUserOrganisation() {
+        return loggedInUserOrganisation;
+    }
+
+    public boolean isInternal() {
+        return internal;
     }
 
     public boolean isReadOnly() {
@@ -112,8 +116,8 @@ public class ProjectTeamViewModel {
     }
 
     public ProjectTeamViewModel openAddTeamMemberForm(long organisationId) {
-        partnerOrgs.stream()
-                .filter(partner -> partner.getOrgId() == organisationId)
+        partners.stream()
+                .filter(partner -> partner.getId() == organisationId)
                 .findAny()
                 .ifPresent(partner -> partner.setOpenAddTeamMemberForm(true));
         return this;

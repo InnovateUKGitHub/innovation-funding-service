@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -87,6 +88,10 @@ public class ProjectUserInviteResourceBuilder extends BaseBuilder<ProjectUserInv
 
     public ProjectUserInviteResourceBuilder withUser(Long... userId) {
         return withArraySetFieldByReflection("user", userId);
+    }
+
+    public ProjectUserInviteResourceBuilder withSentOn(ZonedDateTime... sentOn) {
+        return withArraySetFieldByReflection("sentOn", sentOn);
     }
 
     @Override

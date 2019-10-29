@@ -36,6 +36,7 @@ public class ProjectPartnerStatusResource {
 
     private boolean isGrantOfferLetterSent = false;
     private boolean isLead = false;
+    private boolean pendingPartner = false;
 
 
     //Required for Json Mapping.
@@ -55,7 +56,7 @@ public class ProjectPartnerStatusResource {
                                         ProjectActivityStates financeContactStatus,
                                         ProjectActivityStates partnerProjectLocationStatus,
                                         ProjectActivityStates projectSetupCompleteStatus,
-                                        Boolean isGrantOfferLetterSent, Boolean isLead) {
+                                        Boolean isGrantOfferLetterSent, Boolean isLead, boolean pendingPartner) {
         this.organisationId = organisationId;
         this.name = name;
         this.organisationType = organisationType;
@@ -72,6 +73,7 @@ public class ProjectPartnerStatusResource {
         this.isGrantOfferLetterSent = isGrantOfferLetterSent;
         this.projectSetupCompleteStatus = projectSetupCompleteStatus;
         this.isLead = isLead;
+        this.pendingPartner = pendingPartner;
     }
 
     public Long getOrganisationId() {
@@ -205,6 +207,10 @@ public class ProjectPartnerStatusResource {
 
     public void setProjectSetupCompleteStatus(ProjectActivityStates projectSetupCompleteStatus) {
         this.projectSetupCompleteStatus = projectSetupCompleteStatus;
+    }
+
+    public boolean isPendingPartner() {
+        return pendingPartner;
     }
 
     @Override

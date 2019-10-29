@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
-import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
 import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
@@ -15,7 +14,9 @@ import org.innovateuk.ifs.project.financereviewer.repository.FinanceReviewerRepo
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
@@ -42,7 +43,6 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     private FinanceReviewerRepository financeReviewerRepository;
 
     @Mappings({
-            @Mapping(target = "projectState", ignore = true),
             @Mapping(target = "competition", source = "application.competition.id"),
             @Mapping(target = "competitionName", source = "application.competition.name"),
             @Mapping(target = "monitoringOfficerUser", source = "projectMonitoringOfficerOrElseNull.user.id"),
@@ -58,15 +58,6 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     })
     @Override
     public abstract Project mapToDomain(ProjectResource projectResource);
-
-
-    @AfterMapping
-    public void setAdditionalFieldsOnResource(Project project, @MappingTarget ProjectResource resource) {
-        ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
-        if (process != null) {
-            resource.setProjectState(process.getProcessState());
-        }
-    }
 
     public Long mapProjectToId(Project object) {
         if (object == null) {

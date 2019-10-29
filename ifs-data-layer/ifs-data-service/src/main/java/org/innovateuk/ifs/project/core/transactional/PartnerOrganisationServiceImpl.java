@@ -56,9 +56,6 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private NotificationService notificationService;
 
     @Autowired
-    private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
@@ -78,10 +75,6 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
-
-    enum Notifications {
-        REMOVE_PROJECT_ORGANISATION
-    }
 
     @Override
     public ServiceResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId) {
@@ -138,9 +131,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private void deleteProjectFinance(long projectId, long organisationId) {
         find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
                 notFoundError(ProjectFinance.class)).andOnSuccessReturnVoid(projectFinance -> {
-                    deleteThreads(projectFinance.getId());
-                    projectFinanceRowRepository.deleteAllByTargetId(projectFinance.getId());
-                    projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
+            deleteThreads(projectFinance.getId());
+            projectFinanceRowRepository.deleteAllByTargetId(projectFinance.getId());
+            projectFinanceRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         });
     }
 

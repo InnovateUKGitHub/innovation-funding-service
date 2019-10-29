@@ -23,7 +23,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.core.transactional.PartnerOrganisationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
+import static org.innovateuk.ifs.project.core.transactional.RemovePartnerNotificationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
 
 @Service
 public class RemovePartnerNotificationServiceImpl implements  RemovePartnerNotificationService {
@@ -39,6 +39,10 @@ public class RemovePartnerNotificationServiceImpl implements  RemovePartnerNotif
 
     @Autowired
     private NotificationService notificationService;
+
+    enum Notifications {
+        REMOVE_PROJECT_ORGANISATION
+    }
 
     @Override
     public ServiceResult<Void> sendNotifications(Project project, Organisation organisation) {
@@ -83,7 +87,6 @@ public class RemovePartnerNotificationServiceImpl implements  RemovePartnerNotif
         Notification notification = new Notification(from, singletonList(to), REMOVE_PROJECT_ORGANISATION, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
-
     private NotificationTarget createProjectNotificationTarget(User user) {
         String fullName = getProjectManagerFullName(user);
         return new UserNotificationTarget(fullName, user.getEmail());

@@ -2,7 +2,10 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -14,7 +17,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -87,25 +89,6 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         ApplicationResource updated = controller.getApplicationById(APPLICATION_ID).getSuccess();
         assertEquals(newTitle, updated.getName());
 
-    }
-
-    /**
-     * Check if progress decreases when marking a question as incomplete.
-     */
-    @Test
-    public void testGetProgressPercentageByApplicationId() {
-        CompletedPercentageResource response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccess();
-        BigDecimal completedPercentage = response.getCompletedPercentage();
-        double delta = 0.10;
-        assertEquals(33.87, completedPercentage.doubleValue(), delta); //Changed after enabling mark as complete on
-        // some more questions for INFUND-446
-
-        questionStatusController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
-
-        CompletedPercentageResource response2  = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccess();
-        BigDecimal completedPercentage2 = response2.getCompletedPercentage();
-        assertEquals(32.35, completedPercentage2.doubleValue(), delta);
-        // some more questions for INFUND-446
     }
 
     @Rollback
