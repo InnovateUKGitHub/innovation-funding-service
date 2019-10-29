@@ -495,11 +495,7 @@ the user can add and remove multiple content groups
     When the user uploads the file             name = contentGroups[2].attachment  ${text_file}
     Then the user should see the element       jQuery = .govuk-error-summary__list:contains("${wrong_filetype_validation_error}")
     And the user uploads the file              name = contentGroups[2].attachment  ${too_large_pdf}
-    Then the user should get an error page     ${too_large_pdf_validation_error}
-    And the user goes back to the previous page
-    And the user reloads the page
-    # TODO this reload is required for now due to IFS-559
-    And the user should not see an error in the page
+    Then The user should see a field and summary error     ${too_large_5MB_validation_error}
     And the user clicks the button/link       jQuery = button:contains("Remove section"):eq(1)
     Then the user should not see the element  id = contentGroups[2].heading
     And the user should not see the element   jQuery = .editor:eq(2)
