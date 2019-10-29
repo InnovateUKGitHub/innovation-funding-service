@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -18,6 +17,7 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +42,12 @@ import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunction
  * Service provides CRUD operation functions for {@FileEntry}s linked to {@FormInputReponse}s.
  */
 @Service
-public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInputUploadService {
+public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalService implements ApplicationFormInputUploadService {
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
 
     @Autowired
     private FormInputRepository formInputRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;

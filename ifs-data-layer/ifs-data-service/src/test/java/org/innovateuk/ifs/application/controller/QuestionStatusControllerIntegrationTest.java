@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
 @Rollback
 public class QuestionStatusControllerIntegrationTest extends BaseControllerIntegrationTest<QuestionStatusController> {
 
-
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
     @Autowired
@@ -48,7 +47,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     private static final long newAssigneeProcessRoleId = 5L;
     private static final long organisationId = 3L;
     private static final long competitionId = 1L;
-    private static final long QUESTION_ID_WITH_MULTIPLE = 35L;
+    private static final long QUESTION_ID_WITH_MULTIPLE = 28L;
 
     @Before
     public void setup(){
@@ -104,19 +103,19 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
         // Start with zero completed
         Set<Long> markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
-        assertEquals(9, markedAsComplete.size());
+        assertEquals(4, markedAsComplete.size());
 
         // Complete one section
         controller.markAsComplete(questionId, applicationId, userId);
         markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
-        assertEquals(10, markedAsComplete.size());
+        assertEquals(5, markedAsComplete.size());
 
         // Mark section as incomplete again.
         controller.markAsInComplete(questionId, applicationId, userId);
         markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
-        assertEquals(9, markedAsComplete.size());
+        assertEquals(4, markedAsComplete.size());
     }
 
     @Test
@@ -146,6 +145,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
     @Test
     public void testIsMarkedAsCompleteMultiple() {
         question = questionRepository.findById(QUESTION_ID_WITH_MULTIPLE).get();
+        controller.markAsInComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, userId);
 
         assertFalse(questionStatusService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
 

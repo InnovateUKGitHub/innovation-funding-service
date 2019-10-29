@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
-import org.innovateuk.ifs.project.invite.resource.ProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class ProjectInviteValidator {
                         validateTargetUserIsValid(invite.getProject(), invite.getEmail())));
     }
 
-    public ServiceResult<Void> validate(long projectId, ProjectPartnerInviteResource invite) {
+    public ServiceResult<Void> validate(long projectId, SendProjectPartnerInviteResource invite) {
         return validateProjectPartnerInviteResource(invite).andOnSuccess(() ->
                 validateUserNotAlreadyInvited(projectId, invite.getEmail()).andOnSuccess(() ->
                         validateTargetUserIsValid(projectId, invite.getEmail())));
@@ -58,7 +58,7 @@ public class ProjectInviteValidator {
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateProjectPartnerInviteResource(ProjectPartnerInviteResource invite) {
+    private ServiceResult<Void> validateProjectPartnerInviteResource(SendProjectPartnerInviteResource invite) {
         if (StringUtils.isEmpty(invite.getEmail()) || StringUtils.isEmpty(invite.getUserName())
                 || StringUtils.isEmpty(invite.getOrganisationName())) {
             return serviceFailure(PROJECT_INVITE_INVALID);

@@ -28,7 +28,8 @@ public class ProjectInviteDocs {
             fieldWithPath("name").description("Name of the Invite recipient"),
             fieldWithPath("nameConfirmed").description("Confirmed name of the Invite recipient"),
             fieldWithPath("organisation").description("Id of the Organisation that the Invite recipient is being invited into"),
-            fieldWithPath("organisationName").description("Name of the Organisation that the Invite recipient is being invited into")
+            fieldWithPath("organisationName").description("Name of the Organisation that the Invite recipient is being invited into"),
+            fieldWithPath("sentOn").description("Date the invite was sent.")
     };
 
     public static final FieldDescriptor[] projectInviteFieldsList = createTopLevelArrayOfDocumentation(projectInviteFields);

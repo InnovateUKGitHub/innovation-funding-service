@@ -491,7 +491,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         setupApplicationWithRoles();
         ApplicationResource applicationResource = applications.get(0);
         AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
-        FormInputResource fileUpload = newFormInputResource().withType(FormInputType.FINANCE_UPLOAD).build();
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
         OrganisationResource organisation = orgSet.first();
@@ -502,7 +501,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .withQuestion(costQuestion)
                 .withApplicantFormInputs(
                         newApplicantFormInputResource()
-                                .withFormInput(fileUpload)
                                 .build(1))
                 .build();
         ApplicantSectionResource costSection = newApplicantSectionResource()

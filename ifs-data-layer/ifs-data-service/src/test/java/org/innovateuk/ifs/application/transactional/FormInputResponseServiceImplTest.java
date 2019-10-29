@@ -127,7 +127,7 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
         Application application = newApplication().build();
         Question question = newQuestion().build();
         Organisation organisation = newOrganisation().build();
-        FormInputType formInputType = FormInputType.FINANCE;
+        FormInputType formInputType = FormInputType.TEXTAREA;
         FormInputResponse formInputResponse = newFormInputResponse().build();
         FormInputResponseResource formInputResponseResource = newFormInputResponseResource().build();
 
@@ -151,7 +151,7 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
         Application application = newApplication().build();
         Question question = newQuestion().build();
         Organisation organisation = newOrganisation().build();
-        FormInputType formInputType = FormInputType.FINANCE;
+        FormInputType formInputType = FormInputType.TEXTAREA;
         String description = "description";
         FormInputResponse formInputResponse = newFormInputResponse().build();
         FormInputResponseResource formInputResponseResource = newFormInputResponseResource().build();

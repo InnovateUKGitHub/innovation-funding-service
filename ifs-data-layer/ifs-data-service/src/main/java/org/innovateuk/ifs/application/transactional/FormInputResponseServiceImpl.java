@@ -90,7 +90,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
 
     @Override
     @Transactional
-    public ServiceResult<FormInputResponse> saveQuestionResponse(FormInputResponseCommand formInputResponseCommand) {
+    public ServiceResult<FormInputResponseResource> saveQuestionResponse(FormInputResponseCommand formInputResponseCommand) {
         Long applicationId = formInputResponseCommand.getApplicationId();
         Long formInputId = formInputResponseCommand.getFormInputId();
         String htmlUnescapedValue = formInputResponseCommand.getValue();
@@ -101,6 +101,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
                 andOnSuccess((user, formInput, application) ->
                         getOrCreateResponse(application, formInput, userAppRole)
                                 .andOnSuccessReturn(response -> updateAndSaveResponse(response, htmlUnescapedValue, userAppRole, application))
+                        .andOnSuccessReturn(response -> formInputResponseMapper.mapToResource(response))
                 );
     }
 

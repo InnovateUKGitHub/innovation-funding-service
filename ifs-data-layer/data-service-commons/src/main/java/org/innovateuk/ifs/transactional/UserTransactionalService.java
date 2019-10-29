@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Method calls within this service will have transaction boundaries
  * provided to allow for safe atomic operations and persistence cascading.
  */
-@Transactional
+@Transactional(readOnly = true)
 public abstract class UserTransactionalService {
 
     @Autowired
