@@ -21,7 +21,7 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false )
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 

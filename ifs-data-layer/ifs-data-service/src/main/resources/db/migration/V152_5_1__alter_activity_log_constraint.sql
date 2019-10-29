@@ -1,3 +1,5 @@
+-- IFS-6484 alter activity log constraints.
+
 ALTER TABLE activity_log
 DROP FOREIGN KEY fk_activity_log_thread_id;
 

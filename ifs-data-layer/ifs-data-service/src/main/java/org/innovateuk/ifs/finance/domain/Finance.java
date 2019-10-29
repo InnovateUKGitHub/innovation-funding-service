@@ -5,7 +5,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import javax.persistence.*;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.REMOVE;
 
 /**
  * Base class for high-level Organisational Finances belonging to different aspects of the IFS application
@@ -24,11 +24,11 @@ public abstract class Finance {
     @Column(name = "organisation_size_id")
     private OrganisationSize organisationSize;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = REMOVE)
     @JoinColumn(name = "employeesAndTurnoverId")
     private EmployeesAndTurnover employeesAndTurnover;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = REMOVE)
     @JoinColumn(name = "growthTableId")
     private GrowthTable growthTable;
 

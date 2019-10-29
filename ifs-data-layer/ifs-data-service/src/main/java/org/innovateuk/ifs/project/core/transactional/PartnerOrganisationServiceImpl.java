@@ -8,6 +8,9 @@ import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
+import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -22,6 +25,7 @@ import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +48,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
+@Transactional(readOnly = true)
 public class PartnerOrganisationServiceImpl implements PartnerOrganisationService {
 
     @Autowired
@@ -82,6 +87,15 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Autowired
     private PartnerChangeService partnerChangeService;
 
+    @Autowired
+    private BankDetailsRepository bankDetailsRepository;
+
+    @Autowired
+    private OrganisationAddressRepository organisationAddressRepository;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
     }
@@ -104,8 +118,8 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Transactional
     public ServiceResult<Void> removePartnerOrganisation(long projectId, long organisationId) {
         return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
-                notFoundError(PartnerOrganisation.class, id)).andOnSuccessReturnVoid(
-                projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccess(
+                notFoundError(PartnerOrganisation.class, id)).andOnSuccess(
+                projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
                             sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
@@ -163,7 +177,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     }
 
     private String getProjectTeamLink(long projectId) {
-        return format("/project-setup/project/%d/team", projectId);
+        return format(webBaseUrl +"/project-setup/project/%d/team", projectId);
     }
 
     private void removePartnerOrg(long projectId, long organisationId) {
@@ -175,6 +189,14 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
             pendingPartnerProgressRepository.deleteById(pendingPartnerProgress.get().getId());
         }
         deleteProjectFinance(projectId, organisationId);
+        deleteBankDetails(projectId, organisationId);
+    }
+
+    private void deleteBankDetails(long projectId, long organisationId) {
+        Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if (bankDetails.isPresent()) {
+            bankDetailsRepository.delete(bankDetails.get());
+        }
     }
 
     private void deleteProjectFinance(long projectId, long organisationId) {

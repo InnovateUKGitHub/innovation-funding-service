@@ -14,7 +14,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -116,7 +115,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
         when(applicationService.getById(APPLICATION_ID)).thenReturn(application);
-        when(questionRestService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.OTHER_FUNDING)).thenReturn(restSuccess(otherFundingQuestion));
     }
 
     @Test
