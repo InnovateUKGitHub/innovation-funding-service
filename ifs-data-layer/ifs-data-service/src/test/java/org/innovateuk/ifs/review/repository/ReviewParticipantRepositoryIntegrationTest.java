@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.review.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Invite;
@@ -24,7 +22,6 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -40,7 +37,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ReviewParticipantRepository> {
 
     private Competition competition;
-    private InnovationArea innovationArea;
     private User user;
 
     @Autowired
@@ -51,9 +47,6 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Autowired
     private CompetitionRepository competitionRepository;
-
-    @Autowired
-    private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
     private ReviewParticipantRepository reviewParticipantRepository;
@@ -71,11 +64,6 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
         competition = competitionRepository.save(newCompetition()
                 .with(id(null))
                 .withName("competition")
-                .build());
-
-        innovationArea = innovationAreaRepository.save(newInnovationArea()
-                .with(id(null))
-                .withName("innovation area")
                 .build());
 
         user = userRepository.findByEmail("paul.plum@gmail.com")
