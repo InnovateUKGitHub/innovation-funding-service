@@ -278,19 +278,11 @@ public class UserResource {
                 .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
-                .append(inviteName, that.inviteName)
                 .append(phoneNumber, that.phoneNumber)
-                .append(imageUrl, that.imageUrl)
                 .append(email, that.email)
-                .append(password, that.password)
                 .append(status, that.status)
                 .append(roles, that.roles)
                 .append(profileId, that.profileId)
-                .append(termsAndConditionsIds, that.termsAndConditionsIds)
-                .append(createdOn, that.createdOn)
-                .append(createdBy, that.createdBy)
-                .append(modifiedOn, that.modifiedOn)
-                .append(modifiedBy, that.modifiedBy)
                 .isEquals();
     }
 
@@ -302,20 +294,12 @@ public class UserResource {
                 .append(title)
                 .append(firstName)
                 .append(lastName)
-                .append(inviteName)
                 .append(phoneNumber)
-                .append(imageUrl)
                 .append(email)
-                .append(password)
                 .append(status)
                 .append(roles)
                 .append(profileId)
                 .append(allowMarketingEmails)
-                .append(termsAndConditionsIds)
-                .append(createdOn)
-                .append(createdBy)
-                .append(modifiedOn)
-                .append(modifiedBy)
                 .toHashCode();
     }
 }
