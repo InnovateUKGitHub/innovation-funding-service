@@ -18,7 +18,7 @@ public class StatusServiceImpl implements StatusService {
     private StatusRestService statusRestService;
 
     @Override
-    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
+    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         return statusRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccess();
     }
 

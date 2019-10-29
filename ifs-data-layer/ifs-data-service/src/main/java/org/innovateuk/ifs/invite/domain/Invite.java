@@ -154,6 +154,10 @@ public abstract class Invite<T, I extends Invite<T,I>> {
         return doSend(sentBy, sentOn);
     }
 
+    public I resend(User sentBy, ZonedDateTime sentOn) {
+        return doSend(sentBy, sentOn);
+    }
+
     public I open () {
         this.status = InviteStatus.OPENED;
         return (I) this;

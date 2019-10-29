@@ -7,9 +7,12 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
+import org.innovateuk.ifs.project.bankdetails.transactional.CompetitionBankDetailsServiceImpl;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 
 import java.util.List;
 
@@ -30,6 +33,10 @@ public class CompetitionBankDetailsControllerTest extends BaseControllerMockMVCT
 
     @Mock
     private BankDetailsRepository bankDetailsRepositoryMock;
+
+    @Spy
+    @InjectMocks
+    private CompetitionBankDetailsServiceImpl competitionBankDetailsService;
 
     @Override
     protected CompetitionBankDetailsController supplyControllerUnderTest() {

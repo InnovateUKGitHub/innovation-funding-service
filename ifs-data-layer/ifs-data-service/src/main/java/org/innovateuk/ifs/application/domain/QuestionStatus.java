@@ -25,7 +25,7 @@ public class QuestionStatus {
 
     private ZonedDateTime markedAsCompleteOn;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "questionId", referencedColumnName = "id")
     private Question question;
 
@@ -34,7 +34,7 @@ public class QuestionStatus {
     private ProcessRole assignee;
     private ZonedDateTime assignedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
