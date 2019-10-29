@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -37,8 +36,6 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
     private InterviewAssignmentService interviewAssignmentService;
     @Autowired
     private QuestionStatusService questionStatusService;
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {

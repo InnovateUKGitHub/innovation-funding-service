@@ -88,7 +88,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);
         application.setProcessRoles(processRoles);
-        applicationRepository.save(application);
+//        applicationRepository.save(application);
     }
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
@@ -102,10 +102,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetition(competition);
         setInnovationArea(application, competition);
 
-        Application savedApplication = applicationRepository.save(application);
-        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication, organisationId);
-        savedApplication = applicationRepository.findById(savedApplication.getId()).orElse(null);
-        return serviceSuccess(applicationMapper.mapToResource(savedApplication));
+        application = applicationRepository.save(application);
+        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, application, organisationId);
+
+        return serviceSuccess(applicationMapper.mapToResource(application));
     }
 
     // Default to the competition's innovation area if only one set.

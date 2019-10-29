@@ -111,14 +111,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         panelAssessor = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
         interviewAssessor = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
 
-        processRole1 = newProcessRole().withRole(Role.LEADAPPLICANT).build();
-        processRole2 = newProcessRole().withRole(Role.APPLICANT).build();
         applicationResource1 = newApplicationResource().withCompetition(competition.getId()).withApplicationState(ApplicationState.OPENED).build();
         applicationResource2 = newApplicationResource().build();
         application1 = newApplication().withId(applicationResource1.getId()).withCompetition(competition).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
-        processRole1.setApplicationId(application1.getId());
-        processRole2.setApplicationId(application2.getId());
+        processRole1 = newProcessRole().withRole(Role.LEADAPPLICANT).withApplication(application1).build();
+        processRole2 = newProcessRole().withRole(Role.APPLICANT).withApplication(application2).build();
 
         applicantRoles.add(Role.LEADAPPLICANT);
         applicantRoles.add(Role.COLLABORATOR);
