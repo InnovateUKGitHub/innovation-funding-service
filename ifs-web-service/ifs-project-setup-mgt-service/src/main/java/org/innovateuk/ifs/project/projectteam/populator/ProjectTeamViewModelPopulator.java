@@ -64,6 +64,8 @@ public class ProjectTeamViewModelPopulator {
                 .sorted()
                 .collect(toList());
 
+        boolean userCanAddAndRemoveOrganisations = userCanAddAndRemoveOrganisations(project, loggedInUser);
+
         partnerOrgModels.addAll(partnerOrganisationInvites(projectId, userCanAddAndRemoveOrganisations));
 
         return new ProjectTeamViewModel(
@@ -76,7 +78,7 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 true,
                 !project.getProjectState().isActive(),
-                userCanAddAndRemoveOrganisations(project, loggedInUser),
+                userCanAddAndRemoveOrganisations,
                 canInvitePartnerOrganisation(project, loggedInUser),
                 canRemovePartnerOrganisation(project, loggedInUser));
     }
