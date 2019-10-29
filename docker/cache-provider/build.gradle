@@ -11,3 +11,8 @@ buildDocker.tag = "innovateuk/cache-provider:" + redisVersion
 createContainer.containerName = "cache-provider"
 createContainer.containerId = "cache-provider"
 createContainer.imageId = "innovateuk/cache-provider:" + redisVersion
+
+tagDocker.onlyIf { !isNamedEnv() }
+tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/cache-provider"
+tagDocker.imageId = "innovateuk/cache-provider:" + redisVersion
+tagDocker.tag = redisVersion
