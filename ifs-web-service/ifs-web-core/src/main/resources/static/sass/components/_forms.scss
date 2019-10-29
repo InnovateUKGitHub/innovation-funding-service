@@ -1,6 +1,6 @@
 %read-only {
   color: govuk-colour("black");
-  background: govuk-colour("grey-4");
+  background: govuk-colour("light-grey");
   border-color: $govuk-border-colour;
   cursor: default;
 }
@@ -224,7 +224,7 @@ tr {
 
       > * {
         &:first-child {
-          background: govuk-colour("grey-4") url('../images/ifs-images/icons/icon-alert.png') no-repeat;
+          background: govuk-colour("light-grey") url('../images/ifs-images/icons/icon-alert.png') no-repeat;
           background-position: 10px 50%;
           background-size: 16px;
           padding-left: 40px;
@@ -239,7 +239,7 @@ tr {
 
       td,
       th {
-        background: govuk-colour("grey-4");
+        background: govuk-colour("light-grey");
       }
     }
   }
@@ -276,7 +276,7 @@ tr {
     @include govuk-font(14);
     border: 2px solid $govuk-border-colour;
     border-bottom: none;
-    background: govuk-colour("grey-4") 0 0 no-repeat;
+    background: govuk-colour("light-grey") 0 0 no-repeat;
     min-height:60px;
 
     + textarea,
@@ -390,7 +390,7 @@ td {
 
 .upload-section {
   overflow: hidden;
-  background: govuk-colour("grey-4");
+  background: govuk-colour("light-grey");
   padding: 16px 16px 8px 16px;
   margin: 16px 0;
 
@@ -502,7 +502,7 @@ td {
   @include govuk-clearfix;
   clear: both;
   color: $govuk-text-colour;
-  background: govuk-colour("grey-4");
+  background: govuk-colour("light-grey");
   padding: 0.8em;
   margin: 0;
 

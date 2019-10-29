@@ -15,8 +15,8 @@ table {
 
 .button-secondary{
   @extend .govuk-button;
-  @include box-shadow(0 2px 0 darken(govuk-colour("grey-3"), 15%));
-  background-color: govuk-colour("grey-3");
+  @include box-shadow(0 2px 0 darken(govuk-colour("light-grey"), 15%));
+  background-color:govuk-colour("light-grey");
   color: $govuk-text-colour;
 
   // Ensure that any global link styles are overridden
@@ -29,16 +29,16 @@ table {
 
   &:hover,
   &:focus {
-    background-color: darken(govuk-colour("grey-3"), 5%);
+    background-color: darken(govuk-colour("light-grey"), 5%);
   }
 
   &.disabled,
   &[disabled]{
-    background-color: govuk-colour("grey-3");
+    background-color:govuk-colour("light-grey");
 
     &:hover,
     &:focus {
-      background-color: govuk-colour("grey-3");
+      background-color:govuk-colour("light-grey");
     }
   }
 }
@@ -56,7 +56,7 @@ table {
 
 .button-clear {
   @include govuk-font($size: 19, $line-height: 19px);
-  @include govuk-focusable;
+  //@include govuk-focusable; //TODO fix properly
   @include box-shadow(none);
   @include box-sizing(border-box);
   display: inline-block;
