@@ -9,4 +9,6 @@ SET @h2020_competition_type = (SELECT id FROM competition_type WHERE name = 'Hor
 -- update all h2020 competitions to use the new terms
 UPDATE competition
   SET terms_and_conditions_id = 24
-WHERE competition_type_id = @h2020_competition_type;
+WHERE
+  competition_type_id = @h2020_competition_type OR
+  (template AND name = 'Template for the Horizon 2020 competition type');
