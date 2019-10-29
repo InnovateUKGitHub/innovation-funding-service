@@ -213,7 +213,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_payloadTooLarge")).
                 andReturn();
 
-        assertResponseErrorKeyEqual(FILES_PAYLOAD_TOO_LARGE.name(), payloadTooLargeError(5000), response);
+        assertResponseErrorKeyEqual(PAYLOAD_TOO_LARGE.name(), payloadTooLargeError(5000), response);
     }
 
     @Test
@@ -410,7 +410,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_payloadTooLarge")).
                 andReturn();
 
-        assertResponseErrorKeyEqual(FILES_PAYLOAD_TOO_LARGE.name(), payloadTooLargeError(5000), response);
+        assertResponseErrorKeyEqual(PAYLOAD_TOO_LARGE.name(), payloadTooLargeError(5000), response);
     }
 
     @Test
