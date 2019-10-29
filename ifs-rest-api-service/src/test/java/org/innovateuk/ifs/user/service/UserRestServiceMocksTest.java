@@ -309,7 +309,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void deactivateUser() throws Exception {
         String url = usersUrl + "/id/123/deactivate";
-        setupPostWithRestResultExpectations(url, Void.class, null);
+        setupPostWithRestResultExpectations(url, Void.class, OK);
 
         RestResult<Void> result = service.deactivateUser(123L);
         assertTrue(result.isSuccess());
@@ -319,7 +319,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void reactivateUser() throws Exception {
         String url = usersUrl + "/id/123/reactivate";
-        setupPostWithRestResultExpectations(url, Void.class, null);
+        setupPostWithRestResultExpectations(url, Void.class, OK);
 
         RestResult<Void> result = service.reactivateUser(123L);
         assertTrue(result.isSuccess());
