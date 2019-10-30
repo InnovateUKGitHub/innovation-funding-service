@@ -52,20 +52,24 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
     private Organisation organisation;
     private Application application;
     private Project project;
-    private Notification notification;
+    private List<Notification> notifications;
     private MonitoringOfficer monitoringOfficer;
-    private List<ProjectUser> projectUsers = new ArrayList<>();
+    private List<ProjectUser> projectUsers;
     private Map<String, Object> notificationArguments = new HashMap<>();
 
     @Before
     public void setup() {
-
         organisation = newOrganisation()
                 .withId(43L)
                 .withOrganisationType(BUSINESS)
                 .withName("Ludlow")
                 .build();
         application = newApplication().withId(77L).build();
+        project = newProject()
+                .withId(99L)
+                .withName("Smart ideas for plastic recycling")
+                .withApplication(application)
+                .build();
 
         notificationArguments.put("applicationId", application.getId());
         notificationArguments.put("projectName", project.getName());
@@ -81,57 +85,39 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
                 .withUser(orville)
                 .build();
 
-        User lyn = newUser().withId(50L).withFirstName("Lyn").withLastName("Brown").build();
-        ProjectUser projectManager = newProjectUser()
-                .withId(88L)
+        List<User> users = newUser().withId(50L, 23L).withFirstName("Lyn", "Rick").withLastName("Brown", "McDonald").build(2);
+        projectUsers = newProjectUser()
+                .withId(88L, 45L)
                 .withProject(project)
-                .withRole(PROJECT_MANAGER)
+                .withRole(PROJECT_MANAGER, PROJECT_PARTNER)
                 .withOrganisation(organisation)
-                .withUser(lyn)
-                .build();
-        ProjectUser projectPartner = newProjectUser()
-                .withId(32L)
-                .withRole(PROJECT_PARTNER)
-                .build();
-        projectUsers.add(projectManager);
-        projectUsers.add(projectPartner);
+                .withUser(users.get(0), users.get(1))
+                .build(2);
 
-        project = newProject()
-                .withId(99L)
-                .withName("Smart ideas for plastic recycling")
-                .withApplication(application)
-                .withProjectMonitoringOfficer(monitoringOfficer)
-                .withProjectUsers(projectUsers)
-                .build();
+        project.addProjectUser(projectUsers.get(0));
+        project.addProjectUser(projectUsers.get(1));
+        project.setProjectMonitoringOfficer(monitoringOfficer);
 
         NotificationSource from = systemNotificationSourceMock;
-        NotificationTarget recipientPM = createProjectNotificationTarget(lyn);
+        NotificationTarget recipientPM = createProjectNotificationTarget(users.get(0));
         NotificationTarget recipientMO = createProjectNotificationTarget(orville);
 
-        notification = newNotification()
+        notifications = newNotification()
                 .withMessageKey(REMOVE_PROJECT_ORGANISATION)
                 .withSource(from)
-                .withTargets(singletonList(recipientPM))
+                .withTargets(singletonList(recipientPM), singletonList(recipientMO))
                 .withGlobalArguments(notificationArguments)
-                .build();
+                .build(2);
 
-        notification = newNotification()
-                .withMessageKey(REMOVE_PROJECT_ORGANISATION)
-                .withSource(from)
-                .withTargets(singletonList(recipientMO))
-                .withGlobalArguments(notificationArguments)
-                .build();
-
-        when(projectUserRepositoryMock.findByProjectIdAndRole(project.getId(), PROJECT_MANAGER)).thenReturn(Optional.of(projectManager));
+        when(projectUserRepositoryMock.findByProjectIdAndRole(project.getId(), PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
         when(monitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), orville.getId())).thenReturn(true);
         when(service.sendNotifications(project, organisation)).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.sendNotifications(project, organisation );
+        ServiceResult<Void> result = service.sendNotifications(project, organisation);
 
         assertTrue(result.isSuccess());
-        verify(notificationServiceMock, times(1)).sendNotificationWithFlush(notification, EMAIL);
+        verify(notificationServiceMock, times(2)).sendNotificationWithFlush(notifications.get(0), EMAIL);
     }
-
 
     private NotificationTarget createProjectNotificationTarget(User user) {
         String fullName = getProjectManagerFullName(user);
@@ -150,5 +136,4 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
     protected RemovePartnerNotificationService supplyServiceUnderTest() {
         return new RemovePartnerNotificationServiceImpl();
     }
-
 }
