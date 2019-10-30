@@ -41,14 +41,16 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request,
+                                 UserResource user) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
         model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-
+        addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
     }
 

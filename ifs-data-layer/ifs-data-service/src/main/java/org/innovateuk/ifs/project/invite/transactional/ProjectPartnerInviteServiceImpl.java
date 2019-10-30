@@ -183,6 +183,10 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
 
+                                    if(project.getApplication().getCompetition().applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+                                        viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
+                                    }
+
                                     invite.open();
                                 }));
 

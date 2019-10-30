@@ -119,4 +119,7 @@ public class RegistrationCookieService {
         return !isCollaboratorJourney(request);
     }
 
+    public boolean isApplicantJourney(HttpServletRequest request) {
+        return !getProjectInviteHashCookieValue(request).isPresent();
+    }
 }

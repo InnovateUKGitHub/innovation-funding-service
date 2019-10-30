@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.viewmodel.ContributorOrganisationTypeViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,8 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
                                          BindingResult bindingResult,
                                          HttpServletResponse response,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
-                                         @RequestParam(value = "invalid", required = false) String invalid) {
+                                         @RequestParam(value = "invalid", required = false) String invalid,
+                                         UserResource user) {
         registrationCookieService.deleteOrganisationCreationCookie(response);
 
         if (invalid != null) {
@@ -52,6 +54,7 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
                     .collect(Collectors.toList());
         model.addAttribute("form", form);
         model.addAttribute("model", new ContributorOrganisationTypeViewModel(types));
+        addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/contributor-organisation-type";
     }
 

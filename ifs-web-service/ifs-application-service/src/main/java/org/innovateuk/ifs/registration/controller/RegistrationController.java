@@ -90,10 +90,12 @@ public class RegistrationController {
     private final static String EMAIL_FIELD_NAME = "email";
 
     @GetMapping("/success")
-    public String registrationSuccessful(
+    public String registrationSuccessful(Model model,
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
+        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
         registrationCookieService.deleteInviteHashCookie(response);
+        registrationCookieService.deleteProjectInviteHashCookie(response);
         if (referer == null || !referer.contains(request.getServerName() + "/registration/register")) {
             throw new ObjectNotFoundException("Attempt to access registration page directly...", emptyList());
         }
@@ -278,7 +280,6 @@ public class RegistrationController {
         if (inviteHash.isPresent()) {
             Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
             inviteRestService.acceptInvite(inviteHash.get(), userResource.getId(), organisationId.get()).getSuccess();
-            registrationCookieService.deleteInviteHashCookie(response);
         }
 
         Optional<InviteAndIdCookie> projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request);
@@ -286,7 +287,6 @@ public class RegistrationController {
             SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.get().getId(), projectInvite.get().getHash()).getSuccess();
             Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
             projectPartnerInviteRestService.acceptInvite(projectInvite.get().getId(), invite.getId(), organisationId.get()).getSuccess();
-            registrationCookieService.deleteProjectInviteHashCookie(response);
         }
     }
 

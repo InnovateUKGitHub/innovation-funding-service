@@ -89,13 +89,13 @@ public class OrganisationJourneyEnd {
             SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.get().getId(), projectInvite.get().getHash()).getSuccess();
             projectPartnerInviteRestService.acceptInvite(projectInvite.get().getId(), invite.getId(), organisationId).getSuccess();
             registrationCookieService.deleteProjectInviteHashCookie(response);
-            return redirectToProject(projectInvite.get().getId());
+            return redirectToApplicantDashboard();
         }
         throw new ObjectNotFoundException();
     }
 
-    private String redirectToProject(long projectId) {
-        return format("redirect:/project-setup/project/%d", projectId);
+    private String redirectToApplicantDashboard() {
+        return format("redirect:/applicant/dashboard");
     }
 
     private String redirectToApplicationOverview(long applicationId) {

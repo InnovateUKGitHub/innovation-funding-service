@@ -19,6 +19,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -78,6 +80,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @Autowired
     private FinanceService financeService;
+
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
     private FinanceChecksEligibilityProjectCostsFormPopulator formPopulator;
@@ -125,9 +130,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisationId)));
                 }
             } else {
-                ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.getApplication(), organisation.get().getId());
-                if (applicationFinanceResource.getFinanceFileEntry() != null) {
-                    FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccess();
+                Optional<ApplicationFinanceResource> applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.get().getId()).getOptionalSuccessObject();
+                if (applicationFinanceResource.map(ApplicationFinanceResource::getFinanceFileEntry).isPresent()) {
+                    FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.get().getFinanceFileEntry()).getSuccess();
                     jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
                 }
             }
