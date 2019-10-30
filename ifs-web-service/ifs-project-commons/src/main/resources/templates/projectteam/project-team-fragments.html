@@ -163,5 +163,12 @@
         </tr>
         </tbody>
     </table>
+        <button name="add-team-member"
+                th:value="${organisation.id}"
+                class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
+                th:attr="data-show-form=${'invite-user-' + organisation.id},
+                                     aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
+            Add team member
+        </button>
 </th:block>
 
