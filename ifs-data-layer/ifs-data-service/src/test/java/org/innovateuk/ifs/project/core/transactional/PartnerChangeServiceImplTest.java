@@ -67,13 +67,13 @@ public class PartnerChangeServiceImplTest extends BaseServiceUnitTest<PartnerCha
     }
 
     @Test
-    public void updateProjectAfterChangingPartners_ViabilityAndEligibilityAreReset() {
+    public void updateProjectWhenPartnersChange_ViabilityAndEligibilityAreReset() {
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(Collections.emptyList());
 
         when(financeCheckService.resetViability(any(), any(), any())).thenReturn(ServiceResult.serviceSuccess());
         when(financeCheckService.resetEligibility(any(), any(), any())).thenReturn(ServiceResult.serviceSuccess());
 
-        boolean result = service.updateProjectAfterChangingPartners(1L).isSuccess();
+        boolean result = service.updateProjectWhenPartnersChange(1L).isSuccess();
 
         verify(financeCheckService, times(1)).resetViability(new ProjectOrganisationCompositeId(1L, 1L), Viability.REVIEW, ViabilityRagStatus.UNSET);
         verify(financeCheckService, times(1)).resetEligibility(any(), any(), any());
@@ -81,14 +81,14 @@ public class PartnerChangeServiceImplTest extends BaseServiceUnitTest<PartnerCha
     }
 
     @Test
-    public void updateProjectAfterChangingPartners_submittedDocumentIsRejected() {
+    public void updateProjectWhenPartnersChange_submittedDocumentIsRejected() {
         stubResetProjectFinance();
         List<ProjectDocument> documents = Collections.singletonList(projectDocument);
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(documents);
         when(projectDocument.getStatus()).thenReturn(DocumentStatus.APPROVED);
         when(projectDocumentRepository.saveAll(any())).thenReturn(documents);
 
-        boolean result = service.updateProjectAfterChangingPartners(1).isSuccess();
+        boolean result = service.updateProjectWhenPartnersChange(1).isSuccess();
 
         verify(projectDocument).setStatus(DocumentStatus.REJECTED);
         verify(projectDocumentRepository, times(1)).saveAll(documents);
@@ -97,25 +97,25 @@ public class PartnerChangeServiceImplTest extends BaseServiceUnitTest<PartnerCha
     }
 
     @Test
-    public void updateProjectAfterChangingPartners_thereAreNoSubmittedDocuments() {
+    public void updateProjectWhenPartnersChange_thereAreNoSubmittedDocuments() {
         stubResetProjectFinance();
         List<ProjectDocument> documents = Collections.emptyList();
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(documents);
 
-        boolean result = service.updateProjectAfterChangingPartners(1).isSuccess();
+        boolean result = service.updateProjectWhenPartnersChange(1).isSuccess();
 
         verify(projectDocumentRepository, times(0)).saveAll(any());
         assertTrue(result);
     }
 
     @Test
-    public void updateProjectAfterChangingPartners_thereAreOnlyRejectedDocuments() {
+    public void updateProjectWhenPartnersChange_thereAreOnlyRejectedDocuments() {
         stubResetProjectFinance();
         List<ProjectDocument> documents = Collections.singletonList(projectDocument);
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(documents);
         when(projectDocument.getStatus()).thenReturn(DocumentStatus.REJECTED);
 
-        boolean result = service.updateProjectAfterChangingPartners(1).isSuccess();
+        boolean result = service.updateProjectWhenPartnersChange(1).isSuccess();
 
         verify(projectDocumentRepository, times(0)).saveAll(any());
         assertTrue(result);

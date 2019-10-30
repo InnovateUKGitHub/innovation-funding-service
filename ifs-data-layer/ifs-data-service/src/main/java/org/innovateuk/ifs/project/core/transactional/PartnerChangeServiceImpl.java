@@ -34,12 +34,12 @@ public class PartnerChangeServiceImpl extends BaseTransactionalService implement
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateProjectAfterChangingPartners(long projectId) {
-        return resetProjectFinanceForUnchangedPartners(projectId)
+    public ServiceResult<Void> updateProjectWhenPartnersChange(long projectId) {
+        return resetProjectFinance(projectId)
             .andOnSuccess(() -> rejectProjectDocuments(projectId));
     }
 
-    private ServiceResult<Void> resetProjectFinanceForUnchangedPartners(long projectId) {
+    private ServiceResult<Void> resetProjectFinance(long projectId) {
         List<ProjectFinance> projectFinances = projectFinanceRepository.findByProjectId(projectId);
 
         projectFinances.forEach(projectFinance -> {

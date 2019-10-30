@@ -123,7 +123,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
                             sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
-                            partnerChangeService.updateProjectAfterChangingPartners(projectId);
+                            partnerChangeService.updateProjectWhenPartnersChange(projectId);
                         })
         );
     }

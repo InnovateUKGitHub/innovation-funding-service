@@ -92,6 +92,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private ActivityLogService activityLogService;
 
+    @Autowired
+    PartnerChangeService partnerChangeService;
+
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -139,6 +142,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<ProjectUser> addPartner(long projectId, long userId, long organisationId) {
+        partnerChangeService.updateProjectWhenPartnersChange(projectId);
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
                     if (project.getOrganisations(o -> o.getId() == organisationId).isEmpty()) {
