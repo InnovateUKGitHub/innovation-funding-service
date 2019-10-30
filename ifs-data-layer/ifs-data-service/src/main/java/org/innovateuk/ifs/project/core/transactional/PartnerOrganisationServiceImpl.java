@@ -86,10 +86,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
-
-    @Autowired
-    private OrganisationAddressRepository organisationAddressRepository;
-
+    
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
