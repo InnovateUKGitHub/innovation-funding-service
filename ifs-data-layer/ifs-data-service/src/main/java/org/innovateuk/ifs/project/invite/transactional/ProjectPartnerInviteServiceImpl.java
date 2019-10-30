@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
@@ -20,6 +21,7 @@ import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -77,6 +79,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private PendingPartnerProgressRepository pendingPartnerProgressRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -173,6 +178,8 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
                                     PartnerOrganisation partnerOrganisation = new PartnerOrganisation(project, organisation, false);
                                     partnerOrganisation = partnerOrganisationRepository.save(partnerOrganisation);
+
+                                    pendingPartnerProgressRepository.save(new PendingPartnerProgress(partnerOrganisation));
 
                                     ProjectUser projectUser = new ProjectUser(invite.getUser(), project, ProjectParticipantRole.PROJECT_PARTNER, organisation);
                                     projectUser = projectUserRepository.save(projectUser);
