@@ -36,3 +36,6 @@ ALTER TABLE activity_log MODIFY type ENUM(
     'ORGANISATION_REMOVED',
     'ORGANISATION_ADDED'
 ) NOT NULL;
+
+ALTER TABLE activity_log
+    ADD COLUMN author bigint(20);

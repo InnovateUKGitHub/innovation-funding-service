@@ -41,6 +41,10 @@ public class ActivityLog {
     @JoinColumn(name="createdBy", referencedColumnName="id", nullable = false, updatable = false)
     private User createdBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="author", referencedColumnName="id", nullable = true, updatable = false)
+    private User author;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
@@ -84,6 +88,13 @@ public class ActivityLog {
         this.organisation = organisation;
     }
 
+    public ActivityLog(Application application, ActivityType type, Organisation organisation, User author) {
+        this.author = author;
+        this.application = application;
+        this.type = type;
+        this.organisation = organisation;
+    }
+
     public Long getId() {
         return id;
     }
@@ -102,6 +113,10 @@ public class ActivityLog {
 
     public User getCreatedBy() {
         return createdBy;
+    }
+
+    public User getAuthor() {
+        return author != null ? author : getCreatedBy();
     }
 
     public ZonedDateTime getCreatedOn() {
@@ -129,6 +144,7 @@ public class ActivityLog {
                 .append(application, that.application)
                 .append(type, that.type)
                 .append(createdBy, that.createdBy)
+                .append(author, that.author)
                 .append(createdOn, that.createdOn)
                 .append(organisation, that.organisation)
                 .append(competitionDocument, that.competitionDocument)
