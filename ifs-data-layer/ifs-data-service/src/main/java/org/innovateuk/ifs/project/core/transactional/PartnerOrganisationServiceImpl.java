@@ -8,7 +8,6 @@ import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
@@ -86,7 +85,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
-    
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
