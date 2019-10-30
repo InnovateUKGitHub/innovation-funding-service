@@ -142,7 +142,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<ProjectUser> addPartner(long projectId, long userId, long organisationId) {
-        partnerChangeService.updateProjectWhenPartnersChange(projectId);
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
                     if (project.getOrganisations(o -> o.getId() == organisationId).isEmpty()) {
@@ -158,6 +157,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         if (projectUser.isPresent()) {
             return serviceSuccess(projectUser.get()); // Already a partner
         } else {
+            partnerChangeService.updateProjectWhenPartnersChange(project.getId());
             ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
             return serviceSuccess(pu);
         }
