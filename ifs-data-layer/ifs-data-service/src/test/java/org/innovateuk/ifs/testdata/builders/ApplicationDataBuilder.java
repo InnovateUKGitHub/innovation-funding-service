@@ -97,7 +97,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                                 .getSuccess(),
                         x -> type.equals(x.getQuestionSetupType())).get();
 
-                questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
+                questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
                                 .getId()),
                         retrieveLeadApplicant(data.getApplication().getId()).getId())

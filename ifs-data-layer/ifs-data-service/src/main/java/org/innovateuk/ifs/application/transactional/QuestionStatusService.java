@@ -22,6 +22,9 @@ public interface QuestionStatusService {
                                                            final long markedAsCompleteById);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
+    ServiceResult<Void> markAsCompleteNoValidate(QuestionApplicationCompositeId ids, long markedAsCompleteById);
+
+    @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                              final long markedAsInCompleteById);
 
