@@ -21,6 +21,10 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-6485 - Add Partner
 ...
+...             IFS-6505 - Accept invite as new partner and register
+...
+...            IFS-6525 - Invited new partner to project setup - pending state
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -170,18 +174,18 @@ New user is able to repspond to a query
     Then the user should not see an error in the page
 
 Ifs Admin is able to add a new partner organisation
-    [Documentation]  IFS-6485
+    [Documentation]  IFS-6485  IFS-6505
     [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page           ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation  Testing Organisation  Name Surname  ${ifsAdminAddOrgEmail}
+    When the user adds a new partner organisation  Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
     Then the user reads his email                  ${ifsAdminAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
 
 Project finance is able to add a new partner organisation
-    [Documentation]  IFS-6485
+    [Documentation]  IFS-6485  IFS-6505
     [Setup]  log in as a different user            &{internal_finance_credentials}
     Given the user navigates to the page           ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation  Testing Organisation  Name Surname  ${intFinanceAddOrgEmail}
-    Then the user reads his email                  ${intFinanceAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    When the user adds a new partner organisation  Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
+    Then a new orgzanisation is able to accept project invite
 
 Comp Admin isn't able to add a new partner organisation
     [Documentation]  IFS-6485
@@ -190,16 +194,22 @@ Comp Admin isn't able to add a new partner organisation
     Then the user should not see the element       link = Add a partner organisation
 
 *** Keywords ***
+a new orgzanisation is able to accept project invite
+    logout as user
+    the user reads his email and clicks the link   ${intFinanceAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+#    ${test_mailbox_one}+changepsw@gmail.com  Reset your password  If you didn't request this
+
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
     the user enters text to a text field  id = organisationName  ${partnerOrgName}
     the user enters text to a text field  id = userName  ${persFullName}
     the user enters text to a text field  id = email  ${email}
     the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
+    the user should see the element           jQuery = h2:contains(${partnerOrgName})
 
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
-    the user clicks the button/link        jQuery =tr:contains("Empire") td:nth-child(6):contains("View")
+    the user clicks the button/link        jQuery = tr:contains("Empire") td:nth-child(6):contains("View")
     the user clicks the button/link        id = post-new-query
     the user enters text to a text field   id = queryTitle  a viability query's title
     the user enters text to a text field   css = .editor    another query body
@@ -334,6 +344,6 @@ The user fills in account details
 Custom suite setup
     The guest user opens the browser
 
-Custom suite teardown
-    The user closes the browser
+#Custom suite teardown
+#    The user closes the browser
 
