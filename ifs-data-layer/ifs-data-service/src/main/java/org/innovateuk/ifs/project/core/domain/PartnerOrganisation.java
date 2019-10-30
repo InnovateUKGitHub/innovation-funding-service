@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -12,8 +13,9 @@ import java.util.Optional;
  */
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "project_id", "organisation_id" } ) } )
-public class PartnerOrganisation implements ProcessActivity {
+public class PartnerOrganisation implements ProcessActivity, Serializable {
 
+    private static final long serialVersionUID = -8387564358927297967L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
