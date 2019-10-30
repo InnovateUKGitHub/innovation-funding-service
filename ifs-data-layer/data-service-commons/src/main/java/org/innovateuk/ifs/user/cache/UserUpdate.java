@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Caching(put = {
-        @CachePut(value = "userUid", key = "#result.getSuccess().uid", unless = "#result.isSuccess()")
+        @CachePut(value = "userUid", key = "#result.getSuccess().uid", unless = "#result.isFailure()")
 })
 public @interface UserUpdate {
 }

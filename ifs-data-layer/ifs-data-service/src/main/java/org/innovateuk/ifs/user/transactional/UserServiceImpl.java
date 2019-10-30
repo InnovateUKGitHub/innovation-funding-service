@@ -214,6 +214,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     @Transactional
+    @UserUpdate
     public ServiceResult<UserResource> updateDetails(UserResource userResource) {
         return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()))
                 .andOnSuccess(user -> updateUser(user, userResource))
