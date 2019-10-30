@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.invite.transactional;
 
+import org.innovateuk.ifs.activitylog.advice.Activity;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;

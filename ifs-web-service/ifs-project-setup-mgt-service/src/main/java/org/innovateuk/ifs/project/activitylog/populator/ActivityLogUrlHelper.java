@@ -23,6 +23,8 @@ public class ActivityLogUrlHelper {
             case MARKED_PROJECT_AS_SUCCESSFUL:
             case MARKED_PROJECT_AS_UNSUCCESSFUL:
                 return format("/project-setup-management/competition/%d/project/%d/details", project.getCompetition(), project.getId());
+            case ORGANISATION_REMOVED:
+            case ORGANISATION_ADDED:
             case PROJECT_MANAGER_NOMINATED:
             case FINANCE_CONTACT_NOMINATED:
                 return format("/project-setup-management/competition/%d/project/%d/team", project.getCompetition(), project.getId());
