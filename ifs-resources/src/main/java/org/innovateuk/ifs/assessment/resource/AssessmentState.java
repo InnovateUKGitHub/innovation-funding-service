@@ -14,21 +14,22 @@ import static com.google.common.collect.Sets.immutableEnumSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 public enum AssessmentState implements ProcessState, IdentifiableEnum {
-    CREATED(19, State.CREATED),
-    PENDING(1, State.PENDING),
-    WITHDRAWN(20, State.WITHDRAWN),
-    REJECTED(3, State.REJECTED),
-    ACCEPTED(12, State.ACCEPTED),
-    OPEN(2, State.OPEN),
-    READY_TO_SUBMIT(4, State.READY_TO_SUBMIT),
-    SUBMITTED(5, State.SUBMITTED),
+    CREATED(19, State.CREATED, 1),
+    PENDING(1, State.PENDING, 2),
+    WITHDRAWN(20, State.WITHDRAWN, 3),
+    REJECTED(3, State.REJECTED, 4),
+    ACCEPTED(12, State.ACCEPTED, 5),
+    OPEN(2, State.OPEN, 6),
+    READY_TO_SUBMIT(4, State.READY_TO_SUBMIT, 7),
+    SUBMITTED(5, State.SUBMITTED, 8),
 
-    DECIDE_IF_READY_TO_SUBMIT(-1, State.DECIDE_IF_READY_TO_SUBMIT); // pseudo state?
+    DECIDE_IF_READY_TO_SUBMIT(-1, State.DECIDE_IF_READY_TO_SUBMIT, 9); // pseudo state?
 
     private static final Map<String, AssessmentState> assessmentStatesMap;
 
     private final long id;
     private final State backingState;
+    private final int priority;
 
     static {
         assessmentStatesMap = new HashMap<>();
@@ -38,9 +39,10 @@ public enum AssessmentState implements ProcessState, IdentifiableEnum {
         }
     }
 
-    AssessmentState(long id, State backingState) {
+    AssessmentState(long id, State backingState, int priority) {
         this.id = id;
         this.backingState = backingState;
+        this.priority = priority;
     }
 
     public static final ImmutableSet<AssessmentState> acceptedAssessmentStates = immutableEnumSet(
@@ -82,5 +84,9 @@ public enum AssessmentState implements ProcessState, IdentifiableEnum {
     @Override
     public long getId() {
         return id;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 }
