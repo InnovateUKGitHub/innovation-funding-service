@@ -830,6 +830,11 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     }
 
+    @Test
+    public void resetViability_when() {
+
+    }
+
     private ProjectFinance setUpSaveViabilityMocking(User user, PartnerOrganisation partnerOrganisationInDB, ViabilityState viabilityStateInDB) {
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);

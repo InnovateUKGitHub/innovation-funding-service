@@ -502,10 +502,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Viability viability) {
 
-        if (Viability.APPROVED == viability) {
-            viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
-        } else if(Viability.REVIEW == viability){
-            viabilityWorkflowHandler.viabilityReset(partnerOrganisation, currentUser);
+        if(!viability.equals(viabilityWorkflowHandler.getState(partnerOrganisation))) {
+            if (Viability.APPROVED == viability) {
+                viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
+            } else if (Viability.REVIEW == viability) {
+                viabilityWorkflowHandler.viabilityReset(partnerOrganisation, currentUser);
+            }
         }
 
         return serviceSuccess();
@@ -513,9 +515,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
-        projectFinance.setViabilityStatus(viabilityRagStatus);
+        if(!projectFinance.getViabilityStatus().equals(viabilityRagStatus)) {
+            projectFinance.setViabilityStatus(viabilityRagStatus);
 
-        projectFinanceRepository.save(projectFinance);
+            projectFinanceRepository.save(projectFinance);
+        }
 
         return serviceSuccess();
     }
@@ -545,9 +549,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
 
-        projectFinance.setEligibilityStatus(eligibilityRagStatus);
+        if(!projectFinance.getViabilityStatus().equals(eligibilityRagStatus)) {
+            projectFinance.setEligibilityStatus(eligibilityRagStatus);
 
-        projectFinanceRepository.save(projectFinance);
+            projectFinanceRepository.save(projectFinance);
+        }
 
         return serviceSuccess();
     }
