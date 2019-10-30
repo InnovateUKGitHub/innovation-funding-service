@@ -242,7 +242,7 @@ the user should see correct details after assessment submitted
     the user should not see the element               link = Intelligent Building
 
 the user submits the assessment
-    the user clicks the button/link            css = .in-progress li:nth-child(3) input[type = "checkbox"] ~ label
+    the user clicks the button/link            css = .in-progress li:nth-child(7) input[type = "checkbox"] ~ label
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
     the user clicks the button/link            jQuery = button:contains("Cancel")
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
