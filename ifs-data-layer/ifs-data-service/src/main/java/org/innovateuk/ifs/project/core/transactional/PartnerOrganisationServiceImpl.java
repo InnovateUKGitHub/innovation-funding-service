@@ -68,6 +68,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private QueryRepository queryRepository;
 
     @Autowired
+    private PartnerChangeService partnerChangeService;
+
+    @Autowired
     private BankDetailsRepository bankDetailsRepository;
 
     @Autowired
@@ -99,6 +102,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
                             removePartnerNotificationService.sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
+                            partnerChangeService.updateProjectWhenPartnersChange(projectId);
                         })
         );
     }
