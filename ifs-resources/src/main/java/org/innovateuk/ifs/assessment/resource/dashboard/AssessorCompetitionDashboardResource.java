@@ -13,7 +13,6 @@ public class AssessorCompetitionDashboardResource {
     private String innovationLead;
     private ZonedDateTime assessorAcceptDate;
     private ZonedDateTime assessorDeadlineDate;
-
     private List<ApplicationAssessmentResource> applicationAssessments;
 
     public AssessorCompetitionDashboardResource() {
