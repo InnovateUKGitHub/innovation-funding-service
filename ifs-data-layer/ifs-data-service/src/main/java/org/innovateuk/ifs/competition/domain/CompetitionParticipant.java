@@ -15,8 +15,8 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 /**
  * A {@link Participant} in a {@link Competition}.
  */
-@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorOptions(force = true)
 @Entity
 @Table(name = "competition_user")
@@ -34,10 +34,6 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "invite_id")
-    private I invite;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rejection_reason_id")
@@ -70,8 +66,6 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
 
         this.user = invite.getUser();
         this.competition = invite.getTarget();
-        this.invite = invite;
-        this.role = CompetitionParticipantRole.ASSESSOR;
     }
 
     @Override
@@ -145,7 +139,6 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
                 .append(id, that.id)
                 .append(competition, that.competition)
                 .append(user, that.user)
-                .append(invite, that.invite)
                 .append(rejectionReason, that.rejectionReason)
                 .append(rejectionReasonComment, that.rejectionReasonComment)
                 .append(role, that.role)
@@ -159,7 +152,6 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
                 .append(id)
                 .append(competition)
                 .append(user)
-                .append(invite)
                 .append(rejectionReason)
                 .append(rejectionReasonComment)
                 .append(role)

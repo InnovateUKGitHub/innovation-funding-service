@@ -5,14 +5,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 
@@ -38,24 +37,13 @@ public class ReviewParticipant extends CompetitionParticipant<ReviewInvite> {
 
     public ReviewParticipant(ReviewInvite invite) {
         super();
-        if (invite == null) {
-            throw new NullPointerException("invite cannot be null");
-        }
-
-        if (invite.getTarget() == null) {
-            throw new NullPointerException("invite.target cannot be null");
-        }
-
-        if (invite.getStatus() != SENT && invite.getStatus() != OPENED) {
-            throw new IllegalArgumentException("invite.status must be SENT or OPENED");
-        }
 
         if (invite.getUser() != null) {
             super.setUser(invite.getUser());
         }
         super.setProcess(invite.getTarget());
         this.invite = invite;
-        super.setRole(CompetitionParticipantRole.PANEL_ASSESSOR);
+        setRole(PANEL_ASSESSOR);
     }
 
     private ReviewParticipant accept() {
@@ -76,7 +64,6 @@ public class ReviewParticipant extends CompetitionParticipant<ReviewInvite> {
         }
 
         super.setStatus(ACCEPTED);
-
         return this;
     }
 

@@ -3,8 +3,9 @@ package org.innovateuk.ifs.competition.domain;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.User;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
+
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.*;
 
 /**
  * A {@link Stakeholder} in a {@link Competition}.
@@ -13,14 +14,29 @@ import javax.persistence.Entity;
 @DiscriminatorValue("STAKEHOLDER")
 public class Stakeholder extends CompetitionParticipant<StakeholderInvite> {
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "invite_id")
+    private StakeholderInvite invite;
+
     private Stakeholder() {
     }
 
     public Stakeholder(Competition competition, User user) {
         super.setProcess(competition);
         super.setUser(user);
-        super.setRole(CompetitionParticipantRole.STAKEHOLDER);
+        super.setRole(STAKEHOLDER);
         super.setStatus(ParticipantStatus.ACCEPTED);
+    }
+
+    public Stakeholder(StakeholderInvite invite) {
+        super();
+
+        if (invite.getUser() != null) {
+            super.setUser(invite.getUser());
+        }
+        super.setProcess(invite.getTarget());
+        this.invite = invite;
+        setRole(STAKEHOLDER);
     }
 
     @Override

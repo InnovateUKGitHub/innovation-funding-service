@@ -12,7 +12,6 @@ import org.innovateuk.ifs.user.domain.User;
 import javax.persistence.*;
 
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 
@@ -38,24 +37,13 @@ public class InterviewParticipant extends CompetitionParticipant<InterviewInvite
 
     public InterviewParticipant(InterviewInvite invite) {
         super();
-        if (invite == null) {
-            throw new NullPointerException("invite cannot be null");
-        }
-
-        if (invite.getTarget() == null) {
-            throw new NullPointerException("invite.target cannot be null");
-        }
-
-        if (invite.getStatus() != SENT && invite.getStatus() != OPENED) {
-            throw new IllegalArgumentException("invite.status must be SENT or OPENED");
-        }
 
         if (invite.getUser() != null) {
             super.setUser(invite.getUser());
         }
         super.setProcess(invite.getTarget());
         this.invite = invite;
-        super.setRole(CompetitionParticipantRole.INTERVIEW_ASSESSOR);
+        setRole(CompetitionParticipantRole.INTERVIEW_ASSESSOR);
     }
 
     private InterviewParticipant accept() {
