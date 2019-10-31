@@ -72,7 +72,7 @@ function startPybot() {
     fi
 
 
-    pabot --processes 2 --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
+    pabot --processes 4 --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
