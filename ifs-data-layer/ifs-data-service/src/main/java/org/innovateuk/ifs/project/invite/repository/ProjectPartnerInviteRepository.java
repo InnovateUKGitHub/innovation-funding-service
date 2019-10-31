@@ -8,5 +8,4 @@ import java.util.List;
 public interface ProjectPartnerInviteRepository extends InviteRepository<ProjectPartnerInvite> {
     List<ProjectPartnerInvite> findByProjectIdAndEmail(long projectId, String email);
     List<ProjectPartnerInvite> findByProjectId(long projectId);
-
 }

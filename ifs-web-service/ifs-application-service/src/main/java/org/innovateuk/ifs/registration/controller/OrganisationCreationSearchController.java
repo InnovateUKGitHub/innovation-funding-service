@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -53,6 +54,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     @GetMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"})
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
+                                     UserResource user,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
         registrationCookieService.deleteOrganisationIdCookie(response);
@@ -67,7 +69,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-
+        addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
@@ -87,7 +89,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                            Model model,
                                            @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                            HttpServletRequest request,
-                                           HttpServletResponse response) {
+                                           HttpServletResponse response,
+                                           UserResource user) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         organisationForm.setSearchOrganisationId(searchOrganisationId);
 
@@ -96,9 +99,11 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
+        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        addPageSubtitleToModel(request, user, model);
 
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
     }

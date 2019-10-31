@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static java.lang.Long.parseLong;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 
 /**
  * Interceptor to add Google Analytics data layer to the Model.
@@ -121,23 +121,21 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
         if (pathVariables.containsKey(PROJECT_ID)) {
             final long projectId = getIdFromPathVariable(pathVariables, PROJECT_ID);
-            final long applicationId = googleAnalyticsDataLayerRestService.getApplicationIdForProject(projectId).getSuccess();
-            dataLayer.setApplicationId(applicationId);
+            final Optional<Long> applicationId = googleAnalyticsDataLayerRestService.getApplicationIdForProject(projectId).getOptionalSuccessObject();
+            applicationId.ifPresent(dataLayer::setApplicationId);
         }
     }
 
     private static void setCompetitionNameFromRestService(GoogleAnalyticsDataLayer dl,
                                                           Function<Long, RestResult<String>> f,
                                                           final long id) {
-        final String competitionName = f.apply(id).getSuccess();
-        if (competitionName != null) {
-            dl.setCompetitionName(fromJson(competitionName, String.class));
-        }
+        final Optional<String> competitionName = f.apply(id).getOptionalSuccessObject();
+        competitionName.ifPresent(dl::setCompetitionName);
     }
 
     private static void setApplicationOrProjectSpecificRolesFromRestService(GoogleAnalyticsDataLayer dl, Function<Long, RestResult<List<Role>>> f, final long id) {
-        final List<Role> roles = f.apply(id).getSuccess();
-        dl.addUserRoles(roles);
+        final Optional<List<Role>> roles = f.apply(id).getOptionalSuccessObject();
+        roles.ifPresent(dl::addUserRoles);
     }
 
     private static long getIdFromPathVariable(final Map<String,String> pathVariables, final String pathVariable) {

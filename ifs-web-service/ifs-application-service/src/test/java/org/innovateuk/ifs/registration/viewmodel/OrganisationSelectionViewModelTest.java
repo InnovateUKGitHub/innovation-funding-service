@@ -13,7 +13,7 @@ public class OrganisationSelectionViewModelTest {
         OrganisationSelectionChoiceViewModel choice = mock(OrganisationSelectionChoiceViewModel.class);
 
         OrganisationSelectionViewModel viewModel = new OrganisationSelectionViewModel(asSet(choice),
-                false,
+                false, false,
                 "url"
                 );
 
