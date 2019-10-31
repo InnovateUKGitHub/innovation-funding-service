@@ -39,7 +39,7 @@
     <!-- ============== Logging Categories and Levels ============== -->
     <!-- =========================================================== -->
 
-    <logger name="org.opensaml.saml.metadata.resolver" level="TRACE"/>
+    <logger name="org.opensaml.saml.metadata.resolver" level="WARN"/>
 
     <!-- Logs IdP, but not OpenSAML, messages -->
     <logger name="net.shibboleth.idp" level="${idp.loglevel.idp:-INFO}"/>

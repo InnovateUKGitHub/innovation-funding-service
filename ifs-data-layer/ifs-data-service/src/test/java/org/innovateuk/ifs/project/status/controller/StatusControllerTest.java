@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.transactional.InternalUserProjectStatusService;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -23,19 +24,22 @@ public class StatusControllerTest extends BaseControllerMockMVCTest<StatusContro
     @Mock
     private StatusService statusServiceMock;
 
+    @Mock
+    private InternalUserProjectStatusService internalUserProjectStatusService;
+
     @Test
     public void getCompetitionStatus() throws Exception {
         final Long competitionId = 123L;
         String applicationSearchString = "12";
         List<ProjectStatusResource> projectStatusResources = newProjectStatusResource().withProjectNumber().build(3);
         ServiceResult<List<ProjectStatusResource>> expected = serviceSuccess(projectStatusResources);
-        when(statusServiceMock.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(expected);
+        when(internalUserProjectStatusService.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(expected);
 
         mockMvc.perform(get("/project/competition/{competitionId}?applicationSearchString=" + applicationSearchString, 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectStatusResources)));
 
-        verify(statusServiceMock).getCompetitionStatus(competitionId, applicationSearchString);
+        verify(internalUserProjectStatusService).getCompetitionStatus(competitionId, applicationSearchString);
     }
 
     @Test
@@ -44,7 +48,7 @@ public class StatusControllerTest extends BaseControllerMockMVCTest<StatusContro
 
         ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
 
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+        when(internalUserProjectStatusService.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
         mockMvc.perform(get("/project/{id}/status", projectId))
                 .andExpect(status().isOk())

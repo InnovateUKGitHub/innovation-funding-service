@@ -52,7 +52,7 @@ public class AssessmentCompetitionDashboardControllerTest extends BaseController
         ApplicationAssessmentResource assessments = newApplicationAssessmentResource()
                 .withApplicationId(1L)
                 .withAssessmentId(2L)
-                .withCompetitionName(competition.getName())
+                .withApplicationName("Test Application")
                 .withLeadOrganisation("Lead Company")
                 .withState(ACCEPTED)
                 .build();

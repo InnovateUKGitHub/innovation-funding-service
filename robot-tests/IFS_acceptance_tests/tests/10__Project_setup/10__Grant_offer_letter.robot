@@ -124,13 +124,12 @@ Non lead should not be able to see GOL until it is sent by IUK
 Comp Admin cannot upload big or non-pdf grant offer letter
     [Documentation]  INFUND-7049
     [Tags]
-    [Setup]  log in as a different user              &{Comp_admin1_credentials}
-    Given the user navigates to the page             ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
-    When the user uploads a file                     grantOfferLetter  ${too_large_pdf}
-    Then the user should see the element             jQuery = h1:contains("${too_large_pdf_validation_error}")
-    When the user navigates to the page              ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
-    And the user uploads a file                      grantOfferLetter  ${text_file}
-    Then the user should see a field error           ${wrong_filetype_validation_error}
+    [Setup]  log in as a different user                 &{Comp_admin1_credentials}
+    Given the user navigates to the page                ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
+    When the user uploads a file                        grantOfferLetter  ${too_large_pdf}
+    Then The user should see a field and summary error  ${too_large_10MB_validation_error}
+    And the user uploads a file                         grantOfferLetter  ${text_file}
+    Then the user should see a field error              ${wrong_filetype_validation_error}
 
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
@@ -197,11 +196,10 @@ PM should not be able to upload big Grant Offer files
     [Documentation]    INFUND-4851, INFUND-4972
     [Tags]
     [Setup]    log in as a different user            ${Elbow_Grease_Lead_PM_Email}  ${short_password}
-    Given the user clicks the button/link            link = ${Elbow_Grease_Title}
-    And the user clicks the button/link              link = Grant offer letter
-    When the user uploads a file                     signedGrantOfferLetter    ${too_large_pdf}
-    Then the user should see the element             jQuery = h1:contains("${too_large_pdf_validation_error}")
-    And the user goes back to the previous page
+    Given the user clicks the button/link               link = ${Elbow_Grease_Title}
+    And the user clicks the button/link                 link = Grant offer letter
+    When the user uploads a file                        signedGrantOfferLetter    ${too_large_pdf}
+    Then the user should see a field and summary error  ${too_large_10MB_validation_error}
 
 PM should be able upload a file and then access the Send button
     [Documentation]    INFUND-4851, INFUND-4972, INFUND-6829

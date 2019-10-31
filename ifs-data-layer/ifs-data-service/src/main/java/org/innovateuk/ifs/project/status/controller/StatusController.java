@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.transactional.InternalUserProjectStatusService;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,18 @@ import static java.util.Optional.ofNullable;
 public class StatusController {
     @Autowired
     private StatusService statusService;
+    @Autowired
+    private InternalUserProjectStatusService internalUserProjectStatusService;
 
     @GetMapping("/competition/{competitionId}")
     public RestResult<List<ProjectStatusResource>> getCompetitionStatus(@PathVariable final long competitionId,
                                                                         @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString){
-        return statusService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).toGetResponse();
+        return internalUserProjectStatusService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).toGetResponse();
     }
 
     @GetMapping("/previous/competition/{competitionId}")
     public RestResult<List<ProjectStatusResource>> getPreviousCompetitionStatus(@PathVariable final long competitionId) {
-        return statusService.getPreviousCompetitionStatus(competitionId).toGetResponse();
+        return internalUserProjectStatusService.getPreviousCompetitionStatus(competitionId).toGetResponse();
     }
 
     @GetMapping("/{projectId}/team-status")
@@ -40,6 +43,6 @@ public class StatusController {
 
     @GetMapping("/{projectId}/status")
     public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
-        return statusService.getProjectStatusByProjectId(projectId).toGetResponse();
+        return internalUserProjectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
     }
 }
