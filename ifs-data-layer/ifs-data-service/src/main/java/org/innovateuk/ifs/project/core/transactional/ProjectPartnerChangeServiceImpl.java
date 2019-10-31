@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class PartnerChangeServiceImpl extends BaseTransactionalService implements PartnerChangeService {
+public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService implements ProjectPartnerChangeService {
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;

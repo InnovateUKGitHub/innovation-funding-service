@@ -32,7 +32,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration
-public class PartnerChangeServiceImplTest extends BaseServiceUnitTest<PartnerChangeService> {
+public class ProjectPartnerChangeServiceImplTest extends BaseServiceUnitTest<ProjectPartnerChangeService> {
 
     @Mock
     private ProjectDocumentRepository projectDocumentRepository;
@@ -49,8 +49,8 @@ public class PartnerChangeServiceImplTest extends BaseServiceUnitTest<PartnerCha
     private ProjectDocument projectDocument = mock(ProjectDocument.class);
 
     @Override
-    protected PartnerChangeService supplyServiceUnderTest() {
-        return new PartnerChangeServiceImpl();
+    protected ProjectPartnerChangeService supplyServiceUnderTest() {
+        return new ProjectPartnerChangeServiceImpl();
     }
 
     @Before

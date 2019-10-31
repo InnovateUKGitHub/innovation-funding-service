@@ -93,7 +93,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ActivityLogService activityLogService;
 
     @Autowired
-    PartnerChangeService partnerChangeService;
+    ProjectPartnerChangeService projectPartnerChangeService;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -157,7 +157,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         if (projectUser.isPresent()) {
             return serviceSuccess(projectUser.get()); // Already a partner
         } else {
-            partnerChangeService.updateProjectWhenPartnersChange(project.getId());
+            projectPartnerChangeService.updateProjectWhenPartnersChange(project.getId());
             ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
             return serviceSuccess(pu);
         }

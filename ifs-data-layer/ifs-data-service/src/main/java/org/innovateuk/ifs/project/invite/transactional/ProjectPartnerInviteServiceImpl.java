@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.transactional.ProjectPartnerChangeService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
@@ -82,6 +83,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private PendingPartnerProgressRepository pendingPartnerProgressRepository;
+
+    @Autowired
+    private ProjectPartnerChangeService projectPartnerChangeService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -184,6 +188,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     ProjectUser projectUser = new ProjectUser(invite.getUser(), project, ProjectParticipantRole.PROJECT_PARTNER, organisation);
                                     projectUser = projectUserRepository.save(projectUser);
 
+                                    projectPartnerChangeService.updateProjectWhenPartnersChange(project.getId());
                                     projectFinanceRowService.createProjectFinance(project.getId(),
                                             organisation.getId());
 
@@ -193,7 +198,6 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     if(project.getApplication().getCompetition().applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
                                         viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
                                     }
-
                                     invite.open();
                                 }));
 
