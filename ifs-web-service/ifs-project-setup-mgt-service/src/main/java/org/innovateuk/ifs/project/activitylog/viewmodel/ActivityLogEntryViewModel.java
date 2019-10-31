@@ -4,6 +4,9 @@ import org.innovateuk.ifs.activitylog.resource.ActivityType;
 
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.ORGANISATION_ADDED;
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.ORGANISATION_REMOVED;
+
 public class ActivityLogEntryViewModel {
 
     private final String title;
@@ -53,5 +56,16 @@ public class ActivityLogEntryViewModel {
 
     public boolean isDisplayLink() {
         return displayLink;
+    }
+
+    public String getView() {
+        switch (activityType) {
+            case ORGANISATION_ADDED:
+                return ORGANISATION_ADDED.toString();
+            case ORGANISATION_REMOVED:
+                return ORGANISATION_REMOVED.toString();
+            default:
+                return "DEFAULT";
+        }
     }
 }
