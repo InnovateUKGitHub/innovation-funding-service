@@ -14,5 +14,6 @@ import java.util.Optional;
 public interface ProjectFinanceRowRepository extends FinanceRowRepository<ProjectFinanceRow>, PagingAndSortingRepository<ProjectFinanceRow, Long> {
     List<ProjectFinanceRow> findByTargetId(long targetId);
     Optional<ProjectFinanceRow> findOneByApplicationRowId(long applicationRowId);
+    void deleteAllByTargetId(long projectId);
     List<ProjectFinanceRow> findByTargetProjectIdAndTargetOrganisationId(long projectId, long organisationId);
 }

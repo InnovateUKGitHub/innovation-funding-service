@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static javax.persistence.CascadeType.REMOVE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DB_STRING_LENGTH;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH_MESSAGE;
 
@@ -37,7 +38,7 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
-    @OneToMany(mappedBy="financeRowId")
+    @OneToMany(mappedBy="financeRowId", cascade = REMOVE)
     private List<FinanceRowMetaValue> financeRowMetadata = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
