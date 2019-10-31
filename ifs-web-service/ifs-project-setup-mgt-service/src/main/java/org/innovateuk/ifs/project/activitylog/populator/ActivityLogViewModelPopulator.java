@@ -132,19 +132,19 @@ public class ActivityLogViewModelPopulator {
 
     private String internalUserText(ActivityLogResource log) {
         String role = log.isIfsAdmin() ? IFS_ADMINISTRATOR.getDisplayName()
-                : log.getCreatedByRoles().iterator().next().getDisplayName();
-        return log.getCreatedByName() + ", " + role;
+                : log.getAuthoredByRoles().iterator().next().getDisplayName();
+        return log.getAuthoredByName() + ", " + role;
     }
 
     private String externalUserText(ActivityLogResource log, List<ProjectUserResource> projectUserResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
         Supplier<Stream<ProjectUserResource>> projectUsers = () -> projectUserResources
                 .stream()
-                .filter(pu -> pu.getUser().equals(log.getCreatedBy()));
+                .filter(pu -> pu.getUser().equals(log.getAuthoredBy()));
         String organisationName = organisationNameOfProjectUser(projectUsers, partnerOrganisationResources);
         String role = projectUsers.get().anyMatch(ProjectUserResource::isProjectManager) ? "Project manager"
                 : projectUsers.get().anyMatch(ProjectUserResource::isFinanceContact) ? "Finance contact"
                 : "Partner";
-        return format("%s, %s for %s", log.getCreatedByName(), role, organisationName);
+        return format("%s, %s for %s", log.getAuthoredByName(), role, organisationName);
     }
 
     private String organisationNameOfProjectUser(Supplier<Stream<ProjectUserResource>> projectUsers, List<PartnerOrganisationResource> partnerOrganisationResources) {

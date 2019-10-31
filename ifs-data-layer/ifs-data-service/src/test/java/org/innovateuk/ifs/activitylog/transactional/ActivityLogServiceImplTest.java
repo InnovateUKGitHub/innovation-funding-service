@@ -172,9 +172,9 @@ public class ActivityLogServiceImplTest {
         ActivityLogResource activityLogResource = result.getSuccess().get(0);
 
         assertEquals(TEST_ACTIVITY_TYPE, activityLogResource.getActivityType());
-        assertEquals(createdBy.getId(), activityLogResource.getCreatedBy());
-        assertEquals("Bob Name", activityLogResource.getCreatedByName());
-        assertEquals(singleton(PROJECT_FINANCE), activityLogResource.getCreatedByRoles());
+        assertEquals(createdBy.getId(), activityLogResource.getAuthoredBy());
+        assertEquals("Bob Name", activityLogResource.getAuthoredByName());
+        assertEquals(singleton(PROJECT_FINANCE), activityLogResource.getAuthoredByRoles());
         assertEquals(createdOn, activityLogResource.getCreatedOn());
         assertEquals(competitionDocument.getId(), activityLogResource.getDocumentConfig());
         assertEquals("My document", activityLogResource.getDocumentConfigName());

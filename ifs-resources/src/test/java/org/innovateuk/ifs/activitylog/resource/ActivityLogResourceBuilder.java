@@ -36,17 +36,17 @@ public class ActivityLogResourceBuilder  extends BaseBuilder<ActivityLogResource
         return withArray((activityType, log) -> setField("activityType", activityType, log), activityTypes);
     }
 
-    public ActivityLogResourceBuilder withCreatedBy(Long... createdBys) {
-        return withArray((createdBy, log) -> setField("createdBy", createdBy, log), createdBys);
+    public ActivityLogResourceBuilder withAuthoredBy(Long... createdBys) {
+        return withArray((createdBy, log) -> setField("authoredBy", createdBy, log), createdBys);
     }
 
-    public ActivityLogResourceBuilder withCreatedByName(String... createdByNames) {
-        return withArray((createdByName, log) -> setField("createdByName", createdByName, log), createdByNames);
+    public ActivityLogResourceBuilder withAuthoredByName(String... createdByNames) {
+        return withArray((createdByName, log) -> setField("authoredByName", createdByName, log), createdByNames);
     }
 
     @SafeVarargs
-    public final ActivityLogResourceBuilder withCreatedByRoles(Set<Role>... createdByRolez) {
-        return withArray((createdByRoles, log) -> setField("createdByRoles", createdByRoles, log), createdByRolez);
+    public final ActivityLogResourceBuilder withAuthoredByRoles(Set<Role>... authoredByRolez) {
+        return withArray((authoredByRoles, log) -> setField("authoredByRoles", authoredByRoles, log), authoredByRolez);
     }
 
     public ActivityLogResourceBuilder withCreatedOn(ZonedDateTime... createdOns) {
