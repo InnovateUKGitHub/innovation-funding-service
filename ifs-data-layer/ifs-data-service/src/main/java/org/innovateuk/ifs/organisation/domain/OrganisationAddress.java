@@ -9,8 +9,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
-
 /**
  * Resource object to store the address details, from the company, from the companies house api.
  */
@@ -51,16 +49,7 @@ public class OrganisationAddress {
     public void setBankDetails(List<BankDetails> bankDetails) {
         this.bankDetails = bankDetails;
     }
-
-    //    @JsonIgnore
-//    public BankDetails getBankDetails() {
-//        return bankDetails;
-//    }
-//
-//    public void setBankDetails(BankDetails bankDetails) {
-//        this.bankDetails = bankDetails;
-//    }
-
+    
     @JsonIgnore
     public Organisation getOrganisation() {
         return organisation;
