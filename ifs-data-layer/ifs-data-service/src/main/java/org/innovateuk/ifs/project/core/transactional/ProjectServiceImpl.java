@@ -157,7 +157,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         if (projectUser.isPresent()) {
             return serviceSuccess(projectUser.get()); // Already a partner
         } else {
-            projectPartnerChangeService.updateProjectWhenPartnersChange(project.getId());
             ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
             return serviceSuccess(pu);
         }
