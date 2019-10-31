@@ -89,7 +89,7 @@ public class ProjectTeamViewModelPopulator {
                 statusAccessor.isGrantOfferLetterGenerated(),
                 false,
                 isMonitoringOfficer,
-                true,
+                false,
                 false);
     }
 
