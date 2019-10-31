@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static javax.persistence.CascadeType.REMOVE;
+
 /**
  * Resource object to store the address details, from the company, from the companies house api.
  */
@@ -29,7 +31,7 @@ public class OrganisationAddress {
     @JoinColumn(name = "address_type_id", referencedColumnName = "id")
     private AddressType addressType;
 
-    @OneToMany(mappedBy = "organisationAddress")
+    @OneToMany(mappedBy = "organisationAddress", fetch = FetchType.LAZY, cascade = REMOVE)
     private List<BankDetails> bankDetails;
 
     public OrganisationAddress(Organisation organisation, Address address, AddressType addressType) {
