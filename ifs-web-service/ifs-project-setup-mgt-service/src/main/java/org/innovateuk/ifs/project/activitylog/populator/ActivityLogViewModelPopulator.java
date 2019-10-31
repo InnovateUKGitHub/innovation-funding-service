@@ -69,7 +69,8 @@ public class ActivityLogViewModelPopulator {
                         activity.getCreatedOn(),
                         linkText(activity),
                         url(activity, project),
-                        userCanSeeLink(activity, user)
+                        userCanSeeLink(activity, user),
+                        activity.getActivityType()
                 ))
                 .collect(toList());
 
