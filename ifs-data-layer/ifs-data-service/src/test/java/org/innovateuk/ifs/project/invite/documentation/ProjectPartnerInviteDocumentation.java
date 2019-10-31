@@ -137,7 +137,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         long inviteId = 321L;;
         long organisationId = 321L;
         when(projectPartnerInviteService.acceptInvite(inviteId, organisationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(get("/project/{projectId}/project-partner-invite/{inviteId}/organisation/{organisationId}/accept", projectId, inviteId, organisationId)
+        mockMvc.perform(post("/project/{projectId}/project-partner-invite/{inviteId}/organisation/{organisationId}/accept", projectId, inviteId, organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
