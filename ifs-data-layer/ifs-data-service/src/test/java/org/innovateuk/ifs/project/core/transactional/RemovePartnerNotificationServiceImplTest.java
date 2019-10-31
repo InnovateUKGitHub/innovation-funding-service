@@ -45,9 +45,6 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
-    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
-
-    @Mock
     private SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
