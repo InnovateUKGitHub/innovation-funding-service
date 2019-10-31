@@ -7,12 +7,14 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
+@Transactional(readOnly = true)
 public class AssessmentCompetitionDashboardServiceImpl implements AssessmentCompetitionDashboardService {
 
     @Autowired
@@ -24,6 +26,7 @@ public class AssessmentCompetitionDashboardServiceImpl implements AssessmentComp
     @Override
     public ServiceResult<AssessorCompetitionDashboardResource> getAssessorCompetitionDashboardResource(long userId, long competitionId) {
         List<ApplicationAssessmentResource> assessments = applicationAssessmentService.getApplicationAssessmentResource(userId, competitionId).getSuccess();
+
         Competition competition = competitionRepository.findById(competitionId).get();
         AssessorCompetitionDashboardResource assessorCompetitionDashboardResource = new AssessorCompetitionDashboardResource(
                 competitionId,
