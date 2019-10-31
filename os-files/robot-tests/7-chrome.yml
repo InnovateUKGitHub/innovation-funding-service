@@ -30,10 +30,10 @@ items:
           - containerPort: 3000
           resources:
             limits:
-              cpu: 6000m
+              cpu: 3000m
               memory: 6000M
             requests:
-              cpu: 800m
+              cpu: 400m
               memory: 800M
           env:
           - name: NODE_MAX_SESSION
