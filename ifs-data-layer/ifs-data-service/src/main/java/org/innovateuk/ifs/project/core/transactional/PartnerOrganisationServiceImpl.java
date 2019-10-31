@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -35,6 +37,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.ORGANISATION_REMOVED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_REMOVE_LEAD_ORGANISATION_FROM_PROJECT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -85,6 +88,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -183,6 +189,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
         }
         deleteProjectFinance(projectId, organisationId);
         deleteBankDetails(projectId, organisationId);
+        activityLogService.recordActivityByProjectIdAndOrganisationId(projectId, organisationId, ORGANISATION_REMOVED);
     }
 
     private void deleteBankDetails(long projectId, long organisationId) {
