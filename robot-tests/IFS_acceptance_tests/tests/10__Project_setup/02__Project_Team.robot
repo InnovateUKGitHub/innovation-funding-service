@@ -25,7 +25,7 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 
 ...             IFS-6505 - Accept invite as new partner and register
 ...
-...            IFS-6525 - Invited new partner to project setup - pending state
+...             IFS-6525 - Invited new partner to project setup - pending state
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
