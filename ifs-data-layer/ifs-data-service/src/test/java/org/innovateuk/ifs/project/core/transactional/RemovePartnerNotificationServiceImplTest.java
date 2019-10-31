@@ -15,7 +15,9 @@ import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerReposit
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 
@@ -36,6 +38,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTest<RemovePartnerNotificationService> {
 
     @Mock
@@ -115,7 +118,6 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
                 .build(2);
 
         when(projectUserRepositoryMock.findByProjectIdAndRole(project.getId(), PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
-        when(monitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), orville.getId())).thenReturn(true);
 
         ServiceResult<Void> result = service.sendNotifications(project, organisation);
 
@@ -149,7 +151,6 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
                 .build(1);
 
         when(projectUserRepositoryMock.findByProjectIdAndRole(project.getId(), PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
-        when(monitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), orville.getId())).thenReturn(false);
 
         ServiceResult<Void> result = service.sendNotifications(project, organisation);
 
@@ -185,7 +186,6 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
 
         when(projectUserRepositoryMock.findByProjectIdAndRole(project.getId(), PROJECT_MANAGER)).thenReturn(Optional.empty());
         when(projectUserRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(projectUsers);
-        when(monitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), orville.getId())).thenReturn(true);
 
         ServiceResult<Void> result = service.sendNotifications(project, organisation);
 
