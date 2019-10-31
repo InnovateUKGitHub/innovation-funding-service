@@ -539,7 +539,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, EligibilityState eligibility) {
 
-        if(!eligibility.name().equals(eligibilityWorkflowHandler.getState(partnerOrganisation).name())) {
+        if(!eligibility.equals(eligibilityWorkflowHandler.getState(partnerOrganisation))) {
             if (EligibilityState.APPROVED == eligibility) {
                 eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
             } else if (EligibilityState.REVIEW == eligibility) {

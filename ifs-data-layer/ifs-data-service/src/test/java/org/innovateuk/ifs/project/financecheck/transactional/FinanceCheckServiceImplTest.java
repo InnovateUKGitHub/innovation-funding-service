@@ -785,8 +785,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.UNSET);
-
+        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
         verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
     }
 
@@ -836,6 +835,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ViabilityProcess viabilityProcess = new ViabilityProcess(user, partnerOrganisationInDB, viabilityStateInDB);
         when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(viabilityStateInDB);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -984,8 +984,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.UNSET);
-
+        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
     }
 
@@ -1045,6 +1044,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         EligibilityProcess eligibilityProcess = new EligibilityProcess(user, partnerOrganisationInDB, eligibilityStateInDB);
         when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(eligibilityProcess);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(eligibilityStateInDB);
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
