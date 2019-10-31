@@ -43,20 +43,11 @@ def String ldapEncryptionCertificateFileName = 'ldap-encryption.crt'
 def String ldapEncryptionCertificateFile = "${buildDir}/${ldapEncryptionCertificateFileName}"
 
 task prepareIDPProxySecrets {
-
     doFirst {
         if (!file("${idpCertsVolume}/${idpProxyKeyFileName}").exists() ||
                 !file("${idpCertsVolume}/${idpProxyCertificateFileName}").exists() ||
                 !file("${idpCertsVolume}/${idpProxyCacertificateFileName}").exists()) {
             buildDir.mkdir()
-            // a valid CA certificate is required for the data service to work
-            assert project.hasProperty('idp.proxy.key')
-            new File(idpProxyKeyFile).write(project['idp.proxy.key'])
-            assert project.hasProperty('idp.proxy.certificate')
-            new File(idpProxyCertificateFile).write(project['idp.proxy.certificate'])
-            assert project.hasProperty('idp.proxy.cacertificate')
-            new File(idpProxyCacertificateFile).write(project['idp.proxy.cacertificate'])
-
             copy {
                 from file(idpProxyKeyFile)
                 from file(idpProxyCertificateFile)
