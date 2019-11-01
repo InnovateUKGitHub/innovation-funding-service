@@ -82,13 +82,10 @@ Large pdfs not allowed for either document
     Given the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link                 link = Collaboration agreement
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
-    Then the user should see the element                jQuery = h1:contains("${too_large_pdf_validation_error}")
-    And the user goes back to the previous page
-    And the user goes to documents page                 Back to document overview  Exploitation plan
+    Then the user should see a field error              ${too_large_10MB_validation_error}
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
-    Then the user should see the element                jQuery = h1:contains("${too_large_pdf_validation_error}")
+    Then the user should see a field error              ${too_large_10MB_validation_error}
     And the user should not see the element             link = ${too_large_pdf}")
-    And the user goes back to the previous page
     [Teardown]  the user clicks the button/link          link = Back to document overview
 
 Non pdf files not allowed for either document

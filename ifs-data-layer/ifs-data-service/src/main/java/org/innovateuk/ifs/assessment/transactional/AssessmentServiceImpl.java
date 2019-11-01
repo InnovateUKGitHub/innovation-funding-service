@@ -114,7 +114,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
         return serviceSuccess(
                 simpleMap(
-                        sort(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId),
+                        sort(assessmentRepository.findByParticipantUserIdAndTargetCompetitionId(userId, competitionId),
                                 comparing(Assessment::getProcessState)
                         ),
                         assessmentMapper::mapToResource
