@@ -142,7 +142,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         projectRepository.save(activeProject);
 
         // any competitions with projects still active will show in this list
-        assertEquals(5L, repository.countProjectSetup().longValue());
+        assertEquals(5, repository.countProjectSetup().longValue());
         assertEquals(5, repository.findProjectSetup(PageRequest.of(0, 10)).getTotalElements());
 
         // our new competition should be included
@@ -196,29 +196,29 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Rollback
     public void competitionWithNoProjects() {
 
-        Competition compWithNoProjects = newCompetition()
+        Competition competitionWithNoProjects = newCompetition()
                 .withId()
                 .withNonIfs(false)
                 .withSetupComplete(true)
                 .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
-        compWithNoProjects = repository.save(compWithNoProjects);
+        competitionWithNoProjects = repository.save(competitionWithNoProjects);
 
         Milestone feedbackReleasedMilestone =
-                new Milestone(FEEDBACK_RELEASED, ZonedDateTime.now().minusDays(1), compWithNoProjects);
+                new Milestone(FEEDBACK_RELEASED, ZonedDateTime.now().minusDays(1), competitionWithNoProjects);
 
         milestoneRepository.save(feedbackReleasedMilestone);
 
         Application applicationFundedAndInformed = newApplication()
-                .withCompetition(compWithNoProjects)
+                .withCompetition(competitionWithNoProjects)
                 .withFundingDecision(FUNDED)
                 .withManageFundingEmailDate(now())
                 .build();
 
         applicationRepository.save(applicationFundedAndInformed);
 
-        assertFalse(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(compWithNoProjects));
+        assertFalse(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(competitionWithNoProjects));
     }
 
     @Test
@@ -367,8 +367,12 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         notFundedAndInformed = repository.save(notFundedAndInformed);
 
-        Application applicationFundedAndInformed = newApplication().withCompetition(notFundedAndInformed)
-                .withFundingDecision(UNFUNDED).withManageFundingEmailDate(now()).build();
+        Application applicationFundedAndInformed = newApplication()
+                .withCompetition(notFundedAndInformed)
+                .withFundingDecision(UNFUNDED)
+                .withManageFundingEmailDate(now())
+                .build();
+
         applicationRepository.save(applicationFundedAndInformed);
 
         assertFalse(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(notFundedAndInformed));

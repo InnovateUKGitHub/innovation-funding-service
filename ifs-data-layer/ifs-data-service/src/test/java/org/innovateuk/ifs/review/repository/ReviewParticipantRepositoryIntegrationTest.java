@@ -85,7 +85,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
 
         List<ReviewParticipant> retrievedParticipants = repository.findAll();
 
-        assertEquals(10, retrievedParticipants.size());  // Including 8 pre-existing participants added via patch
+        assertEquals(2, retrievedParticipants.size());
         assertEqualParticipants(savedParticipants, retrievedParticipants);
     }
 
@@ -151,7 +151,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
-    public void getAssessorsByCompetitionAndStatus() throws Exception {
+    public void getAssessorsByCompetitionAndStatus() {
         User acceptedUser = newUser()
                 .withId()
                 .withEmailAddress("ah@test2.com")
@@ -178,7 +178,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
         repository.saveAll(reviewParticipants);
         flushAndClearSession();
 
-        assertEquals(12, repository.count()); // Including 8 pre-existing paricipants added via patch
+        assertEquals(4, repository.count());
         Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<ReviewParticipant> pagedResult = repository.getPanelAssessorsByCompetitionAndStatusContains(
