@@ -30,6 +30,7 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
+Resource          ../../resources/Applicant_Commons.robot
 
 *** Variables ***
 ${newProjecTeamPage}         ${server}/project-setup/project/${PS_PD_Project_Id}/team
@@ -228,6 +229,14 @@ the user removes a partner organisation
 a new orgzanisation is able to accept project invite
     logout as user
     the user reads his email and clicks the link   ${intFinanceAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user clicks the button/link                jQuery = .govuk-button:contains("Yes, create an account")
+    the user selects the radio button              radio-1   1
+    the user clicks the button/link                jQuery = .govuk-button:contains("Save and continue")
+
+    the user enters text to a text field           id = organisationSearchName  Nomensa
+    the user clicks the button/link                id = org-search
+    the user clicks the button/link                link = NOMENSA LTD
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
 #    ${test_mailbox_one}+changepsw@gmail.com  Reset your password  If you didn't request this
 
 the user adds a new partner organisation
@@ -236,7 +245,7 @@ the user adds a new partner organisation
     the user enters text to a text field  id = userName  ${persFullName}
     the user enters text to a text field  id = email  ${email}
     the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
-    the user should see the element           jQuery = h2:contains(${partnerOrgName})
+    the user should see the element       jQuery = h2:contains(${partnerOrgName})
 
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
