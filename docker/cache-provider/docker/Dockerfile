@@ -4,6 +4,7 @@ RUN usermod -a -G root redis
 RUN mkdir /redis-data
 COPY redis.conf /usr/local/etc/redis/redis.conf
 RUN chown -R :root /redis-data
+RUN chmod -R 777 /redis-data
 
 # Health checks
 COPY redis-docker-healthcheck.sh /usr/local/bin/docker-healthcheck.sh
