@@ -65,7 +65,7 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
 
     @Test
     @Rollback
-    public void testMarkAsComplete(){
+    public void testMarkAsComplete() {
         RestResult<ValidationMessages> result = controller.markAsComplete(fundingSection, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
         ValidationMessages validationMessages = result.getSuccess();
