@@ -29,7 +29,7 @@ public class Stakeholder extends CompetitionParticipant<StakeholderInvite> {
     }
 
     public Stakeholder(StakeholderInvite invite) {
-        super();
+        super(invite);
 
         if (invite.getUser() != null) {
             super.setUser(invite.getUser());

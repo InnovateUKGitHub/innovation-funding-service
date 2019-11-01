@@ -36,7 +36,7 @@ public class ReviewParticipant extends CompetitionParticipant<ReviewInvite> {
     }
 
     public ReviewParticipant(ReviewInvite invite) {
-        super();
+        super(invite);
 
         if (invite.getUser() != null) {
             super.setUser(invite.getUser());

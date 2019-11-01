@@ -36,7 +36,7 @@ public class InterviewParticipant extends CompetitionParticipant<InterviewInvite
     }
 
     public InterviewParticipant(InterviewInvite invite) {
-        super();
+        super(invite);
 
         if (invite.getUser() != null) {
             super.setUser(invite.getUser());

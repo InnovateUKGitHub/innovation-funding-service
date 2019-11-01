@@ -34,7 +34,7 @@ public class InnovationLead extends CompetitionParticipant<InnovationLeadInvite>
     }
 
     public InnovationLead(InnovationLeadInvite invite) {
-        super();
+        super(invite);
 
         if (invite.getUser() != null) {
             super.setUser(invite.getUser());
