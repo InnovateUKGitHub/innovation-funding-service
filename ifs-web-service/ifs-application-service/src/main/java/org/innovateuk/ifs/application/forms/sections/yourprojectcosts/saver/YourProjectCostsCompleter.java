@@ -63,14 +63,9 @@ public class YourProjectCostsCompleter {
     }
 
     private void handleMarkAcademicFinancesAsNotRequired(long organisationType, long applicationId, long processRoleId, CompetitionResource competition) {
-        if (OrganisationTypeEnum.RESEARCH.getId() == organisationType
-                && !researchUserSeesOrganisationSection(competition)) {
+        if (competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisationType))) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competition.getId(), SectionType.ORGANISATION_FINANCES).get(0);
             sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
         }
-    }
-
-    private boolean researchUserSeesOrganisationSection(CompetitionResource competition) {
-        return Boolean.TRUE.equals(competition.getIncludeYourOrganisationSection());
     }
 }
