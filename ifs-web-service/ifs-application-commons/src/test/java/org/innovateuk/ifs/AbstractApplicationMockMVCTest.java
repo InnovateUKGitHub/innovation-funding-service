@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -177,6 +178,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withMinProjectDuration(1)
                 .withMaxProjectDuration(36)
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
