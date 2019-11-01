@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.transactional.ProjectPartnerChangeService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
@@ -100,6 +101,9 @@ public class ProjectPartnerInviteServiceImplTest {
 
     @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Mock
+    private ProjectPartnerChangeService projectPartnerChangeService;
 
     @Test
     public void invite() {
@@ -290,6 +294,7 @@ public class ProjectPartnerInviteServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(inviteOrganisation.getOrganisation(), organisation);
+        verify(projectPartnerChangeService).updateProjectWhenPartnersChange(project.getId());
         verify(projectFinanceRowService).createProjectFinance(project.getId(), organisationId);
         verify(viabilityWorkflowHandler).projectCreated(any(), any());
         verify(eligibilityWorkflowHandler).projectCreated(any(), any());
