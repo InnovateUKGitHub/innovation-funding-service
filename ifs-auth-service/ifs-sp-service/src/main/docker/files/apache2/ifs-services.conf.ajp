@@ -200,7 +200,7 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
-  <Location ~ "/project-setup/project/\d*/partner-invite/.*">
+  <Location ~ "/project-setup/project/\d+/partner-invite/.*">
     AuthType shibboleth
     ShibRequireSession Off
     ShibRequestSetting isPassive On
@@ -208,7 +208,7 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
-  <Location ~ "/project-setup/project/\d*/partner-invite/authenticate">
+  <Location ~ "/project-setup/project/\d+/partner-invite/authenticate">
     AuthType shibboleth
     ShibRequireSession On
     ShibRequestSetting isPassive Off

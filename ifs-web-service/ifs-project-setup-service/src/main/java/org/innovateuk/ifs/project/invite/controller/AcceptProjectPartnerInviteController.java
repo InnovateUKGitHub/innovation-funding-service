@@ -53,14 +53,14 @@ public class AcceptProjectPartnerInviteController {
         registrationCookieService.deleteAllRegistrationJourneyCookies(response);
 
         return projectPartnerInviteRestService.getInviteByHash(projectId, hash).andOnSuccessReturn(invite -> {
-            if (!SENT.equals(invite.getStatus())) {
+            if (invite.getStatus() != SENT) {
                 return alreadyAcceptedView(response, request);
             }
             if (loggedInAsNonInviteUser(invite, loggedInUser)) {
                 return "registration/logged-in-with-another-user-failure";
             }
             registrationCookieService.saveToProjectInviteHashCookie(new InviteAndIdCookie(projectId, hash), response);
-            if (invite.getExistingUser() == null) {
+            if (invite.getUser() == null) {
                 return String.format("redirect:/project/%d/partner-invite/new-user", projectId);
             } else {
                 return String.format("redirect:/project/%d/partner-invite/existing-user", projectId);
@@ -119,7 +119,7 @@ public class AcceptProjectPartnerInviteController {
         return navigationUtils.getRedirectToSameDomainUrl(request, "not-found");
     }
 
-    private final boolean loggedInAsNonInviteUser(SentProjectPartnerInviteResource invite, UserResource loggedInUser) {
+    private boolean loggedInAsNonInviteUser(SentProjectPartnerInviteResource invite, UserResource loggedInUser) {
         if (loggedInUser == null || invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())){
             return false;
         }

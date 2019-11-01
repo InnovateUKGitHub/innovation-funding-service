@@ -1,7 +1,6 @@
 #!/bin/sh
 
-idle_workers=$(curl -k -f -s https://localhost:"${HTTPS_PORT}"/monitoring/status | grep "idle workers" | awk '{ print $6 }')
-
+idle_workers=$(curl -k -f -s https://localhost:"${HTTPS_PORT}"/monitoring/status?auto | grep "IdleWorkers" | awk '{ print $2 }')
 # stop accepting connections when less than 5% workers idle
 threshold=$(awk "BEGIN {print $MPM_MAXREQUESTWORKERS/20}" | xargs printf "%.*f\n" 0)
 

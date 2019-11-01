@@ -357,8 +357,7 @@ Large pdf uploads not allowed for note comments
     [Tags]
     Given the user clicks the button/link            id = post-new-comment
     When the user uploads the file                   name = attachment    ${too_large_pdf}
-    Then the user should see the element             jQuery = h1:contains("${too_large_pdf_validation_error}")
-    [Teardown]    the user goes back to the previous page
+    Then the user should see a field error           ${too_large_10MB_validation_error}
 
 Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756

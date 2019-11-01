@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.analytics;
 
+import com.google.common.base.Strings;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
@@ -19,7 +20,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static java.lang.Long.parseLong;
+import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 
 /**
  * Interceptor to add Google Analytics data layer to the Model.
@@ -130,7 +133,9 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
                                                           Function<Long, RestResult<String>> f,
                                                           final long id) {
         final Optional<String> competitionName = f.apply(id).getOptionalSuccessObject();
-        competitionName.ifPresent(dl::setCompetitionName);
+        if (competitionName.filter(negate(Strings::isNullOrEmpty)).isPresent()) {
+            dl.setCompetitionName(fromJson(competitionName.get(), String.class));
+        }
     }
 
     private static void setApplicationOrProjectSpecificRolesFromRestService(GoogleAnalyticsDataLayer dl, Function<Long, RestResult<List<Role>>> f, final long id) {
