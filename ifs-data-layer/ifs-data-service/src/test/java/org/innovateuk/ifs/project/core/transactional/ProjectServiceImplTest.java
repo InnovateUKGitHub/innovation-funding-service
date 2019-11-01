@@ -392,7 +392,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         // Method under test
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(project.getId(), newUser.getId(), o.getId());
         // Expectations
-        verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
         assertTrue(shouldSucceed.isSuccess());
     }
 
