@@ -203,6 +203,17 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
         verify(bankDetailsRepositoryMock, times(1)).findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
     }
 
+    @Test
+    public void removeLeadPartnerOrganisation() {
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId())).thenReturn(partnerOrganisations.get(0));
+
+        ServiceResult<Void> result = service.removePartnerOrganisation(projectId, organisations.get(0).getId());
+
+        assertTrue(result.isFailure());
+        verify(partnerOrganisationRepositoryMock, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId());
+        verifyNoMoreInteractions(partnerOrganisationRepositoryMock);
+    }
+
     @Override
     protected PartnerOrganisationService supplyServiceUnderTest() {
         return new PartnerOrganisationServiceImpl();
