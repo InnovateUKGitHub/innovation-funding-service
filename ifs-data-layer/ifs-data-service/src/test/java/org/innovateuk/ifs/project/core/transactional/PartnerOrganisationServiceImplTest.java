@@ -26,9 +26,7 @@ import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +48,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<PartnerOrganisationService> {
 
     @Mock
@@ -184,7 +181,6 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
     @Test
     public void removeNonLeadPartnerOrganisation() {
         pendingPartnerProgress = new PendingPartnerProgress(partnerOrganisations.get(1));
-        when(pendingPartnerProgressRepositoryMock.save(pendingPartnerProgress)).thenReturn(pendingPartnerProgress);
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(partnerOrganisations.get(1));
         when(pendingPartnerProgressRepositoryMock.findByOrganisationIdAndProjectId(organisations.get(1).getId(), projectId)).thenReturn(Optional.of(pendingPartnerProgress));
