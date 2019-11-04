@@ -7,28 +7,28 @@
 
   // .activity-log__item
   &__item {
+    @include govuk-clearfix;
     padding-bottom: 10px;
     border-bottom: 1px solid govuk-colour("grey-2");
     clear: both;
-    @include govuk-clearfix;
   }
 
   // .activity-log__left
   &__left {
-    width: 60%;
-    float: left;
-
     @include media-down(mobile) {
       width: 100%;
       float: none;
       margin-bottom: 10px;
     }
+
+    width: 60%;
+    float: left;
   }
 
   //. activity-log__title
   &__title {
-    display: block;
     @include govuk-font(19);
+    display: block;
   }
 
   //. activity-log__user
@@ -38,21 +38,21 @@
 
   // .activity-log__right
   &__right {
-    width: 40%;
-    float: right;
-    text-align: right;
-
     @include media-down(mobile) {
       width: 100%;
       float: none;
       text-align: left;
     }
+
+    width: 40%;
+    float: right;
+    text-align: right;
   }
 
   //. activity-log__time
   &__time {
-    display: block;
     @include govuk-font(16);
+    display: block;
   }
 
   //. activity-log__link
