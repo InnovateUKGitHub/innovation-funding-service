@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -35,11 +39,10 @@ public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService im
     @Override
     @Transactional
     public ServiceResult<Void> updateProjectWhenPartnersChange(long projectId) {
-        return resetProjectFinance(projectId)
-            .andOnSuccess(() -> rejectProjectDocuments(projectId));
+        return resetProjectFinance(projectId).andOnSuccess(this::rejectProjectDocuments);
     }
 
-    private ServiceResult<Void> resetProjectFinance(long projectId) {
+    private ServiceResult<Long> resetProjectFinance(long projectId) {
         List<ProjectFinance> projectFinances = projectFinanceRepository.findByProjectId(projectId);
 
         projectFinances.forEach(projectFinance -> {
@@ -48,19 +51,19 @@ public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService im
             financeCheckService.resetViability(new ProjectOrganisationCompositeId(projectId, partnerId), Viability.REVIEW, ViabilityRagStatus.UNSET);
             financeCheckService.resetEligibility(new ProjectOrganisationCompositeId(projectId, partnerId), EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
         });
-        return ServiceResult.serviceSuccess();
+        return serviceSuccess(projectId);
     }
 
     private ServiceResult<Void> rejectProjectDocuments(long projectId) {
         List<ProjectDocument> documents = projectDocumentRepository.findAllByProjectId(projectId).stream()
             .filter(document -> !document.getStatus().equals(DocumentStatus.REJECTED))
-            .collect(Collectors.toList());
+            .collect(toList());
 
         if (!documents.isEmpty()) {
             documents.forEach(notRejectedDocument -> notRejectedDocument.setStatus(DocumentStatus.REJECTED));
             projectDocumentRepository.saveAll(documents);
         }
 
-        return ServiceResult.serviceSuccess();
+        return serviceSuccess();
     }
 }

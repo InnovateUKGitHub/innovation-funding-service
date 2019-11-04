@@ -141,9 +141,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Mock
     private OrganisationMapper organisationMapperMock;
 
-    @Mock
-    private ProjectPartnerChangeService projectPartnerChangeService;
-
     private long applicationId = 456;
 
     private Competition competition;
