@@ -11,7 +11,6 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.core.transactional.PartnerOrganisationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 
 import java.util.HashMap;
@@ -107,7 +106,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Override
     public ServiceResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId) {
         return find(partnerOrganisationRepository.findByProjectId(projectId),
-                notFoundError(PartnerOrganisation.class, id)).
+                notFoundError(PartnerOrganisation.class)).
                 andOnSuccessReturn(lst -> simpleMap(lst, partnerOrganisationMapper::mapToResource));
     }
 
@@ -122,7 +121,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Transactional
     public ServiceResult<Void> removePartnerOrganisation(long projectId, long organisationId) {
         return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
-                notFoundError(PartnerOrganisation.class, id)).andOnSuccess(
+                notFoundError(PartnerOrganisation.class)).andOnSuccess(
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
