@@ -180,14 +180,14 @@ Ifs Admin is able to add a new partner organisation
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new orgzanisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
+    Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
 
 Project finance is able to add a new partner organisation
     [Documentation]  IFS-6485  IFS-6505
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new orgzanisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
+    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
 
 Comp Admin isn't able to add a new partner organisation
     [Documentation]  IFS-6485
@@ -196,7 +196,7 @@ Comp Admin isn't able to add a new partner organisation
     Then the user should not see the element       link = Add a partner organisation
 
 *** Keywords ***
-a new orgzanisation is able to accept project invite
+a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
     the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
