@@ -236,7 +236,6 @@ The user accepts invitation and selects organisation type
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
 
-
 the relevant users recieve an email notification
     [Arguments]  ${orgName}
     the user reads his email       troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
@@ -248,7 +247,6 @@ the user removes a partner organisation
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
     the user should not see the element         jQuery = h2:contains(${orgName})
-
 
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
