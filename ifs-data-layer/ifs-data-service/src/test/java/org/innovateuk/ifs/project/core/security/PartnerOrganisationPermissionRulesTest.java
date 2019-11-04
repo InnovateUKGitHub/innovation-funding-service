@@ -15,6 +15,8 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -173,5 +175,24 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
 
         assertTrue(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
+    }
+
+    @Test
+    public void internalUsersCanRemovePartnerOrganisations() {
+        long projectId = 1L;
+        long organisationId = 2L;
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+                .withProject(projectId)
+                .withOrganisation(organisationId)
+                .build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isInternalAdmin(user)) {
+                assertTrue(rules.internalUsersCanRemovePartnerOrganisations(partnerOrg,user));
+            } else {
+                assertFalse(rules.internalUsersCanRemovePartnerOrganisations(partnerOrg, user));
+            }
+        });
     }
 }
