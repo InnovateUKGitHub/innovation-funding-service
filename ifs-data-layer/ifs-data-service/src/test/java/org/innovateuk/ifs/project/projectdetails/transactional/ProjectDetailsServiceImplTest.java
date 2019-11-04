@@ -239,7 +239,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         final ProjectUserResource projectManagerResource = newProjectUserResource().withProject(projectId).withRoleName(PROJECT_MANAGER.getName()).build();
 
         when(projectUserMapperMock.mapToResource(projectManager)).thenReturn(projectManagerResource);
-        when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(projectManager);
+        when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(Optional.of(projectManager));
 
         ServiceResult<ProjectUserResource> foundProjectManager = service.getProjectManager(projectId);
         assertTrue(foundProjectManager.isSuccess());

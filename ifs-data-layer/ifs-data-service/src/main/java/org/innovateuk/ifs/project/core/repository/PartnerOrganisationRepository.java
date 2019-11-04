@@ -6,6 +6,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface PartnerOrganisationRepository extends PagingAndSortingRepository<PartnerOrganisation, Long> {
-    PartnerOrganisation findOneByProjectIdAndOrganisationId(Long projectId, Long organisationId);
-    List<PartnerOrganisation> findByProjectId(Long projectId);
+    PartnerOrganisation findOneByProjectIdAndOrganisationId(long projectId, long organisationId);
+    void deleteOneByProjectIdAndOrganisationId(long projectId, long organisationId);
+    List<PartnerOrganisation> findByProjectId(long projectId);
 }

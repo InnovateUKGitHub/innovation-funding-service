@@ -13,4 +13,7 @@ public interface ProjectUserInviteRepository extends InviteRepository<ProjectUse
     List<ProjectUserInvite> findByProjectId(long projectId);
 
     List<ProjectUserInvite> findByProjectIdAndEmail(long projectId, String email);
+
+    void deleteAllByProjectIdAndOrganisationId(long projectId, long organisationId);
+
 }
