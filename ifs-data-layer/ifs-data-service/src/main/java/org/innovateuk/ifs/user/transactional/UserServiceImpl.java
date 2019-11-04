@@ -15,6 +15,7 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
+import org.innovateuk.ifs.user.cache.UserCacheEvict;
 import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -219,6 +220,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()))
                 .andOnSuccess(user -> updateUser(user, userResource))
                 .andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    @Override
+    @UserCacheEvict
+    public ServiceResult<Void> evictUserCache(String uid) {
+        return serviceSuccess();
     }
 
     private ServiceResult<User> updateUser(User existingUser, UserResource updatedUserResource) {

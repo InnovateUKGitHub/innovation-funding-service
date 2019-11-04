@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.resource.*;
@@ -55,4 +56,7 @@ public interface UserService {
 
     @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
     ServiceResult<UserResource> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
+
+    @NotSecured(value = "Can be called anywhere by anyone", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> evictUserCache(String uid);
 }

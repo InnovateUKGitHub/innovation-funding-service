@@ -11,6 +11,7 @@ import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -50,7 +51,10 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
     private GrantProcessService grantProcessService;
 
     @Mock
-    protected GrantMapper grantMapper;
+    private GrantMapper grantMapper;
+
+    @Mock
+    private UserService userService;
 
     @Override
     protected GrantServiceImpl supplyServiceUnderTest() {
@@ -63,6 +67,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
                 .withFirstName("A")
                 .withLastName("B")
                 .withEmailAddress("a@b.com")
+                .withUid("uid")
                 .build();
 
         setLoggedInUser(newUserResource()
@@ -143,6 +148,9 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         // assert that "normal" Partner users are NOT granted access to Live Projects
         assertFalse(normalPartnerOrg1.getUser().hasRole(Role.LIVE_PROJECTS_USER));
         assertFalse(normalPartnerOrg2.getUser().hasRole(Role.LIVE_PROJECTS_USER));
+
+        verify(userService).evictUserCache("uid");
+        verifyNoMoreInteractions(userService);
     }
 
     private static Predicate<Grant> matchGrant(Project project) {
