@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -10,8 +11,10 @@ import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
@@ -38,6 +41,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
@@ -81,6 +85,9 @@ public class ProjectPartnerInviteServiceImplTest {
 
     @Mock
     private PartnerOrganisationRepository partnerOrganisationRepository;
+
+    @Mock
+    private PendingPartnerProgressRepository pendingPartnerProgressRepository;
 
     @Mock
     private ProjectUserRepository projectUserRepository;
@@ -265,12 +272,14 @@ public class ProjectPartnerInviteServiceImplTest {
         long inviteId = 1L;
         long organisationId = 2L;
 
-        Project project = newProject().build();
+        Competition competition = newCompetition().withIncludeJesForm(true).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
         ProjectPartnerInvite invite = new ProjectPartnerInvite();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         invite.setInviteOrganisation(inviteOrganisation);
         invite.setProject(project);
-        Organisation organisation = newOrganisation().withId(organisationId).build();
+        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.RESEARCH) .build();
 
         when(organisationRepository.findById(organisationId)).thenReturn(of(organisation));
         when(projectPartnerInviteRepository.findById(inviteId)).thenReturn(of(invite));
@@ -284,5 +293,7 @@ public class ProjectPartnerInviteServiceImplTest {
         verify(projectFinanceRowService).createProjectFinance(project.getId(), organisationId);
         verify(viabilityWorkflowHandler).projectCreated(any(), any());
         verify(eligibilityWorkflowHandler).projectCreated(any(), any());
+        verify(viabilityWorkflowHandler).viabilityNotApplicable(any(), any());
+        verify(pendingPartnerProgressRepository).save(any());
     }
 }

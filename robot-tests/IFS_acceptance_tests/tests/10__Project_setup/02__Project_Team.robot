@@ -23,13 +23,15 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-6505 - Accept invite as new partner and register
 ...
-...            IFS-6525 - Invited new partner to project setup - pending state
+...             IFS-6525 - Invited new partner to project setup - pending state
 ...
 ...             IFS-6484 - Remove Partner
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
+Resource          ../04__Applicant/Applicant_Commons.robot
+
 
 *** Variables ***
 ${newProjecTeamPage}         ${server}/project-setup/project/${PS_PD_Project_Id}/team
@@ -178,17 +180,17 @@ New user is able to repspond to a query
 
 Ifs Admin is able to add a new partner organisation
     [Documentation]  IFS-6485  IFS-6505
-    [Setup]  log in as a different user            &{ifs_admin_user_credentials}
-    Given the user navigates to the page           ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation  Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then the user reads his email                  ${ifsAdminAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
+    Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
+    Then a new orgzanisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}
 
 Project finance is able to add a new partner organisation
     [Documentation]  IFS-6485  IFS-6505
-    [Setup]  log in as a different user            &{internal_finance_credentials}
-    Given the user navigates to the page           ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation  Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new orgzanisation is able to accept project invite
+    [Setup]  log in as a different user                        &{internal_finance_credentials}
+    Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
+    Then a new orgzanisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
@@ -213,9 +215,26 @@ Ifs Admin is able to remove a partner organisation
 
 *** Keywords ***
 a new orgzanisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}
     logout as user
-    the user reads his email and clicks the link   ${intFinanceAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
-#    ${test_mailbox_one}+changepsw@gmail.com  Reset your password  If you didn't request this
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user accepts invitation and selects organisation type
+    the user fills in account details                             ${fname}  ${sname}
+    the user clicks the button/link                               jQuery = button:contains("Create account")
+    the user verifies their account                               ${email}
+    a new organisation logs in and sees the project               ${email}
+    the user should see the element                               jQuery = a:contains("PSC application 7")
+
+A new organisation logs in and sees the project
+    [Arguments]  ${email}
+    the user clicks the button/link   link = Sign in
+    Logging in and Error Checking     ${email}  ${short_password}
+
+The user accepts invitation and selects organisation type
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
+    the user selects the radio button                     organisationType    1
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
 
 
 the relevant users recieve an email notification
@@ -237,7 +256,7 @@ the user adds a new partner organisation
     the user enters text to a text field  id = userName  ${persFullName}
     the user enters text to a text field  id = email  ${email}
     the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
-    the user should see the element           jQuery = h2:contains(${partnerOrgName})
+    the user should see the element       jQuery = h2:contains(${partnerOrgName})
 
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
@@ -290,7 +309,7 @@ Lead partner completes the Project team section
     the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The Project team status appears as complete for the internal user
-    log in as a different user    &{internal_finance_credentials}
+    log in as a different user        &{internal_finance_credentials}
     the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     the user should see the element   jQuery = th:contains("Magic material")~ ~ td:contains("Complete")
 
@@ -377,6 +396,6 @@ The user fills in account details
 Custom suite setup
     The guest user opens the browser
 
-#Custom suite teardown
-#    The user closes the browser
+Custom suite teardown
+    The user closes the browser
 

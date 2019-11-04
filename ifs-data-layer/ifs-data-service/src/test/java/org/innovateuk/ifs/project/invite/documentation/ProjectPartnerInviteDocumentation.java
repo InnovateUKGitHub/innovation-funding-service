@@ -39,7 +39,10 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
                 fieldWithPath("sentOn").description("Date the invite was sent"),
                 fieldWithPath("email").description("Email address that invite was sent to."),
                 fieldWithPath("organisationName").description("Organisation name for invite"),
-                fieldWithPath("userName").description("Users name of invite")
+                fieldWithPath("userName").description("Users name of invite"),
+                fieldWithPath("user").optional().description("The id of the user the invite was sent to"),
+                fieldWithPath("status").description("The status of the invite"),
+                fieldWithPath("projectName").description("The name of the project the invite is to"),
     };
 
     @Test
@@ -116,7 +119,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         when(projectPartnerInviteService.getInviteByHash(hash)).thenReturn(serviceSuccess(newSentProjectPartnerInviteResource().build()));
         mockMvc.perform(get("/project/{projectId}/project-partner-invite/{hash}", projectId, hash)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project the invite belongs to"),
@@ -134,9 +137,9 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
         long inviteId = 321L;;
         long organisationId = 321L;
         when(projectPartnerInviteService.acceptInvite(inviteId, organisationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(get("/project/{projectId}/project-partner-invite/{inviteId}/organisation/{organisationId}/accept", projectId, inviteId, organisationId)
+        mockMvc.perform(post("/project/{projectId}/project-partner-invite/{inviteId}/organisation/{organisationId}/accept", projectId, inviteId, organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project the invite belongs to"),
