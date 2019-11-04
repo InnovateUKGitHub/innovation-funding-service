@@ -41,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.Short.parseShort;
@@ -112,8 +113,8 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                 andOnSuccess(() -> validateBankDetails(bankDetailsResource).
                 andOnSuccess(accountDetails -> saveSubmittedBankDetails(accountDetails, bankDetailsResource)).
                 andOnSuccess(accountDetails -> {
-                    BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
-                    return verifyBankDetails(accountDetails, bankDetails);
+                    Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
+                    return verifyBankDetails(accountDetails, bankDetails.get());
                 }));
     }
 
@@ -175,8 +176,8 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId) {
-        BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if (bankDetails != null) {
+        Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if (bankDetails.isPresent()) {
             return serviceFailure(new Error(BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE));
         }
         return serviceSuccess();
@@ -213,12 +214,12 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     private ServiceResult<AccountDetails> updateExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
-        BankDetails existingBankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
-        if (existingBankDetails != null) {
-            if (existingBankDetails.isManualApproval()) {
+        Optional<BankDetails> existingBankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
+        if (existingBankDetails.isPresent()) {
+            if (existingBankDetails.get().isManualApproval()) {
                 return serviceFailure(CommonFailureKeys.BANK_DETAILS_HAVE_ALREADY_BEEN_APPROVED_AND_CANNOT_BE_UPDATED);
             }
-            bankDetailsResource.setId(existingBankDetails.getId());
+            bankDetailsResource.setId(existingBankDetails.get().getId());
         } else {
             return serviceFailure(CommonFailureKeys.BANK_DETAILS_CANNOT_BE_UPDATED_BEFORE_BEING_SUBMITTED);
         }

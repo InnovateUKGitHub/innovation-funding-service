@@ -11,15 +11,17 @@ import java.util.Collections;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PartnerOrganisationControllerTest extends BaseControllerMockMVCTest<PartnerOrganisationController> {
 
     @Mock
-    private PartnerOrganisationService partnerOrganisationServiceMock;
+    private PartnerOrganisationService partnerOrganisationService;
 
     @Override
     protected PartnerOrganisationController supplyControllerUnderTest() {
@@ -27,23 +29,35 @@ public class PartnerOrganisationControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
-    public void testGetProjectPartner() throws Exception {
+    public void getProjectPartner() throws Exception {
         Long projectId = 123L;
         Long organisationId = 234L;
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
-        when(partnerOrganisationServiceMock.getPartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess(partnerOrg));
+        when(partnerOrganisationService.getPartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess(partnerOrg));
         mockMvc.perform(get("/project/{projectId}/partner/{organisationId}", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(partnerOrg)));
     }
 
     @Test
-    public void testGetProjectPartners() throws Exception {
+    public void getProjectPartners() throws Exception {
         Long projectId = 123L;
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
-        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrg)));
+        when(partnerOrganisationService.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrg)));
         mockMvc.perform(get("/project/{projectId}/partner-organisation", projectId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(Collections.singletonList(partnerOrg))));
+    }
+
+    @Test
+    public void removeOrganisation() throws Exception {
+        long projectId = 123;
+        long organisationId = 456;
+
+        when(partnerOrganisationService.removePartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/remove-organisation/{organisationId}", projectId, organisationId))
+                .andExpect(status().isOk());
+
+        verify(partnerOrganisationService).removePartnerOrganisation(projectId,organisationId);
     }
 }
