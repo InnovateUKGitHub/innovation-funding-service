@@ -27,9 +27,9 @@ items:
           - containerPort: 6379
           resources:
             requests:
-              memory: 500M
+              memory: 50M
             limits:
-              memory: 600M
+              memory: 100M
     test: false
     triggers:
     - type: ConfigChange

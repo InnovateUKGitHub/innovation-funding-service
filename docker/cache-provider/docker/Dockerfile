@@ -1,4 +1,4 @@
-FROM redis:5.0.6
+FROM redis:5.0.5
 
 RUN usermod -a -G root redis
 RUN mkdir /redis-data

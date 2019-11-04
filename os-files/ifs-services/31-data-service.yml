@@ -69,6 +69,8 @@ items:
             value: "${IFS_DATA_SERVICE_REDIS_HOST}"
           - name: SPRING_REDIS_PORT
             value: "${IFS_DATA_SERVICE_REDIS_PORT}"
+          - name: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
+            value: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
           ports:
           - containerPort: 8080
           resources:
