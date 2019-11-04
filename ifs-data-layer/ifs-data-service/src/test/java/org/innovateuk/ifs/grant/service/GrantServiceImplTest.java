@@ -85,25 +85,25 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
 
         ProjectUser financeContactOrg1 = newProjectUser()
                 .withRole(PROJECT_FINANCE_CONTACT)
-                .withUser(newUser().build())
+                .withUser(newUser().withUid("financeContactOrg1").build())
                 .withOrganisation(organisation1)
                 .build();
 
         ProjectUser normalPartnerOrg1 = newProjectUser()
                 .withRole(PROJECT_PARTNER)
-                .withUser(newUser().build())
+                .withUser(newUser().withUid("normalPartnerOrg1").build())
                 .withOrganisation(organisation1)
                 .build();
 
         ProjectUser financeContactOrg2 = newProjectUser()
                 .withRole(PROJECT_FINANCE_CONTACT)
-                .withUser(newUser().build())
+                .withUser(newUser().withUid("financeContactOrg2").build())
                 .withOrganisation(organisation2)
                 .build();
 
         ProjectUser normalPartnerOrg2 = newProjectUser()
                 .withRole(PROJECT_PARTNER)
-                .withUser(newUser().build())
+                .withUser(newUser().withUid("normalPartnerOrg2").build())
                 .withOrganisation(organisation2)
                 .build();
 
@@ -150,6 +150,8 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         assertFalse(normalPartnerOrg2.getUser().hasRole(Role.LIVE_PROJECTS_USER));
 
         verify(userService).evictUserCache("uid");
+        verify(userService).evictUserCache("financeContactOrg1");
+        verify(userService).evictUserCache("financeContactOrg2");
         verifyNoMoreInteractions(userService);
     }
 

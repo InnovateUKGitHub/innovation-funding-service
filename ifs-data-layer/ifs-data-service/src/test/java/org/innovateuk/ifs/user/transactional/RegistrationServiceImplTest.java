@@ -25,7 +25,6 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
@@ -76,9 +75,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
@@ -394,7 +391,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
-        ServiceResult<Void> result = service.editInternalUser(userToEdit, Role.COLLABORATOR);
+        ServiceResult<UserResource> result = service.editInternalUser(userToEdit, Role.COLLABORATOR);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
@@ -407,7 +404,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceFailure(notFoundError(User.class, userToEdit.getId())));
 
-        ServiceResult<Void> result = service.editInternalUser(userToEdit, Role.SUPPORT);
+        ServiceResult<UserResource> result = service.editInternalUser(userToEdit, Role.SUPPORT);
 
         assertTrue(result.isFailure());
         assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
@@ -423,7 +420,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
         when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);
 
-        ServiceResult<Void> result = service.editInternalUser(userToEdit, newRole);
+        ServiceResult<UserResource> result = service.editInternalUser(userToEdit, newRole);
 
         assertTrue(result.isSuccess());
         verify(userRepositoryMock).save(userInDB);
@@ -442,7 +439,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         userInDB.setStatus(UserStatus.INACTIVE);
         when(userRepositoryMock.save(userInDB)).thenReturn(userInDB);
 
-        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+        ServiceResult<UserResource> result = service.deactivateUser(userToEdit.getId());
 
         verify(userRepositoryMock).save(userInDB);
 
@@ -457,9 +454,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
         when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
 
-        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+        ServiceResult<UserResource> result = service.deactivateUser(userToEdit.getId());
 
-        assertNull(result.getSuccess());
+        assertTrue(result.isFailure());
     }
 
     @Test
@@ -469,7 +466,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.empty());
 
-        ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
+        ServiceResult<UserResource> result = service.deactivateUser(userToEdit.getId());
 
         assertTrue(result.isFailure());
     }
@@ -484,7 +481,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         userInDB.setStatus(UserStatus.ACTIVE);
         when(userRepositoryMock.save(userInDB)).thenReturn(updatedUserInDB);
 
-        ServiceResult<Void> result = service.activateUser(userToEdit.getId());
+        ServiceResult<UserResource> result = service.activateUser(userToEdit.getId());
 
         verify(userRepositoryMock).save(userInDB);
 
@@ -499,9 +496,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
         when(idpServiceMock.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
 
-        ServiceResult<Void> result = service.activateUser(userToEdit.getId());
+        ServiceResult<UserResource> result = service.activateUser(userToEdit.getId());
 
-        assertNull(result.getSuccess());
+        assertTrue(result.isFailure());
     }
 
     @Test
@@ -511,7 +508,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.empty());
 
-        ServiceResult<Void> result = service.activateUser(userToEdit.getId());
+        ServiceResult<UserResource> result = service.activateUser(userToEdit.getId());
 
         assertTrue(result.isFailure());
     }
