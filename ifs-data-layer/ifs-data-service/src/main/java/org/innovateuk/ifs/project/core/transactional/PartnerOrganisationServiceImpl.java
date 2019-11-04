@@ -85,7 +85,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Override
     public ServiceResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId) {
         return find(partnerOrganisationRepository.findByProjectId(projectId),
-                notFoundError(PartnerOrganisation.class, projectId)).
+                notFoundError(PartnerOrganisation.class)).
                 andOnSuccessReturn(lst -> simpleMap(lst, partnerOrganisationMapper::mapToResource));
     }
 
@@ -100,10 +100,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Transactional
     public ServiceResult<Void> removePartnerOrganisation(long projectId, long organisationId) {
         return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
-                notFoundError(PartnerOrganisation.class, projectId, organisationId)).andOnSuccess(
+                notFoundError(PartnerOrganisation.class)).andOnSuccess(
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
-                            //remove invitation
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
                             removePartnerNotificationService.sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
                             projectPartnerChangeService.updateProjectWhenPartnersChange(projectId);
