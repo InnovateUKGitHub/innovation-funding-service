@@ -11,6 +11,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ProjectFinanceRepository extends PagingAndSortingRepository<ProjectFinance, Long> {
-    ProjectFinance findByProjectIdAndOrganisationId(Long projectId, Long organisationId);
+    ProjectFinance findByProjectIdAndOrganisationId(long projectId, long organisationId);
     List<ProjectFinance> findByProjectId(Long projectId);
+    void deleteAllByProjectIdAndOrganisationId(long projectId, long organisationId);
 }
