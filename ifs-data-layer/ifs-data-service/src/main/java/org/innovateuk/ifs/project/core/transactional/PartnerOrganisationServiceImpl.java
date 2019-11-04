@@ -1,40 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
-import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
-import org.innovateuk.ifs.notifications.resource.*;
-import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
-import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
-import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
-import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
-import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
-import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
-import org.innovateuk.ifs.threads.repository.NoteRepository;
-import org.innovateuk.ifs.threads.repository.QueryRepository;
-import org.innovateuk.ifs.user.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -47,6 +12,44 @@ import static org.innovateuk.ifs.project.core.transactional.PartnerOrganisationS
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationSource;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
+import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.threads.repository.NoteRepository;
+import org.innovateuk.ifs.threads.repository.QueryRepository;
+import org.innovateuk.ifs.user.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
@@ -122,7 +125,6 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                 notFoundError(PartnerOrganisation.class, id)).andOnSuccess(
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
-                            //remove invitation
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
                             sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
                             projectPartnerChangeService.updateProjectWhenPartnersChange(projectId);
