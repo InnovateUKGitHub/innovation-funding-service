@@ -37,11 +37,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "ADD_PARTNER", description = "The System Registration user can add a partner to a project")
     public boolean systemRegistrarCanAddPartnersToProject(final ProjectResource project, final UserResource user) {
         return isSystemRegistrationUser(user)
-                && isProjectActive(project.getId());
-    }
-
-    @PermissionRule(value = "UPDATE_PROJECT", description = "Internal users can update the project")
-    public boolean internalUsersCanUpdateProjects(final ProjectResource project, UserResource user) {
-        return isInternal(user);
+            && isProjectActive(project.getId());
     }
 }

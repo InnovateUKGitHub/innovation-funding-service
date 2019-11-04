@@ -474,10 +474,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Viability viability) {
 
-        if(!viability.name().equals(viabilityWorkflowHandler.getState(partnerOrganisation).name())) {
-            if (Viability.APPROVED == viability) {
-                viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
-            }
+        if (Viability.APPROVED == viability) {
+            viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
         }
 
         return serviceSuccess();
@@ -509,11 +507,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, EligibilityState eligibility) {
 
-        if(!eligibility.equals(eligibilityWorkflowHandler.getState(partnerOrganisation))) {
-            if (EligibilityState.APPROVED == eligibility) {
-                eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
-            }
+        if (EligibilityState.APPROVED == eligibility) {
+            eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
         }
+
         return serviceSuccess();
     }
 

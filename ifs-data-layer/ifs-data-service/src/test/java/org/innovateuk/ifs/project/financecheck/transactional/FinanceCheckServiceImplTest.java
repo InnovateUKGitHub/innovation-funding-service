@@ -998,66 +998,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
     }
 
-    private ProjectFinance setUpResetEligibility(User user, PartnerOrganisation partnerOrganisationInDB, EligibilityState eligibilityStateInDB,
-                                                 EligibilityRagStatus eligibilityRagStatusInDB) {
-
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
-
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(eligibilityStateInDB);
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        ProjectFinance projectFinanceInDB = mock(ProjectFinance.class);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
-        when(projectFinanceInDB.getEligibilityStatus()).thenReturn(eligibilityRagStatusInDB);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(eligibilityStateInDB);
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-
-        return projectFinanceInDB;
-
-    }
-
-    @Test
-    public void resetEligibility_whenNoChangeRequired() {
-        Long userId = 7L;
-        User user = newUser().withId(userId).build();
-
-        EligibilityRagStatus currentEligibilityRagStatus = EligibilityRagStatus.AMBER;
-        EligibilityState currentEligibilityState = EligibilityState.REVIEW;
-
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
-        ProjectFinance projectFinanceInDB = setUpResetEligibility(user, partnerOrganisationInDB, currentEligibilityState, currentEligibilityRagStatus);
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.resetEligibility(projectOrganisationCompositeId, currentEligibilityState, currentEligibilityRagStatus);
-
-        assertTrue(result.isSuccess());
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
-        verify(eligibilityWorkflowHandlerMock, never()).eligibilityReset(partnerOrganisationInDB, user);
-    }
-
-    @Test
-    public void resetEligibility_WhenEligibilityChangeRequired(){
-        Long userId = 7L;
-        User user = newUser().withId(userId).build();
-
-        EligibilityRagStatus currentEligibilityRagStatus = EligibilityRagStatus.AMBER;
-        EligibilityState currentEligibilityState = EligibilityState.APPROVED;
-
-        EligibilityRagStatus resetEligibilityRagStatus = EligibilityRagStatus.UNSET;
-        EligibilityState resetEligibility = EligibilityState.REVIEW;
-
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
-        ProjectFinance projectFinanceInDB = setUpResetEligibility(user, partnerOrganisationInDB, currentEligibilityState, currentEligibilityRagStatus);
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.resetEligibility(projectOrganisationCompositeId, resetEligibility, resetEligibilityRagStatus);
-
-        assertTrue(result.isSuccess());
-        verify(projectFinanceRepositoryMock, times(1)).save(projectFinanceInDB);
-        verify(eligibilityWorkflowHandlerMock, times(1)).eligibilityReset(partnerOrganisationInDB, user);
-    }
-
     @Test
     public void testGetCreditReportSuccess() {
 
