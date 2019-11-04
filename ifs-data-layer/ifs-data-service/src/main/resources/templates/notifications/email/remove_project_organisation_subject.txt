@@ -1,0 +1,1 @@
+Partner removed from ${applicationId}: ${projectName}

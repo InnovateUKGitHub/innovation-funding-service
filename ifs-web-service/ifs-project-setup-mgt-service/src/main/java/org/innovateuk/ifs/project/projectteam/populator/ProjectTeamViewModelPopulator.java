@@ -77,8 +77,9 @@ public class ProjectTeamViewModelPopulator {
                 loggedInUser.getId(),
                 false,
                 true,
-                isReadOnly,
-                userCanAddAndRemoveOrganisations);
+                !project.getProjectState().isActive(),
+                userCanAddAndRemoveOrganisations,
+                canInvitePartnerOrganisation(project, loggedInUser));
     }
 
     private List<ProjectTeamOrganisationViewModel> partnerOrganisationInvites(long projectId, boolean userCanAddAndRemoveOrganisations) {
@@ -93,6 +94,13 @@ public class ProjectTeamViewModelPopulator {
                         invite.getId()
                 ))
                 .collect(toList());
+    }
+
+    private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {
+        return pcrEnabled
+                && user.hasRole(PROJECT_FINANCE)
+                && !project.isSpendProfileGenerated()
+                && project.getProjectState().isActive();
     }
 
     private boolean userCanAddAndRemoveOrganisations(ProjectResource project, UserResource user) {
