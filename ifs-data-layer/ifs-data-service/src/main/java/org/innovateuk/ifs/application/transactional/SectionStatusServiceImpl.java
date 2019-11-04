@@ -117,7 +117,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
             ValidationMessages sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
             if (!sectionIsValid.hasErrors()) {
-                markSectionAsComplete(section, application, markedAsCompleteById);
+                markSectionAsCompleteNoValidate(section, application, markedAsCompleteById);
             }
 
             return serviceSuccess(sectionIsValid);
@@ -128,14 +128,14 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     @Transactional
     public ServiceResult<Void> markSectionAsNotRequired(long sectionId, long applicationId, long markedAsCompleteById) {
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
-            markSectionAsComplete(section, application, markedAsCompleteById);
+            markSectionAsCompleteNoValidate(section, application, markedAsCompleteById);
             return serviceSuccess();
         });
     }
 
-    private void markSectionAsComplete(Section section, Application application, long markedAsCompleteById) {
+    private void markSectionAsCompleteNoValidate(Section section, Application application, long markedAsCompleteById) {
         sectionService.getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
-            questionStatusService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
+            questionStatusService.markAsCompleteNoValidate(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.
             questionStatusService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
         }));
@@ -174,7 +174,6 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     private Map<Long, Set<Long>> completedSections(Application application) {
-
         List<Section> sections = application.getCompetition().getSections();
         List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
         Set<Long> organisations = simpleMapSet(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
