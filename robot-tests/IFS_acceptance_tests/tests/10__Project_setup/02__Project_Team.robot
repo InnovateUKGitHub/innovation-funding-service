@@ -21,11 +21,11 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-6485 - Add Partner
 ...
-...             IFS-6484 - Remove Partner
-
 ...             IFS-6505 - Accept invite as new partner and register
 ...
 ...             IFS-6525 - Invited new partner to project setup - pending state
+...
+...             IFS-6484 - Remove Partner
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -214,20 +214,6 @@ Ifs Admin is able to remove a partner organisation
     Then the relevant users recieve an email notification  SmithZone
 
 *** Keywords ***
-
-the relevant users recieve an email notification
-    [Arguments]  ${orgName}
-    the user reads his email       troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
-    the user reads his email       sian.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
-    the user reads his email       megan.rowland@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
-
-the user removes a partner organisation
-    [Arguments]  ${orgName}
-    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
-    the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
-    the user should not see the element         jQuery = h2:contains(${orgName})
-
-
 a new orgzanisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}
     logout as user
@@ -249,6 +235,18 @@ The user accepts invitation and selects organisation type
     the user selects the radio button                     organisationType    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
+
+the relevant users recieve an email notification
+    [Arguments]  ${orgName}
+    the user reads his email       troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
+    the user reads his email       sian.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
+    the user reads his email       megan.rowland@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
+
+the user removes a partner organisation
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
+    the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
+    the user should not see the element         jQuery = h2:contains(${orgName})
 
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
