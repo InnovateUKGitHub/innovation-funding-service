@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -84,6 +85,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
+
+    @Autowired
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -174,6 +178,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     private void removePartnerOrg(long projectId, long organisationId) {
         projectUserInviteRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
+        projectPartnerInviteRepository.deleteByProjectIdAndInviteOrganisationOrganisationId(projectId, organisationId);
         projectUserRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         partnerOrganisationRepository.deleteOneByProjectIdAndOrganisationId(projectId, organisationId);
         Optional<PendingPartnerProgress> pendingPartnerProgress = pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(organisationId, projectId);
