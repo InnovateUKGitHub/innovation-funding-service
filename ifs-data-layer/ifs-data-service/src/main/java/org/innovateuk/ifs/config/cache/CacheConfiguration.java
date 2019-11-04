@@ -13,8 +13,6 @@ import java.time.Duration;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 @Configuration
-@EnableCaching
-@Profile("!integration-test")
 public class CacheConfiguration {
 
     @Bean

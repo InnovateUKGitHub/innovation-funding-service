@@ -63,6 +63,12 @@ items:
             value: "${IFS_EARLY_METRICS_URL}"
           - name: IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS
             value: "${IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS}"
+          - name: SPRING_CACHE_TYPE
+            value: "${IFS_DATA_SERVICE_CACHE_TYPE}"
+          - name: SPRING_REDIS_HOST
+            value: "${IFS_DATA_SERVICE_REDIS_HOST}"
+          - name: SPRING_REDIS_PORT
+            value: "${IFS_DATA_SERVICE_REDIS_PORT}"
           ports:
           - containerPort: 8080
           resources:
