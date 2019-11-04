@@ -48,7 +48,6 @@ public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService im
         projectFinances.forEach(projectFinance -> {
             Organisation partner = projectFinance.getOrganisation();
             long partnerId = partner.getId();
-            financeCheckService.resetViability(new ProjectOrganisationCompositeId(projectId, partnerId), Viability.REVIEW, ViabilityRagStatus.UNSET);
             financeCheckService.resetEligibility(new ProjectOrganisationCompositeId(projectId, partnerId), EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
         });
         return serviceSuccess(projectId);

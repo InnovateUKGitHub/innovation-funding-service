@@ -18,6 +18,8 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -69,14 +71,11 @@ public class ProjectPartnerChangeServiceImplTest extends BaseServiceUnitTest<Pro
     @Test
     public void updateProjectWhenPartnersChange_ViabilityAndEligibilityAreReset() {
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(Collections.emptyList());
-
-        when(financeCheckService.resetViability(any(), any(), any())).thenReturn(ServiceResult.serviceSuccess());
         when(financeCheckService.resetEligibility(any(), any(), any())).thenReturn(ServiceResult.serviceSuccess());
 
         boolean result = service.updateProjectWhenPartnersChange(1L).isSuccess();
 
-        verify(financeCheckService, times(1)).resetViability(new ProjectOrganisationCompositeId(1L, 1L), Viability.REVIEW, ViabilityRagStatus.UNSET);
-        verify(financeCheckService, times(1)).resetEligibility(any(), any(), any());
+        verify(financeCheckService, times(1)).resetEligibility(new ProjectOrganisationCompositeId(1L, 1L), EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
         assertTrue(result);
     }
 
