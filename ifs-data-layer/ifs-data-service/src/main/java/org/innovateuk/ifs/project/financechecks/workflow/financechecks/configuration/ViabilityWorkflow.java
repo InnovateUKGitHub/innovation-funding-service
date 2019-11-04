@@ -25,7 +25,6 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
     @Override
     public void configure(StateMachineConfigurationConfigurer<ViabilityState, ViabilityEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
-
     }
 
     @Override

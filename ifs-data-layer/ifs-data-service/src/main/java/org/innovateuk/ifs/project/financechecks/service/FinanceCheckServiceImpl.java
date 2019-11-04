@@ -502,10 +502,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Viability viability) {
 
-        if (Viability.APPROVED == viability) {
-            viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
-        } else if(Viability.REVIEW == viability){
-            viabilityWorkflowHandler.viabilityReset(partnerOrganisation, currentUser);
+        if(!viability.name().equals(viabilityWorkflowHandler.getState(partnerOrganisation).name())) {
+            if (Viability.APPROVED == viability) {
+                viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
+            } else if (Viability.REVIEW == viability) {
+                viabilityWorkflowHandler.viabilityReset(partnerOrganisation, currentUser);
+            }
         }
 
         return serviceSuccess();
@@ -513,9 +515,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
-        projectFinance.setViabilityStatus(viabilityRagStatus);
+        if(!projectFinance.getViabilityStatus().equals(viabilityRagStatus)) {
+            projectFinance.setViabilityStatus(viabilityRagStatus);
 
-        projectFinanceRepository.save(projectFinance);
+            projectFinanceRepository.save(projectFinance);
+        }
 
         return serviceSuccess();
     }
@@ -535,19 +539,23 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, EligibilityState eligibility) {
 
-        if (EligibilityState.APPROVED == eligibility) {
-            eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
-        } else if(EligibilityState.REVIEW == eligibility){
-            eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, currentUser);
+        if(!eligibility.equals(eligibilityWorkflowHandler.getState(partnerOrganisation))) {
+            if (EligibilityState.APPROVED == eligibility) {
+                eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
+            } else if (EligibilityState.REVIEW == eligibility) {
+                eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, currentUser);
+            }
         }
         return serviceSuccess();
     }
 
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
 
-        projectFinance.setEligibilityStatus(eligibilityRagStatus);
+        if(!projectFinance.getEligibilityStatus().equals(eligibilityRagStatus)) {
+            projectFinance.setEligibilityStatus(eligibilityRagStatus);
 
-        projectFinanceRepository.save(projectFinance);
+            projectFinanceRepository.save(projectFinance);
+        }
 
         return serviceSuccess();
     }

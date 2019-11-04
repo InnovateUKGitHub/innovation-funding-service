@@ -84,8 +84,8 @@ public class PartnerOrganisationRepositoryIntegrationTest extends BaseRepository
     private Project project;
     private Organisation empire;
     private Organisation ludlow;
-    List<ProjectUser> projectUsers;
-    List<PartnerOrganisation> partnerOrganisations;
+    private List<ProjectUser> projectUsers;
+    private List<PartnerOrganisation> partnerOrganisations;
     private ProjectFinance projectFinanceEmpire;
     private ProjectFinance projectFinanceLudlow;
     private BankDetails bankDetailsEmpire;

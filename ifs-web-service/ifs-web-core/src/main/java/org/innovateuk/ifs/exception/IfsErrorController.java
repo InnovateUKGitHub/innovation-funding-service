@@ -30,7 +30,7 @@ public class IfsErrorController extends BasicErrorController {
         if (status instanceof Integer){
             if (status.equals(NOT_FOUND.value())) {
                 return new ModelAndView(NOT_FOUND.toString());
-            } else if (status.equals(PAYLOAD_TOO_LARGE)){
+            } else if (status.equals(PAYLOAD_TOO_LARGE) || status.equals(PAYLOAD_TOO_LARGE.value())){
                 return new ModelAndView(PAYLOAD_TOO_LARGE.toString());
             }
         }

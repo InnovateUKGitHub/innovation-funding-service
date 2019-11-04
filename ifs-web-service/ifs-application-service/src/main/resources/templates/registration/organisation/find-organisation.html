@@ -25,7 +25,7 @@
         </div>
 
         <th:block th:with="orgTitle=${organisationType.name}">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0 ? 'Select your organisation' : 'Enter organisation details'},subTitle=${isLeadApplicant ? 'Start new application' : 'Join application'},size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0 ? 'Select your organisation' : 'Enter organisation details'},subTitle=${subtitle},size='govuk-heading-xl'" />
         </th:block>
 
         <th:block th:unless="${organisationForm.research}">

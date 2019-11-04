@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class PartnerChangeServiceImpl extends BaseTransactionalService implements PartnerChangeService {
+public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService implements ProjectPartnerChangeService {
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
@@ -45,7 +45,6 @@ public class PartnerChangeServiceImpl extends BaseTransactionalService implement
         projectFinances.forEach(projectFinance -> {
             Organisation partner = projectFinance.getOrganisation();
             long partnerId = partner.getId();
-
             financeCheckService.resetViability(new ProjectOrganisationCompositeId(projectId, partnerId), Viability.REVIEW, ViabilityRagStatus.UNSET);
             financeCheckService.resetEligibility(new ProjectOrganisationCompositeId(projectId, partnerId), EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
         });

@@ -15,4 +15,5 @@ public interface ProjectFinanceRowRepository extends FinanceRowRepository<Projec
     List<ProjectFinanceRow> findByTargetId(long targetId);
     Optional<ProjectFinanceRow> findOneByApplicationRowId(long applicationRowId);
     void deleteAllByTargetId(long projectId);
+    List<ProjectFinanceRow> findByTargetProjectIdAndTargetOrganisationId(long projectId, long organisationId);
 }

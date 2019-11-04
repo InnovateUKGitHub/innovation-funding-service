@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.service;
+package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;

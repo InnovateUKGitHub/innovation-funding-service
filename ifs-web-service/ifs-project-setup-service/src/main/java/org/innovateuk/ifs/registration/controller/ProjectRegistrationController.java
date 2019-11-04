@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.service;
+package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -22,7 +22,7 @@ import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
+import static org.innovateuk.ifs.registration.controller.AcceptProjectInviteController.*;
 
 @Controller
 @SecuredBySpring(value = "Controller",

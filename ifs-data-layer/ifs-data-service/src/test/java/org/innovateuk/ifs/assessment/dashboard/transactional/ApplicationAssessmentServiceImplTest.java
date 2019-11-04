@@ -64,14 +64,14 @@ public class ApplicationAssessmentServiceImplTest extends BaseServiceUnitTest<Ap
                 .build();
         Assessment assessment = newAssessment().withId(5L).withApplication(application).withProcessState(ACCEPTED).build();
 
-        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(user.getId(), competition.getId()))
+        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionId(user.getId(), competition.getId()))
                 .thenReturn(singletonList(assessment));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
 
         ServiceResult<List<ApplicationAssessmentResource>> result = service.getApplicationAssessmentResource(user.getId(), competition.getId());
 
         assertTrue(result.isSuccess());
-        verify(assessmentRepositoryMock, times(1)).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(user.getId(), competition.getId());
+        verify(assessmentRepositoryMock, times(1)).findByParticipantUserIdAndTargetCompetitionId(user.getId(), competition.getId());
         verify(organisationRepositoryMock, times(1)).findById(organisation.getId());
         verifyNoMoreInteractions(assessmentRepositoryMock);
     }

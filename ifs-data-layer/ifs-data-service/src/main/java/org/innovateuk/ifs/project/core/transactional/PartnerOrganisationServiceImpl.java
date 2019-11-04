@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
@@ -31,7 +32,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @Transactional(readOnly = true)
@@ -68,10 +68,13 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private QueryRepository queryRepository;
 
     @Autowired
-    private PartnerChangeService partnerChangeService;
+    private ProjectPartnerChangeService projectPartnerChangeService;
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
+
+    @Autowired
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
 
     @Autowired
     private RemovePartnerNotificationService removePartnerNotificationService;
@@ -100,9 +103,10 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                 notFoundError(PartnerOrganisation.class, projectId, organisationId)).andOnSuccess(
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
+                            //remove invitation
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
                             removePartnerNotificationService.sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
-                            partnerChangeService.updateProjectWhenPartnersChange(projectId);
+                            projectPartnerChangeService.updateProjectWhenPartnersChange(projectId);
                         })
         );
     }
@@ -115,6 +119,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     private void removePartnerOrg(long projectId, long organisationId) {
         projectUserInviteRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
+        projectPartnerInviteRepository.deleteByProjectIdAndInviteOrganisationOrganisationId(projectId, organisationId);
         projectUserRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         partnerOrganisationRepository.deleteOneByProjectIdAndOrganisationId(projectId, organisationId);
         Optional<PendingPartnerProgress> pendingPartnerProgress = pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(organisationId, projectId);

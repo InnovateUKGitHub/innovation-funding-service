@@ -22,10 +22,15 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-6485 - Add Partner
 ...
 ...             IFS-6484 - Remove Partner
+
+...             IFS-6505 - Accept invite as new partner and register
+...
+...             IFS-6525 - Invited new partner to project setup - pending state
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
+Resource          ../../resources/Applicant_Commons.robot
 
 *** Variables ***
 ${newProjecTeamPage}         ${server}/project-setup/project/${PS_PD_Project_Id}/team
@@ -71,11 +76,12 @@ Comp admin has a read only view of the Project team page
     When the user navigates to the page   ${internalViewTeamPage}
     Then the user should see the read only view of Project team page
 
-Project finance has a read only view of the Project team page
-    [Documentation]  IFS-5901
+Project finance isn't able to add team members on Project team page
+    [Documentation]  IFS-5901  IFS-6484
     Given log in as a different user      &{internal_finance_credentials}
     When the user navigates to the page   ${internalViewTeamPage}
-    Then the user should see the read only view of Project team page
+    Then the user should not see the element   jQuery = button:contains("Add team member")
+    And the user should not see the element   jQuery = button:contains("Resend invite")
 
 The lead partner is able to access project team page
     [Documentation]  IFS-5700
@@ -134,10 +140,10 @@ A user who has been removed is no longer able to access the project
 
 A user is able to re-send an invitation
     [Documentation]  IFS-5723
-    [Setup]    the user logs-in in new browser              &{lead_applicant_credentials}
-    Given the user navigates to the page                    ${newProjecTeamPage}
+    [Setup]    log in as a different user                  &{lead_applicant_credentials}
+    Given the user navigates to the page                   ${newProjecTeamPage}
     And the user clicks the button/link                    jQuery = button:contains("Add team member")
-    When the user adds a new team member                    Removed   ${removeInviteEmail}
+    When the user adds a new team member                   Removed   ${removeInviteEmail}
     Then the user is able to re-send an invitation
     And the user reads his email                            ${removeInviteEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.
 
@@ -172,25 +178,25 @@ New user is able to repspond to a query
     Then the user should not see an error in the page
 
 Ifs Admin is able to add a new partner organisation
-    [Documentation]  IFS-6485
+    [Documentation]  IFS-6485  IFS-6505
     [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page           ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation  Testing Organisation  Name Surname  ${ifsAdminAddOrgEmail}
+    When the user adds a new partner organisation  Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
     Then the user reads his email                  ${ifsAdminAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
 
 Project finance is able to add a new partner organisation
-    [Documentation]  IFS-6485
+    [Documentation]  IFS-6485  IFS-6505
     [Setup]  log in as a different user            &{internal_finance_credentials}
     Given the user navigates to the page           ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation  Testing Organisation  Name Surname  ${intFinanceAddOrgEmail}
-    Then the user reads his email                  ${intFinanceAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    When the user adds a new partner organisation  Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
+    Then a new orgzanisation is able to accept project invite
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
     [Setup]  log in as a different user            &{Comp_admin1_credentials}
     Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     Then the user should not see the element       link = Add a partner organisation
-    And the user should not see the element        jQuery = h2:contains("Red Planet") ~p:first button:contains("Remove organisation")
+    And the user should not see the element        jQuery = h2:contains("Red Planet") ~ button:first:contains("Remove organisation")
 
 Project finance is able to remove a partner organisation
     [Documentation]  IFS-6485
@@ -216,10 +222,23 @@ the relevant users recieve an email notification
 
 the user removes a partner organisation
     [Arguments]  ${orgName}
-    the user clicks the button/link             jQuery = h2:contains("${orgName}") ~p:first button:contains("Remove organisation")
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:first:contains(("Remove organisation")
     the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
     the user should not see the element         jQuery = h2:contains(${orgName})
 
+
+a new orgzanisation is able to accept project invite
+    logout as user
+    the user reads his email and clicks the link   ${intFinanceAddOrgEmail}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user clicks the button/link                jQuery = .govuk-button:contains("Yes, create an account")
+    the user selects the radio button              radio-1   1
+    the user clicks the button/link                jQuery = .govuk-button:contains("Save and continue")
+
+    the user enters text to a text field           id = organisationSearchName  Nomensa
+    the user clicks the button/link                id = org-search
+    the user clicks the button/link                link = NOMENSA LTD
+    the user clicks the button/link                jQuery = button:contains("Save and continue")
+#    ${test_mailbox_one}+changepsw@gmail.com  Reset your password  If you didn't request this
 
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
@@ -227,10 +246,11 @@ the user adds a new partner organisation
     the user enters text to a text field  id = userName  ${persFullName}
     the user enters text to a text field  id = email  ${email}
     the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
+    the user should see the element       jQuery = h2:contains(${partnerOrgName})
 
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
-    the user clicks the button/link        jQuery =tr:contains("Empire") td:nth-child(6):contains("View")
+    the user clicks the button/link        jQuery = tr:contains("Empire") td:nth-child(6):contains("View")
     the user clicks the button/link        id = post-new-query
     the user enters text to a text field   id = queryTitle  a viability query's title
     the user enters text to a text field   css = .editor    another query body
@@ -300,17 +320,17 @@ The user navigates to the Project team page from the dashboard
     the user clicks the button/link   link = Project team
 
 The user is able to add team memebers to all partner organisations
-    the user clicks the button/link        jQuery = h2:contains("Empire Ltd")~ p:first button:contains("Add team member")
+    the user clicks the button/link        jQuery = h2:contains("Empire Ltd")~ button:first:contains("Add team member")
     the user enters text to a text field   jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first [name=name]  cssAdded1
     the user enters text to a text field   jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first [name=email]  1${removeInviteEmail}
     the user clicks the button/link        jQuery = h2:contains("Empire Ltd")~ table[id*="invite-user"]:first button:contains("Invite to project")
     the user should see the element        jQuery = td:contains("cssAdded1 (pending for 0 days)")
-    the user clicks the button/link        jQuery = h2:contains("EGGS")~ p:first button:contains("Add team member")
+    the user clicks the button/link        jQuery = h2:contains("EGGS")~ button:first:contains("Add team member")
     the user enters text to a text field   jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first [name=name]  cssAdded2
     the user enters text to a text field   jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first [name=email]  2${removeInviteEmail}
     the user clicks the button/link        jQuery = h2:contains("EGGS")~ table[id*="invite-user"]:first button:contains("Invite to project")
     the user should see the element        jQuery = td:contains("cssAdded2 (pending for 0 days)")
-    the user clicks the button/link        jQuery = h2:contains("Ludlow")~ p:first button:contains("Add team member")
+    the user clicks the button/link        jQuery = h2:contains("Ludlow")~ button:first:contains("Add team member")
     the user enters text to a text field   jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first [name=name]  cssAdded3
     the user enters text to a text field   jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first [name=email]  3${removeInviteEmail}
     the user clicks the button/link        jQuery = h2:contains("Ludlow")~ table[id*="invite-user"]:first button:contains("Invite to project")
@@ -337,7 +357,7 @@ The user is abe to remove the pending invitation
 
 The user is able to access the project
     [Arguments]  ${email}
-    the user logs-in in new browser   ${email}   ${short_password}
+    Logging in and Error Checking     ${email}   ${short_password}
     the user should see the element   link = ${PS_PD_Application_Title}
 
 The user creates a new account
@@ -347,6 +367,7 @@ The user creates a new account
     the user fills in account details   ${firstName}   ${lastName}
     the user clicks the button/link     jQuery = button:contains("Create account")
     the user verifies their account     ${email}
+    the user clicks the button/link     link = Sign in
 
 The user verifies their account
     [Arguments]  ${email}
@@ -365,6 +386,6 @@ The user fills in account details
 Custom suite setup
     The guest user opens the browser
 
-Custom suite teardown
-    The user closes the browser
+#Custom suite teardown
+#    The user closes the browser
 

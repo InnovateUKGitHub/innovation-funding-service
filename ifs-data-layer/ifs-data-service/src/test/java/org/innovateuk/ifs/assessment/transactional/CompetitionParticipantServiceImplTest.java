@@ -104,7 +104,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
 
         when(assessmentParticipantRepositoryMock.getByAssessorId(userId)).thenReturn(competitionParticipants);
         when(assessmentParticipantMapperMock.mapToResource(same(competitionParticipant))).thenReturn(expected);
-        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionId(userId, competitionId)).thenReturn(assessments);
 
         ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult =
                 competitionParticipantService.getCompetitionAssessors(assessorId);
@@ -120,7 +120,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
                 assessmentParticipantMapperMock, assessmentRepositoryMock);
         inOrder.verify(assessmentParticipantRepositoryMock, calls(1)).getByAssessorId(assessorId);
         inOrder.verify(assessmentParticipantMapperMock, calls(1)).mapToResource(any(AssessmentParticipant.class));
-        inOrder.verify(assessmentRepositoryMock, calls(1)).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findByParticipantUserIdAndTargetCompetitionId(userId, competitionId);
         inOrder.verifyNoMoreInteractions();
     }
 

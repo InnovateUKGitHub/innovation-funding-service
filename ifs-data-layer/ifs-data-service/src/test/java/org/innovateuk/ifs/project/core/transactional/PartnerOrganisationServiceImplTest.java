@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -43,7 +44,6 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -84,10 +84,13 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
     private NotificationService notificationServiceMock;
 
     @Mock
+    private ProjectPartnerInviteRepository projectPartnerInviteRepositoryMock;
+
+    @Mock
     private RemovePartnerNotificationService removePartnerNotificationServiceMock;
 
     @Mock
-    private PartnerChangeService partnerChangeServiceMock;
+    private ProjectPartnerChangeService projectPartnerChangeServiceMock;
 
     private Long projectId = 123L;
     private List<Organisation> organisations;
@@ -103,11 +106,7 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
 
     @Before
     public void setup() {
-        users = newUser().withId(3L, 8L, 71L).withFirstName("James", "Rex", "Orville").withLastName("Reid", "Mill", "Gibbs").build(3);
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer()
-                .withId(81L)
-                .withUser(users.get(2))
-                .build();
+        users = newUser().withId(3L, 8L, 71L).withFirstName("James", "Rex").withLastName("Reid", "Mill").build(2);
         organisations = newOrganisation()
                 .withOrganisationType(BUSINESS)
                 .withName("Empire", "Ludlow")
@@ -122,7 +121,6 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
                 .withProjectUsers(projectUsers)
                 .withApplication(application)
                 .withDuration(6L)
-                .withProjectMonitoringOfficer(monitoringOfficer)
                 .build();
         partnerOrganisations = newPartnerOrganisation()
                 .withId(3L, 18L)
@@ -188,7 +186,7 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(Optional.of(bankDetails.get(1)));
         when(removePartnerNotificationServiceMock.sendNotifications(project, organisations.get(0))).thenReturn(serviceSuccess());
         when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
-        when(partnerChangeServiceMock.updateProjectWhenPartnersChange(projectId)).thenReturn(serviceSuccess());
+        when(projectPartnerChangeServiceMock.updateProjectWhenPartnersChange(projectId)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.removePartnerOrganisation(projectId, organisations.get(1).getId());
 

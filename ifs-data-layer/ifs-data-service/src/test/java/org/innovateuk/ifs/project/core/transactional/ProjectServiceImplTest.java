@@ -142,7 +142,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private OrganisationMapper organisationMapperMock;
 
     @Mock
-    private PartnerChangeService partnerChangeService;
+    private ProjectPartnerChangeService projectPartnerChangeService;
 
     private long applicationId = 456;
 
@@ -392,7 +392,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         // Method under test
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(project.getId(), newUser.getId(), o.getId());
         // Expectations
-        verify(partnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
         assertTrue(shouldSucceed.isSuccess());
     }
 
