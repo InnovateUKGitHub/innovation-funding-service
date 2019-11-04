@@ -138,20 +138,4 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
             }
         });
     }
-
-    @Test
-    public void internalUserCanUpdateProject() {
-        ProjectResource project = newProjectResource().build();
-        ProjectProcess projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
-
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (allInternalUsers.contains(user)) {
-                assertTrue(rules.internalUsersCanUpdateProjects(project, user));
-            } else {
-                assertFalse(rules.internalUsersCanUpdateProjects(project, user));
-            }
-        });
-    }
 }

@@ -58,14 +58,6 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-        value = "RESET_ELIGIBILITY",
-        description = "Project Finance Users can reset Eligibility")
-    public boolean projectFinanceUserCanResetEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-
-        return isProjectFinanceUser(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
-    }
-
-    @PermissionRule(
             value = "VIEW_CREDIT_REPORT",
             description = "Project Finance Users can view the Credit Report flag")
     public boolean projectFinanceUserCanViewCreditReport(ProjectCompositeId projectCompositeId, UserResource user) {

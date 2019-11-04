@@ -1037,7 +1037,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void resetEligibility_WhenViabilityChangeRequired(){
+    public void resetEligibility_WhenEligibilityChangeRequired(){
         Long userId = 7L;
         User user = newUser().withId(userId).build();
 

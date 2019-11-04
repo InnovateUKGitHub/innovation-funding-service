@@ -358,20 +358,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility,
-                                                EligibilityRagStatus eligibilityRagStatus) {
-        long organisationId = projectOrganisationCompositeId.getOrganisationId();
-        long projectId = projectOrganisationCompositeId.getProjectId();
-
-        return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
-            .andOnSuccess(partnerOrganisation -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility))
-            .andOnSuccess(() -> getProjectFinance(projectId, organisationId)
-                .andOnSuccess(projectFinance -> saveEligibility(projectFinance, eligibilityRagStatus)))
-        );
-    }
-
-    @Override
-    @Transactional
     public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
 
         return getPartnerOrganisation(projectId, organisationId)
@@ -526,8 +512,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         if(!eligibility.equals(eligibilityWorkflowHandler.getState(partnerOrganisation))) {
             if (EligibilityState.APPROVED == eligibility) {
                 eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
-            } else if (EligibilityState.REVIEW == eligibility) {
-                eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, currentUser);
             }
         }
         return serviceSuccess();
