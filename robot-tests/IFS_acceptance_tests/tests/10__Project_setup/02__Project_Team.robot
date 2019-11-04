@@ -23,9 +23,9 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-6505 - Accept invite as new partner and register
 ...
-...             IFS-6484 - Remove Partner
-...
 ...             IFS-6525 - Invited new partner to project setup - pending state
+...
+...             IFS-6484 - Remove Partner
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -214,7 +214,6 @@ Ifs Admin is able to remove a partner organisation
     Then the relevant users recieve an email notification  SmithZone
 
 *** Keywords ***
-
 a new orgzanisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}
     logout as user
