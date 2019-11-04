@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
+import org.junit.Test;
+
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
-
-
-import org.junit.Test;
 
 public class OrganisationSelectionViewModelTest {
 
@@ -15,10 +14,10 @@ public class OrganisationSelectionViewModelTest {
         OrganisationSelectionChoiceViewModel choice = mock(OrganisationSelectionChoiceViewModel.class);
 
         OrganisationSelectionViewModel viewModel = new OrganisationSelectionViewModel(asSet(choice),
-            false,
-            false,
-            "url"
-            );
+                false,
+                false,
+                "url"
+                );
 
         assertFalse(viewModel.canSelectOrganisation());
         assertFalse(viewModel.isApplicantJourney());
