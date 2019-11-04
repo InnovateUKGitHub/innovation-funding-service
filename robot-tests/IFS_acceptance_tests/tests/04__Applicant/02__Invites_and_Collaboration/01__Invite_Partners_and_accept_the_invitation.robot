@@ -130,13 +130,23 @@ Valid invitation submit
     [Tags]  HappyPath
     Given the user clicks the button/link  jQuery = button:contains("Invite partner organisation")
     Then the user should see the element   jQuery = td:contains("Steve") ~ td:contains("Lead")
-    And the user should see the element    jQuery = td:contains("Adrian Booth (Pending for")
+    And the user should see the element    jQuery = td:contains("Adrian Booth (pending for")
 
 Cannot mark as complete with pending invites
     [Documentation]  IFS-3088
     [Tags]  HappyPath
     Given the user clicks the button/link                 id = application-question-complete
     Then The user should see a field and summary error    You cannot mark as complete until Adrian Booth has either accepted the invitation or is removed
+
+Partner is still marked as pending after accepting invitation but not completing
+    [Documentation]  IFS-6589
+    [Setup]  Logout as user
+    Given the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
+    When the user accepts invitation
+    And the user clicks the button/link     link = Sign in
+    And Logging in and Error Checking       &{lead_applicant_credentials}
+    Then the user still sees pending user
+    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invite")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
@@ -151,17 +161,14 @@ Supprot user should the pending invite on application team
     When the user clicks the button/link   link = ${applicationId}
     Then the user navigates to the page    ${server}/management/competition/${openCompetitionBusinessRTO}/application/${applicationId}
     And the user clicks the button/link    id = accordion-questions-heading-1
-    Then the user should see the element   jQuery = td:contains("Adrian Booth (Pending for")
+    Then the user should see the element   jQuery = td:contains("Adrian Booth (pending for")
 
 Business organisation (partner accepts invitation)
     [Documentation]  INFUND-1005 INFUND-2286 INFUND-1779 INFUND-2336
     [Tags]  HappyPath
     Given log in as a different user                    ${invite_email}  ${short_password}
     When the user reads his email and clicks the link   ${invite_email}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation  2
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user selects the radio button               organisationType    1
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Save and continue")
-    And the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
+    And the user accepts invitation
     And the invited user fills the create account form  Adrian  Booth
     And the user reads his email                        ${invite_email}  Please verify your email address  Once verified you can sign into your account
 
@@ -205,7 +212,7 @@ Partner can invite others to his own organisation
     [Tags]
     Given the user clicks the button/link      jQuery = button:contains("Add person to NOMENSA LTD")
     When the user invites a person to the same organisation  Mark  mark21@innovateuk.com
-    Then The user should see the element      jQuery = td:contains("Mark (Pending for")
+    Then The user should see the element      jQuery = td:contains("Mark (pending for")
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
@@ -224,13 +231,13 @@ Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link           link = Application team
     And the user clicks the button/link           jQuery = button:contains("Add person to ${organisation}")
     When the user invites a person to the same organisation  Roger Axe  ${test_mailbox_one}+inviteorg2@gmail.com
-    Then the user should see the element           jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
+    Then the user should see the element           jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
 
 Lead is able to resend invitation
     [Documentation]  IFS-5960
     [Tags]
-    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td button:contains("Resend invite")
-    Then the user should see the element     jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
+    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
+    Then the user should see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
     [Teardown]    Logout as user
 
 Registered partner should not create new org but should follow the create account flow
@@ -254,7 +261,7 @@ Lead should not see pending status or resend invite for accepted invite
     When the user clicks the button/link        link = Invite robot test application
     And the user clicks the button/link         link = Application team
     Then the user should see the element        jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
-    And The user should not see the element     jQuery = td:contains("Roger Axe (Pending for 0 days)") ~ td button:contains("Resend invite")
+    And The user should not see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
@@ -336,3 +343,14 @@ Custom Suite Setup
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user accepts invitation
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, accept invitation")
+    the user selects the radio button                     organisationType    1
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
+
+the user still sees pending user
+    the user clicks the button/link    link = Invite robot test application
+    the user clicks the button/link    link = Application team
+    the user should see the element    jQuery = td:contains("Adrian Booth (pending for")

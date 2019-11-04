@@ -170,24 +170,21 @@ public class ApplicationNotificationServiceImplTest {
                 .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com")
                 .build(3);
 
-        List<ProcessRole> processRoles = newProcessRole()
-                .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(Role.LEADAPPLICANT)
-                .build(3);
-
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .withId(applicationOneId, applicationTwoId, applicationThreeId)
                 .withName("App1", "App2", "App3")
                 .build(3);
 
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withRole(Role.LEADAPPLICANT)
+                .withApplication(applications.toArray(new Application[0]))
+                .build(3);
+
         applications.get(0).setProcessRoles(singletonList(processRoles.get(0)));
         applications.get(1).setProcessRoles(singletonList(processRoles.get(1)));
         applications.get(2).setProcessRoles(singletonList(processRoles.get(2)));
-
-        processRoles.get(0).setApplicationId(applicationOneId);
-        processRoles.get(1).setApplicationId(applicationTwoId);
-        processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
                 new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
@@ -274,10 +271,6 @@ public class ApplicationNotificationServiceImplTest {
                 .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com")
                 .build(3);
 
-        List<ProcessRole> processRoles = newProcessRole()
-                .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(Role.LEADAPPLICANT)
-                .build(3);
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
@@ -285,13 +278,15 @@ public class ApplicationNotificationServiceImplTest {
                 .withName("App1", "App2", "App3")
                 .build(3);
 
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withRole(Role.LEADAPPLICANT)
+                .withApplication(applications.toArray(new Application[0]))
+                .build(3);
+
         applications.get(0).setProcessRoles(singletonList(processRoles.get(0)));
         applications.get(1).setProcessRoles(singletonList(processRoles.get(1)));
         applications.get(2).setProcessRoles(singletonList(processRoles.get(2)));
-
-        processRoles.get(0).setApplicationId(applicationOneId);
-        processRoles.get(1).setApplicationId(applicationTwoId);
-        processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
                 new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
@@ -383,24 +378,21 @@ public class ApplicationNotificationServiceImplTest {
                 .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com")
                 .build(3);
 
-        List<ProcessRole> processRoles = newProcessRole()
-                .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(Role.LEADAPPLICANT)
-                .build(3);
-
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .withId(applicationOneId, applicationTwoId, applicationThreeId)
                 .withName("App1", "App2", "App3")
                 .build(3);
 
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withRole(Role.LEADAPPLICANT)
+                .withApplication(applications.toArray(new Application[0]))
+                .build(3);
+
         applications.get(0).setProcessRoles(singletonList(processRoles.get(0)));
         applications.get(1).setProcessRoles(singletonList(processRoles.get(1)));
         applications.get(2).setProcessRoles(singletonList(processRoles.get(2)));
-
-        processRoles.get(0).setApplicationId(applicationOneId);
-        processRoles.get(1).setApplicationId(applicationTwoId);
-        processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
                 new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),

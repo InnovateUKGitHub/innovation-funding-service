@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectUserRepository extends PagingAndSortingRepository<ProjectUser, Long> {
 
@@ -24,5 +25,7 @@ public interface ProjectUserRepository extends PagingAndSortingRepository<Projec
 
     ProjectUser findByProjectIdAndRoleAndUserId(long projectId, ProjectParticipantRole role, long userId);
 
-    ProjectUser findByProjectIdAndRole(long projectId, ProjectParticipantRole role);
+    Optional<ProjectUser> findByProjectIdAndRole(long projectId, ProjectParticipantRole role);
+
+    void deleteAllByProjectIdAndOrganisationId(long projectId, long organisationId);
 }

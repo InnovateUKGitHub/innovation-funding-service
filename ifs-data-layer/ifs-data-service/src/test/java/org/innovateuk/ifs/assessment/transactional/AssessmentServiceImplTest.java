@@ -208,14 +208,14 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .build(1);
 
         when(competitionParticipantServiceMock.getCompetitionAssessors(userId)).thenReturn(serviceSuccess(competitionParticipantList));
-        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionId(userId, competitionId)).thenReturn(assessments);
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
 
         List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccess();
 
         assertEquals(expected, found);
-        verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
+        verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndTargetCompetitionId(userId, competitionId);
     }
 
     @Test

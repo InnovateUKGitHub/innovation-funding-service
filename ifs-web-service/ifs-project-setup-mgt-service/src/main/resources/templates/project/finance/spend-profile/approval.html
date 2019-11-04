@@ -41,8 +41,14 @@
         </th:block>
 
         <th:block th:unless="${model.empty}">
-            <p class="govuk-body">This overview details the spend profile of each partner.</p>
-            <p class="govuk-body">You can download each spend profile to enable sharing with the monitoring officer.</p>
+            <th:block th:if="${model.collaborativeProject}">
+                <p class="govuk-body">This overview details the spend profile of each partner.</p>
+                <p class="govuk-body">You can download each spend profile to enable sharing with the monitoring officer.</p>
+            </th:block>
+            <th:block th:unless="${model.collaborativeProject}">
+                <p class="govuk-body">This overview details the spend profile.</p>
+                <p class="govuk-body">You can download the spend profile to enable sharing with the monitoring officer.</p>
+            </th:block>
             <h2 class="govuk-heading-m">Innovation Lead</h2>
             <p class="govuk-body" th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}">
                 Innovation Lead

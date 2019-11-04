@@ -27,6 +27,7 @@ items:
       ACC_USERNAME: "${ACC_USERNAME}"
       ACC_PASSWORD: "${ACC_PASSWORD}"
       ACC_BITBUCKET_URL: "${ACC_BITBUCKET_URL}"
+      ACC_SUFFIX: "${ACC_SUFFIX}"
   - apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -118,6 +119,11 @@ items:
                 configMapKeyRef:
                   name: bitbucket-config
                   key: ACC_PASSWORD
+            - name: ACC_SUFFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: bitbucket-config
+                  key: ACC_SUFFIX
             - name: LDAP_HOST
               valueFrom:
                 configMapKeyRef:

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<th:block th:fragment="project-user-row(model, organisation, user)">
+        <td class="govuk-table__cell"
+            th:text="${user.name}"></td>
+        <td class="govuk-table__cell ifs-table__email"
+            th:text="${user.email}"></td>
+        <td class="govuk-table__cell"
+            th:classappend="${!user.hasRole} ? 'alignright'">
+            <th:block th:if="${user.removeable}">
+                <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})"/>
+                <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
+                   th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
+                   class="govuk-link">Remove</a>
+            </th:block>
+            <th:block th:if="${user.hasRole}">
+                <span th:text="${user.getRolesNames()}">Roles</span>
+            </th:block>
+        </td>
+</th:block>
+
+<th:block th:fragment="project-invite-row(model, organisation, invite)">
+    <td class="govuk-table__cell hint"
+        th:text="${invite.name}"></td>
+    <td class="govuk-table__cell ifs-table__email hint"
+        th:text="${invite.email}"></td>
+    <td class="govuk-table__cell hint alignright">
+        <button th:if="${invite.canResend}" class="button-clear govuk-!-margin-right-1" type="submit"
+                name="resend-invite" th:value="${invite.id}">Resend invite
+        </button>
+        <span th:if="${invite.canResend and invite.removeable}">|</span>
+        <button th:if="${invite.removeable}" class="button-clear govuk-!-margin-left-1" type="submit"
+                name="remove-invite" th:value="${invite.id}">Remove
+        </button>
+    </td>
+</th:block>
+
+<th:block th:fragment="partner-invite-row(model, organisation, invite)">
+    <td class="govuk-table__cell hint"
+        th:text="${invite.name}"></td>
+    <td class="govuk-table__cell ifs-table__email hint"
+        th:text="${invite.email}"></td>
+    <td class="govuk-table__cell hint alignright">
+        <button th:if="${invite.canResend}" class="button-clear govuk-!-margin-right-1" type="submit"
+                name="resend-partner-invite" th:value="${invite.id}">Resend invite
+        </button>
+    </td>
+</th:block>
+
+<th:block th:fragment="assign-role(model)">
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span class="govuk-visually-hidden">Role</span></th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span class="govuk-visually-hidden">Name</span></th>
+            <th scope="col" class="govuk-table__header govuk-!-width-one-third"><span
+                class="govuk-visually-hidden">Status</span></th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        <tr th:if="${model.userLeadPartner}"
+            class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <a th:unless="${model.grantOfferLetterGenerated}"
+                   th:href="@{/project/{id}/team/project-manager(id=${model.projectId})}" class="govuk-link">Project
+                    manager</a>
+                <th:block th:if="${model.grantOfferLetterGenerated}">Project manager</th:block>
+            </td>
+            <td class="govuk-table__cell"
+                th:text="${model.projectManager != null ? model.projectManager?.userName : '-'}">
+            </td>
+            <td class="govuk-table__cell alignright">
+                <strong th:if="${model.projectManager == null}" class="incomplete-status">Incomplete</strong>
+                <strong th:unless="${model.projectManager == null}" class="complete-status">Complete</strong>
+            </td>
+        </tr>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrganisation.id})}"
+                   class="govuk-link">Your finance contact</a>
+            </td>
+            <td class="govuk-table__cell"
+                th:text="${model.loggedInUserOrganisation.getFinanceContact() != null ? model.loggedInUserOrganisation.getFinanceContact().name : '-'}">
+            </td>
+            <td class="govuk-table__cell alignright">
+                <strong th:if="${model.loggedInUserOrganisation.getFinanceContact() == null}"
+                        class="incomplete-status">Incomplete</strong>
+                <strong th:unless="${model.loggedInUserOrganisation.getFinanceContact() == null}"
+                        class="complete-status">Complete</strong>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+
+<th:block th:fragment="invite-form (model, organisation)">
+    <table th:id="${'invite-user-' + organisation.id}"
+           class="govuk-table govuk-!-margin-bottom-2"
+           th:attr="aria-hidden=${organisation.openAddTeamMemberForm} ? 'false' : 'true'">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-visually-hidden">Name</th>
+            <th scope="col" class="govuk-table__header govuk-visually-hidden">Email</th>
+            <th scope="col" class="govuk-table__header govuk-visually-hidden">Invite</th>
+            <th scope="col" class="govuk-table__header smaller-col govuk-visually-hidden">Remove</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        <tr class="govuk-table__row form-group-row-validated"
+            th:classappend="((${#fields.hasErrors('name')}) or (${#fields.hasErrors('email')})) ? 'govuk-form-group--error'">
+            <td class="govuk-table__cell govuk-form-group"
+                th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="name">
+                    Name
+                </label>
+                <th:block th:if="${#fields.hasErrors('name')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('name')}"
+                                      th:text="${err}"/>
+                </th:block>
+                <input id="name"
+                       th:field="*{name}"
+                       th:errorclass="govuk-input--error"
+                       class="govuk-input govuk-input--width-30"
+                       type="text"
+                       required="required"
+                       th:disabled="${!organisation.openAddTeamMemberForm}"
+                       th:attr="data-required-errormessage=#{validation.standard.name.required}"/>
+            </td>
+            <td class="govuk-table__cell govuk-form-group"
+                th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="email">
+                    Email
+                </label>
+                <th:block th:if="${#fields.hasErrors('email')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
+                                      th:text="${err}"/>
+                </th:block>
+                <input id="email"
+                       th:field="*{email}"
+                       th:errorclass="govuk-input--error"
+                       class="govuk-input govuk-input--width-30"
+                       type="email"
+                       required="required"
+                       th:disabled="${!organisation.openAddTeamMemberForm}"
+                       th:attr="data-required-errormessage=#{validation.projectteam.email.required},
+                                                    data-email-invalid-errormessage=#{validation.projectteam.email.format}" />
+            </td>
+            <td class="govuk-table__cell">
+                <button name="invite-to-project"
+                        class="govuk-button govuk-!-margin-top-6"
+                        th:value="${organisation.id}">
+                    Invite to project
+                </button>
+            </td>
+            <td class="govuk-table__cell alignright">
+                <button name="close-add-team-member-form"
+                        class="button-clear govuk-!-margin-top-6 govuk-!-margin-left-6"
+                        th:attr="data-hide-form=${'invite-user-' + organisation.id}">
+                    Remove
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+        <button name="add-team-member"
+                th:value="${organisation.id}"
+                class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
+                th:attr="data-show-form=${'invite-user-' + organisation.id},
+                                     aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
+            Add team member
+        </button>
+</th:block>
+

@@ -408,7 +408,7 @@ public class ProjectFinanceChecksController {
                 success -> {
                     List<ThreadViewModel> queryThreads =
                             threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
-                                    threadViewModelPopulator.anonymousProjectFinanceOrNamedExternalUser(projectId));
+                                    threadViewModelPopulator.anonymousProjectFinanceOrNamedExternalUser(organisationId));
 
                     return queryThreads
                             .stream()
@@ -464,12 +464,9 @@ public class ProjectFinanceChecksController {
         model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
         model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
 
-        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview,
+        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, eligibilityOverview,
                 organisation.getName(),
-                project.getName(),
-                application.getId(),
                 isLeadPartnerOrganisation,
-                project.getId(),
                 organisation.getId(),
                 eligibilityApproved,
                 eligibility.getEligibilityRagStatus(),
@@ -478,10 +475,7 @@ public class ProjectFinanceChecksController {
                 eligibility.getEligibilityApprovalDate(),
                 true,
                 false,
-                null,
-                competition.isH2020(),
-                project.getProjectState().isActive(),
-                competition.isLoan()));
+                null));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

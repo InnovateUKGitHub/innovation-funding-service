@@ -88,7 +88,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);
         application.setProcessRoles(processRoles);
-        applicationRepository.save(application);
     }
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
@@ -102,10 +101,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetition(competition);
         setInnovationArea(application, competition);
 
-        Application savedApplication = applicationRepository.save(application);
-        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication, organisationId);
-        savedApplication = applicationRepository.findById(savedApplication.getId()).orElse(null);
-        return serviceSuccess(applicationMapper.mapToResource(savedApplication));
+        application = applicationRepository.save(application);
+        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, application, organisationId);
+
+        return serviceSuccess(applicationMapper.mapToResource(application));
     }
 
     // Default to the competition's innovation area if only one set.
@@ -270,15 +269,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<Application> filtered = simpleFilter(allApps, app -> app.getCompetition().getId().equals(competitionId) &&
                 applicationContainsUserRole(app.getProcessRoles(), userId, role));
         return serviceSuccess(simpleMap(filtered, applicationMapper::mapToResource));
-    }
-
-    @Override
-    public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
-        return getApplicationById(applicationId).andOnSuccessReturn(applicationResource -> {
-            CompletedPercentageResource resource = new CompletedPercentageResource();
-            resource.setCompletedPercentage(applicationResource.getCompletion());
-            return resource;
-        });
     }
 
     @Override

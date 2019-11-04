@@ -4,15 +4,15 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.AbstractProjectTeamRowViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamOrganisationViewModel;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -22,11 +22,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -54,7 +55,7 @@ public class ProjectTeamViewModelPopulatorTest {
     private StatusService statusService;
 
     @Mock
-    private ProjectDetailsService projectDetailsService;
+    private ProjectInviteRestService projectInviteRestService;
 
     @Test
     public void populate() {
@@ -91,6 +92,7 @@ public class ProjectTeamViewModelPopulatorTest {
                 .withName("Mr Invite")
                 .withOrganisation(partnerOne.getId())
                 .withStatus(InviteStatus.SENT)
+                .withSentOn(ZonedDateTime.now().minusHours(2).minusDays(10))
                 .build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -98,7 +100,7 @@ public class ProjectTeamViewModelPopulatorTest {
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(projectOrgs);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
-        when(projectDetailsService.getInvitesByProject(project.getId())).thenReturn(serviceSuccess(invites));
+        when(projectInviteRestService.getInvitesByProject(project.getId())).thenReturn(restSuccess(invites));
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 
@@ -109,19 +111,19 @@ public class ProjectTeamViewModelPopulatorTest {
         assertFalse(model.isUserLeadPartner());
         assertEquals((long) loggedInUser.getId(), model.getLoggedInUserId());
         assertFalse(model.isInternalUserView());
-        assertEquals(2, model.getPartnerOrgs().size());
+        assertEquals(2, model.getPartners().size());
 
-        ProjectOrganisationViewModel partnerOneViewModel = model.getPartnerOrgs().stream().filter(view -> view.getOrgId() == partnerOne.getId()).findAny().get();
+        ProjectTeamOrganisationViewModel partnerOneViewModel = model.getPartners().stream().filter(view -> view.getId() == partnerOne.getId()).findAny().get();
 
         assertEquals(2, partnerOneViewModel.getUsers().size());
         assertNotNull(partnerOneViewModel.getProjectManager());
 
-        ProjectOrganisationUserRowViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
+        AbstractProjectTeamRowViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
         assertEquals(partnerOneUser.getId(), 123L);
 
-        ProjectOrganisationUserRowViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(1);
+        AbstractProjectTeamRowViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(1);
         assertEquals((long) invites.get(0).getId(), partnerOneInvitee.getId());
-        assertEquals("Mr Invite (Pending)", partnerOneInvitee.getDisplayName());
+        assertEquals("Mr Invite (pending for 10 days)", partnerOneInvitee.getName());
 
         assertFalse(partnerOneViewModel.isOpenAddTeamMemberForm());
         model.openAddTeamMemberForm(partnerOne.getId());

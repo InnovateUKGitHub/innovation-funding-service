@@ -3,18 +3,20 @@ package org.innovateuk.ifs.project.bankdetails.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
 import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
 
 public class BankDetailsReviewViewModel {
-    private Long projectId;
-    private Long applicationId;
+    private long projectId;
+    private long applicationId;
+    private long competitionId;
     private String projectName;
     private String financeContactName;
     private String financeContactEmail;
     private String financeContactPhoneNumber;
-    private Long organisationId;
+    private long organisationId;
     private String organisationName;
     private String registrationNumber;
     private String bankAccountNumber;
@@ -27,14 +29,13 @@ public class BankDetailsReviewViewModel {
     private Boolean approved;
     private Boolean approvedManually;
     private boolean projectActive;
+    private boolean collaborativeProject;
 
-    public BankDetailsReviewViewModel(Long projectId,
-                                      Long applicationId,
-                                      String projectName,
+    public BankDetailsReviewViewModel(ProjectResource project,
                                       String financeContactName,
                                       String financeContactEmail,
                                       String financeContactPhoneNumber,
-                                      Long organisationId,
+                                      long organisationId,
                                       String organisationName,
                                       String registrationNumber,
                                       String bankAccountNumber,
@@ -45,11 +46,10 @@ public class BankDetailsReviewViewModel {
                                       Boolean registrationNumberMatched,
                                       Short addressScore,
                                       Boolean approved,
-                                      Boolean approvedManually,
-                                      boolean projectActive) {
-        this.projectId = projectId;
-        this.applicationId = applicationId;
-        this.projectName = projectName;
+                                      Boolean approvedManually) {
+        this.projectId = project.getId();
+        this.applicationId = project.getApplication();
+        this.projectName = project.getName();
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
         this.financeContactPhoneNumber = financeContactPhoneNumber;
@@ -65,7 +65,9 @@ public class BankDetailsReviewViewModel {
         this.addressScore = addressScore;
         this.approved = approved;
         this.approvedManually = approvedManually;
-        this.projectActive = projectActive;
+        this.projectActive = project.getProjectState().isActive();
+        this.collaborativeProject = project.isCollaborativeProject();
+        this.competitionId = project.getCompetition();
     }
 
     public String getProjectName() {
@@ -222,6 +224,14 @@ public class BankDetailsReviewViewModel {
 
     public boolean isProjectActive() {
         return projectActive;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 
     public boolean isEditable() {

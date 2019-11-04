@@ -24,7 +24,4 @@ public interface ProjectDetailsRestService {
 
     RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postcode);
 
-    RestResult<Void> inviteFinanceContact(Long projectId, ProjectUserInviteResource inviteResource);
-
-    RestResult<Void> inviteProjectManager(Long projectId, ProjectUserInviteResource inviteResource);
 }

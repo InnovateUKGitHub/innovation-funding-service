@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
@@ -55,7 +56,7 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
 
     public ProcessRoleBuilder withApplication(Application... applications) {
         return withArray((application, processRole) -> {
-                processRole.setApplicationId(application.getId());
+                setField("applicationId", application.getId(), processRole);
                 application.addUserApplicationRole(processRole);
            }, applications);
     }

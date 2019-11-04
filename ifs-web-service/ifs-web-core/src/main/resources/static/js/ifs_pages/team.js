@@ -30,6 +30,7 @@ IFS.core.team = (function () {
     },
     toggleForm: function (button, form) {
       button.toggle()
+      button.next('span').toggle() // Hide the dividing | between button.
       form.toggle()
     },
     clearErrors: function () {

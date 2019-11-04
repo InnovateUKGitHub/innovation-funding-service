@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -147,6 +148,12 @@ public class Project implements ProcessActivity {
         }
 
         return getOnlyElement(matchingUser);
+    }
+
+    public Optional<PartnerOrganisation> getLeadOrganisation() {
+        return getPartnerOrganisations().stream()
+                .filter(PartnerOrganisation::isLeadOrganisation)
+                .findFirst();
     }
 
     public Long getId() {
@@ -340,5 +347,15 @@ public class Project implements ProcessActivity {
 
     public ProjectProcess getProjectProcess() {
         return projectProcess;
+    }
+
+    public boolean isSpendProfileGenerated() { return !spendProfiles.isEmpty(); }
+
+    public boolean isCollaborativeProject() {
+        return partnerOrganisations.size() != 1;
+    }
+
+    public ProjectState getProjectState() {
+        return getProjectProcess().getProcessState();
     }
 }

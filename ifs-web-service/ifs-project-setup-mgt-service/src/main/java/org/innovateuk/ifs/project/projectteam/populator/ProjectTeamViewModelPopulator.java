@@ -2,20 +2,23 @@ package org.innovateuk.ifs.project.projectteam.populator;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
+import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationUserRowViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectOrganisationViewModel;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
+import org.innovateuk.ifs.projectteam.viewmodel.*;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -24,54 +27,87 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @Component
 public class ProjectTeamViewModelPopulator {
 
-    private final ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
-    private final ProjectDetailsService projectDetailsService;
+    @Autowired
+    private ProjectInviteRestService projectInviteRestService;
 
-    public ProjectTeamViewModelPopulator(ProjectService projectService,
-                                         ProjectDetailsService projectDetailsService) {
-        this.projectService = projectService;
-        this.projectDetailsService = projectDetailsService;
-    }
+    @Autowired
+    private ProjectPartnerInviteRestService projectPartnerInviteRestService;
+
+    @Value("${ifs.project.team.change.enabled:false}")
+    private boolean pcrEnabled;
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
-        ProjectResource projectResource = projectService.getById(projectId);
+        ProjectResource project = projectService.getById(projectId);
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
 
-        List<ProjectUserInviteResource> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccess();
+        List<ProjectUserInviteResource> invitedUsers = projectInviteRestService.getInvitesByProject(projectId).getSuccess();
 
-        List<ProjectOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
-                .map(org -> mapToProjectOrganisationViewModel(projectUsers,
-                                                              invitedUsers,
-                                                              org,
-                                                              org.equals(leadOrganisation),
-                                                              true))  // all organisations editable for internal users
-                .sorted()
-                .collect(toList());
-
-        boolean projectIsNotActive = !projectResource.getProjectState().isActive();
+        boolean projectIsNotActive = !project.getProjectState().isActive();
 
         // support users and ifs admins can edit, other internal users have read only view only
         boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) || projectIsNotActive;
 
+        List<ProjectTeamOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
+                .map(org -> mapToProjectOrganisationViewModel(projectUsers,
+                                                              invitedUsers,
+                                                              org,
+                                                              org.equals(leadOrganisation),
+                                                              !isReadOnly))
+                .sorted()
+                .collect(toList());
+
+        boolean userCanAddAndRemoveOrganisations = userCanAddAndRemoveOrganisations(project, loggedInUser);
+
+        partnerOrgModels.addAll(partnerOrganisationInvites(projectId, userCanAddAndRemoveOrganisations));
+
         return new ProjectTeamViewModel(
-                projectResource.getCompetitionName(),
-                projectResource.getCompetition(),
-                projectResource.getName(),
-                projectResource.getId(),
+                project,
                 partnerOrgModels,
                 null,
-                getProjectManager(projectResource.getId()).orElse(null),
+                getProjectManager(project.getId()).orElse(null),
                 false,
                 loggedInUser.getId(),
                 false,
                 true,
-                isReadOnly);
+                !project.getProjectState().isActive(),
+                userCanAddAndRemoveOrganisations,
+                canInvitePartnerOrganisation(project, loggedInUser));
+    }
+
+    private List<ProjectTeamOrganisationViewModel> partnerOrganisationInvites(long projectId, boolean userCanAddAndRemoveOrganisations) {
+        return projectPartnerInviteRestService.getPartnerInvites(projectId).getSuccess()
+                .stream()
+                .map(invite -> new ProjectTeamOrganisationViewModel(
+                        singletonList(new ProjectTeamInviteViewModel(invite.getId(), invite.getEmail(), invite.getUserName(), invite.getSentOn(), userCanAddAndRemoveOrganisations, userCanAddAndRemoveOrganisations)),
+                        invite.getOrganisationName(),
+                        invite.getId(),
+                        false,
+                        false,
+                        invite.getId()
+                ))
+                .collect(toList());
+    }
+
+    private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {
+        return pcrEnabled
+                && user.hasRole(PROJECT_FINANCE)
+                && !project.isSpendProfileGenerated()
+                && project.getProjectState().isActive();
+    }
+
+    private boolean userCanAddAndRemoveOrganisations(ProjectResource project, UserResource user) {
+        return pcrEnabled
+                && user.hasRole(PROJECT_FINANCE)
+                && !project.isSpendProfileGenerated()
+                && project.getProjectState().isActive();
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
@@ -79,38 +115,27 @@ public class ProjectTeamViewModelPopulator {
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
     }
 
-    private ProjectOrganisationViewModel mapToProjectOrganisationViewModel(List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, boolean isLead, boolean editable) {
+    private ProjectTeamOrganisationViewModel mapToProjectOrganisationViewModel(List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, boolean isLead, boolean userCanAddAndResend) {
         List<ProjectUserResource> usersForOrganisation = simpleFilter(totalUsers,
                                                                       user -> user.getOrganisation().equals(organisation.getId()));
         List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
                                                                               invite -> invite.getOrganisation().equals(organisation.getId()));
-        return new ProjectOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation), organisation.getName(), organisation.getId(), isLead, editable);
+        return new ProjectTeamOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation, userCanAddAndResend), organisation.getName(), organisation.getId(), isLead, userCanAddAndResend, null);
     }
 
-    private List<ProjectOrganisationUserRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> usersForOrganisation, List<ProjectUserInviteResource> invitesForOrganisation) {
+    private List<AbstractProjectTeamRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> users, List<ProjectUserInviteResource> invites, boolean userCanAddAndResend) {
 
-        List<ProjectOrganisationUserRowViewModel> partnerUsers = usersForOrganisation.stream()
+        List<ProjectTeamUserViewModel> partnerUsers = users.stream()
                 .filter(pu -> !(pu.isProjectManager() || pu.isFinanceContact()))
-                .map(pu -> new ProjectOrganisationUserRowViewModel(pu.getEmail(),
-                                                                   pu.getUserName(),
-                                                                   pu.getUser(),
-                                                                   false,
-                                                                   false,
-                                                                   false))
+                .map(pu -> new ProjectTeamUserViewModel(
+                        pu.getUser(),
+                        pu.getEmail(),
+                        pu.getUserName(),
+                        false))
                 .distinct()
                 .collect(toList());
 
-        partnerUsers.addAll(invitesForOrganisation.stream()
-                                    .filter(invite -> invite.getStatus() != InviteStatus.OPENED)
-                                    .map(invite -> new ProjectOrganisationUserRowViewModel(invite.getEmail(),
-                                                                                           invite.getName(),
-                                                                                           invite.getId(),
-                                                                                           false,
-                                                                                           false,
-                                                                                           true))
-                                    .collect(toList()));
-
-        Optional<ProjectUserResource> financeContact = simpleFindFirst(usersForOrganisation,
+        Optional<ProjectUserResource> financeContact = simpleFindFirst(users,
                                                                        ProjectUserResource::isFinanceContact);
 
         financeContact.ifPresent(fc -> partnerUsers.stream()
@@ -119,7 +144,7 @@ public class ProjectTeamViewModelPopulator {
                 .get()
                 .setFinanceContact(true));
 
-        Optional<ProjectUserResource> projectManager = simpleFindFirst(usersForOrganisation,
+        Optional<ProjectUserResource> projectManager = simpleFindFirst(users,
                                                                        ProjectUserResource::isProjectManager);
 
         projectManager.ifPresent(pm -> partnerUsers.stream()
@@ -128,6 +153,20 @@ public class ProjectTeamViewModelPopulator {
                 .get()
                 .setProjectManager(true));
 
-        return partnerUsers;
+        List<ProjectTeamInviteViewModel> inviteViews = invites.stream()
+                .filter(invite -> invite.getStatus() != InviteStatus.OPENED)
+                .map(invite -> new ProjectTeamInviteViewModel(
+                        invite.getId(),
+                        invite.getEmail(),
+                        invite.getName(),
+                        invite.getSentOn(),
+                        false,
+                        userCanAddAndResend))
+                .collect(toList());
+
+        List<AbstractProjectTeamRowViewModel> rows = new ArrayList<>();
+        rows.addAll(partnerUsers);
+        rows.addAll(inviteViews);
+        return rows;
     }
 }

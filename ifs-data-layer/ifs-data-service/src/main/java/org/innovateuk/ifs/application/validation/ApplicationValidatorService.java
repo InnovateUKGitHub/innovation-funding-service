@@ -25,4 +25,7 @@ public interface ApplicationValidatorService {
 
     @NotSecured(value = "This is not getting date from the database, just getting a FinanceRowHandler for project finance", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getProjectCostHandler(FinanceRowItem costItem);
+
+    @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
+    ValidationMessages validateAcademicUpload(Application application, Long markedAsCompleteById);
 }

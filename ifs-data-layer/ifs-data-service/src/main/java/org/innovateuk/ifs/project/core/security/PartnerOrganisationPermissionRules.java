@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 @PermissionRules
 @Component
@@ -40,5 +41,15 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_PARTNER_ORGANISATION", description = "Partners can view their own partner organisation")
     public boolean partnersCanViewTheirOwnPartnerOrganisation(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
+    }
+
+    @PermissionRule(value = "PENDING_PARTNER_PROGRESS", description = "Partners can view their own progress setting up their organisation")
+    public boolean partnersCanViewTheirOwnPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
+    }
+
+    @PermissionRule(value = "REMOVE_PARTNER_ORGANISATION", description = "Internal users can remove partner organisations for any project")
+    public boolean internalUsersCanRemovePartnerOrganisations(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return isInternalAdmin(user);
     }
 }

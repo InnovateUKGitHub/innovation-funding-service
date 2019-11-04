@@ -4,9 +4,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakd
 import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -116,10 +114,11 @@ public class ApplicationFundingBreakdownViewModelPopulator {
     private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ApplicationFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
         Optional<String> financeLink = financesLink(organisation, processRoles, user, application, competition);
+        boolean lead = organisation.getId().equals(leadOrganisationId);
         return new BreakdownTableRow(
                 organisation.getId(),
                 organisation.getName(),
-                organisation.getId().equals(leadOrganisationId) ? "Lead organisation" : "Partner",
+                organisationText(application, lead),
                 financeLink.isPresent(),
                 financeLink.orElse(null),
                 finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
@@ -135,11 +134,21 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         );
     }
 
+    private String organisationText(ApplicationResource application, boolean lead) {
+        if (!application.isCollaborativeProject()) {
+            return "Organisation";
+        } else if (lead) {
+            return "Lead organisation";
+        } else {
+            return "Partner";
+        }
+    }
+
     private Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
-        if (authenticatedUser.isInternalUser()) {
+        if (authenticatedUser.isInternalUser() || authenticatedUser.getRoles().contains(STAKEHOLDER)) {
             if (!application.isSubmitted()) {
                 if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT)) {
                     return Optional.of(internalLink(application.getId(), organisation));

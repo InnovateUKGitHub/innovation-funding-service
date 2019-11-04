@@ -1,3 +1,5 @@
+
+
 *** Settings ***
 Documentation   IFS-4189 Add/Remove Stakeholders
 ...
@@ -6,6 +8,9 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...             IFS-4314 Stakeholder invite email
 ...
 ...             IFS-4252 Stakeholder registration
+...
+...             IFS-6632 Stakeholders are able to access T&C's
+...
 Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
@@ -122,11 +127,23 @@ The Stakeholder can search for a competition
 
 The Stakeholder can search for application
     [Documentation]  IFS-4564
-    [Tags]
     Given the user enters text to a text field    searchQuery  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     When the user clicks the button/link          id = searchsubmit
     And the user clicks the button/link           link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     Then the user should see the element          jQuery = span:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+
+The stakeholder is able to view finances
+    [Documentation]  IFS-6648
+    Given the user clicks the button/link  jQuery = button:contains("Finances summary")
+    When the user clicks the button/link   jQuery = div:contains("Empire") ~ a:contains("View finances")
+    Then the user should see the element   jQuery = h1:contains("Your project finances")
+    [Teardown]  the user clicks the button/link  link = Back to application overview
+
+The Stakeholder is able to view application T&C's
+    [Documentation]  IFS-6632
+    When the user clicks the button/link          link = View terms and conditions
+    Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    And the user clicks the button/link           jQuery = a:contains("Back to application overview")
     [Teardown]  The user clicks the button/link   link = Dashboard
 
 The Stakeholder cannot search for unassigned applications

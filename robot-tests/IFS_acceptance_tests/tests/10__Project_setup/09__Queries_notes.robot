@@ -41,7 +41,7 @@ Queries section is linked from viability and this selects viability on the query
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
     [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
-    Given the user clicks the button/link    jQuery = table.table-progress th:contains("Lead") + td a
+    Given the user clicks the button/link    jQuery = table.table-progress th:contains("${Dreambit_Name}") + td a
     When the user clicks the button/link     jQuery = .button-secondary:contains("Queries")
     And the user clicks the button/link      jQuery = .govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability     id = section
@@ -357,8 +357,7 @@ Large pdf uploads not allowed for note comments
     [Tags]
     Given the user clicks the button/link            id = post-new-comment
     When the user uploads the file                   name = attachment    ${too_large_pdf}
-    Then the user should see the element             jQuery = h1:contains("${too_large_pdf_validation_error}")
-    [Teardown]    the user goes back to the previous page
+    Then the user should see a field error           ${too_large_10MB_validation_error}
 
 Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756

@@ -22,7 +22,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 

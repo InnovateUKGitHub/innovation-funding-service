@@ -76,17 +76,8 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
             organisationResource.setCompaniesHouseNumber(organisationForm.getSearchOrganisationId());
         }
 
-        organisationResource = createOrRetrieveOrganisation(organisationResource, request);
+        organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
 
         return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
-    }
-
-    private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
-        if (registrationCookieService.isCollaboratorJourney(request)) {
-            return organisationRestService.createAndLinkByInvite(organisationResource,
-                    registrationCookieService.getInviteHashCookieValue(request).get()).getSuccess();
-        } else {
-            return organisationRestService.createOrMatch(organisationResource).getSuccess();
-        }
     }
 }

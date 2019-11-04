@@ -19,7 +19,6 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -27,9 +26,9 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.invite.transactional.ProjectInviteValidator;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
-import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -59,7 +58,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
-import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -69,9 +67,9 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mapstruct.factory.Mappers.getMapper;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mapstruct.factory.Mappers.getMapper;
 
 public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamServiceImpl> {
 
@@ -89,9 +87,6 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
     @Mock
     private LoggedInUserSupplier loggedInUserSupplierMock;
-
-    @Mock
-    private StatusService statusServiceMock;
 
     @Mock
     private ProjectUserInviteRepository projectUserInviteRepositoryMock;
@@ -113,6 +108,9 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
     @Mock
     private ProjectService projectServiceMock;
+
+    @Mock
+    private ProjectInviteValidator projectInviteValidator;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -194,7 +192,6 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
                 .build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
 
         ServiceResult<Void> result = service.inviteTeamMember(projectId, inviteResource);
 
@@ -250,6 +247,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
         when(projectInviteMapperMock.mapToResource(projectInvite)).thenReturn(inviteResource);
         when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(projectInvite);
+        when(projectInviteValidator.validate(any())).thenReturn(serviceSuccess());
 
         NotificationTarget to = new UserNotificationTarget("Abc Xyz", "Abc.xyz@gmail.com");
 
@@ -266,17 +264,13 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL))
                 .thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
-                .withSpendProfileStatus(ProjectActivityStates.PENDING)
-                .build()));
-
         ServiceResult<Void> result = service.inviteTeamMember(projectInDB.getId(), inviteResource);
 
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
         assertTrue(result.isFailure());
         assertEquals(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(projectUserInviteRepositoryMock, times(2)).save(projectInvite);
+        verify(projectUserInviteRepositoryMock, times(1)).save(projectInvite);
     }
 
     @Test
@@ -329,8 +323,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         when(projectServiceMock.getProjectById(projectInDB.getId())).thenReturn(serviceSuccess(projectResource));
         when(projectInviteMapperMock.mapToResource(projectInvite)).thenReturn(inviteResource);
         when(projectInviteMapperMock.mapToDomain(projectUserInviteResource)).thenReturn(projectInvite);
-
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+        when(projectInviteValidator.validate(any())).thenReturn(serviceSuccess());
 
         NotificationTarget to = new UserNotificationTarget("Abc Xyz", "Abc.xyz@gmail.com");
         Map<String, Object> globalArguments = new HashMap<>();
@@ -350,7 +343,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
 
         assertTrue(result.isSuccess());
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
-        verify(projectUserInviteRepositoryMock, times(2)).save(projectInvite);
+        verify(projectUserInviteRepositoryMock, times(1)).save(projectInvite);
     }
 
     @Test

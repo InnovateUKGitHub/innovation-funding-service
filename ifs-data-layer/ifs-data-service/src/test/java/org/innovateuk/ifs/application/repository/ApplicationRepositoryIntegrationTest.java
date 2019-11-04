@@ -44,18 +44,18 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.*;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Rollback
 public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationRepository> {
@@ -337,14 +337,16 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         loginCompAdmin();
 
         Competition competition = newCompetition().with(id(null)).build();
+        competitionRepository.save(competition);
 
         //Previous
-        Application withoutProject = newApplication()
+        Application withoutProject = applicationRepository.save(newApplication()
                 .withCompetition(competition)
                 .with(id(null))
                 .withName("applicationWithoutProject")
                 .withActivityState(APPROVED)
-                .build();
+                .build());
+
         Organisation lead = newOrganisation()
                 .with(id(null))
                 .withName("Lead")
@@ -356,6 +358,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withUser(userRepository.findById(getSteveSmith().getId()).get())
                 .withOrganisationId(lead.getId())
                 .withRole(Role.LEADAPPLICANT)
+                .withApplication(withoutProject)
                 .build();
 
         // Not previous
@@ -377,10 +380,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withActivityState(OPENED)
                 .build();
 
-        competitionRepository.save(competition);
-        applicationRepository.saveAll(asList(withProject, withoutProject, unsubmitted));
+        applicationRepository.saveAll(asList(withProject, unsubmitted));
         projectRepository.save(project);
-        pr.setApplicationId(withoutProject.getId());
         processRoleRepository.save(pr);
 
         assertEquals(1, repository.countPrevious(competition.getId()));
@@ -500,5 +501,64 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(userOnAppButNotProject.getId())));
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(assessorApp.getId())));
+    }
+
+    @Test
+    public void findByApplicationStateAndFundingDecision() {
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .withFundingDecision(FUNDED, null, UNFUNDED)
+                .build(3);
+
+        applicationRepository.saveAll(applications);
+
+        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
+
+        assertEquals(1, foundApplications.size());
+    }
+
+    @Test
+    public void findByApplicationStateAndFundingDecision_undecided() {
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .withFundingDecision(UNDECIDED, null)
+                .build(2);
+
+        applicationRepository.saveAll(applications);
+
+        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, UNDECIDED, false);
+
+        assertEquals(2, foundApplications.size());
+    }
+
+    @Test
+    public void findByApplicationStateAndFundingDecision_funded() {
+        loginCompAdmin();
+        Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
+
+        List<Application> applications = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withFundingDecision(FUNDED, null)
+                .withActivityState(SUBMITTED, APPROVED)
+                .build(2);
+
+        applicationRepository.saveAll(applications);
+
+        flushAndClearSession();
+
+        List<Application> foundApplications = repository.findByApplicationStateAndFundingDecision(competition.getId(), SUBMITTED_STATES, null, FUNDED, false);
+
+        assertEquals(2, foundApplications.size());
     }
 }

@@ -16,7 +16,6 @@ public interface OrganisationRestService {
     RestResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId);
     RestResult<List<OrganisationResource>> getAllByUserId(long userId);
     RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation);
-    RestResult<OrganisationResource> createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
     RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation);
 
 }
