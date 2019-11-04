@@ -170,7 +170,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                     true);
         }
         Optional<MonitoringOfficerResource> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
-        Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
+        Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
 
         boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(), organisation.getId()).getSuccess();

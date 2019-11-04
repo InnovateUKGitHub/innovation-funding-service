@@ -163,14 +163,12 @@
         </tr>
         </tbody>
     </table>
-    <p class="govuk-body">
         <button name="add-team-member"
                 th:value="${organisation.id}"
-                class="button-clear"
+                class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
                 th:attr="data-show-form=${'invite-user-' + organisation.id},
                                      aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'">
             Add team member
         </button>
-    </p>
 </th:block>
 
