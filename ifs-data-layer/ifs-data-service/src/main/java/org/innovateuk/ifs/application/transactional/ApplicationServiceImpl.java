@@ -88,7 +88,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<ProcessRole> processRoles = new ArrayList<>();
         processRoles.add(processRole);
         application.setProcessRoles(processRoles);
-//        applicationRepository.save(application);
     }
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
