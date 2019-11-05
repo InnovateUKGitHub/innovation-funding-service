@@ -1,16 +1,4 @@
-ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
-
 ext.activeProfile="local"
-
-ext.ifsDatasourceHost = "ifs-database"
-ext.ifsDatasourceUrl="jdbc:mariadb://ifs-finance-database:3306/ifs_finance"
-ext.ifsDatasourceUsername="root"
-ext.ifsDatasourcePassword="password"
-
-
-ext.testIfsDatasourceUrl="jdbc:mariadb://ifs-finance-database:3307/ifs_finance_test"
-ext.testIfsDatasourceUsername="root"
-ext.testIfsDatasourcePassword="password"
 
 project.ext['flyway.url']='jdbc:mariadb://ifs-finance-database:3307?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs_finance'

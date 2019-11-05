@@ -2,11 +2,6 @@ ext.ifsSurveyAuthSecretKey="supersecretkey"
 
 ext.activeProfile="local"
 
-ext.ifsDatasourceHost = "ifs-survey-database"
-ext.ifsDatasourceUrl="jdbc:mariadb://ifs-survey-database:3306/ifs_survey"
-ext.ifsDatasourceUsername="root"
-ext.ifsDatasourcePassword="password"
-
 ext.testIfsDatasourceUrl="jdbc:mariadb://ifs-survey-database:3308/ifs_survey_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
