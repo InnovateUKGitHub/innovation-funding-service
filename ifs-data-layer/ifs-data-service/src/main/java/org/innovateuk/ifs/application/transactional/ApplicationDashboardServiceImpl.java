@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -35,7 +36,7 @@ import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.ON
  * Transactional and secured service that generates a dashboard of applications for a user.
  */
 @Service
-public class ApplicationDashboardServiceImpl extends BaseTransactionalService implements ApplicationDashboardService {
+public class ApplicationDashboardServiceImpl extends RootTransactionalService implements ApplicationDashboardService {
 
     @Autowired
     private InterviewAssignmentService interviewAssignmentService;

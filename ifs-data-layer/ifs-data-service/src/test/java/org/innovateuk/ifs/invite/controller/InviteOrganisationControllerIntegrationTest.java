@@ -175,6 +175,8 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     private User setupCollaboratorForApplicationAndOrganisation(Application application, Organisation organisation) {
         loginSteveSmith();
 
+        application = applicationRepository.findById(application.getId()).get();
+
         User user = userRepository.save(newUser()
                 .with(id(null))
                 .withFirstName("Example")
@@ -188,8 +190,8 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
                 .withUser(user)
                 .withRole(Role.COLLABORATOR)
                 .withOrganisationId(organisation.getId())
+                .withApplication(application)
                 .build();
-        processRole.setApplicationId(application.getId());
 
         processRoleRepository.save(processRole);
 

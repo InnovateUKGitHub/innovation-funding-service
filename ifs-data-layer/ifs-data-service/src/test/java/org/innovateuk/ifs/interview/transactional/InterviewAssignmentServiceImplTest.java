@@ -203,8 +203,8 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
     private static InterviewAssignment interviewPanelLambdaMatcher(Application application) {
         return createLambdaMatcher((InterviewAssignment interviewPanel) -> {
             ProcessRole participant = interviewPanel.getParticipant();
-            assertEquals(application.getId(), interviewPanel.getTarget().getId());
-            assertEquals(application.getId(), participant.getApplicationId());
+            assertEquals(application.getId().longValue(), interviewPanel.getTarget().getId().longValue());
+            assertEquals(application.getId().longValue(), participant.getApplicationId());
             assertSame(participant.getRole(), Role.INTERVIEW_LEAD_APPLICANT);
             assertEquals(participant.getUser(), application.getLeadApplicant());
             assertEquals(participant.getOrganisationId(), application.getLeadOrganisationId());

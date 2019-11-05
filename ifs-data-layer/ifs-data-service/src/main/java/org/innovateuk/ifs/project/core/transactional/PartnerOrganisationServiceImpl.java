@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.core.mapper.PartnerOrganisationMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -44,7 +45,6 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.core.transactional.PartnerOrganisationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @Transactional(readOnly = true)
@@ -86,6 +86,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
 
+    @Autowired
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -96,7 +99,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Override
     public ServiceResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId) {
         return find(partnerOrganisationRepository.findByProjectId(projectId),
-                notFoundError(PartnerOrganisation.class, id)).
+                notFoundError(PartnerOrganisation.class)).
                 andOnSuccessReturn(lst -> simpleMap(lst, partnerOrganisationMapper::mapToResource));
     }
 
@@ -111,7 +114,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     @Transactional
     public ServiceResult<Void> removePartnerOrganisation(long projectId, long organisationId) {
         return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
-                notFoundError(PartnerOrganisation.class, id)).andOnSuccess(
+                notFoundError(PartnerOrganisation.class)).andOnSuccess(
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
@@ -175,6 +178,7 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     private void removePartnerOrg(long projectId, long organisationId) {
         projectUserInviteRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
+        projectPartnerInviteRepository.deleteByProjectIdAndInviteOrganisationOrganisationId(projectId, organisationId);
         projectUserRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         partnerOrganisationRepository.deleteOneByProjectIdAndOrganisationId(projectId, organisationId);
         Optional<PendingPartnerProgress> pendingPartnerProgress = pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(organisationId, projectId);
