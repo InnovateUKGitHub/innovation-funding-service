@@ -91,14 +91,14 @@ public class ProjectPartnerChangeServiceImplTest extends BaseServiceUnitTest<Pro
         when(projectFinanceRepository.findByProjectId(1L)).thenReturn(Collections.emptyList());
     }
 
-    private void setUpForResetProjectFinance() {
+    private void setUpForResetProjectFinanceEligibility() {
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(Collections.emptyList());
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(1L, 1L)).thenReturn(partnerOrganisation);
     }
 
     @Test
     public void updateProjectWhenPartnersChange_EligibilityResetRequired() {
-        setUpForResetProjectFinance();
+        setUpForResetProjectFinanceEligibility();
         when(projectFinance.getEligibilityStatus()).thenReturn(EligibilityRagStatus.AMBER);
 
         boolean result = service.updateProjectWhenPartnersChange(1L).isSuccess();
@@ -110,7 +110,7 @@ public class ProjectPartnerChangeServiceImplTest extends BaseServiceUnitTest<Pro
 
     @Test
     public void updateProjectWhenPartnersChange_EligibilityResetNotRequired() {
-        setUpForResetProjectFinance();
+        setUpForResetProjectFinanceEligibility();
         when(projectFinance.getEligibilityStatus()).thenReturn(EligibilityRagStatus.UNSET);
 
         boolean result = service.updateProjectWhenPartnersChange(1L).isSuccess();
