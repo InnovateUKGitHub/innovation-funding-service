@@ -145,7 +145,6 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
         assertTrue(result.isSuccess());
     }
 
-
     @Override
     protected Class<? extends PartnerOrganisationService> getClassUnderTest() {
         return PartnerOrganisationServiceImpl.class;

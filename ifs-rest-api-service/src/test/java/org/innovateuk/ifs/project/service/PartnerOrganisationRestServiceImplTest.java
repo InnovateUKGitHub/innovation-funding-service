@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
@@ -55,5 +56,18 @@ public class PartnerOrganisationRestServiceImplTest extends BaseRestServiceUnitT
         PartnerOrganisationRestServiceImpl partnerOrganisationRestService = new PartnerOrganisationRestServiceImpl();
         ReflectionTestUtils.setField(partnerOrganisationRestService, "projectRestURL", projectRestURL);
         return partnerOrganisationRestService;
+    }
+
+    @Test
+    public void removePartnerOrganisation() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/remove-organisation/" + organisationId, HttpStatus.OK);
+
+        RestResult<Void> result = service.removePartnerOrganisation(projectId, organisationId);
+
+        assertTrue(result.isSuccess());
     }
 }

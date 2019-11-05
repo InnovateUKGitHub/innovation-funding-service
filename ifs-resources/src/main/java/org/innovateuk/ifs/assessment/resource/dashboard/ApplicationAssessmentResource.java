@@ -4,11 +4,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 
-public class ApplicationAssessmentResource {
+import static java.lang.Integer.compare;
+
+public class ApplicationAssessmentResource implements Comparable<ApplicationAssessmentResource> {
 
     private long applicationId;
     private long assessmentId;
-    private String competitionName;
+    private String applicationName;
     private String leadOrganisation;
     private AssessmentState state;
     private int overallScore;
@@ -18,14 +20,14 @@ public class ApplicationAssessmentResource {
 
     public ApplicationAssessmentResource(long applicationId,
                                          long assessmentId,
-                                         String competitionName,
+                                         String applicationName,
                                          String leadOrganisation,
                                          AssessmentState state,
                                          int overallScore,
                                          Boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
-        this.competitionName = competitionName;
+        this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
         this.state = state;
         this.overallScore = overallScore;
@@ -40,8 +42,8 @@ public class ApplicationAssessmentResource {
         return assessmentId;
     }
 
-    public String getCompetitionName() {
-        return competitionName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
     public String getLeadOrganisation() {
@@ -60,6 +62,10 @@ public class ApplicationAssessmentResource {
         return recommended;
     }
 
+    public boolean isReadyToSubmit() {
+        return state == AssessmentState.READY_TO_SUBMIT;
+    }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -68,7 +74,7 @@ public class ApplicationAssessmentResource {
                 .append(overallScore, that.overallScore)
                 .append(applicationId, that.applicationId)
                 .append(assessmentId, that.assessmentId)
-                .append(competitionName, that.competitionName)
+                .append(applicationName, that.applicationName)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
                 .append(recommended, that.recommended)
@@ -81,10 +87,15 @@ public class ApplicationAssessmentResource {
                 .append(overallScore)
                 .append(applicationId)
                 .append(assessmentId)
-                .append(competitionName)
+                .append(applicationName)
                 .append(leadOrganisation)
                 .append(state)
                 .append(recommended)
                 .toHashCode();
+    }
+
+    @Override
+    public int compareTo(ApplicationAssessmentResource o) {
+        return compare(this.getState().getPriority(), o.getState().getPriority());
     }
 }

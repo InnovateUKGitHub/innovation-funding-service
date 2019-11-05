@@ -312,7 +312,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 newAssessmentInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
-                        .withUser(users.toArray(new User[users.size()]))
+                        .withUser(users.toArray(new User[0]))
                         .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
                         .withCompetition(competitions.get(0), competitions.get(0), competitions.get(1))
                         .withInnovationArea(innovationArea)
@@ -329,12 +329,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         // Now assign two of the participants
         for (int i = 0; i < 2; i++) {
-
-            ProcessRole processRole = new ProcessRole();
-            processRole.setUser(users.get(i));
-            processRole.setApplicationId(application.getId());
-            processRole.setRole(Role.ASSESSOR);
-            processRoleRepository.save(processRole);
+            ProcessRole processRole = processRoleRepository.save(new ProcessRole(users.get(i), application.getId(), Role.ASSESSOR));
 
             Assessment assessment = new Assessment(application, processRole);
             assessment.setProcessState(AssessmentState.ACCEPTED);
@@ -360,7 +355,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 newAssessmentInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
-                        .withUser(users.toArray(new User[users.size()]))
+                        .withUser(users.toArray(new User[0]))
                         .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
                         .withCompetition(competitions.get(0), competitions.get(0), competitions.get(0))
                         .withStatus(SENT)
@@ -375,11 +370,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         );
 
         // Now assign one of the participants
-        ProcessRole processRole = new ProcessRole();
-        processRole.setUser(users.get(0));
-        processRole.setApplicationId(application.getId());
-        processRole.setRole(Role.ASSESSOR);
-        processRoleRepository.save(processRole);
+        ProcessRole processRole = processRoleRepository.save(new ProcessRole(users.get(0), application.getId(), Role.ASSESSOR));
 
         Assessment assessment = new Assessment(application, processRole);
         assessment.setProcessState(AssessmentState.ACCEPTED);

@@ -32,7 +32,8 @@ public class OrganisationSelectionViewModelPopulator {
                 .stream()
                 .map(this::choice)
                 .collect(toSet());
-        return new OrganisationSelectionViewModel(choices, registrationCookieService.isCollaboratorJourney(request), newOrganisationUrl);
+        return new OrganisationSelectionViewModel(choices, registrationCookieService.isCollaboratorJourney(request),
+                registrationCookieService.isApplicantJourney(request), newOrganisationUrl);
     }
 
     private OrganisationSelectionChoiceViewModel choice(OrganisationResource organisation) {
