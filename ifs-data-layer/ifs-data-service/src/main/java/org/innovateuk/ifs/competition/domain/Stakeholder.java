@@ -21,13 +21,6 @@ public class Stakeholder extends CompetitionParticipant<StakeholderInvite> {
     private Stakeholder() {
     }
 
-    public Stakeholder(Competition competition, User user) {
-        super.setProcess(competition);
-        super.setUser(user);
-        super.setRole(STAKEHOLDER);
-        super.setStatus(ParticipantStatus.ACCEPTED);
-    }
-
     public Stakeholder(StakeholderInvite invite) {
         super(invite);
 
@@ -37,6 +30,13 @@ public class Stakeholder extends CompetitionParticipant<StakeholderInvite> {
         super.setProcess(invite.getTarget());
         this.invite = invite;
         setRole(STAKEHOLDER);
+    }
+
+    public Stakeholder(Competition competition, User user) {
+        super.setProcess(competition);
+        super.setUser(user);
+        super.setRole(STAKEHOLDER);
+        super.setStatus(ParticipantStatus.ACCEPTED);
     }
 
     @Override

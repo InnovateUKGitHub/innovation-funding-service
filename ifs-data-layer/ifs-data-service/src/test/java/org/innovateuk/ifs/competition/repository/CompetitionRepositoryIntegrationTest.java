@@ -41,6 +41,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.FEEDBACK_RELEASED;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.OPEN_DATE;
@@ -230,7 +231,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withName("Programme")
                 .build();
 
-        Competition compOne = newCompetition()
+        Competition competitionOne = newCompetition()
                 .withId()
                 .withName("Comp1")
                 .withNonIfs(false)
@@ -241,10 +242,10 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withCreatedOn(now())
                 .build();
 
-        compOne = repository.save(compOne);
+        competitionOne = repository.save(competitionOne);
 
         Application applicationOne = newApplication()
-                .withId().withCompetition(compOne)
+                .withId().withCompetition(competitionOne)
                 .withFundingDecision(FUNDED)
                 .withManageFundingEmailDate(now())
                 .build();
@@ -260,7 +261,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         projectRepository.save(projectOne);
 
-        Competition compTwo = newCompetition()
+        Competition competitionTwo = newCompetition()
                 .withId()
                 .withName("Comp2")
                 .withNonIfs(false)
@@ -271,9 +272,9 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withCreatedOn(now())
                 .build();
 
-        compTwo = repository.save(compTwo);
+        competitionTwo = repository.save(competitionTwo);
 
-        Application applicationTwo = newApplication().withId().withCompetition(compTwo)
+        Application applicationTwo = newApplication().withId().withCompetition(competitionTwo)
                 .withFundingDecision(FUNDED).withManageFundingEmailDate(now()).build();
         applicationTwo = applicationRepository.save(applicationTwo);
 
@@ -286,7 +287,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         projectRepository.save(projectTwo);
 
-        Competition compNonIfs = newCompetition()
+        Competition competitionNonIfs = newCompetition()
                 .withId()
                 .withName("Comp3")
                 .withNonIfs(true)
@@ -295,11 +296,11 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withCreatedOn(now())
                 .build();
 
-        compNonIfs = repository.save(compNonIfs);
+        competitionNonIfs = repository.save(competitionNonIfs);
 
-        assertTrue(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(compOne));
-        assertTrue(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(compTwo));
-        assertFalse(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(compNonIfs));
+        assertTrue(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(competitionOne));
+        assertTrue(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(competitionTwo));
+        assertFalse(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(competitionNonIfs));
     }
 
     @Test
@@ -308,28 +309,35 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         loginCompAdmin();
 
-        Competition compFundedAndInformed = newCompetition()
+        Competition competitionFundedAndInformed = newCompetition()
                 .withId()
                 .withNonIfs(false)
                 .withSetupComplete(true)
                 .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .build();
 
-        compFundedAndInformed = repository.save(compFundedAndInformed);
+        competitionFundedAndInformed = repository.save(competitionFundedAndInformed);
 
-        Milestone feedbackReleasedMilestone =
-                new Milestone(FEEDBACK_RELEASED, ZonedDateTime.now().minusDays(1), compFundedAndInformed);
+        Milestone feedbackReleasedMilestone = newMilestone()
+                .withType(FEEDBACK_RELEASED)
+                .withDate(now())
+                .withCompetition(competitionFundedAndInformed)
+                .build();
 
         milestoneRepository.save(feedbackReleasedMilestone);
 
-        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
-                .withFundingDecision(FUNDED).withManageFundingEmailDate(now()).build();
+        Application applicationFundedAndInformed = newApplication()
+                .withCompetition(competitionFundedAndInformed)
+                .withFundingDecision(FUNDED)
+                .withManageFundingEmailDate(now())
+                .build();
+
         applicationRepository.save(applicationFundedAndInformed);
 
         assertEquals(1L, repository.countPrevious().longValue());
         assertEquals(1, repository.findPrevious(PageRequest.of(0, 10)).getTotalElements());
 
-        assertEquals(compFundedAndInformed.getId().longValue(), repository.findPrevious(PageRequest.of(0, 10)).getContent().get(0).getId()
+        assertEquals(competitionFundedAndInformed.getId().longValue(), repository.findPrevious(PageRequest.of(0, 10)).getContent().get(0).getId()
                 .longValue());
     }
 
@@ -394,7 +402,6 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void search() {
         User leadTechnologist = getUserByEmail("steve.smith@empire.com");
         User notLeadTechnologist = getUserByEmail("pete.tom@egg.com");
-
         GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
         termsAndConditions.setId(1L);
 
@@ -795,13 +802,19 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     public void countLiveForInnovationLead() {
         // TODO: Improve once IFS-2222 is done.
-        long innovationLead1Id = 51L;
-        long innovationLead2Id = 52L;
 
-        Long count = repository.countLiveForInnovationLeadOrStakeholder(innovationLead2Id);
+        InnovationLead innovationLeadOne = newInnovationLead()
+                .withId(51L)
+                .build();
+
+        InnovationLead innovationLeadTwo = newInnovationLead()
+                .withId(52L)
+                .build();
+
+        Long count = repository.countLiveForInnovationLeadOrStakeholder(innovationLeadTwo.getId());
         assertEquals(new Long(1L), count);
 
-        count = repository.countLiveForInnovationLeadOrStakeholder(innovationLead1Id);
+        count = repository.countLiveForInnovationLeadOrStakeholder(innovationLeadOne.getId());
         assertEquals(new Long(0L), count);
     }
 

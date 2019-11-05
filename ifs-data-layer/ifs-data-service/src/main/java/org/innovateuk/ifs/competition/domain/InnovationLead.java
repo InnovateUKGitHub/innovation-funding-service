@@ -21,6 +21,17 @@ public class InnovationLead extends CompetitionParticipant<InnovationLeadInvite>
     private InnovationLead() {
     }
 
+    public InnovationLead(InnovationLeadInvite invite) {
+        super(invite);
+
+        if (invite.getUser() != null) {
+            super.setUser(invite.getUser());
+        }
+        super.setProcess(invite.getTarget());
+        this.invite = invite;
+        setRole(INNOVATION_LEAD);
+    }
+
     public InnovationLead(Competition competition, User user) {
         super.setProcess(competition);
         super.setUser(user);
@@ -31,16 +42,5 @@ public class InnovationLead extends CompetitionParticipant<InnovationLeadInvite>
     @Override
     public InnovationLeadInvite getInvite() {
         return null;
-    }
-
-    public InnovationLead(InnovationLeadInvite invite) {
-        super(invite);
-
-        if (invite.getUser() != null) {
-            super.setUser(invite.getUser());
-        }
-        super.setProcess(invite.getTarget());
-        this.invite = invite;
-        setRole(INNOVATION_LEAD);
     }
 }

@@ -5,12 +5,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
@@ -43,7 +43,7 @@ public class InterviewParticipant extends CompetitionParticipant<InterviewInvite
         }
         super.setProcess(invite.getTarget());
         this.invite = invite;
-        setRole(CompetitionParticipantRole.INTERVIEW_ASSESSOR);
+        setRole(INTERVIEW_ASSESSOR);
     }
 
     private InterviewParticipant accept() {

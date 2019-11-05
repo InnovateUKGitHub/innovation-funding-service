@@ -86,7 +86,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + LIVE_QUERY_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM CompetitionParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE;
 
     String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE + " ORDER BY c.projectSetupStarted DESC";
 
@@ -304,5 +304,4 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(value = COUNT_PENDING_SPEND_PROFILES, nativeQuery = true)
     BigDecimal countPendingSpendProfiles(long competitionId);
-
 }
