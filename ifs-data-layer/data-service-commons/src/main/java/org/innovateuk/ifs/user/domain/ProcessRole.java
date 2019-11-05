@@ -15,11 +15,11 @@ public class ProcessRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="userId", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name="userId", referencedColumnName="id", nullable = false)
     private User user;
 
-    private Long applicationId;
+    private long applicationId;
 
     @Column(name = "role_id")
     private Role role;
@@ -51,7 +51,7 @@ public class ProcessRole {
         return user;
     }
 
-    public Long getApplicationId() {
+    public long getApplicationId() {
         return applicationId;
     }
 
@@ -65,10 +65,6 @@ public class ProcessRole {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
     }
 
     public void setOrganisationId(Long organisationId) {
@@ -105,7 +101,7 @@ public class ProcessRole {
 
         return new EqualsBuilder()
                 .append(id, that.id)
-                .append(user, that.user)
+                .append(user == null ? null : user.getId(), that.user == null ? null : that.user.getId())
                 .append(applicationId, that.applicationId)
                 .append(role, that.role)
                 .append(organisationId, that.organisationId)
@@ -116,7 +112,7 @@ public class ProcessRole {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(user)
+                .append(user.getId())
                 .append(applicationId)
                 .append(role)
                 .append(organisationId)
