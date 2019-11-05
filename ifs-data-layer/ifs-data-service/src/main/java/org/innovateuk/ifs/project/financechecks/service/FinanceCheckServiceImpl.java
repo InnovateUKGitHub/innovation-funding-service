@@ -483,11 +483,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
-        if(!projectFinance.getViabilityStatus().equals(viabilityRagStatus)) {
-            projectFinance.setViabilityStatus(viabilityRagStatus);
-
-            projectFinanceRepository.save(projectFinance);
-        }
+        projectFinance.setViabilityStatus(viabilityRagStatus);
+        projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();
     }
@@ -515,11 +512,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
 
-        if(!projectFinance.getEligibilityStatus().equals(eligibilityRagStatus)) {
-            projectFinance.setEligibilityStatus(eligibilityRagStatus);
-
-            projectFinanceRepository.save(projectFinance);
-        }
+        projectFinance.setEligibilityStatus(eligibilityRagStatus);
+        projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();
     }
