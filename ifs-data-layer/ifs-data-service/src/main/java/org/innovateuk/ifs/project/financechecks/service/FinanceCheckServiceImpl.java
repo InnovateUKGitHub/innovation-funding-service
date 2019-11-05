@@ -510,7 +510,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         if (EligibilityState.APPROVED == eligibility) {
             eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
         }
-
         return serviceSuccess();
     }
 
