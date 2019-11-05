@@ -24,10 +24,11 @@ public class ActivityLogResource {
     private String documentConfigName;
     private Long query;
     private FinanceChecksSectionType queryType;
+    private boolean organisationRemoved;
 
     ActivityLogResource() {}
 
-    public ActivityLogResource(ActivityType activityType, long authoredBy, String authoredByName, Set<Role> authoredByRoles, ZonedDateTime createdOn, Long organisation, String organisationName, Long documentConfig, String documentConfigName, Long query, FinanceChecksSectionType queryType) {
+    public ActivityLogResource(ActivityType activityType, long authoredBy, String authoredByName, Set<Role> authoredByRoles, ZonedDateTime createdOn, Long organisation, String organisationName, Long documentConfig, String documentConfigName, Long query, FinanceChecksSectionType queryType, boolean organisationRemoved) {
         this.activityType = activityType;
         this.authoredBy = authoredBy;
         this.authoredByName = authoredByName;
@@ -39,6 +40,7 @@ public class ActivityLogResource {
         this.documentConfigName = documentConfigName;
         this.query = query;
         this.queryType = queryType;
+        this.organisationRemoved = organisationRemoved;
     }
 
     public ActivityType getActivityType() {
@@ -83,6 +85,10 @@ public class ActivityLogResource {
 
     public FinanceChecksSectionType getQueryType() {
         return queryType;
+    }
+
+    public boolean isOrganisationRemoved() {
+        return organisationRemoved;
     }
 
     @JsonIgnore

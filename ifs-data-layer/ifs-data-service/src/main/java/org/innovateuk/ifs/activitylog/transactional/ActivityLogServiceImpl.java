@@ -138,7 +138,8 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 activityLog.getCompetitionDocument().map(CompetitionDocument::getId).orElse(null),
                 activityLog.getCompetitionDocument().map(CompetitionDocument::getTitle).orElse(null),
                 activityLog.getQuery().map(Query::id).orElse(null),
-                activityLog.getQuery().map(Query::section).orElse(null)
+                activityLog.getQuery().map(Query::section).orElse(null),
+                activityLog.isOrganisationRemoved()
         );
     }
 }

@@ -7,8 +7,10 @@ import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -19,6 +21,7 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleContains;
 
 @Entity
 @Immutable
@@ -61,7 +64,7 @@ public class ActivityLog {
     @JoinColumn(name = "threadId", referencedColumnName = "id")
     private Query query;
 
-    private ActivityLog() {
+    public ActivityLog() {
     }
 
     public ActivityLog(Application application, ActivityType type, CompetitionDocument competitionDocument) {
@@ -164,5 +167,16 @@ public class ActivityLog {
                 .append(competitionDocument)
                 .append(query)
                 .toHashCode();
+
+    }
+
+    public boolean isOrganisationRemoved() {
+        return getOrganisation().map(org ->
+                        ofNullable(getApplication())
+                                .map(a -> a.getProject())
+                                .map(p -> p.getOrganisations())
+                                .map(orgs -> !simpleContains(orgs, o -> org.getId().equals(o.getId())))
+                                .orElse(true)
+        ).orElse(false);
     }
 }

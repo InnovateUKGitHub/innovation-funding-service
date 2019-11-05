@@ -52,7 +52,8 @@ public class ActivityLogControllerDocumentation extends BaseControllerMockMVCTes
                                 fieldWithPath("[].documentConfig").description("The id of document involved in the activity").optional(),
                                 fieldWithPath("[].documentConfigName").description("The name of document involved in the activity").optional(),
                                 fieldWithPath("[].query").description("The id of query involved in the activity").optional(),
-                                fieldWithPath("[].queryType").description("The type of query involved in the activity").optional()
+                                fieldWithPath("[].queryType").description("The type of query involved in the activity").optional(),
+                                fieldWithPath("[].organisationRemoved").description("If the organisation has been removed from the project").optional()
                         )
                 ));
     }
