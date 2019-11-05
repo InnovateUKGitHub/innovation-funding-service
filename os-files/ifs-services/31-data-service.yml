@@ -119,6 +119,10 @@ items:
                   value: "${IFS_DATA_COMPANIES_HOUSE_KEY}"
                 - name: IFS_DATA_SERVICE_FILE_STORAGE_BASE
                   value: "${IFS_DATA_SERVICE_FILE_STORAGE_BASE}"
+                - name: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN
+                  value: "${IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN}"
+                - name: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS
+                  value: "${IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS}"
               ports:
                 - containerPort: 8080
               resources:
