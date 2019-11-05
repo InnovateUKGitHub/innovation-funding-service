@@ -92,9 +92,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private ActivityLogService activityLogService;
 
-    @Autowired
-    ProjectPartnerChangeService projectPartnerChangeService;
-
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);

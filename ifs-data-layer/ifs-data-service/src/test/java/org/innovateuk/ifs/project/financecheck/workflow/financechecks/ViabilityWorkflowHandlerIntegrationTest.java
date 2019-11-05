@@ -69,16 +69,6 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void viabilityReset() {
-
-        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityReset(partnerOrganisation,
-            internalUser)),
-
-            // current State, destination State and expected Event to be fired
-            ViabilityState.APPROVED, ViabilityState.REVIEW, ViabilityEvent.VIABILITY_RESET);
-    }
-
-    @Test
     public void viabilityNotApplicable() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, internalUser)),
