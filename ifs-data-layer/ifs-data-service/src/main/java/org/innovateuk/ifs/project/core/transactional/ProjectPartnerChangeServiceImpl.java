@@ -29,25 +29,17 @@ public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService im
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateProjectWhenPartnersChange(long projectId) {
+    public void updateProjectWhenPartnersChange(long projectId) {
         rejectProjectDocuments(projectId);
-        return resetProjectFinanceEligibility(projectId);
+        resetProjectFinanceEligibility(projectId);
     }
 
-    private ServiceResult<Void> resetProjectFinanceEligibility(long projectId) {
+    private void resetProjectFinanceEligibility(long projectId) {
         projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
             long organisationId = projectFinance.getOrganisation().getId();
             eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
-            saveNewEligibilityRagStatus(projectFinance, EligibilityRagStatus.UNSET);
+            projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
         });
-        return serviceSuccess();
-    }
-
-    private void saveNewEligibilityRagStatus(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
-        if (!projectFinance.getEligibilityStatus().equals(eligibilityRagStatus)) {
-            projectFinance.setEligibilityStatus(eligibilityRagStatus);
-            projectFinanceRepository.save(projectFinance);
-        }
     }
 
     private void rejectProjectDocuments(long projectId) {

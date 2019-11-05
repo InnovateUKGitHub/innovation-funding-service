@@ -80,81 +80,52 @@ public class ProjectPartnerChangeServiceImplTest extends BaseServiceUnitTest<Pro
         when(organisation.getId()).thenReturn(1L);
         when(projectFinance.getOrganisation()).thenReturn(organisation);
         List<ProjectFinance> projectFinances = Collections.singletonList(projectFinance);
-        when(projectFinanceRepository.findByProjectId(1L)).thenReturn(projectFinances);
+        when(projectFinanceRepository.findByProjectId(2L)).thenReturn(projectFinances);
 
-        when(userResource.getId()).thenReturn(1L);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userResource.getId()).thenReturn(3L);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user));
         setLoggedInUser(userResource);
     }
 
-    private void setupForRejectProjectDocuments() {
-        when(projectFinanceRepository.findByProjectId(1L)).thenReturn(Collections.emptyList());
-    }
-
-    private void setUpForResetProjectFinanceEligibility() {
-        when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(Collections.emptyList());
-        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(1L, 1L)).thenReturn(partnerOrganisation);
-    }
-
     @Test
-    public void updateProjectWhenPartnersChange_EligibilityResetRequired() {
-        setUpForResetProjectFinanceEligibility();
-        when(projectFinance.getEligibilityStatus()).thenReturn(EligibilityRagStatus.AMBER);
+    public void updateProjectWhenPartnersChange_EligibilityIsReset() {
+        when(projectDocumentRepository.findAllByProjectId(2L)).thenReturn(Collections.emptyList());
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(2L, 1L)).thenReturn(partnerOrganisation);
 
-        boolean result = service.updateProjectWhenPartnersChange(1L).isSuccess();
+        service.updateProjectWhenPartnersChange(2L);
 
         verify(eligibilityWorkflowHandler, times(1)).eligibilityReset(partnerOrganisation, user);
-        verify(projectFinanceRepository, times(1)).save(projectFinance);
-        assertTrue(result);
-    }
-
-    @Test
-    public void updateProjectWhenPartnersChange_EligibilityResetNotRequired() {
-        setUpForResetProjectFinanceEligibility();
-        when(projectFinance.getEligibilityStatus()).thenReturn(EligibilityRagStatus.UNSET);
-
-        boolean result = service.updateProjectWhenPartnersChange(1L).isSuccess();
-
-        verify(eligibilityWorkflowHandler, times(1)).eligibilityReset(partnerOrganisation, user);
-        verify(projectFinanceRepository, never()).save(projectFinance);
-        assertTrue(result);
     }
 
     @Test
     public void updateProjectWhenPartnersChange_submittedDocumentIsRejected() {
-        setupForRejectProjectDocuments();
         List<ProjectDocument> documents = Collections.singletonList(projectDocument);
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(documents);
         when(projectDocument.getStatus()).thenReturn(DocumentStatus.APPROVED);
 
-        boolean result = service.updateProjectWhenPartnersChange(1).isSuccess();
+        service.updateProjectWhenPartnersChange(1L);
 
         verify(projectDocument).setStatus(DocumentStatus.REJECTED);
-        assertTrue(result);
     }
 
     @Test
     public void updateProjectWhenPartnersChange_thereAreNoSubmittedDocuments() {
-        setupForRejectProjectDocuments();
         List<ProjectDocument> documents = Collections.emptyList();
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(documents);
 
-        boolean result = service.updateProjectWhenPartnersChange(1).isSuccess();
+        service.updateProjectWhenPartnersChange(1L);
 
         verify(projectDocumentRepository, times(0)).saveAll(any());
-        assertTrue(result);
     }
 
     @Test
     public void updateProjectWhenPartnersChange_thereAreOnlyRejectedDocuments() {
-        setupForRejectProjectDocuments();
         List<ProjectDocument> documents = Collections.singletonList(projectDocument);
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(documents);
         when(projectDocument.getStatus()).thenReturn(DocumentStatus.REJECTED);
 
-        boolean result = service.updateProjectWhenPartnersChange(1).isSuccess();
+        service.updateProjectWhenPartnersChange(1L);
 
         verify(projectDocumentRepository, times(0)).saveAll(any());
-        assertTrue(result);
     }
 }

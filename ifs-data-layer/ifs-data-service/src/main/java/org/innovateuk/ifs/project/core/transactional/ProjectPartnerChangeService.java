@@ -7,5 +7,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface ProjectPartnerChangeService {
 
     @NotSecured(value = "This Service is only used within a secured service for performing validation checks (update of project manager and address)", mustBeSecuredByOtherServices = true)
-    ServiceResult<Void> updateProjectWhenPartnersChange(long projectId);
+    void updateProjectWhenPartnersChange(long projectId);
 }
