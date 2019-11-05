@@ -31,4 +31,8 @@ public interface ApplicationConfiguration {
     default boolean applicantShouldUseJesFinances(OrganisationTypeEnum organisationType) {
         return Boolean.TRUE.equals(getIncludeJesForm()) && RESEARCH.equals(organisationType);
     }
+
+    default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {
+        return isH2020() || applicantShouldUseJesFinances(organisationType);
+    }
 }

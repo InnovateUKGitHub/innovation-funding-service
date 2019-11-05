@@ -200,6 +200,22 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
+  <Location ~ "/project-setup/project/\d+/partner-invite/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/project-setup/project/\d+/partner-invite/authenticate">
+    AuthType shibboleth
+    ShibRequireSession On
+    ShibRequestSetting isPassive Off
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
   <Location ~ "/alert/findAllVisibleByType/.*">
     AuthType shibboleth
     ShibRequireSession Off
