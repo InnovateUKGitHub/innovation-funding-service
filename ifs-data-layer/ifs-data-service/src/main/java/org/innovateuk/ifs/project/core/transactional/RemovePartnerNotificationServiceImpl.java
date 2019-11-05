@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -39,6 +40,9 @@ public class RemovePartnerNotificationServiceImpl implements  RemovePartnerNotif
 
     @Autowired
     private NotificationService notificationService;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     enum Notifications {
         REMOVE_PROJECT_ORGANISATION
@@ -93,7 +97,7 @@ public class RemovePartnerNotificationServiceImpl implements  RemovePartnerNotif
     }
 
     private String getProjectTeamLink(long projectId) {
-        return format("/project-setup/project/%d/team", projectId);
+        return format(webBaseUrl + "/project-setup/project/%d/team", projectId);
     }
 
     private String getProjectManagerFullName(User projectManager) {

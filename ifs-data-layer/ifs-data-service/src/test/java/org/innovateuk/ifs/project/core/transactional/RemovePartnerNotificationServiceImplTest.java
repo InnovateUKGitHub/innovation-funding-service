@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 
@@ -59,6 +60,9 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
     private List<ProjectUser> projectUsers;
     private PartnerOrganisation leadPartnerOrganisation;
     private Map<String, Object> notificationArguments = new HashMap<>();
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Before
     public void setup() {
@@ -202,7 +206,7 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
     }
 
     private String getProjectTeamLink(long projectId) {
-        return format("/project-setup/project/%d/team", projectId);
+        return format(webBaseUrl + "/project-setup/project/%d/team", projectId);
     }
 
     @Override

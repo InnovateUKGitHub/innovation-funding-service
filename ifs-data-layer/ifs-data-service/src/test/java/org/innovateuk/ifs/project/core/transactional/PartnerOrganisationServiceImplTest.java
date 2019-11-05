@@ -19,7 +19,6 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
@@ -186,7 +185,6 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(Optional.of(bankDetails.get(1)));
         when(removePartnerNotificationServiceMock.sendNotifications(project, organisations.get(0))).thenReturn(serviceSuccess());
         when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
-        when(projectPartnerChangeServiceMock.updateProjectWhenPartnersChange(projectId)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.removePartnerOrganisation(projectId, organisations.get(1).getId());
 
