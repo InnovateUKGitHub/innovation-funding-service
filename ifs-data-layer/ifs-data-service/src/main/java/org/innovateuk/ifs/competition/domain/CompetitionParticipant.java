@@ -50,7 +50,7 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
         this.competition = null;
     }
 
-    protected CompetitionParticipant(I invite) {
+    protected CompetitionParticipant(I invite, CompetitionParticipantRole role) {
         super();
         if (invite == null) {
             throw new NullPointerException("invite cannot be null");
@@ -64,8 +64,8 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
             throw new IllegalArgumentException("invite.status must be SENT or OPENED");
         }
 
-        this.user = invite.getUser();
         this.competition = invite.getTarget();
+        this.role = role;
     }
 
     @Override

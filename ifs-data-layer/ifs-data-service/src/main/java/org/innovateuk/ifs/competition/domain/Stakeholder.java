@@ -22,14 +22,13 @@ public class Stakeholder extends CompetitionParticipant<StakeholderInvite> {
     }
 
     public Stakeholder(StakeholderInvite invite) {
-        super(invite);
+        super(invite, STAKEHOLDER);
 
         if (invite.getUser() != null) {
-            super.setUser(invite.getUser());
+            setUser(invite.getUser());
         }
-        super.setProcess(invite.getTarget());
+        setProcess(invite.getTarget());
         this.invite = invite;
-        setRole(STAKEHOLDER);
     }
 
     public Stakeholder(Competition competition, User user) {

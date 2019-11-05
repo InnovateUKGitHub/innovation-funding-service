@@ -36,14 +36,13 @@ public class ReviewParticipant extends CompetitionParticipant<ReviewInvite> {
     }
 
     public ReviewParticipant(ReviewInvite invite) {
-        super(invite);
+        super(invite, PANEL_ASSESSOR);
 
         if (invite.getUser() != null) {
-            super.setUser(invite.getUser());
+            setUser(invite.getUser());
         }
-        super.setProcess(invite.getTarget());
+        setProcess(invite.getTarget());
         this.invite = invite;
-        setRole(PANEL_ASSESSOR);
     }
 
     private ReviewParticipant accept() {
