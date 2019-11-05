@@ -1,9 +1,21 @@
 package org.innovateuk.ifs.config.cache;
 
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.ClientOptions.DisconnectedBehavior;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.interceptor.CacheErrorHandler;
+import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -12,10 +24,22 @@ import java.time.Duration;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 @Configuration
-public class CacheConfiguration {
+public class CacheConfiguration extends CachingConfigurerSupport {
+
+    private static final Log LOG = LogFactory.getLog(CacheConfiguration.class);
 
     @Value("${ifs.data.service.cache.ttl.seconds}")
     private int ttlSeconds;
+
+    @Bean
+    public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort()),
+                LettuceClientConfiguration.builder()
+                        .clientOptions(ClientOptions.builder()
+                                .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS)
+                                .build())
+                        .build());
+    }
 
     @Bean
     public ServiceResultWrappingSerializer serviceResultWrappingSerializer() {
@@ -23,7 +47,7 @@ public class CacheConfiguration {
     }
 
     @Bean
-    public RedisCacheConfiguration defaultCacheConfig(ServiceResultWrappingSerializer serviceResultWrappingSerializer) {
+    public RedisCacheConfiguration redisCacheConfiguration(ServiceResultWrappingSerializer serviceResultWrappingSerializer) {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(
@@ -36,5 +60,26 @@ public class CacheConfiguration {
                         )
                 )
                 .entryTtl(Duration.of(ttlSeconds, SECONDS));
+    }
+
+    @Override
+    public CacheErrorHandler errorHandler() {
+        return new SimpleCacheErrorHandler() {
+            @Override
+            public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
+                LOG.error("Failed to get cache item with key " + key.toString(), exception);
+            }
+
+            @Override
+            public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
+                LOG.error("Failed to put cache item with key " + key.toString(), exception);
+            }
+
+            @Override
+            public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
+                LOG.error("Failed to evict cache item with key " + key.toString(), exception);
+
+            }
+        };
     }
 }
