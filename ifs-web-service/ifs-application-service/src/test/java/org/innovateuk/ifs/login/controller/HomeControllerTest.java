@@ -95,15 +95,6 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void homeLoggedInDualRoleInnovationLead() throws Exception {
-        setLoggedInUser(innovationLeadAndApplicant);
-
-        mockMvc.perform(get("/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/dashboard-selection"));
-    }
-
-    @Test
     public void homeLoggedInDualRoleLiveProjects() throws Exception {
         setLoggedInUser(liveProjectsAndApplicant);
 
@@ -121,8 +112,8 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(liveProjectsAndApplicant);
 
         List<DashboardPanel> expectedDashboards = asList(
-                new DashboardPanel(Role.LIVE_PROJECTS_USER, liveProjectsUrl),
-                new DashboardPanel(Role.APPLICANT, "http://localhost:80/applicant/dashboard")
+                new DashboardPanel(Role.APPLICANT, "http://localhost:80/applicant/dashboard"),
+                new DashboardPanel(Role.LIVE_PROJECTS_USER, liveProjectsUrl)
         );
 
         DashboardSelectionViewModel expectedModel = new DashboardSelectionViewModel(expectedDashboards);
