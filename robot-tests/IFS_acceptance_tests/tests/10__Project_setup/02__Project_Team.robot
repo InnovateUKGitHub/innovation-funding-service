@@ -183,14 +183,14 @@ Ifs Admin is able to add a new partner organisation
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new orgzanisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}
+    Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
 
 Project finance is able to add a new partner organisation
     [Documentation]  IFS-6485  IFS-6505
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new orgzanisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}
+    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
@@ -214,11 +214,11 @@ Ifs Admin is able to remove a partner organisation
     Then the relevant users recieve an email notification  SmithZone
 
 *** Keywords ***
-a new orgzanisation is able to accept project invite
-    [Arguments]  ${fname}  ${sname}  ${email}
+a new organisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
     the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
-    the user accepts invitation and selects organisation type
+    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
     the user verifies their account                               ${email}
@@ -231,10 +231,11 @@ A new organisation logs in and sees the project
     Logging in and Error Checking     ${email}  ${short_password}
 
 The user accepts invitation and selects organisation type
+    [Arguments]   ${orgId}  ${orgName}
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
     the user selects the radio button                     organisationType    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
+    the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
 the relevant users recieve an email notification
     [Arguments]  ${orgName}
