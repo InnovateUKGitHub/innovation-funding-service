@@ -13,6 +13,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
@@ -82,6 +83,9 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
     @Mock
     private FinanceService financeService;
+
+    @Mock
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Mock
     private FinanceChecksEligibilityProjectCostsFormPopulator formPopulator;
@@ -216,7 +220,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().withFinanceFileEntry(123L).build();
         FileEntryResource jesFile = newFileEntryResource().withId(987L).withName("Jes1").build();
-        when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.getApplication(), academicOrganisation.getId())).thenReturn(appFinanceResource);
+        when(applicationFinanceRestService.getFinanceDetails(project.getApplication(), academicOrganisation.getId())).thenReturn(restSuccess(appFinanceResource));
         when(financeService.getFinanceEntry(123L)).thenReturn(restSuccess(jesFile));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
@@ -239,7 +243,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().build();
-        when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), 1L)).thenReturn(appFinanceResource);
+        when(applicationFinanceRestService.getFinanceDetails(project.getApplication(), academicOrganisation.getId())).thenReturn(restSuccess(appFinanceResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), academicOrganisation.getId())).

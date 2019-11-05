@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.registration.service;
 
+import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -20,6 +21,7 @@ public class RegistrationCookieService {
     public static final String ORGANISATION_FORM = "organisationForm";
     public static final String ORGANISATION_ID = "organisationId";
     public static final String INVITE_HASH = "invite_hash";
+    public static final String PROJECT_INVITE_HASH = "project_invite_hash";
     public static final String COMPETITION_ID = "competitionId";
 
     @Autowired
@@ -45,6 +47,10 @@ public class RegistrationCookieService {
         cookieUtil.saveToCookie(response, INVITE_HASH, hash);
     }
 
+    public void saveToProjectInviteHashCookie(InviteAndIdCookie inviteAndIdCookie, HttpServletResponse response) {
+        cookieUtil.saveToCookie(response, PROJECT_INVITE_HASH, JsonUtil.getSerializedObject(inviteAndIdCookie));
+    }
+
     public Optional<OrganisationTypeForm> getOrganisationTypeCookieValue(HttpServletRequest request) {
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_TYPE), OrganisationTypeForm.class));
     }
@@ -67,6 +73,10 @@ public class RegistrationCookieService {
         return Optional.ofNullable(inviteHash).filter(s -> !s.isEmpty());
     }
 
+    public Optional<InviteAndIdCookie> getProjectInviteHashCookieValue(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, PROJECT_INVITE_HASH), InviteAndIdCookie.class));
+    }
+
     public void deleteOrganisationTypeCookie(HttpServletResponse response) {
         cookieUtil.removeCookie(response, ORGANISATION_TYPE);
     }
@@ -86,6 +96,9 @@ public class RegistrationCookieService {
     public void deleteCompetitionIdCookie(HttpServletResponse response) {
         cookieUtil.removeCookie(response, COMPETITION_ID);
     }
+    public void deleteProjectInviteHashCookie(HttpServletResponse response) {
+        cookieUtil.removeCookie(response, PROJECT_INVITE_HASH);
+    }
 
     public void deleteAllRegistrationJourneyCookies(HttpServletResponse response) {
         deleteOrganisationTypeCookie(response);
@@ -93,13 +106,20 @@ public class RegistrationCookieService {
         deleteOrganisationIdCookie(response);
         deleteInviteHashCookie(response);
         deleteCompetitionIdCookie(response);
+        deleteProjectInviteHashCookie(response);
     }
 
     public boolean isCollaboratorJourney(HttpServletRequest request) {
-        return getInviteHashCookieValue(request).isPresent() && !getCompetitionIdCookieValue(request).isPresent();
+        return (getInviteHashCookieValue(request).isPresent()
+                || getProjectInviteHashCookieValue(request).isPresent())
+                && !getCompetitionIdCookieValue(request).isPresent();
     }
 
     public boolean isLeadJourney(HttpServletRequest request) {
         return !isCollaboratorJourney(request);
+    }
+
+    public boolean isApplicantJourney(HttpServletRequest request) {
+        return !getProjectInviteHashCookieValue(request).isPresent();
     }
 }
