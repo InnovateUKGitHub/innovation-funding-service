@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.innovateuk.ifs.activitylog.advice.Activity;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteReposito
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -118,12 +120,12 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Override
     @Transactional
-    public ServiceResult<Void> removePartnerOrganisation(long projectId, long organisationId) {
-        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
+    public ServiceResult<Void> removePartnerOrganisation(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
                 notFoundError(PartnerOrganisation.class)).andOnSuccess(
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
-                            removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
+                            removePartnerOrg(projectOrganisationCompositeId.getProjectId(), projectPartner.getOrganisation().getId());
                             sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
 
                         })

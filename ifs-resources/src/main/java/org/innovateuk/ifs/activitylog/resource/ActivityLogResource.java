@@ -45,7 +45,7 @@ public class ActivityLogResource {
         return activityType;
     }
 
-    public Long getAuthoredBy() {
+    public long getAuthoredBy() {
         return authoredBy;
     }
 

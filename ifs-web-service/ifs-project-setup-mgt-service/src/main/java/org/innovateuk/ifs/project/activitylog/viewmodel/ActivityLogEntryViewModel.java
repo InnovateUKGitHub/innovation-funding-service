@@ -61,9 +61,9 @@ public class ActivityLogEntryViewModel {
     public String getView() {
         switch (activityType) {
             case ORGANISATION_ADDED:
-                return ORGANISATION_ADDED.toString();
+                return ORGANISATION_ADDED.name();
             case ORGANISATION_REMOVED:
-                return ORGANISATION_REMOVED.toString();
+                return ORGANISATION_REMOVED.name();
             default:
                 return "DEFAULT";
         }

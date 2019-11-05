@@ -53,9 +53,6 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     @Autowired
     private OrganisationRepository organisationRepository;
 
-
-
-
     @Override
     public void recordActivityByApplicationId(long applicationId, ActivityType activityType) {
         applicationRepository.findById(applicationId)
@@ -124,11 +121,11 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     public ServiceResult<List<ActivityLogResource>> findByApplicationId(long applicationId) {
         return serviceSuccess(activityLogRepository.findByApplicationIdOrderByCreatedOnDesc(applicationId)
                 .stream()
-                .map(this::toResource)
+                .map(ActivityLogServiceImpl::toResource)
                 .collect(toList()));
     }
 
-    private ActivityLogResource toResource(ActivityLog activityLog) {
+    private static ActivityLogResource toResource(ActivityLog activityLog) {
         initialize(activityLog.getAuthor().getRoles());
         return new ActivityLogResource(
                 activityLog.getType(),

@@ -38,4 +38,9 @@ ALTER TABLE activity_log MODIFY type ENUM(
 ) NOT NULL;
 
 ALTER TABLE activity_log
-    ADD COLUMN author bigint(20);
+    ADD COLUMN author_id bigint(20);
+
+ALTER TABLE activity_log
+    ADD CONSTRAINT `author_user_fk`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `user` (`id`);activity_log

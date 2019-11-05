@@ -116,7 +116,7 @@ public class ActivityLog {
     }
 
     public User getAuthor() {
-        return author != null ? author : getCreatedBy();
+        return ofNullable(author).orElse(getCreatedBy());
     }
 
     public ZonedDateTime getCreatedOn() {
