@@ -343,20 +343,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability,
-                                              ViabilityRagStatus viabilityRagStatus) {
-        long organisationId = projectOrganisationCompositeId.getOrganisationId();
-        long projectId = projectOrganisationCompositeId.getProjectId();
-
-        return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
-            .andOnSuccess(partnerOrganisation -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability))
-            .andOnSuccess(() -> getProjectFinance(projectId, organisationId)
-                .andOnSuccess(projectFinance -> saveViability(projectFinance, viabilityRagStatus)))
-        );
-    }
-
-    @Override
-    @Transactional
     public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
@@ -368,20 +354,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
                         .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus)))));
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> resetEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility,
-                                                EligibilityRagStatus eligibilityRagStatus) {
-        long organisationId = projectOrganisationCompositeId.getOrganisationId();
-        long projectId = projectOrganisationCompositeId.getProjectId();
-
-        return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
-            .andOnSuccess(partnerOrganisation -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility))
-            .andOnSuccess(() -> getProjectFinance(projectId, organisationId)
-                .andOnSuccess(projectFinance -> saveEligibility(projectFinance, eligibilityRagStatus)))
-        );
     }
 
     @Override
@@ -502,12 +474,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Viability viability) {
 
-        if(!viability.name().equals(viabilityWorkflowHandler.getState(partnerOrganisation).name())) {
-            if (Viability.APPROVED == viability) {
-                viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
-            } else if (Viability.REVIEW == viability) {
-                viabilityWorkflowHandler.viabilityReset(partnerOrganisation, currentUser);
-            }
+        if (Viability.APPROVED == viability) {
+            viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
         }
 
         return serviceSuccess();
@@ -515,11 +483,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
-        if(!projectFinance.getViabilityStatus().equals(viabilityRagStatus)) {
-            projectFinance.setViabilityStatus(viabilityRagStatus);
-
-            projectFinanceRepository.save(projectFinance);
-        }
+        projectFinance.setViabilityStatus(viabilityRagStatus);
+        projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();
     }
@@ -539,23 +504,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, EligibilityState eligibility) {
 
-        if(!eligibility.equals(eligibilityWorkflowHandler.getState(partnerOrganisation))) {
-            if (EligibilityState.APPROVED == eligibility) {
-                eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
-            } else if (EligibilityState.REVIEW == eligibility) {
-                eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, currentUser);
-            }
+        if (EligibilityState.APPROVED == eligibility) {
+            eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
         }
         return serviceSuccess();
     }
 
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
 
-        if(!projectFinance.getEligibilityStatus().equals(eligibilityRagStatus)) {
-            projectFinance.setEligibilityStatus(eligibilityRagStatus);
-
-            projectFinanceRepository.save(projectFinance);
-        }
+        projectFinance.setEligibilityStatus(eligibilityRagStatus);
+        projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();
     }

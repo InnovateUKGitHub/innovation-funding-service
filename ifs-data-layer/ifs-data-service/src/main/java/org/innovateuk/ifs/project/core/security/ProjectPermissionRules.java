@@ -39,9 +39,4 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isSystemRegistrationUser(user)
                 && isProjectActive(project.getId());
     }
-
-    @PermissionRule(value = "UPDATE_PROJECT", description = "Internal users can update the project")
-    public boolean internalUsersCanUpdateProjects(final ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
 }

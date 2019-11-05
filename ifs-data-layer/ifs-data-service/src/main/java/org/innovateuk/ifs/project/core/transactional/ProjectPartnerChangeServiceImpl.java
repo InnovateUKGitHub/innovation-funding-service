@@ -1,20 +1,15 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+
+
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
-import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,37 +25,25 @@ public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService im
     private ProjectDocumentRepository projectDocumentRepository;
 
     @Autowired
-    private FinanceCheckService financeCheckService;
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateProjectWhenPartnersChange(long projectId) {
-        return resetProjectFinance(projectId)
-            .andOnSuccess(() -> rejectProjectDocuments(projectId));
+    public void updateProjectWhenPartnersChange(long projectId) {
+        rejectProjectDocuments(projectId);
+        resetProjectFinanceEligibility(projectId);
     }
 
-    private ServiceResult<Void> resetProjectFinance(long projectId) {
-        List<ProjectFinance> projectFinances = projectFinanceRepository.findByProjectId(projectId);
-
-        projectFinances.forEach(projectFinance -> {
-            Organisation partner = projectFinance.getOrganisation();
-            long partnerId = partner.getId();
-            financeCheckService.resetViability(new ProjectOrganisationCompositeId(projectId, partnerId), Viability.REVIEW, ViabilityRagStatus.UNSET);
-            financeCheckService.resetEligibility(new ProjectOrganisationCompositeId(projectId, partnerId), EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
+    private void resetProjectFinanceEligibility(long projectId) {
+        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
+            long organisationId = projectFinance.getOrganisation().getId();
+            eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+            projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
         });
-        return ServiceResult.serviceSuccess();
     }
 
-    private ServiceResult<Void> rejectProjectDocuments(long projectId) {
-        List<ProjectDocument> documents = projectDocumentRepository.findAllByProjectId(projectId).stream()
-            .filter(document -> !document.getStatus().equals(DocumentStatus.REJECTED))
-            .collect(Collectors.toList());
-
-        if (!documents.isEmpty()) {
-            documents.forEach(notRejectedDocument -> notRejectedDocument.setStatus(DocumentStatus.REJECTED));
-            projectDocumentRepository.saveAll(documents);
-        }
-
-        return ServiceResult.serviceSuccess();
+    private void rejectProjectDocuments(long projectId) {
+        projectDocumentRepository.findAllByProjectId(projectId).stream()
+            .filter(document -> !document.getStatus().equals(DocumentStatus.REJECTED)).forEach(document -> document.setStatus(DocumentStatus.REJECTED));
     }
 }
