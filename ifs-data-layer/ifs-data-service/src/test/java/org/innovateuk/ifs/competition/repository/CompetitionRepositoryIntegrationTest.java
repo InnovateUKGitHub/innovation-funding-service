@@ -8,8 +8,10 @@ import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -17,6 +19,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -108,32 +111,26 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Rollback
     public void projectSetup() {
 
-        Competition competitionInProjectSetup = newCompetition()
+        Competition compInProjectSetup = newCompetition()
                 .withId()
                 .withNonIfs(false)
                 .withSetupComplete(true)
                 .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
-        competitionInProjectSetup = repository.save(competitionInProjectSetup);
+        compInProjectSetup = repository.save(compInProjectSetup);
 
-        Milestone feedbackReleasedMilestone = newMilestone()
-                .withType(FEEDBACK_RELEASED)
-                .withDate(ZonedDateTime.now().minusDays(1))
-                .withCompetition(competitionInProjectSetup)
-                .build();
+        Milestone feedbackReleasedMilestone =
+                new Milestone(MilestoneType.FEEDBACK_RELEASED, ZonedDateTime.now().minusDays(1), compInProjectSetup);
 
         milestoneRepository.save(feedbackReleasedMilestone);
 
-        Application applicationFundedAndInformed = newApplication()
-                .withCompetition(competitionInProjectSetup)
-                .withFundingDecision(FUNDED)
-                .withManageFundingEmailDate(now())
-                .build();
+        Application applicationFundedAndInformed = newApplication().withCompetition(compInProjectSetup)
+                .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
 
         applicationRepository.save(applicationFundedAndInformed);
+        ProjectProcess activeProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
-        ProjectProcess activeProcess = newProjectProcess().withActivityState(SETUP).build();
         Project activeProject = newProject()
                 .withName("project name")
                 .withApplication(applicationFundedAndInformed)
@@ -143,54 +140,51 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         projectRepository.save(activeProject);
 
         // any competitions with projects still active will show in this list
-        assertEquals(5, repository.countProjectSetup().longValue());
+        assertEquals(5L, repository.countProjectSetup().longValue());
         assertEquals(5, repository.findProjectSetup(PageRequest.of(0, 10)).getTotalElements());
 
         // our new competition should be included
-        assertTrue(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(competitionInProjectSetup));
+        assertTrue(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(compInProjectSetup));
 
         // and will also appear in the Previous competitions list
         assertEquals(1L, repository.countPrevious().longValue());
         assertEquals(1, repository.findPrevious(PageRequest.of(0, 10)).getTotalElements());
+
     }
 
     @Test
     @Rollback
     public void competitionWithInactiveProject() {
 
-        Competition competitionWithInactiveProject = newCompetition()
+        Competition compWithInactiveProject = newCompetition()
                 .withId()
                 .withNonIfs(false)
                 .withSetupComplete(true)
                 .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
-        competitionWithInactiveProject = repository.save(competitionWithInactiveProject);
+        compWithInactiveProject = repository.save(compWithInactiveProject);
 
-        Milestone feedbackReleasedMilestone = newMilestone()
-                .withType(FEEDBACK_RELEASED)
-                .withDate(ZonedDateTime.now().minusDays(1))
-                .withCompetition(competitionWithInactiveProject)
-                .build();
+        Milestone feedbackReleasedMilestone =
+                new Milestone(MilestoneType.FEEDBACK_RELEASED, ZonedDateTime.now().minusDays(1), compWithInactiveProject);
 
         milestoneRepository.save(feedbackReleasedMilestone);
 
-        Application applicationFundedAndInformed = newApplication()
-                .withCompetition(competitionWithInactiveProject)
-                .withFundingDecision(FUNDED)
-                .withManageFundingEmailDate(now())
-                .build();
-        applicationRepository.save(applicationFundedAndInformed);
+        Application applicationFundedAndInformed = newApplication().withCompetition(compWithInactiveProject)
+                .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
 
-        ProjectProcess inactiveProcess = newProjectProcess().withActivityState(COMPLETED_OFFLINE).build();
+        applicationRepository.save(applicationFundedAndInformed);
+        ProjectProcess inactiveProcess = newProjectProcess().withActivityState(ProjectState.COMPLETED_OFFLINE).build();
+
         Project activeProject = newProject()
                 .withName("project name")
                 .withApplication(applicationFundedAndInformed)
                 .withProjectProcess(inactiveProcess)
                 .build();
+
         projectRepository.save(activeProject);
 
-        assertFalse(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(competitionWithInactiveProject));
+        assertFalse(repository.findProjectSetup(PageRequest.of(0, 10)).getContent().contains(compWithInactiveProject));
     }
 
     @Test
@@ -309,35 +303,28 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         loginCompAdmin();
 
-        Competition competitionFundedAndInformed = newCompetition()
+        Competition compFundedAndInformed = newCompetition()
                 .withId()
                 .withNonIfs(false)
                 .withSetupComplete(true)
                 .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .build();
 
-        competitionFundedAndInformed = repository.save(competitionFundedAndInformed);
+        compFundedAndInformed = repository.save(compFundedAndInformed);
 
-        Milestone feedbackReleasedMilestone = newMilestone()
-                .withType(FEEDBACK_RELEASED)
-                .withDate(now())
-                .withCompetition(competitionFundedAndInformed)
-                .build();
+        Milestone feedbackReleasedMilestone =
+                new Milestone(MilestoneType.FEEDBACK_RELEASED, ZonedDateTime.now().minusDays(1), compFundedAndInformed);
 
         milestoneRepository.save(feedbackReleasedMilestone);
 
-        Application applicationFundedAndInformed = newApplication()
-                .withCompetition(competitionFundedAndInformed)
-                .withFundingDecision(FUNDED)
-                .withManageFundingEmailDate(now())
-                .build();
-
+        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
+                .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
         applicationRepository.save(applicationFundedAndInformed);
 
         assertEquals(1L, repository.countPrevious().longValue());
         assertEquals(1, repository.findPrevious(PageRequest.of(0, 10)).getTotalElements());
 
-        assertEquals(competitionFundedAndInformed.getId().longValue(), repository.findPrevious(PageRequest.of(0, 10)).getContent().get(0).getId()
+        assertEquals(compFundedAndInformed.getId().longValue(), repository.findPrevious(PageRequest.of(0, 10)).getContent().get(0).getId()
                 .longValue());
     }
 
