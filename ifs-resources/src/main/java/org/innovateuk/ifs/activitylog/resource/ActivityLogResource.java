@@ -12,7 +12,7 @@ import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 public class ActivityLogResource {
 
     private ActivityType activityType;
-    private Long authoredBy;
+    private long authoredBy;
     private String authoredByName;
     private Set<Role> authoredByRoles;
     private ZonedDateTime createdOn;
@@ -27,7 +27,7 @@ public class ActivityLogResource {
 
     ActivityLogResource() {}
 
-    public ActivityLogResource(ActivityType activityType, Long authoredBy, String authoredByName, Set<Role> authoredByRoles, ZonedDateTime createdOn, Long organisation, String organisationName, Long documentConfig, String documentConfigName, Long query, FinanceChecksSectionType queryType) {
+    public ActivityLogResource(ActivityType activityType, long authoredBy, String authoredByName, Set<Role> authoredByRoles, ZonedDateTime createdOn, Long organisation, String organisationName, Long documentConfig, String documentConfigName, Long query, FinanceChecksSectionType queryType) {
         this.activityType = activityType;
         this.authoredBy = authoredBy;
         this.authoredByName = authoredByName;

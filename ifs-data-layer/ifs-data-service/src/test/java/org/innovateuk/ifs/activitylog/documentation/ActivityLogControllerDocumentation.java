@@ -2,9 +2,12 @@ package org.innovateuk.ifs.activitylog.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.activitylog.controller.ActivityLogController;
+import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.List;
 
 import static org.innovateuk.ifs.activitylog.resource.ActivityLogResourceBuilder.newActivityLogResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -29,6 +32,7 @@ public class ActivityLogControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void findByApplicationId() throws Exception {
         Long applicationId = 1L;
+        List<ActivityLogResource> qq = newActivityLogResource().build(1);
         when(activityLogService.findByApplicationId(applicationId)).thenReturn(serviceSuccess(newActivityLogResource().build(1)));
 
         mockMvc.perform(get("/activity-log?applicationId={applicationId}", applicationId)

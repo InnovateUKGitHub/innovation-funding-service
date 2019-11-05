@@ -36,8 +36,8 @@ public class ActivityLogResourceBuilder  extends BaseBuilder<ActivityLogResource
         return withArraySetFieldByReflection("activityType", activityTypes);
     }
 
-    public ActivityLogResourceBuilder withAuthoredBy(Long... createdBys) {
-        return withArraySetFieldByReflection("createdBy", createdBys);
+    public ActivityLogResourceBuilder withAuthoredBy(Long... authoredBys) {
+        return withArraySetFieldByReflection("authoredBy", authoredBys);
     }
 
     public ActivityLogResourceBuilder withAuthoredByName(String... createdByNames) {

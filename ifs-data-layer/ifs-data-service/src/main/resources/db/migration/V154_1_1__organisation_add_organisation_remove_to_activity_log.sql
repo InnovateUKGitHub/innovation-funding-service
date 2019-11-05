@@ -41,6 +41,6 @@ ALTER TABLE activity_log
     ADD COLUMN author_id bigint(20);
 
 ALTER TABLE activity_log
-    ADD CONSTRAINT `author_user_fk`
+    ADD CONSTRAINT `fk_activity_log_author_id_user_id author_user_fk`
     FOREIGN KEY (`author_id`)
-    REFERENCES `user` (`id`);activity_log
+    REFERENCES `user` (`id`);

@@ -42,7 +42,7 @@ public class ActivityLog {
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="author", referencedColumnName="id", nullable = true, updatable = false)
+    @JoinColumn(name="author_id", referencedColumnName="id", nullable = true, updatable = false)
     private User author;
 
     @CreatedDate

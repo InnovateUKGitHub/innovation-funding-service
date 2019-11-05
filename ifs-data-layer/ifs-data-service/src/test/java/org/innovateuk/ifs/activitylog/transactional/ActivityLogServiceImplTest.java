@@ -172,7 +172,7 @@ public class ActivityLogServiceImplTest {
         ActivityLogResource activityLogResource = result.getSuccess().get(0);
 
         assertEquals(TEST_ACTIVITY_TYPE, activityLogResource.getActivityType());
-        assertEquals(createdBy.getId(), activityLogResource.getAuthoredBy());
+        assertEquals(createdBy.getId().longValue(), activityLogResource.getAuthoredBy());
         assertEquals("Bob Name", activityLogResource.getAuthoredByName());
         assertEquals(singleton(PROJECT_FINANCE), activityLogResource.getAuthoredByRoles());
         assertEquals(createdOn, activityLogResource.getCreatedOn());
