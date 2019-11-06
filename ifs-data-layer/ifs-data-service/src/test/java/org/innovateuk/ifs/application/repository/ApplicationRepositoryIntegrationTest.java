@@ -337,14 +337,16 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         loginCompAdmin();
 
         Competition competition = newCompetition().with(id(null)).build();
+        competitionRepository.save(competition);
 
         //Previous
-        Application withoutProject = newApplication()
+        Application withoutProject = applicationRepository.save(newApplication()
                 .withCompetition(competition)
                 .with(id(null))
                 .withName("applicationWithoutProject")
                 .withActivityState(APPROVED)
-                .build();
+                .build());
+
         Organisation lead = newOrganisation()
                 .with(id(null))
                 .withName("Lead")
@@ -356,6 +358,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withUser(userRepository.findById(getSteveSmith().getId()).get())
                 .withOrganisationId(lead.getId())
                 .withRole(Role.LEADAPPLICANT)
+                .withApplication(withoutProject)
                 .build();
 
         // Not previous
@@ -377,10 +380,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withActivityState(OPENED)
                 .build();
 
-        competitionRepository.save(competition);
-        applicationRepository.saveAll(asList(withProject, withoutProject, unsubmitted));
+        applicationRepository.saveAll(asList(withProject, unsubmitted));
         projectRepository.save(project);
-        pr.setApplicationId(withoutProject.getId());
         processRoleRepository.save(pr);
 
         assertEquals(1, repository.countPrevious(competition.getId()));
