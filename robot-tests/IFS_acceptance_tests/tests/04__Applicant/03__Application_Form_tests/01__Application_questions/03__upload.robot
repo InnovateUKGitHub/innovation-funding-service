@@ -39,7 +39,7 @@ Large pdf uploads not allowed
     And the user clicks the button/link     link = Academic robot test application
     And the user clicks the button/link     link = 5. Technical approach
     When the user uploads the file          css = .inputfile    ${too_large_pdf}
-    Then the user should get an error page  ${too_large_pdf_validation_error}
+    Then the user should see a field and summary error  ${too_large_10MB_validation_error}
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832

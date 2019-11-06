@@ -12,7 +12,7 @@ import static java.util.Collections.emptyList;
 public class ApplicationAssessmentResourceBuilder extends BaseBuilder<ApplicationAssessmentResource, ApplicationAssessmentResourceBuilder> {
 
     public static ApplicationAssessmentResourceBuilder newApplicationAssessmentResource() {
-        return  new ApplicationAssessmentResourceBuilder(emptyList());
+        return new ApplicationAssessmentResourceBuilder(emptyList());
     }
 
     protected ApplicationAssessmentResourceBuilder(List<BiConsumer<Integer, ApplicationAssessmentResource>> newActions) {
@@ -37,8 +37,8 @@ public class ApplicationAssessmentResourceBuilder extends BaseBuilder<Applicatio
         return withArraySetFieldByReflection("assessmentId", assessmentIds);
     }
 
-    public ApplicationAssessmentResourceBuilder withCompetitionName(String... competitionNames) {
-        return withArraySetFieldByReflection("competitionName", competitionNames);
+    public ApplicationAssessmentResourceBuilder withApplicationName(String... applicationNames) {
+        return withArraySetFieldByReflection("applicationName", applicationNames);
     }
 
     public ApplicationAssessmentResourceBuilder withLeadOrganisation(String... leadOrganisations) {

@@ -12,8 +12,10 @@ import java.util.Collections;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -75,6 +77,24 @@ public class PartnerOrganisationControllerDocumentation extends BaseControllerMo
                                 fieldWithPath("[].leadOrganisation").description("If the partner organisation is the lead partner"),
                                 fieldWithPath("[].postcode").description("The project location for this partner"),
                                 fieldWithPath("[].project").description("Project id"))
+                ));
+    }
+
+    @Test
+    public void removePartnerOrganisation() throws Exception {
+        long projectId = 123;
+        long organisationId = 456;
+
+        when(partnerOrganisationServiceMock.removePartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/remove-organisation/{organisationId}", projectId, organisationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of project that the organisation is part of"),
+                                parameterWithName("organisationId").description("Id of organisation to remove")
+                        )
                 ));
     }
 }
