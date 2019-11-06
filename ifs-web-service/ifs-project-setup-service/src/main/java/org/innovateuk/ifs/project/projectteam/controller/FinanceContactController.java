@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.projectteam.controller;
 
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.form.FinanceContactForm;
@@ -11,6 +13,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +38,9 @@ public class FinanceContactController {
 
     private ProjectService projectService;
     private ProjectDetailsService projectDetailsService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     public FinanceContactController(
             ProjectService projectService,
@@ -94,8 +100,8 @@ public class FinanceContactController {
         }
 
         ProjectResource projectResource = projectService.getById(projectId);
-
-        FinanceContactViewModel viewModel = new FinanceContactViewModel(organisationProjectUsers, projectId, projectResource.getName());
+        CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+        FinanceContactViewModel viewModel = new FinanceContactViewModel(organisationProjectUsers, projectId, projectResource.getName(), competition.isLoan());
 
         model.addAttribute("form", form);
         model.addAttribute("model", viewModel);
