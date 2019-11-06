@@ -69,8 +69,7 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
     [Tags]
     Given logging in and error checking               &{nonregistered_assessor3_credentials}
-    And the user should see the element               link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    When the user clicks the button/link              link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    When the user clicks the button/link              link = Val is awesome
     Then the user should see the element              jQuery = p:contains("There are currently no assessments for you to review.")
     And the user reads his email and clicks the link  ${test_mailbox_one}+thomas.fister@gmail.com    Innovate UK assessor questionnaire    diversity survey
     [Teardown]    the user navigates to the page      ${LOGIN_URL}
