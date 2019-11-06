@@ -66,6 +66,11 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
 
         this.competition = invite.getTarget();
         this.role = role;
+
+        if (invite.getUser() != null) {
+            setUser(invite.getUser());
+        }
+        setProcess(invite.getTarget());
     }
 
     @Override

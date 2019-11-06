@@ -39,11 +39,6 @@ public class AssessmentParticipant extends CompetitionParticipant<AssessmentInvi
 
     public AssessmentParticipant(AssessmentInvite invite) {
         super(invite, ASSESSOR);
-
-        if (invite.getUser() != null) {
-            setUser(invite.getUser());
-        }
-        setProcess(invite.getTarget());
         this.invite = invite;
     }
 

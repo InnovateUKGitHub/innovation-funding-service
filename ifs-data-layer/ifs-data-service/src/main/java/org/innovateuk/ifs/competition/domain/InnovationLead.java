@@ -23,11 +23,6 @@ public class InnovationLead extends CompetitionParticipant<InnovationLeadInvite>
 
     public InnovationLead(InnovationLeadInvite invite) {
         super(invite, INNOVATION_LEAD);
-
-        if (invite.getUser() != null) {
-            setUser(invite.getUser());
-        }
-        setProcess(invite.getTarget());
         this.invite = invite;
     }
 

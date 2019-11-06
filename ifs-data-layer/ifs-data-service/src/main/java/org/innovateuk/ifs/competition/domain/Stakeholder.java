@@ -23,11 +23,6 @@ public class Stakeholder extends CompetitionParticipant<StakeholderInvite> {
 
     public Stakeholder(StakeholderInvite invite) {
         super(invite, STAKEHOLDER);
-
-        if (invite.getUser() != null) {
-            setUser(invite.getUser());
-        }
-        setProcess(invite.getTarget());
         this.invite = invite;
     }
 

@@ -37,11 +37,6 @@ public class InterviewParticipant extends CompetitionParticipant<InterviewInvite
 
     public InterviewParticipant(InterviewInvite invite) {
         super(invite, INTERVIEW_ASSESSOR);
-
-        if (invite.getUser() != null) {
-            setUser(invite.getUser());
-        }
-        setProcess(invite.getTarget());
         this.invite = invite;
     }
 
