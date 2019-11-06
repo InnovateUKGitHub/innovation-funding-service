@@ -2,11 +2,14 @@ ext.ifsSurveyAuthSecretKey="supersecretkey"
 
 ext.activeProfile="local"
 
-ext.testIfsDatasourceUrl="jdbc:mariadb://ifs-survey-database:3308/ifs_survey_test"
+def jdbcUrl = "jdbc:mariadb://ifs-survey-database:3308"
+
+ext.testIfsDatasourceUrl="$jdbcUrl/ifs_survey_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-project.ext['flyway.url']='jdbc:mariadb://ifs-survey-database:3308?characterEncoding=utf8'
+//project.ext['flyway.url']='jdbc:mariadb://ifs-survey-database:3308?characterEncoding=utf8'
+project.ext['flyway.url']=jdbcUrl
 project.ext['flyway.schemas']='ifs_survey'
 project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"

@@ -1,14 +1,17 @@
 ext.activeProfile="environment"
 
-ext.testIfsDatasourceUrl="jdbc:mariadb://127.0.0.1:3306?characterEncoding=utf8&useMysqlMetadata=true/ifs_finance_test"
+def jdbcUrl = "jdbc:mysql://127.0.0.1:3306?characterEncoding=utf"
+
+//ext.testIfsDatasourceUrl="jdbc:mariadb://127.0.0.1:3306?characterEncoding=utf8&useMysqlMetadata=true/ifs_finance_test"
+ext.testIfsDatasourceUrl="$jdbcUrl/ifs_finance_test"
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
 
-ext.ifsDatasourceUrl="jdbc:mariadb://127.0.0.1:3306?characterEncoding=utf8&useMysqlMetadata=true/ifs_finance_test"
+ext.ifsDatasourceUrl="$jdbcUrl/ifs_finance_test"
 ext.ifsDatasourceUsername="ifs"
 ext.iIfsDatasourcePassword="ifs"
 
-project.ext['flyway.url']='jdbc:mariadb://127.0.0.1:3306?characterEncoding=utf8&useMysqlMetadata=true'
+project.ext['flyway.url']=jdbcUrl
 project.ext['flyway.schemas']='ifs_finance_test'
 project.ext['flyway.user']="ifs"
 project.ext['flyway.password']="ifs"
