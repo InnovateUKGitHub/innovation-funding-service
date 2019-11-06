@@ -16,7 +16,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join project',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-        <p class="govuk-body">You need to complete all 3 sections before you can join this project.</p>
+        <p class="govuk-body">You need to complete all sections before you can join this project.</p>
         <ul class="task-list">
             <li th:if="${model.showYourOrganisation}">
                 <div class="task">
@@ -47,7 +47,7 @@
                     <h3 class="govuk-heading-s">
                         <a href="#" class="govuk-link">Award terms and conditions</a>
                     </h3>
-                </div>  
+                </div>
                 <div th:if="${model.termsAndConditionsComplete}"
                      class="task-status-complete"><span>Complete</span></div>
                 <div th:unless="${model.termsAndConditionsComplete}"
