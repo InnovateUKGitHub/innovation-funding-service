@@ -91,7 +91,9 @@ public class ActivityLogViewModelPopulator {
     }
 
     private boolean userCanSeeLink(ActivityLogResource activity, UserResource user) {
-        if (user.hasRole(PROJECT_FINANCE)) {
+        if (activity.isOrganisationRemoved() && ActivityLogUrlHelper.linkInvalidIfOrganisationRemoved(activity)) {
+            return false;
+        } else  if (user.hasRole(PROJECT_FINANCE)) {
             return true;
         } else if (user.hasRole(COMP_ADMIN)) {
             return COMP_ADMIN_TYPES.contains(activity.getActivityType());

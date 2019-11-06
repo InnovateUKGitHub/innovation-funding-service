@@ -61,4 +61,24 @@ public class ActivityLogUrlHelper {
                 return null;
         }
     }
+
+    /**
+     * Determines whether the link is invalid once an organisation is removed.
+     * @param log
+     * @return
+     */
+    public static boolean linkInvalidIfOrganisationRemoved(ActivityLogResource log){
+        switch (log.getActivityType()) {
+            case BANK_DETAILS_SUBMITTED:
+            case BANK_DETAILS_APPROVED:
+            case BANK_DETAILS_EDITED:
+            case VIABILITY_APPROVED:
+            case FINANCE_QUERY:
+            case FINANCE_QUERY_RESPONDED:
+            case SPEND_PROFILE_GENERATED:
+                return true;
+            default:
+                return false;
+        }
+    }
 }
