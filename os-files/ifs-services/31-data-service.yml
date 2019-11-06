@@ -2,6 +2,15 @@ apiVersion: v1
 kind: List
 items:
 - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: cache-config
+    data:
+      SPRING_CACHE_TYPE: "${IFS_DATA_SERVICE_CACHE_TYPE}"
+      SPRING_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
+      SPRING_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
+      IFS_DATA_SERVICE_CACHE_TTL_SECONDS: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
@@ -64,13 +73,25 @@ items:
           - name: IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS
             value: "${IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS}"
           - name: SPRING_CACHE_TYPE
-            value: "${IFS_DATA_SERVICE_CACHE_TYPE}"
+              valueFrom:
+                configMapKeyRef:
+                  name: cache-config
+                  key: SPRING_CACHE_TYPE
           - name: SPRING_REDIS_HOST
-            value: "${IFS_DATA_SERVICE_REDIS_HOST}"
+              valueFrom:
+                configMapKeyRef:
+                  name: cache-config
+                  key: DB_HOST
           - name: SPRING_REDIS_PORT
-            value: "${IFS_DATA_SERVICE_REDIS_PORT}"
-          - name: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
-            value: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
+              valueFrom:
+                configMapKeyRef:
+                  name: cache-config
+                  key: SPRING_REDIS_PORT
+          - name: SPRING_CACHE_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: cache-config
+                  key: SPRING_CACHE_TYPE
           ports:
           - containerPort: 8080
           resources:

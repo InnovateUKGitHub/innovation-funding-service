@@ -67,7 +67,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
         return new SimpleCacheErrorHandler() {
             @Override
             public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
-                LOG.error("Failed to get cache item with key " + key.toString(), exception);
+                LOG.debug("Failed to get cache item with key " + key.toString(), exception);
             }
 
             @Override
