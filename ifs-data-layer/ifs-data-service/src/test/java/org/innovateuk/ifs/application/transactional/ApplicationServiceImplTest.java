@@ -240,7 +240,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertEquals(1, created.getProcessRoles().size());
             ProcessRole createdProcessRole = created.getProcessRoles().get(0);
             assertNull(createdProcessRole.getId());
-            assertEquals(application.getId(), createdProcessRole.getApplicationId());
+            assertEquals(application.getId().longValue(), createdProcessRole.getApplicationId());
             assertEquals(organisation.getId(), createdProcessRole.getOrganisationId());
             assertEquals(Role.LEADAPPLICANT, createdProcessRole.getRole());
             assertEquals(user.getId(), createdProcessRole.getUser().getId());
@@ -258,8 +258,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
                         competition.getId(), user.getId(), organisation.getId()).getSuccess();
 
-        verify(applicationRepositoryMock, times(2)).save(isA(Application.class));
-        verify(processRoleRepositoryMock).save(isA(ProcessRole.class));
+        verify(applicationRepositoryMock, times(1)).save(isA(Application.class));
         assertEquals(applicationResource, created);
     }
 

@@ -2,14 +2,12 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.viewmodel.ContributorOrganisationTypeViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,25 +40,21 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
                                          BindingResult bindingResult,
                                          HttpServletResponse response,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
-                                         @RequestParam(value = "invalid", required = false) String invalid) {
-        String hash = registrationCookieService.getInviteHashCookieValue(request).get();
+                                         @RequestParam(value = "invalid", required = false) String invalid,
+                                         UserResource user) {
         registrationCookieService.deleteOrganisationCreationCookie(response);
-        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invalid != null) {
             validator.validate(form, bindingResult);
         }
 
-        if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
-            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccess();
-            types = types.stream()
-                        .filter(t -> t.getParentOrganisationType() == null)
-                        .collect(Collectors.toList());
-            model.addAttribute("form", form);
-            model.addAttribute("model", new ContributorOrganisationTypeViewModel(types));
-        } else {
-            return "redirect:/login";
-        }
+        List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccess();
+        types = types.stream()
+                    .filter(t -> t.getParentOrganisationType() == null)
+                    .collect(Collectors.toList());
+        model.addAttribute("form", form);
+        model.addAttribute("model", new ContributorOrganisationTypeViewModel(types));
+        addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/contributor-organisation-type";
     }
 

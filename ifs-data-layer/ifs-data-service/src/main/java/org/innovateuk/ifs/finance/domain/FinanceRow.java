@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.util.StringUtils;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static javax.persistence.CascadeType.REMOVE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DB_STRING_LENGTH;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH_MESSAGE;
 
@@ -36,7 +38,7 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
-    @OneToMany(mappedBy="financeRowId")
+    @OneToMany(mappedBy="financeRowId", cascade = REMOVE)
     private List<FinanceRowMetaValue> financeRowMetadata = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -144,5 +146,22 @@ public abstract class FinanceRow<FinanceType extends Finance> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * Used for comparing application and project finance rows.  Doesn't consider associated meta fields.
+     * @param another
+     * @return
+     */
+    public boolean matches(FinanceRow another){
+        if (another == null) return false;
+
+        return new EqualsBuilder()
+                .append(getItem(), another.getItem())
+                .append(getCost(), another.getCost())
+                .append(getDescription(), another.getDescription())
+                .append(getName(), another.getName())
+                .append(getQuantity(), another.getQuantity())
+                .isEquals();
     }
 }

@@ -37,7 +37,7 @@ public class Section implements Comparable<Section> {
 
     private boolean questionGroup;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="competitionId", referencedColumnName="id")
     private Competition competition;
 

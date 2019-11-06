@@ -34,6 +34,7 @@ import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -208,6 +209,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ProjectUserInviteResource>> projectInviteResourceListType() {
         return new ParameterizedTypeReference<List<ProjectUserInviteResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<SentProjectPartnerInviteResource>> sentProjectPartnerInviteResourceListType() {
+        return new ParameterizedTypeReference<List<SentProjectPartnerInviteResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ExternalInviteResource>> externalInviteResourceListType() {

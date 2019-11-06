@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.groups.Default;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAIM_AMOUNT;
 
@@ -50,14 +49,7 @@ public class GrantClaimAmountHandler extends FinanceRowHandler<GrantClaimAmount>
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeFundingLevel(applicationFinance));
-        return costs;
-    }
-
-    private ApplicationFinanceRow initializeFundingLevel(ApplicationFinance applicationFinance) {
-        GrantClaimAmount costItem = new GrantClaimAmount(applicationFinance.getId());
-        return toApplicationDomain(costItem);
+    protected Optional<GrantClaimAmount> intialiseCost(Finance finance) {
+        return Optional.of(new GrantClaimAmount(finance.getId()));
     }
 }

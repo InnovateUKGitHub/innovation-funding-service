@@ -33,11 +33,11 @@ public class FormInput {
     @Column(name = "form_input_type_id")
     private FormInputType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="questionId", referencedColumnName="id")
     private Question question;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "competitionId", referencedColumnName = "id")
     private Competition competition;
 

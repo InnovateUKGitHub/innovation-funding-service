@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.transactional.InternalUserProjectStatusService;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -37,6 +38,9 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     @Mock
     private StatusService statusServiceMock;
 
+    @Mock
+    private InternalUserProjectStatusService internalUserProjectStatusService;
+
     @Test
     public void getCompetitionStatus() throws Exception {
         Long competitionId = 1L;
@@ -58,7 +62,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withProjectState(LIVE).
                         build(3);
 
-        when(statusServiceMock.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(serviceSuccess(projectStatusResources));
+        when(internalUserProjectStatusService.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(serviceSuccess(projectStatusResources));
 
         mockMvc.perform(get("/project/competition/{id}?applicationSearchString=" + applicationSearchString, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -93,7 +97,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withProjectState(LIVE).
                         build(3);
 
-        when(statusServiceMock.getPreviousCompetitionStatus(competitionId)).thenReturn(serviceSuccess(projectStatusResources));
+        when(internalUserProjectStatusService.getPreviousCompetitionStatus(competitionId)).thenReturn(serviceSuccess(projectStatusResources));
 
         mockMvc.perform(get("/project/previous/competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -151,7 +155,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         Long projectId = 1L;
         ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
 
-        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+        when(internalUserProjectStatusService.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
         mockMvc.perform(get("/project/{id}/status", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc"))

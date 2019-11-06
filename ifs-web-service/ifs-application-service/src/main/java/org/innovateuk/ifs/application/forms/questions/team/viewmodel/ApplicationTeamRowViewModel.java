@@ -51,7 +51,7 @@ public class ApplicationTeamRowViewModel {
 
     public String getName() {
         return invite
-                ? String.format("%s (Pending for %d days)", name, getDaysPending())
+                ? String.format("%s (pending for %d days)", name, getDaysPending())
                 : name;
     }
 
