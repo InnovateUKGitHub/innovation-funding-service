@@ -178,7 +178,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         InterviewAssignment interviewAssignment = interviewAssignmentRepository.findAll().iterator().next();
 
-        assertEquals(applications.get(0).getId(), interviewAssignment.getParticipant().getApplicationId());
+        assertEquals(applications.get(0).getId().longValue(), interviewAssignment.getParticipant().getApplicationId());
     }
 
     @Test

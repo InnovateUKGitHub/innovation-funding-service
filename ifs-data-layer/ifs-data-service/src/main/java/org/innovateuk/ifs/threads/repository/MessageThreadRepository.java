@@ -9,4 +9,5 @@ import java.util.List;
 public interface MessageThreadRepository<T extends MessageThread> extends PagingAndSortingRepository<T, Long> {
     List<T> findAllByClassPkAndClassName(Long classPk, String className);
     List<T> findDistinctThreadByPostsAttachmentsId(@Param("attachmentId") Long attachmentId);
+    void deleteAllByClassPk(long projectFinanceId);
 }

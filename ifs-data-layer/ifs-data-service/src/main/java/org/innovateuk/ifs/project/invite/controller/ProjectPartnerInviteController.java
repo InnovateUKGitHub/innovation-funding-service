@@ -36,4 +36,14 @@ public class ProjectPartnerInviteController {
     public RestResult<Void> deleteInvite(@PathVariable long inviteId) {
         return projectPartnerInviteService.deleteInvite(inviteId).toDeleteResponse();
     }
+
+    @GetMapping("/{hash}")
+    public RestResult<SentProjectPartnerInviteResource> getInviteByHash(@PathVariable String hash) {
+        return projectPartnerInviteService.getInviteByHash(hash).toGetResponse();
+    }
+
+    @PostMapping("/{inviteId}/organisation/{organisationId}/accept")
+    public RestResult<Void> acceptInvite(@PathVariable long inviteId, @PathVariable long organisationId) {
+        return projectPartnerInviteService.acceptInvite(inviteId, organisationId).toPostResponse();
+    }
 }

@@ -53,6 +53,10 @@ items:
             value: "ifs-front-door-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
             value: "${NEW_RELIC_LICENCE_KEY}"
+          - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+            value: "${GA_TRACKING_ID}"
+          - name: IFS_WEB_SYSTEM_USER_UID
+            value: "${SYSTEM_USER_UUID}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           ports:

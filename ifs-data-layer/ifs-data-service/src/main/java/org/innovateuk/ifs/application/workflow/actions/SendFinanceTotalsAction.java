@@ -21,7 +21,7 @@ public class SendFinanceTotalsAction extends BaseApplicationAction {
     @Autowired
     private ApplicationFinanceTotalsSender applicationFinanceTotalsSender;
 
-    @Value("${ifs.finance-totals.enabled}")
+    @Value("${ifs.finance.totals.enabled}")
     private boolean financeTotalsEnabled;
 
     @Override

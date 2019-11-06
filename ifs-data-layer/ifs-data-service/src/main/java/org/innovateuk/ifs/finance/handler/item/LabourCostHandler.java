@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
@@ -11,8 +11,7 @@ import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 
@@ -69,17 +68,10 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeWorkingDays(applicationFinance));
-        return costs;
-    }
-
-    private ApplicationFinanceRow initializeWorkingDays(ApplicationFinance applicationFinance) {
+    protected Optional<LabourCost> intialiseCost(Finance finance) {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
-        LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, applicationFinance.getId());
-        return toApplicationDomain(costItem);
+        return Optional.of(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, finance.getId()));
     }
 
 }
