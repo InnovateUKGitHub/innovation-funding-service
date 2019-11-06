@@ -99,25 +99,25 @@ items:
                       name: db-config
                       key: FLYWAY_LOCATIONS
                 - name: SPRING_CACHE_TYPE
-                    valueFrom:
-                      configMapKeyRef:
-                        name: cache-config
-                        key: SPRING_CACHE_TYPE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: SPRING_CACHE_TYPE
                 - name: SPRING_REDIS_HOST
-                    valueFrom:
-                      configMapKeyRef:
-                        name: cache-config
-                        key: DB_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: DB_HOST
                 - name: SPRING_REDIS_PORT
-                    valueFrom:
-                      configMapKeyRef:
-                        name: cache-config
-                        key: SPRING_REDIS_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: SPRING_REDIS_PORT
                 - name: SPRING_CACHE_TYPE
-                    valueFrom:
-                      configMapKeyRef:
-                        name: cache-config
-                        key: SPRING_CACHE_TYPE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: SPRING_CACHE_TYPE
                 - name: IFS_WEB_BASEURL
                   value: 'https://${SHIB_ADDRESS}'
                 - name: IDP_REST_BASEURL
