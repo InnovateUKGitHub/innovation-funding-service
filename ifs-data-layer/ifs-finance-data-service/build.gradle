@@ -41,6 +41,7 @@ afterEvaluate {
 
 ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
+ext.pactDir = file('ifs-data-service/build/pacts')
 
 ext {
     snippetsDir = file('build/generated-snippets')
