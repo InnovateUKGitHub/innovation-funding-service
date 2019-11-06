@@ -100,8 +100,8 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
                             removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
-                            removePartnerNotificationService.sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
                             projectPartnerChangeService.updateProjectWhenPartnersChange(projectId);
+                            removePartnerNotificationService.sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
                         })
         );
     }
