@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.core.transactional.RemovePartnerNotificationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
 
 @Service
-public class RemovePartnerNotificationServiceImpl implements  RemovePartnerNotificationService {
+public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotificationService {
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
@@ -91,6 +91,7 @@ public class RemovePartnerNotificationServiceImpl implements  RemovePartnerNotif
         Notification notification = new Notification(from, singletonList(to), REMOVE_PROJECT_ORGANISATION, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
+
     private NotificationTarget createProjectNotificationTarget(User user) {
         String fullName = getProjectManagerFullName(user);
         return new UserNotificationTarget(fullName, user.getEmail());
