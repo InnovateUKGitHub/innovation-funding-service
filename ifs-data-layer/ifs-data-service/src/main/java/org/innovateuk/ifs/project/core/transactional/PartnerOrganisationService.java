@@ -19,6 +19,6 @@ public interface PartnerOrganisationService {
     ServiceResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
 
     @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.ORGANISATION_REMOVED)
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.PartnerOrganisationResource', 'REMOVE_PARTNER_ORGANISATION')")
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'org.innovateuk.ifs.project.resource.PartnerOrganisationResource', 'REMOVE_PARTNER_ORGANISATION')")
     ServiceResult<Void> removePartnerOrganisation(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 }
