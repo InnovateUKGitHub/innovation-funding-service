@@ -1,17 +1,14 @@
 ext.activeProfile="local"
 
-def jdbcUrl = "jdbc:mysql://ifs-finance-database:3307"
+def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
+ext['flyway.locations']=flywayPatchesPath + "/migration"
 
-ext.testIfsDatasourceUrl="$jdbcUrl/ifs_finance_test"
+ext.testIfsDatasourceUrl="jdbc:mysql://ifs-finance-database:3307/ifs_finance_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-//ext['flyway.url']='jdbc:mysql://ifs-finance-database:3307?characterEncoding=utf8'
-ext['flyway.url']=jdbcUrl
+ext['flyway.url']='jdbc:mysql://ifs-finance-database:3307?characterEncoding=utf8'
 ext['flyway.schemas']='ifs_finance'
 ext['flyway.user']='root'
 ext['flyway.password']="password"
 ext['flyway.table']="schema_version"
-
-def flywayPatchesPath = "filesystem:$project.buildDir.path/resources/main/db"
-ext['flyway.locations']="$flywayPatchesPath/migration"

@@ -26,4 +26,5 @@ public interface ProjectFinanceService {
     ServiceResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed);
 
     ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId);
+
 }
