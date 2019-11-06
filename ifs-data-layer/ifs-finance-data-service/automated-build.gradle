@@ -4,7 +4,7 @@ def jdbcUrl = "jdbc:mysql://127.0.0.1:3306?characterEncoding=utf&"
 def mariaDbFlywayWorkaround = "useMysqlMetadata=true"
 
 //ext.testIfsDatasourceUrl="jdbc:mariadb://127.0.0.1:3306?characterEncoding=utf8&useMysqlMetadata=true/ifs_finance_test"
-ext.testIfsDatasourceUrl="$jdbcUrl/ifs_finance_test"
+ext.testIfsDatasourceUrl="$jdbcUrl$mariaDbFlywayWorkaround/ifs_finance_test"
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
 
