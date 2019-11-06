@@ -12,8 +12,8 @@ ext.ifsDatasourceUrl="$jdbcUrl/ifs_finance_test"
 ext.ifsDatasourceUsername="ifs"
 ext.iIfsDatasourcePassword="ifs"
 
-project.ext['flyway.url']="$jdbcUrl$mariaDbFlywayWorkaround"
-project.ext['flyway.schemas']='ifs_finance_test'
-project.ext['flyway.user']="ifs"
-project.ext['flyway.password']="ifs"
-project.ext['flyway.table']="schema_version"
+ext['flyway.url']="$jdbcUrl$mariaDbFlywayWorkaround"
+ext['flyway.schemas']='ifs_finance_test'
+ext['flyway.user']="ifs"
+ext['flyway.password']="ifs"
+ext['flyway.table']="schema_version"
