@@ -5,6 +5,7 @@ import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -32,6 +33,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     private int ttlSeconds;
 
     @Bean
+    @ConditionalOnProperty(value = "spring.cache.type", havingValue = "redis")
     public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
         return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort()),
                 LettuceClientConfiguration.builder()
