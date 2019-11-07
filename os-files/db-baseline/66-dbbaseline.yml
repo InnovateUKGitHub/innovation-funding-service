@@ -32,7 +32,7 @@ items:
       args:
       - |
         cat > /flyway/flyway.conf <<EOF
-        spring.flyway.url=jdbc:mariadb://\${DB_HOST}:\${DB_PORT}
+        spring.flyway.url=jdbc:mysql://\${DB_HOST}:\${DB_PORT}
         spring.flyway.schemas=\$DB_NAME
         spring.flyway.locations=\$FLYWAY_LOCATIONS
         spring.flyway.user=\$DB_USER
