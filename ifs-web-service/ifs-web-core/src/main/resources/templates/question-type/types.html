@@ -142,11 +142,13 @@
             */-->
             <div class="ajax-upload"
                 th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'govuk-form-group--error')"
+                 th:with="removeValue = ${removeValue != null} ? ${removeValue} : true"
                  th:attr="data-js-download-location=${downloadUrl},
                  data-js-remove-file-name=${removeName},
+                 data-js-remove-file-value=${removeValue},
                  data-js-upload-button-name=${saveName},
                  data-js-upload-file-input=${inputField}"
-                 data-js-single-upload="">
+                 data-js-number-of-files="1">
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
@@ -172,7 +174,7 @@
                                    target="_blank"
                                    class="govuk-link"
                                    aria-describedby="file-hint">File</a>
-                                <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-clear remove-file" aria-label="Remove uploaded document">Remove</button>
+                                <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue}" class="button-clear remove-file" aria-label="Remove uploaded document">Remove</button>
                             </div>
                         </li>
                     </ul>

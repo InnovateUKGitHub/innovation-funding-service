@@ -7,9 +7,10 @@ IFS.core.upload = (function () {
       wrapper: '.ajax-upload',
       downloadLocation: 'data-js-download-location',
       removeFileName: 'data-js-remove-file-name',
+      removeFileValue: 'data-js-remove-file-value',
       uploadButtonName: 'data-js-upload-button-name',
       uploadFileInput: 'data-js-upload-file-input',
-      singleUpload: 'data-js-single-upload',
+      numberOfFiles: 'data-js-number-of-files',
       successRow: '<li class="success">' +
                     '<div class="file-row">' +
                       '<a href="$href" target="_blank" class="govuk-link">$text (Opens in a new window)</a>' +
@@ -92,7 +93,7 @@ IFS.core.upload = (function () {
       return jQuery('[data-for-file-upload="' + fileInputId + '"]')
     },
     processAjaxResult: function (wrapper, file, data) {
-      var errorMessage = jQuery(data).find('ul.govuk-error-summary__list li a')
+      var errorMessage = jQuery(data).find('ul.govuk-error-summary__list li')
       IFS.core.upload.clearMessages(wrapper, 'li.pending')
       var row
       if (errorMessage.length) {
@@ -135,7 +136,8 @@ IFS.core.upload = (function () {
         messageList.before('<p class="govuk-body uploaded-file">No file currently uploaded.</p>')
       }
     },
-    toggleUploadView: function (wrapper, display) {
+    toggleUploadView: function (wrapper) {
+      var display = wrapper.find('li.success').length >= wrapper.attr(s.numberOfFiles)
       if (display) {
         if (!wrapper.find('input:file').length) {
           var guid = IFS.core.template.guidGenerator()
@@ -156,8 +158,9 @@ IFS.core.upload = (function () {
       var wrapper = row.closest(s.wrapper)
       if (row.hasClass('success')) {
         var removeName = wrapper.attr(s.removeFileName)
+        var removeValue = wrapper.attr(s.removeFileValue)
         var formData = new window.FormData()
-        formData.append(removeName, true)
+        formData.append(removeName, removeValue)
         jQuery.ajaxProtected({
           type: 'POST',
           url: wrapper.closest('form').attr('action'),
