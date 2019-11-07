@@ -120,7 +120,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
 
         List<InterviewParticipant> retrievedParticipants = repository.findAll();
 
-        assertEquals(10, retrievedParticipants.size());  // Including 8 pre-existing participants added via patch
+        assertEquals(2, retrievedParticipants.size());
         assertEqualParticipants(savedParticipants, retrievedParticipants);
     }
 
@@ -215,7 +215,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         repository.saveAll(interviewParticipants);
         flushAndClearSession();
 
-        assertEquals(12, repository.count()); // Including 8 pre-existing participants added via patch
+        assertEquals(4, repository.count());
         Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<InterviewParticipant> pagedResult = repository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
@@ -285,7 +285,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         repository.saveAll(interviewParticipants);
         flushAndClearSession();
 
-        assertEquals(9, repository.count()); // Including 8 pre-existing participants added via patch
+        assertEquals(1, repository.count());
         Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
 
         Page<InterviewAcceptedAssessorsResource> pagedResult = repository.getInterviewAcceptedAssessorsByCompetition(
