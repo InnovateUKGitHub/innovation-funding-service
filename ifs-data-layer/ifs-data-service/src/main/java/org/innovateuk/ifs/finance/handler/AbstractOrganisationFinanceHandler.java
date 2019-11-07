@@ -41,7 +41,6 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
 
-
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {
         if (initialiseCostTypeSupported(costType)) {
@@ -52,6 +51,23 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
                     c.setTarget(applicationFinance);
                 });
                 return applicationFinanceRowRepository.saveAll(cost);
+            } catch (IllegalArgumentException e) {
+                LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Iterable<ProjectFinanceRow> initialiseCostType(ProjectFinance projectFinance, FinanceRowType costType) {
+        if (initialiseCostTypeSupported(costType)) {
+            try {
+                List<ProjectFinanceRow> cost = getCostHandler(costType).initializeCost(projectFinance);
+                cost.forEach(c -> {
+                    c.setType(costType);
+                    c.setTarget(projectFinance);
+                });
+                return projectFinanceRowRepository.saveAll(cost);
             } catch (IllegalArgumentException e) {
                 LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }

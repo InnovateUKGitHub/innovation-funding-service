@@ -31,7 +31,7 @@ public class ProcessRoleTest {
     @Test
     public void userApplicationRoleShouldReturnCorrectAttributeValues() throws Exception {
         assertEquals(processRoleTest.getUser(), user);
-        assertEquals(processRoleTest.getApplicationId(), application.getId());
+        assertEquals(processRoleTest.getApplicationId(), application.getId().longValue());
         assertEquals(processRoleTest.getRole(), role);
         assertEquals(processRoleTest.getOrganisationId(), organisation.getId());
     }

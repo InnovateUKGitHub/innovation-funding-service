@@ -6,6 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,5 +133,19 @@ public abstract class AbstractOrganisationCreationController {
             return organisationSearchResult;
         }
         return null;
+    }
+
+    protected void addPageSubtitleToModel(HttpServletRequest request, UserResource user, Model model) {
+        if (user != null) {
+            if (registrationCookieService.getProjectInviteHashCookieValue(request).isPresent()) {
+                model.addAttribute("subtitle", "Join project");
+            } else if (registrationCookieService.isCollaboratorJourney(request)) {
+                model.addAttribute("subtitle", "Join application");
+            } else {
+                model.addAttribute("subtitle", "Create new application");
+            }
+        } else {
+            model.addAttribute("subtitle", "Create your account");
+        }
     }
 }

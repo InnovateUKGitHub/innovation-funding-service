@@ -73,7 +73,8 @@ public class ApplicationFinance extends Finance {
                 .orElse(0);
     }
 
-    private Competition getCompetition() {
+    @Override
+    public Competition getCompetition() {
         return getApplication().getCompetition();
     }
 
