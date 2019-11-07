@@ -119,7 +119,7 @@ items:
                     configMapKeyRef:
                       name: cache-config
                       key: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
-                - name: MANAGEMENT_HEALTH_REDIS_ENABLE
+                - name: MANAGEMENT_HEALTH_REDIS_ENABLED
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
