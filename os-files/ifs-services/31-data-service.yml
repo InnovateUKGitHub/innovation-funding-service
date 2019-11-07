@@ -15,9 +15,9 @@ items:
     metadata:
       name: cache-config
     data:
-      SPRING_CACHE_TYPE: "${IFS_DATA_SERVICE_CACHE_TYPE}"
-      SPRING_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
-      SPRING_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
+      IFS_DATA_SERVICE_CACHE_TYPE: "${IFS_DATA_SERVICE_CACHE_TYPE}"
+      IFS_DATA_SERVICE_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
+      IFS_DATA_SERVICE_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
       IFS_DATA_SERVICE_CACHE_TTL_SECONDS: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
   - apiVersion: v1
     kind: DeploymentConfig
@@ -102,22 +102,22 @@ items:
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: SPRING_CACHE_TYPE
+                      key: IFS_DATA_SERVICE_CACHE_TYPE
                 - name: SPRING_REDIS_HOST
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: DB_HOST
+                      key: IFS_DATA_SERVICE_REDIS_HOST
                 - name: SPRING_REDIS_PORT
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: SPRING_REDIS_PORT
-                - name: SPRING_CACHE_TYPE
+                      key: IFS_DATA_SERVICE_REDIS_PORT
+                - name: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: SPRING_CACHE_TYPE
+                      key: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
                 - name: IFS_WEB_BASEURL
                   value: 'https://${SHIB_ADDRESS}'
                 - name: IDP_REST_BASEURL
