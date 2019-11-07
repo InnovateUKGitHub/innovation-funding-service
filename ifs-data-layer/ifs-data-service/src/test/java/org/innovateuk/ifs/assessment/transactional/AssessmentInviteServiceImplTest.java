@@ -1085,12 +1085,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(0)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(0));
+        inOrder.verify(userService).evictUserCache(user.getUid());
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(1)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(1));
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
-        inOrder.verify(userService).evictUserCache(user.getUid());
         inOrder.verifyNoMoreInteractions();
     }
 

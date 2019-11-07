@@ -16,6 +16,7 @@ items:
       name: cache-config
     data:
       IFS_DATA_SERVICE_CACHE_TYPE: "${IFS_DATA_SERVICE_CACHE_TYPE}"
+      IFS_DATA_SERVICE_REDIS_ENABLED: "${IFS_DATA_SERVICE_REDIS_ENABLED}"
       IFS_DATA_SERVICE_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
       IFS_DATA_SERVICE_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
       IFS_DATA_SERVICE_CACHE_TTL_SECONDS: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
@@ -118,6 +119,11 @@ items:
                     configMapKeyRef:
                       name: cache-config
                       key: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
+                - name: MANAGEMENT_HEALTH_REDIS_ENABLE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_ENABLED
                 - name: IFS_WEB_BASEURL
                   value: 'https://${SHIB_ADDRESS}'
                 - name: IDP_REST_BASEURL
