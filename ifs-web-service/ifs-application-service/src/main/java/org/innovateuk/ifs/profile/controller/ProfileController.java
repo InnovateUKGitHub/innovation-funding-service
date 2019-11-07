@@ -88,7 +88,7 @@ public class ProfileController {
             ServiceResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
 
             if (updateProfileResult.isSuccess()) {
-                loggedInUser = userAuthenticationService.getAuthenticatedUser(request, true);
+                loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
                 destination = viewUserProfile(model, loggedInUser);
             } else {
                 addEnvelopeErrorsToBindingResultErrors(updateProfileResult.getFailure().getErrors(), bindingResult);
