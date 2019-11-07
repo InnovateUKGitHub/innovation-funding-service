@@ -4,7 +4,7 @@ IFS.core.upload = (function () {
   return {
     settings: {
       uploadEl: '[type="file"][class="inputfile"]',
-      wrapper: '.upload-section',
+      wrapper: '.ajax-upload',
       downloadLocation: 'data-js-download-location',
       removeFileName: 'data-js-remove-file-name',
       uploadButtonName: 'data-js-upload-button-name',
@@ -12,7 +12,7 @@ IFS.core.upload = (function () {
       singleUpload: 'data-js-single-upload',
       successRow: '<li class="success">' +
                     '<div class="file-row">' +
-                      '<a href="$href" target="_blank">$text (Opens in a new window)</a>' +
+                      '<a href="$href" target="_blank" class="govuk-link">$text (Opens in a new window)</a>' +
                       '<button class="button-clear remove-file">Remove</button>' +
                     '</div>' +
                   '</li>',
@@ -32,19 +32,17 @@ IFS.core.upload = (function () {
     },
     init: function () {
       s = this.settings
-      if (typeof window.FormData !== 'undefined') {
-        jQuery('body').on('change', s.uploadEl, function () {
+      jQuery('body').on('change', s.uploadEl, function () {
+        if (typeof window.FormData !== 'undefined' && jQuery(this).closest(s.wrapper).length) {
           IFS.core.upload.ajaxFileUpload(jQuery(this))
-        })
-        jQuery('body').on('click', 'button.remove-file', function (e) {
-          e.preventDefault()
-          IFS.core.upload.removeFile(jQuery(this))
-        })
-      } else {
-        jQuery('body').on('change', s.uploadEl, function () {
+        } else {
           IFS.core.upload.triggerFormSubmission(jQuery(this))
-        })
-      }
+        }
+      })
+      jQuery('body').on('click', 'button.remove-file', function (e) {
+        e.preventDefault()
+        IFS.core.upload.removeFile(jQuery(this))
+      })
     },
     ajaxFileUpload: function (fileInput) {
       var wrapper = fileInput.closest(s.wrapper)
