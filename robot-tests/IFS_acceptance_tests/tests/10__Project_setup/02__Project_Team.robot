@@ -27,6 +27,7 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-6484 - Remove Partner
 ...
+...             IFS-6502 - Update status of sections in project setup after partner change
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -39,6 +40,9 @@ ${moProjectID}               ${project_ids["Super-EFFY - Super Efficient Forecas
 ${addPartnerOrgCompId}       ${competition_ids["Project Setup Comp 7"]}
 ${addNewPartnerOrgProjID}    ${project_ids["PSC application 7"]}
 ${addNewPartnerOrgAppID}     ${application_ids["PSC application 7"]}
+${leadApplicantEmail}        troy.ward@gmail.com
+${partnerApplicantEmail}     belle.smith@gmail.com
+${reserachApplicantEmail}    nicole.brown@gmail.com
 ${addNewPartnerOrgProjPage}  ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team/partner
 ${steakHolderCompId}         ${competition_ids["Rolling stock future developments"]}
 ${steakHolderProjectId}      ${project_ids["High-speed rail and its effects on water quality"]}
@@ -178,27 +182,6 @@ New user is able to repspond to a query
     When the new user posts a response
     Then the user should not see an error in the page
 
-Ifs Admin is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505
-    [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
-    Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
-
-Project finance is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505
-    [Setup]  log in as a different user                        &{internal_finance_credentials}
-    Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
-
-Comp Admin isn't able to add or remove a partner organisation
-    [Documentation]  IFS-6485 IFS-6485
-    [Setup]  log in as a different user            &{Comp_admin1_credentials}
-    Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
-    Then the user should not see the element       link = Add a partner organisation
-    And the user should not see the element        jQuery = h2:contains("Red Planet") ~ button:first:contains("Remove organisation")
-
 Project finance is able to remove a partner organisation
     [Documentation]  IFS-6485
     [Setup]  log in as a different user                    &{internal_finance_credentials}
@@ -206,12 +189,49 @@ Project finance is able to remove a partner organisation
     When the user removes a partner organisation           Red Planet
     Then the relevant users recieve an email notification  Red Planet
 
+Applicants completes the project setup details
+    [Documentation]  IFS-6502
+    Given the applicants completes the project setup details
+    Then the internal user approves the project setup details
+    And the internal user checks for completed status
+
+Ifs Admin is able to add a new partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
+    Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
+    Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
+
 Ifs Admin is able to remove a partner organisation
     [Documentation]  IFS-6485
     [Setup]  log in as a different user                    &{ifs_admin_user_credentials}
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     When the user removes a partner organisation           SmithZone
-    Then the relevant users recieve an email notification  SmithZone
+    Then the user reads his email                          troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed SmithZone from this project.
+    And the internal user checks for status after new org accept project invite
+
+New org enter project setup details and lead resubmit the documents
+    [Documentation]  IFS-6502
+    Given applicant submits the project setup details
+    Then PM removes the rejected documents and resubmit
+    And the internal user approves the project setup details after new org added
+    And the internal user checks for completed status
+
+Project finance is able to add a new partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    [Setup]  log in as a different user                        &{internal_finance_credentials}
+    Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation             Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
+    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
+    And log in as a different user                            &{internal_finance_credentials}
+    And the internal user checks for status after new org accept project invite
+
+Comp Admin isn't able to add or remove a partner organisation
+    [Documentation]  IFS-6485 IFS-6485
+    [Setup]  log in as a different user            &{Comp_admin1_credentials}
+    Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
+    Then the user should not see the element       link = Add a partner organisation
+    And the user should not see the element        jQuery = h2:contains("Red Planet") ~ button:first:contains("Remove organisation")
 
 *** Keywords ***
 a new organisation is able to accept project invite
@@ -391,6 +411,125 @@ The user fills in account details
     the user enters text to a text field   id = phoneNumber   07123456789
     the user enters text to a text field   id = password      ${short_password}
     the user selects the checkbox          termsAndConditions
+
+the applicants completes the project setup details
+    log in as a different user          ${leadApplicantEmail}   ${short_password}
+    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}/details/project-address
+    the user enter the Correspondence address
+    the user clicks the button/link     link = Return to set up your project
+    the user completes the project team details
+    PM uploads the project documents    ${addNewPartnerOrgProjID}
+    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}//document/all
+    PM submits both documents           ${addNewPartnerOrgProjID}
+    applicant submits the bank details
+    log in as a different user          ${partnerApplicantEmail}   ${short_password}
+    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}/team
+    the user clicks the button/link     link = Your finance contact
+    the user selects the radio button   financeContact   financeContact1
+    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user clicks the button/link     link = Set up your project
+    applicant submits the bank details
+
+applicant submits the bank details
+    the user navigates to the page                       ${server}/project-setup/project/${addNewPartnerOrgProjID}/bank-details
+    the user enters text to a text field                 name = accountNumber  ${Account_Two}
+    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link                      id = submit-bank-details
+
+the internal user approves the project setup details
+    log in as a different user               &{internal_finance_credentials}
+    the user navigates to the page           ${server}/project-setup-management/project/${addNewPartnerOrgProjID}/document/all
+    the user clicks the button/link          link = Collaboration agreement
+    internal user approve uploaded documents
+    the user goes to documents page          Return to documents  Exploitation plan
+    internal user approve uploaded documents
+    internal user approve the viability and eligibility
+
+the internal user approves the project setup details after new org added
+    log in as a different user                                        &{internal_finance_credentials}
+    the user navigates to the page                                    ${server}/project-setup-management/project/${addNewPartnerOrgProjID}/document/all
+    the user clicks the button/link                                   link = Collaboration agreement
+    internal user approve uploaded documents
+    the user goes to documents page                                   Return to documents  Exploitation plan
+    internal user approve uploaded documents
+    the user navigates to the page                                    ${server}/project-setup-management/project/${addNewPartnerOrgProjID}/finance-check
+    the rag rating updates on the finance check page for viability    2  Green
+    the rag rating updates on the finance check page for eligibility  1  Green
+    the rag rating updates on the finance check page for eligibility  2  Green
+
+internal user approve the viability and eligibility
+    the user navigates to the page     ${server}/project-setup-management/project/${addNewPartnerOrgProjID}/finance-check
+    the rag rating updates on the finance check page for viability    1  Green
+    the rag rating updates on the finance check page for viability    2  Green
+    the rag rating updates on the finance check page for eligibility  1  Green
+    the rag rating updates on the finance check page for eligibility  2  Green
+
+the rag rating updates on the finance check page for viability
+   [Arguments]    ${row_id}  ${rag_rating}
+   the user clicks the button/link                jQuery = table.table-progress tr:nth-child(${row_id}) td:nth-child(2) a:contains("Review")
+   the user selects the checkbox                  project-viable
+   the user selects the option from the drop-down menu    ${rag_rating}    id = rag-rating
+   the user clicks the button/link                jQuery = .govuk-button:contains("Confirm viability")
+   the user clicks the button/link                name = confirm-viability
+   the user clicks the button/link                link = Return to finance checks
+   the user should see the text in the element    css = table.table-progress tr:nth-child(${row_id}) td:nth-child(3)    ${rag_rating}
+
+the rag rating updates on the finance check page for eligibility
+   [Arguments]    ${row_id}  ${rag_rating}
+   the user clicks the button/link                jQuery = table.table-progress tr:nth-child(${row_id}) td:nth-child(4) a:contains("Review")
+   the user selects the checkbox                  project-eligible
+   the user selects the option from the drop-down menu    ${rag_rating}    id = rag-rating
+   the user clicks the button/link                jQuery = .govuk-button:contains("Approve eligible costs")
+   the user clicks the button/link                name = confirm-eligibility
+   the user clicks the button/link                link = Return to finance checks
+   the user should see the text in the element    css = table.table-progress tr:nth-child(${row_id}) td:nth-child(5)    ${rag_rating}
+
+the internal user checks for completed status
+    the user navigates to the page     ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(2) a:contains("Complete")
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(3) a:contains("Complete")
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(4) a:contains("Complete")
+    the user clicks the button/link    jQuery = th:contains("${applicationName}") ~ td:nth-child(7) a:contains("Review")
+    the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
+    the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
+
+the internal user checks for status after new org accept project invite
+    the user navigates to the page     ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(4) a:contains("Rejected")
+    the user clicks the button/link    jQuery = th:contains("${applicationName}") ~ td:nth-child(7) a:contains("Review")
+    the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
+    the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
+
+applicant submits the project setup details
+    log in as a different user    	admin@addorg.com   ${short_password}
+    the user enter project details and project team details
+
+the user enter project details and project team details
+    the user navigates to the page         ${server}/project-setup/project/${addNewPartnerOrgProjID}/details
+    the user clicks the button/link        link = Edit
+    the user enters text to a text field   id = postcode   AB12 3CD
+    the user clicks the button/link        jQuery = button:contains("Save project location")
+    the user navigates to the page         ${server}/project-setup/project/${addNewPartnerOrgProjID}/team
+    the user clicks the button/link        link = Your finance contact
+    the user selects the radio button      financeContact   financeContact1
+    the user clicks the button/link        jQuery = button:contains("Save finance contact")
+    the user clicks the button/link        link = Set up your project
+
+PM removes the rejected documents and resubmit
+    log in as a different user          ${leadApplicantEmail}   ${short_password}
+    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}//document/all
+    the user clicks the button/link     link = Collaboration agreement
+    the user clicks the button/link     jQuery = button:contains("Remove")
+    the user clicks the button/link     link = Back to document overview
+    the user clicks the button/link     link = Exploitation plan
+    the user clicks the button/link     jQuery = button:contains("Remove")
+    PM uploads the project documents    ${addNewPartnerOrgProjID}
+    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}//document/all
+    PM submits both documents           ${addNewPartnerOrgProjID}
 
 Custom suite setup
     The guest user opens the browser

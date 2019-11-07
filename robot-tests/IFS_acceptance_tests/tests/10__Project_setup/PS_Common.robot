@@ -429,4 +429,37 @@ the user completes the project team details
     the user selects the radio button   projectManager   projectManager1
     the user clicks the button/link     jQuery = button:contains("Save project manager")
     the user clicks the button/link     link = Set up your project
-    the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
+    #the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+PM uploads the project documents
+    [Arguments]  ${compName}
+    the user navigates to the page         ${SERVER}/project-setup/project/${compName}/document/all
+    the user clicks the button/link        link = Exploitation plan
+    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
+    the user should see the element        jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
+    the user goes to documents page        Back to document overview  Collaboration agreement
+    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
+    the user should see the element        jQuery = .upload-section:contains("Collaboration agreement") a:contains("${valid_pdf}")
+    the user should not see an error in the page
+
+applicant user enters bank details
+    the user enters text to a text field                name = accountNumber  ${Account_Two}
+    the user enters text to a text field                name = sortCode  ${Sortcode_two}
+    the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link                     jquery = button:contains("Cancel")
+    the user should not see the element                 jQUery = p:contains("The bank account details below are being reviewed")
+    the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link                     id = submit-bank-details
+
+PM submits both documents
+    [Arguments]  ${compName}
+    the user clicks the button/link     link = Collaboration agreement
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     jQuery = button:contains("Cancel")
+    the user should see the element     name = deleteDocument
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user goes to documents page     Return to documents  Exploitation plan
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user should be redirected to the correct page    ${SERVER}/project-setup/project/${compName}

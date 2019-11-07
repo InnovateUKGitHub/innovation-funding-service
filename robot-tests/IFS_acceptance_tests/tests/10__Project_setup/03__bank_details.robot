@@ -251,15 +251,6 @@ The applicant user is able to submit bank details
     applicant user enters bank details
     verify applicant submission is waiting review
 
-applicant user enters bank details
-    the user enters text to a text field                name = accountNumber  ${Account_Two}
-    the user enters text to a text field                name = sortCode  ${Sortcode_two}
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                     jquery = button:contains("Cancel")
-    the user should not see the element                 jQUery = p:contains("The bank account details below are being reviewed")
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                     id = submit-bank-details
-
 Verify applicant submission is waiting review
     the user should see the element                     jQuery = p:contains("The bank account details below are being")
     the user navigates to the page                      ${server}/project-setup/project/${Grade_Crossing_Project_Id}
