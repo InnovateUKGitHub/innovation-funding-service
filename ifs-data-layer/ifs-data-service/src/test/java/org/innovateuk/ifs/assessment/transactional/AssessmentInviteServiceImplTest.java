@@ -38,6 +38,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -157,6 +158,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     @Mock
     private InnovationAreaMapper innovationAreaMapperMock;
 
+    @Mock
+    private UserService userService;
 
     private AssessmentParticipant competitionParticipant;
 
@@ -1087,7 +1090,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(1)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(1));
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
-
+        inOrder.verify(userService).evictUserCache(user.getUid());
         inOrder.verifyNoMoreInteractions();
     }
 
