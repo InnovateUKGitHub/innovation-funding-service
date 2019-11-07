@@ -5,7 +5,11 @@
 
   .file-list {
     li {
+      margin-bottom: 0;
+
       .file-row {
+        display:flex;
+        justify-content: space-between;
         border-top: 1px solid $govuk-border-colour;
         border-bottom: 1px solid $govuk-border-colour;
         padding: 10px 10px 10px 50px;
@@ -18,7 +22,6 @@
         button {
           margin: 0;
           padding: 0;
-          float: right;
         }
 
         @keyframes blink {

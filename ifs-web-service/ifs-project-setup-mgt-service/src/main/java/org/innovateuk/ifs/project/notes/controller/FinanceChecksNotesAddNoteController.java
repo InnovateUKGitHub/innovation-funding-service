@@ -21,13 +21,13 @@ import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.EncryptedCookieService;
+import org.innovateuk.ifs.util.EncodedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
@@ -70,7 +71,7 @@ public class FinanceChecksNotesAddNoteController {
     private ProjectRestService projectRestService;
 
     @Autowired
-    private EncryptedCookieService cookieUtil;
+    private EncodedCookieService cookieUtil;
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
@@ -154,7 +155,9 @@ public class FinanceChecksNotesAddNoteController {
                                         ValidationHandler validationHandler,
                                         UserResource loggedInUser,
                                         HttpServletRequest request,
-                                        HttpServletResponse response) {
+                                        HttpServletResponse response) throws InterruptedException {
+        TimeUnit.SECONDS.sleep(10);
+
 
         if (postParametersMatchOrigin(request, projectId, organisationId, loggedInUser.getId())) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);

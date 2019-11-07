@@ -6,8 +6,6 @@ IFS.core.upload = (function () {
       uploadEl: '[type="file"][class="inputfile"]',
       wrapper: '.ajax-upload',
       downloadLocation: 'data-js-download-location',
-      removeFileName: 'data-js-remove-file-name',
-      removeFileValue: 'data-js-remove-file-value',
       uploadButtonName: 'data-js-upload-button-name',
       uploadFileInput: 'data-js-upload-file-input',
       numberOfFiles: 'data-js-number-of-files',
@@ -49,11 +47,8 @@ IFS.core.upload = (function () {
       var wrapper = fileInput.closest(s.wrapper)
       var submitButton = IFS.core.upload.getButton(fileInput)
       var file = fileInput.get(0).files[0]
-
       IFS.core.upload.clearMessages(wrapper, 'li.error')
-
-      var row = IFS.core.template.replaceInTemplate(s.pendingRow, {text: file.name})
-      IFS.core.upload.addMessage(wrapper, row)
+      var pendingRow = IFS.core.upload.addMessage(wrapper, IFS.core.template.replaceInTemplate(s.pendingRow, {text: file.name}))
 
       var formData = new window.FormData()
       formData.append(fileInput.attr('name'), file)
@@ -63,16 +58,17 @@ IFS.core.upload = (function () {
         type: 'POST',
         url: wrapper.closest('form').attr('action'),
         success: function (data) {
+          pendingRow.remove()
           IFS.core.upload.processAjaxResult(wrapper, file, data)
           IFS.core.upload.resetFileInput(wrapper)
         },
         error: function (error) {
+          pendingRow.remove()
           console.log(error)
           var errorMessage = ' Internal server error.'
           if (error.status === 413) {
             errorMessage = ' File is too large.'
           }
-          IFS.core.upload.clearMessages(wrapper, 'li.pending')
           var row = IFS.core.template.replaceInTemplate(s.errorRow, {
             text: file.name,
             error: errorMessage
@@ -94,7 +90,6 @@ IFS.core.upload = (function () {
     },
     processAjaxResult: function (wrapper, file, data) {
       var errorMessage = jQuery(data).find('ul.govuk-error-summary__list li')
-      IFS.core.upload.clearMessages(wrapper, 'li.pending')
       var row
       if (errorMessage.length) {
         row = IFS.core.template.replaceInTemplate(s.errorRow, {
@@ -102,13 +97,10 @@ IFS.core.upload = (function () {
           error: errorMessage.text()
         })
       } else {
-        row = IFS.core.template.replaceInTemplate(s.successRow, {
-          text: file.name,
-          href: wrapper.attr(s.downloadLocation)
-        })
+        IFS.core.upload.replaceMessageListWithResponse(wrapper, data, file.name)
       }
       IFS.core.upload.addMessage(wrapper, row)
-      IFS.core.upload.toggleUploadView(wrapper, false)
+      IFS.core.upload.toggleUploadView(wrapper)
     },
     getMessageList: function (wrapper) {
       var messageList = wrapper.find('ul.file-list')
@@ -120,8 +112,10 @@ IFS.core.upload = (function () {
     },
     addMessage: function (wrapper, message) {
       var messageList = IFS.core.upload.getMessageList(wrapper)
-      messageList.append(message)
+      var appendable = jQuery(message)
+      messageList.append(appendable)
       IFS.core.upload.toggleNoFileMessage(messageList)
+      return appendable
     },
     clearMessages: function (wrapper, selector) {
       var messageList = IFS.core.upload.getMessageList(wrapper)
@@ -137,7 +131,7 @@ IFS.core.upload = (function () {
       }
     },
     toggleUploadView: function (wrapper) {
-      var display = wrapper.find('li.success').length >= wrapper.attr(s.numberOfFiles)
+      var display = wrapper.find('li.success').length < wrapper.attr(s.numberOfFiles)
       if (display) {
         if (!wrapper.find('input:file').length) {
           var guid = IFS.core.template.guidGenerator()
@@ -156,9 +150,10 @@ IFS.core.upload = (function () {
     removeFile: function (removeButton) {
       var row = removeButton.closest('li')
       var wrapper = row.closest(s.wrapper)
+      removeButton.replaceWith('<p class="saving">Removing<span>.</span><span>.</span><span>.</span></p>')
       if (row.hasClass('success')) {
-        var removeName = wrapper.attr(s.removeFileName)
-        var removeValue = wrapper.attr(s.removeFileValue)
+        var removeName = removeButton.attr('name')
+        var removeValue = removeButton.attr('value')
         var formData = new window.FormData()
         formData.append(removeName, removeValue)
         jQuery.ajaxProtected({
@@ -182,11 +177,18 @@ IFS.core.upload = (function () {
       var messageList = IFS.core.upload.getMessageList(wrapper)
       row.remove()
       IFS.core.upload.toggleNoFileMessage(messageList)
-      IFS.core.upload.toggleUploadView(wrapper, true)
+      IFS.core.upload.toggleUploadView(wrapper)
     },
     resetFileInput: function (wrapper) {
-      wrapper.wrap('<form>').closest('form').get(0).reset()
-      wrapper.unwrap()
+      // wrapper.wrap('<form>').closest('form').get(0).reset()
+      // wrapper.unwrap()
+    },
+    replaceMessageListWithResponse: function (wrapper, data, filename) {
+      var index = jQuery(s.wrapper).index(wrapper)
+      var wrapperInResponse = jQuery(data).find(s.wrapper).eq(index)
+      var messageToInsert = wrapperInResponse.find('.success:last')
+      var messageListToInsertInto = IFS.core.upload.getMessageList(wrapper)
+      messageListToInsertInto.append(messageToInsert)
     }
   }
 })()
