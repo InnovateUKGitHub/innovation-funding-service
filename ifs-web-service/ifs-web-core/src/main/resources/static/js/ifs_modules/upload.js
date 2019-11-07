@@ -109,6 +109,7 @@ IFS.core.upload = (function () {
         })
       }
       IFS.core.upload.addMessage(wrapper, row)
+      IFS.core.upload.toggleUploadView(wrapper, false)
     },
     getMessageList: function (wrapper) {
       var messageList = wrapper.find('ul.file-list')
