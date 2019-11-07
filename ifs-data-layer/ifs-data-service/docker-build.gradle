@@ -5,7 +5,6 @@ ext.testIfsDatasourceUrl="$jdbcBaseUrl/ifs_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-//ext['flyway.url']="jdbc:mysql://ifs-database:3306$jdbcParams&user=root&password=password"
 ext['flyway.url']="$jdbcBaseUrl$jdbcParams"
 ext['flyway.schemas']='ifs,ifs_test'
 ext['flyway.user']="$ext.testIfsDatasourceUsername"

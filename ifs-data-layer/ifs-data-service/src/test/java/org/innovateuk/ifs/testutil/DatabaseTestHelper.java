@@ -29,7 +29,6 @@ public class DatabaseTestHelper {
 
     private static final Log LOG = LogFactory.getLog(DatabaseTestHelper.class);
 
-
     private void logVariables() {
         LOG.error("*******************");
         LOG.error(databaseUrl);
