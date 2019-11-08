@@ -563,17 +563,6 @@ public final class CollectionFunctions {
     }
 
     /**
-     * Check whether there is an item matching the predicate
-     * @param list
-     * @param filterFn
-     * @param <T>
-     * @return
-     */
-    public static <T> boolean simpleContains(Collection<T> list, Predicate<T> filterFn) {
-        return simpleFindAny(list, filterFn).isPresent();
-    }
-
-    /**
      * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
      */
     public static <T> Optional<T> simpleFindFirst(Collection<T> list, Predicate<T> filterFn) {

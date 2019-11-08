@@ -49,7 +49,7 @@ public class ActivityLogViewModelPopulator {
     private MessageSource messageSource;
 
     private static final Set<ActivityType> STAKEHOLDER_INNOVATION_SUPPORT_TYPES = EnumSet.of(APPLICATION_SUBMITTED, APPLICATION_INTO_PROJECT_SETUP, PROJECT_DETAILS_COMPLETE,
-            PROJECT_MANAGER_NOMINATED, FINANCE_CONTACT_NOMINATED, DOCUMENT_APPROVED, MONITORING_OFFICER_ASSIGNED, SPEND_PROFILE_APPROVED, FINANCE_REVIEWER_ADDED, GRANT_OFFER_LETTER_APPROVED);
+            PROJECT_MANAGER_NOMINATED, FINANCE_CONTACT_NOMINATED, ORGANISATION_ADDED, ORGANISATION_REMOVED, DOCUMENT_APPROVED, MONITORING_OFFICER_ASSIGNED, SPEND_PROFILE_APPROVED, FINANCE_REVIEWER_ADDED, GRANT_OFFER_LETTER_APPROVED);
 
     private static final Set<ActivityType> COMP_ADMIN_TYPES = Sets.union(STAKEHOLDER_INNOVATION_SUPPORT_TYPES,
             EnumSet.of(DOCUMENT_UPLOADED, DOCUMENT_REJECTED, SPEND_PROFILE_GENERATED, GRANT_OFFER_LETTER_UPLOADED, GRANT_OFFER_LETTER_PUBLISHED, GRANT_OFFER_LETTER_SIGNED, GRANT_OFFER_LETTER_REJECTED)
@@ -147,6 +147,9 @@ public class ActivityLogViewModelPopulator {
         String role = projectUsers.get().anyMatch(ProjectUserResource::isProjectManager) ? "Project manager"
                 : projectUsers.get().anyMatch(ProjectUserResource::isFinanceContact) ? "Finance contact"
                 : "Partner";
+        if (organisationName == null) {
+            organisationName = log.getOrganisationName();
+        }
         return format("%s, %s for %s", log.getAuthoredByName(), role, organisationName);
     }
 
