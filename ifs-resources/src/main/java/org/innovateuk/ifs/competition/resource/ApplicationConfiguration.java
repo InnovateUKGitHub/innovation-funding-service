@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 
@@ -29,7 +29,9 @@ public interface ApplicationConfiguration {
     FundingType getFundingType();
 
     default boolean applicantShouldUseJesFinances(OrganisationTypeEnum organisationType) {
-        return Boolean.TRUE.equals(getIncludeJesForm()) && RESEARCH.equals(organisationType);
+        return Boolean.TRUE.equals(getIncludeJesForm())
+                && getFundingType().equals(GRANT)
+                && RESEARCH.equals(organisationType);
     }
 
     default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {

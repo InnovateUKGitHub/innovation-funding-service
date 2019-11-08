@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -71,7 +72,7 @@ import static org.mockito.Mockito.when;
     @Test
     public void testIndustrialCreate() {
         // Setup
-        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).build();
+        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withFundingType(FundingType.GRANT).build();
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
         OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build(); // Industrial

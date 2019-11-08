@@ -1,12 +1,6 @@
 package org.innovateuk.ifs.applicant.transactional;
 
-import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantQuestionStatusResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.resource.*;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
@@ -22,7 +16,6 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -202,10 +195,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private boolean isSectionExcluded(SectionResource section, OrganisationResource organisation,
                                       CompetitionResource competition) {
         if (section.getType() == SectionType.ORGANISATION_FINANCES) {
-            boolean isResearchOrganisation = organisation != null && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
-            boolean excludeYourOrganisationSectionForResearchOrgs =
-                    Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
-            return isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
+            return competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         }
 
         return section.getType() == SectionType.FUNDING_FINANCES && competition.isFullyFunded();
