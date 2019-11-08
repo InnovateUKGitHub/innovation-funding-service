@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.activitylog.populator;
 
 import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import static java.lang.String.format;
@@ -67,18 +68,9 @@ public class ActivityLogUrlHelper {
      * @param log
      * @return
      */
-    public static boolean linkInvalidIfOrganisationRemoved(ActivityLogResource log){
-        switch (log.getActivityType()) {
-            case BANK_DETAILS_SUBMITTED:
-            case BANK_DETAILS_APPROVED:
-            case BANK_DETAILS_EDITED:
-            case VIABILITY_APPROVED:
-            case FINANCE_QUERY:
-            case FINANCE_QUERY_RESPONDED:
-            case SPEND_PROFILE_GENERATED:
-                return true;
-            default:
-                return false;
-        }
+    public static boolean linkInvalidIfOrganisationRemoved(ActivityLogResource log) {
+        return log.getOrganisation() != null
+                && log.getActivityType() != ActivityType.ORGANISATION_REMOVED
+                && log.getActivityType() != ActivityType.ORGANISATION_ADDED;
     }
 }
