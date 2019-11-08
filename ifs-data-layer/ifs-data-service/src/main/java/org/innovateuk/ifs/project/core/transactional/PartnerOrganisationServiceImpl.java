@@ -5,7 +5,6 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
@@ -50,9 +49,6 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private NotificationService notificationService;
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
