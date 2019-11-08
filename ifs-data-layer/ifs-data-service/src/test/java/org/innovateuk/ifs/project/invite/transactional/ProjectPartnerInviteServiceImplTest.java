@@ -294,11 +294,12 @@ public class ProjectPartnerInviteServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(inviteOrganisation.getOrganisation(), organisation);
-        verify(projectPartnerChangeService).updateProjectWhenPartnersChange(project.getId());
-        verify(projectFinanceRowService).createProjectFinance(project.getId(), organisationId);
-        verify(viabilityWorkflowHandler).projectCreated(any(), any());
-        verify(eligibilityWorkflowHandler).projectCreated(any(), any());
-        verify(viabilityWorkflowHandler).viabilityNotApplicable(any(), any());
-        verify(pendingPartnerProgressRepository).save(any());
+        verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
+        verify(projectFinanceRowService, times(1)).createProjectFinance(project.getId(), organisationId);
+        verify(viabilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(viabilityWorkflowHandler, times(1)).viabilityNotApplicable(any(), any());
+        verify(pendingPartnerProgressRepository, times(1)).save(any());
+        verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceRowService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
     }
 }

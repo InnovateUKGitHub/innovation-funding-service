@@ -68,7 +68,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testEligibilityReset() {
+    public void EligibilityReset() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation,
             internalUser)),
