@@ -28,6 +28,7 @@ public class GrantClaimMaximumPermissionRules extends BasePermissionRules {
     public boolean internalAdminAndUsersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden
             (CompetitionResource competition, UserResource user) {
         return isInternalAdmin(user) ||
-                usersRolesService.userHasApplicationForCompetition(user.getId(), competition.getId()).getSuccess();
+                usersRolesService.userHasApplicationForCompetition(user.getId(), competition.getId()).getSuccess()
+                || projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
     }
 }

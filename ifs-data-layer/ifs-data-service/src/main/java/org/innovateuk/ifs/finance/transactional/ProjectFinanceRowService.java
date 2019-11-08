@@ -21,7 +21,7 @@ public interface ProjectFinanceRowService {
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can add new costs to project finance")
     ServiceResult<FinanceRowItem> create(FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')") //todo permissions
     @SecuredBySpring(value = "UPDATE", securedType = FinanceRowItem.class, description = "Project Finance users can update  costs from project finance")
     ServiceResult<FinanceRowItem> update(long costId, FinanceRowItem newCostItem);
 
