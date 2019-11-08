@@ -31,7 +31,7 @@ public class PostcoderWeb implements AddressLookupService {
     @Value("${ifs.data.postcode-lookup.url}")
     private String postcodeLookupUrl = null;
 
-    @Value("${ifs.data.postcode-lookup.key}")
+    @Value("${ifs.data.postcode.lookup.key}")
     private String postcodeLookupKey = null;
 
     @Value("${ifs.data.postcode-lookup.lines}")

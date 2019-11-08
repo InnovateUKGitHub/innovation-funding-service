@@ -99,4 +99,8 @@ public enum Role implements Identifiable {
     public static Set<Role> externalApplicantRoles(){
         return new HashSet<>(asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
     }
+
+    public static Set<Role> multiDashboardRoles() {
+        return new HashSet<>(asList(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER));
+    }
 }

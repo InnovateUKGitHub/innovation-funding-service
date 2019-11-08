@@ -1,8 +1,3 @@
-ext.ifsDatasourceHost = "ifs-database"
-ext.ifsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs"
-ext.ifsDatasourceUsername="root"
-ext.ifsDatasourcePassword="password"
-
 ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
@@ -23,10 +18,6 @@ project.ext['flyway.placeholders.ifs.system.user.uuid']='c0d02979-e66e-11e7-ac43
 
 ext.ifsFinanceTotalsEnabled=true
 ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
-
-ext.ifsFlywayLocations="db/migration,db/reference,db/setup,db/webtest"
-
-ext.silRestBaseURL="http://sil-stub:8080/silstub"
 
 ext.idpRestBaseURL="http://registration-svc:8080"
 

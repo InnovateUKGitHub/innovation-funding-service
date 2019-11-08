@@ -173,22 +173,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     private GrantOfferLetterWorkflowHandler golWorkflowHandlerMock;
 
     @Mock
-    private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
-
-    @Mock
     private PartnerOrganisationService partnerOrganisationServiceMock;
-
-    @Mock
-    private FinanceCheckService financeCheckServiceMock;
-
-    @Mock
-    private EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
-
-    @Mock
-    private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
-
-    @Mock
-    private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
 
     @Mock
     private ProjectProcessRepository projectProcessRepositoryMock;
