@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Your organisation'}" />
+</head>
+<body class="govuk-template__body project-other-documents">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/modals :: modal-configured-partner-document" />
+<th:block th:insert="fragments/modals :: modal-overlay" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to join project',linkUrl=@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',subTitle=${model.projectName},size='govuk-heading-xl'" />
+
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:attr="data-autosave='autosaveFormPost'"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST">
+            <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        with-growth-table(
+                                               form=${form},
+                                               organisationSizeOptions=${model.organisationSizeOptions},
+                                               isH2020=${model.h2020},
+                                               readOnly=${model.readOnly},
+                                               showOrganisationSizeAlert=${model.showOrganisationSizeAlert},
+                                               showStateAidAgreement=${model.showStateAidAgreement},
+                                        )" />
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+
+</body>
+</html>

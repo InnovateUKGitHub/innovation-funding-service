@@ -87,8 +87,10 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));
 
-        Future<YourOrganisationWithGrowthTableForm> formRequest = async(() ->
-                withGrowthTableFormPopulator.populate(applicationId, organisationId));
+        Future<YourOrganisationWithGrowthTableForm> formRequest = async(() -> {
+            OrganisationFinancesWithGrowthTableResource finances = yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(applicationId, organisationId).getSuccess();
+            return withGrowthTableFormPopulator.populate(finances);
+        });
 
         model.addAttribute("commonFinancesModel", commonViewModelRequest);
         model.addAttribute("model", viewModelRequest);
@@ -112,7 +114,8 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     @PostMapping(value = "/auto-save")
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
-    public @ResponseBody JsonNode autosaveWithGrowthTable(
+    public @ResponseBody
+    JsonNode autosaveWithGrowthTable(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
             @ModelAttribute YourOrganisationWithGrowthTableForm form) {
@@ -192,7 +195,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     }
 
     private YourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
-        return viewModelPopulator.populate(applicationId, competitionId,  organisationId);
+        return viewModelPopulator.populate(applicationId, competitionId, organisationId);
     }
 
     private CommonYourProjectFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {

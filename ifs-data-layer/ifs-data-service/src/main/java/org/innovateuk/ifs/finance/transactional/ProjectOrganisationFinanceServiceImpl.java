@@ -12,6 +12,8 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+
 @Service
 public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationFinanceService<ProjectFinanceResource> implements ProjectOrganisationFinanceService {
 
@@ -55,5 +57,15 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
     protected void resetYourFundingSection(ProjectFinanceResource projectFinanceResource, long competitionId, long userId) {
         pendingPartnerProgressService.markYourFundingIncomplete(ProjectOrganisationCompositeId.id(projectFinanceResource.getProject(),
                 projectFinanceResource.getOrganisation())).getSuccess();
+    }
+
+    @Override
+    protected ServiceResult<Boolean> getStateAidAgreed(long targetId) {
+        return serviceSuccess(true);
+    }
+
+    @Override
+    protected ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed) {
+        return serviceSuccess();
     }
 }

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 public class PendingPartnerProgressLandingPageViewModel {
 
     private final long projectId;
+    private final long organisationId;
     private final long applicationId;
     private final String projectName;
     private final boolean yourOrganisationComplete;
@@ -13,7 +14,7 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean termsAndConditionsComplete;
     private final boolean showYourOrganisation;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
@@ -21,10 +22,15 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.yourFundingComplete = progress.isYourFundingComplete();
         this.termsAndConditionsComplete = progress.isTermsAndConditionsComplete();
         this.showYourOrganisation = showYourOrganisation;
+        this.organisationId = organisationId;
     }
 
     public long getProjectId() {
         return projectId;
+    }
+
+    public long getOrganisationId() {
+        return organisationId;
     }
 
     public long getApplicationId() {

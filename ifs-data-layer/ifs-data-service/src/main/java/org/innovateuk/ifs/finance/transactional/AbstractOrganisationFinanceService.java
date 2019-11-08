@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -23,16 +20,12 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceResource> extends BaseTransactionalService implements OrganisationFinanceService {
 
     @Autowired
     private CompetitionService competitionService;
-    @Autowired
-    private ApplicationService applicationService;
     @Autowired
     private OrganisationService organisationService;
     @Autowired
@@ -45,6 +38,8 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
     protected abstract ServiceResult<FinanceRowItem> saveGrantClaim(GrantClaim grantClaim);
     protected abstract ServiceResult<CompetitionResource> getCompetitionFromTargetId(long targetId);
     protected abstract void resetYourFundingSection(F finance, long competitionId, long userId);
+    protected abstract ServiceResult<Boolean> getStateAidAgreed(long targetId);
+    protected abstract ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed);
 
     @Override
     public ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationWithGrowthTable(long targetId, long organisationId) {
@@ -104,7 +99,6 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
     @Transactional
     public ServiceResult<Void> updateOrganisationWithGrowthTable(long targetId, long organisationId, OrganisationFinancesWithGrowthTableResource finances) {
         long competitionId = getCompetitionId(targetId);
-        long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
 
         boolean stateAidIncluded = isShowStateAidAgreement(targetId, organisationId).getSuccess();
 
@@ -132,7 +126,6 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
     @Transactional
     public ServiceResult<Void> updateOrganisationWithoutGrowthTable(long targetId, long organisationId, OrganisationFinancesWithoutGrowthTableResource finances) {
         long competitionId = getCompetitionId(targetId);
-        long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
         boolean stateAidIncluded = isShowStateAidAgreement(targetId, organisationId).getSuccess();
 
         //finance
@@ -161,10 +154,6 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
         });
     }
 
-    private ServiceResult<Boolean> getStateAidAgreed(long targetId) {
-        return applicationService.getApplicationById(targetId).
-                andOnSuccessReturn(ApplicationResource::getStateAidAgreed);
-    }
 
     private ServiceResult<Boolean> getStateAidEligibilityForCompetition(long targetId) {
         return getCompetitionFromTargetId(targetId).
@@ -174,15 +163,6 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
     private ServiceResult<Boolean> isBusinessOrganisation(Long organisationId) {
         return organisationService.findById(organisationId).
                 andOnSuccessReturn(organisation -> organisation.getOrganisationType() == OrganisationTypeEnum.BUSINESS.getId());
-    }
-
-    private ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed) {
-        return applicationService.getApplicationById(targetId).
-                andOnSuccess(application -> {
-                    application.setStateAidAgreed(stateAidAgreed);
-                    return applicationService.saveApplicationDetails(targetId, application);
-                }).
-                andOnSuccessReturnVoid();
     }
 
     private void updateOrganisationSize(F finance, long competitionId, OrganisationSize organisationSize) {
@@ -213,7 +193,6 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
     }
 
     private long getCompetitionId(long targetId) {
-        Application application = find(applicationRepository.findById(targetId), notFoundError(Application.class, targetId)).getSuccess();
-        return application.getCompetition().getId();
+        return getCompetitionFromTargetId(targetId).getSuccess().getId();
     }
 }
