@@ -11,7 +11,7 @@ IFS.core.upload = (function () {
       uploadFileInput: 'data-js-upload-file-input',
       numberOfFiles: 'data-js-number-of-files',
       oneAtATime: 'data-js-upload-one-at-a-time',
-      maxSize: 'data-js-max-siz',
+      maxSize: 'data-js-max-size',
       successRow: '<li class="success">' +
                     '<div class="file-row">' +
                       '<a href="$href" target="_blank" class="govuk-link">$text (Opens in a new window)</a>' +
@@ -81,8 +81,9 @@ IFS.core.upload = (function () {
               var maxSize = wrapper.attr(s.maxSize)
               if (maxSize) {
                 errorMessage = 'Your upload must be less than ' + maxSize + ' in size.'
+              } else {
+                errorMessage = 'The file you submitted is too large. Please limit it to the sizes specified.'
               }
-              errorMessage = 'The file you submitted is too large. Please limit it to the sizes specified.'
             }
             var row = IFS.core.template.replaceInTemplate(s.errorRow, {
               text: file.name,
