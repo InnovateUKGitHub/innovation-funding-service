@@ -785,7 +785,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.UNSET);
         verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
     }
 
@@ -923,7 +923,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+        assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.UNSET);
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
     }
 
