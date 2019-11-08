@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.transactional;
+ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
@@ -1079,7 +1079,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertTrue(existingUsers.get(1).hasRole(Role.ASSESSOR));
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
+                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock,
+                                  notificationServiceMock, userService);
         inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
