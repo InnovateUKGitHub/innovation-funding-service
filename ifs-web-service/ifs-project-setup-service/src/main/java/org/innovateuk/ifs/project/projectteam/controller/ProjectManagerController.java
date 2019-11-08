@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.projectteam.controller;
 
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
@@ -10,6 +12,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,9 +37,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class ProjectManagerController {
 
     private ProjectService projectService;
-
     private ProjectDetailsService projectDetailsService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     public ProjectManagerController(
             ProjectService projectService,
@@ -106,7 +110,8 @@ public class ProjectManagerController {
     private void populateProjectManagerModel(Model model, final long projectId, final List<ProjectUserResource> leadOrgPartners) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        ProjectManagerViewModel viewModel = new ProjectManagerViewModel(leadOrgPartners, projectResource.getId(), projectResource.getName());
+        CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+        ProjectManagerViewModel viewModel = new ProjectManagerViewModel(leadOrgPartners, projectResource.getId(), projectResource.getName(), competition.isLoan());
         model.addAttribute("model", viewModel);
     }
 

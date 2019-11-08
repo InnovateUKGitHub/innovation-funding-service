@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.projectteam.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -12,7 +14,9 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -26,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class FinanceContactControllerTest extends BaseControllerMockMVCTest<FinanceContactController> {
 
-
     @Override
     protected FinanceContactController supplyControllerUnderTest() {
         return new FinanceContactController(projectService, projectDetailsService);
@@ -38,6 +41,9 @@ public class FinanceContactControllerTest extends BaseControllerMockMVCTest<Fina
     @Mock
     private ProjectDetailsService projectDetailsService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Test
     public void viewFinanceContactPage() throws Exception {
 
@@ -48,12 +54,13 @@ public class FinanceContactControllerTest extends BaseControllerMockMVCTest<Fina
                 .withOrganisation(organisationId, organisationId)
                 .withRole(PROJECT_MANAGER, PARTNER)
                 .build(2);
-
+        CompetitionResource competitionResource = newCompetitionResource().build();
         setLoggedInUser(newUserResource().withId(222L).build());
 
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
         when(projectService.getProjectUsersWithPartnerRole(projectResource.getId())).thenReturn(singletonList(projectUsers.get(1)));
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get("/project/{projectId}/team/finance-contact/organisation/{orgId}", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -76,7 +83,7 @@ public class FinanceContactControllerTest extends BaseControllerMockMVCTest<Fina
         when(projectDetailsService.updateFinanceContact(composite, financeContactUserId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/team/finance-contact/organisation/{organisationId}", projectId, organisationId)
-                                .param("financeContact", String.valueOf(financeContactUserId)))
+                .param("financeContact", String.valueOf(financeContactUserId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/team"));
 
