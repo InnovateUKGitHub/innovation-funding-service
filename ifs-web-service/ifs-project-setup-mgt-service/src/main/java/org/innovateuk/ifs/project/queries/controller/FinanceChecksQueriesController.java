@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
@@ -212,7 +213,8 @@ public class FinanceChecksQueriesController {
                                             @SuppressWarnings("unused") BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             HttpServletRequest request,
-                                            HttpServletResponse response) {
+                                            HttpServletResponse response) throws InterruptedException {
+        TimeUnit.SECONDS.sleep(10);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
         Supplier<String> onError = () -> {

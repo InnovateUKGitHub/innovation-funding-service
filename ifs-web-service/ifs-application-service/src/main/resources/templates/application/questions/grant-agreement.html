@@ -38,7 +38,8 @@
                 <p class="govuk-body">Your EU reconciliation report will need approval from the EU. Once you have received this you will be asked to upload it as part of your project setup, which will be the second stage of this application process.</p>
                 <p class="govuk-body">The document must be less than 35 MB.</p>
 
-                <th:block th:insert="question-type/types :: fileupload-fragment(${model.readonly ? 'readonly' : 'edit'},
+                <th:block th:with="maxSize='35 MB'"
+                    th:insert="question-type/types :: fileupload-fragment(${model.readonly ? 'readonly' : 'edit'},
                                             @{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=${model.questionId})},
                                             ${model.filename},
                                             grantAgreement,

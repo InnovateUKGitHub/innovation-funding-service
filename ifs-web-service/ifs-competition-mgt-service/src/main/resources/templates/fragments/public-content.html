@@ -415,8 +415,9 @@
                                validationField=${inputField},
                                mayRemove=true,
                                removeName='removeFile',
-                               saveName='uploadFile'">
-                    <th:block th:with="removeValue=${contentGroup.id}" th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                               saveName='uploadFile',
+                               removeValue=${contentGroup.id}">
+                    <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
             </div>
             <button type="button" class="button-clear" th:if="${index > 0 or model.section.type.allowEmptyContentGroups}" data-remove-row="contentGroup">Remove section</button>

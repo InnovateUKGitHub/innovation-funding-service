@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
@@ -156,8 +155,6 @@ public class FinanceChecksNotesAddNoteController {
                                         UserResource loggedInUser,
                                         HttpServletRequest request,
                                         HttpServletResponse response) throws InterruptedException {
-        TimeUnit.SECONDS.sleep(10);
-
         if (postParametersMatchOrigin(request, projectId, organisationId, loggedInUser.getId())) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
             Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId));

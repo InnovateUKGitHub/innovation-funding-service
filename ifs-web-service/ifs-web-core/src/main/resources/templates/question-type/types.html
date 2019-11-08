@@ -144,7 +144,8 @@
                  th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'govuk-form-group--error')"
                  th:attr="data-js-download-location=${downloadUrl},
                  data-js-upload-button-name=${saveName},
-                 data-js-upload-file-input=${inputField}"
+                 data-js-upload-file-input=${inputField},
+                 data-js-max-size=${maxSize}"
                  data-js-number-of-files="1">
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
