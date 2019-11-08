@@ -11,12 +11,15 @@
         display:flex;
         justify-content: space-between;
         border-top: 1px solid $govuk-border-colour;
-        border-bottom: 1px solid $govuk-border-colour;
         padding: 10px 10px 10px 50px;
         background-color: govuk-colour("grey-4");
         background-repeat: no-repeat;
         background-position: 20px 50%;
         background-size: 20px 20px;
+
+        &:last-child {
+          border-bottom: 1px solid $govuk-border-colour;
+        }
 
         p,
         button {

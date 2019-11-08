@@ -158,7 +158,6 @@ public class FinanceChecksNotesAddNoteController {
                                         HttpServletResponse response) throws InterruptedException {
         TimeUnit.SECONDS.sleep(10);
 
-
         if (postParametersMatchOrigin(request, projectId, organisationId, loggedInUser.getId())) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
             Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId));

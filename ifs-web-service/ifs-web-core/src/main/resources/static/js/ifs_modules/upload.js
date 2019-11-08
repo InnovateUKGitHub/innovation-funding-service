@@ -1,6 +1,7 @@
 IFS.core.upload = (function () {
   'use strict'
   var s // private alias to settings
+  var promise = jQuery.when({})
   return {
     settings: {
       uploadEl: '[type="file"][class="inputfile"]',
@@ -9,6 +10,7 @@ IFS.core.upload = (function () {
       uploadButtonName: 'data-js-upload-button-name',
       uploadFileInput: 'data-js-upload-file-input',
       numberOfFiles: 'data-js-number-of-files',
+      oneAtATime: 'data-js-upload-one-at-a-time',
       successRow: '<li class="success">' +
                     '<div class="file-row">' +
                       '<a href="$href" target="_blank" class="govuk-link">$text (Opens in a new window)</a>' +
@@ -54,32 +56,41 @@ IFS.core.upload = (function () {
       formData.append(fileInput.attr('name'), file)
       formData.append(submitButton.attr('name'), true)
 
-      jQuery.ajaxProtected({
-        type: 'POST',
-        url: wrapper.closest('form').attr('action'),
-        success: function (data) {
-          pendingRow.remove()
-          IFS.core.upload.processAjaxResult(wrapper, file, data)
-          IFS.core.upload.resetFileInput(wrapper)
-        },
-        error: function (error) {
-          pendingRow.remove()
-          console.log(error)
-          var errorMessage = ' Internal server error.'
-          if (error.status === 413) {
-            errorMessage = ' File is too large.'
-          }
-          var row = IFS.core.template.replaceInTemplate(s.errorRow, {
-            text: file.name,
-            error: errorMessage
-          })
-          IFS.core.upload.addMessage(wrapper, row)
-          IFS.core.upload.resetFileInput(wrapper)
-        },
-        processData: false,
-        contentType: false,
-        data: formData
-      })
+      if (wrapper.get(0).hasAttribute(s.oneAtATime)) {
+        promise = promise.then(IFS.core.upload.doAjaxUpload(wrapper, file, pendingRow, formData))
+      } else {
+        IFS.core.upload.doAjaxUpload(wrapper, file, pendingRow, formData)()
+      }
+    },
+    doAjaxUpload: function (wrapper, file, pendingRow, formData) {
+      return function () {
+        return jQuery.ajaxProtected({
+          type: 'POST',
+          url: wrapper.closest('form').attr('action'),
+          success: function (data) {
+            pendingRow.remove()
+            IFS.core.upload.processAjaxResult(wrapper, file, data)
+            IFS.core.upload.resetFileInput(wrapper)
+          },
+          error: function (error) {
+            pendingRow.remove()
+            console.log(error)
+            var errorMessage = ' Internal server error.'
+            if (error.status === 413) {
+              errorMessage = ' File is too large.'
+            }
+            var row = IFS.core.template.replaceInTemplate(s.errorRow, {
+              text: file.name,
+              error: errorMessage
+            })
+            IFS.core.upload.addMessage(wrapper, row)
+            IFS.core.upload.resetFileInput(wrapper)
+          },
+          processData: false,
+          contentType: false,
+          data: formData
+        })
+      }
     },
     triggerFormSubmission: function (fileInput) {
       IFS.core.upload.getButton(fileInput).click()
