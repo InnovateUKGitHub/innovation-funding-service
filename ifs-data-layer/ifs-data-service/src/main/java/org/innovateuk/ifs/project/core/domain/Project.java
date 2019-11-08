@@ -70,7 +70,7 @@ public class Project implements ProcessActivity {
             mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
     private FinanceReviewer financeReviewer = null;
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
