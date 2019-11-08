@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
-import org.innovateuk.ifs.finance.transactional.OrganisationFinanceService;
+import org.innovateuk.ifs.finance.transactional.ApplicationOrganisationFinanceService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -16,14 +16,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest<OrganisationFinanceController> {
+public class ApplicationOrganisationFinanceControllerTest extends BaseControllerMockMVCTest<ApplicationOrganisationFinanceController> {
 
     @Mock
-    private OrganisationFinanceService organisationFinanceService;
+    private ApplicationOrganisationFinanceService applicationOrganisationFinanceService;
 
     @Override
-    protected OrganisationFinanceController supplyControllerUnderTest() {
-        return new OrganisationFinanceController();
+    protected ApplicationOrganisationFinanceController supplyControllerUnderTest() {
+        return new ApplicationOrganisationFinanceController();
     }
 
     @Test
@@ -32,7 +32,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         long applicationId = 1L;
         long organisationId = 2L;
 
-        when(organisationFinanceService.getOrganisationWithGrowthTable(applicationId, organisationId)).thenReturn(serviceSuccess(expectedOrganisationFinances));
+        when(applicationOrganisationFinanceService.getOrganisationWithGrowthTable(applicationId, organisationId)).thenReturn(serviceSuccess(expectedOrganisationFinances));
 
         mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", applicationId, organisationId))
                 .andExpect(status().isOk())
@@ -45,7 +45,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         long applicationId = 1L;
         long organisationId = 2L;
 
-        when(organisationFinanceService.getOrganisationWithoutGrowthTable(applicationId, organisationId)).thenReturn(serviceSuccess(expectedOrganisationFinances));
+        when(applicationOrganisationFinanceService.getOrganisationWithoutGrowthTable(applicationId, organisationId)).thenReturn(serviceSuccess(expectedOrganisationFinances));
 
         mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/without-growth-table", applicationId, organisationId))
                 .andExpect(status().isOk())
@@ -58,7 +58,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         long applicationId = 1L;
         long organisationId = 2L;
 
-        when(organisationFinanceService.updateOrganisationWithGrowthTable(applicationId, organisationId, finances)).thenReturn(serviceSuccess());
+        when(applicationOrganisationFinanceService.updateOrganisationWithGrowthTable(applicationId, organisationId, finances)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/with-growth-table", applicationId, organisationId)
                 .contentType(APPLICATION_JSON)
@@ -73,7 +73,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         long applicationId = 1L;
         long organisationId = 2L;
 
-        when(organisationFinanceService.updateOrganisationWithoutGrowthTable(applicationId, organisationId, finances)).thenReturn(serviceSuccess());
+        when(applicationOrganisationFinanceService.updateOrganisationWithoutGrowthTable(applicationId, organisationId, finances)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/organisation/{organisationId}/finance/without-growth-table", applicationId, organisationId)
                 .contentType(APPLICATION_JSON)
@@ -86,7 +86,7 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         long applicationId = 1L;
         long organisationId = 2L;
 
-        when(organisationFinanceService.isShowStateAidAgreement(applicationId, organisationId)).thenReturn(serviceSuccess(true));
+        when(applicationOrganisationFinanceService.isShowStateAidAgreement(applicationId, organisationId)).thenReturn(serviceSuccess(true));
 
         mockMvc.perform(get("/application/{applicationId}/organisation/{organisationId}/finance/show-state-aid", applicationId, organisationId))
                 .andExpect(status().isOk());

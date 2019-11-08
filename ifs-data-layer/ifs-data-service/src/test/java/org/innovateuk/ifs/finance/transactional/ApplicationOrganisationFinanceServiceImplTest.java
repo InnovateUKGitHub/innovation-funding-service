@@ -44,7 +44,7 @@ import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBui
 import static org.innovateuk.ifs.finance.builder.GrowthTableResourceBuilder.newGrowthTableResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
-import static org.innovateuk.ifs.finance.transactional.OrganisationFinanceServiceImpl.*;
+import static org.innovateuk.ifs.finance.transactional.ApplicationOrganisationFinanceServiceImpl.*;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputType.FINANCIAL_OVERVIEW_ROW;
@@ -55,7 +55,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-public class OrganisationFinanceServiceImplTest extends BaseServiceUnitTest<OrganisationFinanceServiceImpl> {
+public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUnitTest<ApplicationOrganisationFinanceServiceImpl> {
 
     @Mock
     private CompetitionService competitionService;
@@ -333,7 +333,7 @@ public class OrganisationFinanceServiceImplTest extends BaseServiceUnitTest<Orga
     }
 
     @Override
-    protected OrganisationFinanceServiceImpl supplyServiceUnderTest() {
-        return new OrganisationFinanceServiceImpl();
+    protected ApplicationOrganisationFinanceServiceImpl supplyServiceUnderTest() {
+        return new ApplicationOrganisationFinanceServiceImpl();
     }
 }

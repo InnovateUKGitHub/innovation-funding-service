@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.invite.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
@@ -66,7 +66,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     private LoggedInUserSupplier loggedInUserSupplier;
 
     @Autowired
-    private ProjectFinanceRowService projectFinanceRowService;
+    private ProjectFinanceService projectFinanceService;
 
     @Autowired
     private PartnerOrganisationRepository partnerOrganisationRepository;
@@ -184,7 +184,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     ProjectUser projectUser = new ProjectUser(invite.getUser(), project, ProjectParticipantRole.PROJECT_PARTNER, organisation);
                                     projectUser = projectUserRepository.save(projectUser);
 
-                                    projectFinanceRowService.createProjectFinance(project.getId(),
+                                    projectFinanceService.createProjectFinance(project.getId(),
                                             organisation.getId());
 
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
