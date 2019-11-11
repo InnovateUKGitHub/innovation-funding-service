@@ -24,6 +24,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,9 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Value("${ifs.system.internal.user.email.domains}")
     private String internalUserEmailDomains;
@@ -238,6 +242,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     private void addStakeholderRoleToUser(User user) {
         user.addRole(Role.STAKEHOLDER);
         userRepository.save(user);
+        userService.evictUserCache(user.getUid());
     }
 
     private ServiceResult<Void> sendAddStakeholderNotification(Stakeholder stakeholder, Competition competition) {

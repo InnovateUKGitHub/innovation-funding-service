@@ -13,6 +13,4 @@ public interface UserAuthenticationService {
     Authentication getAuthentication(HttpServletRequest request);
     UserResource getAuthenticatedUser(HttpServletRequest request);
 
-    Authentication getAuthentication(HttpServletRequest request, boolean expireCache);
-    UserResource getAuthenticatedUser(HttpServletRequest request, boolean expireCache);
 }

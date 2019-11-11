@@ -328,7 +328,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void agreeNewSiteTermsAndConditions() throws Exception {
         long userId = 1L;
 
-        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess());
+        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/id/{userId}/agree-new-site-terms-and-conditions", userId))
                 .andExpect(status().isOk());
@@ -340,7 +340,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void editInternalUser() throws Exception {
 
         EditUserResource editUserResource = new EditUserResource(1L, "First", "Last", Role.IFS_ADMINISTRATOR);
-        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/internal/edit")
                 .contentType(APPLICATION_JSON)
@@ -352,15 +352,15 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void deactivateUser() throws Exception {
-        when(registrationServiceMock.deactivateUser(123L)).thenReturn(serviceSuccess());
-        mockMvc.perform(get("/user/id/123/deactivate")).andExpect(status().isOk());
+        when(registrationServiceMock.deactivateUser(123L)).thenReturn(serviceSuccess(newUserResource().build()));
+        mockMvc.perform(post("/user/id/123/deactivate")).andExpect(status().isOk());
         verify(registrationServiceMock).deactivateUser(123L);
     }
 
     @Test
     public void reactivateUser() throws Exception {
-        when(registrationServiceMock.activateUser(123L)).thenReturn(serviceSuccess());
-        mockMvc.perform(get("/user/id/123/reactivate")).andExpect(status().isOk());
+        when(registrationServiceMock.activateUser(123L)).thenReturn(serviceSuccess(newUserResource().build()));
+        mockMvc.perform(post("/user/id/123/reactivate")).andExpect(status().isOk());
         verify(registrationServiceMock).activateUser(123L);
     }
 
@@ -385,7 +385,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         long userId = 1L;
         Role grantRole = Role.APPLICANT;
 
-        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());
+        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name()))
                 .andExpect(status().isOk());
