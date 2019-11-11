@@ -93,9 +93,9 @@ public class ActivityLogViewModelPopulatorTest {
 
         List<ActivityLogResource> activities = newActivityLogResource()
                 .withActivityType(ActivityType.APPLICATION_SUBMITTED, ActivityType.BANK_DETAILS_APPROVED, ActivityType.DOCUMENT_UPLOADED, ActivityType.FINANCE_QUERY)
-                .withCreatedBy(partnerUserId, financeUserId, partnerUserId, financeUserId)
-                .withCreatedByRoles(singleton(Role.APPLICANT), singleton(Role.PROJECT_FINANCE), singleton(Role.APPLICANT), singleton(Role.PROJECT_FINANCE))
-                .withCreatedByName("Adam Applicant", "Frank Finance", "Adam Applicant", "Frank Finance")
+                .withAuthoredBy(partnerUserId, financeUserId, partnerUserId, financeUserId)
+                .withAuthoredByRoles(singleton(Role.APPLICANT), singleton(Role.PROJECT_FINANCE), singleton(Role.APPLICANT), singleton(Role.PROJECT_FINANCE))
+                .withAuthoredByName("Adam Applicant", "Frank Finance", "Adam Applicant", "Frank Finance")
                 .withCreatedOn(now.minusDays(3), now.minusDays(2), now.minusDays(1),  now)
                 .withOrganisation(null, organisationId, null, organisationId)
                 .withOrganisationName(null, partner.getOrganisationName(), null, partner.getOrganisationName())

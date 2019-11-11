@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- ========================= Default output for an activity entry =========================== -->
+<th:block th:fragment="DEFAULT (activity)">
+    <div class="activity-log__left">
+        <span class="activity-log__title">
+            <strong th:text="${activity.title}">Grant offer letter approved</strong>
+            <th:block th:if="${activity.organisationName != null}"
+                      th:text="| for ${activity.organisationName}|">for Very long Company Name &amp; Sons Limited</th:block>
+        </span>
+        <span class="activity-log__user">
+            <strong>By:</strong>  <th:block th:text="${activity.userText}">Wendy Wallis, UKRI finance admin</th:block>
+        </span>
+    </div>
+    <div class="activity-log__right">
+        <span class="activity-log__time"
+              th:text="|${#temporals.format(activity.createdOn, 'd MMMM yyyy')}, ${#temporals.format(activity.createdOn, 'hh:mma')}|">
+            28 Feb 2019, 07:47 AM
+        </span>
+        <a th:href="${activity.linkUrl}"
+           th:if="${activity.displayLink}"
+           th:text="${activity.linkText}"
+           class="activity-log__link">View grant offer letter</a>
+    </div>
+</th:block>
+
+<!-- ========================= Output for an organisation added activity =========================== -->
+<th:block th:fragment="ORGANISATION_ADDED (activity)">
+    <div class="activity-log__left">
+        <span class="activity-log__title">
+            <strong th:text="${activity.title}">Organisation added</strong>
+            <th:block th:if="${activity.organisationName != null}"
+                      th:text="| ${activity.organisationName}|">for Very long Company Name &amp; Sons Limited</th:block>
+        </span>
+        <span class="activity-log__user">
+            <strong>By:</strong>  <th:block th:text="${activity.userText}">Wendy Wallis, UKRI finance admin</th:block>
+        </span>
+    </div>
+    <div class="activity-log__right">
+        <span class="activity-log__time"
+              th:text="|${#temporals.format(activity.createdOn, 'd MMMM yyyy')}, ${#temporals.format(activity.createdOn, 'hh:mma')}|">
+            28 Feb 2019, 07:47 AM
+        </span>
+        <a th:href="${activity.linkUrl}"
+           th:if="${activity.displayLink}"
+           th:text="${activity.linkText}"
+           class="activity-log__link">View project team</a>
+    </div>
+</th:block>
+
+<!-- ========================= Output for an organisation removed activity =========================== -->
+<th:block th:fragment="ORGANISATION_REMOVED (activity)">
+    <div class="activity-log__left">
+        <span class="activity-log__title">
+            <strong th:text="${activity.title}">Organisation removed</strong>
+            <th:block th:if="${activity.organisationName != null}"
+                      th:text="| ${activity.organisationName}|">for Very long Company Name &amp; Sons Limited</th:block>
+        </span>
+        <span class="activity-log__user">
+            <strong>By:</strong>  <th:block th:text="${activity.userText}">Wendy Wallis, UKRI finance admin</th:block>
+        </span>
+    </div>
+    <div class="activity-log__right">
+        <span class="activity-log__time"
+              th:text="|${#temporals.format(activity.createdOn, 'd MMMM yyyy')}, ${#temporals.format(activity.createdOn, 'hh:mma')}|">
+            28 Feb 2019, 07:47 AM
+        </span>
+        <a th:href="${activity.linkUrl}"
+           th:if="${activity.displayLink}"
+           th:text="${activity.linkText}"
+           class="activity-log__link">View project team</a>
+    </div>
+</th:block>
+
+</html>

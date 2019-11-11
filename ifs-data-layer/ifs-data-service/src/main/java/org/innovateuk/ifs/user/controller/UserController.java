@@ -206,14 +206,14 @@ public class UserController {
         return userService.updateEmail(id, email).toPutResponse();
     }
 
-    @GetMapping("/id/{id}/deactivate")
+    @PostMapping("/id/{id}/deactivate")
     public RestResult<Void> deactivateUser(@PathVariable("id") final Long id) {
-        return registrationService.deactivateUser(id).toGetResponse();
+        return registrationService.deactivateUser(id).toPostResponse();
     }
 
-    @GetMapping("/id/{id}/reactivate")
+    @PostMapping("/id/{id}/reactivate")
     public RestResult<Void> reactivateUser(@PathVariable("id") final Long id) {
-        return registrationService.activateUser(id).toGetResponse();
+        return registrationService.activateUser(id).toPostResponse();
     }
 
     @PostMapping("{id}/grant/{role}")

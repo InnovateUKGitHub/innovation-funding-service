@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AgreementMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
@@ -72,6 +73,9 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
     @Mock
     private AddressMapper addressMapperMock;
+
+    @Mock
+    private UserMapper userMapper;
 
     @Override
     protected ProfileServiceImpl supplyServiceUnderTest() {
@@ -812,7 +816,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .build();
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
 
-        ServiceResult<Void> result = service.updateUserProfile(userId, newUserProfileResource()
+        ServiceResult<UserResource> result = service.updateUserProfile(userId, newUserProfileResource()
                 .withAddress(addressResource)
                 .build());
 

@@ -22,6 +22,9 @@ public interface ActivityLogService {
     void recordActivityByProjectIdAndOrganisationId(long projectId, long organisationId, ActivityType activityType);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
+    void recordActivityByProjectIdAndOrganisationIdAndAuthorId(long projectId, long organisationId, long authorId, ActivityType activityType);
+
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     void recordDocumentActivityByProjectId(long projectId, ActivityType type, long documentConfigId);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
@@ -30,4 +33,6 @@ public interface ActivityLogService {
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "VIEW_ACTIVITY_LOG", description = "Only internal users can view activity log")
     ServiceResult<List<ActivityLogResource>> findByApplicationId(long applicationId);
+
+
 }
