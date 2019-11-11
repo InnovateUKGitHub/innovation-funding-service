@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.invite.transactional;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -46,6 +48,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService implements ProjectPartnerInviteService {
+
+    @Autowired
+    private ActivityLogService activityLogService;
 
     @Autowired
     private ProjectPartnerInviteRepository projectPartnerInviteRepository;
@@ -195,6 +200,8 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     }
 
                                     invite.open();
+
+                                    activityLogService.recordActivityByProjectIdAndOrganisationIdAndAuthorId(project.getId(), organisationId, invite.getSentBy().getId(), ActivityType.ORGANISATION_ADDED);
                                 }));
 
     }

@@ -3,10 +3,13 @@ package org.innovateuk.ifs.project.core.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId.id;
 
 /**
  * This controller handles calls for partner organisations
@@ -31,6 +34,6 @@ public class PartnerOrganisationController {
     @PostMapping("/remove-organisation/{organisationId}")
     public RestResult<Void> removeOrganisation(@PathVariable long projectId,
                                                @PathVariable long organisationId) {
-        return partnerOrganisationService.removePartnerOrganisation(projectId, organisationId).toPostResponse();
+        return partnerOrganisationService.removePartnerOrganisation(id(projectId, organisationId)).toPostResponse();
     }
 }

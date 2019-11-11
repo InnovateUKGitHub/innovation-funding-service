@@ -49,7 +49,7 @@ public class ActivityLogViewModelPopulator {
     private MessageSource messageSource;
 
     private static final Set<ActivityType> STAKEHOLDER_INNOVATION_SUPPORT_TYPES = EnumSet.of(APPLICATION_SUBMITTED, APPLICATION_INTO_PROJECT_SETUP, PROJECT_DETAILS_COMPLETE,
-            PROJECT_MANAGER_NOMINATED, FINANCE_CONTACT_NOMINATED, DOCUMENT_APPROVED, MONITORING_OFFICER_ASSIGNED, SPEND_PROFILE_APPROVED, FINANCE_REVIEWER_ADDED, GRANT_OFFER_LETTER_APPROVED);
+            PROJECT_MANAGER_NOMINATED, FINANCE_CONTACT_NOMINATED, ORGANISATION_ADDED, ORGANISATION_REMOVED, DOCUMENT_APPROVED, MONITORING_OFFICER_ASSIGNED, SPEND_PROFILE_APPROVED, FINANCE_REVIEWER_ADDED, GRANT_OFFER_LETTER_APPROVED);
 
     private static final Set<ActivityType> COMP_ADMIN_TYPES = Sets.union(STAKEHOLDER_INNOVATION_SUPPORT_TYPES,
             EnumSet.of(DOCUMENT_UPLOADED, DOCUMENT_REJECTED, SPEND_PROFILE_GENERATED, GRANT_OFFER_LETTER_UPLOADED, GRANT_OFFER_LETTER_PUBLISHED, GRANT_OFFER_LETTER_SIGNED, GRANT_OFFER_LETTER_REJECTED)
@@ -69,7 +69,8 @@ public class ActivityLogViewModelPopulator {
                         activity.getCreatedOn(),
                         linkText(activity),
                         url(activity, project),
-                        userCanSeeLink(activity, user)
+                        userCanSeeLink(activity, user),
+                        activity.getActivityType()
                 ))
                 .collect(toList());
 
@@ -90,7 +91,9 @@ public class ActivityLogViewModelPopulator {
     }
 
     private boolean userCanSeeLink(ActivityLogResource activity, UserResource user) {
-        if (user.hasRole(PROJECT_FINANCE)) {
+        if (activity.isOrganisationRemoved() && ActivityLogUrlHelper.linkInvalidIfOrganisationRemoved(activity)) {
+            return false;
+        } else  if (user.hasRole(PROJECT_FINANCE)) {
             return true;
         } else if (user.hasRole(COMP_ADMIN)) {
             return COMP_ADMIN_TYPES.contains(activity.getActivityType());
@@ -132,19 +135,22 @@ public class ActivityLogViewModelPopulator {
 
     private String internalUserText(ActivityLogResource log) {
         String role = log.isIfsAdmin() ? IFS_ADMINISTRATOR.getDisplayName()
-                : log.getCreatedByRoles().iterator().next().getDisplayName();
-        return log.getCreatedByName() + ", " + role;
+                : log.getAuthoredByRoles().iterator().next().getDisplayName();
+        return log.getAuthoredByName() + ", " + role;
     }
 
     private String externalUserText(ActivityLogResource log, List<ProjectUserResource> projectUserResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
         Supplier<Stream<ProjectUserResource>> projectUsers = () -> projectUserResources
                 .stream()
-                .filter(pu -> pu.getUser().equals(log.getCreatedBy()));
+                .filter(pu -> pu.getUser().equals(log.getAuthoredBy()));
         String organisationName = organisationNameOfProjectUser(projectUsers, partnerOrganisationResources);
         String role = projectUsers.get().anyMatch(ProjectUserResource::isProjectManager) ? "Project manager"
                 : projectUsers.get().anyMatch(ProjectUserResource::isFinanceContact) ? "Finance contact"
                 : "Partner";
-        return format("%s, %s for %s", log.getCreatedByName(), role, organisationName);
+        if (organisationName == null) {
+            organisationName = log.getOrganisationName();
+        }
+        return format("%s, %s for %s", log.getAuthoredByName(), role, organisationName);
     }
 
     private String organisationNameOfProjectUser(Supplier<Stream<ProjectUserResource>> projectUsers, List<PartnerOrganisationResource> partnerOrganisationResources) {
