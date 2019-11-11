@@ -126,7 +126,7 @@ public class GrantMapperTest {
                 .thenReturn(applicationFinance);
         ProjectFinance projectFinance = mock(ProjectFinance.class);
         when(projectFinance.getOrganisationSize()).thenReturn(OrganisationSize.MEDIUM);
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(any(), any()))
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(anyLong(), anyLong()))
                 .thenReturn(projectFinance);
         ProjectFinanceRow projectFinanceRow = mock(ProjectFinanceRow.class);
         when(projectFinanceRow.getName()).thenReturn("grant-claim");

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
 import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
@@ -33,7 +34,7 @@ public interface BankDetailsRepository extends PagingAndSortingRepository<BankDe
             + PENDING_BANK_DETAILS_APPROVALS_FROM_CLAUSE;
 
 
-    BankDetails findByProjectIdAndOrganisationId(Long projectId, Long organisationId);
+    Optional<BankDetails> findByProjectIdAndOrganisationId(long projectId, long organisationId);
     List<BankDetails> findByProjectId(Long projectId);
     List<BankDetails> findByProjectApplicationCompetitionId(Long competitionId);
 

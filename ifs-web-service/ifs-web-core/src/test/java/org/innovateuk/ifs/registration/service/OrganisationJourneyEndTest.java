@@ -2,9 +2,10 @@ package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.when;
 public class OrganisationJourneyEndTest extends BaseServiceUnitTest<OrganisationJourneyEnd> {
 
     @Mock
-    private ApplicationService applicationService;
+    private ApplicationRestService applicationRestService;
 
     @Mock
     private RegistrationCookieService registrationCookieService;
@@ -51,6 +52,8 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
     @Mock
     private HttpServletResponse response;
 
+    @Mock
+    private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
     @Test
     public void completeProcess_newUser() {
@@ -73,14 +76,14 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
         when(registrationCookieService.isLeadJourney(request)).thenReturn(true);
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
-        when(applicationService.createApplication(competitionId, user.getId(), organisationId, ""))
-                .thenReturn(application);
+        when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
+                .thenReturn(restSuccess(application));
 
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, String.format("redirect:/application/%s",
                 application.getId()));
-        verify(applicationService).createApplication(competitionId, user.getId(), organisationId, "");
+        verify(applicationRestService).createApplication(competitionId, user.getId(), organisationId, "");
     }
 
     @Test
@@ -93,13 +96,13 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
         when(registrationCookieService.isLeadJourney(request)).thenReturn(true);
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
-        when(applicationService.createApplication(competitionId, user.getId(), organisationId, ""))
-                .thenReturn(application);
+        when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
+                .thenReturn(restSuccess(application));
 
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, String.format("redirect:/application/%s", application.getId()));
-        verify(applicationService).createApplication(competitionId, user.getId(), organisationId, "");
+        verify(applicationRestService).createApplication(competitionId, user.getId(), organisationId, "");
     }
 
     @Test
@@ -134,13 +137,13 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.isLeadJourney(request)).thenReturn(true);
         when(userRestService.grantRole(user.getId(), Role.APPLICANT)).thenReturn(restSuccess());
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
-        when(applicationService.createApplication(competitionId, user.getId(), organisationId, ""))
-                .thenReturn(application);
+        when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
+                .thenReturn(restSuccess(application));
 
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, String.format("redirect:/application/%s", application.getId()));
-        verify(applicationService).createApplication(competitionId, user.getId(), organisationId, "");
+        verify(applicationRestService).createApplication(competitionId, user.getId(), organisationId, "");
         verify(userRestService).grantRole(user.getId(), Role.APPLICANT);
         verify(cookieUtil).saveToCookie(response, "role", Role.APPLICANT.getName());
     }

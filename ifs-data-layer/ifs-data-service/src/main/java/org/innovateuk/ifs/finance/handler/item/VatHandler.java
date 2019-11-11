@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -11,8 +11,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @Component
 public class VatHandler extends FinanceRowHandler<Vat> {
@@ -33,7 +32,6 @@ public class VatHandler extends FinanceRowHandler<Vat> {
         return FinanceRowType.VAT;
     }
 
-
     @Override
     public ApplicationFinanceRow toApplicationDomain(Vat vat) {
         return new ApplicationFinanceRow(vat.getId(), COST_KEY, vat.getRegistered() != null ? vat.getRegistered().toString() : null, vat.getName(), 0, vat.getRate(), null, vat.getCostType());
@@ -45,9 +43,7 @@ public class VatHandler extends FinanceRowHandler<Vat> {
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(toApplicationDomain(new Vat(null, null, new BigDecimal("0.2"), applicationFinance.getId())));
-        return costs;
+    protected Optional<Vat> intialiseCost(Finance finance) {
+        return Optional.of(new Vat(null, null, new BigDecimal("0.2"), finance.getId()));
     }
 }

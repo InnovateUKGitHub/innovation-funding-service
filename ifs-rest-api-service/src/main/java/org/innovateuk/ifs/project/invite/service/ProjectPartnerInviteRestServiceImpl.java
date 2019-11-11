@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.sen
 public class ProjectPartnerInviteRestServiceImpl extends BaseRestService implements ProjectPartnerInviteRestService {
 
     private static final String baseUrl = "/project/%d/project-partner-invite";
-    private static final String inviteIdUrl = baseUrl + "/%d";
+    private static final String inviteIdUrl = baseUrl + "/%s";
 
     @Override
     public RestResult<Void> invitePartnerOrganisation(long projectId, SendProjectPartnerInviteResource invite) {
@@ -35,5 +35,15 @@ public class ProjectPartnerInviteRestServiceImpl extends BaseRestService impleme
     @Override
     public RestResult<Void> deleteInvite(long projectId, long inviteId) {
         return deleteWithRestResult(format(inviteIdUrl, projectId, inviteId), Void.class);
+    }
+
+    @Override
+    public RestResult<SentProjectPartnerInviteResource> getInviteByHash(long projectId, String hash) {
+        return getWithRestResultAnonymous(format(inviteIdUrl, projectId, hash), SentProjectPartnerInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(long projectId, long inviteId, long organisationId) {
+        return postWithRestResultAnonymous(format(inviteIdUrl + "/organisation/%d/accept", projectId, inviteId, organisationId), Void.class);
     }
 }
