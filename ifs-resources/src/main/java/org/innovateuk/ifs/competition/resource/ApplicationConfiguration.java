@@ -20,9 +20,9 @@ public interface ApplicationConfiguration {
     Boolean getIncludeJesForm();
 
     default boolean isMaximumFundingLevelConstant(OrganisationTypeEnum organisationType, boolean maximumFundingLevelOverridden) {
-        return LOAN.equals(getFundingType()) ||
+        return LOAN == getFundingType() ||
                 isFullyFunded() ||
-                !BUSINESS.equals(organisationType) ||
+                BUSINESS != organisationType ||
                 maximumFundingLevelOverridden;
     }
 
@@ -30,8 +30,8 @@ public interface ApplicationConfiguration {
 
     default boolean applicantShouldUseJesFinances(OrganisationTypeEnum organisationType) {
         return Boolean.TRUE.equals(getIncludeJesForm())
-                && getFundingType().equals(GRANT)
-                && RESEARCH.equals(organisationType);
+                && getFundingType() == GRANT
+                && RESEARCH == organisationType;
     }
 
     default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {
