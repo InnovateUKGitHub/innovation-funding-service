@@ -182,10 +182,6 @@ public class ActivityLogServiceImplTest {
         assertEquals("My organisation", activityLogResource.getOrganisationName());
         assertEquals(query.id(), activityLogResource.getQuery());
         assertEquals(FinanceChecksSectionType.VIABILITY, activityLogResource.getQueryType());
-        assertEquals(true, activityLogResource.isOrganisationRemoved());
-
-
-
+        assertTrue(activityLogResource.isOrganisationRemoved());
     }
-
 }
