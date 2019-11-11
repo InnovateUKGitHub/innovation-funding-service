@@ -197,21 +197,11 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
             @Override
             public Authentication getAuthentication(HttpServletRequest request) {
-                return getAuthentication(request, false);
-            }
-
-            @Override
-            public UserResource getAuthenticatedUser(HttpServletRequest request) {
-                return getAuthenticatedUser(request, false);
-            }
-
-            @Override
-            public Authentication getAuthentication(HttpServletRequest request, boolean expireCache) {
                 return new UserAuthentication(loggedInUserSupplier.get());
             }
 
             @Override
-            public UserResource getAuthenticatedUser(HttpServletRequest request, boolean expireCache) {
+            public UserResource getAuthenticatedUser(HttpServletRequest request) {
                 return loggedInUserSupplier.get();
             }
         });

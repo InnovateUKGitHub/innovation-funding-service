@@ -4,12 +4,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.core.controller.PartnerOrganisationController;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Collections;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId.id;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -85,7 +87,7 @@ public class PartnerOrganisationControllerDocumentation extends BaseControllerMo
         long projectId = 123;
         long organisationId = 456;
 
-        when(partnerOrganisationServiceMock.removePartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess());
+        when(partnerOrganisationServiceMock.removePartnerOrganisation(id(projectId, organisationId))).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/remove-organisation/{organisationId}", projectId, organisationId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON))

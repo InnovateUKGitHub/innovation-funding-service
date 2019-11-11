@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.documentation.ProfileAgreementDocs.profileAgree
 import static org.innovateuk.ifs.documentation.ProfileSkillsDocs.*;
 import static org.innovateuk.ifs.documentation.UserProfileResourceDocs.userProfileResourceBuilder;
 import static org.innovateuk.ifs.documentation.UserProfileResourceDocs.userProfileResourceFields;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -138,7 +139,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
         Long userId = 1L;
         UserProfileResource profileDetails = userProfileResourceBuilder.build();
 
-        when(profileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess());
+        when(profileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(put("/profile/id/{id}/update-user-profile", userId)
                 .contentType(APPLICATION_JSON)
