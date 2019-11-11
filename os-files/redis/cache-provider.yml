@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: cache-provider
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: cache-provider
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: cache-provider
+      spec:
+        containers:
+        - env:
+          image: innovateuk/cache-provider:5.0.6
+          name: cache-provider
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 6379
+          resources:
+            requests:
+              memory: 50M
+            limits:
+              memory: 100M
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: cache-provider
+  spec:
+    ports:
+    - name: 6379-tcp
+      port: 6379
+      targetPort: 6379
+    selector:
+      deploymentconfig: cache-provider
+  status:
+    loadBalancer: {}

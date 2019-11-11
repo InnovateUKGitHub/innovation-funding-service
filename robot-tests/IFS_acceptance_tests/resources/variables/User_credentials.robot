@@ -36,3 +36,6 @@
 &{applicant_stakeholder_credentials}              email=gene.bowman@jetpulse.example.com    password=Passw0rd
 &{triple_user_credentials}                        email=carolyn.reed@example.com    password=Passw0rd
 &{PS_EF_Application_Partner_Email_credentials}    email= ${test_mailbox_one}+karen@gmail.com   password=Passw0rd
+##### DO NOT USE THIS USER FOR ANYTHING ELSE ######
+&{terms_and_conditions_login_credentials}         email=laura.jackson@example.com  password=Passw0rd
+###################################################

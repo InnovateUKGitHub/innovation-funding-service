@@ -1,0 +1,27 @@
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+
+buildscript {
+    repositories { jcenter() }
+}
+def redisVersion = "5.0.6"
+
+buildDocker.inputDir = project.file("$project.projectDir/docker")
+buildDocker.tag = "innovateuk/cache-provider:" + redisVersion
+
+createContainer.containerName = "cache-provider"
+createContainer.containerId = "cache-provider"
+createContainer.imageId = "innovateuk/cache-provider:" + redisVersion
+
+tagDocker.onlyIf { !isNamedEnv() }
+tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/cache-provider"
+tagDocker.imageId = "innovateuk/cache-provider:" + redisVersion
+tagDocker.tag = redisVersion
+
+osStageRemote.onlyIf { !isNamedEnv() }
+osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/cache-provider"
+osStageRemote.tag = redisVersion
+
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
