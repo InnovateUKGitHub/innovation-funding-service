@@ -6,9 +6,11 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AgreementMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public ServiceResult<ProfileSkillsResource> getProfileSkills(long userId) {
@@ -139,19 +144,21 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
+    @UserUpdate
+    public ServiceResult<UserResource> updateUserProfile(Long userId, UserProfileResource profileDetails) {
         return find(userRepository.findById(userId), notFoundError(User.class, userId))
-                .andOnSuccess(user -> updateUserProfileDetails(user, profileDetails));
+                .andOnSuccess(user -> updateUserProfileDetails(user, profileDetails))
+                .andOnSuccessReturn(userMapper::mapToResource);
     }
 
-    private ServiceResult<Void> updateUserProfileDetails(User user, UserProfileResource profileDetails) {
+    private ServiceResult<User> updateUserProfileDetails(User user, UserProfileResource profileDetails) {
         updateBasicDetails(user, profileDetails);
 
         Profile profile = getOrCreateUserProfile(user);
         profile.setAddress(addressMapper.mapToDomain(profileDetails.getAddress()));
         profileRepository.save(profile);
 
-        return serviceSuccess();
+        return serviceSuccess(user);
     }
 
     private void updateBasicDetails(User user, UserProfileResource profileDetails) {

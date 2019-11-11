@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
+import org.innovateuk.ifs.user.cache.UserUidLookup;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.Role;
@@ -26,6 +27,7 @@ public class BaseUserServiceImpl extends UserTransactionalService implements Bas
     private UserMapper userMapper;
 
     @Override
+    @UserUidLookup
     public ServiceResult<UserResource> getUserResourceByUid(final String uid) {
         return find(userRepository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
     }
