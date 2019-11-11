@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Set;
@@ -35,9 +36,6 @@ public interface UserService {
     @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.token.domain.Token', 'CHANGE_PASSWORD')")
     ServiceResult<Void> changePassword(@P("hash") String hash, String password);
 
-    @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
-    ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findActiveByRoles(Set<Role> roleTypes, Pageable pageable);
 
@@ -48,11 +46,17 @@ public interface UserService {
     ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'AGREE_TERMS')")
-    ServiceResult<Void> agreeNewTermsAndConditions(long userId);
+    ServiceResult<UserResource> agreeNewTermsAndConditions(long userId);
 
     @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
-    ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand);
+    ServiceResult<UserResource> grantRole(GrantRoleCommand grantRoleCommand);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE_USER_EMAIL')")
-    ServiceResult<Void> updateEmail(long userId, String email);
+    ServiceResult<UserResource> updateEmail(long userId, String email);
+
+    @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
+    ServiceResult<UserResource> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
+
+    @NotSecured(value = "Can be called anywhere by anyone", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> evictUserCache(String uid);
 }

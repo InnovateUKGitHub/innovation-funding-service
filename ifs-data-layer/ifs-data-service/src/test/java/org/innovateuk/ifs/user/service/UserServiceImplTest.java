@@ -690,7 +690,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         User user = newUser().build();
         when(userRepositoryMock.findById(grantRoleCommand.getUserId())).thenReturn(Optional.of(user));
 
-        ServiceResult<Void> result = service.grantRole(grantRoleCommand);
+        ServiceResult<UserResource> result = service.grantRole(grantRoleCommand);
 
         assertTrue(result.isSuccess());
         assertTrue(user.hasRole(APPLICANT));
@@ -707,7 +707,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(invite);
         when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
 
-        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+        ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isSuccess());
         assertEquals(updateEmail, user.getEmail());
@@ -724,7 +724,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         user.setEmail(updateEmail);
         when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
 
-        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+        ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isSuccess());
         assertEquals(updateEmail, user.getEmail());
@@ -739,7 +739,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(idpServiceMock.updateUserEmail(user.getUid(),user.getEmail())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
 
-        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+        ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isFailure());
     }
@@ -754,7 +754,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRepositoryMock.findByEmail(emailToFind)).thenReturn(Optional.empty());
         when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
 
-        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+        ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isFailure());
         assertEquals("master@gmail.co.uk", user.getEmail());
