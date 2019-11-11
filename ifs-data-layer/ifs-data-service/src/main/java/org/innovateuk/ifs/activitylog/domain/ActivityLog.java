@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 @Entity
 @Immutable
@@ -41,6 +42,10 @@ public class ActivityLog {
     @JoinColumn(name="createdBy", referencedColumnName="id", nullable = false, updatable = false)
     private User createdBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="author_id", referencedColumnName="id", nullable = true, updatable = false)
+    private User author;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
@@ -57,7 +62,7 @@ public class ActivityLog {
     @JoinColumn(name = "threadId", referencedColumnName = "id")
     private Query query;
 
-    private ActivityLog() {
+    public ActivityLog() {
     }
 
     public ActivityLog(Application application, ActivityType type, CompetitionDocument competitionDocument) {
@@ -84,6 +89,13 @@ public class ActivityLog {
         this.organisation = organisation;
     }
 
+    public ActivityLog(Application application, ActivityType type, Organisation organisation, User author) {
+        this.author = author;
+        this.application = application;
+        this.type = type;
+        this.organisation = organisation;
+    }
+
     public Long getId() {
         return id;
     }
@@ -102,6 +114,10 @@ public class ActivityLog {
 
     public User getCreatedBy() {
         return createdBy;
+    }
+
+    public User getAuthor() {
+        return ofNullable(author).orElse(getCreatedBy());
     }
 
     public ZonedDateTime getCreatedOn() {
@@ -129,6 +145,7 @@ public class ActivityLog {
                 .append(application, that.application)
                 .append(type, that.type)
                 .append(createdBy, that.createdBy)
+                .append(author, that.author)
                 .append(createdOn, that.createdOn)
                 .append(organisation, that.organisation)
                 .append(competitionDocument, that.competitionDocument)
@@ -148,5 +165,16 @@ public class ActivityLog {
                 .append(competitionDocument)
                 .append(query)
                 .toHashCode();
+
+    }
+
+    public boolean isOrganisationRemoved() {
+        return getOrganisation().map(org ->
+                        ofNullable(getApplication())
+                                .map(a -> a.getProject())
+                                .map(p -> p.getOrganisations())
+                                .map(orgs -> !simpleAnyMatch(orgs, o -> org.getId().equals(o.getId())))
+                                .orElse(true)
+        ).orElse(false);
     }
 }
