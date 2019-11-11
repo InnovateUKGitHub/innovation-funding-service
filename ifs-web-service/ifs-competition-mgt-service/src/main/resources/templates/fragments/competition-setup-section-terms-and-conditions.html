@@ -40,7 +40,7 @@
             <div id="procurement-upload" class="upload-section">
                 <th:block th:insert="question-type/types :: fileupload-fragment(edit,
                                 @{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})},
-                                ${model.general.competition.competitionTerms.name},
+                                ${model.general.competition.competitionTerms?.name},
                                 termsAndConditionsDoc,
                                 termsAndConditionsDoc,
                                 true,
