@@ -26,6 +26,7 @@ Innovation lead can see competitions assigned to him only
     Given Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision, All Applictions
     When The Competition Admin assigns the Innovation Lead to a competition
     Then Innovation lead see the assigned competitions
+    And the total calculation in dashboard should be correct    Project setup  //section[1]/ul/li
     [Teardown]  The user clicks the button/link  link = Dashboard
 
 Innovation lead can only search for applications assigned to them
@@ -44,6 +45,12 @@ Innovation lead cannot search for unassigned applications
     [Teardown]  The user clicks the button/link   link = Dashboard
 
 *** Keywords ***
+the total calculation in dashboard should be correct
+    [Arguments]    ${TEXT}    ${Section_Xpath}
+    [Documentation]    This keyword uses 2 arguments. The first one is about the page's text (competition or application) and the second is about the Xpath selector.
+    ${NO_OF_COMP_OR_APPL}=    Get Element Count    ${Section_Xpath}
+    Page Should Contain    ${TEXT} (${NO_OF_COMP_OR_APPL})
+
 The user should see permission error on page
     [Arguments]  ${page}
     The user navigates to the page and gets a custom error message  ${page}  ${403_error_message}

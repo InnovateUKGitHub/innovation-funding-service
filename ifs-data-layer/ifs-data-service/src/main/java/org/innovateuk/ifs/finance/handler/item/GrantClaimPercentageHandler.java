@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.groups.Default;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 
@@ -57,20 +56,14 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeFundingLevel(applicationFinance));
-        return costs;
-    }
-
-    private ApplicationFinanceRow initializeFundingLevel(ApplicationFinance applicationFinance) {
-        Competition competition = applicationFinance.getApplication().getCompetition();
-        GrantClaimPercentage costItem = new GrantClaimPercentage(applicationFinance.getId());
+    protected Optional<GrantClaimPercentage> intialiseCost(Finance finance) {
+        Competition competition = finance.getCompetition();
+        GrantClaimPercentage costItem = new GrantClaimPercentage(finance.getId());
         if (competition.isFullyFunded()) {
             costItem.setPercentage(100);
         } else {
             costItem.setPercentage(null);
         }
-        return toApplicationDomain(costItem);
+        return Optional.of(costItem);
     }
 }

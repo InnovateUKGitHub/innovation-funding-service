@@ -10,7 +10,7 @@ if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.ena
     apply from: "gradle-support/zipkin.gradle"
 }
 
-ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance-totals.enabled'] ?: true
+ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance.totals.enabled'] ?: true
 
 def isNamedEnv() {
     return ["ifs-sysint", "ifs-uat", "ifs-demo", "ifs-perf", "ifs-prod"].contains(openshiftEnv)

@@ -15,4 +15,8 @@ public interface ProjectPartnerInviteRestService {
     RestResult<Void> resendInvite(long projectId, long inviteId);
 
     RestResult<Void> deleteInvite(long projectId, long inviteId);
+
+    RestResult<SentProjectPartnerInviteResource> getInviteByHash(long projectId, String hash);
+
+    RestResult<Void> acceptInvite(long projectId, long inviteId, long organisationId);
 }
