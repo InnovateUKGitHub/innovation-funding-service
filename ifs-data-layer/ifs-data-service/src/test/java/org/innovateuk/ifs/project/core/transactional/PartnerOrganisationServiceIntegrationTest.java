@@ -15,21 +15,28 @@ import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
-import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.repository.*;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
+import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
+import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
+import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectDetailsState;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileProcessRepository;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -58,12 +65,12 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -127,6 +134,18 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private ProjectProcessRepository projectProcessRepository;
+
+    @Autowired
+    private ViabilityProcessRepository viabilityProcessRepository;
+
+    @Autowired
+    private ProjectDetailsProcessRepository projectDetailsProcessRepository;
+
+    @Autowired
+    private SpendProfileProcessRepository spendProfileProcessRepository;
+
     private User projectManager;
     private User projectPartner;
     private Project project;
@@ -151,8 +170,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
 
     @Before
     public void setup() {
-        webUser = newUserResource().withEmail("lee.bowman@innovateuk.test").withRoleGlobal(PROJECT_FINANCE).build();
-        setLoggedInUser(webUser);
+        loginCompAdmin();
 
         projectManager = userRepository.findByEmail("steve.smith@empire.com").get();
         projectPartner = userRepository.findByEmail("jessica.doe@ludlow.co.uk").get();
@@ -169,9 +187,10 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .withDuration(6L)
                 .withName("My test project")
                 .withAddress(newAddress().withAddressLine1("2 Polaris House").withAddressLine2("Swindon").withPostcode("SN2 1EU").build())
-                .withOtherDocumentsApproved(ApprovalType.APPROVED)
+                .withOtherDocumentsApproved(ApprovalType.UNSET)
                 .withTargetStartDate(now())
                 .withProjectUsers(projectUsers)
+                .withSpendProfileSubmittedDate(ZonedDateTime.now())
                 .build();
         projectRepository.save(project);
 
@@ -234,6 +253,11 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                         .build())
                 .withStatus(DocumentStatus.APPROVED)
                 .build();
+        projectProcessRepository.save(newProjectProcess().withProject(project).withActivityState(SETUP).build());
+        eligibilityProcessRepository.save(new EligibilityProcess(projectUsers.get(0), partnerOrganisations.get(0), EligibilityState.REVIEW));
+        viabilityProcessRepository.save(new ViabilityProcess(projectUsers.get(0), partnerOrganisations.get(0), ViabilityState.REVIEW));
+        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(0), project, ProjectDetailsState.PENDING));
+        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(0), project, SpendProfileState.PENDING));
     }
 
     @Test
@@ -255,26 +279,10 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         assertEquals("Ludlow", result2.getSuccess().getOrganisationName());
     }
 
-    @Test
-    public void removePartnerOrganisation() {
-
-//        eligibilityProcess = new EligibilityProcess(projectUsers.get(0), partnerOrganisations.get(0), EligibilityState.APPROVED);
-//        eligibilityProcessRepository.save(eligibilityProcess);
+//    @Test
+//    public void removePartnerOrganisation() {
+//        ServiceResult<Void> result = partnerOrganisationService.removePartnerOrganisation(new ProjectOrganisationCompositeId(project.getId(), ludlow.getId()));
 //
-//        pendingPartnerProgressRepository.save(pendingPartnerProgress);
-//        pendingPartnerProgressRepository.save(pendingPartnerProgress1);
-
-//        user = newUser().withEmailAddress(webUser.getEmail())
-//                .withUid(webUser.getUid())
-//                .withCreatedBy(newUser().build())
-//                .withCreatedOn(ZonedDateTime.now())
-//                .withModifiedBy(newUser().build())
-//                .withModifiedOn(ZonedDateTime.now())
-//                .build();
-
-        user = userMapper.mapToDomain(webUser);
-        ServiceResult<Void> result = partnerOrganisationService.removePartnerOrganisation(project.getId(), ludlow.getId());
-
-        assertTrue(result.isSuccess());
-    }
+//        assertTrue(result.isSuccess());
+//    }
 }

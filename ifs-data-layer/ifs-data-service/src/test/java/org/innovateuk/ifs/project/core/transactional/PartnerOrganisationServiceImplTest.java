@@ -21,6 +21,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -178,6 +179,7 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
     @Test
     public void removeNonLeadPartnerOrganisation() {
         pendingPartnerProgress = new PendingPartnerProgress(partnerOrganisations.get(1));
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisations.get(1).getId());
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(partnerOrganisations.get(1));
         when(pendingPartnerProgressRepositoryMock.findByOrganisationIdAndProjectId(organisations.get(1).getId(), projectId)).thenReturn(Optional.of(pendingPartnerProgress));
@@ -186,7 +188,7 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
         when(removePartnerNotificationServiceMock.sendNotifications(project, organisations.get(0))).thenReturn(serviceSuccess());
         when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
 
-        ServiceResult<Void> result = service.removePartnerOrganisation(projectId, organisations.get(1).getId());
+        ServiceResult<Void> result = service.removePartnerOrganisation(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
         verify(partnerOrganisationRepositoryMock, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
@@ -197,9 +199,10 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
 
     @Test
     public void removeLeadPartnerOrganisation() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisations.get(0).getId());
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId())).thenReturn(partnerOrganisations.get(0));
 
-        ServiceResult<Void> result = service.removePartnerOrganisation(projectId, organisations.get(0).getId());
+        ServiceResult<Void> result = service.removePartnerOrganisation(projectOrganisationCompositeId);
 
         assertTrue(result.isFailure());
         verify(partnerOrganisationRepositoryMock, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId());

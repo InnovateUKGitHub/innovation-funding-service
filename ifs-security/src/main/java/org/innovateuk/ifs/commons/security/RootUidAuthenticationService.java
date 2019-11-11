@@ -23,23 +23,12 @@ public class RootUidAuthenticationService implements UserAuthenticationService {
     @Autowired
     private UidSupplier uidSupplier;
 
-
-    @Override
-    public Authentication getAuthentication(HttpServletRequest request) {
-        return getAuthentication(request, false);
-    }
-
-    @Override
-    public UserResource getAuthenticatedUser(HttpServletRequest request) {
-        return getAuthenticatedUser(request, false);
-    }
-
     /**
      * Retrieve the Authenticated user by its authentication token in the request header.
      */
     @Override
-    public UserResource getAuthenticatedUser(HttpServletRequest request, boolean expireCache) {
-        Authentication authentication = getAuthentication(request, expireCache);
+    public UserResource getAuthenticatedUser(HttpServletRequest request) {
+        Authentication authentication = getAuthentication(request);
         if(authentication!=null) {
             return (UserResource) authentication.getDetails();
         }
@@ -47,14 +36,14 @@ public class RootUidAuthenticationService implements UserAuthenticationService {
     }
 
     @Override
-    public Authentication getAuthentication(HttpServletRequest request, boolean expireCache) {
+    public Authentication getAuthentication(HttpServletRequest request) {
         String uid = uidSupplier.getUid(request);
 
         if (StringUtils.isBlank(uid)) {
             return null;
         }
 
-        Optional<UserResource> user = validator.retrieveUserByUid(uid, expireCache).getOptionalSuccessObject();
+        Optional<UserResource> user = validator.retrieveUserByUid(uid).getOptionalSuccessObject();
         return user.map(UserAuthentication::new).orElse(null);
     }
 }

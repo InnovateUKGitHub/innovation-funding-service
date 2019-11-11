@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.activitylog.populator;
 
 import org.innovateuk.ifs.activitylog.resource.ActivityLogResource;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import static java.lang.String.format;
@@ -23,6 +24,8 @@ public class ActivityLogUrlHelper {
             case MARKED_PROJECT_AS_SUCCESSFUL:
             case MARKED_PROJECT_AS_UNSUCCESSFUL:
                 return format("/project-setup-management/competition/%d/project/%d/details", project.getCompetition(), project.getId());
+            case ORGANISATION_REMOVED:
+            case ORGANISATION_ADDED:
             case PROJECT_MANAGER_NOMINATED:
             case FINANCE_CONTACT_NOMINATED:
                 return format("/project-setup-management/competition/%d/project/%d/team", project.getCompetition(), project.getId());
@@ -58,5 +61,16 @@ public class ActivityLogUrlHelper {
             default:
                 return null;
         }
+    }
+
+    /**
+     * Determines whether the link is invalid once an organisation is removed.
+     * @param log
+     * @return
+     */
+    public static boolean linkInvalidIfOrganisationRemoved(ActivityLogResource log) {
+        return log.getOrganisation() != null
+                && log.getActivityType() != ActivityType.ORGANISATION_REMOVED
+                && log.getActivityType() != ActivityType.ORGANISATION_ADDED;
     }
 }

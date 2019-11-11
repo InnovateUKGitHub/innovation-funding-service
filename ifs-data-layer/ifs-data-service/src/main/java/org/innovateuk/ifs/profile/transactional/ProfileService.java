@@ -26,7 +26,7 @@ public interface ProfileService {
     ServiceResult<UserProfileResource> getUserProfile(Long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE')")
-    ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails);
+    ServiceResult<UserResource> updateUserProfile(Long userId, UserProfileResource profileDetails);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId);

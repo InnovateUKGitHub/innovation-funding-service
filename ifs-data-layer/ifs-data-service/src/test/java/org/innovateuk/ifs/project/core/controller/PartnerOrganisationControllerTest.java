@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.core.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -10,6 +11,7 @@ import java.util.Collections;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
+import static org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId.id;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,11 +55,12 @@ public class PartnerOrganisationControllerTest extends BaseControllerMockMVCTest
     public void removeOrganisation() throws Exception {
         long projectId = 123;
         long organisationId = 456;
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = id(projectId, organisationId);
 
-        when(partnerOrganisationService.removePartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess());
+        when(partnerOrganisationService.removePartnerOrganisation(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/remove-organisation/{organisationId}", projectId, organisationId))
                 .andExpect(status().isOk());
 
-        verify(partnerOrganisationService).removePartnerOrganisation(projectId,organisationId);
+        verify(partnerOrganisationService).removePartnerOrganisation(projectOrganisationCompositeId);
     }
 }

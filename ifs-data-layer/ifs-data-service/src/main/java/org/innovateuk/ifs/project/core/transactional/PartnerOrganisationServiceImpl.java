@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +74,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     private ProjectPartnerInviteRepository projectPartnerInviteRepository;
 
     @Autowired
+    private ActivityLogService activityLogService;
+
+    @Autowired
     private RemovePartnerNotificationService removePartnerNotificationService;
 
     @Override
@@ -90,13 +95,13 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
 
     @Override
     @Transactional
-    public ServiceResult<Void> removePartnerOrganisation(long projectId, long organisationId) {
-        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
+    public ServiceResult<Void> removePartnerOrganisation(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
                 notFoundError(PartnerOrganisation.class)).andOnSuccess(
                 projectPartner -> validatePartnerNotLead(projectPartner).andOnSuccessReturnVoid(
                         () -> {
-                            removePartnerOrg(projectId, projectPartner.getOrganisation().getId());
-                            projectPartnerChangeService.updateProjectWhenPartnersChange(projectId);
+                            removePartnerOrg(projectOrganisationCompositeId.getProjectId(), projectPartner.getOrganisation().getId());
+                            projectPartnerChangeService.updateProjectWhenPartnersChange(projectOrganisationCompositeId.getProjectId());
                             removePartnerNotificationService.sendNotifications(projectPartner.getProject(), projectPartner.getOrganisation());
                         })
         );

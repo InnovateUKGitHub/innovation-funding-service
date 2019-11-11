@@ -33,42 +33,42 @@ public class ActivityLogResourceBuilder  extends BaseBuilder<ActivityLogResource
     }
 
     public ActivityLogResourceBuilder withActivityType(ActivityType... activityTypes) {
-        return withArray((activityType, log) -> setField("activityType", activityType, log), activityTypes);
+        return withArraySetFieldByReflection("activityType", activityTypes);
     }
 
-    public ActivityLogResourceBuilder withCreatedBy(Long... createdBys) {
-        return withArray((createdBy, log) -> setField("createdBy", createdBy, log), createdBys);
+    public ActivityLogResourceBuilder withAuthoredBy(Long... authoredBys) {
+        return withArraySetFieldByReflection("authoredBy", authoredBys);
     }
 
-    public ActivityLogResourceBuilder withCreatedByName(String... createdByNames) {
-        return withArray((createdByName, log) -> setField("createdByName", createdByName, log), createdByNames);
+    public ActivityLogResourceBuilder withAuthoredByName(String... createdByNames) {
+        return withArraySetFieldByReflection("authoredByName", createdByNames);
     }
 
     @SafeVarargs
-    public final ActivityLogResourceBuilder withCreatedByRoles(Set<Role>... createdByRolez) {
-        return withArray((createdByRoles, log) -> setField("createdByRoles", createdByRoles, log), createdByRolez);
+    public final ActivityLogResourceBuilder withAuthoredByRoles(Set<Role>... authoredByRolez) {
+        return withArraySetFieldByReflection("authoredByRoles", authoredByRolez);
     }
 
     public ActivityLogResourceBuilder withCreatedOn(ZonedDateTime... createdOns) {
-        return withArray((createdOn, log) -> setField("createdOn", createdOn, log), createdOns);
+        return withArraySetFieldByReflection("createdOn", createdOns);
     }
 
     public ActivityLogResourceBuilder withOrganisation(Long... organisations) {
-        return withArray((organisation, log) -> setField("organisation", organisation, log), organisations);
+        return withArraySetFieldByReflection("organisation", organisations);
     }
     public ActivityLogResourceBuilder withOrganisationName(String... organisationNames) {
-        return withArray((organisationName, log) -> setField("organisationName", organisationName, log), organisationNames);
+        return withArraySetFieldByReflection("organisationName", organisationNames);
     }
     public ActivityLogResourceBuilder withDocumentConfig(Long... documentConfigs) {
-        return withArray((documentConfig, log) -> setField("documentConfig", documentConfig, log), documentConfigs);
+        return withArraySetFieldByReflection("documentConfig", documentConfigs);
     }
     public ActivityLogResourceBuilder withDocumentConfigName(String... documentConfigNames) {
-        return withArray((documentConfigName, log) -> setField("documentConfigName", documentConfigName, log), documentConfigNames);
+        return withArraySetFieldByReflection("documentConfigName", documentConfigNames);
     }
     public ActivityLogResourceBuilder withQuery(Long... queries) {
-        return withArray((query, log) -> setField("query", query, log), queries);
+        return withArraySetFieldByReflection("query", queries);
     }
     public ActivityLogResourceBuilder withQueryType(FinanceChecksSectionType... queryTypes) {
-        return withArray((queryType, log) -> setField("queryType", queryType, log), queryTypes);
+        return withArraySetFieldByReflection("queryType", queryTypes);
     }
 }
