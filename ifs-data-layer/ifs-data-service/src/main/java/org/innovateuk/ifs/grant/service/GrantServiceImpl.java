@@ -11,7 +11,9 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,9 @@ public class GrantServiceImpl implements GrantService {
 
     @Autowired
     private GrantMapper grantMapper;
+
+    @Autowired
+    private UserService userService;
 
     private static final List<ProjectParticipantRole> LIVE_PROJECT_ACCESS_ROLES =
             asList(
@@ -77,7 +82,6 @@ public class GrantServiceImpl implements GrantService {
                 projectUser -> LIVE_PROJECT_ACCESS_ROLES.contains(projectUser.getRole()));
 
         liveProjectAccessUsers.forEach(projectUser -> {
-
             User user = projectUser.getUser();
             addLiveRole(user);
         });
@@ -90,6 +94,7 @@ public class GrantServiceImpl implements GrantService {
     private void addLiveRole(User user) {
         if(!user.hasRole(LIVE_PROJECTS_USER)) {
             user.addRole(LIVE_PROJECTS_USER);
+            userService.evictUserCache(user.getUid());
         }
     }
 }

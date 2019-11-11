@@ -8,7 +8,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0ba
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/contributor-organisation-type
-${collaboratorId}  ${user_ids['${collaborator1_credentials["email"]}']}
+${terms_and_conditions_user_id}  ${user_ids['${terms_and_conditions_login_credentials["email"]}']}
 # This file uses the Application: Climate science the history of Greenland's ice    (Lead applcant: Steve.Smith)
 
 *** Test Cases ***
@@ -97,8 +97,8 @@ Research and technology organisations (RTO) search (accept invitation flow with 
 Validation on terms and condition page
     [Documentation]  IFS-3093
     [Tags]  HappyPath
-    [Setup]  Delete user from terms and conditions database   ${collaboratorId}
-    Given Log in as a different user                   &{collaborator1_credentials}
+    [Setup]  Delete user from terms and conditions database   ${terms_and_conditions_user_id}
+    Given Log in as a different user                   &{terms_and_conditions_login_credentials}
     When The user clicks the button/link                css = button[type="submit"]
     Then the user should see a field and summary error  In order to continue you must agree to the terms and conditions.
 
