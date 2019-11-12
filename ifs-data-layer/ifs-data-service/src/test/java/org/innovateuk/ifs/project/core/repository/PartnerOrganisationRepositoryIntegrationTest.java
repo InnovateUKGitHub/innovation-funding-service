@@ -6,10 +6,8 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -30,11 +28,8 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
-import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
-import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -88,10 +83,6 @@ public class PartnerOrganisationRepositoryIntegrationTest extends BaseRepository
     private List<PartnerOrganisation> partnerOrganisations;
     private ProjectFinance projectFinanceEmpire;
     private ProjectFinance projectFinanceLudlow;
-    private BankDetails bankDetailsEmpire;
-    private BankDetails bankDetailsLudlow;
-    private OrganisationAddress organisationAddress;
-    private OrganisationAddress organisationAddress2;
 
     @Autowired
     @Override
@@ -138,34 +129,6 @@ public class PartnerOrganisationRepositoryIntegrationTest extends BaseRepository
                 .build();
         projectFinanceRepository.save(projectFinanceEmpire);
         projectFinanceRepository.save(projectFinanceLudlow);
-        organisationAddress = newOrganisationAddress()
-                .withOrganisation(empire)
-                .withAddress(newAddress()
-                        .withAddressLine1("45 Friendly Street").withAddressLine2("SN2 1UR").build())
-                .withAddressType(newAddressType().build())
-                .build();
-        organisationAddress2 = newOrganisationAddress()
-                .withOrganisation(empire)
-                .withAddress(newAddress()
-                        .withAddressLine1("817 Union Street").withAddressLine2("SN2 5SL").build())
-                .withAddressType(newAddressType().build())
-                .build();
-        bankDetailsEmpire = newBankDetails()
-                .withOrganisation(empire)
-                .withSortCode("100006")
-                .withAccountNumber("98765432")
-                .withOrganiationAddress(organisationAddress)
-                .withProject(project)
-                .build();
-        bankDetailsLudlow = newBankDetails()
-                .withOrganisation(ludlow)
-                .withSortCode("120034")
-                .withAccountNumber("1200146")
-                .withOrganiationAddress(organisationAddress2)
-                .withProject(project)
-                .build();
-        bankDetailsRepository.save(bankDetailsEmpire);
-        bankDetailsRepository.save(bankDetailsLudlow);
     }
 
     @Test
