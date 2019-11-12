@@ -28,6 +28,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-6484 - Remove Partner
 ...
 ...             IFS-6502 - Update status of sections in project setup after partner change
+...
+...             IFS-6486 - Activity Logs for Partner Changes
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -208,7 +210,7 @@ Ifs Admin is able to remove a partner organisation
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     When the user removes a partner organisation           SmithZone
     Then the user reads his email                          troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed SmithZone from this project.
-    And the internal user checks for status after new org accept project invite
+    And the internal user checks for status after new org added/removed
 
 New org enter project setup details and lead resubmit the documents
     [Documentation]  IFS-6502
@@ -224,7 +226,7 @@ Project finance is able to add a new partner organisation
     When the user adds a new partner organisation             Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
     Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
     And log in as a different user                            &{internal_finance_credentials}
-    And the internal user checks for status after new org accept project invite
+    And the internal user checks for status after new org added/removed
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
@@ -232,6 +234,14 @@ Comp Admin isn't able to add or remove a partner organisation
     Given the user navigates to the page           ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     Then the user should not see the element       link = Add a partner organisation
     And the user should not see the element        jQuery = h2:contains("Red Planet") ~ button:first:contains("Remove organisation")
+
+The internal users checks for activity logs after partner added/removed
+    [Documentation]  IFS-6486
+    Given internal user should see entries in activity log after partner org added/removed
+    When log in as a different user       &{internal_finance_credentials}
+    Then internal user should see entries in activity log after partner org added/removed
+    And log in as a different user       &{ifs_admin_user_credentials}
+    And internal user should see entries in activity log after partner org added/removed
 
 *** Keywords ***
 a new organisation is able to accept project invite
@@ -447,7 +457,9 @@ the internal user approves the project setup details
     internal user approve uploaded documents
     the user goes to documents page          Return to documents  Exploitation plan
     internal user approve uploaded documents
+    internal user assign MO to project
     internal user approve the viability and eligibility
+    internal user approves the bank details
 
 the internal user approves the project setup details after new org added
     log in as a different user                                        &{internal_finance_credentials}
@@ -493,13 +505,17 @@ the internal user checks for completed status
     the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(2) a:contains("Complete")
     the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(3) a:contains("Complete")
     the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(4) a:contains("Complete")
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(5) a:contains("Assigned")
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(6) a:contains("Complete")
     the user clicks the button/link    jQuery = th:contains("${applicationName}") ~ td:nth-child(7) a:contains("Review")
     the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
     the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
-the internal user checks for status after new org accept project invite
+the internal user checks for status after new org added/removed
     the user navigates to the page     ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
     the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(4) a:contains("Rejected")
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(5) a:contains("Assigned")
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(6) a:contains("Complete")
     the user clicks the button/link    jQuery = th:contains("${applicationName}") ~ td:nth-child(7) a:contains("Review")
     the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
     the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
@@ -530,6 +546,26 @@ PM removes the rejected documents and resubmit
     PM uploads the project documents    ${addNewPartnerOrgProjID}
     the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}//document/all
     PM submits both documents           ${addNewPartnerOrgProjID}
+
+internal user assign MO to project
+    the user navigates to the page           ${server}/project-setup-management/monitoring-officer/view-all
+    search for MO   Orvill  Orville Gibbs
+    the internal user assign project to MO   ${addNewPartnerOrgAppID}  ${applicationName}
+
+internal user approves the bank details
+    log in as a different user        &{internal_finance_credentials}
+    the user navigates to the page     ${server}/management/dashboard/project-setup
+    Project finance is able to approve the bank details   	Ward Ltd
+    the user navigates to the page     ${server}/management/dashboard/project-setup
+    Project finance is able to approve the bank details   	SmithZone
+
+internal user should see entries in activity log after partner org added/removed
+    the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/activity-log
+    the user should not see the element   jQuery = li div:contains("for SmithZone") ~ div a:contains("View bank details")
+    the user should not see the element   jQuery = li div:contains("for SmithZone") ~ div a:contains("View finance viability")
+    the user should not see the element   jQuery = li div:contains("for SmithZone") ~ div a:contains("View finance eligibiliy")
+    the user should see the element       jQuery = li div span:contains("NOMENSA LTD") strong:contains("Organisation added:")
+    the user should see the element       jQuery = li div span:contains("SmithZone") strong:contains("Organisation removed:")
 
 Custom suite setup
     The guest user opens the browser

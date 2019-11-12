@@ -463,3 +463,11 @@ PM submits both documents
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user should be redirected to the correct page    ${SERVER}/project-setup/project/${compName}
+
+Project finance is able to approve the bank details
+    [Arguments]  ${orgName}
+    the user clicks the button/link    jQuery = a:contains("Review bank details")
+    the user clicks the button/link    jQuery = a:contains("${orgName}")
+    the user clicks the button/link    jQuery = button:contains("Approve bank account details")
+    the user clicks the button/link    jQuery = button:contains("Approve account")
+    the user should see the element    jQuery = h2:contains("The bank details provided have been approved.")
