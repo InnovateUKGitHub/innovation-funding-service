@@ -168,7 +168,6 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                         .param("attachFeedbackApplicationId", "2"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessors/interview/application-send-invites"))
-                .andExpect(model().attributeHasFieldErrors("form", "feedback[2]"))
                 .andReturn();
 
         verify(interviewAssignmentRestService).uploadFeedback(applicationId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes());

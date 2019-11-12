@@ -200,7 +200,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void agreeNewSiteTermsAndConditions() throws Exception {
         long userId = 1L;
 
-        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess());
+        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/id/{userId}/agree-new-site-terms-and-conditions", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -217,7 +217,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void editInternalUser() throws Exception {
 
         EditUserResource editUserResource = new EditUserResource(1L, "Johnathan", "Dow", Role.SUPPORT);
-        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/internal/edit")
                 .contentType(APPLICATION_JSON)
@@ -235,7 +235,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void deactivateUser() throws Exception {
         final long userId = 9999L;
 
-        when(registrationServiceMock.deactivateUser(userId)).thenReturn(serviceSuccess());
+        when(registrationServiceMock.deactivateUser(userId)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(get("/user/id/{userId}/deactivate", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -250,7 +250,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void reactivateUser() throws Exception {
         final long userId = 9999L;
 
-        when(registrationServiceMock.activateUser(userId)).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateUser(userId)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(get("/user/id/{userId}/reactivate", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -295,7 +295,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         long userId = 1L;
         Role grantRole = Role.APPLICANT;
 
-        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());
+        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name())
                 .header("IFS_AUTH_TOKEN", "123abc"))

@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
-public class CompetitionResource implements ApplicationConfiguration {
+public class CompetitionResource implements ApplicationConfiguration, ProjectConfiguration {
 
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final String H2020_TYPE_NAME = "Horizon 2020";
@@ -946,5 +946,11 @@ public class CompetitionResource implements ApplicationConfiguration {
                 .append(modifiedBy)
                 .append(modifiedOn)
                 .toHashCode();
+    }
+
+    @Override
+    @JsonIgnore
+    public ApplicationConfiguration getApplicationConfiguration() {
+        return this;
     }
 }

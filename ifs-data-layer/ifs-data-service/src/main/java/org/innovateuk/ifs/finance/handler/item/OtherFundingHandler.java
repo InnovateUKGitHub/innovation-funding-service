@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
@@ -15,8 +15,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
 
@@ -88,12 +87,10 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-
+    protected Optional<OtherFunding> intialiseCost(Finance finance) {
         Long id = null;
         String otherPublicFunding;
-        if (applicationFinance.getApplication().getCompetition().isFullyFunded()) {
+        if (finance.getCompetition().isFullyFunded()) {
             otherPublicFunding = "No";
         } else {
             otherPublicFunding = "";
@@ -101,10 +98,6 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         String fundingSource = OtherFundingCostCategory.OTHER_FUNDING;
         String securedDate = null;
         BigDecimal fundingAmount = new BigDecimal(0);
-        OtherFunding costItem = new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount, applicationFinance.getId());
-        ApplicationFinanceRow cost = toApplicationDomain(costItem);
-
-        costs.add(cost);
-        return costs;
+        return Optional.of(new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount, finance.getId()));
     }
 }

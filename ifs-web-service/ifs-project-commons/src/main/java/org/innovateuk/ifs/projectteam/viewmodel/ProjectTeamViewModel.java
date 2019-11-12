@@ -24,6 +24,7 @@ public class ProjectTeamViewModel {
     private final boolean internal;
     private final boolean readOnly;
     private final boolean canInvitePartnerOrganisation;
+    private final boolean canRemovePartnerOrganisation;
     private final boolean collaborativeProject;
 
     public ProjectTeamViewModel(ProjectResource project,
@@ -35,6 +36,7 @@ public class ProjectTeamViewModel {
                                 boolean grantOfferLetterGenerated,
                                 boolean internal,
                                 boolean readOnly,
+                                boolean canRemovePartnerOrganisation,
                                 boolean canInvitePartnerOrganisation) {
 
         this.competitionName = project.getCompetitionName();
@@ -50,6 +52,7 @@ public class ProjectTeamViewModel {
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
         this.internal = internal;
         this.readOnly = readOnly;
+        this.canRemovePartnerOrganisation = canRemovePartnerOrganisation;
         this.canInvitePartnerOrganisation = canInvitePartnerOrganisation;
     }
 
@@ -119,5 +122,9 @@ public class ProjectTeamViewModel {
 
     public boolean isCanInvitePartnerOrganisation() {
         return canInvitePartnerOrganisation;
+    }
+
+    public boolean isCanRemovePartnerOrganisation() {
+        return canRemovePartnerOrganisation;
     }
 }

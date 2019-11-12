@@ -115,6 +115,7 @@ The Stakeholder can see their dashboard and the competitions they were added to
     [Tags]
     Given log in as a different user        &{stakeholder_user}
     Then the user should see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
+    And all of the calculations on the dashboard should be correct
 
 The Stakeholder can search for a competition
     [Documentation]  IFS-4189
@@ -170,6 +171,13 @@ The Stakeholder can no longer see the competition
     Then the user should not see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
 
 *** Keywords ***
+All of the calculations on the dashboard should be correct
+    the total calculation in dashboard should be correct    Open           //section[1]/ul/li
+    the total calculation in dashboard should be correct    Closed         //section[2]/ul/li
+    the total calculation in dashboard should be correct    In assessment  //section[3]/ul/li
+    the total calculation in dashboard should be correct    Panel          //section[4]/ul/li
+    the total calculation in dashboard should be correct    Inform         //section[5]/ul/li
+
 Comp admin navigate to stakeholders page
     the user logs-in in new browser    &{Comp_admin1_credentials}
     the user clicks the button/link    link = ${openProgrammeCompetitionName}

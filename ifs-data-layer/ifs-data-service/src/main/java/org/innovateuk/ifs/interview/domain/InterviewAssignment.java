@@ -46,7 +46,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
 
         if (participant.getRole() != INTERVIEW_LEAD_APPLICANT)
             throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
-        if (!participant.getApplicationId().equals(application.getId()))
+        if (participant.getApplicationId() != application.getId())
             throw new IllegalArgumentException("participant application must match the application");
         if (!participant.getOrganisationId().equals(application.getLeadOrganisationId()))
             throw new IllegalArgumentException("participant organisation must match the application's lead organisation");

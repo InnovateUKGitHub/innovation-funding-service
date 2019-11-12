@@ -12,13 +12,16 @@ public class ProjectManagerViewModel {
     private final List<ProjectUserResource> leadOrgUsers;
     private final long projectId;
     private final String projectName;
+    private final boolean loanCompetition;
 
     public ProjectManagerViewModel(List<ProjectUserResource> leadOrgUsers,
                                    long projectId,
-                                   String projectName) {
+                                   String projectName,
+                                   boolean loanCompetition) {
         this.leadOrgUsers = leadOrgUsers;
         this.projectId = projectId;
         this.projectName = projectName;
+        this.loanCompetition = loanCompetition;
     }
 
     public List<ProjectUserResource> getLeadOrgUsers() {
@@ -33,4 +36,7 @@ public class ProjectManagerViewModel {
         return projectName;
     }
 
+    public boolean isLoanCompetition() {
+        return loanCompetition;
+    }
 }

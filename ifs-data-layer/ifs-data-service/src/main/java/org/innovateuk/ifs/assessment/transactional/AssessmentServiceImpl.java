@@ -114,7 +114,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
         return serviceSuccess(
                 simpleMap(
-                        sort(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId),
+                        sort(assessmentRepository.findByParticipantUserIdAndTargetCompetitionId(userId, competitionId),
                                 comparing(Assessment::getProcessState)
                         ),
                         assessmentMapper::mapToResource
@@ -256,11 +256,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(assessor.getId(), singletonList(Role.ASSESSOR), application.getId());
 
         if (processRole == null) {
-            processRole = new ProcessRole();
-            processRole.setUser(assessor);
-            processRole.setApplicationId(application.getId());
-            processRole.setRole(role);
-            processRole = processRoleRepository.save(processRole);
+            processRole = processRoleRepository.save(new ProcessRole(assessor, application.getId(), role));
         }
 
         return processRole;

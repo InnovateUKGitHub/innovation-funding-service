@@ -209,7 +209,8 @@ ${403_error_message}                               You do not have the necessary
 ${404_error_message}                               Please check the web address or search term you entered for any errors
 ${500_error_message}                               something went wrong
 ${wrong_filetype_validation_error}                 Your upload must be a PDF.
-${too_large_pdf_validation_error}                  Please upload a smaller file
+${too_large_5MB_validation_error}                  Please upload a file less than 5MB in size.
+${too_large_10MB_validation_error}                 Please upload a file less than 10MB in size.
 ${unsuccessful_login_message}                      Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}                     This field cannot be left blank.
 ${email_already_in_use}                            This email address is already in use.

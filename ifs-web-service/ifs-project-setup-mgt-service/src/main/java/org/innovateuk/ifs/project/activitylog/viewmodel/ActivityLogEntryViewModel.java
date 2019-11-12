@@ -1,6 +1,11 @@
 package org.innovateuk.ifs.project.activitylog.viewmodel;
 
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
+
 import java.time.ZonedDateTime;
+
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.ORGANISATION_ADDED;
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.ORGANISATION_REMOVED;
 
 public class ActivityLogEntryViewModel {
 
@@ -11,8 +16,10 @@ public class ActivityLogEntryViewModel {
     private final String linkText;
     private final String linkUrl;
     private final boolean displayLink;
+    private final ActivityType activityType;
 
-    public ActivityLogEntryViewModel(String title, String organisationName, String userText, ZonedDateTime createdOn, String linkText, String linkUrl, boolean displayLink) {
+    public ActivityLogEntryViewModel(String title, String organisationName, String userText, ZonedDateTime createdOn, String linkText, String linkUrl, boolean displayLink, ActivityType activityType) {
+
         this.title = title;
         this.organisationName = organisationName;
         this.userText = userText;
@@ -20,6 +27,7 @@ public class ActivityLogEntryViewModel {
         this.linkText = linkText;
         this.linkUrl = linkUrl;
         this.displayLink = displayLink;
+        this.activityType = activityType;
     }
 
     public String getTitle() {
@@ -48,5 +56,16 @@ public class ActivityLogEntryViewModel {
 
     public boolean isDisplayLink() {
         return displayLink;
+    }
+
+    public String getView() {
+        switch (activityType) {
+            case ORGANISATION_ADDED:
+                return ORGANISATION_ADDED.name();
+            case ORGANISATION_REMOVED:
+                return ORGANISATION_REMOVED.name();
+            default:
+                return "DEFAULT";
+        }
     }
 }

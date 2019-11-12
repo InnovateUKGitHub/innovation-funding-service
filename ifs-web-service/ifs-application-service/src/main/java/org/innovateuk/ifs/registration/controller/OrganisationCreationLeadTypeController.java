@@ -60,7 +60,6 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             model.addAttribute(ORGANISATION_FORM, new OrganisationCreationForm());
         }
 
-
         return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
     }
 

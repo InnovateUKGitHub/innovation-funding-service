@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
@@ -19,9 +18,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OVERHEADS;
 
 /**
@@ -91,15 +89,8 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
         }
     }
 
-    @Override
-    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        return singletonList(initializeAcceptRate(applicationFinance));
+    protected Optional<Overhead> intialiseCost(Finance finance) {
+        return Optional.of(new Overhead(finance.getId()));
     }
 
-    private ApplicationFinanceRow initializeAcceptRate(ApplicationFinance applicationFinance) {
-        Overhead costItem = new Overhead(applicationFinance.getId());
-        ApplicationFinanceRow cost = toApplicationDomain(costItem);
-        cost.setDescription(OverheadCostCategory.ACCEPT_RATE);
-        return cost;
-    }
 }

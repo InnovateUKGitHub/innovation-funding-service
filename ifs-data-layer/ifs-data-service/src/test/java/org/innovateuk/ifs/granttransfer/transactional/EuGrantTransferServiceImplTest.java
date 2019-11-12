@@ -179,8 +179,8 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
 
     @Test
     public void updateGrantTransferByApplicationId() {
-        LocalDate now = LocalDate.now();
-        setField(service, "horizon2020StartDate", now);
+        LocalDate start = LocalDate.of(2021, 4, 5);
+        setField(service, "horizon2020StartDate", start);
         long applicationId = 1L;
         EuActionTypeResource euActionTypeResource = new EuActionTypeResource();
         euActionTypeResource.setId(2L);
@@ -190,8 +190,8 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
                 .withGrantAgreementNumber("123456")
                 .withParticipantId("987654321")
                 .withProjectCoordinator(true)
-                .withProjectEndDate(now.plusMonths(13))
-                .withProjectStartDate(now.minusDays(1))
+                .withProjectEndDate(start.plusMonths(13))
+                .withProjectStartDate(start)
                 .withProjectName("Project name")
                 .build();
 
@@ -215,7 +215,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
         assertEquals(grantTransfer.getProjectCoordinator(), grantTransferResource.getProjectCoordinator());
 
         assertEquals(application.getName(), grantTransferResource.getProjectName());
-        assertEquals(application.getStartDate(), now);
+        assertEquals(application.getStartDate(), start);
         assertEquals(application.getDurationInMonths(), (Long) 13L);
     }
 
