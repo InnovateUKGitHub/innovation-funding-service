@@ -29,14 +29,6 @@ public class DatabaseTestHelper {
 
     private static final Log LOG = LogFactory.getLog(DatabaseTestHelper.class);
 
-    private void logVariables() {
-        LOG.error("*******************");
-        LOG.error(databaseUrl);
-        LOG.error(databaseUser);
-        LOG.error(databasePassword);
-        LOG.error("*******************");
-    }
-
     /**
      * Assert that no database changes occur during the running of the given action
      */
@@ -70,8 +62,6 @@ public class DatabaseTestHelper {
     }
 
     private String getDatabaseContents() throws SQLException {
-
-        logVariables();
         Connection connection = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
         DatabaseMetaData schemaMetadata = connection.getMetaData();
         ResultSet schemaResults = schemaMetadata.getTables(null, null, "%", null);
