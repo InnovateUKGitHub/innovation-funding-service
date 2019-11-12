@@ -61,6 +61,7 @@ createContainer.networkAliases=["ifs-data-service"]
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 
 ext.companiesHouseLookupEnabled = ext.has('ifs.companies.house.enabled') ? ext.get('ifs.companies.house.enabled') : true
+ext.companiesHouseKey = ext.has('ifs.companies.house.key') ? ext.get('ifs.companies.house.key') : 'mock-key'
 
 ext {
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
