@@ -15,10 +15,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,10 +71,7 @@ public class YourProjectFinancesModelPopulator {
 
     private boolean isSectionExcluded(SectionResource section, CompetitionResource competition, OrganisationResource organisation) {
         if (section.getType() == SectionType.ORGANISATION_FINANCES) {
-            boolean isResearchOrganisation = organisation != null && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
-            boolean excludeYourOrganisationSectionForResearchOrgs =
-                    Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
-            return isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
+            return competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         }
         return section.getType() == SectionType.FUNDING_FINANCES && competition.isFullyFunded();
     }
