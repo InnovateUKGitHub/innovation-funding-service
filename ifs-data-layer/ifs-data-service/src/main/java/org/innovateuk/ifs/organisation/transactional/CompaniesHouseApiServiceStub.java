@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  */
 
 @Service
-@ConditionalOnProperty(name = "ifs.data.companies-house.lookup.enabled", havingValue = "false")
+@ConditionalOnProperty(name = "ifs.data.companies.house.lookup.enabled", havingValue = "false")
 public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     @Override
