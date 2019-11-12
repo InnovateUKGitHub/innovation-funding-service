@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept invitation'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept invitation',size='govuk-heading-l'" />
+
+        <p class="govuk-body" th:text="|You have been invited to join the project '${projectName}'.|">You have been invited to join the project 'Blah'.</p>
+        <h3 class="govuk-heading-s">We have found an account with the invited email address</h3>
+        <a class="govuk-button" th:href="@{/project/{projectId}/partner-invite/authenticate(projectId=${projectId})}"
+        th:text="${loggedIn ? 'Continue, confirm organisation' : 'Continue, sign in'}">Yes, create an account</a>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

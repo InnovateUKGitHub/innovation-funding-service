@@ -178,7 +178,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         boolean started = false;
         for (Organisation organisation : project.getOrganisations()) {
             if (isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
-                Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
+                Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
                 ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
                 ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
                 if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {

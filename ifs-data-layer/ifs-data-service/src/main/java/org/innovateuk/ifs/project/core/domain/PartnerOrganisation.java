@@ -26,7 +26,7 @@ public class PartnerOrganisation implements ProcessActivity {
     @JoinColumn(name = "organisation_id", referencedColumnName = "id", nullable = false)
     private Organisation organisation;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "partnerOrganisation")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "partnerOrganisation", cascade = CascadeType.ALL)
     private PendingPartnerProgress pendingPartnerProgress;
 
     private boolean leadOrganisation;

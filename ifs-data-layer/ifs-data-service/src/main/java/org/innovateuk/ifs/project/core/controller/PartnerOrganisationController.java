@@ -3,13 +3,13 @@ package org.innovateuk.ifs.project.core.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId.id;
 
 /**
  * This controller handles calls for partner organisations
@@ -21,13 +21,19 @@ public class PartnerOrganisationController {
     private PartnerOrganisationService partnerOrganisationService;
 
     @GetMapping("/partner-organisation")
-    public RestResult<List<PartnerOrganisationResource>> getFinanceCheck(@PathVariable("projectId") final Long projectId) {
+    public RestResult<List<PartnerOrganisationResource>> getFinanceCheck(@PathVariable final long projectId) {
         return partnerOrganisationService.getProjectPartnerOrganisations(projectId).toGetResponse();
     }
 
     @GetMapping("/partner/{organisationId}")
-    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(@PathVariable(value = "projectId") Long projectId,
-                                                                          @PathVariable(value = "organisationId") Long organisationId) {
+    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(@PathVariable long projectId,
+                                                                          @PathVariable long organisationId) {
         return partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).toGetResponse();
+    }
+
+    @PostMapping("/remove-organisation/{organisationId}")
+    public RestResult<Void> removeOrganisation(@PathVariable long projectId,
+                                               @PathVariable long organisationId) {
+        return partnerOrganisationService.removePartnerOrganisation(id(projectId, organisationId)).toPostResponse();
     }
 }

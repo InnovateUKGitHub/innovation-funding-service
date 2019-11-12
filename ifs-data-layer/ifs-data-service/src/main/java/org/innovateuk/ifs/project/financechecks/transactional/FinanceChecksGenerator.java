@@ -95,8 +95,7 @@ public class FinanceChecksGenerator {
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
-        if(competition.isH2020() || competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
-
+        if(competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
         }

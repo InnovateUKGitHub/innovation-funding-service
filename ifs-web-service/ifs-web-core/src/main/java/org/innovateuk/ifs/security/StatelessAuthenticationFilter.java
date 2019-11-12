@@ -51,7 +51,7 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
 
 
         if (shouldBeAuthenticated(request)) {
-            Authentication authentication = userAuthenticationService.getAuthentication(request, true);
+            Authentication authentication = userAuthenticationService.getAuthentication(request);
 
             if (authentication != null) {
                 UserResource userResource = userAuthenticationService.getAuthenticatedUser(request);

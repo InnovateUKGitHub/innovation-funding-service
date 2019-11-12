@@ -25,7 +25,7 @@ public class FormInputResponse {
     @Column(length = 5000)
     private String value;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "updatedById", referencedColumnName = "id")
     private ProcessRole updatedBy;
 

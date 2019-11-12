@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.registration.controller.RegistrationController;
+import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
+import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -24,7 +26,7 @@ import static java.lang.String.format;
 public class OrganisationJourneyEnd {
 
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationRestService applicationRestService;
 
     @Autowired
     private RegistrationCookieService registrationCookieService;
@@ -38,12 +40,15 @@ public class OrganisationJourneyEnd {
     @Autowired
     private EncryptedCookieService cookieUtil;
 
+    @Autowired
+    private ProjectPartnerInviteRestService projectPartnerInviteRestService;
+
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
         if (user != null) {
             return handleExistingUser(request, response, user, organisationId);
         } else {
             registrationCookieService.saveToOrganisationIdCookie(organisationId, response);
-            return "redirect:" + RegistrationController.BASE_URL;
+            return "redirect:/registration/register";
         }
     }
 
@@ -66,17 +71,31 @@ public class OrganisationJourneyEnd {
     }
 
     private String createNewApplication(HttpServletRequest request, UserResource user, long organisationId) {
-        ApplicationResource application = applicationService.createApplication(registrationCookieService.getCompetitionIdCookieValue(request).get(),
-                user.getId(), organisationId, "");
+        ApplicationResource application = applicationRestService.createApplication(registrationCookieService.getCompetitionIdCookieValue(request).get(),
+                user.getId(), organisationId, "").getSuccess();
         return redirectToApplicationOverview(application.getId());
     }
 
     private String acceptInvite(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
-        String inviteHash = registrationCookieService.getInviteHashCookieValue(request).get();
-        ApplicationInviteResource invite = inviteRestService.getInviteByHash(inviteHash).getSuccess();
-        inviteRestService.acceptInvite(inviteHash, user.getId(), organisationId).getSuccess();
-        registrationCookieService.deleteInviteHashCookie(response);
-        return redirectToApplicationOverview(invite.getApplication());
+        Optional<String> applicationInviteHash = registrationCookieService.getInviteHashCookieValue(request);
+        if (applicationInviteHash.isPresent()) {
+            ApplicationInviteResource invite = inviteRestService.getInviteByHash(applicationInviteHash.get()).getSuccess();
+            inviteRestService.acceptInvite(applicationInviteHash.get(), user.getId(), organisationId).getSuccess();
+            registrationCookieService.deleteInviteHashCookie(response);
+            return redirectToApplicationOverview(invite.getApplication());
+        }
+        Optional<InviteAndIdCookie> projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request);
+        if (projectInvite.isPresent()) {
+            SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.get().getId(), projectInvite.get().getHash()).getSuccess();
+            projectPartnerInviteRestService.acceptInvite(projectInvite.get().getId(), invite.getId(), organisationId).getSuccess();
+            registrationCookieService.deleteProjectInviteHashCookie(response);
+            return redirectToApplicantDashboard();
+        }
+        throw new ObjectNotFoundException();
+    }
+
+    private String redirectToApplicantDashboard() {
+        return format("redirect:/applicant/dashboard");
     }
 
     private String redirectToApplicationOverview(long applicationId) {

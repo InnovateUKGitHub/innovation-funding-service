@@ -23,6 +23,7 @@ import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationRes
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.Role;
@@ -35,20 +36,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -226,8 +223,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> activateUser(long userId) {
-        return getUser(userId).andOnSuccessReturnVoid(this::activateUser);
+    @UserUpdate
+    public ServiceResult<UserResource> activateUser(long userId) {
+        return getUser(userId).andOnSuccess(this::activateUser)
+                .andOnSuccessReturn(userMapper::mapToResource);
     }
 
     private ServiceResult<User> activateUser(User user) {
@@ -241,8 +240,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> deactivateUser(long userId) {
-        return getUser(userId).andOnSuccessReturnVoid(this::deactivateUser);
+    @UserUpdate
+    public ServiceResult<UserResource> deactivateUser(long userId) {
+        return getUser(userId).andOnSuccess(this::deactivateUser)
+                .andOnSuccessReturn(userMapper::mapToResource);
     }
 
     private ServiceResult<User> deactivateUser(User user) {
@@ -433,20 +434,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType) {
-
+    @UserUpdate
+    public ServiceResult<UserResource> editInternalUser(UserResource userToEdit, Role userRoleType) {
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findById(userToEdit.getId()).orElse(null), notFoundError(User.class)))
                 .andOnSuccess(user -> getInternalRoleResources(userRoleType)
-                    .andOnSuccess(roleResources -> {
+                    .andOnSuccessReturn(roleResources -> {
                         Set<Role> roleList = new HashSet<>(roleResources);
                         user.setFirstName(userToEdit.getFirstName());
                         user.setLastName(userToEdit.getLastName());
                         user.setRoles(roleList);
-                        userRepository.save(user);
-                        return serviceSuccess();
+                        return userRepository.save(user);
                     })
-                );
+                ).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
