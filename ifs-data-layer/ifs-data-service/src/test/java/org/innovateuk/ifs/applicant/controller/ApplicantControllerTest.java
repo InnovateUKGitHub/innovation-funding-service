@@ -4,11 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder;
 import org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder;
 import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
-import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.applicant.transactional.ApplicantService;
 import org.innovateuk.ifs.application.transactional.ApplicationDashboardService;
 import org.innovateuk.ifs.documentation.*;
@@ -28,7 +24,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuild
 import static org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource.ApplicantDashboardResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource.DashboardApplicationForEuGrantTransferResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource.DashboardApplicationInProgressResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource.DashboardApplicationInSetupResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource.DashboardInSetupRowResourceBuilder.aDashboardInSetupRowResource;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
@@ -183,7 +179,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
 
         DashboardEuGrantTransferRowResource euGrantTransfer = new DashboardApplicationForEuGrantTransferResourceBuilder().withApplicationId(euGrantTransferId).build();
         DashboardInProgressRowResource inProgress = new DashboardApplicationInProgressResourceBuilder().withApplicationId(inProgressId).build();
-        DashboardInSetupRowResource inSetup = new DashboardApplicationInSetupResourceBuilder().withApplicationId(inSetupId).build();
+        DashboardInSetupRowResource inSetup = aDashboardInSetupRowResource().withApplicationId(inSetupId).build();
         DashboardPreviousRowResource previous = new DashboardPreviousApplicationResourceBuilder().withApplicationId(previousId).build();
 
         when(applicationDashboardService.getApplicantDashboard(USER_ID)).thenReturn(serviceSuccess(new ApplicantDashboardResourceBuilder()
