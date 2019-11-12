@@ -198,9 +198,5 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
     public void removePartnerOrganisation() {
         ServiceResult<Void> result = partnerOrganisationService.removePartnerOrganisation(new ProjectOrganisationCompositeId(project.getId(), ludlow.getId()));
         assertTrue(result.isSuccess());
-
-//        flushAndClearSession();
-//        ServiceResult<List<PartnerOrganisationResource>> expected = partnerOrganisationService.getProjectPartnerOrganisations(project.getId());
-//        assertEquals(1, expected.getSuccess().size());
     }
 }
