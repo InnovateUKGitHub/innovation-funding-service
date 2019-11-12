@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.Labou
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -104,6 +105,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     private OrganisationResource academicOrganisation;
 
     private CompetitionResource competitionResource = newCompetitionResource()
+            .withFundingType(FundingType.GRANT)
             .withIncludeJesForm(true)
             .build();
 
