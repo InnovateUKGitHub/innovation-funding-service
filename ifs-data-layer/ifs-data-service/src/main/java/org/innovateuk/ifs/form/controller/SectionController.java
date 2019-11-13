@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.SectionService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +28,11 @@ public class SectionController {
     @GetMapping("/{sectionId}")
     public RestResult<SectionResource> getById(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getById(sectionId).toGetResponse();
+    }
+
+    @GetMapping("/{sectionIds}")
+    public RestResult<List<SectionResource>> getByIds(@PathVariable("sectionId") final List<Long> sectionIds) {
+        return sectionService.getByIds(sectionIds).toGetResponse();
     }
 
     @GetMapping("/get-next-section/{sectionId}")

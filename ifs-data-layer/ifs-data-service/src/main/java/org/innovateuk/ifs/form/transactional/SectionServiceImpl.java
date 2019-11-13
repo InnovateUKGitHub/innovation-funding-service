@@ -11,13 +11,16 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.asListOfPairs;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -36,6 +39,13 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Override
     public ServiceResult<SectionResource> getById(final Long sectionId) {
         return getSection(sectionId).andOnSuccessReturn(sectionMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<List<SectionResource>> getByIds(List<Long> sectionIds) {
+        List<SectionResource> sectionResources = new ArrayList();
+        sectionIds.stream().forEach(sectionId -> sectionResources.add(getSection(sectionId).andOnSuccessReturn(sectionMapper::mapToResource).getSuccess()));
+        return serviceSuccess(sectionResources);
     }
 
     @Override
