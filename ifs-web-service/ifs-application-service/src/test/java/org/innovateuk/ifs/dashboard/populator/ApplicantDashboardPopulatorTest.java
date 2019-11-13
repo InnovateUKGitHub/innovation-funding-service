@@ -29,7 +29,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource.DashboardApplicationForEuGrantTransferResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource.DashboardApplicationInProgressResourceBuilder;
-import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource.DashboardApplicationInSetupResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource.DashboardInSetupRowResourceBuilder.aDashboardInSetupRowResource;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
@@ -58,7 +58,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void testPopulateInSetupProjects() {
-        DashboardInSetupRowResource inSetup = new DashboardApplicationInSetupResourceBuilder()
+        DashboardInSetupRowResource inSetup = aDashboardInSetupRowResource()
                 .withCompetitionTitle("Competition Title")
                 .withProjectId(3L)
                 .withProjectTitle("Project Title")
@@ -78,15 +78,15 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
     @Test
     public void testSortForInSetupProjects() {
-        DashboardInSetupRowResource startsYesterday = new DashboardApplicationInSetupResourceBuilder()
+        DashboardInSetupRowResource startsYesterday = aDashboardInSetupRowResource()
                 .withTargetStartDate(YESTERDAY.toLocalDate())
                 .withProjectTitle("starts in past")
                 .build();
-        DashboardInSetupRowResource startsToday = new DashboardApplicationInSetupResourceBuilder()
+        DashboardInSetupRowResource startsToday = aDashboardInSetupRowResource()
                 .withTargetStartDate(TODAY.toLocalDate())
                 .withProjectTitle("starts today")
                 .build();
-        DashboardInSetupRowResource startsTomorrow = new DashboardApplicationInSetupResourceBuilder()
+        DashboardInSetupRowResource startsTomorrow = aDashboardInSetupRowResource()
                 .withTargetStartDate(TOMORROW.toLocalDate())
                 .withProjectTitle("starts in future")
                 .build();

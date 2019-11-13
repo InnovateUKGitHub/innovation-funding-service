@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -87,7 +88,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
     ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
 
-    CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withIncludeJesForm(true).build();
+    CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withFundingType(FundingType.GRANT).withIncludeJesForm(true).build();
 
     OrganisationResource innovateOrganisationResource = newOrganisationResource().withName("Innovate").withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
 

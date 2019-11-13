@@ -172,7 +172,7 @@ Dashboard status updates correctly for internal and external users
     When all partners complete the Project team section
     Then the Project team status appears as complete for the internal user
 
-New user is able to repspond to a query
+New user is able to respond to a query
     [Documentation]  IFS-6421
     Given the internal user posts a query
     When the new user posts a response
@@ -190,7 +190,7 @@ Project finance is able to add a new partner organisation
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
+    Then a new organisation is able to accept project invite   FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
@@ -223,7 +223,9 @@ a new organisation is able to accept project invite
     the user clicks the button/link                               jQuery = button:contains("Create account")
     the user verifies their account                               ${email}
     a new organisation logs in and sees the project               ${email}
-    the user should see the element                               jQuery = a:contains("PSC application 7")
+    the user should see the element                               jQuery = ul:contains("PSC application 7") .status:contains("Ready to join project")
+    the user clicks the button/link                               link = PSC application 7
+    the user should see the element                               jQuery = h1:contains("Join project")
 
 A new organisation logs in and sees the project
     [Arguments]  ${email}
