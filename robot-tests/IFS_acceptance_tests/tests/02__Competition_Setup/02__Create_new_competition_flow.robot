@@ -379,7 +379,7 @@ Application: Application details validations
     When the user selects the radio button       useResubmissionQuestion  true
     Then the user should see the element         jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element          jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("${empty_field_warning_message}")
-    When the user clicks the button/link         css = button[type="submit"]
+    When the user clicks the button/link         jQuery = button:contains('Done')
     Then the user should see the element         css = .govuk-error-summary__list
 
     When the user enters text to a text field    id = minProjectDuration  -2
@@ -393,7 +393,7 @@ Application: Application details validations
     And the user should see a field error        This field should be 60 or lower.
 
     When the user enters text to a text field    id = minProjectDuration  59
-    And the user clicks the button/link          css = button[type="submit"]
+    And the user clicks the button/link          jQuery = button:contains('Done')
     Then the user should see a summary error     This field should be 60 or lower
     [Teardown]  the user clicks the button/link  link = Application
 
@@ -406,7 +406,7 @@ Application: Application details
     When the user selects the radio button        useResubmissionQuestion  false
     Then the user enters text to a text field     id = minProjectDuration  2
     And the user enters text to a text field      id = maxProjectDuration  60
-    And The user clicks the button/link           css = button[type="submit"]
+    And The user clicks the button/link           jQuery = button:contains('Done')
     And the user should see the element           jQuery = li:contains("Application details") .task-status-complete
     When the user clicks the button/link          link = Application details
     Then the user should see the element          jQuery = dt:contains("resubmission") + dd:contains("No")
@@ -422,7 +422,7 @@ Application: Scope
     And the user should see the element           jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
     When The user fills the empty question fields
     And The user enters text to a text field      id = question.shortTitle  Test heading
-    And The user clicks the button/link           css = button[type="submit"]
+    And The user clicks the button/link           jQuery = button:contains('Done')
     And the user clicks the button/link           link = Test heading
     Then the user should see the element          jQuery = h1:contains("Test heading")
     And the user checks the question fields
@@ -433,13 +433,13 @@ Application: Scope Assessment questions
     Given the user clicks the button/link            link = Edit this question
     And the user selects the radio button            question.writtenFeedback    1
     And the user fills the scope assessment questions
-    When the user clicks the button/link             css = button[type="submit"]
+    When the user clicks the button/link             jQuery = button:contains('Done')
     And the user clicks the button/link              link = Test heading
     Then the user checks the scope assessment questions
     And the user clicks the button/link              link = Edit this question
     And the user selects the radio button            question.writtenFeedback    0
     And the user should not be able to edit the scope feedback
-    And the user clicks the button/link              css = button[type="submit"]
+    And the user clicks the button/link              jQuery = button:contains('Done')
     And the user clicks the button/link              link = Test heading
     Then the user should not see the scope feedback
     [Teardown]    The user clicks the button/link    link = Application
@@ -451,7 +451,7 @@ Application: Project Summary
     And the user should see the element              jQuery = h1:contains("Project summary")
     And the user should see the element             jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
     When The user fills the empty question fields
-    And The user clicks the button/link              css = button[type="submit"]
+    And The user clicks the button/link              jQuery = button:contains('Done')
     And the user clicks the button/link              link = Project summary
     Then the user should see the element             jQuery = h1:contains("Project summary")
     And the user checks the question fields
@@ -462,21 +462,21 @@ Application: Need or challenge
     [Tags]  HappyPath
     Given the user should not see the element    jQuery = li:contains("${amendedQuestion}") .task-status-complete
     When the user clicks the button/link         jQuery = h4 a:contains("${amendedQuestion}")
-    And the user clicks the button/link          css = button[type="submit"]
+    And the user clicks the button/link          jQuery = button:contains('Done')
     And the user clicks the button/link          jQuery = h4 a:contains("${amendedQuestion}")
     Then the user should see the element         jQuery = dt:contains("Question heading") + dd:contains("${amendedQuestion}")
     # The above steps verify that when the question is not completed and you click it, you land on the edit mode
     # If question is completed and you click it, you should land on the read only mode.
     When the user clicks the button/link         link = Edit this question
     And the user edits the assessed question information
-    And The user clicks the button/link          css = button[type="submit"]
+    And The user clicks the button/link          jQuery = button:contains('Done')
     When the user clicks the button/link         jQuery = h4 a:contains("${amendedQuestion}")
     Then the user sees the correct read only view of the question
     When the user clicks the button/link         link = Edit this question
     And the user selects the radio button        question.writtenFeedback  0
     And the user selects the radio button        question.scored  0
     And the user should not be able to edit the assessed question feedback
-    And the user clicks the button/link          jQuery = button[type="submit"]
+    And the user clicks the button/link          jQuery = button:contains("Done")
     When the user clicks the button/link         jQuery = h4 a:contains("${amendedQuestion}")
     Then the user should not see the element     jQuery = dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
@@ -498,7 +498,7 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]  HappyPath
-    Given the user clicks the button/link                                               css = p button[type="submit"]  #Add question link
+    Given the user clicks the button/link                                               jQuery = button[type="submit"]  #Add question link
     When the user is able to configure the new question                                 ${customQuestion}
     And the user clicks the button/link                                                 jQuery = li:contains("${customQuestion}")
     Then the user should be able to see the read only view of question correctly        ${customQuestion}
@@ -524,7 +524,7 @@ Application: Finances
     And the user selects the radio button          includeYourOrganisationSection  true
     And the user selects the radio button          includeJesForm  true
     And the user enters text to a text field       css = .editor  Funding rules for this competition are now entered.
-    Then The user clicks the button/link           css = button[type="submit"]  #Save and close
+    Then The user clicks the button/link           jQuery = button:contains('Done')  #Save and close
     When the user clicks the button/link           link = Finances
     Then the user should see the element           jQuery = dt:contains("Include project growth table")+dd:contains("Yes")
     And the user should see the element            jQuery = dt:contains("Funding rules for this competition")+dd:contains("Funding rules for this competition are now entered.")
@@ -548,7 +548,7 @@ Documents in project setup: The competition admin adds document requirements
     And the user clicks the button/link          jQuery = span:contains("PDF")
     And the user clicks the button/link          jQuery = span:contains("Spreadsheet")
     And the user enters text to a text field     css = .editor    Guidance test.
-    And the user clicks the button/link          css = button[type = "submit"]
+    And the user clicks the button/link          jQuery = button:contains('Done')
     And the user should see the element          jQuery = span:contains("Test document type")
 
 Documents in project setup: The competition admin removes a document
@@ -612,7 +612,7 @@ Application: Edit again should mark as incomplete
     Then the user should see the element        css = #compCTA[disabled="disabled"]
     When the user navigates to the page         ${server}/management/competition/setup/${competitionId}/section/application/landing-page
     When the user clicks the button/link        link = Application details
-    And the user clicks the button/link         css = button[type="submit"]
+    And the user clicks the button/link         jQuery = button:contains('Done')
     Then the user should see the element        jQuery = li:contains("Application details") .task-status-complete
 
 
@@ -889,7 +889,7 @@ the user marks question as complete
     [Arguments]  ${question_link}
     the user should not see the element    jQuery = li:contains("${question_link}") .task-status-complete
     the user clicks the button/link        jQuery = a:contains("${question_link}")
-    the user clicks the button/link        css = button[type="submit"]
+    the user clicks the button/link        jQuery = button:contains('Done')
     the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
 
 the user should see the read-only view of the initial details
