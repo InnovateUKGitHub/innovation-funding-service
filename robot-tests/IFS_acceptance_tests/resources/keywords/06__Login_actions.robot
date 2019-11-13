@@ -35,8 +35,8 @@ The guest user inserts user email and password
     Input Password    id=password    ${password}
 
 The guest user clicks the log-in button
-    Wait Until Element Is Visible Without Screenshots    css=button[name="_eventId_proceed"]
-    Click Button    css=button[name="_eventId_proceed"]
+    Wait Until Element Is Visible Without Screenshots    jQuery = button:contains("Sign in")
+    Click Button    jQuery = button:contains("Sign in")
 
 The guest user opens the browser
     Register keyword to run on failure    capture page screenshot on failure
