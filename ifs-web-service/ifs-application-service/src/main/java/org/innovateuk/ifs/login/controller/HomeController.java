@@ -7,7 +7,6 @@ import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Comparator.comparingInt;
+import static org.innovateuk.ifs.user.resource.Role.multiDashboardRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -31,14 +32,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 public class HomeController {
 
     private NavigationUtils navigationUtils;
-    private List<Role> rolesWithDashboards;
 
-    HomeController(
-            NavigationUtils navigationUtils,
-            @Value("#{'${ifs.web.service.multi.dashboard.roles}'.split(',')}") List<String> roleNames) {
-        
+    HomeController(NavigationUtils navigationUtils) {
         this.navigationUtils = navigationUtils;
-        this.rolesWithDashboards = simpleMap(roleNames, Role::valueOf);        
     }
 
     @GetMapping("/")
@@ -51,7 +47,7 @@ public class HomeController {
 
         UserResource user = (UserResource) authentication.getDetails();
 
-        if (user.hasMoreThanOneRoleOf(rolesWithDashboards)) {
+        if (user.hasMoreThanOneRoleOf(multiDashboardRoles())) {
             return "redirect:/dashboard-selection";
         }
 
@@ -67,7 +63,7 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (!user.hasMoreThanOneRoleOf(rolesWithDashboards)) {
+        if (!user.hasMoreThanOneRoleOf(multiDashboardRoles())) {
             return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
@@ -76,10 +72,10 @@ public class HomeController {
 
     private String doViewDashboardSelection(HttpServletRequest request, Model model, UserResource user) {
 
-        List<Role> dashboardRoles = simpleFilter(user.getRoles(), rolesWithDashboards::contains);
+        List<Role> dashboardRoles = simpleFilter(user.getRoles(), multiDashboardRoles()::contains);
         List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
         List<DashboardPanel> orderedPanels = sort(dashboardPanels,
-                comparingInt(panel -> rolesWithDashboards.indexOf(panel.getRole())));
+                comparingInt(panel -> asList(multiDashboardRoles()).indexOf(panel.getRole())));
 
         model.addAttribute("model", new DashboardSelectionViewModel(orderedPanels));
         return "login/multiple-dashboard-choice";

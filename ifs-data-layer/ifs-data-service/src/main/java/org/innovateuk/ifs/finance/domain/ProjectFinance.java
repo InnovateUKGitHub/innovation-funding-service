@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -34,6 +35,11 @@ public class ProjectFinance extends Finance {
     private EligibilityRagStatus eligibilityStatus = EligibilityRagStatus.UNSET;
 
     public ProjectFinance() {
+    }
+
+    public ProjectFinance(Project project, Organisation organisation) {
+        super(organisation);
+        this.project = project;
     }
 
     public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover) {
@@ -82,4 +88,8 @@ public class ProjectFinance extends Finance {
                 .map(pu -> pu.isUser(userId)).orElse(false);
     }
 
+    @Override
+    public Competition getCompetition() {
+        return getProject().getApplication().getCompetition();
+    }
 }

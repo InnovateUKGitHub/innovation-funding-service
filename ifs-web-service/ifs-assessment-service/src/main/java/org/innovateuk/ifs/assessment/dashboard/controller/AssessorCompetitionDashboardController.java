@@ -87,6 +87,5 @@ public class AssessorCompetitionDashboardController {
                     return "assessment/assessment-submit-confirm";
                 }
         );
-
     }
 }

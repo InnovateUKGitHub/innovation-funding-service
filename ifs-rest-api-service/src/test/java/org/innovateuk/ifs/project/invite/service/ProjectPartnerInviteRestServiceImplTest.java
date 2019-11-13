@@ -63,6 +63,30 @@ public class ProjectPartnerInviteRestServiceImplTest extends BaseRestServiceUnit
         assertTrue(result.isSuccess());
     }
 
+    @Test
+    public void getInviteByHash() {
+        long projectId = 1L;
+        String hash = "hash";
+        SentProjectPartnerInviteResource resource = newSentProjectPartnerInviteResource().build();
+        setupGetWithRestResultAnonymousExpectations(format("/project/%d/project-partner-invite/%s", projectId, hash), SentProjectPartnerInviteResource.class, resource);
+
+        RestResult<SentProjectPartnerInviteResource> result = service.getInviteByHash(projectId, hash);
+
+        assertEquals(resource, result.getSuccess());
+    }
+
+    @Test
+    public void acceptInvite() {
+        long projectId = 1L;
+        long inviteId = 2L;
+        long organisationId = 3L;
+        setupPostWithRestResultAnonymousExpectations(format("/project/%d/project-partner-invite/%d/organisation/%d/accept", projectId, inviteId, organisationId), Void.class, null, null, HttpStatus.OK);
+
+        RestResult<Void> result = service.acceptInvite(projectId, inviteId, organisationId);
+
+        assertTrue(result.isSuccess());
+    }
+
     @Override
     protected ProjectPartnerInviteRestServiceImpl registerRestServiceUnderTest() {
         return new ProjectPartnerInviteRestServiceImpl();

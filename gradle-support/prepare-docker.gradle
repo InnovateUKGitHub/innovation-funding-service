@@ -20,6 +20,8 @@ task prepareDockerBaseInput {
     String uid = System.env.bamboo_gluster_UID ?: "996"
     String userPassword = System.env.bamboo_gluster_user_password ?: "default"
 
+    inputs.file("$project.buildDir/libs/$executableJarFile")
+
     outputs.files(
             project.file("$inputDir/Dockerfile"),
             project.file("$inputDir/$jarFile")

@@ -7,12 +7,12 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
 
 public abstract class FinanceRowHandler<T extends FinanceRowItem> {
 
@@ -39,6 +39,19 @@ public abstract class FinanceRowHandler<T extends FinanceRowItem> {
     }
 
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        return new ArrayList<>();
+        return intialiseCost(applicationFinance)
+                .map(this::toApplicationDomain)
+                .map(Arrays::asList)
+                .orElse(emptyList());
+    }
+    public List<ProjectFinanceRow> initializeCost(ProjectFinance projectFinance) {
+        return intialiseCost(projectFinance)
+                .map(this::toProjectDomain)
+                .map(Arrays::asList)
+                .orElse(emptyList());
+    }
+
+    protected Optional<T> intialiseCost(Finance finance) {
+        return empty();
     }
 }

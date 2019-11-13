@@ -3,9 +3,13 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -20,6 +24,7 @@ import static java.util.Collections.sort;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource.ApplicantDashboardResourceBuilder;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource.DashboardApplicationInProgressResourceBuilder;
+import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource.DashboardInSetupRowResourceBuilder.aDashboardInSetupRowResource;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.*;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.inProgressStates;
@@ -31,7 +36,7 @@ import static org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.ON
  * Transactional and secured service that generates a dashboard of applications for a user.
  */
 @Service
-public class ApplicationDashboardServiceImpl extends BaseTransactionalService implements ApplicationDashboardService {
+public class ApplicationDashboardServiceImpl extends RootTransactionalService implements ApplicationDashboardService {
 
     @Autowired
     private InterviewAssignmentService interviewAssignmentService;
@@ -53,7 +58,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
             DashboardSection section = sectionForApplication(application);
             switch (section) {
                 case IN_SETUP:
-                    inSetup.add(toSetupResource(application));
+                    inSetup.add(toSetupResource(application, userId));
                     break;
                 case EU_GRANT_TRANSFER:
                     euGrantTransfer.add(toEuGrantResource(application));
@@ -151,7 +156,7 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
 
     private DashboardInProgressRowResource toInProgressResource(Application application, long userId) {
         Optional<ProcessRole> role = application.getProcessRoles().stream()
-                .filter(processRoleResource -> processRoleResource.getUser().getId().equals(userId))
+                .filter(pr -> pr.getUser().getId().equals(userId))
                 .findFirst();
         boolean invitedToInterview = interviewAssignmentService.isApplicationAssigned(application.getId()).getSuccess();
 
@@ -182,17 +187,27 @@ public class ApplicationDashboardServiceImpl extends BaseTransactionalService im
                 .build();
     }
 
-    private DashboardInSetupRowResource toSetupResource(Application application) {
-        return new DashboardInSetupRowResource.DashboardApplicationInSetupResourceBuilder()
+    private DashboardInSetupRowResource toSetupResource(Application application, long userId) {
+        PartnerOrganisation partnerOrganisation = getPartnerOrganisation(application, userId);
+        return aDashboardInSetupRowResource()
                 .withTitle(application.getProject().getName())
                 .withApplicationId(application.getId())
                 .withCompetitionTitle(application.getCompetition().getName())
                 .withProjectId(application.getProject().getId())
                 .withProjectTitle(application.getProject().getName())
                 .withTargetStartDate(application.getProject().getTargetStartDate())
+                .withPendingPartner(partnerOrganisation.isPendingPartner())
+                .withOrganisationId(partnerOrganisation.getOrganisation().getId())
                 .build();
     }
 
+    private PartnerOrganisation getPartnerOrganisation(Application application, long userId) {
+        return application.getProject().getProjectUsers().stream()
+                .filter(pu -> pu.getUser().getId().equals(userId))
+                .findFirst()
+                .map(ProjectUser::getPartnerOrganisation)
+                .orElseThrow(ObjectNotFoundException::new);
+    }
 
     private boolean isAssigned(Application application, Optional<ProcessRole> processRole) {
         if (processRole.isPresent() && !isLead(processRole)) {

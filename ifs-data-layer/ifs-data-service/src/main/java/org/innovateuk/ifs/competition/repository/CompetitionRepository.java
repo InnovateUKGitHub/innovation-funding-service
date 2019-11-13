@@ -47,29 +47,29 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     /* Filters by innovation lead id or stakeholder id and in project setup state */
-    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
-            "AND ap.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
-            "AND EXISTS (SELECT a.manageFundingEmailDate FROM Application a WHERE a.competition.id = ap.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
-            "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE " +
-            "AND ap.competition.completionStage = 'PROJECT_SETUP'";
+    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE = "WHERE cp.user.id = :userId " +
+            "AND cp.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
+            "AND EXISTS (SELECT a.manageFundingEmailDate FROM Application a WHERE a.competition.id = cp.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            "AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE " +
+            "AND cp.competition.completionStage = 'PROJECT_SETUP'";
 
     /* Filters by innovation lead or stakeholder and in feedback released state */
-    String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE = "WHERE ap.user.id = :userId AND " +
-            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = ap.competition.id) AND " +
-            "ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
+    String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE = "WHERE cp.user.id = :userId AND " +
+            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = cp.competition.id) AND " +
+            "cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
 
     /* Filters by innovation lead or stakeholder and in live state */
-    String INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
-            "AND ap.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
-            "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = ap.competition.id) " +
-            "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = ap.competition.id) " +
-            "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
+    String INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE = "WHERE cp.user.id = :userId " +
+            "AND cp.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
+            "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = cp.competition.id) " +
+            "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = cp.competition.id) " +
+            "AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
 
     /* Innovation leads should not access competitions in states: In preparation and Ready to open */
-    String SEARCH_QUERY_INNOVATION_LEAD_STAKEHOLDER = "SELECT ap.competition FROM AssessmentParticipant ap LEFT JOIN ap.competition.milestones m LEFT JOIN ap.competition.competitionType ct " +
-            "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (ap.competition.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE " +
-            "AND (ap.competition.setupComplete IS NOT NULL AND ap.competition.setupComplete != FALSE) " +
-            "AND ap.user.id = :userId " +
+    String SEARCH_QUERY_INNOVATION_LEAD_STAKEHOLDER = "SELECT cp.competition FROM CompetitionParticipant cp LEFT JOIN cp.competition.milestones m LEFT JOIN cp.competition.competitionType ct " +
+            "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (cp.competition.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE " +
+            "AND (cp.competition.setupComplete IS NOT NULL AND cp.competition.setupComplete != FALSE) " +
+            "AND cp.user.id = :userId " +
             "ORDER BY m.date";
 
     /* Support users should not be able to access competitions in preparation */
@@ -86,23 +86,23 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + LIVE_QUERY_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY = "SELECT count(distinct cp.competition.id) " + "FROM CompetitionParticipant cp " + INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE;
 
     String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE + " ORDER BY c.projectSetupStarted DESC";
 
     String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY = "SELECT distinct ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE + " ORDER BY ap.competition.name";
+    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY = "SELECT distinct cp.competition FROM CompetitionParticipant cp " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE + " ORDER BY cp.competition.name";
 
-    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM CompetitionParticipant cp " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
 
     String PREVIOUS_QUERY = "SELECT c FROM Competition c " + PREVIOUS_WHERE_CLAUSE + " ORDER BY c.id DESC";
 
     String PREVIOUS_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PREVIOUS_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_QUERY = "SELECT distinct ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE + " ORDER BY ap.competition.id DESC";
+    String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_QUERY = "SELECT distinct cp.competition FROM CompetitionParticipant cp " + INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE + " ORDER BY cp.competition.id DESC";
 
-    String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_COUNT_QUERY = "SELECT count(distinct ap.competition.id) FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE;
+    String INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM CompetitionParticipant cp " + INNOVATION_LEAD_STAKEHOLDER_PREVIOUS_WHERE_CLAUSE;
 
     String NON_IFS_QUERY = "SELECT c FROM Competition c " +
             "LEFT JOIN PublicContent pc ON pc.competitionId=c.id " +
@@ -304,5 +304,4 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(value = COUNT_PENDING_SPEND_PROFILES, nativeQuery = true)
     BigDecimal countPendingSpendProfiles(long competitionId);
-
 }

@@ -12,9 +12,9 @@ import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 public class ActivityLogResource {
 
     private ActivityType activityType;
-    private Long createdBy;
-    private String createdByName;
-    private Set<Role> createdByRoles;
+    private long authoredBy;
+    private String authoredByName;
+    private Set<Role> authoredByRoles;
     private ZonedDateTime createdOn;
 
     // Optional
@@ -24,14 +24,15 @@ public class ActivityLogResource {
     private String documentConfigName;
     private Long query;
     private FinanceChecksSectionType queryType;
+    private boolean organisationRemoved;
 
     ActivityLogResource() {}
 
-    public ActivityLogResource(ActivityType activityType, Long createdBy, String createdByName, Set<Role> createdByRoles, ZonedDateTime createdOn, Long organisation, String organisationName, Long documentConfig, String documentConfigName, Long query, FinanceChecksSectionType queryType) {
+    public ActivityLogResource(ActivityType activityType, long authoredBy, String authoredByName, Set<Role> authoredByRoles, ZonedDateTime createdOn, Long organisation, String organisationName, Long documentConfig, String documentConfigName, Long query, FinanceChecksSectionType queryType, boolean organisationRemoved) {
         this.activityType = activityType;
-        this.createdBy = createdBy;
-        this.createdByName = createdByName;
-        this.createdByRoles = createdByRoles;
+        this.authoredBy = authoredBy;
+        this.authoredByName = authoredByName;
+        this.authoredByRoles = authoredByRoles;
         this.createdOn = createdOn;
         this.organisation = organisation;
         this.organisationName = organisationName;
@@ -39,22 +40,23 @@ public class ActivityLogResource {
         this.documentConfigName = documentConfigName;
         this.query = query;
         this.queryType = queryType;
+        this.organisationRemoved = organisationRemoved;
     }
 
     public ActivityType getActivityType() {
         return activityType;
     }
 
-    public Long getCreatedBy() {
-        return createdBy;
+    public long getAuthoredBy() {
+        return authoredBy;
     }
 
-    public String getCreatedByName() {
-        return createdByName;
+    public String getAuthoredByName() {
+        return authoredByName;
     }
 
-    public Set<Role> getCreatedByRoles() {
-        return createdByRoles;
+    public Set<Role> getAuthoredByRoles() {
+        return authoredByRoles;
     }
 
     public ZonedDateTime getCreatedOn() {
@@ -85,14 +87,18 @@ public class ActivityLogResource {
         return queryType;
     }
 
+    public boolean isOrganisationRemoved() {
+        return organisationRemoved;
+    }
+
     @JsonIgnore
     public boolean isInternalUser() {
-        return getCreatedByRoles().stream().anyMatch(role -> Role.internalRoles().contains(role));
+        return getAuthoredByRoles().stream().anyMatch(role -> Role.internalRoles().contains(role));
     }
 
     @JsonIgnore
     public boolean isIfsAdmin() {
-        return getCreatedByRoles().contains(IFS_ADMINISTRATOR);
+        return getAuthoredByRoles().contains(IFS_ADMINISTRATOR);
     }
 
 }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 
@@ -20,15 +20,21 @@ public interface ApplicationConfiguration {
     Boolean getIncludeJesForm();
 
     default boolean isMaximumFundingLevelConstant(OrganisationTypeEnum organisationType, boolean maximumFundingLevelOverridden) {
-        return LOAN.equals(getFundingType()) ||
+        return LOAN == getFundingType() ||
                 isFullyFunded() ||
-                !BUSINESS.equals(organisationType) ||
+                BUSINESS != organisationType ||
                 maximumFundingLevelOverridden;
     }
 
     FundingType getFundingType();
 
     default boolean applicantShouldUseJesFinances(OrganisationTypeEnum organisationType) {
-        return Boolean.TRUE.equals(getIncludeJesForm()) && RESEARCH.equals(organisationType);
+        return Boolean.TRUE.equals(getIncludeJesForm())
+                && getFundingType() == GRANT
+                && RESEARCH == organisationType;
+    }
+
+    default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {
+        return isH2020() || applicantShouldUseJesFinances(organisationType);
     }
 }

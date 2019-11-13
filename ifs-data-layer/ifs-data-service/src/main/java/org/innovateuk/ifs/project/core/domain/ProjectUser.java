@@ -32,6 +32,13 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
     @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "projectId", referencedColumnName = "project_id", insertable = false, updatable = false),
+        @JoinColumn(name = "organisationId", referencedColumnName = "organisation_id", insertable = false, updatable = false)
+    })
+    private PartnerOrganisation partnerOrganisation;
+
     public ProjectUser() {
     }
 
@@ -96,6 +103,10 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
 
     public void setInvite(ProjectUserInvite invite) {
         this.invite = invite;
+    }
+
+    public PartnerOrganisation getPartnerOrganisation() {
+        return partnerOrganisation;
     }
 
     @Override
