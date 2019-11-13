@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -69,22 +67,10 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
     private UserRepository userRepository;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
-
-    @Autowired
     private ProjectRepository projectRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private OrganisationAddressRepository organisationAddressRepository;
-
-    @Autowired
-    private ProjectPartnerChangeService ProjectPartnerChangeService;
 
     @Autowired
     private EligibilityProcessRepository eligibilityProcessRepository;

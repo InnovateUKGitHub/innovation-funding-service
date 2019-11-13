@@ -7,7 +7,6 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
@@ -51,46 +49,43 @@ import static org.mockito.Mockito.*;
 public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<PartnerOrganisationService> {
 
     @Mock
-    private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
+    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Mock
-    private PartnerOrganisationMapper partnerOrganisationMapperMock;
+    private PartnerOrganisationMapper partnerOrganisationMapper;
 
     @Mock
-    private PendingPartnerProgressRepository pendingPartnerProgressRepositoryMock;
+    private PendingPartnerProgressRepository pendingPartnerProgressRepository;
 
     @Mock
-    private ProjectUserRepository projectUserRepositoryMock;
+    private ProjectUserRepository projectUserRepository;
 
     @Mock
-    private ProjectFinanceRepository projectFinanceRepositoryMock;
+    private ProjectFinanceRepository projectFinanceRepository;
 
     @Mock
-    private BankDetailsRepository bankDetailsRepositoryMock;
+    private BankDetailsRepository bankDetailsRepository;
 
     @Mock
-    private ProjectUserInviteRepository projectUserInviteRepositoryMock;
+    private ProjectUserInviteRepository projectUserInviteRepository;
 
     @Mock
-    private ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
 
     @Mock
-    private NoteRepository noteRepositoryMock;
+    private NoteRepository noteRepository;
 
     @Mock
-    private QueryRepository queryRepositoryMock;
+    private QueryRepository queryRepository;
 
     @Mock
-    private NotificationService notificationServiceMock;
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
 
     @Mock
-    private ProjectPartnerInviteRepository projectPartnerInviteRepositoryMock;
+    private RemovePartnerNotificationService removePartnerNotificationService;
 
     @Mock
-    private RemovePartnerNotificationService removePartnerNotificationServiceMock;
-
-    @Mock
-    private ProjectPartnerChangeService projectPartnerChangeServiceMock;
+    private ProjectPartnerChangeService projectPartnerChangeService;
 
     private Long projectId = 123L;
     private List<Organisation> organisations;
@@ -125,6 +120,7 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
         partnerOrganisations = newPartnerOrganisation()
                 .withId(3L, 18L)
                 .withOrganisation(organisations.get(0), organisations.get(1))
+                .withProject(project)
                 .withLeadOrganisation(true, false)
                 .build(2);
         partnerOrganisationResources = newPartnerOrganisationResource()
@@ -146,10 +142,10 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
 
     @Test
     public void getPartnerOrganisation() {
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId())).thenReturn(partnerOrganisations.get(0));
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(partnerOrganisations.get(1));
-        when(partnerOrganisationMapperMock.mapToResource(partnerOrganisations.get(0))).thenReturn(partnerOrganisationResources.get(0));
-        when(partnerOrganisationMapperMock.mapToResource(partnerOrganisations.get(1))).thenReturn(partnerOrganisationResources.get(1));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId())).thenReturn(partnerOrganisations.get(0));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(partnerOrganisations.get(1));
+        when(partnerOrganisationMapper.mapToResource(partnerOrganisations.get(0))).thenReturn(partnerOrganisationResources.get(0));
+        when(partnerOrganisationMapper.mapToResource(partnerOrganisations.get(1))).thenReturn(partnerOrganisationResources.get(1));
 
         ServiceResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(projectId, organisations.get(0).getId());
         ServiceResult<PartnerOrganisationResource> result2 = service.getPartnerOrganisation(projectId, organisations.get(1).getId());
@@ -157,23 +153,23 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
         assertEquals(partnerOrganisationResources.get(0), result.getSuccess());
         assertEquals(partnerOrganisationResources.get(1), result2.getSuccess());
 
-        verify(partnerOrganisationRepositoryMock, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId());
-        verify(partnerOrganisationRepositoryMock, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
-        verifyNoMoreInteractions(partnerOrganisationRepositoryMock);
+        verify(partnerOrganisationRepository, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId());
+        verify(partnerOrganisationRepository, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
+        verifyNoMoreInteractions(partnerOrganisationRepository);
     }
 
     @Test
     public void getProjectPartnerOrganisations() {
-        when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
-        when(partnerOrganisationMapperMock.mapToResource(partnerOrganisations.get(0))).thenReturn(partnerOrganisationResources.get(0));
-        when(partnerOrganisationMapperMock.mapToResource(partnerOrganisations.get(1))).thenReturn(partnerOrganisationResources.get(1));
+        when(partnerOrganisationRepository.findByProjectId(projectId)).thenReturn(partnerOrganisations);
+        when(partnerOrganisationMapper.mapToResource(partnerOrganisations.get(0))).thenReturn(partnerOrganisationResources.get(0));
+        when(partnerOrganisationMapper.mapToResource(partnerOrganisations.get(1))).thenReturn(partnerOrganisationResources.get(1));
 
         ServiceResult<List<PartnerOrganisationResource>> result = service.getProjectPartnerOrganisations(projectId);
 
         assertTrue(result.isSuccess());
         assertEquals(partnerOrganisationResources, result.getSuccess());
-        verify(partnerOrganisationRepositoryMock, times(1)).findByProjectId(projectId);
-        verifyNoMoreInteractions(partnerOrganisationRepositoryMock);
+        verify(partnerOrganisationRepository, times(1)).findByProjectId(projectId);
+        verifyNoMoreInteractions(partnerOrganisationRepository);
     }
 
     @Test
@@ -181,32 +177,41 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
         pendingPartnerProgress = new PendingPartnerProgress(partnerOrganisations.get(1));
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisations.get(1).getId());
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(partnerOrganisations.get(1));
-        when(pendingPartnerProgressRepositoryMock.findByOrganisationIdAndProjectId(organisations.get(1).getId(), projectId)).thenReturn(Optional.of(pendingPartnerProgress));
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(projectFinance.get(1));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(Optional.of(bankDetails.get(1)));
-        when(removePartnerNotificationServiceMock.sendNotifications(project, organisations.get(0))).thenReturn(serviceSuccess());
-        when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())).thenReturn(partnerOrganisations.get(1));
+        when(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(organisations.get(1).getId(), projectId)).thenReturn(Optional.of(pendingPartnerProgress));
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(projectFinance.get(1));
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(Optional.of(bankDetails.get(1)));
+        when(projectUserRepository.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
 
         ServiceResult<Void> result = service.removePartnerOrganisation(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
-        verify(partnerOrganisationRepositoryMock, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
-        verify(pendingPartnerProgressRepositoryMock, times(1)).findByOrganisationIdAndProjectId(organisations.get(1).getId(), projectId);
-        verify(projectFinanceRepositoryMock, times(1)).findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
-        verify(bankDetailsRepositoryMock, times(1)).findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
+        verify(partnerOrganisationRepository, times(1)).findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+        verify(pendingPartnerProgressRepository, times(1)).findByOrganisationIdAndProjectId(organisations.get(1).getId(), projectId);
+        verify(projectFinanceRepository, times(1)).findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
+        verify(bankDetailsRepository, times(1)).findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
+        verify(projectUserInviteRepository, times(1)).deleteAllByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
+        verify(projectPartnerInviteRepository, times(1)).deleteByProjectIdAndInviteOrganisationOrganisationId(projectId, organisations.get(1).getId());
+        verify(projectUserRepository, times(1)).deleteAllByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
+        verify(partnerOrganisationRepository, times(1)).deleteOneByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
+        verify(projectFinanceRowRepository, times(1)).deleteAllByTargetId(projectFinance.get(1).getId());
+        verify(projectFinanceRepository, times(1)).deleteAllByProjectIdAndOrganisationId(projectId, organisations.get(1).getId());
+        verify(noteRepository, times(1)).deleteAllByClassPk(projectFinance.get(1).getId());
+        verify(queryRepository, times(1)).deleteAllByClassPk(projectFinance.get(1).getId());
+        verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(projectOrganisationCompositeId.getProjectId());
+        verify(removePartnerNotificationService, times(1)).sendNotifications(project, organisations.get(1));
     }
 
     @Test
     public void removeLeadPartnerOrganisation() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisations.get(0).getId());
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId())).thenReturn(partnerOrganisations.get(0));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId())).thenReturn(partnerOrganisations.get(0));
 
         ServiceResult<Void> result = service.removePartnerOrganisation(projectOrganisationCompositeId);
 
         assertTrue(result.isFailure());
-        verify(partnerOrganisationRepositoryMock, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId());
-        verifyNoMoreInteractions(partnerOrganisationRepositoryMock);
+        verify(partnerOrganisationRepository, times(1)).findOneByProjectIdAndOrganisationId(projectId, organisations.get(0).getId());
+        verifyNoMoreInteractions(partnerOrganisationRepository);
     }
 
     @Override

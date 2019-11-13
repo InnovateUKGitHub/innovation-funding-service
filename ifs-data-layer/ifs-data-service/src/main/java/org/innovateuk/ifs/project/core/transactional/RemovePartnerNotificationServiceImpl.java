@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -21,7 +20,6 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.core.transactional.RemovePartnerNotificationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
@@ -49,10 +47,9 @@ public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotifi
     }
 
     @Override
-    public ServiceResult<Void> sendNotifications(Project project, Organisation organisation) {
+    public void sendNotifications(Project project, Organisation organisation) {
         sendNotificationToProjectTeam(project, organisation);
         sendNotificationToMonitoringOfficer(project, organisation);
-        return serviceSuccess();
     }
 
     private void sendNotificationToProjectTeam(Project project, Organisation organisation) {
