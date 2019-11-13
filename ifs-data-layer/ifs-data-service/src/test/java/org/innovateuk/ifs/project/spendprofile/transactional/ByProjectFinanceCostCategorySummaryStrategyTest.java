@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -63,7 +64,6 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
     @Test
     public void testGenerateSpendProfileForIndustrialOrganisation() {
-
         ProjectResource project = newProjectResource().
                 withDuration(10L).
                 withCompetition(2L).
@@ -145,6 +145,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
