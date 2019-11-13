@@ -29,6 +29,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static java.time.LocalDate.now;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -47,8 +50,9 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -106,10 +110,22 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
     private Project project;
     private Organisation empire;
     private Organisation ludlow;
+    private User projectFinanceUser;
+    private UserResource projectFinanceUserResource;
 
     @Before
     public void setup() {
-        loginCompAdmin();
+        User webUser = userMapper.mapToDomain(getSystemRegistrationUser());
+        projectFinanceUser = newUser()
+                .with(id(null))
+                .withEmailAddress("lee.bowman@innovateuk.test")
+                .withRoles(singleton(PROJECT_FINANCE))
+                .withUid("uid1200000012")
+                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedBy(webUser)
+                .withModifiedBy(webUser)
+                .withModifiedOn(ZonedDateTime.now())
+                .build();
 
         User projectManager = userRepository.findByEmail("steve.smith@empire.com").get();
         User projectPartner = userRepository.findByEmail("jessica.doe@ludlow.co.uk").get();
@@ -177,6 +193,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
 
     @Test
     public void getProjectPartnerOrganisations() {
+        loginCompAdmin();
         ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getProjectPartnerOrganisations(project.getId());
 
         assertTrue(result.isSuccess());
@@ -186,6 +203,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
 
     @Test
     public void getPartnerOrganisation() {
+        loginCompAdmin();
         ServiceResult<PartnerOrganisationResource> result = partnerOrganisationService.getPartnerOrganisation(project.getId(), empire.getId());
         ServiceResult<PartnerOrganisationResource> result2 = partnerOrganisationService.getPartnerOrganisation(project.getId(), ludlow.getId());
 
@@ -195,8 +213,21 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
     }
 
     @Test
-    public void removePartnerOrganisation() {
+    public void removeNonLeadPartnerOrganisation() {
+        userRepository.save(projectFinanceUser);
+        projectFinanceUserResource = userMapper.mapToResource(projectFinanceUser);
+        setLoggedInUser(projectFinanceUserResource);
+
         ServiceResult<Void> result = partnerOrganisationService.removePartnerOrganisation(new ProjectOrganisationCompositeId(project.getId(), ludlow.getId()));
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void removeLeadPartnerOrganisation() {
+        projectFinanceUserResource = userMapper.mapToResource(projectFinanceUser);
+        setLoggedInUser(projectFinanceUserResource);
+
+        ServiceResult<Void> result = partnerOrganisationService.removePartnerOrganisation(new ProjectOrganisationCompositeId(project.getId(), empire.getId()));
+        assertFalse(result.isSuccess());
     }
 }
