@@ -567,9 +567,9 @@ the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
     \    the user should see the element  css = li:nth-child(${i}) .task-status-complete
 
-#Custom suite teardown
-#    The user closes the browser
-#    Disconnect from database
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database
 
 the user should redirect to the correct page after publish and review
     the user able to see edit view for  Summary   Public content summary
