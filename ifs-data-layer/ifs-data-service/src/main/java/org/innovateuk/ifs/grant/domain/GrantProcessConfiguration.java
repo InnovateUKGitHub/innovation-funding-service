@@ -1,4 +1,6 @@
-package org.innovateuk.ifs.competition.domain;
+package org.innovateuk.ifs.grant.domain;
+
+import org.innovateuk.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
 import java.util.Objects;

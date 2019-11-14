@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.competition.repository;
+package org.innovateuk.ifs.grant.repository;
 
-import org.innovateuk.ifs.competition.domain.GrantProcessConfiguration;
+import org.innovateuk.ifs.grant.domain.GrantProcessConfiguration;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

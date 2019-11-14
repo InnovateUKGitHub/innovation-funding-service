@@ -2,8 +2,8 @@ package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.competition.domain.GrantProcessConfiguration;
-import org.innovateuk.ifs.competition.repository.GrantProcessConfigurationRepository;
+import org.innovateuk.ifs.grant.domain.GrantProcessConfiguration;
+import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,11 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     @Override
     public void createGrantProcess(long applicationId) {
         Optional<Application> application = applicationRepository.findById(applicationId);
-        Optional<GrantProcessConfiguration> sendToAcc = grantProcessConfigurationRepository.findByCompetitionId(application.get().getCompetition().getId());
-        boolean sendToAccFlag = sendToAcc.map(GrantProcessConfiguration::isSendByDefault).orElseGet(() -> false);
-        grantProcessRepository.save(new GrantProcess(applicationId, sendToAccFlag));
+        application.ifPresent((a) -> {
+            Optional<GrantProcessConfiguration> config = grantProcessConfigurationRepository.findByCompetitionId(a.getCompetition().getId());
+            boolean sendByDefault = config.map(GrantProcessConfiguration::isSendByDefault).orElseGet(() -> false);
+            grantProcessRepository.save(new GrantProcess(applicationId, sendByDefault));
+        });
     }
 
     @Override
