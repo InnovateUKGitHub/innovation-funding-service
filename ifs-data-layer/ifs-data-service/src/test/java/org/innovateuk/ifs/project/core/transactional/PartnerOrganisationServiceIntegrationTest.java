@@ -141,10 +141,11 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .withProjectUsers(projectUsers)
                 .withSpendProfileSubmittedDate(ZonedDateTime.now())
                 .build();
+        Project savedProject = projectRepository.save(project);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
                 .with(id(null))
-                .withProject(projectRepository.save(project))
+                .withProject(savedProject)
                 .withOrganisation(empire, ludlow)
                 .withLeadOrganisation(true, false)
                 .build(2);
@@ -178,7 +179,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
 
     @Test
     public void getProjectPartnerOrganisations() {
-        loginCompAdmin();
+        loginIfsAdmin();
         ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getProjectPartnerOrganisations(project.getId());
 
         assertTrue(result.isSuccess());
@@ -188,7 +189,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
 
     @Test
     public void getPartnerOrganisation() {
-        loginCompAdmin();
+        loginIfsAdmin();
         ServiceResult<PartnerOrganisationResource> result = partnerOrganisationService.getPartnerOrganisation(project.getId(), empire.getId());
         ServiceResult<PartnerOrganisationResource> result2 = partnerOrganisationService.getPartnerOrganisation(project.getId(), ludlow.getId());
 
@@ -196,16 +197,16 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         assertEquals("Empire Ltd", result.getSuccess().getOrganisationName());
         assertEquals("Ludlow", result2.getSuccess().getOrganisationName());
     }
-//
-//    @Test
-//    public void removeNonLeadPartnerOrganisation() {
-//        userRepository.save(projectFinanceUser);
-//        projectFinanceUserResource = userMapper.mapToResource(projectFinanceUser);
-//        setLoggedInUser(projectFinanceUserResource);
-//
-//        ServiceResult<Void> result = partnerOrganisationService.removePartnerOrganisation(new ProjectOrganisationCompositeId(project.getId(), ludlow.getId()));
-//        assertTrue(result.isSuccess());
-//    }
+
+    @Test
+    public void removeNonLeadPartnerOrganisation() {
+        userRepository.save(projectFinanceUser);
+        projectFinanceUserResource = userMapper.mapToResource(projectFinanceUser);
+        setLoggedInUser(projectFinanceUserResource);
+
+        ServiceResult<Void> result = partnerOrganisationService.removePartnerOrganisation(new ProjectOrganisationCompositeId(project.getId(), ludlow.getId()));
+        assertTrue(result.isSuccess());
+    }
 
     @Test
     public void removeLeadPartnerOrganisation() {
