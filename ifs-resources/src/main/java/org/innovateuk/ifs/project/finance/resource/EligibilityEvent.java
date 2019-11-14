@@ -9,7 +9,8 @@ public enum EligibilityEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
     NOT_REQUESTING_FUNDING("not-requesting-funding"),
-    ELIGIBILITY_APPROVED("eligibility-approved");
+    ELIGIBILITY_APPROVED("eligibility-approved"),
+    ELIGIBILITY_RESET("eligibility-reset");
 
     String event;
 

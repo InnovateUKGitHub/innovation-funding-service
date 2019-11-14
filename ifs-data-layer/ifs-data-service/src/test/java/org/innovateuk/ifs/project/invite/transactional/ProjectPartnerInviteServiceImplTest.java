@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.transactional.ProjectPartnerChangeService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
@@ -102,6 +103,9 @@ public class ProjectPartnerInviteServiceImplTest {
 
     @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Mock
+    private ProjectPartnerChangeService projectPartnerChangeService;
 
     @Mock
     private ActivityLogService activityLogService;
@@ -296,10 +300,12 @@ public class ProjectPartnerInviteServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(inviteOrganisation.getOrganisation(), organisation);
-        verify(projectFinanceRowService).createProjectFinance(project.getId(), organisationId);
-        verify(viabilityWorkflowHandler).projectCreated(any(), any());
-        verify(eligibilityWorkflowHandler).projectCreated(any(), any());
-        verify(viabilityWorkflowHandler).viabilityNotApplicable(any(), any());
-        verify(pendingPartnerProgressRepository).save(any());
+        verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
+        verify(projectFinanceRowService, times(1)).createProjectFinance(project.getId(), organisationId);
+        verify(viabilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(viabilityWorkflowHandler, times(1)).viabilityNotApplicable(any(), any());
+        verify(pendingPartnerProgressRepository, times(1)).save(any());
+        verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceRowService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
     }
 }
