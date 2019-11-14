@@ -38,8 +38,7 @@ public class ProjectTermsController {
     public String getTerms(@PathVariable long projectId,
                            @PathVariable long organisationId,
                            Model model,
-                           @ModelAttribute(name = "form", binding = false) ProjectTermsForm form,
-                           @RequestParam(value = "readonly", defaultValue = "false") Boolean readOnly) {
+                           @ModelAttribute(name = "form", binding = false) ProjectTermsForm form) {
 
         ProjectTermsViewModel viewModel = projectTermsModelPopulator.populate(projectId, organisationId);
         model.addAttribute("model", viewModel);
@@ -48,13 +47,13 @@ public class ProjectTermsController {
     }
 
     @PostMapping
-    private String acceptTerms(@PathVariable long projectId,
+    public String acceptTerms(@PathVariable long projectId,
                                @PathVariable long organisationId,
                                Model model,
                                @ModelAttribute(name = "form", binding = false) ProjectTermsForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> getTerms(projectId, organisationId, model, form, false);
+        Supplier<String> failureView = () -> getTerms(projectId, organisationId, model, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -63,7 +62,7 @@ public class ProjectTermsController {
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(
                             failureView,
-                            () -> format("redirect:project-setup/project/%d/organisation/%d/pending-partner-progress", projectId, organisationId));
+                            () -> format("redirect:/project/%d/organisation/%d/pending-partner-progress", projectId, organisationId));
         });
     }
 }

@@ -35,7 +35,6 @@ public class ProjectTermsModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         PendingPartnerProgressResource pendingPartnerProgressResource = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
-
         return new ProjectTermsViewModel(
                 projectId,
                 organisationId,
