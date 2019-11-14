@@ -30,7 +30,6 @@ public class BankDetails {
     private Project project;
 
     @OneToOne (cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)   // Using cascade because entries with type "BANK_DETAILS" should be added/removed via
-    // bank details
     @JoinColumn(name = "organisationAddressId", referencedColumnName = "id")
     private OrganisationAddress organisationAddress;
 
