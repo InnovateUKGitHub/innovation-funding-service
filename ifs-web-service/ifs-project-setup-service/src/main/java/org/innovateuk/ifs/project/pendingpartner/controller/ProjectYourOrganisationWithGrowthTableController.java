@@ -27,7 +27,8 @@ import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 /**
- * The Controller for the "Your organisation" page in the Application Form process when a growth table is required.
+ * The Controller for the "Your organisation" page in the project setup process
+ * when a a new partner has been invited and a growth table is required.
  */
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/your-organisation/with-growth-table")
