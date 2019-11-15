@@ -16,12 +16,25 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
+        <div class="message-alert">
+            <p class="govuk-body">If you are a partner enterprise or a linked
+                enterprise you must give the size of the main organisation
+                you are linked to.</p>
+        </div>
+
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               th:attr="data-autosave='autosaveFormPost'"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
+
+            <div class="message-alert">
+                <p class="govuk-body">If you are a partner enterprise or a linked
+                    enterprise you must give the size of the main organisation
+                    you are linked to.</p>
+            </div>
+
             <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                         with-growth-table(
                                                form=${form},
@@ -38,10 +51,6 @@
                             type="submit" name="mark-as-complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
-<!--                    <button id="mark_as_incomplete" th:if="${model.complete}"-->
-<!--                            type="submit" name="mark-as-incomplete" class="button-clear" value="true"-->
-<!--                            th:text="${'Edit your organisation'}">Edit-->
-<!--                    </button>-->
                 </div>
             </div>
 
