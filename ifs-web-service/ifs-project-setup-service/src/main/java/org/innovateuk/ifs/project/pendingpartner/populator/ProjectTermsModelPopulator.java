@@ -39,7 +39,8 @@ public class ProjectTermsModelPopulator {
                 projectId,
                 organisationId,
                 competition.getTermsAndConditions().getTemplate(),
-                pendingPartnerProgressResource.isTermsAndConditionsComplete()
+                pendingPartnerProgressResource.isTermsAndConditionsComplete(),
+                pendingPartnerProgressResource.getTermsAndConditionsCompletedOn()
         );
     }
 }

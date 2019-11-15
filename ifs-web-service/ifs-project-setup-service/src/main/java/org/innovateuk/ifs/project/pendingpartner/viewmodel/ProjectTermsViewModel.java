@@ -1,21 +1,27 @@
 package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 
+import java.time.ZonedDateTime;
+import java.util.Optional;
+
 public class ProjectTermsViewModel {
     private final long projectId;
     private final long organisationId;
     private final String competitionTermsTemplate;
     private final boolean termsAccepted;
     private final boolean showHeaderAndFooter;
+    private final ZonedDateTime termsAcceptedOn;
 
     public ProjectTermsViewModel(long projectId,
                                  long organisationId,
                                  String competitionTermsTemplate,
-                                 boolean termsAccepted) {
+                                 boolean termsAccepted,
+                                 ZonedDateTime termsAcceptedOn) {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.showHeaderAndFooter = true;
         this.termsAccepted = termsAccepted;
+        this.termsAcceptedOn = termsAcceptedOn;
     }
 
     public long getProjectId() {
@@ -36,5 +42,9 @@ public class ProjectTermsViewModel {
 
     public boolean isTermsAccepted() {
         return termsAccepted;
+    }
+
+    public Optional<ZonedDateTime> getTermsAcceptedOn() {
+        return Optional.ofNullable(termsAcceptedOn);
     }
 }

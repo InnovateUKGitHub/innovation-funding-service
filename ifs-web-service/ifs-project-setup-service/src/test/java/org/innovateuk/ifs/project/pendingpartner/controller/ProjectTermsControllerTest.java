@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.ZonedDateTime;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,8 +34,9 @@ public class ProjectTermsControllerTest extends BaseControllerMockMVCTest<Projec
         long organisationId = 5L;
         String competitionTermsTemplate = "terms-template";
         boolean termsAccepted = false;
+        ZonedDateTime termsAcceptedOn = ZonedDateTime.now();
 
-        ProjectTermsViewModel viewModel = new ProjectTermsViewModel(projectId, organisationId, competitionTermsTemplate, termsAccepted);
+        ProjectTermsViewModel viewModel = new ProjectTermsViewModel(projectId, organisationId, competitionTermsTemplate, termsAccepted, termsAcceptedOn);
 
         when(projectTermsModelPopulator.populate(projectId, organisationId)).thenReturn(viewModel);
 
