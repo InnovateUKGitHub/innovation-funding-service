@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.invite.transactional;
 
+import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.transactional.ProjectPartnerChangeService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
@@ -24,6 +26,7 @@ import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteReposito
 import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -100,6 +103,12 @@ public class ProjectPartnerInviteServiceImplTest {
 
     @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Mock
+    private ProjectPartnerChangeService projectPartnerChangeService;
+
+    @Mock
+    private ActivityLogService activityLogService;
 
     @Test
     public void invite() {
@@ -279,6 +288,7 @@ public class ProjectPartnerInviteServiceImplTest {
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         invite.setInviteOrganisation(inviteOrganisation);
         invite.setProject(project);
+        invite.send(newUser().withId(1l).build(), ZonedDateTime.now());
         Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.RESEARCH) .build();
 
         when(organisationRepository.findById(organisationId)).thenReturn(of(organisation));
@@ -290,10 +300,12 @@ public class ProjectPartnerInviteServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(inviteOrganisation.getOrganisation(), organisation);
-        verify(projectFinanceRowService).createProjectFinance(project.getId(), organisationId);
-        verify(viabilityWorkflowHandler).projectCreated(any(), any());
-        verify(eligibilityWorkflowHandler).projectCreated(any(), any());
-        verify(viabilityWorkflowHandler).viabilityNotApplicable(any(), any());
-        verify(pendingPartnerProgressRepository).save(any());
+        verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
+        verify(projectFinanceRowService, times(1)).createProjectFinance(project.getId(), organisationId);
+        verify(viabilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(viabilityWorkflowHandler, times(1)).viabilityNotApplicable(any(), any());
+        verify(pendingPartnerProgressRepository, times(1)).save(any());
+        verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceRowService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
     }
 }

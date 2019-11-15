@@ -42,10 +42,10 @@ public interface RegistrationService {
     ServiceResult<Void> resendUserVerificationEmail(@P("user") final UserResource user);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'ACTIVATE')")
-    ServiceResult<Void> activateUser(long userId);
+    ServiceResult<UserResource> activateUser(long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'DEACTIVATE')")
-    ServiceResult<Void> deactivateUser(long userId);
+    ServiceResult<UserResource> deactivateUser(long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'ACTIVATE')")
     ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId);
@@ -62,7 +62,7 @@ public interface RegistrationService {
 
     @PreAuthorize("hasPermission(#userToEdit, 'EDIT_INTERNAL_USER')")
     @SecuredBySpring(value = "CREATE", securedType = StakeholderRegistrationResource.class, description = "A System Registration User can create new Stakeholders on behalf of non-logged in users with invite hash")
-    ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType);
+    ServiceResult<UserResource> editInternalUser(UserResource userToEdit, Role userRoleType);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "CREATE", securedType = StakeholderRegistrationResource.class, description = "A System Registration User can create new Stakeholders on behalf of non-logged in users with invite hash")

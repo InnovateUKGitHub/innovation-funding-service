@@ -13,6 +13,12 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to join project',linkUrl=@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
+    <div class="message-alert">
+        <p class="govuk-body">If you are a partner enterprise or a linked
+            enterprise you must give the size of the main organisation
+            you are linked to.</p>
+    </div>
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
@@ -22,18 +28,15 @@
                 you are linked to.</p>
         </div>
 
+        <th:block
+            th:insert="application/sections/your-organisation/growth-table-fragments :: partner-size-info"/>
+
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               th:attr="data-autosave='autosaveFormPost'"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
-
-            <div class="message-alert">
-                <p class="govuk-body">If you are a partner enterprise or a linked
-                    enterprise you must give the size of the main organisation
-                    you are linked to.</p>
-            </div>
 
             <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                         with-growth-table(

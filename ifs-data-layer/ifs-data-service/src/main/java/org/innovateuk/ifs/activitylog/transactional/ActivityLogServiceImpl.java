@@ -14,6 +14,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,9 @@ public class ActivityLogServiceImpl implements ActivityLogService {
 
     @Autowired
     private QueryRepository queryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
@@ -64,6 +68,20 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 .ifPresent(project -> {
                     ActivityLog log = new ActivityLog(project.getApplication(), activityType);
                     activityLogRepository.save(log);
+                });
+    }
+
+    @Override
+    public void recordActivityByProjectIdAndOrganisationIdAndAuthorId(long projectId, long organisationId, long authorId, ActivityType activityType) {
+        projectRepository.findById(projectId)
+                .ifPresent(project -> {
+                    organisationRepository.findById(organisationId)
+                            .ifPresent(organisation -> {
+                                userRepository.findById(authorId).ifPresent(user -> {
+                                    ActivityLog log = new ActivityLog(project.getApplication(), activityType, organisation, user);
+                                    activityLogRepository.save(log);
+                                });
+                            });
                 });
     }
 
@@ -100,28 +118,28 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 });
     }
 
-    @Override
     public ServiceResult<List<ActivityLogResource>> findByApplicationId(long applicationId) {
         return serviceSuccess(activityLogRepository.findByApplicationIdOrderByCreatedOnDesc(applicationId)
                 .stream()
-                .map(this::toResource)
+                .map(ActivityLogServiceImpl::toResource)
                 .collect(toList()));
     }
 
-    private ActivityLogResource toResource(ActivityLog activityLog) {
-        initialize(activityLog.getCreatedBy().getRoles());
+    private static ActivityLogResource toResource(ActivityLog activityLog) {
+        initialize(activityLog.getAuthor().getRoles());
         return new ActivityLogResource(
                 activityLog.getType(),
-                activityLog.getCreatedBy().getId(),
-                activityLog.getCreatedBy().getName(),
-                activityLog.getCreatedBy().getRoles(),
+                activityLog.getAuthor().getId(),
+                activityLog.getAuthor().getName(),
+                activityLog.getAuthor().getRoles(),
                 activityLog.getCreatedOn(),
                 activityLog.getOrganisation().map(Organisation::getId).orElse(null),
                 activityLog.getOrganisation().map(Organisation::getName).orElse(null),
                 activityLog.getCompetitionDocument().map(CompetitionDocument::getId).orElse(null),
                 activityLog.getCompetitionDocument().map(CompetitionDocument::getTitle).orElse(null),
                 activityLog.getQuery().map(Query::id).orElse(null),
-                activityLog.getQuery().map(Query::section).orElse(null)
+                activityLog.getQuery().map(Query::section).orElse(null),
+                activityLog.isOrganisationRemoved()
         );
     }
 }

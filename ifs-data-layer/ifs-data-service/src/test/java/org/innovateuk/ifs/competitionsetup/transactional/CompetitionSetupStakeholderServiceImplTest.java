@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -71,6 +72,9 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
 
     @Mock
     private UserMapper userMapperMock;
+
+    @Mock
+    private UserService userService;
 
     @Override
     protected CompetitionSetupStakeholderServiceImpl supplyServiceUnderTest() {
@@ -191,6 +195,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
 
         assertTrue(result.isSuccess());
 
+        verify(userService).evictUserCache(user.getUid());
         verify(stakeholderRepositoryMock).save(savedStakeholderInDB);
         verify(notificationServiceMock).sendNotificationWithFlush(notificationCaptor.capture(), eq(EMAIL));
 

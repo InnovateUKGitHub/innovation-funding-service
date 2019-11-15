@@ -488,7 +488,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
         projectFinance.setViabilityStatus(viabilityRagStatus);
-
         projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();
@@ -518,7 +517,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
 
         projectFinance.setEligibilityStatus(eligibilityRagStatus);
-
         projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();

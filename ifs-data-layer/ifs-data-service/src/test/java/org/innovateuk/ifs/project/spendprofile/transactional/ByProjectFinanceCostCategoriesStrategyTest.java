@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -21,10 +20,12 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Arrays.stream;
-import static java.util.Collections.*;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -48,9 +49,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
     public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategoriesStrategy> {
 
@@ -71,7 +70,6 @@ import static org.mockito.Mockito.when;
 
     @Test
     public void testIndustrialCreate() {
-        // Setup
         CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withFundingType(FundingType.GRANT).build();
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
@@ -90,24 +88,23 @@ import static org.mockito.Mockito.when;
                                 build(2)).
                         build()).
                 build();
-        // Mocks
+
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
         when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
         when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
-        // Method under test
-        ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
-        assertTrue(result.isSuccess());
-        assertEquals(expectedCct, result.getSuccess()); // We matched
+
+        CostCategoryType result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId()).getSuccess();
+
+        assertEquals(expectedCct, result);
     }
 
 
     @Test
     public void testAlreadyCreated() {
-        // Setup
-        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).build();
+        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withFundingType(FundingType.GRANT).build();
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
         OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getId()).build(); // Academic
@@ -127,15 +124,14 @@ import static org.mockito.Mockito.when;
                                 build(spendProfileGenerators.length)).
                         build()).
                 build();
-        // Mocks
+
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
         when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(singletonList(expectedCct)); // This is the one already created and should be returned
         when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
-        // Method under test
-        ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
-        assertTrue(result.isSuccess());
+
+        CostCategoryType result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId()).getSuccess();
 
         verify(projectServiceMock).getProjectById((anyLong()));
         verify(organisationServiceMock).findById(anyLong());
@@ -143,13 +139,12 @@ import static org.mockito.Mockito.when;
         verify(costCategoryTypeRepositoryMock).findAll();
         verifyNoMoreInteractions(costCategoryTypeRepositoryMock);
 
-        assertEquals(expectedCct, result.getSuccess()); // We matched
+        assertEquals(expectedCct, result);
     }
 
     @Test
     public void testAcademicCreate() {
-        // Setup
-        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).build();
+        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withFundingType(FundingType.GRANT).build();
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
         OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getId()).build(); // Academic
@@ -172,17 +167,16 @@ import static org.mockito.Mockito.when;
                                 build(spendProfileGenerators.length)).
                         build()).
                 build();
-        // Mocks
+
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
         when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
         when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
-        // Method under test
-        ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
-        assertTrue(result.isSuccess());
-        assertEquals(expectedCct, result.getSuccess()); // We matched
+
+        CostCategoryType result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId()).getSuccess();
+        assertEquals(expectedCct, result);
     }
 
     private CostCategoryType matcherForCostCategoryType(CostCategoryType expected) {

@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,12 +33,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Companies House API site</a>
  */
 @Service
-@ConditionalOnProperty(name = "ifs.data.companies-house.lookup.enabled", havingValue = "", matchIfMissing = true)
+@ConditionalOnProperty(name = "ifs.data.companies.house.lookup.enabled", havingValue = "", matchIfMissing = true)
 public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final Log LOG = LogFactory.getLog(CompaniesHouseApiServiceImpl.class);
 
-    @Value("${ifs.data.companies-house.url}")
+    @Value("${ifs.data.companies.house.url}")
     private String companiesHouseUrl = null;
 
     private static final int SEARCH_ITEMS_MAX = 10;
