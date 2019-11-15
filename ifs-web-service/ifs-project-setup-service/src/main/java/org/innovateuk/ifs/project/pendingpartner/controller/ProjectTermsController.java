@@ -62,7 +62,7 @@ public class ProjectTermsController {
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(
                             failureView,
-                            () -> format("redirect:/project/%d/organisation/%d/pending-partner-progress", projectId, organisationId));
+                            () -> format("redirect:/project/{projectId}/organisation/{organisationId}/terms-and-conditions#terms-accepted", projectId, organisationId));
         });
     }
 }
