@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import java.time.format.DateTimeFormatter;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.SectionStatusService;
@@ -30,6 +31,11 @@ public class ApplicationOrganisationFinanceServiceImpl extends AbstractOrganisat
     private UsersRolesService usersRolesService;
     @Autowired
     private SectionStatusService sectionStatusService;
+
+    static final String ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION = "Annual turnover";
+    static final String ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION = "Annual profits";
+    static final String ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION = "Annual export";
+    static final String RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION = "Research and development spend";
 
     @Override
     protected ServiceResult<ApplicationFinanceResource> getFinance(long applicationId, long organisationId) {
