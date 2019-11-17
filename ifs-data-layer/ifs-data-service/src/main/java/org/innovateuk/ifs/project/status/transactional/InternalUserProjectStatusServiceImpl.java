@@ -262,17 +262,15 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                                                              final boolean allRequiredDetailsComplete,
                                                              final ProjectState projectState) {
 
-        if (allRequiredDetailsComplete) {
-            if (monitoringOfficerExists) {
-                return COMPLETE;
+        if (monitoringOfficerExists) {
+            return COMPLETE;
+        } else if (allRequiredDetailsComplete) {
+            User user = loggedInUserSupplier.get();
+            if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
+                return notStartedIfProjectActive(projectState);
             } else {
-                User user = loggedInUserSupplier.get();
-                if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
-                    return notStartedIfProjectActive(projectState);
-                } else {
-                    return projectState.isActive() ?
-                    ACTION_REQUIRED : PENDING;
-                }
+                return projectState.isActive() ?
+                ACTION_REQUIRED : PENDING;
             }
         } else {
             return notStartedIfProjectActive(projectState);
