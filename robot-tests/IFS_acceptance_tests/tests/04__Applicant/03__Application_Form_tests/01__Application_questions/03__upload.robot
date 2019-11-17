@@ -58,13 +58,14 @@ Lead applicant can upload a pdf file
     And the user clicks the button/link     link = Academic robot test application
     And the user clicks the button/link     link = 5. Technical approach
     Then the user uploads the file          css = .inputfile    ${5mb_pdf}
-    And the user should see the element     jQuery = a:contains(${5mb_pdf})
+    sleep    200ms
+    And the user should see the element     jQuery = a:contains(${5mb_pdf} (opens in a new window))
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720
     [Tags]  HappyPath
     Given the file has been scanned for viruses
-    Then open pdf link   ${5mb_pdf}
+    Then open pdf link   jQuery = a:contains(${5mb_pdf} (opens in a new window))
 
 Internal users can view uploaded files
     [Documentation]    IFS-1037
@@ -86,7 +87,7 @@ Collaborators can view a file
     Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link           link = Academic robot test application
     And the user clicks the button/link           link = 5. Technical approach
-    Then open pdf link                             ${5mb_pdf}
+    Then open pdf link                            jQuery = a:contains(${5mb_pdf} (opens in a new window))
 
 Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
@@ -97,7 +98,7 @@ Collaborators cannot upload a file if not assigned
 Collaborators cannot remove a file if not assigned
     [Documentation]    INFUND-2720
     [Tags]
-    When the user should see the element               link = ${5mb_pdf}
+    When the user should see the element               jQuery = a:contains(${5mb_pdf} (opens in a new window))
     Then the user should not see the element           jQuery = button:contains("Remove")
 
 Questions can be assigned with appendices
@@ -107,7 +108,7 @@ Questions can be assigned with appendices
     Given the user navigates to the page                    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                     link = Academic robot test application
     And the user clicks the button/link                     link = 5. Technical approach
-    And the user should see the element                     link = ${5mb_pdf}
+    And the user should see the element                     jQuery = a:contains(${5mb_pdf} (opens in a new window))
     When the user assigns the question to the collaborator  Arsene Wenger
     Then the user should not see the element                jQuery = button:contains("Remove")
     And the user clicks the button/link                     link = Back to application overview
@@ -121,7 +122,7 @@ Collaborators can view a file when the question is assigned
     Given the user navigates to the page        ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link         link = Academic robot test application
     When the user clicks the button/link        link = 5. Technical approach
-    Then open pdf link                          ${5mb_pdf}
+    Then open pdf link                          jQuery = a:contains(${5mb_pdf} (opens in a new window))
 
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
@@ -129,7 +130,7 @@ Collaborator can remove a file when the question is assigned
     Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link           link = Academic robot test application
     And the user clicks the button/link           link = 5. Technical approach
-    And the user should see the element           link = ${5mb_pdf}
+    And the user should see the element           jQuery = a:contains(${5mb_pdf} (opens in a new window))
     When the user can remove the uploaded file    removeAppendix  ${5mb_pdf}
     Then the user clicks the button/link          name = assign
 
@@ -191,7 +192,7 @@ the user checks the Appendix guidance
 User verifies if uploaded document can be viewed
      the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${academic_applicaton_id}
      the user expands the section              5. Technical approach
-     open pdf link                             ${5mb_pdf}
+     open pdf link                             jQuery = a:contains(${5mb_pdf})
 
 Custom suite teardown
     Close browser and delete emails

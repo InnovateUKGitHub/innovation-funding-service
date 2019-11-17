@@ -49,8 +49,8 @@ the file has been scanned for viruses
     Sleep    5s    #this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
 
 open pdf link
-    [Arguments]  ${link}
-    the user clicks the button/link        link = ${link}
+    [Arguments]  ${selector}
+    the user clicks the button/link        ${selector}
     Select Window  NEW
     And the user should not see an error in the page
     Then the user closes the last opened tab

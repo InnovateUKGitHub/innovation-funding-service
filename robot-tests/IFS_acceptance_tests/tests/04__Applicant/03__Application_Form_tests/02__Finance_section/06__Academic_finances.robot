@@ -74,7 +74,7 @@ Academics upload
     When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
     And the user should see the element                link = ${5mb_pdf}
-    And open pdf link                                  ${5mb_pdf}
+    And open pdf link                                  jQuery = a:contains(${5mb_pdf} (opens in a new window))
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917

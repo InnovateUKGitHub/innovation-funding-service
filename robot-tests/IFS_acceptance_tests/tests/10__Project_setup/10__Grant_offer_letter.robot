@@ -291,7 +291,7 @@ PM can view the uploaded Annex file
     [Tags]  HappyPath
     [Setup]    log in as a different user        ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user navigates to the page         ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then open pdf link                           ${valid_pdf}
+    Then open pdf link                           jQuery = a:contains(${valid_pdf}(opens in a new window))
 
 PM can download the annex
     [Documentation]    INFUND-5998
