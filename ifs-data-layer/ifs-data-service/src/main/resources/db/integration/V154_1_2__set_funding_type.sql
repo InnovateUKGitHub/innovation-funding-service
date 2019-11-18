@@ -1,0 +1,1 @@
+update competition set funding_type = 'GRANT';
