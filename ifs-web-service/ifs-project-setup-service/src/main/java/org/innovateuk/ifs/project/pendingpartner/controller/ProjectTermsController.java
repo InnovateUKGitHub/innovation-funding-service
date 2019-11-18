@@ -22,7 +22,8 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/terms-and-conditions")
 @PreAuthorize("hasAnyAuthority('applicant')")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectTermsController.class)
+@SecuredBySpring(value = "Controller", description = "Only pending partner can view the application terms",
+        securedType = ProjectTermsController.class)
 public class ProjectTermsController {
 
     private ProjectTermsModelPopulator projectTermsModelPopulator;
