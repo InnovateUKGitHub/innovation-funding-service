@@ -16,6 +16,15 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
         <div class="message-alert">
             <p class="govuk-body">If you are a partner enterprise or a linked
                 enterprise you must give the size of the main organisation

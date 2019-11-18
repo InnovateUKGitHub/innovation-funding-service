@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import javax.validation.constraints.NotNull;
+import org.innovateuk.ifs.commons.validation.constraints.LastFinancialYearEnd;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 /**
