@@ -16,19 +16,19 @@ import java.util.List;
  */
 public interface ProjectFinanceRowService {
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Project Finance users can access cost items from project finance")
     ServiceResult<FinanceRowItem> get(long costItemId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can add new costs to project finance")
     ServiceResult<FinanceRowItem> create(FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')")
     @SecuredBySpring(value = "UPDATE", securedType = FinanceRowItem.class, description = "Project Finance users can update  costs from project finance")
     ServiceResult<FinanceRowItem> update(long costId, FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can delete costs from project finance")
     ServiceResult<Void> delete(long costId);
 

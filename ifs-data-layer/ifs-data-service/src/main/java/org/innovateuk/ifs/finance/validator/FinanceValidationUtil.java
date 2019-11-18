@@ -51,6 +51,7 @@ public class FinanceValidationUtil {
         return buildValidationMessages(costItem, bindingResult);
     }
 
+    @Transactional(readOnly = true)
     public ValidationMessages validateProjectCostItem(FinanceRowItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
         invokeProjectCostValidator(costItem, bindingResult);

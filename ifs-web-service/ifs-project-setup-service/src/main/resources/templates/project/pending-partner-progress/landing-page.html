@@ -33,7 +33,7 @@
             <li>
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a href="#" class="govuk-link">Your funding</a>
+                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-funding(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Your funding</a>
                     </h3>
                 </div>
                 <div th:if="${model.yourFundingComplete}"

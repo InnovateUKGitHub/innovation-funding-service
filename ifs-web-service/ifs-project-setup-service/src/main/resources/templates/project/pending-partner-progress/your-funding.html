@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Your funding'}" />
+</head>
+<body class="govuk-template__body project-other-documents">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/modals :: modal-configured-partner-document" />
+<th:block th:insert="fragments/modals :: modal-overlay" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to join project',linkUrl=@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your funding',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <th:block th:if="${model.fundingSectionLocked}">
+            <p class="govuk-body">
+                Before you can supply your funding details you must:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    you must mark the
+                    <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-organisation(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                       class="govuk-link">
+                        your organisation
+                    </a>
+                    page as complete
+                </li>
+            </ul>
+        </th:block>
+        <th:block th:unless="${model.fundingSectionLocked}">
+            <form th:object="${form}"
+                  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                  th:attr="data-autosave=@{/project/{projectId}/organisation/{organisationId}/your-funding/auto-save(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                  enctype="multipart/form-data"
+                  novalidate="novalidate"
+                  method="POST">
+
+                <th:block th:insert="application/your-funding-fragments :: form(
+                                form=${form},
+                               readOnly=${model.readOnly},
+                               guidanceFragment=${model.business ? 'project-business' : 'project-non-business'},
+                               maximumFundingLevel=${model.maximumFundingLevel}
+                   )" />
+
+                <div class="form-footer">
+                    <div class="form-footer__actions">
+                        <button id="mark-all-as-complete" th:unless="${model.readOnly}" type="submit" name="complete"
+                                class="button-clear" value="true">Mark as complete
+                        </button>
+                        <button th:if="${model.readOnly}" type="submit" name="edit" class="button-clear" value="true">
+                            Edit your funding
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <a th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                       th:if="${model.readOnly}"
+                       class="govuk-!-margin-top-6 button-secondary">Return to organisation details
+                    </a>
+                    <button type="submit" th:unless="${model.readOnly}"
+                            class="govuk-!-margin-top-6 govuk-button">
+                        Save and return to organisationDetails
+                    </button>
+                </div>
+            </form>
+
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+
+</body>
+</html>

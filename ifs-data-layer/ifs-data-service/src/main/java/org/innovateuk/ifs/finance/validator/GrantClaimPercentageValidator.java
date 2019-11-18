@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.finance.validator;
 
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,10 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 public class GrantClaimPercentageValidator implements Validator {
 
     @Autowired
-    private ApplicationFinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
+
+    @Autowired
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -35,9 +38,11 @@ public class GrantClaimPercentageValidator implements Validator {
             return;
         }
 
-        FinanceRow cost = financeRowRepository.findById(response.getId()).get();
-        ApplicationFinance applicationFinance = ((ApplicationFinanceRow)cost).getTarget();
-        Integer max = applicationFinance.getMaximumFundingLevel();
+        Finance finance = applicationFinanceRowRepository.findById(response.getId())
+                .map(ApplicationFinanceRow::getTarget)
+                .map(Finance.class::cast)
+                .orElseGet(() -> projectFinanceRowRepository.findById(response.getId()).get().getTarget());
+        Integer max = finance.getMaximumFundingLevel();
         if (max == null) {
             rejectValue(errors, "percentage", "validation.grantClaimPercentage.maximum.not.defined");
             return;
