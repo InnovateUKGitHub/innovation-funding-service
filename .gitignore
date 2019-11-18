@@ -158,8 +158,15 @@ ifs-web-service/ifs-project-setup-service/tomcat/
 
 # ifs-auth-service secrets
 ifs-auth-service/ifs-sp-service/src/main/docker/certs/
-ifs-auth-service/ifs-idp-service/src/main/docker/certs/*.*
 ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
+
+ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.crt
+ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.key
+ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.crt
+ifs-auth-service/ifs-idp-service/src/main/docker/certs/sp_proxy_certificate.pem
+ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.key
+ifs-auth-service/ifs-idp-service/src/main/docker/certs/ldap-encryption.crt
+
 
 setup-files/scripts/docker/newrelic.*
 ifs-data-layer/ifs-data-service/static/

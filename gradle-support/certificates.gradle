@@ -1,6 +1,6 @@
-String spCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-sp-service/src/main/docker/certs/"
-String idpCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-idp-service/src/main/docker/certs/"
-String ldapCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs/"
+String spCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-sp-service/src/main/docker/certs"
+String idpCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-idp-service/src/main/docker/certs"
+String ldapCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs"
 
 String spProxyKeyFileName = 'sp_proxy_key.pem'
 String spProxyKeyFile = "${buildDir}/${spProxyKeyFileName}"

@@ -119,17 +119,7 @@ COPY scripts/* /usr/local/bin/
 
 # copy certs into build
 RUN mkdir -p /var/certs/
-COPY certs/proxy/idp_proxy_cacertificate.pem /var/certs/
-COPY certs/proxy/idp_proxy_certificate.pem /var/certs/
-COPY certs/proxy/idp_proxy_key.pem /var/certs/
-
-COPY certs/idp-encryption.crt /var/certs/
-COPY certs/idp-encryption.key /var/certs/
-
-COPY certs/idp-signing.crt /var/certs/
-COPY certs/idp-signing.key /var/certs/
-
-COPY certs/sp_proxy_certificate.pem /var/certs/
+COPY certs/* /var/certs/
 
 # custom govuk pages
 COPY pages/ /opt/shibboleth-idp/
