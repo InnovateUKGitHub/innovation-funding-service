@@ -99,11 +99,11 @@ Comp admin can open the view mode of the application
     Then the user should be redirected to the correct page                 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element                                    link = Print application
     And the user should see the element                                    jQuery = h1 span:contains("Climate science the history of Greenland's ice")
-    And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf")
-    And open pdf link                                                      ${5mb_pdf}, 4 MB
-    And the user should see the text in the page    ${quarantine_pdf}
-    And the user cannot see this file but gets a quarantined message
-    TODO when working on Guarantined files. Variable has been removed
+    And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf, 4 MB")
+    And open pdf link                                                      jQuery = a:contains(${5mb_pdf}, 4 MB)
+#        And the user should see the text in the page    ${quarantine_pdf}
+#        And the user cannot see this file but gets a quarantined message
+#     TODO when working on Guarantined files. Variable has been removed
 
 Comp admin can link to the comp page from application overview
     [Documentation]  IFS-6060
@@ -140,7 +140,7 @@ the user can see the option to upload a file on the page
     the user should see the element             jQuery = label:contains("Upload")
 
 the user can view this file without any errors
-    the user clicks the button/link    ${5mb_pdf}, 4 MB
+    the user clicks the button/link   jQuery = a:contains(${5mb_pdf}, 4 MB)
     the user should not see an error in the page
 
 the user cannot see this file but gets a quarantined message
