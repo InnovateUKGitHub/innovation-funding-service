@@ -1,6 +1,6 @@
-String spCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-sp-service/src/main/docker/certs"
-String idpCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-idp-service/src/main/docker/certs"
-String ldapCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs"
+String spCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-sp-service/src/main/docker/certs/"
+String idpCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-idp-service/src/main/docker/certs/"
+String ldapCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs/"
 
 String spProxyKeyFileName = 'sp_proxy_key.pem'
 String spProxyKeyFile = "${buildDir}/${spProxyKeyFileName}"
@@ -24,6 +24,24 @@ String ldapEncryptionKeyFile = "${buildDir}/${ldapEncryptionKeyFileName}"
 
 String ldapEncryptionCertificateFileName = 'ldap-encryption.crt'
 String ldapEncryptionCertificateFile = "${buildDir}/${ldapEncryptionCertificateFileName}"
+
+String idpProxyKeyFileName = 'idp_proxy_key.pem'
+String idpProxyKeyFile = "${buildDir}/${idpProxyKeyFileName}"
+String idpProxyCertificateFileName = 'idp_proxy_certificate.pem'
+String idpProxyCertificateFile = "${buildDir}/${idpProxyCertificateFileName}"
+String idpProxyCacertificateFileName = 'idp_proxy_cacertificate.pem'
+String idpProxyCacertificateFile = "${buildDir}/${idpProxyCacertificateFileName}"
+
+task prepareIDPProxySecrets {
+    doFirst {
+            copy {
+                from file(idpProxyKeyFile)
+                from file(idpProxyCertificateFile)
+                from file(idpProxyCacertificateFile)
+                into idpCertsVolume
+            }
+        }
+}
 
 task prepareIDPSigningSecrets {
     if (!file("${idpCertsVolume}/${idpSigningKeyFileName}").exists() ||
@@ -116,6 +134,7 @@ task prepareLDAPEncryptionSecrets {
 }
 
 task generateCertificates {
+    dependsOn prepareIDPProxySecrets
     dependsOn prepareIDPSigningSecrets
     dependsOn prepareIDPEncryptionSecrets
     dependsOn prepareLDAPEncryptionSecrets

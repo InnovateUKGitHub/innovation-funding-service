@@ -35,8 +35,6 @@ ENV HTTP_PORT=9080 \
   HTTPS_PORT=9443 \
   IDP_DOMAIN=idp \
   SP_DOMAIN=ifs.local-dev \
-  IDP_CERT_LOCATION="/var/certs/******"
-  IDP_KEY_LOCATION="/var/certs/******"
 
   JAVA_KEYSTORE_PASSWORD="@java_keystore_password@" \
 
@@ -121,8 +119,12 @@ COPY scripts/* /usr/local/bin/
 
 # copy certs into build
 RUN mkdir -p /var/certs/
-COPY certs/external* /var/certs/
-COPY certs/proxy* /var/certs/
+COPY certs/proxy/* /var/certs/
+COPY certs/idp-encryption.crt /var/certs/
+COPY certs/idp-encryption.key /var/certs/
+COPY certs/idp-signing.crt /var/certs/
+COPY certs/idp-signing.key /var/certs/
+COPY certs/sp_proxy_certificate.pem /var/certs/
 
 # custom govuk pages
 COPY pages/ /opt/shibboleth-idp/
