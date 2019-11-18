@@ -101,9 +101,9 @@ Comp admin can open the view mode of the application
     And the user should see the element                                    jQuery = h1 span:contains("Climate science the history of Greenland's ice")
     And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf")
     And open pdf link                                                      ${5mb_pdf}, 4 MB
-        And the user should see the text in the page    ${quarantine_pdf}
-        And the user cannot see this file but gets a quarantined message
-     TODO when working on Guarantined files. Variable has been removed
+    And the user should see the text in the page    ${quarantine_pdf}
+    And the user cannot see this file but gets a quarantined message
+    TODO when working on Guarantined files. Variable has been removed
 
 Comp admin can link to the comp page from application overview
     [Documentation]  IFS-6060

@@ -166,7 +166,7 @@ PM can view the grant offer letter page
     Then the user should see the element             css = li.require-action:last-of-type
     When the user clicks the button/link             link = Grant offer letter
     Then the user should see the element             jQuery = p:contains("The grant offer letter has been provided by Innovate UK.")
-    And the user should see the element              jQuery = label:contains(+ Upload)
+    And the user should see the element              jQuery = label:contains(Upload)
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
     Then the user should see the element             jQuery = h1:contains("Project team status")
@@ -178,7 +178,7 @@ Partners should not be able to send the Grant Offer
     [Setup]    log in as a different user       ${Elbow_Grease_Partner_Email}    ${short_password}
     Given the user clicks the button/link       link = ${Elbow_Grease_Title}
     And the user clicks the button/link         link = Grant offer letter
-    Then the user should not see the element    jQuery = label:contains(+ Upload)
+    Then the user should not see the element    jQuery = label:contains(Upload)
     And the user should not see the element     css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
