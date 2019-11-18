@@ -94,10 +94,6 @@ public class DocumentViewModel {
         return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }
 
-    public boolean isShowSubmitDocumentsButton() {
-        return projectManager && status == DocumentStatus.UPLOADED;
-    }
-
     public boolean isShowDisabledSubmitDocumentsButton() {
         return projectManager && status == DocumentStatus.UNSET;
     }

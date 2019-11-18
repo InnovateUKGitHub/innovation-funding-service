@@ -160,7 +160,7 @@
                     <th:block th:unless="${autoSaveOff}">
                         <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" aria-label="Upload a file" />
                     </th:block>
-                    <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                    <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">Upload</label>
                     <button th:name="${saveName}" th:id="${inputField+'-button'}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}" aria-label="Upload document">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">

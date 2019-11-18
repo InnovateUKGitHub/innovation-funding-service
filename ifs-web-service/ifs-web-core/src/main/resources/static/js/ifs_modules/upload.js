@@ -12,6 +12,7 @@ IFS.core.upload = (function () {
       numberOfFiles: 'data-js-number-of-files',
       oneAtATime: 'data-js-upload-one-at-a-time',
       maxSize: 'data-js-max-size',
+      enableButton: 'data-js-enabled-on-file-upload',
       successRow: '<li class="success">' +
                     '<div class="file-row">' +
                       '<a href="$href" target="_blank" class="govuk-link">$text (Opens in a new window)</a>' +
@@ -29,7 +30,7 @@ IFS.core.upload = (function () {
                     '</div>' +
                   '</li>',
       uploadView: '<input type="file" id="$id" name="$uploadFileInput" class="inputfile">' +
-                  '<label for="$id" class="button-secondary govuk-!-margin-top-6">+ Upload</label>' +
+                  '<label for="$id" class="button-secondary govuk-!-margin-top-6">Upload</label>' +
                   '<button name="$uploadButtonName" class="button-secondary" data-for-file-upload="$id"></button>'
     },
     init: function () {
@@ -53,7 +54,7 @@ IFS.core.upload = (function () {
       IFS.core.upload.clearMessages(wrapper, 'li.error')
       var pendingRow = IFS.core.upload.addMessage(wrapper, IFS.core.template.replaceInTemplate(s.pendingRow, {text: file.name}))
 
-      var formData = new window.FormData()
+      var formData = new window.FormData(wrapper.closest('form').get(0))
       formData.append(fileInput.attr('name'), file)
       formData.append(submitButton.attr('name'), true)
 
@@ -115,6 +116,7 @@ IFS.core.upload = (function () {
         })
       } else {
         IFS.core.upload.replaceMessageListWithResponse(wrapper, data, file.name)
+        jQuery('[' + s.enableButton + ']').prop('disabled', false)
       }
       IFS.core.upload.addMessage(wrapper, row)
       IFS.core.upload.toggleUploadView(wrapper)
@@ -178,6 +180,9 @@ IFS.core.upload = (function () {
           url: wrapper.closest('form').attr('action'),
           success: function (data) {
             IFS.core.upload.afterRemoveFile(row, wrapper)
+            if (!wrapper.find('li').length) {
+              jQuery('[' + s.enableButton + ']').prop('disabled', true)
+            }
           },
           error: function (error) {
             console.error(error)
