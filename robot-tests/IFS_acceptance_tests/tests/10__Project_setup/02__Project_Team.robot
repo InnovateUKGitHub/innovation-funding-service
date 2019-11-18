@@ -27,6 +27,7 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-6484 - Remove Partner
 ...
+...             IFS-6492 - Accept Terms & Conditions for New Partners in Project Setup
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          PS_Common.robot
@@ -191,6 +192,13 @@ Project finance is able to add a new partner organisation
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
     Then a new organisation is able to accept project invite   FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
+
+The new organisation partner accept terms and conditions
+    [Documentation]  IFS-6492
+    Given log in as a different user                              ${intFinanceAddOrgEmail}  ${short_password}
+    When the user clicks the button/link                          link = ${applicationName}
+    Then the user accept the competition terms and conditions     Back to join project
+    And the user should see the element                           jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
