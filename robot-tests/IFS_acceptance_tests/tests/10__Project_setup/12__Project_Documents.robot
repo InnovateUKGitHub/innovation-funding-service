@@ -103,7 +103,7 @@ PM can upload both documents
     [Documentation]  INFUND-3011  IFS-2371-2258
     [Tags]  HappyPath
     [Setup]    log in as a different user     &{lead_applicant_credentials_bd}
-    Given PM uploads the project documents
+    Given PM uploads the project documents    ${Grade_Crossing_Project_Id}
 
 Lead partner can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
@@ -196,7 +196,7 @@ PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
     [Tags]  HappyPath
     [Setup]    log in as a different user       &{lead_applicant_credentials_bd}
-    Given PM uploads the project documents
+    Given PM uploads the project documents      ${Grade_Crossing_Project_Id}
 
 Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
@@ -212,7 +212,7 @@ Mandatory document submission
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
     When the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user reloads the page
-    Then PM submits both documents
+    Then PM submits both documents     ${Grade_Crossing_Project_Id}
 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
@@ -333,7 +333,7 @@ After rejection PM can upload both documents when both documents are removed
     [Documentation]    INFUND-3011
     [Tags]  HappyPath
     [Setup]    log in as a different user    &{lead_applicant_credentials_bd}
-    Given PM uploads the project documents
+    Given PM uploads the project documents   ${Grade_Crossing_Project_Id}
 
 After rejection, mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-7342
@@ -343,7 +343,7 @@ After rejection, mandatory document submission
     When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user clicks the button/link     link = Documents
     And the user reloads the page
-    Then PM submits both documents
+    Then PM submits both documents          ${Grade_Crossing_Project_Id}
 
 CompAdmin approves both documents
     [Documentation]    INFUND-4621, INFUND-5507, INFUND-7345
@@ -450,28 +450,6 @@ Partners can see both documents approved
     the user clicks the button/link     link = Return to documents
     the user clicks the button/link     link = Exploitation plan
     the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-
-PM submits both documents
-    the user clicks the button/link     link = Collaboration agreement
-    the user clicks the button/link     id = submitDocumentButton
-    the user clicks the button/link     jQuery = button:contains("Cancel")
-    the user should see the element     name = deleteDocument
-    the user clicks the button/link     id = submitDocumentButton
-    the user clicks the button/link     id = submitDocumentButtonConfirm
-    the user goes to documents page     Return to documents  Exploitation plan
-    the user clicks the button/link     id = submitDocumentButton
-    the user clicks the button/link     id = submitDocumentButtonConfirm
-    the user should be redirected to the correct page    ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}
-
-PM uploads the project documents
-    the user navigates to the page         ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
-    the user clicks the button/link        link = Exploitation plan
-    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    the user should see the element        jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
-    the user goes to documents page        Back to document overview  Collaboration agreement
-    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    the user should see the element        jQuery = .upload-section:contains("Collaboration agreement") a:contains("${valid_pdf}")
-    the user should not see an error in the page
 
 partners can not remove the documents
     the user should not see the element       name = deleteDocument      #Exploitation plan remove CTA

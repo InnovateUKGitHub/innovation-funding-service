@@ -38,8 +38,11 @@
                                 </ul>
                             </div>
                             <div class="status">
-                                <strong class="status-msg msg-progress">
+                                <strong th:unless="${projectView.pendingPartner}" class="status-msg msg-progress">
                                     Project in setup
+                                </strong>
+                                <strong th:if="${projectView.pendingPartner}" class="status-msg msg-progress">
+                                    Ready to join project
                                 </strong>
                             </div>
                         </li>

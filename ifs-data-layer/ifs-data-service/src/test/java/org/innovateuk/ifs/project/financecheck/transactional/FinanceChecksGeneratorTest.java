@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financecheck.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.domain.*;
@@ -110,6 +111,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
         competition = newCompetitionResource()
                 .withIncludeJesForm(true)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         costCategories = newCostCategory().withName("Cat1", "Cat2").build(2);

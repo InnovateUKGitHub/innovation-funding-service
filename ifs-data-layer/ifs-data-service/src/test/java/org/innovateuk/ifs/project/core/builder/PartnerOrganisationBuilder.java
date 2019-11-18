@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -52,6 +53,9 @@ public class PartnerOrganisationBuilder extends BaseBuilder<PartnerOrganisation,
         return withArray((flag, partnerOrg) -> setField("leadOrganisation", flag, partnerOrg), lead);
     }
 
+    public PartnerOrganisationBuilder withPendingPartnerProgress(PendingPartnerProgress... pendingPartnerProgresss) {
+        return withArray((flag, pendingPartnerProgress) -> setField("pendingPartnerProgress", flag, pendingPartnerProgress), pendingPartnerProgresss);
+    }
     @Override
     protected void postProcess(int index, PartnerOrganisation partnerOrganisation) {
 

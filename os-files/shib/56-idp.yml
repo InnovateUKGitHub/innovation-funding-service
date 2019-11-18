@@ -30,7 +30,7 @@ items:
               scheme: HTTPS
             initialDelaySeconds: 60
             periodSeconds: 30
-            timeoutSeconds: 5
+            timeoutSeconds: 25
             failureThreshold: 3
           readinessProbe:
             httpGet:
@@ -39,7 +39,7 @@ items:
               scheme: HTTPS
             initialDelaySeconds: 60
             periodSeconds: 5
-            timeoutSeconds: 5
+            timeoutSeconds: 25
             failureThreshold: 1
           imagePullPolicy: Always
           env:
