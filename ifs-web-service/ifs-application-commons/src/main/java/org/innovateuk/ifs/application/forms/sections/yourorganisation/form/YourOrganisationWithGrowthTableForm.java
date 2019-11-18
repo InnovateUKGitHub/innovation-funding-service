@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
-import org.innovateuk.ifs.commons.validation.constraints.PastYearMonth;
-import org.innovateuk.ifs.commons.validation.constraints.PositiveYearMonth;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
-
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import javax.validation.constraints.NotNull;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 /**
  * Form used to capture "Your organisation" information when a growth table is required.
@@ -16,11 +13,11 @@ public class YourOrganisationWithGrowthTableForm {
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
 
-    private Boolean stateAidAgreed;
+    private Boolean stateAidAgreed = false;
 
-    @NotNull(message = "{validation.standard.mm.yyyy.format}")
-    @PastYearMonth
-    @PositiveYearMonth
+    @LastFinancialYearEnd(messageNotNull = "{validation.standard.mm.yyyy.format}",
+        messagePastYearMonth = "{validation.standard.past.mm.yyyy.not.past.format}",
+        messagePositiveYearMonth = "{validation.standard.mm.yyyy.format}")
     private YearMonth financialYearEnd;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")

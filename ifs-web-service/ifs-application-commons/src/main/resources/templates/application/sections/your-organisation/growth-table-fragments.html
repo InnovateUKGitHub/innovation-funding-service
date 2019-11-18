@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <th:block th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
+    <th:block
+        th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly, isApplicationStage)">
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
@@ -36,10 +37,22 @@
 
             <div class="agree-to-terms-container">
 
-                <th:block th:insert="fragments/form-elements/checkbox ::
+                <th:block th:if="${isApplicationStage}"
+                          th:insert="fragments/form-elements/checkbox ::
                     checkbox(
                         legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
                         label='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot; aria-describedby=&quot;state-aid-hint&quot;>eligible for state aid</a> <span id=&quot;state-aid-hint&quot;>(opens in a new window)</span> within 90 days of any offer being made.',
+                        id='stateAidAgreed',
+                        value='true',
+                        checked=${form.stateAidAgreed},
+                        switchesButtonStatus='#mark_as_complete'
+                    )" />
+
+                <th:block th:unless="${isApplicationStage}"
+                          th:insert="fragments/form-elements/checkbox ::
+                    checkbox(
+                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
+                        label='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot; aria-describedby=&quot;state-aid-hint&quot;>eligible for state aid</a> <span id=&quot;state-aid-hint&quot;>(opens in a new window).</span>',
                         id='stateAidAgreed',
                         value='true',
                         checked=${form.stateAidAgreed},
@@ -54,7 +67,8 @@
         </th:block>
     </th:block>
 
-    <th:block th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
+    <th:block
+        th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly, isApplicationStage)">
 
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
@@ -149,10 +163,23 @@
 
             <div class="agree-to-terms-container">
 
-                <th:block th:insert="fragments/form-elements/checkbox ::
+                <th:block
+                    th:if="${isApplicationStage}"
+                    th:insert="fragments/form-elements/checkbox ::
                     checkbox(
                         legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
                         label='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot; aria-describedby=&quot;state-aid-hint&quot;>eligible for state aid</a> <span id=&quot;state-aid-hint&quot;>(opens in a new window)</span> within 90 days of any offer being made.',
+                        id='stateAidAgreed',
+                        value='true',
+                        checked=${form.stateAidAgreed},
+                        switchesButtonStatus='#mark_as_complete'
+                    )" />
+
+                <th:block th:unless="${isApplicationStage}"
+                          th:insert="fragments/form-elements/checkbox ::
+                    checkbox(
+                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
+                        label='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot; aria-describedby=&quot;state-aid-hint&quot;>eligible for state aid</a> <span id=&quot;state-aid-hint&quot;>(opens in a new window).</span>',
                         id='stateAidAgreed',
                         value='true',
                         checked=${form.stateAidAgreed},
