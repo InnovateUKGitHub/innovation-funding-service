@@ -30,7 +30,7 @@ public interface CompetitionRestService {
 
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
 
-    RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, Long termsAndConditionsId);
+    RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 
     RestResult<ByteArrayResource> downloadTerms(long competitionId);
 }

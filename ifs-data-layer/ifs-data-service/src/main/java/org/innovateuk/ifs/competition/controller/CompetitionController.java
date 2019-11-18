@@ -61,7 +61,7 @@ public class CompetitionController {
     
     @PutMapping("{id}/update-terms-and-conditions/{tcId}")
     public RestResult<Void> updateTermsAndConditionsForCompetition(@PathVariable("id") final long competitionId,
-                                                                   @PathVariable("tcId") final Long termsAndConditionsId) {
+                                                                   @PathVariable("tcId") final long termsAndConditionsId) {
         return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
     }
 
