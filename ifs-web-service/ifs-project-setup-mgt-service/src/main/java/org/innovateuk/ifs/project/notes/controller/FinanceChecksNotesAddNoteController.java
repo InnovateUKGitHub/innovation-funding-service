@@ -154,7 +154,7 @@ public class FinanceChecksNotesAddNoteController {
                                         ValidationHandler validationHandler,
                                         UserResource loggedInUser,
                                         HttpServletRequest request,
-                                        HttpServletResponse response) throws InterruptedException {
+                                        HttpServletResponse response) {
         if (postParametersMatchOrigin(request, projectId, organisationId, loggedInUser.getId())) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
             Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId));

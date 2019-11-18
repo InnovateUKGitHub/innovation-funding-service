@@ -212,7 +212,7 @@ public class FinanceChecksQueriesController {
                                             @SuppressWarnings("unused") BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             HttpServletRequest request,
-                                            HttpServletResponse response) throws InterruptedException {
+                                            HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
         Supplier<String> onError = () -> {
