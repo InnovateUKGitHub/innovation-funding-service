@@ -70,7 +70,7 @@ User opens the edit details form
 the assessor logs-in
    The guest user opens the browser
    The guest user inserts user email and password   &{assessor_bob_credentials}
-   The guest user clicks the log-in button
+   the user clicks the button/link                  jQuery = button:contains("Sign in")
 
 the user enters the invalid details
     the user enters text to a text field     id = firstName    Joy12

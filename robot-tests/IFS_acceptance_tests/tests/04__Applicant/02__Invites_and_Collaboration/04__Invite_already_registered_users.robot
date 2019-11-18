@@ -25,7 +25,7 @@ The user clicks the login link
     [Tags]  HappyPath
     When the user clicks the button/link                link = Continue
     And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    And the guest user clicks the log-in button
+    And the user clicks the button/link                 jQuery = button:contains("Sign in")
     Then the user should see the element                jQuery = h1:contains("Your organisation")
     And the user should see the element                 jQuery = dt:contains("INNOVATE LTD")
     When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
@@ -300,7 +300,7 @@ The invited user should get a message to contact the helpdesk
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}   2
     When the user clicks the button/link                link = Continue
     And The guest user inserts user email and password  ${recipient}  ${correct_password}
-    And the guest user clicks the log-in button
+    And the user clicks the button/link                 jQuery = button:contains("Sign in")
     Then the user should see the element                jQuery = h1:contains("Confirm your organisation")
 
 the collaborator edits the 'public description' question

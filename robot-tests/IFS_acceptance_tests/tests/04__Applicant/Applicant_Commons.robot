@@ -326,7 +326,7 @@ the user is able to confirm the invite
     [Arguments]  ${email}  ${password}
     the user clicks the button/link                 jQuery = .govuk-button:contains("Continue")
     The guest user inserts user email and password  ${email}  ${password}
-    The guest user clicks the log-in button
+    the user clicks the button/link                 jQuery = button:contains("Sign in")
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element   jQuery = h1:contains("Confirm your organisation")
     Run Keyword If    '${status}' == 'PASS'   the user clicks the button/link   jQuery = .govuk-button:contains("Confirm and accept invitation")
     Run Keyword If    '${status}' == 'FAIL'  Run keywords    the user should see the element   jQuery = h1:contains("Your organisation")

@@ -25,7 +25,7 @@ Valid login with double role as Applicant
     [Documentation]    INFUND-1479
     [Tags]
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    And The guest user clicks the log-in button
+    And the user clicks the button/link                   jQuery = button:contains("Sign in")
     Then the user should see multiple role dashboard view
     And the user goes to applicant dashboard
     [Teardown]    Logout as user
@@ -33,7 +33,7 @@ Valid login with double role as Applicant
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    When The guest user clicks the log-in button
+    When the user clicks the button/link                      jQuery = button:contains("Sign in")
     And the user clicks the button/link                       id = dashboard-link-ASSESSOR
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Assessments")
@@ -42,7 +42,7 @@ Valid login with Double role as Assessor
 Valid login with triple role Assessor
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
-    And The guest user clicks the log-in button
+    And the user clicks the button/link                       jQuery = button:contains("Sign in")
     When the user clicks the button/link                      id = dashboard-link-APPLICANT
     Then the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Applications")
@@ -51,7 +51,7 @@ Valid login with triple role Assessor
 Valid login with triple role Stakeholder
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
-    And The guest user clicks the log-in button
+    And the user clicks the button/link                       jQuery = button:contains("Sign in")
     When the user clicks the button/link                      id = dashboard-link-STAKEHOLDER
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     And the user should see the element                       jQuery = h1:contains("All competitions")
@@ -60,7 +60,7 @@ Valid login with triple role Stakeholder
 Valid login with triple role Applicant
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
-    And The guest user clicks the log-in button
+    And the user clicks the button/link                       jQuery = button:contains("Sign in")
     And the user clicks the button/link                       id = dashboard-link-ASSESSOR
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Assessments")

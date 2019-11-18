@@ -196,7 +196,7 @@ the user verifies email
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
     The user clicks the button/link                            jQuery=p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
-    The guest user clicks the log-in button
+    The user clicks the button/link                   jQuery = button:contains("Sign in")
 
 the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
