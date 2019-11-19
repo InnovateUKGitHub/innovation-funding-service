@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Your funding'}" />
 </head>
-<body class="govuk-template__body project-other-documents">
+<body class="govuk-template__body finance-row-form">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-configured-partner-document" />
@@ -33,7 +33,8 @@
         <th:block th:unless="${model.fundingSectionLocked}">
             <form th:object="${form}"
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-                  th:attr="data-autosave=@{/project/{projectId}/organisation/{organisationId}/your-funding/auto-save(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                  th:attr="data-autosave=@{/project/{projectId}/organisation/{organisationId}/your-funding/auto-save(projectId=${model.projectId},organisationId=${model.organisationId})},
+                           data-row-operation-url=@{/project/{projectId}/organisation/{organisationId}/your-funding(projectId=${model.projectId},organisationId=${model.organisationId})}"
                   enctype="multipart/form-data"
                   novalidate="novalidate"
                   method="POST">

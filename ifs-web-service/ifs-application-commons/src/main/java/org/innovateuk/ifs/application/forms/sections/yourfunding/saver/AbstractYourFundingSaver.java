@@ -32,12 +32,12 @@ public abstract class AbstractYourFundingSaver {
 
     protected abstract FinanceRowRestService getFinanceRowService();
 
-    public void addOtherFundingRow(YourFundingPercentageForm form) {
+    public void addOtherFundingRow(AbstractYourFundingForm form) {
         OtherFundingRowForm rowForm = new OtherFundingRowForm();
         form.getOtherFundingRows().put(generateUnsavedRowId(), rowForm);
     }
 
-    public void removeOtherFundingRowForm(YourFundingPercentageForm form, String costId) {
+    public void removeOtherFundingRowForm(AbstractYourFundingForm form, String costId) {
         form.getOtherFundingRows().remove(costId);
         removeOtherFundingRow(costId);
     }
@@ -92,6 +92,11 @@ public abstract class AbstractYourFundingSaver {
                 GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
                 grantClaim.setAmount(new BigDecimal(value));
                 getFinanceRowService().update(grantClaim).getSuccess();
+            } else if (field.equals("otherFunding")) {
+                OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
+                OtherFunding otherFunding = otherFundingCategory.getOtherFunding();
+                otherFunding.setOtherPublicFunding(Boolean.parseBoolean(value) ? "Yes" : "No");
+                getFinanceRowService().update(otherFunding).getSuccess();
             } else if (field.startsWith("otherFundingRows")) {
                 String id = field.substring(field.indexOf('[') + 1, field.indexOf(']'));
                 String rowField = field.substring(field.indexOf("].") + 2);

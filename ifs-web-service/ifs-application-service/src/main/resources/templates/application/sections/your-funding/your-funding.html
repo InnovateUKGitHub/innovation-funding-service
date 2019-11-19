@@ -61,7 +61,8 @@
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
                   th:attr="data-autosave=@{/application/{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},sectionId=${model.sectionId},organisationId=${model.organisationId})},
                            data-application-id=${model.applicationId},
-                           data-section-id=${model.sectionId}"
+                           data-section-id=${model.sectionId},
+                           data-row-operation-url=@{/application/{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},sectionId=${model.sectionId},organisationId=${model.organisationId})}"
                   enctype="multipart/form-data"
                   novalidate="novalidate"
                   method="POST">

@@ -173,7 +173,7 @@ public class YourFundingController {
         return format("redirect:/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 
-    @PostMapping(params = "add_cost")
+    @PostMapping(params = {"add_cost", "grantClaimPercentage"})
     public String addFundingRowFormPost(Model model,
                                         UserResource user,
                                         @PathVariable long applicationId,
@@ -184,14 +184,38 @@ public class YourFundingController {
         saver.addOtherFundingRow(form);
         return viewYourFunding(model, applicationId, sectionId, organisationId, user);
     }
+    @PostMapping(params = {"add_cost", "amount"})
+    public String addFundingRowFormPost(Model model,
+                                        UserResource user,
+                                        @PathVariable long applicationId,
+                                        @PathVariable long sectionId,
+                                        @PathVariable long organisationId,
+                                        @ModelAttribute("form") YourFundingAmountForm form) {
 
-    @PostMapping(params = "remove_cost")
+        saver.addOtherFundingRow(form);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
+    }
+
+    @PostMapping(params = {"remove_cost", "grantClaimPercentage"})
     public String removeFundingRowFormPost(Model model,
                                            UserResource user,
                                            @PathVariable long applicationId,
                                            @PathVariable long sectionId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") YourFundingPercentageForm form,
+                                           @RequestParam("remove_cost") String costId) {
+
+        saver.removeOtherFundingRowForm(form, costId);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
+    }
+
+    @PostMapping(params = {"remove_cost", "amount"})
+    public String removeFundingRowFormPost(Model model,
+                                           UserResource user,
+                                           @PathVariable long applicationId,
+                                           @PathVariable long sectionId,
+                                           @PathVariable long organisationId,
+                                           @ModelAttribute("form") YourFundingAmountForm form,
                                            @RequestParam("remove_cost") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
@@ -213,9 +237,7 @@ public class YourFundingController {
 
     @PostMapping("remove-row/{rowId}")
     public @ResponseBody
-    JsonNode ajaxRemoveRow(UserResource user,
-                           @PathVariable long applicationId,
-                           @PathVariable String rowId) {
+    JsonNode ajaxRemoveRow(@PathVariable String rowId) {
         saver.removeOtherFundingRow(rowId);
         return new ObjectMapper().createObjectNode();
     }

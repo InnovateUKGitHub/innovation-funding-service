@@ -317,9 +317,11 @@
 </th:block>
 
 <th:block th:fragment="project-business">
-    123
+    <th:block
+    th:text="'The maximum you can enter is ' + ${model.maximumFundingLevel} + '%, based on your organisation size and project research category.' "/>
 </th:block>
 <th:block th:fragment="project-non-business">
-    321
+    The amount you apply for must reflect other funding received and be within the participation
+    levels listed.
 </th:block>
 </html>
