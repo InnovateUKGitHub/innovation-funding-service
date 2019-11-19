@@ -43,7 +43,6 @@ import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static java.time.LocalDate.now;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
