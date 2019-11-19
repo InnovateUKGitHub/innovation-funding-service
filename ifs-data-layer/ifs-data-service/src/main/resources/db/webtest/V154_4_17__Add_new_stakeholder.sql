@@ -24,12 +24,12 @@ SET @biosciences =
 (SELECT id FROM competition WHERE name = 'Biosciences round three: plastic recovery in the industrial sector');
 
 insert into competition_user
-(competition_id, competition_role, user_id, participant_status_id)
+(competition_id, competition_role, user_id, participant_status_id, type)
 values
-(@sustainable, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(@internet_of_things, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(@rolling_stock, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(@machine_learning, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(@generic, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(@photonics, 'STAKEHOLDER', @new_stakeholder_user_id, 2),
-(@biosciences, 'STAKEHOLDER', @new_stakeholder_user_id, 2);
+(@sustainable, 'STAKEHOLDER', @new_stakeholder_user_id, 2, 'STAKEHOLDER'),
+(@internet_of_things, 'STAKEHOLDER', @new_stakeholder_user_id, 2, 'STAKEHOLDER'),
+(@rolling_stock, 'STAKEHOLDER', @new_stakeholder_user_id, 2, 'STAKEHOLDER'),
+(@machine_learning, 'STAKEHOLDER', @new_stakeholder_user_id, 2, 'STAKEHOLDER'),
+(@generic, 'STAKEHOLDER', @new_stakeholder_user_id, 2, 'STAKEHOLDER'),
+(@photonics, 'STAKEHOLDER', @new_stakeholder_user_id, 2, 'STAKEHOLDER'),
+(@biosciences, 'STAKEHOLDER', @new_stakeholder_user_id, 2, 'STAKEHOLDER');
