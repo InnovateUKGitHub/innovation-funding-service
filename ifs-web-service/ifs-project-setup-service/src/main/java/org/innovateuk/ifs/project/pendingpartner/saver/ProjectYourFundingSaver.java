@@ -4,17 +4,12 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundin
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.AbstractYourFundingSaver;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class ProjectYourFundingSaver extends AbstractYourFundingSaver {
@@ -38,10 +33,5 @@ public class ProjectYourFundingSaver extends AbstractYourFundingSaver {
     public ServiceResult<Void> save(long projectId, long organisationId, YourFundingPercentageForm form) {
         ProjectFinanceResource finance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         return super.save(finance, form);
-    }
-
-    public Optional<Long> autoSave(String field, String value, long projectId, long organisationId) {
-        ProjectFinanceResource finance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
-        return super.autoSave(field, value, finance);
     }
 }

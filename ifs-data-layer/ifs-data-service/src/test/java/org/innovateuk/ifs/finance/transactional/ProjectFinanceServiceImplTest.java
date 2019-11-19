@@ -175,7 +175,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectFinanceRowRepositoryMock.save(materialCost)).thenReturn(materialCost);
 
-        ServiceResult<FinanceRowItem> result = service.create(material);
+        ServiceResult<FinanceRowItem> result = service.create(newFinance.getId(), material);
         assertTrue(result.isSuccess());
     }
 

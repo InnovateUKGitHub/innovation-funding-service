@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.pendingpartner.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -185,19 +183,6 @@ public class ProjectYourFundingController {
 
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, projectId, organisationId);
-    }
-
-    @PostMapping("auto-save")
-    public @ResponseBody
-    JsonNode ajaxAutoSave(@PathVariable long projectId,
-                          @PathVariable long organisationId,
-                          @RequestParam String field,
-                          @RequestParam String value) {
-        Optional<Long> fieldId = saver.autoSave(field, value, projectId, organisationId);
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        fieldId.ifPresent(id -> node.put("fieldId", id));
-        return node;
     }
 
     @PostMapping("remove-row/{rowId}")

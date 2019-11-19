@@ -41,14 +41,14 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
         GrantClaimPercentage claim = new GrantClaimPercentage(1L);
         when(validationUtil.validateProjectCostItem(nullable(FinanceRowItem.class))).thenReturn(new ValidationMessages());
 
-        when(projectFinanceRowServiceMock.create(claim)).thenReturn(serviceSuccess(claim));
+        when(projectFinanceRowServiceMock.create(1L, claim)).thenReturn(serviceSuccess(claim));
 
         mockMvc.perform(post("/project-finance-row")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(claim)))
                 .andExpect(status().isCreated());
 
-        verify(projectFinanceRowServiceMock, times(1)).create(claim);
+        verify(projectFinanceRowServiceMock, times(1)).create(1L, claim);
     }
 
     @Test
