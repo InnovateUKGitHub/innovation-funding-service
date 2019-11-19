@@ -154,19 +154,19 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
 
         projectProcessRepository.save(newProjectProcess()
                 .with(id(null))
-                .withProject(project)
+                .withProject(savedProject)
                 .withProjectUser(projectUsers.get(0))
                 .withActivityState(ProjectState.SETUP)
                 .build());
         eligibilityProcessRepository.save(new EligibilityProcess(projectUsers.get(0), partnerOrganisations.get(0), EligibilityState.REVIEW));
         viabilityProcessRepository.save(new ViabilityProcess(projectUsers.get(0), partnerOrganisations.get(0), ViabilityState.REVIEW));
-        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(0), project, ProjectDetailsState.PENDING));
-        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(0), project, SpendProfileState.PENDING));
-        GOLProcessRepository.save(new GOLProcess(projectUsers.get(0), project, GrantOfferLetterState.PENDING));
+        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(0), savedProject, ProjectDetailsState.PENDING));
+        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(0), savedProject, SpendProfileState.PENDING));
+        GOLProcessRepository.save(new GOLProcess(projectUsers.get(0), savedProject, GrantOfferLetterState.PENDING));
 
         projectProcessRepository.save(newProjectProcess()
                 .with(id(null))
-                .withProject(project)
+                .withProject(savedProject)
                 .withProjectUser(projectUsers.get(1))
                 .withActivityState(ProjectState.SETUP)
                 .build());
