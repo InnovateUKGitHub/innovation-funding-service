@@ -234,7 +234,7 @@ The new organisation partner accept terms and conditions
     [Documentation]  IFS-6492
     Given log in as a different user                              ${intFinanceAddOrgEmail}  ${short_password}
     When the user clicks the button/link                          link = ${applicationName}
-    Then the user accept the competition terms and conditions     Back to join project
+    Then the user accept the competition terms and conditions     Return to join project
     And the user should see the element                           jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
 
 Comp Admin isn't able to add or remove a partner organisation
