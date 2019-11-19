@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -53,6 +55,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.*;
 
+@Rollback
 @Transactional
 public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
 
@@ -92,6 +95,9 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
     @Autowired
     private GrantOfferLetterProcessRepository GOLProcessRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     private Project project;
     private Organisation empire;
     private Organisation ludlow;
@@ -112,6 +118,8 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .withModifiedOn(ZonedDateTime.now())
                 .build();
 
+        Application application = newApplication().with(id(null)).build();
+        applicationRepository.save(application);
         User projectManager = userRepository.findByEmail("steve.smith@empire.com").get();
         User projectPartner = userRepository.findByEmail("jessica.doe@ludlow.co.uk").get();
         empire = organisationRepository.findOneByName("Empire Ltd");
@@ -125,7 +133,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .build(2);
         project = newProject()
                 .with(id(null))
-                .withApplication(newApplication().withId(1L).build())
+                .withApplication(application)
                 .withDateSubmitted(ZonedDateTime.now())
                 .withDuration(6L)
                 .withName("My test project")
@@ -176,7 +184,6 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         GOLProcessRepository.save(new GOLProcess(projectUsers.get(1), savedProject, GrantOfferLetterState.PENDING));
     }
 
-    @Rollback
     @Test
     public void getProjectPartnerOrganisations() {
         loginIfsAdmin();
@@ -192,7 +199,6 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         assertEquals("Ludlow", result.getSuccess().get(1).getOrganisationName());
     }
 
-    @Rollback
     @Test
     public void getPartnerOrganisation() {
         loginIfsAdmin();
@@ -204,7 +210,6 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         assertEquals("Ludlow", result2.getSuccess().getOrganisationName());
     }
 
-    @Rollback
     @Test
     public void removeNonLeadPartnerOrganisation() {
         userRepository.save(projectFinanceUser);
@@ -215,7 +220,6 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         assertTrue(result.isSuccess());
     }
 
-    @Rollback
     @Test
     public void removeLeadPartnerOrganisation() {
         projectFinanceUserResource = userMapper.mapToResource(projectFinanceUser);
