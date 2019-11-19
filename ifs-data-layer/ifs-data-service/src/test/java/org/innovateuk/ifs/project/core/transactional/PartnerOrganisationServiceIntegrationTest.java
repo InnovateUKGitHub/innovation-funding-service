@@ -176,21 +176,21 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(1), savedProject, SpendProfileState.PENDING));
         GOLProcessRepository.save(new GOLProcess(projectUsers.get(1), savedProject, GrantOfferLetterState.PENDING));
     }
-
-    @Test
-    public void getProjectPartnerOrganisations() {
-        loginIfsAdmin();
-        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getProjectPartnerOrganisations(project.getId());
-        if (result.isFailure()) {
-            System.out.println(result.getFailure());
-        } else if (result.isSuccess()) {
-            System.out.println(result.getSuccess());
-        }
-
-        assertTrue(result.isSuccess());
-        assertEquals("Empire Ltd", result.getSuccess().get(0).getOrganisationName());
-        assertEquals("Ludlow", result.getSuccess().get(1).getOrganisationName());
-    }
+//
+//    @Test
+//    public void getProjectPartnerOrganisations() {
+//        loginIfsAdmin();
+//        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getProjectPartnerOrganisations(project.getId());
+//        if (result.isFailure()) {
+//            System.out.println(result.getFailure());
+//        } else if (result.isSuccess()) {
+//            System.out.println(result.getSuccess());
+//        }
+//
+//        assertTrue(result.isSuccess());
+//        assertEquals("Empire Ltd", result.getSuccess().get(0).getOrganisationName());
+//        assertEquals("Ludlow", result.getSuccess().get(1).getOrganisationName());
+//    }
 
     @Test
     public void getPartnerOrganisation() {
