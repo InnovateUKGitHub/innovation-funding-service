@@ -89,7 +89,7 @@ Comp admin can open the view mode of the application
     [Tags]
     [Setup]  The user logs-in in new browser                               &{lead_applicant_credentials}
     When the user can see the option to upload a file on the page          ${APPLICATION_OVERVIEW_URL}
-    Then the user uploads the file to the 'technical approach' question    ${5mb_pdf}
+    Then the user uploads the file                                         css = input.inputfile  ${5mb_pdf}
     When log in as a different user                                        &{Comp_admin1_credentials}
     And the user navigates to the page                                     ${applicationsForRTOComp}
     #Then the user should see the element  id = sort-by
@@ -129,10 +129,6 @@ Comp admin should be able to view but not edit the finances for every partner
     Then the user should see the correct finances change
 
 *** Keywords ***
-the user uploads the file to the 'technical approach' question
-    [Arguments]    ${file_name}
-    Choose File    css = input.inputfile   ${UPLOAD_FOLDER}/${file_name}
-
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page              ${url}
