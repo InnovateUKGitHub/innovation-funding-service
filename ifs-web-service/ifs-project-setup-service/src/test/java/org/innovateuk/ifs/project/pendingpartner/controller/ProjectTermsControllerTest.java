@@ -38,7 +38,7 @@ public class ProjectTermsControllerTest extends BaseControllerMockMVCTest<Projec
 
     @Override
     protected ProjectTermsController supplyControllerUnderTest() {
-        return new ProjectTermsController(projectTermsModelPopulator, pendingPartnerProgressRestService);
+        return new ProjectTermsController();
     }
 
     @Before
