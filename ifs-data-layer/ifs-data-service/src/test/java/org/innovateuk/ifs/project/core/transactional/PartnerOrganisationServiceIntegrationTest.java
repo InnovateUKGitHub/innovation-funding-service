@@ -172,15 +172,20 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .build());
         eligibilityProcessRepository.save(new EligibilityProcess(projectUsers.get(1), partnerOrganisations.get(1), EligibilityState.REVIEW));
         viabilityProcessRepository.save(new ViabilityProcess(projectUsers.get(1), partnerOrganisations.get(1), ViabilityState.REVIEW));
-        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(1), project, ProjectDetailsState.PENDING));
-        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(1), project, SpendProfileState.PENDING));
-        GOLProcessRepository.save(new GOLProcess(projectUsers.get(1), project, GrantOfferLetterState.PENDING));
+        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(1), savedProject, ProjectDetailsState.PENDING));
+        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(1), savedProject, SpendProfileState.PENDING));
+        GOLProcessRepository.save(new GOLProcess(projectUsers.get(1), savedProject, GrantOfferLetterState.PENDING));
     }
 
     @Test
     public void getProjectPartnerOrganisations() {
         loginIfsAdmin();
         ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getProjectPartnerOrganisations(project.getId());
+        if (result.isFailure()) {
+            System.out.println(result.getFailure());
+        } else if (result.isSuccess()) {
+            System.out.println(result.getSuccess());
+        }
 
         assertTrue(result.isSuccess());
         assertEquals("Empire Ltd", result.getSuccess().get(0).getOrganisationName());
