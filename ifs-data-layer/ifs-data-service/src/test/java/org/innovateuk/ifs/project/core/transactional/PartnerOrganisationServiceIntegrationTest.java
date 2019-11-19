@@ -176,7 +176,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(1), savedProject, SpendProfileState.PENDING));
         GOLProcessRepository.save(new GOLProcess(projectUsers.get(1), savedProject, GrantOfferLetterState.PENDING));
     }
-//
+
 //    @Test
 //    public void getProjectPartnerOrganisations() {
 //        loginIfsAdmin();
