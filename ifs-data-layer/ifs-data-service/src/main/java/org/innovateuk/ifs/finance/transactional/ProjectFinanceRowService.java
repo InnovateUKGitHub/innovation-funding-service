@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -16,21 +15,17 @@ import java.util.List;
  */
 public interface ProjectFinanceRowService {
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Project Finance users can access cost items from project finance")
-    ServiceResult<FinanceRowItem> get(long costItemId);
+    @PreAuthorize("hasPermission(#rowId, 'org.innovateuk.ifs.finance.domain.ProjectFinanceRow', 'CRUD')")
+    ServiceResult<FinanceRowItem> get(long rowId);
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can add new costs to project finance")
-    ServiceResult<FinanceRowItem> create(FinanceRowItem newCostItem);
+    @PreAuthorize("hasPermission(#projectFinanceId, 'org.innovateuk.ifs.finance.resource.ProjectFinanceResource', 'ADD_ROW')")
+    ServiceResult<FinanceRowItem> create(long projectFinanceId, FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')")
-    @SecuredBySpring(value = "UPDATE", securedType = FinanceRowItem.class, description = "Project Finance users can update  costs from project finance")
-    ServiceResult<FinanceRowItem> update(long costId, FinanceRowItem newCostItem);
+    @PreAuthorize("hasPermission(#rowId, 'org.innovateuk.ifs.finance.domain.ProjectFinanceRow', 'CRUD')")
+    ServiceResult<FinanceRowItem> update(long rowId, FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'applicant')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can delete costs from project finance")
-    ServiceResult<Void> delete(long costId);
+    @PreAuthorize("hasPermission(#rowId, 'org.innovateuk.ifs.finance.domain.ProjectFinanceRow', 'CRUD')")
+    ServiceResult<Void> delete(long rowId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
     ServiceResult<ProjectFinanceResource> financeChecksDetails(long projectId, long organisationId);

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.fromBindingResult;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
@@ -96,10 +97,10 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     @Override
     public List<ValidationMessages> validateCostItem(Long applicationId, FinanceRowType type, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
-                financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
-                        financeRowCostsService.getCostItems(financeDetails.getId(), type).andOnSuccessReturn(costItems ->
-                                financeValidationUtil.validateCostItem(costItems)
-                        )
+                financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccessReturn(financeDetails ->
+                    financeValidationUtil.validateCostItem(
+                        financeDetails.getFinanceOrganisationDetails().values().stream().flatMap(category -> category.getCosts().stream()).collect(toList())
+                    )
                 )
         ).getSuccess();
     }

@@ -105,7 +105,7 @@ public abstract class AbstractYourFundingSaver {
                 if (id.startsWith(UNSAVED_ROW_PREFIX)) {
                     cost = (OtherFunding) getFinanceRowService().create(new OtherFunding(finance.getId())).getSuccess();
                 } else {
-                    cost = (OtherFunding) getFinanceRowService().get(Long.valueOf(id)).getSuccess();
+                    cost = (OtherFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
                 }
 
                 if (rowField.equals("source")) {

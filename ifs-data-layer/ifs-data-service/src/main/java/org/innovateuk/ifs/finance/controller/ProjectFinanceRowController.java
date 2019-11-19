@@ -27,7 +27,7 @@ public class ProjectFinanceRowController {
 
     @PostMapping
     public RestResult<FinanceRowItem> addWithResponse(@RequestBody final FinanceRowItem financeRowItem) {
-        return projectFinanceRowService.create(financeRowItem).toPostCreateResponse();
+        return projectFinanceRowService.create(financeRowItem.getTargetId(), financeRowItem).toPostCreateResponse();
     }
 
     @GetMapping("/{id}")

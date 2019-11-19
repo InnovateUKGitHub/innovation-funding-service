@@ -33,8 +33,7 @@
         <th:block th:unless="${model.fundingSectionLocked}">
             <form th:object="${form}"
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-                  th:attr="data-autosave=@{/project/{projectId}/organisation/{organisationId}/your-funding/auto-save(projectId=${model.projectId},organisationId=${model.organisationId})},
-                           data-row-operation-url=@{/project/{projectId}/organisation/{organisationId}/your-funding(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                  th:attr="data-row-operation-url=@{/project/{projectId}/organisation/{organisationId}/your-funding(projectId=${model.projectId},organisationId=${model.organisationId})}"
                   enctype="multipart/form-data"
                   novalidate="novalidate"
                   method="POST">

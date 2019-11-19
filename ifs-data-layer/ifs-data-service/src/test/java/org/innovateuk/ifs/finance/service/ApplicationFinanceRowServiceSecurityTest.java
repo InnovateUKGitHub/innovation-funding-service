@@ -38,7 +38,7 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
-    private FinanceRowLookupStrategy financeRowLookupStrategy;
+    private ApplicationFinanceRowLookupStrategy applicationFinanceRowLookupStrategy;
     private FinanceRowMetaFieldLookupStrategy financeRowMetaFieldLookupStrategy;
     private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
 
@@ -52,7 +52,7 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
-        financeRowLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowLookupStrategy.class);
+        applicationFinanceRowLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceRowLookupStrategy.class);
         financeRowMetaFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowMetaFieldLookupStrategy.class);
         applicationFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceLookupStrategy.class);
 
@@ -62,7 +62,7 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
     @Test
     public void update() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
+        when(applicationFinanceRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.update(costId, new AcademicCost(1L)),
                 () -> verify(costPermissionsRules)
@@ -73,7 +73,7 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
     @Test
     public void delete() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
+        when(applicationFinanceRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.delete(costId),
                 () -> verify(costPermissionsRules)

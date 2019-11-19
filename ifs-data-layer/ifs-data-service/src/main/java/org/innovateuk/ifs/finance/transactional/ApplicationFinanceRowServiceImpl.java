@@ -13,7 +13,6 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,16 +124,6 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
             financeRowMetaValueRepository.deleteByFinanceRowId(financeRowId);
             financeRowRepository.deleteById(financeRowId);
             return serviceSuccess();
-        });
-    }
-
-
-    @Override
-    public ServiceResult<List<FinanceRowItem>> getCostItems(long applicationFinanceId, FinanceRowType type) {
-        return getApplicationFinance(applicationFinanceId).andOnSuccessReturn(applicationFinance -> {
-            OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
-            List<ApplicationFinanceRow> costs = financeRowRepository.findByTargetIdAndType(applicationFinanceId, type);
-            return organisationFinanceHandler.toResources(costs);
         });
     }
 
