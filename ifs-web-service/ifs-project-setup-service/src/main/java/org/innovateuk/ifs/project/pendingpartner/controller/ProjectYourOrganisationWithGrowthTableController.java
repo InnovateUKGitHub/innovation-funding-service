@@ -71,7 +71,7 @@ public class ProjectYourOrganisationWithGrowthTableController extends AsyncAdapt
 
     @PostMapping
     @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
+    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
     public String updateWithGrowthTable(
             @PathVariable long projectId,
             @PathVariable long organisationId,
@@ -83,7 +83,7 @@ public class ProjectYourOrganisationWithGrowthTableController extends AsyncAdapt
 
     @PostMapping(value = "/auto-save")
     @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
+    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
     public @ResponseBody JsonNode autosaveWithGrowthTable(
             @PathVariable long projectId,
             @PathVariable long organisationId,
@@ -95,7 +95,7 @@ public class ProjectYourOrganisationWithGrowthTableController extends AsyncAdapt
 
     @PostMapping(params = {"mark-as-complete"})
     @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_COMPLETE", description = "Applicants can mark their organisation funding details as complete")
+    @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_COMPLETE", description = "Applicants can mark their organisation details as complete")
     public String markAsCompleteWithGrowthTable(
             @PathVariable long projectId,
             @PathVariable long organisationId,
@@ -121,14 +121,14 @@ public class ProjectYourOrganisationWithGrowthTableController extends AsyncAdapt
         return validationHandler.failNowOrSucceedWith(failureHandler, successHandler);
     }
 
-    @PostMapping(params = "mark-as-incomplete")
+    @PostMapping(params = {"mark-as-incomplete"})
     @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_INCOMPLETE", description = "Applicants can mark their organisation funding details as incomplete")
+    @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_INCOMPLETE", description = "Applicants can mark their organisation details as incomplete")
     public String markAsIncomplete(
             @PathVariable long projectId,
             @PathVariable long organisationId) {
 
-        pendingPartnerProgressRestService.markYourFundingIncomplete(projectId, organisationId);
+        pendingPartnerProgressRestService.markYourOrganisationIncomplete(projectId, organisationId);
         return redirectToViewPage(projectId, organisationId);
     }
 

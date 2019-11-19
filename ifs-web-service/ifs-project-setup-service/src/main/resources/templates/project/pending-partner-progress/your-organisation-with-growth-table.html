@@ -55,6 +55,11 @@
                             type="submit" name="mark-as-complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
+                    <button id="mark_as_incomplete"
+                            th:if="${model.readOnly}"
+                            type="submit" name="mark-as-incomplete" class="button-clear" value="true"
+                            th:text="${'Edit your organisation'}">Edit
+                    </button>
                 </div>
             </div>
 
@@ -69,7 +74,6 @@
                     Save and return to organisation details.
                 </button>
             </div>
-
 
         </form>
 

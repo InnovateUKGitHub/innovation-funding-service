@@ -59,7 +59,6 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
     public String viewPage(
         @PathVariable long projectId,
         @PathVariable long organisationId,
-        UserResource loggedInUser,
         Model model) {
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
@@ -76,7 +75,7 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
 
     @PostMapping
     @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
+    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
     public String updateWithoutGrowthTable(
         @PathVariable long projectId,
         @PathVariable long organisationId,
@@ -88,7 +87,7 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
 
     @PostMapping(value = "/auto-save")
     @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
+    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
     public @ResponseBody JsonNode autosaveWithoutGrowthTable(
         @PathVariable long projectId,
         @PathVariable long organisationId,
@@ -100,7 +99,7 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
 
     @PostMapping(params = {"mark-as-complete"})
     @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_COMPLETE", description = "Applicants can mark their organisation funding details as complete")
+    @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_COMPLETE", description = "Applicants can mark their organisation details as complete")
     public String markAsCompleteWithoutGrowthTable(
         @PathVariable long projectId,
         @PathVariable long organisationId,
@@ -128,12 +127,12 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
 
     @PostMapping(params = "mark-as-incomplete")
     @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_INCOMPLETE", description = "Applicants can mark their organisation funding details as incomplete")
+    @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_INCOMPLETE", description = "Applicants can mark their organisation details as incomplete")
     public String markAsIncomplete(
         @PathVariable long projectId,
         @PathVariable long organisationId) {
 
-        pendingPartnerProgressRestService.markYourFundingIncomplete(projectId, organisationId);
+        pendingPartnerProgressRestService.markYourOrganisationIncomplete(projectId, organisationId);
         return redirectToViewPage(projectId, organisationId);
     }
 

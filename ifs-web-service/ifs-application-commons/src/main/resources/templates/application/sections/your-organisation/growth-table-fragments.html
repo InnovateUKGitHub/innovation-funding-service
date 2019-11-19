@@ -18,9 +18,9 @@
                             label='Turnover (£)',
                             hint='Your turnover from the last financial year.',
                             id='turnover',
-                            value=${commonFinancesModel.readOnly ? ('£' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '0')) : form.turnover},
+                            value=${readOnly ? ('£' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '0')) : form.turnover},
                             required=true,
-                            readOnly=${commonFinancesModel.readOnly},
+                            readOnly=${readOnly},
                             )" />
 
         <th:block th:insert="fragments/form-elements/textfield ::
@@ -30,7 +30,7 @@
                             id='headCount',
                             value=${form.headCount},
                             required=true,
-                            readOnly=${commonFinancesModel.readOnly},
+                            readOnly=${readOnly},
                             )" />
 
         <th:block th:if="${!readOnly && showStateAidAgreement}">
