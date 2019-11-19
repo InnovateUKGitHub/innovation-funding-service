@@ -57,9 +57,6 @@
                             id="agree-terms-button"
                             class="govuk-button">Agree and continue
                     </button>
-                    <!--/*
-                            <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
-                     */-->
                 </form>
             </th:block>
             <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted}">
@@ -68,17 +65,14 @@
                     <th:block>
                         at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
                         on <span th:text="${#temporals.format(model.termsAcceptedOn.get(), 'd MMMM yyyy')}"> 08 May 2019</span>
-                        <!--by <span th:text="${model.termsAcceptedByName.get()}"> Tom Baldwin</span>.-->
+                        by you
                     </th:block>
                 </div>
             </div>
             <div>
-                <a class="button-secondary" th:href="@{/project/{projectId}/organisation/{organisationId}/terms-and-conditions(projectId=${model.projectId},organisationId=${model.organisationId})}">Return
+                <a class="button-secondary" th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}">Return
                     to join project</a>
             </div>
-            <!--/*
-            <a href="#" class="button-clear"><span class="icon icon-print"></span> Print terms and conditions</a>
-            */-->
         </th:block>
     </main>
 </div>
