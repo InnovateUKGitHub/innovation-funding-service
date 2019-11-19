@@ -117,7 +117,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .withModifiedOn(ZonedDateTime.now())
                 .build();
 
-        Application application = newApplication().build();
+        Application application = newApplication().withId(1L).build();
         applicationRepository.save(application);
         User projectManager = userRepository.findByEmail("steve.smith@empire.com").get();
         User projectPartner = userRepository.findByEmail("jessica.doe@ludlow.co.uk").get();
