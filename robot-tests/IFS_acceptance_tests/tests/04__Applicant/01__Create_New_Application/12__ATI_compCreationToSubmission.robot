@@ -43,7 +43,7 @@ Single applicant cannot submit his application to a collaborative comp
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user does not see state aid information
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
-    And the user accept the competition terms and conditions
+    And the user accept the competition terms and conditions     Return to application overview
     And the user checks the override value is applied
     And the user selects research category              Feasibility studies
     And the finance overview is marked as incomplete
@@ -133,7 +133,7 @@ the lead invites already registered user
     the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
     the user clicks the button/link                link = Your project finances
     the user marks the finances as complete        ${ATIapplicationTitle}   Calculate  52,214  yes
-    the user accept the competition terms and conditions
+    the user accept the competition terms and conditions     Return to application overview
     Log in as a different user                     &{lead_applicant_credentials}
     the user clicks the button/link                link = ${ATIapplicationTitle}
     the applicant completes Application Team
