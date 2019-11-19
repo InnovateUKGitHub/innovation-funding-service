@@ -27,7 +27,7 @@
 
         <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/th:block[0] "/>
 
-        <th:block th:if="${model.showHeaderAndFooter}">
+        <th:block>
             <div class="message-alert govuk-!-margin-bottom-6">
                 <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end
                     of the page.</p>
@@ -36,7 +36,7 @@
 
         <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content "/>
 
-        <th:block th:if="${model.showHeaderAndFooter}">
+        <th:block>
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
             <th:block th:unless="${model.termsAccepted}">
                 <form th:object="${form}" novalidate="novalidate" method="post" class="application-overview"

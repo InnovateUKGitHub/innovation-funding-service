@@ -8,7 +8,6 @@ public class ProjectTermsViewModel {
     private final long organisationId;
     private final String competitionTermsTemplate;
     private final boolean termsAccepted;
-    private final boolean showHeaderAndFooter;
     private final ZonedDateTime termsAcceptedOn;
 
     public ProjectTermsViewModel(long projectId,
@@ -19,7 +18,6 @@ public class ProjectTermsViewModel {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.competitionTermsTemplate = competitionTermsTemplate;
-        this.showHeaderAndFooter = true;
         this.termsAccepted = termsAccepted;
         this.termsAcceptedOn = termsAcceptedOn;
     }
@@ -34,10 +32,6 @@ public class ProjectTermsViewModel {
 
     public String getCompetitionTermsTemplate() {
         return competitionTermsTemplate;
-    }
-
-    public boolean isShowHeaderAndFooter() {
-        return showHeaderAndFooter;
     }
 
     public boolean isTermsAccepted() {

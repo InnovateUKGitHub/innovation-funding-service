@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.pendingpartner.form.ProjectTermsForm;
 import org.innovateuk.ifs.project.pendingpartner.populator.ProjectTermsModelPopulator;
 import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectTermsViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/terms-and-conditions")
@@ -26,14 +25,11 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
         securedType = ProjectTermsController.class)
 public class ProjectTermsController {
 
+    @Autowired
     private ProjectTermsModelPopulator projectTermsModelPopulator;
-    private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
-    public ProjectTermsController(ProjectTermsModelPopulator projectTermsModelPopulator,
-                                  PendingPartnerProgressRestService pendingPartnerProgressRestService) {
-        this.projectTermsModelPopulator = projectTermsModelPopulator;
-        this.pendingPartnerProgressRestService = pendingPartnerProgressRestService;
-    }
+    @Autowired
+    private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
     @GetMapping
     public String getTerms(@PathVariable long projectId,
@@ -60,7 +56,7 @@ public class ProjectTermsController {
 
             RestResult<Void> result = pendingPartnerProgressRestService.markTermsAndConditionsComplete(projectId, organisationId);
 
-            return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
+            return validationHandler.addAnyErrors(result)
                     .failNowOrSucceedWith(
                             failureView,
                             () -> format("redirect:/project/{projectId}/organisation/{organisationId}/terms-and-conditions#terms-accepted", projectId, organisationId));
