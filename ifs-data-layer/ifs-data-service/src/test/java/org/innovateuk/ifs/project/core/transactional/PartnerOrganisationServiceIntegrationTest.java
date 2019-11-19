@@ -55,7 +55,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.*;
 
-@Rollback
 @Transactional
 public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
 
@@ -184,21 +183,18 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         GOLProcessRepository.save(new GOLProcess(projectUsers.get(1), savedProject, GrantOfferLetterState.PENDING));
     }
 
+    @Rollback
     @Test
     public void getProjectPartnerOrganisations() {
         loginIfsAdmin();
         ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getProjectPartnerOrganisations(project.getId());
-        if (result.isFailure()) {
-            System.out.println(result.getFailure());
-        } else if (result.isSuccess()) {
-            System.out.println(result.getSuccess());
-        }
 
         assertTrue(result.isSuccess());
         assertEquals("Empire Ltd", result.getSuccess().get(0).getOrganisationName());
         assertEquals("Ludlow", result.getSuccess().get(1).getOrganisationName());
     }
 
+    @Rollback
     @Test
     public void getPartnerOrganisation() {
         loginIfsAdmin();
@@ -210,6 +206,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         assertEquals("Ludlow", result2.getSuccess().getOrganisationName());
     }
 
+    @Rollback
     @Test
     public void removeNonLeadPartnerOrganisation() {
         userRepository.save(projectFinanceUser);
@@ -220,6 +217,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
         assertTrue(result.isSuccess());
     }
 
+    @Rollback
     @Test
     public void removeLeadPartnerOrganisation() {
         projectFinanceUserResource = userMapper.mapToResource(projectFinanceUser);
