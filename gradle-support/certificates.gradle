@@ -26,11 +26,11 @@ String ldapEncryptionCertificateFileName = 'ldap-encryption.crt'
 String ldapEncryptionCertificateFile = "${buildDir}/${ldapEncryptionCertificateFileName}"
 
 String idpProxyKeyFileName = 'idp_proxy_key.pem'
-String idpProxyKeyFile = "${buildDir}/${idpProxyKeyFileName}"
+String idpProxyKeyFile = "${idpCertsVolume}/signed/${idpProxyKeyFileName}"
 String idpProxyCertificateFileName = 'idp_proxy_certificate.pem'
-String idpProxyCertificateFile = "${buildDir}/${idpProxyCertificateFileName}"
+String idpProxyCertificateFile = "${idpCertsVolume}/signed//${idpProxyCertificateFileName}"
 String idpProxyCacertificateFileName = 'idp_proxy_cacertificate.pem'
-String idpProxyCacertificateFile = "${buildDir}/${idpProxyCacertificateFileName}"
+String idpProxyCacertificateFile = "${idpCertsVolume}/signed/${idpProxyCacertificateFileName}"
 
 task prepareIDPProxySecrets {
     doLast {
@@ -45,25 +45,21 @@ task prepareIDPProxySecrets {
 
 task prepareIDPSigningSecrets {
     doLast {
-        if (!file("${idpCertsVolume}/${idpSigningKeyFileName}").exists() ||
-                !file("${idpCertsVolume}/${idpSigningCertificateFileName}").exists()) {
-            buildDir.mkdir()
-            exec {
-                executable = 'openssl'
-                args = ['req', '-x509',
-                        '-newkey', 'rsa:4096',
-                        '-keyout', idpSigningKeyFile,
-                        '-out', idpSigningCertificateFile,
-                        '-days', '3650',
-                        '-nodes',
-                        '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
-                ]
-            }
-            copy {
-                from file(idpSigningKeyFile)
-                from file(idpSigningCertificateFile)
-                into idpCertsVolume
-            }
+        exec {
+            executable = 'openssl'
+            args = ['req', '-x509',
+                    '-newkey', 'rsa:4096',
+                    '-keyout', idpSigningKeyFile,
+                    '-out', idpSigningCertificateFile,
+                    '-days', '3650',
+                    '-nodes',
+                    '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
+            ]
+        }
+        copy {
+            from file(idpSigningKeyFile)
+            from file(idpSigningCertificateFile)
+            into idpCertsVolume
         }
     }
 }
@@ -71,7 +67,6 @@ task prepareIDPSigningSecrets {
 
 task prepareIDPEncryptionSecrets {
     doLast {
-        buildDir.mkdir()
         exec {
             executable = 'openssl'
             args = ['req', '-x509',
@@ -93,7 +88,6 @@ task prepareIDPEncryptionSecrets {
 
 task prepareSPSecrets {
     doLast {
-        buildDir.mkdir()
         exec {
             executable = 'openssl'
             args = ['req', '-x509',
@@ -121,7 +115,6 @@ task prepareSPSecrets {
 
 task prepareLDAPEncryptionSecrets {
     doLast {
-        buildDir.mkdir()
         exec {
             executable = 'openssl'
             args = ['req', '-x509',

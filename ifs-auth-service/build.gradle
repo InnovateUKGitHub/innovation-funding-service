@@ -15,8 +15,34 @@ String spProxyCertificateFileName = 'sp_proxy_certificate.pem'
 String idpSigningCertificateFileName = 'idp-signing.crt'
 String idpEncryptionCertificateFileName = 'idp-encryption.crt'
 String ldapEncryptionCertificateFileName = 'ldap-encryption.crt'
+String spProxyKeyFileName = 'sp_proxy_key.pem'
+String spProxyCacertificateFileName = 'sp_proxy_cacertificate.pem'
+String idpSigningKeyFileName = 'idp-signing.key'
+String idpEncryptionKeyFileName = 'idp-encryption.key'
+String ldapEncryptionKeyFileName = 'ldap-encryption.key'
+String idpProxyKeyFileName = 'idp_proxy_key.pem'
+String idpProxyCertificateFileName = 'idp_proxy_certificate.pem'
+String idpProxyCacertificateFileName = 'idp_proxy_cacertificate.pem'
 
 task prepareSecrets {
+    // If certificates are not present and the task is not generating the certificates then fail
+    if (!gradle.startParameter.getTaskNames().contains('generateCertificates')) {
+        if (!file("${spCertsVolume}/${spProxyKeyFileName}").exists() ||
+                !file("${spCertsVolume}/${spProxyCertificateFileName}").exists() ||
+                !file("${spCertsVolume}/${spProxyCacertificateFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpProxyKeyFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpProxyCertificateFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpProxyCacertificateFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpSigningKeyFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpSigningCertificateFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpEncryptionKeyFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpEncryptionCertificateFileName}").exists() ||
+                !file("${ldapCertsVolume}/${ldapEncryptionKeyFileName}").exists() ||
+                !file("${ldapCertsVolume}/${ldapEncryptionCertificateFileName}").exists()) {
+
+            throw new GradleException("Unable to find certificates, please run ./gradlew generateCertificates to generate them")
+        }
+    }
     // on top of their respective certificates SP and IDP need each other's
     // and the IDP needs ldap's
     copy {
@@ -36,3 +62,4 @@ task prepareSecrets {
         into spCertsVolume
     }
 }
+

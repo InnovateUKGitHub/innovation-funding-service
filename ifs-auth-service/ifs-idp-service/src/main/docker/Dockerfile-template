@@ -119,7 +119,7 @@ COPY scripts/* /usr/local/bin/
 
 # copy certs into build
 RUN mkdir -p /var/certs/
-COPY certs/* /var/certs/
+COPY certs/*.* /var/certs/
 
 # custom govuk pages
 COPY pages/ /opt/shibboleth-idp/
