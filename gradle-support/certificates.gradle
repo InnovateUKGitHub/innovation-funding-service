@@ -28,7 +28,7 @@ String ldapEncryptionCertificateFile = "${buildDir}/${ldapEncryptionCertificateF
 String idpProxyKeyFileName = 'idp_proxy_key.pem'
 String idpProxyKeyFile = "${idpCertsVolume}/signed/${idpProxyKeyFileName}"
 String idpProxyCertificateFileName = 'idp_proxy_certificate.pem'
-String idpProxyCertificateFile = "${idpCertsVolume}/signed//${idpProxyCertificateFileName}"
+String idpProxyCertificateFile = "${idpCertsVolume}/signed/${idpProxyCertificateFileName}"
 String idpProxyCacertificateFileName = 'idp_proxy_cacertificate.pem'
 String idpProxyCacertificateFile = "${idpCertsVolume}/signed/${idpProxyCacertificateFileName}"
 
