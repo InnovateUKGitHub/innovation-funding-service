@@ -55,7 +55,7 @@ Applicant Applies to Research leading Competition
     the lead applicant marks every question as complete   1. How innovative is your project?
     And The user clicks the button/link                   link = Your project finances
     When the user marks the finances as complete          ${researchLeadApp}   Calculate  52,214  yes
-    And the user accept the competition terms and conditions
+    And the user accept the competition terms and conditions    Return to application overview
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link = Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
@@ -71,7 +71,7 @@ Applicant Applies to Public content leading Competition
     And the user marks every section but one as complete  ${publicLeadApp}  Experimental development
     When the user navigates to Your-finances page         ${publicLeadApp}
     Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214  no
-    And the user accept the competition terms and conditions
+    And the user accept the competition terms and conditions    Return to application overview
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com  no
 
 Project Finance is able to see the Overheads costs file
@@ -137,7 +137,7 @@ the collaborator accepts and fills in his part in the application
     the user is able to confirm the invite        ${collaborator}  ${short_password}
     the user navigates to Your-finances page      ${application}
     the user marks the finances as complete       ${application}  Calculate  52,214  ${projectGrowth}
-    the user accept the competition terms and conditions
+    the user accept the competition terms and conditions    Return to application overview
 
 the lead is able to submit the application
     [Arguments]  ${user}  ${application}
