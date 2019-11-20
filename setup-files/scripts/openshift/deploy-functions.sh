@@ -193,10 +193,11 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
 
-    if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf"  ]]
+    if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf" || ${TARGET} == "ifs-at-6228-2"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/shib/5-shib.yml
     fi
 }
 
@@ -355,10 +356,6 @@ function scaleSurveyDataService() {
 
 function scaleEuDataService() {
     oc scale dc eu-grant-registration-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
-}
-
-function scaleShib() {
-    oc scale dc shib --replicas=2 ${SVC_ACCOUNT_CLAUSE}
 }
 
 function createProject() {

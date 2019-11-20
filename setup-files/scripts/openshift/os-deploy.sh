@@ -85,8 +85,6 @@ then
     shibInit
 fi
 
-scaleShib
-
 if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" ]]
 then
     # We only scale up data-services once started up and performed the Flyway migrations on one thread
