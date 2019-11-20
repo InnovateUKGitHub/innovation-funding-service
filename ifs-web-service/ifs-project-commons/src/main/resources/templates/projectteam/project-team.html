@@ -110,15 +110,7 @@
                 <span th:if="${!organisation.lead and model.canRemovePartnerOrganisation and organisation.canAddUsers}"
                       class="vertical-align-baseline govuk-body govuk-!-margin-left-1 govuk-!-margin-right-1 hint">|</span>
                 <th:block th:if="${!organisation.lead and model.canRemovePartnerOrganisation}">
-                    <th:block th:if="${organisation.partnerInvite and model.canInvitePartnerOrganisation}">
-                        <button name="remove-partner-invite"
-                                class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
-                                type="submit"
-                                th:value="${organisation.id}">
-                            Remove organisation
-                        </button>
-                    </th:block>
-                    <th:block th:unless="${organisation.partnerInvite and model.canInvitePartnerOrganisation}">
+                    <th:block th:unless="${organisation.partnerInvite}">
                         <button name="remove-organisation"
                                 class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
                                 th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.id}">
@@ -127,6 +119,14 @@
                     </th:block>
                     <th:block
                         th:insert="fragments/modals :: modal-project-team-remove-organisation (${organisation})"/>
+                </th:block>
+                <th:block th:if="${organisation.partnerInvite and model.canInvitePartnerOrganisation}">
+                    <button name="remove-partner-invite"
+                            class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
+                            type="submit"
+                            th:value="${organisation.id}">
+                        Remove organisation
+                    </button>
                 </th:block>
             </th:block>
         </form>
