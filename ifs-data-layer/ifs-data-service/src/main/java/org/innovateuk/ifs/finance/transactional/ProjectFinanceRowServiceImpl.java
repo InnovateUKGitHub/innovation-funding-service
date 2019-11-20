@@ -77,7 +77,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Override
     @Transactional
-    public ServiceResult<FinanceRowItem> create(long projectFinanceId, FinanceRowItem newCostItem) {
+    public ServiceResult<FinanceRowItem> create(FinanceRowItem newCostItem) {
         return find(projectFinance(newCostItem.getTargetId())).andOnSuccess(projectFinance -> {
             OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getProject().getApplication().getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
             FinanceRow newCost = addCostItem(projectFinance, newCostItem);

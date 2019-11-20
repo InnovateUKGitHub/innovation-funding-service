@@ -45,7 +45,8 @@
             <li>
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a href="#" class="govuk-link">Award terms and conditions</a>
+                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/terms-and-conditions(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                           class="govuk-link">Award terms and conditions</a>
                     </h3>
                 </div>
                 <div th:if="${model.termsAndConditionsComplete}"

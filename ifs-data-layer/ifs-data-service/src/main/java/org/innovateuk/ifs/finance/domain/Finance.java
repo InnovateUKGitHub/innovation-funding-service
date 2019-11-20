@@ -115,7 +115,7 @@ public abstract class Finance {
 
     public abstract Application getApplication();
 
-    public Integer getMaximumFundingLevel() {
+    public int getMaximumFundingLevel() {
         if (!isBusinessOrganisationType()) {
             return FundingLevel.HUNDRED.getPercentage();
         }
