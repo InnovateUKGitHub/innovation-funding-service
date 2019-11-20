@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/your-organisation")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = SetupStatusController.class)
+@SecuredBySpring(value = "Controller", description = "Applicants and internal users can see the Your Organisation page",
+    securedType = SetupStatusController.class)
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class ProjectYourOrganisationController {
 

@@ -14,7 +14,7 @@ public class YourOrganisationWithGrowthTableForm {
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
 
-    private Boolean stateAidAgreed = false;
+    private Boolean stateAidAgreed;
 
     @LastFinancialYearEnd(messageNotNull = "{validation.standard.mm.yyyy.format}",
         messagePastYearMonth = "{validation.standard.past.mm.yyyy.not.past.format}",
