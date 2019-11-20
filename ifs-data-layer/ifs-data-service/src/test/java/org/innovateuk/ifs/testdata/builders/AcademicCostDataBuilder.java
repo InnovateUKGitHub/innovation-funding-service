@@ -140,7 +140,7 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
 
     private <T extends FinanceRowItem> AcademicCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Predicate<T> filterFn, Consumer<T> updateFn) {
         return with(data -> {
-            List<FinanceRowItem> existingItems = financeRowCostsService.getCostItems(data.getApplicationFinance().getId(), financeRowType).getSuccess();
+            List<FinanceRowItem> existingItems = getCostItems(data.getApplicationFinance().getId(), financeRowType);
             simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
         });
     }

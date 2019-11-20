@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
+import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @PermissionEntityLookupStrategies
-public class FinanceRowLookupStrategy {
+public class ApplicationFinanceRowLookupStrategy {
     @Autowired
     private ApplicationFinanceRowRepository applicationFinanceRowRepository;
 
     @PermissionEntityLookupStrategy
-    public FinanceRow getFinanceRow(final Long costId) {
+    public ApplicationFinanceRow getFinanceRow(final Long costId) {
         return applicationFinanceRowRepository.findById(costId).orElse(null);
     }
 }

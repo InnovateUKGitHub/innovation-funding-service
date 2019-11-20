@@ -41,9 +41,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
-import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
-import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
-import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -147,7 +145,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
         ApplicationFinanceResource financeDetails = getFinanceDetails(leadApplicant, applicationId, leadOrganisationId);
 
-        assertEquals(Integer.valueOf(expectedMaximumGrant), financeDetails.getMaximumFundingLevel());
+        assertEquals(expectedMaximumGrant, financeDetails.getMaximumFundingLevel());
     }
 
     private ApplicationData createApplication(CompetitionData competitionData, String applicantEmailAddress, String
