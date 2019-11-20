@@ -14,7 +14,10 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean termsAndConditionsComplete;
     private final boolean showYourOrganisation;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project,
+                                                      PendingPartnerProgressResource progress,
+                                                      boolean showYourOrganisation,
+                                                      long organisationId) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
