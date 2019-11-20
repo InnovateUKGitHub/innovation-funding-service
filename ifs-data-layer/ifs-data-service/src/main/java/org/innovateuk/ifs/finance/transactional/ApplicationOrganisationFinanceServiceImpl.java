@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import java.time.format.DateTimeFormatter;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+
+
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -75,18 +76,16 @@ public class ApplicationOrganisationFinanceServiceImpl extends AbstractOrganisat
     }
 
     @Override
-    protected ServiceResult<Boolean> getStateAidAgreed(long targetId) {
-        return applicationService.getApplicationById(targetId).
-                andOnSuccessReturn(ApplicationResource::getStateAidAgreed);
-    }
-
-    @Override
     protected ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed) {
-        return applicationService.getApplicationById(targetId).
+        if (stateAidAgreed) {
+            return applicationService.getApplicationById(targetId).
                 andOnSuccess(application -> {
                     application.setStateAidAgreed(stateAidAgreed);
                     return applicationService.saveApplicationDetails(targetId, application);
                 }).
                 andOnSuccessReturnVoid();
+        }
+        return serviceSuccess();
+
     }
 }

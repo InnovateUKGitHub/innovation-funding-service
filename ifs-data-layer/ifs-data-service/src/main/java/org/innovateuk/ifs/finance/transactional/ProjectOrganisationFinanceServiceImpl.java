@@ -1,18 +1,20 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+
+
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.projectteam.transactional.PendingPartnerProgressService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationFinanceService<ProjectFinanceResource> implements ProjectOrganisationFinanceService {
@@ -31,6 +33,9 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
 
     @Autowired
     private PendingPartnerProgressService pendingPartnerProgressService;
+
+    @Autowired
+    private ProjectMapper projectMapper;
 
     @Override
     protected ServiceResult<ProjectFinanceResource> getFinance(long projectId, long organisationId) {
@@ -60,12 +65,8 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
     }
 
     @Override
-    protected ServiceResult<Boolean> getStateAidAgreed(long targetId) {
-        return serviceSuccess(true);
-    }
-
-    @Override
     protected ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed) {
+        // nowhere to save this in Project Setup.
         return serviceSuccess();
     }
 }

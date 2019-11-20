@@ -1,9 +1,22 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import static java.lang.Boolean.TRUE;
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+
+
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.util.Optional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.finance.resource.*;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
+import org.innovateuk.ifs.finance.resource.GrowthTableResource;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -13,14 +26,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.time.YearMonth;
-import java.util.Optional;
-
-import static java.lang.Boolean.TRUE;
-import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceResource> extends BaseTransactionalService implements OrganisationFinanceService {
 
@@ -38,13 +43,10 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
     protected abstract ServiceResult<FinanceRowItem> saveGrantClaim(GrantClaim grantClaim);
     protected abstract ServiceResult<CompetitionResource> getCompetitionFromTargetId(long targetId);
     protected abstract void resetYourFundingSection(F finance, long competitionId, long userId);
-    protected abstract ServiceResult<Boolean> getStateAidAgreed(long targetId);
     protected abstract ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed);
 
     @Override
     public ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationWithGrowthTable(long targetId, long organisationId) {
-        Boolean stateAidAgreed = getStateAidAgreed(targetId).getSuccess();
-
         F finance = getFinance(targetId, organisationId).getSuccess();
 
         OrganisationSize organisationSize = finance.getOrganisationSize();
@@ -69,7 +71,7 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
 
         return serviceSuccess(new OrganisationFinancesWithGrowthTableResource(
                 organisationSize,
-                stateAidAgreed,
+                false,
                 financialYearEnd,
                 headCountAtLastFinancialYear,
                 annualTurnoverAtEndOfFinancialYear,
@@ -80,7 +82,6 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
 
     @Override
     public ServiceResult<OrganisationFinancesWithoutGrowthTableResource> getOrganisationWithoutGrowthTable(long targetId, long organisationId) {
-        Boolean stateAidAgreed = getStateAidAgreed(targetId).getSuccess();
         F finance = getFinance(targetId, organisationId).getSuccess();
 
         OrganisationSize organisationSize = finance.getOrganisationSize();
@@ -92,7 +93,8 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
         BigDecimal turnover = employeesAndTurnover.map(EmployeesAndTurnoverResource::getTurnover).orElse(null);
         Long headCount = employeesAndTurnover.map(EmployeesAndTurnoverResource::getEmployees).orElse(null);
 
-        return serviceSuccess(new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover, headCount, stateAidAgreed));
+        return serviceSuccess(new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover,
+            headCount, false));
     }
 
     @Override

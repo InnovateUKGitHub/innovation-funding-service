@@ -46,7 +46,7 @@
                                                readOnly=${model.readOnly},
                                                showOrganisationSizeAlert=${model.showOrganisationSizeAlert},
                                                showStateAidAgreement=${model.showStateAidAgreement},
-                                               isApplicationStage=false
+                                               checkboxText='I confirm that by joining this project my organisation is <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot; aria-describedby=&quot;state-aid-hint&quot;>eligible for state aid</a> <span id=&quot;state-aid-hint&quot;>(opens in a new window).</span>'
                                         )" />
 
             <div class="form-footer">
@@ -65,7 +65,7 @@
             <div>
                 <a th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}"
                    th:if="${model.readOnly}"
-                   class="govuk-!-margin-top-6 button-secondary">Save and return to
+                   class="govuk-!-margin-top-6 button-secondary">Return to
                     organisation details.
                 </a>
                 <button type="submit" th:unless="${model.readOnly}"

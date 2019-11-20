@@ -22,7 +22,7 @@ public class YourOrganisationWithoutGrowthTableForm {
     @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
     private Long headCount;
 
-    private Boolean stateAidAgreed;
+    private Boolean stateAidAgreed = false;
 
     YourOrganisationWithoutGrowthTableForm(
             OrganisationSize organisationSize,
