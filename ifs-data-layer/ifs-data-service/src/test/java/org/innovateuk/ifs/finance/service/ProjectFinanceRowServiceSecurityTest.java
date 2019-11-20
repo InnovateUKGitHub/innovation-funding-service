@@ -58,7 +58,7 @@ public class ProjectFinanceRowServiceSecurityTest extends BaseServiceSecurityTes
         final Long financeId = 1L;
         when(projectFinanceLookupStrategy.getProjectFinance(financeId)).thenReturn(newProjectFinanceResource().with(id(financeId)).build());
         assertAccessDenied(
-                () -> classUnderTest.create(financeId, new GrantClaimPercentage(financeId)),
+                () -> classUnderTest.create(new GrantClaimPercentage(financeId)),
                 () -> {
                     verify(projectFinanceRowPermissionRules)
                             .projectFinanceCanCrudProjectFinanceRows(isA(ProjectFinanceResource.class), isA(UserResource.class));

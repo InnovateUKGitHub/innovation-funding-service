@@ -19,7 +19,7 @@ public interface ProjectFinanceRowService {
     ServiceResult<FinanceRowItem> get(long rowId);
 
     @PreAuthorize("hasPermission(#newCostItem.targetId, 'org.innovateuk.ifs.finance.resource.ProjectFinanceResource', 'ADD_ROW')")
-    ServiceResult<FinanceRowItem> create(long projectFinanceId, FinanceRowItem newCostItem);
+    ServiceResult<FinanceRowItem> create(FinanceRowItem newCostItem);
 
     @PreAuthorize("hasPermission(#rowId, 'org.innovateuk.ifs.finance.domain.ProjectFinanceRow', 'CRUD')")
     ServiceResult<FinanceRowItem> update(long rowId, FinanceRowItem newCostItem);
