@@ -176,7 +176,7 @@ Applicant can remove the uploaded response
     [Tags]  HappyPath
     Given an applicant uploads response to an applicantion
     When the user clicks the button/link     css = .button-secondary  #remove
-    Then the user should see the element     jQuery = p:contains("No file currently uploaded") ~ label:contains("+ Upload")
+    Then the user should see the element     jQuery = p:contains("No file currently uploaded") ~ label:contains("Upload")
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery = td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
 
@@ -307,7 +307,7 @@ the compAdmin removes uploaded feedback for an application
     the user uploads the file          id = feedback[1]   ${5mb_pdf}
     the user should see the element    link = testing_5MB.pdf
     the user clicks the button/link    jQuery = td:contains("${computer_vision_application}") ~ td div:nth-child(2):contains("Remove")
-    the user should see the element    jQuery = td:contains("${computer_vision_application}") ~ td label:contains("+ Upload")
+    the user should see the element    jQuery = td:contains("${computer_vision_application}") ~ td label:contains("Upload")
 
 the applicant upload the response to the interview panel
     the user uploads the file              css = .inputfile   ${5mb_pdf}

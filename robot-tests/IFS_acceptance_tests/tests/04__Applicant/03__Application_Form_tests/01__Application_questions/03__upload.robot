@@ -39,7 +39,7 @@ Large pdf uploads not allowed
     And the user clicks the button/link     link = Academic robot test application
     And the user clicks the button/link     link = 5. Technical approach
     When the user uploads the file          css = .inputfile    ${too_large_pdf}
-    Then the user should see a field and summary error  ${too_large_10MB_validation_error}
+    Then the user should see a field error  ${too_large_10MB_validation_error}
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
@@ -48,7 +48,7 @@ Non pdf uploads not allowed
     And the user clicks the button/link                   link = Academic robot test application
     And the user clicks the button/link                   link = 5. Technical approach
     When the user uploads the file                        css = .inputfile    ${text_file}
-    Then the user should see a field and summary error    ${wrong_filetype_validation_error}
+    Then the user should see a field error                ${wrong_filetype_validation_error}
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832  IFS-2327
@@ -140,7 +140,7 @@ Collaborators can upload a file when the question is assigned
     Given the user navigates to the page           ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Academic robot test application
     And the user clicks the button/link            link = 6. Innovation
-    When the user should see the element           jQuery = label:contains("+ Upload")
+    When the user should see the element           jQuery = label:contains("Upload")
     Then the user uploads the file                 css = .inputfile     ${5mb_pdf}
     And the user clicks the button/link            name = assign
 

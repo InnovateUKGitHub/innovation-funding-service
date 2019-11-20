@@ -6,13 +6,14 @@ Resource          ../defaultResources.robot
 the user uploads the file
     [Arguments]  ${selector}  ${file}
     Choose File  ${selector}  ${UPLOAD_FOLDER}/${file}
+    the user should see the element   css = .remove-file
 
 the user can remove the uploaded file
     [Arguments]  ${name}  ${file_name}
     Reload Page
     Click Button    name=${name}
     Wait Until Page Does Not Contain Without Screenshots    Remove
-    Page Should Contain    Upload
+    the user clicks the button/link    jQuery = .button-secondary:contains("Upload")
     Page Should Not Contain    ${file_name}
 
 #Download

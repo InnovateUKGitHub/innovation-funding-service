@@ -211,9 +211,9 @@ the assessor submits the assessment
     the user clicks the button/link               jQuery = button:contains("Yes I want to submit the assessments")
     the user should see the element               jQuery = li:contains("${appl_name}") strong:contains("Recommended")
 
-#Custom suite teardown
-#    Close browser and delete emails
-#    Disconnect from database
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database
 
 the user checks the VAT calculations
     the user clicks the button/link                css = label[for="stateAidAgreed"]

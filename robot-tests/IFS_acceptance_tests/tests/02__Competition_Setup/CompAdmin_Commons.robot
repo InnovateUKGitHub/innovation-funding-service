@@ -261,7 +261,7 @@ the user marks each procurement question as complete
     the user clicks the button/link        jQuery = h4 a:contains("${question_link}")
     the user selects the radio button      question.templateDocument  1
     the user enters text to a text field   id = question.templateTitle   ${question_link}
-    the user uploads the file              id = templateDocumentFile   ${ods_file}
+    the user uploads the file              css = input[id="templateDocumentFile"]   ${ods_file}
     the user selects the checkbox          question.allowedTemplateResponseFileTypes1
     the user clicks the button/link        jQuery = button:contains('Done')
     the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
