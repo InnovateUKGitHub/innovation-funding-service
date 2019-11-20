@@ -26,7 +26,7 @@ String idpProxyCacertificateFileName = 'idp_proxy_cacertificate.pem'
 
 task prepareSecrets {
     // If certificates are not present and the task is not generating the certificates then fail
-    if (!gradle.startParameter.getTaskNames().contains('generateCertificates')) {
+    if (gradle.startParameter.getTaskNames().contains('build')) {
         if (!file("${spCertsVolume}/${spProxyKeyFileName}").exists() ||
                 !file("${spCertsVolume}/${spProxyCertificateFileName}").exists() ||
                 !file("${spCertsVolume}/${spProxyCacertificateFileName}").exists() ||
