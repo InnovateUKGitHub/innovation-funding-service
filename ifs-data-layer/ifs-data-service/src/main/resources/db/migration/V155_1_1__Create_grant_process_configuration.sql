@@ -6,6 +6,3 @@ CREATE TABLE `grant_process_configuration` (
 	PRIMARY KEY (`id`),
 	CONSTRAINT `competition_id` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`)
 );
-
-insert into grant_process_configuration (competition_id) select id from competition;
-
