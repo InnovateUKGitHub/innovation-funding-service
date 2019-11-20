@@ -359,6 +359,7 @@ function scaleEuDataService() {
 
 function scaleShib() {
     oc scale dc shib --replicas=2 ${SVC_ACCOUNT_CLAUSE}
+}
 
 function createProject() {
     until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
