@@ -31,12 +31,12 @@ Applicant applies to newly created The Prince's Trust competition
 Applicant submits his application
     [Documentation]  IFS-2688  IFS-3287  IFS-5920
     [Tags]
-    Given the user clicks the button/link               link = Application details
-    When the user fills in the Application details      ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
+    Given the user clicks the button/link                      link = Application details
+    When the user fills in the Application details             ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
     Then the applicant completes application team
     And the lead applicant answers the four sections as complete
-    And the user accept the competition terms and conditions
-    And the user should not see the element             jQuery = h2:contains("Finances")
+    And the user accept the competition terms and conditions    Return to application overview
+    And the user should not see the element                     jQuery = h2:contains("Finances")
     Then the applicant submits the application
 
 *** Keywords ***

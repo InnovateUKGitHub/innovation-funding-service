@@ -12,8 +12,12 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean yourFundingComplete;
     private final boolean termsAndConditionsComplete;
     private final boolean showYourOrganisation;
+    private final long organisationId;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project,
+                                                      PendingPartnerProgressResource progress,
+                                                      boolean showYourOrganisation,
+                                                      long organisationId) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
@@ -21,6 +25,7 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.yourFundingComplete = progress.isYourFundingComplete();
         this.termsAndConditionsComplete = progress.isTermsAndConditionsComplete();
         this.showYourOrganisation = showYourOrganisation;
+        this.organisationId = organisationId;
     }
 
     public long getProjectId() {
@@ -49,5 +54,9 @@ public class PendingPartnerProgressLandingPageViewModel {
 
     public boolean isShowYourOrganisation() {
         return showYourOrganisation;
+    }
+
+    public long getOrganisationId() {
+        return organisationId;
     }
 }
