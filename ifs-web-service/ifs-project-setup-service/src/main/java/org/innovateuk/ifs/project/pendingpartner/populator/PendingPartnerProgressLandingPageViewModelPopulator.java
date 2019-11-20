@@ -35,7 +35,6 @@ public class PendingPartnerProgressLandingPageViewModelPopulator {
 
         return new PendingPartnerProgressLandingPageViewModel(
                 project,
-                organisationId,
                 progress,
                 !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum()),
                 organisationId
