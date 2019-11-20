@@ -12,7 +12,8 @@ IFS.core.upload = (function () {
       numberOfFiles: 'data-js-number-of-files',
       oneAtATime: 'data-js-upload-one-at-a-time',
       maxSize: 'data-js-max-size',
-      enableButton: 'data-js-enabled-on-file-upload',
+      enableButtonOnSuccess: 'data-js-enabled-on-file-upload',
+      toggleOnSuccess: 'data-js-toggle-on-file-upload',
       successRow: '<li class="success">' +
                     '<div class="file-row">' +
                       '<a href="$href" target="_blank" class="govuk-link">$text (Opens in a new window)</a>' +
@@ -116,7 +117,8 @@ IFS.core.upload = (function () {
         })
       } else {
         IFS.core.upload.replaceMessageListWithResponse(wrapper, data, file.name)
-        jQuery('[' + s.enableButton + ']').prop('disabled', false)
+        jQuery('[' + s.enableButtonOnSuccess + ']').prop('disabled', false)
+        jQuery('[' + s.toggleOnSuccess + ']').toggle()
       }
       IFS.core.upload.addMessage(wrapper, row)
       IFS.core.upload.toggleUploadView(wrapper)
@@ -173,7 +175,7 @@ IFS.core.upload = (function () {
       if (row.hasClass('success')) {
         var removeName = removeButton.attr('name')
         var removeValue = removeButton.attr('value')
-        var formData = new window.FormData()
+        var formData = new window.FormData(wrapper.closest('form').get(0))
         formData.append(removeName, removeValue)
         jQuery.ajaxProtected({
           type: 'POST',
@@ -181,7 +183,8 @@ IFS.core.upload = (function () {
           success: function (data) {
             IFS.core.upload.afterRemoveFile(row, wrapper)
             if (!wrapper.find('li').length) {
-              jQuery('[' + s.enableButton + ']').prop('disabled', true)
+              jQuery('[' + s.enableButtonOnSuccess + ']').prop('disabled', true)
+              jQuery('[' + s.toggleOnSuccess + ']').toggle()
             }
           },
           error: function (error) {
