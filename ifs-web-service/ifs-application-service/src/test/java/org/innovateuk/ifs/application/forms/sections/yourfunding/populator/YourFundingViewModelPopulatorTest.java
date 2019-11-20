@@ -22,6 +22,7 @@ import org.mockito.Mock;
 
 import java.util.Collections;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
@@ -37,7 +38,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CA
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourFundingViewModelPopulator> {
@@ -125,17 +126,19 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         when(applicantRestService.getSection(user.getId(), APPLICATION_ID, SECTION_ID)).thenReturn(section);
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourOrgSection.getId()));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(finance));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId())).thenReturn(restSuccess(true));
 
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, applicant.getOrganisation().getId(), user);
 
         assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
         assertEquals(viewModel.getApplicationName(), "Name");
-        assertEquals((Long) viewModel.getCompetitionId(), competition.getId());
-        assertEquals(viewModel.getMaximumFundingLevel(), (Integer) 60);
-        assertEquals((Long) viewModel.getYourOrganisationSectionId(), yourOrgSection.getId());
+        assertEquals(viewModel.getCompetitionId(), competition.getId().longValue());
+        assertEquals(viewModel.getMaximumFundingLevel().intValue(), 60);
+        assertEquals(viewModel.getYourOrganisationSectionId(), yourOrgSection.getId().longValue());
         assertEquals(viewModel.getResearchCategoryQuestionId(), researchCategoryQuestion.getId());
-        assertEquals(viewModel.isFundingSectionLocked(), false);
-        assertEquals(viewModel.getFinancesUrl(), String.format("/application/%d/form/FINANCE", APPLICATION_ID));
+        assertFalse(viewModel.isFundingSectionLocked());
+        assertEquals(viewModel.getFinancesUrl(), format("/application/%d/form/FINANCE", APPLICATION_ID));
+        assertTrue(viewModel.isOverridingFundingRules());
     }
 
     @Test
@@ -155,8 +158,8 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertEquals(viewModel.getCompetitionId(), competitionId);
         assertEquals(viewModel.getApplicationName(),"name");
 
-        assertEquals(viewModel.isFundingSectionLocked(), false);
-        assertEquals(viewModel.isFundingSectionLocked(), false);
-        assertEquals(viewModel.getFinancesUrl(), String.format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId));
+        assertFalse(viewModel.isFundingSectionLocked());
+        assertFalse(viewModel.isFundingSectionLocked());
+        assertEquals(viewModel.getFinancesUrl(), format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId));
     }
 }
