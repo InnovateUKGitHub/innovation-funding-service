@@ -467,7 +467,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return financeService.getApplicationFinanceById(applicationFinanceId).andOnSuccess(applicationFinance -> {
             return financeService.financeDetails(applicationFinance.getApplication(), applicationFinance.getOrganisation()).andOnSuccessReturn(finance ->
                     finance.getFinanceOrganisationDetails().values().stream().flatMap(category -> category.getCosts().stream())
-                            .filter(row -> row.getCostType().equals(type))
+                            .filter(row -> row.getCostType() == type)
                             .collect(toList())
             );
         }).getSuccess();
