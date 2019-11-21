@@ -15,7 +15,7 @@ public interface ProjectFinanceHandler {
     @NotSecured(value = "This service must be secured by other services")
     BigDecimal getResearchParticipationPercentageFromProject(long projectId);
 
-    @NotSecured(value = "This service must be secured by other services")
+    @NotSecured(value = "This service should be secured by others. Unless being called by a scheduled job.", mustBeSecuredByOtherServices = false)
     ServiceResult<ProjectFinanceResource> getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
 
     @NotSecured(value = "This service must be secured by other service")
