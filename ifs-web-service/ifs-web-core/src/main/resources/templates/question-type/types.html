@@ -154,12 +154,8 @@
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">
                     <p class="govuk-body uploaded-file">No file currently uploaded.</p>
-                    <th:block th:if="${autoSaveOff}">
-                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" data-autosave-disabled="" aria-label="Upload a file"/>
-                    </th:block>
-                    <th:block th:unless="${autoSaveOff}">
-                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" aria-label="Upload a file" />
-                    </th:block>
+                    <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" aria-label="Upload a file"
+                           data-set-section-valid=".ajax-upload" />
                     <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">Upload</label>
                     <button th:name="${saveName}" th:id="${inputField+'-button'}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}" aria-label="Upload document">Save</button>
                 </th:block>

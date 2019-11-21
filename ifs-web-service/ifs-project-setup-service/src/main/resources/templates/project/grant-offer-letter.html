@@ -123,10 +123,12 @@
                 </div>
 
                 <th:block th:if="${model.grantOfferLetterSent}">
-                    <a th:if="${model.showSubmitButton}"
+                    <a th:attr="aria-hidden=${!model.showSubmitButton}"
+                       data-js-toggle-on-file-upload=""
                        th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
                        data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
-                    <button th:if="${model.showDisabledSubmitButton}"
+                    <button th:attr="aria-hidden=${!model.showDisabledSubmitButton}"
+                            data-js-toggle-on-file-upload=""
                             disabled="disabled" class="govuk-button">Send to Innovate UK
                     </button>
                 </th:block>
