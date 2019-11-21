@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import java.util.List;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -7,8 +8,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.List;
 
 /**
  * Transactional service to support operations on ProjectFinanceRow.  This is only permitted for use by internal finance users.
@@ -38,4 +37,5 @@ public interface ProjectFinanceRowService {
 
     @NotSecured(value = "Should only be called from other secure services")
     ServiceResult<Void> createProjectFinance(long projectId, long organisationId);
+
 }

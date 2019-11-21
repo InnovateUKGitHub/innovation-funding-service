@@ -10,7 +10,12 @@ import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
-import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
+import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -223,11 +228,11 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
             ProjectFinanceRow savedCost = projectFinanceRowRepository.save(updatedCost);
 
             newCost.getFinanceRowMetadata()
-                    .stream()
-                    .filter(c -> c.getValue() != null)
-                    .filter(c -> !"null".equals(c.getValue()))
-                    .peek(c -> LOG.debug("FinanceRowMetaValue: " + c.getValue()))
-                    .forEach(costValue -> updateCostValue(costValue, savedCost));
+                .stream()
+                .filter(c -> c.getValue() != null)
+                .filter(c -> !"null".equals(c.getValue()))
+                .peek(c -> LOG.debug("FinanceRowMetaValue: " + c.getValue()))
+                .forEach(costValue -> updateCostValue(costValue, savedCost));
 
             // refresh the object, since we need to reload the costvalues, on the cost object.
             return savedCost;
