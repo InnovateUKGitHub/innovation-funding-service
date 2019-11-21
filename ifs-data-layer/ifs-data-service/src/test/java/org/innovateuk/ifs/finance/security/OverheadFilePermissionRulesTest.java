@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.resource.Role;
@@ -34,8 +33,8 @@ import static org.mockito.Mockito.when;
 
 public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<OverheadFilePermissionRules> {
 
-    private FinanceRow overheads;
-    private FinanceRow submittedOverheads;
+    private ApplicationFinanceRow overheads;
+    private ApplicationFinanceRow submittedOverheads;
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource compAdmin;

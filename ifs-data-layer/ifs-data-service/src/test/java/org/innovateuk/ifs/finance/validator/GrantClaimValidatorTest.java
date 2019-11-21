@@ -49,17 +49,6 @@ public class GrantClaimValidatorTest {
 	}
 
 	@Test
-	public void testMaximumNotDefinedError() {
-		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
-		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
-		when(applicationFinance.getMaximumFundingLevel()).thenReturn(null);
-
-		validator.validate(claim, bindingResult);
-
-		verifyError("validation.grantClaimPercentage.maximum.not.defined");
-	}
-
-	@Test
 	public void testMinimumError() {
 		claim.setPercentage(-1);
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);

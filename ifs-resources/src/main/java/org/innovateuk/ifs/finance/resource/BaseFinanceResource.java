@@ -22,7 +22,7 @@ public abstract class BaseFinanceResource {
     protected Long organisation;
     protected String organisationName;
     protected Long target;
-    protected Integer maximumFundingLevel;
+    protected int maximumFundingLevel;
     protected OrganisationSize organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
     private FinancialYearAccountsResource financialYearAccounts;
@@ -82,11 +82,11 @@ public abstract class BaseFinanceResource {
         this.target = target;
     }
 
-    public Integer getMaximumFundingLevel() {
+    public int getMaximumFundingLevel() {
         return maximumFundingLevel;
     }
 
-    public void setMaximumFundingLevel(Integer maximumFundingLevel) {
+    public void setMaximumFundingLevel(int maximumFundingLevel) {
         this.maximumFundingLevel = maximumFundingLevel;
     }
 
