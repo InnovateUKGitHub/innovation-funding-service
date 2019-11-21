@@ -321,8 +321,14 @@
 </th:block>
 
 <th:block th:fragment="project-business">
-    <th:block
-    th:text="'The maximum you can enter is ' + ${model.maximumFundingLevel} + '%, based on your organisation size and project research category.' "/>
+    <th:block th:if="${model.overridingFundingRules}">
+        The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
+        based on the <a class="govuk-link" target="_blank"
+                        th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">competition's rules</a>.
+    </th:block>
+    <th:block th:unless="${model.overridingFundingRules}">
+        The maximum you can enter is <span th:text="${model.maximumFundingLevel}">33</span>%, based on your organisation size and project research category.
+    </th:block>
 </th:block>
 <th:block th:fragment="project-non-business">
     The amount you apply for must reflect other funding received and be within the participation
