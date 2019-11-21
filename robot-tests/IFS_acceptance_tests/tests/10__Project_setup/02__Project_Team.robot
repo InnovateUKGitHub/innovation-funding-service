@@ -231,25 +231,33 @@ Project finance is able to add a new partner organisation
     And the internal user checks for status after new org added/removed
 
 The new partner cannot complete funding without organisation
+    [Documentation]  IFS-6491
     Given log in as a different user                              ${intFinanceAddOrgEmail}  ${short_password}
     And the user clicks the button/link                          link = ${applicationName}
     When the user clicks the button/link     link = Your funding
     Then the user should see the element     link = your organisation
 
 The new partner can complete Your organisation
+    [Documentation]  IFS-6491
     Given the user clicks the button/link    link = your organisation
     When the user completes your organisation
-    Then the user should see the element    jQuery = li div:contains("Your organisation") ~ .task-status-complete
+    Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
 
 The new partner completes your funding
+    [Documentation]  IFS-6491
     Given The user clicks the button/link   link = Your funding
     When the user completes your funding
-    Then the user should see the element   jQuery = li div:contains("Your funding") ~ .task-status-complete
+    Then the user should see the element    jQuery = li div:contains("Your funding") ~ .task-status-complete
 
 The new organisation partner accept terms and conditions
     [Documentation]  IFS-6492
-    When the user accept the competition terms and conditions      Return to join project
-    And the user should see the element                            jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
+    Given the user accept the competition terms and conditions      Return to join project
+    Then the user should see the element                            jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
+
+Editing org size resets your funding
+    Given the user clicks the button/link      link = Your organisation
+    When the user edits the org size
+    Then the user should not see the element   jQuery = li div:contains("Your funding") ~ .task-status-complete
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
@@ -609,6 +617,12 @@ the user completes your funding
     the user enters text to a text field       css = [name^="grantClaimPercentage"]  35
     the user selects the radio button          otherFunding   false
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
+
+the user edits the org size
+    the user clicks the button/link                         id = mark_as_incomplete
+    the user selects the radio button                       organisationSize  SMALL
+    the user selects the checkbox                           stateAidAgreed
+    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 Custom suite setup
     The guest user opens the browser
