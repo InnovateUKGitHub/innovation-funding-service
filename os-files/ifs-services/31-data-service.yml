@@ -11,6 +11,15 @@ items:
       DB_PASS: "${DB_PASS}"
       FLYWAY_LOCATIONS: "${FLYWAY_LOCATIONS}"
   - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: cache-config
+    data:
+      IFS_DATA_SERVICE_CACHE_TYPE: "${IFS_DATA_SERVICE_CACHE_TYPE}"
+      IFS_DATA_SERVICE_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
+      IFS_DATA_SERVICE_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
+      IFS_DATA_SERVICE_CACHE_TTL_SECONDS: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
+  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       creationTimestamp: null
@@ -89,6 +98,26 @@ items:
                     configMapKeyRef:
                       name: db-config
                       key: FLYWAY_LOCATIONS
+                - name: SPRING_CACHE_TYPE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_CACHE_TYPE
+                - name: SPRING_REDIS_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_HOST
+                - name: SPRING_REDIS_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_PORT
+                - name: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
                 - name: IFS_WEB_BASEURL
                   value: 'https://${SHIB_ADDRESS}'
                 - name: IDP_REST_BASEURL

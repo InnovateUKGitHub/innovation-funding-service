@@ -22,6 +22,7 @@ public abstract class BaseFinanceResource {
     protected Long organisation;
     protected String organisationName;
     protected Long target;
+    protected int maximumFundingLevel;
     protected OrganisationSize organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
     private FinancialYearAccountsResource financialYearAccounts;
@@ -79,6 +80,14 @@ public abstract class BaseFinanceResource {
 
     public void setTarget(Long target) {
         this.target = target;
+    }
+
+    public int getMaximumFundingLevel() {
+        return maximumFundingLevel;
+    }
+
+    public void setMaximumFundingLevel(int maximumFundingLevel) {
+        this.maximumFundingLevel = maximumFundingLevel;
     }
 
     @JsonProperty("organisationSizeValue")

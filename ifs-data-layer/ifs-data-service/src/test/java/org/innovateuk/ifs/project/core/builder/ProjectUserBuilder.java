@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.builder;
 
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -47,6 +48,10 @@ public class ProjectUserBuilder extends ProjectParticipantBuilder<ProjectUser, P
 
     public ProjectUserBuilder withInvite(ProjectUserInvite... projectUserInvites) {
         return withArraySetFieldByReflection("invite", projectUserInvites);
+    }
+
+    public ProjectUserBuilder withPartnerOrganisation(PartnerOrganisation... partnerOrganisations) {
+        return withArraySetFieldByReflection("partnerOrganisation", partnerOrganisations);
     }
 
     @Override

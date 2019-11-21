@@ -37,24 +37,7 @@
                 <p class="govuk-body">The most recent activities are at the top.</p>
                 <ol class="activity-log govuk-body govuk-list">
                     <li th:each="activity : ${model.activities}" class="activity-log__item">
-                        <div class="activity-log__left">
-                            <span class="activity-log__title">
-                                <strong th:text="${activity.title}">Grant offer letter approved</strong>
-                                <th:block th:if="${activity.organisationName != null}" th:text="| for ${activity.organisationName}|">for Verylong Company Name &amp; Sons Limited</th:block>
-                            </span>
-                            <span class="activity-log__user">
-                                <strong>By:</strong>  <th:block th:text="${activity.userText}">Wendy Wallis, UKRI finance admin</th:block>
-                            </span>
-                        </div>
-                        <div class="activity-log__right">
-                            <span class="activity-log__time"
-                                  th:text="|${#temporals.format(activity.createdOn, 'd MMMM yyyy')}, ${#temporals.format(activity.createdOn, 'hh:mma')}|">
-                                28 Feb 2019, 07:47 AM
-                            </span>
-                            <a th:href="${activity.linkUrl}"
-                               th:if="${activity.displayLink}"
-                               th:text="${activity.linkText}"
-                               class="activity-log__link">View grant offer letter</a>
+                        <div th:replace="project/activity-logs :: ${activity.view} (activity=${activity})">
                         </div>
                     </li>
                 </ol>

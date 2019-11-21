@@ -63,7 +63,7 @@ public class YourFundingController {
     @GetMapping
     @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project finances'")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
-    public String managementViewYourFunding(@ModelAttribute("form") YourFundingPercentageForm bindingForm,
+    public String viewYourFunding(@ModelAttribute("form") YourFundingPercentageForm bindingForm,
                                             Model model,
                                             UserResource user,
                                             @PathVariable long applicationId,
@@ -86,7 +86,7 @@ public class YourFundingController {
                                   @PathVariable long sectionId,
                                   @PathVariable long organisationId,
                                   @ModelAttribute("form") YourFundingPercentageForm form) {
-        saver.save(applicationId, form, organisationId);
+        saver.save(applicationId, organisationId, form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -97,7 +97,7 @@ public class YourFundingController {
                                   @PathVariable long sectionId,
                                   @PathVariable long organisationId,
                                   @ModelAttribute("form") YourFundingAmountForm form) {
-        saver.save(applicationId, form, organisationId);
+        saver.save(applicationId, organisationId, form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -118,7 +118,7 @@ public class YourFundingController {
                 form,
                 bindingResult,
                 validationHandler,
-                f -> saver.save(applicationId, f, organisationId));
+                f -> saver.save(applicationId, organisationId, f));
     }
 
 
@@ -139,7 +139,7 @@ public class YourFundingController {
                 form,
                 bindingResult,
                 validationHandler,
-                f -> saver.save(applicationId, f, organisationId));
+                f -> saver.save(applicationId, organisationId, f));
     }
 
     private <FormType extends AbstractYourFundingForm> String complete(Model model,
@@ -173,7 +173,7 @@ public class YourFundingController {
         return format("redirect:/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 
-    @PostMapping(params = "add_cost")
+    @PostMapping(params = {"add_cost", "grantClaimPercentage"})
     public String addFundingRowFormPost(Model model,
                                         UserResource user,
                                         @PathVariable long applicationId,
@@ -184,14 +184,38 @@ public class YourFundingController {
         saver.addOtherFundingRow(form);
         return viewYourFunding(model, applicationId, sectionId, organisationId, user);
     }
+    @PostMapping(params = {"add_cost", "amount"})
+    public String addFundingRowFormPost(Model model,
+                                        UserResource user,
+                                        @PathVariable long applicationId,
+                                        @PathVariable long sectionId,
+                                        @PathVariable long organisationId,
+                                        @ModelAttribute("form") YourFundingAmountForm form) {
 
-    @PostMapping(params = "remove_cost")
+        saver.addOtherFundingRow(form);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
+    }
+
+    @PostMapping(params = {"remove_cost", "grantClaimPercentage"})
     public String removeFundingRowFormPost(Model model,
                                            UserResource user,
                                            @PathVariable long applicationId,
                                            @PathVariable long sectionId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") YourFundingPercentageForm form,
+                                           @RequestParam("remove_cost") String costId) {
+
+        saver.removeOtherFundingRowForm(form, costId);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
+    }
+
+    @PostMapping(params = {"remove_cost", "amount"})
+    public String removeFundingRowFormPost(Model model,
+                                           UserResource user,
+                                           @PathVariable long applicationId,
+                                           @PathVariable long sectionId,
+                                           @PathVariable long organisationId,
+                                           @ModelAttribute("form") YourFundingAmountForm form,
                                            @RequestParam("remove_cost") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
@@ -213,9 +237,7 @@ public class YourFundingController {
 
     @PostMapping("remove-row/{rowId}")
     public @ResponseBody
-    JsonNode ajaxRemoveRow(UserResource user,
-                           @PathVariable long applicationId,
-                           @PathVariable String rowId) {
+    JsonNode ajaxRemoveRow(@PathVariable String rowId) {
         saver.removeOtherFundingRow(rowId);
         return new ObjectMapper().createObjectNode();
     }

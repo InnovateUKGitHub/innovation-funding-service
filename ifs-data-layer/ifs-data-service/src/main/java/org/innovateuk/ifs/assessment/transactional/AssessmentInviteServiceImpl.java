@@ -35,6 +35,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.util.EncodingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -127,6 +128,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Autowired
     private AssessorCreatedInviteMapper assessorCreatedInviteMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -545,6 +549,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     private void addAssessorRoleToUser(User user) {
         user.addRole(Role.ASSESSOR);
+        userService.evictUserCache(user.getUid());
     }
 
     @Override

@@ -12,14 +12,13 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.Question;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,17 +35,12 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class OtherFundingValidatorTest {
 
-	private Validator validator;
+    @InjectMocks
+	private OtherFundingValidator validator;
 
     @Mock
     private ApplicationFinanceRowRepository financeRowRepository;
 
-	
-	@Before
-	public void setUp() {
-        validator = new OtherFundingValidator(financeRowRepository);
-    }
-	
     @Test
     public void invalidSecuredDateYear() {
         mockWithRadio("Yes");

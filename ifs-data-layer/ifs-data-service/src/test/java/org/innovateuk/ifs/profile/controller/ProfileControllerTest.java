@@ -13,6 +13,7 @@ import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.n
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -127,7 +128,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
         UserProfileResource profileDetails = newUserProfileResource().build();
         Long userId = 1L;
 
-        when(profileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess());
+        when(profileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(put("/profile/id/{userId}/update-user-profile", userId)
                 .contentType(APPLICATION_JSON)

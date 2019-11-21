@@ -221,8 +221,8 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         assertEquals(countFeedbackReleased, response.getFeedbackReleasedCount());
 
         // Test for innovation lead user where only competitions they are assigned to should be counted
-        // actual query tested in repository integration test, this is only testing correct repostiory method is called.
-        UserResource innovationLeadUser = newUserResource().withRolesGlobal(asList(Role.INNOVATION_LEAD)).build();
+        // actual query tested in repository integration test, this is only testing correct repository method is called.
+        UserResource innovationLeadUser = newUserResource().withRolesGlobal(singletonList(INNOVATION_LEAD)).build();
         setLoggedInUser(innovationLeadUser);
 
         when(competitionRepositoryMock.countLiveForInnovationLeadOrStakeholder(innovationLeadUser.getId())).thenReturn(countLive);

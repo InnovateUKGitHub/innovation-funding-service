@@ -33,6 +33,8 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinance
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -105,6 +107,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -458,5 +461,15 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         } catch (ExecutionException e) {
             throw new RuntimeException("Exception encountered whilst reading from Cache", e);
         }
+    }
+
+    protected List<FinanceRowItem> getCostItems(long applicationFinanceId, FinanceRowType type) {
+        return financeService.getApplicationFinanceById(applicationFinanceId).andOnSuccess(applicationFinance -> {
+            return financeService.financeDetails(applicationFinance.getApplication(), applicationFinance.getOrganisation()).andOnSuccessReturn(finance ->
+                    finance.getFinanceOrganisationDetails().values().stream().flatMap(category -> category.getCosts().stream())
+                            .filter(row -> row.getCostType() == type)
+                            .collect(toList())
+            );
+        }).getSuccess();
     }
 }

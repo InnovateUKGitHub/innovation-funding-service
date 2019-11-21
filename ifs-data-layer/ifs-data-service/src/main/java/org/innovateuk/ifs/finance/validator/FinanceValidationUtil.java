@@ -5,8 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +16,6 @@ import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 
@@ -26,20 +26,15 @@ public class FinanceValidationUtil {
     @Autowired
     private ApplicationValidatorService applicationValidatorService;
 
-    public List<ValidationMessages> validateCostItem(List<FinanceRowItem> costItems) {
-        if (costItems.isEmpty()) {
-            return emptyList();
-        }
-
+    public List<ValidationMessages> validateCostItem(FinanceRowType type, FinanceRowCostCategory costCategory) {
+        List<FinanceRowItem> costItems = costCategory.getCosts();
         List<ValidationMessages> results = costItems.stream()
                 .map(this::validateCostItem)
                 .filter(this::nonEmpty)
                 .collect(toList());
 
-        ValidationMessages emptyRowMessages = invokeEmptyRowValidator(costItems);
-        if (emptyRowMessages != null) {
-            results.add(emptyRowMessages);
-        }
+        ValidationMessages emptyRowMessages = invokeEmptyRowValidator(type, costCategory);
+        results.add(emptyRowMessages);
 
         return results;
     }
@@ -51,6 +46,7 @@ public class FinanceValidationUtil {
         return buildValidationMessages(costItem, bindingResult);
     }
 
+    @Transactional(readOnly = true)
     public ValidationMessages validateProjectCostItem(FinanceRowItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
         invokeProjectCostValidator(costItem, bindingResult);
@@ -86,33 +82,20 @@ public class FinanceValidationUtil {
         return validationMessages != null && validationMessages.hasErrors();
     }
 
-    private ValidationMessages invokeEmptyRowValidator(List<FinanceRowItem> costItems) {
+    private ValidationMessages invokeEmptyRowValidator(FinanceRowType type, FinanceRowCostCategory costCategory) {
+        List<FinanceRowItem> costItems = costCategory.getCosts();
         ValidationMessages validationMessages = new ValidationMessages();
-        int rowCount = 0;
-        if (costItems.size() > 1) {
-            for (final FinanceRowItem row : costItems) {
-                boolean exclude = row.excludeInRowCount();
-                if (!exclude) {
-                    rowCount++;
-                }
-            }
-        }
-
-        if (rowCount < costItems.get(0).getMinRows()) {
-            switch (costItems.get(0).getCostType()) {
-                case OTHER_FUNDING:
-                    if ("Yes".equals(((OtherFunding) costItems.get(0)).getOtherPublicFunding())) {
-                        if (costItems.get(0).getMinRows() == 1) {
-                            validationMessages.addError(globalError("validation.finance.min.row.other.funding.single"));
-                        } else {
-                            validationMessages.addError(globalError("validation.finance.min.row.other.funding.multiple", singletonList(costItems.get(0).getMinRows())));
-                        }
+        switch (type) {
+            case OTHER_FUNDING:
+                OtherFundingCostCategory otherFundingCostCategory = (OtherFundingCostCategory) costCategory;
+                if ("Yes".equals(otherFundingCostCategory.getOtherFunding().getOtherPublicFunding())) {
+                    if (costItems.isEmpty()) {
+                        validationMessages.addError(globalError("validation.finance.min.row.other.funding.single"));
                     }
-                    break;
-                default:
-                    validationMessages.addError(globalError("validation.finance.min.row", singletonList(costItems.get(0).getMinRows())));
-                    break;
-            }
+                }
+                break;
+            default:
+                break;
         }
         return validationMessages;
     }

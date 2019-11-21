@@ -21,6 +21,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -50,8 +51,9 @@ public class YourProjectCostsCompleterTest extends BaseServiceUnitTest<YourProje
     public void markAsComplete() {
         long sectionId = 1L;
         CompetitionResource competition = newCompetitionResource()
-                .withIncludeYourOrganisationSection(false)
-                .withFundingType(FundingType.PROCUREMENT)
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeName(H2020_TYPE_NAME)
+                .withIncludeJesForm(true)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())

@@ -127,17 +127,10 @@ Project Finance approves Bank Details through the Bank Details list
     [Tags]  HappyPath
     Given log in as a different user        &{internal_finance_credentials}
     When the user navigates to the page     ${server}/management/dashboard/project-setup
-    Then project finance is able to approve the bank details
+    Then project finance is able to approve the bank details    ${A_B_Cad_Services_Name}
     And the project finance user confirms the approved bank details
 
 *** Keywords ***
-Project finance is able to approve the bank details
-    the user clicks the button/link    jQuery = a:contains("Review bank details")
-    the user clicks the button/link    jQuery = a:contains("${A_B_Cad_Services_Name}")
-    the user clicks the button/link    jQuery = button:contains("Approve bank account details")
-    the user clicks the button/link    jQuery = button:contains("Approve account")
-    the user should see the element    jQuery = h2:contains("The bank details provided have been approved.")
-
 The admin user is able to see bank details
     the user should see the element                      css = #table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(5)
     the user clicks the button/link                      css = #table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(5) a
@@ -250,15 +243,6 @@ The academic user navigates to the bank details page
 The applicant user is able to submit bank details
     applicant user enters bank details
     verify applicant submission is waiting review
-
-applicant user enters bank details
-    the user enters text to a text field                name = accountNumber  ${Account_Two}
-    the user enters text to a text field                name = sortCode  ${Sortcode_two}
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                     jquery = button:contains("Cancel")
-    the user should not see the element                 jQUery = p:contains("The bank account details below are being reviewed")
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                     id = submit-bank-details
 
 Verify applicant submission is waiting review
     the user should see the element                     jQuery = p:contains("The bank account details below are being")

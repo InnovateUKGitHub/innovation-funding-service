@@ -2,15 +2,17 @@ ext.ifsSurveyAuthSecretKey="supersecretkey"
 
 ext.activeProfile="local"
 
-ext.testIfsDatasourceUrl="jdbc:mysql://ifs-survey-database:3308/ifs_survey_test"
+def jdbcUrl = "jdbc:mysql://ifs-survey-database:3308"
+
+ext.testIfsDatasourceUrl="$jdbcUrl/ifs_survey_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-project.ext['flyway.url']='jdbc:mysql://ifs-survey-database:3308?characterEncoding=utf8'
+project.ext['flyway.url']=jdbcUrl
 project.ext['flyway.schemas']='ifs_survey'
 project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"
 project.ext['flyway.table']="schema_version"
 
-def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
-project.ext['flyway.locations']=flywayPatchesPath + "/migration"
+def flywayPatchesPath = "filesystem:$project.buildDir.path/resources/main/db"
+project.ext['flyway.locations']="$flywayPatchesPath/migration"
