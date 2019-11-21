@@ -1,0 +1,143 @@
+String spCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-sp-service/src/main/docker/certs"
+String idpCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-idp-service/src/main/docker/certs"
+String ldapCertsVolume = "${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs"
+
+String spProxyKeyFileName = 'sp_proxy_key.pem'
+String spProxyKeyFile = "${buildDir}/${spProxyKeyFileName}"
+String spProxyCertificateFileName = 'sp_proxy_certificate.pem'
+String spProxyCertificateFile = "${buildDir}/${spProxyCertificateFileName}"
+String spProxyCacertificateFileName = 'sp_proxy_cacertificate.pem'
+String spProxyCacertificateFile = "${buildDir}/${spProxyCacertificateFileName}"
+
+String idpSigningKeyFileName = 'idp-signing.key'
+String idpSigningKeyFile = "${buildDir}/${idpSigningKeyFileName}"
+String idpSigningCertificateFileName = 'idp-signing.crt'
+String idpSigningCertificateFile = "${buildDir}/${idpSigningCertificateFileName}"
+
+String idpEncryptionKeyFileName = 'idp-encryption.key'
+String idpEncryptionKeyFile = "${buildDir}/${idpEncryptionKeyFileName}"
+String idpEncryptionCertificateFileName = 'idp-encryption.crt'
+String idpEncryptionCertificateFile = "${buildDir}/${idpEncryptionCertificateFileName}"
+
+String ldapEncryptionKeyFileName = 'ldap-encryption.key'
+String ldapEncryptionKeyFile = "${buildDir}/${ldapEncryptionKeyFileName}"
+
+String ldapEncryptionCertificateFileName = 'ldap-encryption.crt'
+String ldapEncryptionCertificateFile = "${buildDir}/${ldapEncryptionCertificateFileName}"
+
+String idpProxyKeyFileName = 'idp_proxy_key.pem'
+String idpProxyKeyFile = "${idpCertsVolume}/signed/${idpProxyKeyFileName}"
+String idpProxyCertificateFileName = 'idp_proxy_certificate.pem'
+String idpProxyCertificateFile = "${idpCertsVolume}/signed/${idpProxyCertificateFileName}"
+String idpProxyCacertificateFileName = 'idp_proxy_cacertificate.pem'
+String idpProxyCacertificateFile = "${idpCertsVolume}/signed/${idpProxyCacertificateFileName}"
+
+task prepareIDPProxySecrets {
+    doLast {
+        copy {
+            from file(idpProxyKeyFile)
+            from file(idpProxyCertificateFile)
+            from file(idpProxyCacertificateFile)
+            into idpCertsVolume
+        }
+    }
+}
+
+task prepareIDPSigningSecrets {
+    doLast {
+        exec {
+            executable = 'openssl'
+            args = ['req', '-x509',
+                    '-newkey', 'rsa:4096',
+                    '-keyout', idpSigningKeyFile,
+                    '-out', idpSigningCertificateFile,
+                    '-days', '3650',
+                    '-nodes',
+                    '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
+            ]
+        }
+        copy {
+            from file(idpSigningKeyFile)
+            from file(idpSigningCertificateFile)
+            into idpCertsVolume
+        }
+    }
+}
+
+
+task prepareIDPEncryptionSecrets {
+    doLast {
+        exec {
+            executable = 'openssl'
+            args = ['req', '-x509',
+                    '-newkey', 'rsa:4096',
+                    '-keyout', idpEncryptionKeyFile,
+                    '-out', idpEncryptionCertificateFile,
+                    '-days', '3650',
+                    '-nodes',
+                    '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
+            ]
+        }
+        copy {
+            from file(idpEncryptionKeyFile)
+            from file(idpEncryptionCertificateFile)
+            into idpCertsVolume
+        }
+    }
+}
+
+task prepareSPSecrets {
+    doLast {
+        exec {
+            executable = 'openssl'
+            args = ['req', '-x509',
+                    '-newkey', 'rsa:4096',
+                    '-keyout', spProxyKeyFile,
+                    '-out', spProxyCertificateFile,
+                    '-days', '3650',
+                    '-nodes',
+                    '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ifs.local-dev'
+            ]
+        }
+        copy {
+            from file(spProxyCertificateFile)
+            into buildDir
+            rename 'sp_proxy_certificate.pem', 'sp_proxy_cacertificate.pem'
+        }
+        copy {
+            from file(spProxyKeyFile)
+            from file(spProxyCertificateFile)
+            from file(spProxyCacertificateFile)
+            into spCertsVolume
+        }
+    }
+}
+
+task prepareLDAPEncryptionSecrets {
+    doLast {
+        exec {
+            executable = 'openssl'
+            args = ['req', '-x509',
+                    '-newkey', 'rsa:4096',
+                    '-keyout', ldapEncryptionKeyFile,
+                    '-out', ldapEncryptionCertificateFile,
+                    '-days', '3650',
+                    '-nodes',
+                    '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ldap'
+            ]
+        }
+        copy {
+            from file(ldapEncryptionKeyFile)
+            from file(ldapEncryptionCertificateFile)
+            into ldapCertsVolume
+        }
+    }
+}
+
+task generateCertificates {
+    dependsOn prepareIDPProxySecrets
+    dependsOn prepareIDPSigningSecrets
+    dependsOn prepareIDPEncryptionSecrets
+    dependsOn prepareLDAPEncryptionSecrets
+    dependsOn prepareSPSecrets
+}
