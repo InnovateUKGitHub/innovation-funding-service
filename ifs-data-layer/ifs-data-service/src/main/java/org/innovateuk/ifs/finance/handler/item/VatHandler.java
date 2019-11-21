@@ -28,8 +28,8 @@ public class VatHandler extends FinanceRowHandler<Vat> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return FinanceRowType.VAT;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(FinanceRowType.VAT);
     }
 
     @Override

@@ -78,7 +78,6 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
             case SUBCONTRACTING_COSTS:
             case TRAVEL:
             case YOUR_FINANCE:
-            case ACADEMIC:
                 handler = jesCostHandler;
                 break;
             case FINANCE:

@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.PROCUREMENT_OVERHEADS;
 
 /**
@@ -41,7 +43,7 @@ public class ProcurementsOverheadsHandler extends FinanceRowHandler<ProcurementO
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return PROCUREMENT_OVERHEADS;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(PROCUREMENT_OVERHEADS);
     }
 }

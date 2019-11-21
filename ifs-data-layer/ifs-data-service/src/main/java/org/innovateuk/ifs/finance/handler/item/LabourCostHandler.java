@@ -63,8 +63,8 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return LABOUR;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(LABOUR);
     }
 
     @Override

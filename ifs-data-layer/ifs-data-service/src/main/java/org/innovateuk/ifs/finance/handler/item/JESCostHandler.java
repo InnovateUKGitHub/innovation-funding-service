@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 /***
  *  Handle conversion and validation of the AcademicCost and FinanceRowItem objects.
@@ -41,7 +42,7 @@ public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return FinanceRowType.ACADEMIC;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.empty();
     }
 }

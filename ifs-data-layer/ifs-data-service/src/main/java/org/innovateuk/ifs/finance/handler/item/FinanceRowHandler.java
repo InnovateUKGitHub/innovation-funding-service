@@ -24,7 +24,7 @@ public abstract class FinanceRowHandler<T extends FinanceRowItem> {
 
     public abstract T toResource(FinanceRow cost);
 
-    public abstract FinanceRowType getFinanceRowType();
+    public abstract Optional<FinanceRowType> getFinanceRowType();
 
     public void validate(@NotNull T costItem, @NotNull BindingResult bindingResult) {
         ValidationUtil.isValid(bindingResult, costItem, (Class<?>[]) null);

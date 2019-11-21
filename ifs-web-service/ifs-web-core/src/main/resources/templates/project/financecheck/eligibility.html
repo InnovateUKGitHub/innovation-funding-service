@@ -231,22 +231,19 @@
             </div>
         </th:block>
         <th:block th:if="${summaryModel.usingJesFinances}">
-            <h2 class="govuk-heading-m">Je-S Form overview</h2>
-            <p class="govuk-body">These finances were initially submitted at the application stage, from the
-                details in the Je-S form.</p>
-            <p class="govuk-body">If you need to make corrections, discuss this with the applicant. You can do
-                this by raising queries through the Innovation Funding Service. Saved changes will be visible to the applicant.</p>
-            <div class="upload-section">
-                <h3 class="govuk-heading-s govuk-!-margin-0">Download Je-S form:</h3>
-                <p class="uploaded-file govuk-body">
-                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
-                       class="govuk-link"
-                       th:text="${summaryModel.jesFileDetails?.filename}"
-                       target="_blank"
-                       aria-describedby="file-download-hint">The-uploaded-file-example.pdf</a>
-                    <span id="file-download-hint">(opens in a new window)</span>.
-                </p>
-            </div>
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${academicCostForm}"
+                  enctype="multipart/form-data">
+                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"
+                        name="save-and-continue">
+                    Save form
+                </button>
+                <th:block th:insert="application/academic-costs-fragments :: costs (
+                    form=${academicCostForm},
+                    readOnly=${summaryModel.canEditAcademicFinances},
+                    internal=${!summaryModel.externalView},
+                    downloadUrl=@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}
+                )" />
+            </form>
         </th:block>
 
         <input type="hidden" id="cacheTest" value=""/>

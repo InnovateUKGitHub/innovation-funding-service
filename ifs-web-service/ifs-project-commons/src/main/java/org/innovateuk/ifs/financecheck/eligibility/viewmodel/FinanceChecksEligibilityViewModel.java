@@ -35,6 +35,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean projectIsActive;
     private final boolean loanCompetition;
     private final boolean collaborativeProject;
+    private final boolean canEditAcademicFinances;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -49,7 +50,8 @@ public class FinanceChecksEligibilityViewModel {
                                              LocalDate approvalDate,
                                              boolean externalView,
                                              boolean isUsingJesFinances,
-                                             FileDetailsViewModel jesFileDetailsViewModel) {
+                                             FileDetailsViewModel jesFileDetailsViewModel,
+                                             boolean canEditAcademicFinances) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -69,10 +71,15 @@ public class FinanceChecksEligibilityViewModel {
         this.externalView = externalView;
         this.isUsingJesFinances = isUsingJesFinances;
         this.jesFileDetails = jesFileDetailsViewModel;
+        this.canEditAcademicFinances = canEditAcademicFinances;
     }
 
     public boolean isApproved() {
         return eligibilityApproved;
+    }
+
+    public boolean isCanEditAcademicFinances() {
+        return canEditAcademicFinances;
     }
 
     public boolean isShowSaveAndContinueButton() {

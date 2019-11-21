@@ -74,8 +74,8 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return OVERHEADS;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(OVERHEADS);
     }
 
     private void validateFilePresent(Overhead overhead, BindingResult bindingResult) {

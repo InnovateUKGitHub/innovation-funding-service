@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.CAPITAL_USAGE;
 
@@ -41,8 +42,8 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return CAPITAL_USAGE;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(CAPITAL_USAGE);
     }
 
     private CapitalUsage buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){

@@ -7,6 +7,8 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.TRAVEL;
 
 /**
@@ -42,7 +44,7 @@ public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return TRAVEL;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(TRAVEL);
     }
 }

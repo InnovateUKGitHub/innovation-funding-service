@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 
 /**
@@ -41,7 +43,7 @@ public class MaterialsHandler extends FinanceRowHandler<Materials> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return MATERIALS;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(MATERIALS);
     }
 }

@@ -5,12 +5,11 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,21 +22,16 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
-
 @Component
-public class AcademicCostFormPopulator {
-
-    @Autowired
-    private ApplicationFinanceRestService applicationFinanceRestService;
+public abstract class AbstractAcademicCostFormPopulator<F extends BaseFinanceResource> {
 
     @Autowired
     private FileEntryRestService fileEntryRestService;
 
-    @Autowired
-    private ApplicationFinanceRowRestService defaultFinanceRowRestService;
+    protected abstract FinanceRowRestService financeRowRestService();
+    protected abstract Long getFileEntryId(F finance);
 
-    public void populate(AcademicCostForm form, long applicationId, long organisationId) {
-        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+    protected AcademicCostForm populate(AcademicCostForm form, F finance) {
         Map<String, AcademicCost> costMap = mapCostsByName(finance);
 
         form.setTsbReference(getCostByName(costMap, "tsb_reference", finance).getItem());
@@ -55,14 +49,16 @@ public class AcademicCostFormPopulator {
         form.setExceptionsStaff(getCostByName(costMap, "exceptions_staff", finance).getCost());
         form.setExceptionsOtherCosts(getCostByName(costMap, "exceptions_other_costs", finance).getCost());
 
-        form.setFilename(ofNullable(finance.getFinanceFileEntry())
+        form.setFilename(ofNullable(getFileEntryId(finance))
                 .map(fileEntryRestService::findOne)
                 .flatMap(RestResult::getOptionalSuccessObject)
                 .map(FileEntryResource::getName)
                 .orElse(null));
+
+        return form;
     }
 
-    private Map<String,AcademicCost> mapCostsByName(ApplicationFinanceResource finance) {
+    private Map<String,AcademicCost> mapCostsByName(BaseFinanceResource finance) {
         return finance.getFinanceOrganisationDetails().values().stream()
                 .map(FinanceRowCostCategory::getCosts)
                 .flatMap(List::stream)
@@ -71,11 +67,11 @@ public class AcademicCostFormPopulator {
                 .collect(toMap(AcademicCost::getName, Function.identity()));
     }
 
-    private AcademicCost getCostByName(Map<String, AcademicCost> costMap, String name, ApplicationFinanceResource finance) {
+    private AcademicCost getCostByName(Map<String, AcademicCost> costMap, String name, BaseFinanceResource finance) {
         AcademicCost cost = costMap.get(name);
         if (cost == null) {
             cost = new AcademicCost(null, name, BigDecimal.ZERO, null, costTypeFromName(name), finance.getId());
-            defaultFinanceRowRestService.create(cost);
+            financeRowRestService().create(cost);
         }
         return cost;
     }

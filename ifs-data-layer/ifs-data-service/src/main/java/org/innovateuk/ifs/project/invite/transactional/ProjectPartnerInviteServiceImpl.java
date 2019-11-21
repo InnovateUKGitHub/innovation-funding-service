@@ -182,6 +182,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                 .andOnSuccess(invite ->
                         find(organisation(organisationId))
                                 .andOnSuccessReturnVoid((organisation) -> {
+
                                     Project project = invite.getProject();
                                     invite.getInviteOrganisation().setOrganisation(organisation);
 

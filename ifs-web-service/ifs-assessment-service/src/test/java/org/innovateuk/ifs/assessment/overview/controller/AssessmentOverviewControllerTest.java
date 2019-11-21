@@ -11,7 +11,7 @@ import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakd
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
-import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostFormPopulator;
+import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCostViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
@@ -162,7 +162,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
     private AcademicCostViewModelPopulator academicCostViewModelPopulator;
 
     @Mock
-    private AcademicCostFormPopulator academicCostFormPopulator;
+    private ApplicationAcademicCostFormPopulator applicationAcademicCostFormPopulator;
 
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {

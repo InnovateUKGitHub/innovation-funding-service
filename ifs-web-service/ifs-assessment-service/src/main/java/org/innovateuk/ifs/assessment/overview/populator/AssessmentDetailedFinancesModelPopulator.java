@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.overview.populator;
 import org.innovateuk.ifs.application.finance.populator.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
-import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostFormPopulator;
+import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCostViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
@@ -65,7 +65,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     @Autowired
     private AcademicCostViewModelPopulator academicCostViewModelPopulator;
     @Autowired
-    private AcademicCostFormPopulator academicCostFormPopulator;
+    private ApplicationAcademicCostFormPopulator applicationAcademicCostFormPopulator;
 
     public AssessmentDetailedFinancesViewModel populateModel(long applicationId, long organisationId, Model model, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -93,7 +93,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId) {
         AcademicCostViewModel viewModel = academicCostViewModelPopulator.populate(organisationId, applicationId, sectionId, false);
         AcademicCostForm form = new AcademicCostForm();
-        academicCostFormPopulator.populate(form, applicationId, organisationId);
+        applicationAcademicCostFormPopulator.populate(form, applicationId, organisationId);
 
         model.addAttribute("costsViewModel", viewModel);
         model.addAttribute("form", form);
