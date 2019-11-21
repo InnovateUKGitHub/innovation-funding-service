@@ -18,20 +18,6 @@ version project.version
 
 apply plugin: 'idea'
 
-def String idpCertsVolume = 'src/main/docker/certs'
-
-def String idpProxyKeyFile = "${idpCertsVolume}/idp_proxy_key.pem"
-def String idpProxyCertificateFile = "${idpCertsVolume}/idp_proxy_certificate.pem"
-def String idpProxyCacertificateFile = "${idpCertsVolume}/idp_proxy_cacertificate.pem"
-
-def String spProxyCertificateFile = "${idpCertsVolume}/sp_proxy_certificate.pem"
-
-def String idpSigningKeyFile = "${idpCertsVolume}/idp-signing.key"
-def String idpSigningCertificateFile = "${idpCertsVolume}/idp-signing.crt"
-def String idpEncryptionKeyFile = "${idpCertsVolume}/idp-encryption.key"
-def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
-
-def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?: "changeit"
 
 apply from: rootProject.file("gradle-support/new-relic.gradle")
@@ -47,20 +33,6 @@ task prepareDockerFile {
     def inputDir = project.file("$project.buildDir/docker")
 
     doFirst {
-
-        def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
-        def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')
-        def String idpProxyCacertificate = file(idpProxyCacertificateFile).text.trim().replace('\n', '\\n')
-
-        def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
-
-        def String idpSigningKey = file(idpSigningKeyFile).text.trim().replace('\n', '\\n')
-        def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
-        def String idpEncryptionKey = file(idpEncryptionKeyFile).text.trim().replace('\n', '\\n')
-        def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
-
-        def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
-
         def buildTimestamp = new Date().format("yyyyMMddHHmmssSSS")
 
         def resource_domain  = project.hasProperty('resource_domain') ? project.properties['resource_domain'] : '';
@@ -70,16 +42,7 @@ task prepareDockerFile {
             into inputDir
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [auth_idp_proxy_key              : idpProxyKey,
-                                           auth_idp_proxy_certificate      : idpProxyCertificate,
-                                           auth_idp_proxy_cacertificate    : idpProxyCacertificate,
-                                           auth_sp_proxy_certificate       : spProxyCertificate,
-                                           auth_idp_signing_key            : idpSigningKey,
-                                           auth_idp_signing_certificate    : idpSigningCertificate,
-                                           auth_idp_encryption_key         : idpEncryptionKey,
-                                           auth_idp_encryption_certificate : idpEncryptionCertificate,
-                                           auth_ldap_encryption_certificate: ldapEncryptionCertificate,
-                                           java_keystore_password          : javaKeystorePassword,
+            filter(ReplaceTokens, tokens: [java_keystore_password          : javaKeystorePassword,
                                            build_timestamp                 : buildTimestamp,
                                            resource_domain                 : resource_domain,
                                            version                         : project.properties['version']])
@@ -132,7 +95,6 @@ tagDockerLocal.tag = idpVersion
 osStageRemote.tag = idpVersion
 osStageLocal.tag = idpVersion
 
-
 createContainer.containerName = "idp"
 createContainer.containerId = "idp"
 createContainer.env= ["SP_DOMAIN=ifs.local-dev","IDP_DOMAIN=auth.local-dev:9443","HTTPS_PORT=9443","HTTP_PORT=9080"]
@@ -140,4 +102,3 @@ createContainer.networkAliases=["auth.local-dev","iuk-auth-localdev"]
 createContainer.portBindings = ['9443:9443']
 createContainer.hostName="idp"
 createContainer.workingDir="/usr/local/bin"
-
