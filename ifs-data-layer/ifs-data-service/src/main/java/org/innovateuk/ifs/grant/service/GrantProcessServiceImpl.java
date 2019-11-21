@@ -2,9 +2,9 @@ package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.grant.domain.GrantProcessConfiguration;
 import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
-import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class GrantProcessServiceImpl implements GrantProcessService {
         Optional<Application> application = applicationRepository.findById(applicationId);
         application.ifPresent((a) -> {
             Optional<GrantProcessConfiguration> config = grantProcessConfigurationRepository.findByCompetitionId(a.getCompetition().getId());
-            boolean sendByDefault = config.map(GrantProcessConfiguration::isSendByDefault).orElseGet(() -> false);
+            boolean sendByDefault = config.map(GrantProcessConfiguration::isSendByDefault).orElse(false);
             grantProcessRepository.save(new GrantProcess(applicationId, sendByDefault));
         });
     }
