@@ -229,6 +229,9 @@
 
                 </div>
             </div>
+            <a th:if="${!summaryModel.externalView && model.editableRowType != null}"
+               class="govuk-link govuk-body"
+               th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">Cancel changes</a>
         </th:block>
         <th:block th:if="${summaryModel.usingJesFinances}">
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${academicCostForm}"
@@ -239,10 +242,30 @@
                 </button>
                 <th:block th:insert="application/academic-costs-fragments :: costs (
                     form=${academicCostForm},
-                    readOnly=${summaryModel.canEditAcademicFinances},
-                    internal=${!summaryModel.externalView},
-                    downloadUrl=@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}
+                    readOnly=${!summaryModel.canEditAcademicFinances},
+                    internal=${!summaryModel.externalView}
                 )" />
+
+                <th:block th:unless="${summaryModel.externalView}">
+                    <a th:unless="${summaryModel.canEditAcademicFinances}"
+                       th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#academic-cost-actions'}(editAcademicFinances=${true})}" class="button-secondary" name="edit-academic-finances">Edit</a>
+                    <div id="academic-cost-actions" th:if="${summaryModel.canEditAcademicFinances}">
+                        <button id="save-academic-costs" class="govuk-button vertical-align-baseline" name="save-academic-costs">Save</button>
+                        <a class="govuk-!-margin-left-1 govuk-link govuk-body vertical-align-baseline" th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">Cancel changes</a>
+                    </div>
+                </th:block>
+
+                <div class="upload-section">
+                    <h3 class="govuk-heading-s govuk-!-margin-0">Download Je-S form</h3>
+                    <th:block th:insert="question-type/types :: fileupload-fragment(readonly,
+                                    @{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})},
+                                    ${academicCostForm.filename},
+                                    jesFile,
+                                    jesFile,
+                                    true,
+                                    remove_jes,
+                                    upload_jes)"/>
+                </div>
             </form>
         </th:block>
 
@@ -251,9 +274,10 @@
         <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}"/>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               th:object="${eligibilityForm}"
-              th:unless="${summaryModel.isExternalView()}">
+              th:unless="${summaryModel.isExternalView()}"
+              th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
-            <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive}">
+            <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
                 <p class="govuk-body">After making any necessary changes, the eligible costs should be approved.</p>
                 <th:block th:unless="${summaryModel.isH2020()}">

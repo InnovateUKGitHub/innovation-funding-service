@@ -18,4 +18,8 @@ public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewMode
     public boolean isReadOnly(FinanceRowType type) {
         return isReadOnly() || !type.equals(editableRowType);
     }
+
+    public FinanceRowType getEditableRowType() {
+        return editableRowType;
+    }
 }

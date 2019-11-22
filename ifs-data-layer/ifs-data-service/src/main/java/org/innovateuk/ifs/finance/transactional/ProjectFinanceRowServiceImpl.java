@@ -118,7 +118,11 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowItem costItem) {
-        return organisationFinanceDefaultHandler.getCostHandler(costItem.getCostType());
+        return find(projectFinanceRowRepository.findById(costItem.getId()), notFoundError(ProjectFinanceRow.class, costItem.getId()))
+                .andOnSuccessReturn(row -> {
+                    OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(row.getTarget().getCompetition().getId(), row.getTarget().getOrganisation().getOrganisationType().getId());
+                    return organisationFinanceHandler.getCostHandler(row.getType());
+                }).getSuccess();
     }
 
     @Override

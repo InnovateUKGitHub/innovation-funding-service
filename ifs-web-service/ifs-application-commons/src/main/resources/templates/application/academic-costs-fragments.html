@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="costs(form, readOnly, internal, downloadUrl)">
+<th:block th:fragment="costs(form, readOnly, internal)">
 
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -30,7 +30,7 @@
             <span th:if="${internal}" class="govuk-hint">This number is found at the top of the Je-S form</span>
             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=tsbReference)"/>
             <input type="text"
-                   class="govuk-input"
+                   class="govuk-input govuk-input--width-20"
                    th:field="*{tsbReference}"
                    required="required"
                    th:readonly="${readOnly}"
@@ -55,13 +55,13 @@
                     <p class="govuk-body govuk-hint">TSB Contribution (please refer to the TSB contribution column)</p>
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('incurredStaff')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="incurredStaff">Staff</label>
+                        <label class="govuk-label govuk-!-font-weight-bold" th:for="incurredStaff">Staff</label>
                         <th:block
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=incurredStaff)"/>
                         <div>
                             <input type="number"
                                    data-prevent-input-non-number
-                                   class="govuk-input"
+                                   class="govuk-input govuk-input--width-5"
                                    th:field="*{incurredStaff}"
                                    min="0"
                                    th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -78,7 +78,7 @@
                         <th:block
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=incurredTravel)"/>
                         <div>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-input--width-5"
                                    th:field="*{incurredTravel}"
                                    type="number"
                                    data-prevent-input-non-number
@@ -97,7 +97,7 @@
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=incurredOtherCosts)"/>
 
                         <div>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-input--width-5"
                                    th:field="*{incurredOtherCosts}"
                                    type="number"
                                    data-prevent-input-non-number
@@ -109,19 +109,13 @@
                                    th:errorclass="govuk-input--error"/>
                         </div>
                     </div>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="subtotal-resources">
-                            Total directly incurred costs
-                        </label>
-                        <div>
-                            <input class="govuk-input"
-                                   id="subtotal-resources"
-                                   data-calculation-fields="#incurredStaff,#incurredTravel,#incurredOtherCosts"
-                                   data-calculation-operations="+"
-                                   readonly="readonly"
-                                   th:value="'£' + ${#numbers.formatInteger(form.getTotalIncurred(),0, 'DEFAULT')}"/>
-                        </div>
-                    </div>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total directly incurred costs <span data-mirror="#subtotal-resources"></span></p>
+                    <input class="govuk-input"
+                           id="subtotal-resources"
+                           data-calculation-fields="#incurredStaff,#incurredTravel,#incurredOtherCosts"
+                           data-calculation-operations="+"
+                           type="hidden"
+                           th:value="'£' + ${#numbers.formatInteger(form.getTotalIncurred(),0, 'DEFAULT')}"/>
                 </div>
             </div>
 
@@ -139,7 +133,7 @@
                         <th:block
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedInvestigators)"/>
                         <div>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-input--width-5"
                                    th:field="*{allocatedInvestigators}"
                                    type="number"
                                    data-prevent-input-non-number
@@ -157,7 +151,7 @@
                         <th:block
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedEstateCosts)"/>
                         <div>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-input--width-5"
                                    th:field="*{allocatedEstateCosts}"
                                    type="number"
                                    data-prevent-input-non-number
@@ -175,7 +169,7 @@
                         <th:block
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedOtherCosts)"/>
                         <div>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-input--width-5"
                                    th:field="*{allocatedOtherCosts}"
                                    type="number"
                                    data-prevent-input-non-number
@@ -187,18 +181,13 @@
                                    th:errorclass="govuk-input--error"/>
                         </div>
                     </div>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label govuk-!-font-weight-bold" for="subtotal-directly-allocated">
-                            Total directly allocated costs
-                        </label>
-                        <div>
-                            <input class="govuk-input"
-                                   data-calculation-fields="#allocatedInvestigators,#allocatedEstateCosts,#allocatedOtherCosts"
-                                   data-calculation-operations="+"
-                                   readonly="readonly" id="subtotal-directly-allocated"
-                                   th:value="'£' + ${#numbers.formatInteger(form.getTotalAllocated(),0, 'DEFAULT')}"/>
-                        </div>
-                    </div>
+
+                    <p class="govuk-body govuk-!-font-weight-bold">Total directly allocated costs <span data-mirror="#subtotal-directly-allocated"></span></p>
+                    <input class="govuk-input"
+                           data-calculation-fields="#allocatedInvestigators,#allocatedEstateCosts,#allocatedOtherCosts"
+                           data-calculation-operations="+"
+                           type="hidden" id="subtotal-directly-allocated"
+                           th:value="'£' + ${#numbers.formatInteger(form.getTotalAllocated(),0, 'DEFAULT')}"/>
                 </div>
             </div>
             <div class="govuk-accordion__section">
@@ -215,7 +204,7 @@
                         <th:block
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=indirectCosts)"/>
                         <div>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-input--width-5"
                                    th:field="*{indirectCosts}"
                                    id="indirect-costs"
                                    type="number"
@@ -228,12 +217,7 @@
                                    th:errorclass="govuk-input--error"/>
                         </div>
                     </div>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label govuk-!-font-weight-bold" for="subtotal-directly-allocated">
-                            Total indirect costs
-                        </label>
-                        <span data-mirror="#indirect-costs"></span>
-                    </div>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total indirect costs <span data-mirror="#indirect-costs"></span></p>
                 </div>
             </div>
 
@@ -252,7 +236,7 @@
                         <th:block
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=exceptionsStaff)"/>
                         <div>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-input--width-5"
                                    th:field="*{exceptionsStaff}"
                                    type="number"
                                    data-prevent-input-non-number
@@ -270,7 +254,7 @@
                         <th:block
                             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=exceptionsOtherCosts)"/>
                         <div>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-input--width-5"
                                    th:field="*{exceptionsOtherCosts}"
                                    type="number"
                                    data-prevent-input-non-number
@@ -282,55 +266,24 @@
                                    th:errorclass="govuk-input--error"/>
                         </div>
                     </div>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="subtotal-exceptions">
-                            Total exceptions costs
-                        </label>
-                        <div>
-                            <input id="subtotal-exceptions"
-                                   class="govuk-input"
-                                   data-calculation-fields="#exceptionsStaff,#exceptionsOtherCosts"
-                                   data-calculation-operations="+"
-                                   readonly="readonly"
-                                   th:value="'£' + ${#numbers.formatInteger(form.getTotalExceptions(),0, 'DEFAULT')}"/>
-                        </div>
-                    </div>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total exceptions costs <span data-mirror="#subtotal-exceptions"></span></p>
+                    <input id="subtotal-exceptions"
+                           class="govuk-input"
+                           data-calculation-fields="#exceptionsStaff,#exceptionsOtherCosts"
+                           data-calculation-operations="+"
+                           type="hidden"
+                           th:value="'£' + ${#numbers.formatInteger(form.getTotalExceptions(),0, 'DEFAULT')}"/>
                 </div>
             </div>
         </div>
-        <div class="govuk-form-group totals">
-            <label class="govuk-label" for="total">Total project costs</label>
-            <div>
-                <input class="govuk-input"
-                       data-calculation-fields="#subtotal-resources,#indirect-costs,#subtotal-directly-allocated,#subtotal-exceptions"
-                       data-calculation-operations="+"
-                       id="total"
-                       readonly="readonly"
-                       th:value="'£' + ${#numbers.formatInteger(form.getTotal(),0, 'DEFAULT')}"/>
-            </div>
-        </div>
+        <p class="govuk-body govuk-!-font-weight-bold">Total project costs <span data-mirror="#total"></span></p>
+        <input class="govuk-input"
+               data-calculation-fields="#subtotal-resources,#indirect-costs,#subtotal-directly-allocated,#subtotal-exceptions"
+               data-calculation-operations="+"
+               id="total"
+               type="hidden"
+               th:value="'£' + ${#numbers.formatInteger(form.getTotal(),0, 'DEFAULT')}"/>
 
-
-
-
-    <div class="upload-section">
-        <h3 th:unless="${readOnly}" class="govuk-heading-s govuk-!-margin-0">Upload a pdf copy of the Je-S output
-            form once you have a status of 'With Council'.</h3>
-        <h3 th:if="${readOnly}" class="govuk-heading-s govuk-!-margin-0">Download Je-S form</h3>
-        <p th:unless="${readOnly}" class="govuk-body">
-            <a target="_blank"
-               href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system">How
-                do I create my Je-S output?</a>
-        </p>
-        <th:block th:insert="question-type/types :: fileupload-fragment(${readOnly && !internal ? 'readonly' : 'edit'},
-                                    ${downloadUrl},
-                                    ${form.filename},
-                                    jesFile,
-                                    jesFile,
-                                    true,
-                                    remove_jes,
-                                    upload_jes)"/>
-    </div>
 
 </th:block>
 </html>
