@@ -84,11 +84,6 @@ public class TravelCost extends AbstractFinanceRowItem {
         return false;
     }
 
-    @Override
-    public int getMinRows() {
-        return 0;
-    }
-
     public void setItem(String item) {
         this.item = item;
     }
