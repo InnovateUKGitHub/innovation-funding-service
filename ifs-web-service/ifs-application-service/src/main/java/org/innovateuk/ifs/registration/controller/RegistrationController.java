@@ -286,7 +286,12 @@ public class RegistrationController {
         if (projectInvite.isPresent()) {
             SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.get().getId(), projectInvite.get().getHash()).getSuccess();
             Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
-            projectPartnerInviteRestService.acceptInvite(projectInvite.get().getId(), invite.getId(), organisationId.get()).getSuccess();
+            RestResult<Void> saveResult = projectPartnerInviteRestService.acceptInvite(projectInvite.get().getId(), invite.getId(), organisationId.get());
+            if(saveResult.isSuccess()) {
+                saveResult.getSuccess();
+            } else {
+                saveResult.getFailure();
+            }
         }
     }
 
