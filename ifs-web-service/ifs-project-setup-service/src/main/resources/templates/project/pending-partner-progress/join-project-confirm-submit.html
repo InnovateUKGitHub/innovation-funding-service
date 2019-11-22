@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm join project submit'" />
+</head>
+<body class="govuk-template__body join-project-confirm-submit">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <input type="submit" tabindex="0" class="govuk-button" value="Yes, I want to join the project" />
+            <a role="button" tabindex="1" class="button-clear" th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${projectId}, organisationId=${organisationId})}">Cancel</a>
+        </form>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

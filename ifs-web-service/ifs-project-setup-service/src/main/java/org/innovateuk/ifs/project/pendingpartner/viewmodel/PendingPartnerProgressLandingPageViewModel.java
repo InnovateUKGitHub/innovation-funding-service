@@ -56,4 +56,8 @@ public class PendingPartnerProgressLandingPageViewModel {
     public boolean isShowYourOrganisation() {
         return showYourOrganisation;
     }
+
+    public boolean isReadyToJoinProject() {
+        return isYourFundingComplete() && isTermsAndConditionsComplete() && (!isShowYourOrganisation() || isYourOrganisationComplete());
+    }
 }

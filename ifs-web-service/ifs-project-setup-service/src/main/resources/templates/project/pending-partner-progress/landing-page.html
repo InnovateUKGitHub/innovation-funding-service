@@ -56,6 +56,14 @@
             </li>
         </ul>
 
+        <form class="govuk-!-margin-top-6" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
+            <button id="submit-join-project-button"
+                    th:disabled="${!model.readyToJoinProject}"
+                    class="govuk-button"
+                    name="submit-and-continue"
+                    data-js-modal="modal-confirm-submit-join-project">Submit and continue</button>
+        </form>
+
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
