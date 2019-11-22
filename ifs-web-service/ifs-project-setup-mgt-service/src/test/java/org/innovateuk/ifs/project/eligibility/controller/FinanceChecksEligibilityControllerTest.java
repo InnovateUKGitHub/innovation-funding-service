@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.eligibility.controller;
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
+import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.LabourRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
@@ -22,8 +23,10 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
+import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
 import org.innovateuk.ifs.project.eligibility.saver.FinanceChecksEligibilityProjectCostsSaver;
+import org.innovateuk.ifs.project.eligibility.saver.ProjectAcademicCostsSaver;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
@@ -53,10 +56,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -99,6 +99,12 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
     @Mock
     private ProjectFinanceChangesViewModelPopulator projectFinanceChangesViewModelPopulator;
+
+    @Mock
+    private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
+
+    @Mock
+    private ProjectAcademicCostsSaver projectAcademicCostsSaver;
 
     private OrganisationResource industrialOrganisation;
 
@@ -166,7 +172,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, true, industrialOrganisation.getName(), false, "Jes1", false);
+        assertViewEligibilityDetails(eligibility, result, true, industrialOrganisation.getName(), false,  false);
 
     }
 
@@ -188,7 +194,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, true, industrialOrganisation.getName(), false, "Jes1", true);
+        assertViewEligibilityDetails(eligibility, result, true, industrialOrganisation.getName(), false,  true);
 
     }
 
@@ -207,7 +213,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, false, industrialOrganisation.getName(), false, "Jes1", false);
+        assertViewEligibilityDetails(eligibility, result, false, industrialOrganisation.getName(), false,  false);
 
     }
 
@@ -217,8 +223,9 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
-
+        AcademicCostForm academicCostForm = new AcademicCostForm();
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
+        when(projectAcademicCostFormPopulator.populate(any(), eq(project.getId()), eq(academicOrganisation.getId()))).thenReturn(academicCostForm);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().withFinanceFileEntry(123L).build();
         FileEntryResource jesFile = newFileEntryResource().withId(987L).withName("Jes1").build();
@@ -229,35 +236,39 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 project.getId(), academicOrganisation.getId())).
                 andExpect(status().isOk()).
                 andExpect(model().attributeExists("summaryModel")).
+                andExpect(model().attribute("academicCostForm", academicCostForm)).
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, true, academicOrganisation.getName(), true, "Jes1", false);
-
+        assertViewEligibilityDetails(eligibility, result, true, academicOrganisation.getName(), true, false);
     }
 
     @Test
-    public void testViewEligibilityLeadOrgIsAcademicNoJesFileEntry() throws Exception {
+    public void testViewEligibilityLeadOrgIsAcademicEditFinances() throws Exception {
 
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
+        AcademicCostForm academicCostForm = new AcademicCostForm();
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
+        when(projectAcademicCostFormPopulator.populate(any(), eq(project.getId()), eq(academicOrganisation.getId()))).thenReturn(academicCostForm);
 
-        ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().build();
+        ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().withFinanceFileEntry(123L).build();
+        FileEntryResource jesFile = newFileEntryResource().withId(987L).withName("Jes1").build();
         when(applicationFinanceRestService.getFinanceDetails(project.getApplication(), academicOrganisation.getId())).thenReturn(restSuccess(appFinanceResource));
+        when(financeService.getFinanceEntry(123L)).thenReturn(restSuccess(jesFile));
 
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility?editAcademicFinances=true",
                 project.getId(), academicOrganisation.getId())).
                 andExpect(status().isOk()).
                 andExpect(model().attributeExists("summaryModel")).
+                andExpect(model().attribute("academicCostForm", academicCostForm)).
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
-        assertViewEligibilityDetails(eligibility, result, true, academicOrganisation.getName(), true, null, false);
-
+        FinanceChecksEligibilityViewModel viewModel = assertViewEligibilityDetails(eligibility, result, true, academicOrganisation.getName(), true, false);
+        assertTrue(viewModel.isCanEditAcademicFinances());
     }
-
 
     private void setUpViewEligibilityMocking(EligibilityResource eligibility) {
 
@@ -269,7 +280,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(projectFinanceService.getEligibility(project.getId(), academicOrganisation.getId())).thenReturn(eligibility);
     }
 
-    private void assertViewEligibilityDetails(EligibilityResource eligibility, MvcResult result, boolean expectedIsLeadPartnerOrganisation, String organisationName, boolean expectedIsUsingJesFinances, String expectedJesFilename, boolean isH2020) {
+    private FinanceChecksEligibilityViewModel assertViewEligibilityDetails(EligibilityResource eligibility, MvcResult result, boolean expectedIsLeadPartnerOrganisation, String organisationName, boolean expectedIsUsingJesFinances, boolean isH2020) {
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
@@ -292,9 +303,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
         assertFalse(viewModel.isExternalView());
         assertEquals(expectedIsUsingJesFinances, viewModel.isUsingJesFinances());
-        if (null != viewModel.getJesFileDetails()) {
-            assertEquals(expectedJesFilename, viewModel.getJesFileDetails().getFilename());
-        }
+        return viewModel;
     }
 
     @Test

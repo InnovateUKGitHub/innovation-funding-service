@@ -3,7 +3,6 @@ package org.innovateuk.ifs.financecheck.eligibility.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -30,7 +29,6 @@ public class FinanceChecksEligibilityViewModel {
 
     private boolean externalView;
     private boolean isUsingJesFinances;
-    private FileDetailsViewModel jesFileDetails;
     private final boolean h2020;
     private final boolean projectIsActive;
     private final boolean loanCompetition;
@@ -50,7 +48,6 @@ public class FinanceChecksEligibilityViewModel {
                                              LocalDate approvalDate,
                                              boolean externalView,
                                              boolean isUsingJesFinances,
-                                             FileDetailsViewModel jesFileDetailsViewModel,
                                              boolean canEditAcademicFinances) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
@@ -70,7 +67,6 @@ public class FinanceChecksEligibilityViewModel {
         this.approvalDate = approvalDate;
         this.externalView = externalView;
         this.isUsingJesFinances = isUsingJesFinances;
-        this.jesFileDetails = jesFileDetailsViewModel;
         this.canEditAcademicFinances = canEditAcademicFinances;
     }
 
@@ -209,14 +205,6 @@ public class FinanceChecksEligibilityViewModel {
 
     public void setUsingJesFinances(boolean usingJesFinances) {
         isUsingJesFinances = usingJesFinances;
-    }
-
-    public FileDetailsViewModel getJesFileDetails() {
-        return jesFileDetails;
-    }
-
-    public void setJesFileDetails(FileDetailsViewModel jesFileDetails) {
-        this.jesFileDetails = jesFileDetails;
     }
 
     public boolean isH2020() {
