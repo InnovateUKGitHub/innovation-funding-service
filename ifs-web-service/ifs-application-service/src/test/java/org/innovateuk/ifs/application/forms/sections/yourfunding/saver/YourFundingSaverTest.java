@@ -85,7 +85,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
                 "20", existingRow
                 ));
 
-        service.save(APPLICATION_ID, form, ORGANISATION_ID);
+        service.save(APPLICATION_ID, ORGANISATION_ID, form);
 
         verify(financeRowRestService).update(finance.getGrantClaim());
 

@@ -6,7 +6,6 @@ package org.innovateuk.ifs.finance.resource;
 public class ApplicationFinanceResource extends BaseFinanceResource {
 
     private Long financeFileEntry;
-    private Integer maximumFundingLevel;
     private String workPostcode;
 
     public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
@@ -49,14 +48,6 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
 
     public void setApplication(Long target) {
         super.setTarget(target);
-    }
-
-    public Integer getMaximumFundingLevel() {
-        return maximumFundingLevel;
-    }
-
-    public void setMaximumFundingLevel(Integer maximumFundingLevel) {
-        this.maximumFundingLevel = maximumFundingLevel;
     }
 
     public String getWorkPostcode() {

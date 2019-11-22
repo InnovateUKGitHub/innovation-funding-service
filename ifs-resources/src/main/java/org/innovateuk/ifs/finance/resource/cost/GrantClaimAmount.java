@@ -58,12 +58,6 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
 
     @Override
     @JsonIgnore
-    public int getMinRows() {
-        return 0;
-    }
-
-    @Override
-    @JsonIgnore
     public FinanceRowType getCostType() {
         return FinanceRowType.GRANT_CLAIM_AMOUNT;
     }

@@ -69,11 +69,6 @@ public class OtherCost extends AbstractFinanceRowItem {
         return false;
     }
 
-    @Override
-    public int getMinRows() {
-        return 0;
-    }
-
     public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
