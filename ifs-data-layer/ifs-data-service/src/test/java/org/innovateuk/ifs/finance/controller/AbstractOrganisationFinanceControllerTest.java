@@ -55,7 +55,8 @@ public class AbstractOrganisationFinanceControllerTest extends BaseControllerMoc
         OrganisationFinancesWithGrowthTableResource expectedOrganisationFinances =
             new OrganisationFinancesWithGrowthTableResource();
 
-        when(organisationFinanceService.getOrganisationWithGrowthTable(targetId, organisationId))
+        when(organisationFinanceService.
+            getOrganisationWithGrowthTable(targetId, organisationId))
             .thenReturn(serviceSuccess(expectedOrganisationFinances));
 
         mockMvc.perform(get("/root/{targetId}/organisation/{organisationId}/finance/with-growth-table",
