@@ -475,7 +475,8 @@ public class ProjectFinanceChecksController {
                 eligibility.getEligibilityApprovalDate(),
                 true,
                 false,
-                null));
+                null,
+                false));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 
