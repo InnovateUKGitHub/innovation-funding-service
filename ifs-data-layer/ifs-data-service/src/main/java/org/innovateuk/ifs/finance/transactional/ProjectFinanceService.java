@@ -19,8 +19,6 @@ public interface ProjectFinanceService {
     @NotSecured(value = "Should only be called from other secure services")
     ServiceResult<Void> createProjectFinance(long projectId, long organisationId);
 
-    //TODO permission
+    @NotSecured(value = "Should only be called from other secure services")
     ServiceResult<Void> updateProjectFinance(long projectFinanceId, ProjectFinanceResource projectFinanceResource);
-
-
 }
