@@ -56,16 +56,8 @@ ENV HTTP_PORT=9080 \
   GOOGLEANALYTICS_TRACKINGID="" \
   BUILD_TIMESTAMP="@build_timestamp@" \
   RESOURCE_DOMAIN="@resource_domain@" \
-  IDP_PROXY_KEY="@auth_idp_proxy_key@" \
-  IDP_PROXY_CERTIFICATE="@auth_idp_proxy_certificate@" \
-  IDP_PROXY_CACERTIFICATE="@auth_idp_proxy_cacertificate@" \
+
   IDP_LOG_LEVEL=WARN \
-  SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
-  IDP_SAML_SIGNING_KEY="@auth_idp_signing_key@" \
-  IDP_SAML_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
-  IDP_SAML_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
-  IDP_SAML_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
-  LDAP_ENCRYPTION_CERTIFICATE="@auth_ldap_encryption_certificate@" \
 
   JAVA_OPTS="-Xms384M -Xmx768M" \
   MEMCACHE_ENDPOINT=
@@ -124,6 +116,10 @@ RUN mkdir /etc/tomcat8/certs && \
 
 # start and other useful scripts
 COPY scripts/* /usr/local/bin/
+
+# copy certs into build
+RUN mkdir -p /var/certs/
+COPY certs/*.* /var/certs/
 
 # custom govuk pages
 COPY pages/ /opt/shibboleth-idp/

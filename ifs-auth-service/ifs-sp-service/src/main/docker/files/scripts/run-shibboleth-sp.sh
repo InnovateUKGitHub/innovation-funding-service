@@ -3,14 +3,14 @@
 # update configuration at runtime for configuration files without native environment variable support
 
 # apache certificates
-echo "$SP_PROXY_KEY" > /etc/apache2/certs/sp_proxy_key.pem && \
-echo "$SP_PROXY_CERTIFICATE" > /etc/apache2/certs/sp_proxy_certificate.pem && \
-echo "$SP_PROXY_CACERTIFICATE" > /etc/apache2/certs/sp_proxy_cacertificate.pem
+cat /var/certs/sp_proxy_key.pem > /etc/apache2/certs/sp_proxy_key.pem && \
+cat /var/certs/sp_proxy_certificate.pem > /etc/apache2/certs/sp_proxy_certificate.pem && \
+cat /var/certs/sp_proxy_cacertificate.pem > /etc/apache2/certs/sp_proxy_cacertificate.pem
 
 # sp certificates
 cp /etc/apache2/certs/* /etc/shibboleth/ && \
-echo "$IDP_SIGNING_CERTIFICATE" > /etc/shibboleth/idp-signing.crt && \
-echo "$IDP_ENCRYPTION_CERTIFICATE" > /etc/shibboleth/idp-encryption.crt
+cat /var/certs/idp-signing.crt > /etc/shibboleth/idp-signing.crt && \
+cat /var/certs/idp-encryption.crt > /etc/shibboleth/idp-encryption.crt
 
 # sp configuration
 sed -i "s#\/\/ifs.local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
