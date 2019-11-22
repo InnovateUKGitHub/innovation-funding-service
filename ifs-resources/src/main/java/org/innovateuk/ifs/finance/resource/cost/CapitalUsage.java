@@ -139,11 +139,6 @@ public class CapitalUsage extends AbstractFinanceRowItem {
     }
 
     @Override
-    public int getMinRows() {
-        return 0;
-    }
-
-    @Override
     public FinanceRowType getCostType() {
         return FinanceRowType.CAPITAL_USAGE;
     }
