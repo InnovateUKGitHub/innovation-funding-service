@@ -50,7 +50,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-6054 Display completed projects in the previous tab
 ...
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
-Suite Setup       the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
+Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
@@ -478,10 +478,16 @@ Verify support users permissions in project setup tab
     And the user should see the element                                     jQuery = .success-alert h2:contains("These documents have been approved.")
 
 Support user should see completed project in previous tab
-   [Documentation]  IFS-6054
-   Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
-   And the user expands the section        Projects
-   Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
+    [Documentation]  IFS-6054
+    Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
+    And the user expands the section        Projects
+    Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
+
+Project is automatically sent to ACC if set up for the competition
+    [Documentation]  IFS-6786
+    [Setup]   Sleep  30s
+    Given log in as a different user         ${Elbow_Grease_Lead_PM_Email}   ${short_password}
+    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
 
 *** Keywords ***
 the user uploads a file
@@ -531,3 +537,8 @@ the user should see live project on dashboard
     the user should not see the element    jQuery = .projects-in-setup ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQuery = .previous ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQUery = .task:contains("${Elbow_Grease_Title}") ~ .status:contains("Live project")
+
+Custom suite setup
+    Connect to database  @{database}
+    the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
+    execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`id`, `competition_id`, `send_by_default`) VALUES ('1', '${PROJECT_SETUP_COMPETITION}', '1');
