@@ -60,13 +60,13 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
         Competition competition = CompetitionBuilder.newCompetition().withId(competitionId).build();
         Application application = ApplicationBuilder.newApplication().withId(applicationId).withCompetition(competition).build();
 
-        GrantProcessConfiguration grandProcessConfiguration = createGrantProcessConfiguration(competition, false);
+        GrantProcessConfiguration grantProcessConfiguration = createGrantProcessConfiguration(competition, false);
 
         GrantProcess grantProcess = new GrantProcess(applicationId);
 
         when(grantProcessRepository.save(grantProcess)).thenReturn(grantProcess);
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(grantProcessConfigurationRepository.findByCompetitionId(competitionId)).thenReturn(Optional.of(grandProcessConfiguration));
+        when(grantProcessConfigurationRepository.findByCompetitionId(competitionId)).thenReturn(Optional.of(grantProcessConfiguration));
 
         service.createGrantProcess(applicationId);
 
