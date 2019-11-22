@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
+import javax.validation.Valid;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
@@ -20,11 +21,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * The Controller for the "Your organisation" page in the project setup process
@@ -79,18 +80,6 @@ public class ProjectYourOrganisationWithGrowthTableController extends AsyncAdapt
 
         updateYourOrganisationWithGrowthTable(projectId, organisationId, form);
         return redirectToLandingPage(projectId, organisationId);
-    }
-
-    @PostMapping(value = "/auto-save")
-    @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
-    public @ResponseBody JsonNode autosaveWithGrowthTable(
-            @PathVariable long projectId,
-            @PathVariable long organisationId,
-            @ModelAttribute YourOrganisationWithGrowthTableForm form) {
-
-        updateWithGrowthTable(projectId, organisationId, form);
-        return new ObjectMapper().createObjectNode();
     }
 
     @PostMapping(params = {"mark-as-complete"})
