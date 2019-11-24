@@ -127,7 +127,7 @@ Comp Admin cannot upload big or non-pdf grant offer letter
     [Setup]  log in as a different user                 &{Comp_admin1_credentials}
     Given the user navigates to the page                ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     When the user uploads a file                        grantOfferLetter  ${too_large_pdf}
-    Then The user should see a field and summary error  ${too_large_10MB_validation_error}
+    Then the user should see a field error              ${too_large_10MB_validation_error}
     And the user uploads a file                         grantOfferLetter  ${text_file}
     Then the user should see a field error              ${wrong_filetype_validation_error}
 

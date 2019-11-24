@@ -292,16 +292,17 @@ the user checks for the key statistics for invite assessors
     the user should see the element      jQuery = .govuk-grid-column-one-quarter:contains("${Declined}") small:contains("Declined")
 
 the compAdmin uploads additional feedback for an application
-    the user uploads the file          id = feedback[0]   ${too_large_pdf}  #checking for large file upload
-    the user should see a field and summary error   ${too_large_10MB_validation_error}
-    the user uploads the file          id = feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
-    the user should see a field and summary error      ${wrong_filetype_validation_error}
+    the user uploads the file                   id = feedback[0]   ${too_large_pdf}  #checking for large file upload
+    the user should see a field error           ${too_large_10MB_validation_error}
+    the user uploads the file                   id = feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
+    the user should see a field error           ${wrong_filetype_validation_error}
     the compAdmin/applicant upload feedback     id = feedback[0]  ${5mb_pdf}  link = ${5mb_pdf}
 
 the compAdmin/applicant upload feedback
     [Arguments]   ${uploadId}  ${FileToUpload}  ${uploadedFile}
-    the user uploads the file          ${uploadId}  ${FileToUpload}
-    the user should see the element    ${uploadedFile}
+    the user uploads the file                           ${uploadId}  ${FileToUpload}
+    wait until element is visible without screenshots   ${uploadedFile}
+    the user should see the element                     ${uploadedFile}
 
 the compAdmin removes uploaded feedback for an application
     the user uploads the file          id = feedback[1]   ${5mb_pdf}
@@ -443,7 +444,7 @@ an applicant uploads response to an applicantion
     log in as a different user                 ${peter_styles_email}   ${short_password}
     the user clicks the button/link            link = ${computer_vision_application_name}
     the user should see the element            jQuery = .message-alert p:contains("If you are asked to respond to feedback you can upload your response below.")  #checking banner message befor uploading file.
-    the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf
+    the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf (opens in a new window)
     the user should see the element            jQuery = .message-alert p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
 
 the comp admin navigates to allocate applications page

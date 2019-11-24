@@ -7,7 +7,6 @@ the user uploads the file
     [Arguments]  ${selector}  ${file}
     Choose File  ${selector}  ${UPLOAD_FOLDER}/${file}
     Wait Until Page Does Not Contain Without Screenshots    Uploading
-    the user should see the element   css = .remove-file
 
 the user can remove the uploaded file
     [Arguments]  ${name}  ${file_name}

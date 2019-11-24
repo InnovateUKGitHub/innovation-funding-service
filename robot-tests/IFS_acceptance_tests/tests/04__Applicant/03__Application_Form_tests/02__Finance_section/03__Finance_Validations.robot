@@ -93,7 +93,7 @@ Overhead cost client side
     Given the user clicks the button/link    jQuery = button:contains("Overhead costs")
     When the user selects the radio button   overhead.rateType  overhead-rate-type-total
     And the user uploads the file            id = overhead.file  ${text_file}
-    Then the user should see a field and summary error    Please upload a file in .xls, .xlsx or .ods format only.
+    Then the user should see a field error    Please upload a file in .xls, .xlsx or .ods format only.
     #TODO Add validaions for text feild once IFS-2555 done
 
 Overhead cost server side
