@@ -43,6 +43,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
 @Controller
@@ -91,8 +92,8 @@ public class RegistrationController {
 
     @GetMapping("/success")
     public String registrationSuccessful(Model model,
-            @RequestHeader(value = "referer", required = false) final String referer,
-            final HttpServletRequest request, HttpServletResponse response) {
+                                         @RequestHeader(value = "referer", required = false) final String referer,
+                                         final HttpServletRequest request, HttpServletResponse response) {
         model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
         registrationCookieService.deleteInviteHashCookie(response);
         registrationCookieService.deleteProjectInviteHashCookie(response);
@@ -238,15 +239,24 @@ public class RegistrationController {
 
                             return registerForm(registrationForm, model, user, request, response);
                         },
-                        userResource -> {
-                            removeCompetitionIdCookie(response);
-                            acceptInvite(response, request, userResource); // might want to move this, to after email verifications.
-                            registrationCookieService.deleteOrganisationIdCookie(response);
+                        userResource ->
+                                acceptInvite(request, userResource).handleSuccessOrFailure(
+                                        failure -> {
+                                            removeCompetitionIdCookie(response);
+                                            registrationCookieService.deleteOrganisationIdCookie(response);
 
-                            return "redirect:/registration/success";
-                        }
-                )
-        );
+                                            InviteAndIdCookie projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request).get();
+                                            SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.getId(), projectInvite.getHash()).getSuccess();
+                                            model.addAttribute("model", invite);
+
+                                            return "registration/duplicate-organisation-error";
+                                        },
+                                        success -> {
+                                            removeCompetitionIdCookie(response);
+                                            registrationCookieService.deleteOrganisationIdCookie(response);
+
+                                            return "redirect:/registration/success";
+                                        })));
     }
 
     @GetMapping("/resend-email-verification")
@@ -275,24 +285,20 @@ public class RegistrationController {
         return registrationCookieService.getCompetitionIdCookieValue(request).orElse(null);
     }
 
-    private void acceptInvite(HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
+    private ServiceResult<Void> acceptInvite(HttpServletRequest request, UserResource userResource) {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
         if (inviteHash.isPresent()) {
             Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
-            inviteRestService.acceptInvite(inviteHash.get(), userResource.getId(), organisationId.get()).getSuccess();
+            return inviteRestService.acceptInvite(inviteHash.get(), userResource.getId(), organisationId.get()).toServiceResult();
         }
 
         Optional<InviteAndIdCookie> projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request);
         if (projectInvite.isPresent()) {
             SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.get().getId(), projectInvite.get().getHash()).getSuccess();
             Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
-            RestResult<Void> saveResult = projectPartnerInviteRestService.acceptInvite(projectInvite.get().getId(), invite.getId(), organisationId.get());
-            if(saveResult.isSuccess()) {
-                saveResult.getSuccess();
-            } else {
-                saveResult.getFailure();
-            }
+            return projectPartnerInviteRestService.acceptInvite(projectInvite.get().getId(), invite.getId(), organisationId.get()).toServiceResult();
         }
+        return serviceSuccess();
     }
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
