@@ -398,8 +398,9 @@ the user enter the Correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
 
 the user uploads to the collaboration agreement/exploitation plan
-    [Arguments]  ${file_name}
+    [Arguments]   ${file_name}
     choose file  name = document  ${upload_folder}/${file_name}
+    Wait Until Page Does Not Contain Without Screenshots    Uploading
 
 the user goes to documents page
     [Arguments]  ${link1}  ${link2}

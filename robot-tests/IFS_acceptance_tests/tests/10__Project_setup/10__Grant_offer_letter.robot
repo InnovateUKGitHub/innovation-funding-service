@@ -51,7 +51,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
 Suite Setup       the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
-Suite Teardown    Close browser and delete emails
+#Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
@@ -487,6 +487,7 @@ Support user should see completed project in previous tab
 the user uploads a file
     [Arguments]  ${name}  ${file}
     choose file    name = ${name}    ${upload_folder}/${file}
+    Wait Until Page Does Not Contain Without Screenshots    Uploading
 
 the user is able to see the Grant Offer letter page
     Select Window                          title = Print version with CSS

@@ -81,12 +81,12 @@ Large pdfs not allowed for either document
     [Tags]
     Given the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link                 link = Collaboration agreement
-    When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
+    When the user uploads to the collaboration agreement/exploitation plan   ${too_large_pdf}
     Then the user should see a field error              ${too_large_10MB_validation_error}
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
     Then the user should see a field error              ${too_large_10MB_validation_error}
     And the user should not see the element             link = ${too_large_pdf}")
-    [Teardown]  the user clicks the button/link          link = Back to document overview
+    [Teardown]  the user clicks the button/link         link = Back to document overview
 
 Non pdf files not allowed for either document
     [Documentation]  INFUND-3011

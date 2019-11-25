@@ -182,6 +182,7 @@ Applicant can remove the uploaded response
 
 CompAdmin checks for interview panel key statistics
     [Documentation]  IFS-3524
+    [Setup]  Log in as a different user     &{Comp_admin1_credentials}
     Given the user navigates to the page    ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}
     Then the user checks for Manage interview panel key statistics
 
