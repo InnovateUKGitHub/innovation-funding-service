@@ -58,6 +58,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
 
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration(ServiceResultWrappingSerializer serviceResultWrappingSerializer, CacheProperties cacheProperties) {
+        LOG.error("KEY PREFIX: " + cacheProperties.getRedis().getKeyPrefix());
         return RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(
