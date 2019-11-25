@@ -644,7 +644,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_LOCATION_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
     }
 
     @Test

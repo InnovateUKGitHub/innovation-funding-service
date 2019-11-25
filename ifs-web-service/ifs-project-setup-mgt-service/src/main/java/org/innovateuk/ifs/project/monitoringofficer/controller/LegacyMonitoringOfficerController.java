@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.project.monitoringofficer.form.LegacyMonitoringOfficer
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +45,7 @@ public class LegacyMonitoringOfficerController {
     private ProjectService projectService;
 
     @Autowired
-    private StatusService statusService;
-
-    @Autowired
     private MonitoringOfficerRestService monitoringOfficerService;
-
-    @Autowired
-    private ApplicationService applicationService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
