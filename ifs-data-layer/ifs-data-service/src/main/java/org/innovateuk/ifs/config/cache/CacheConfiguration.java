@@ -63,6 +63,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
         RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
         clusterConfiguration.clusterNode(redisProperties.getHost(), redisProperties.getPort());
         clusterConfiguration.setPassword(RedisPassword.of(redisProperties.getPassword()));
+        clusterConfiguration.setMaxRedirects(3);
         return new LettuceConnectionFactory(clusterConfiguration, builder.build());
     }
 
