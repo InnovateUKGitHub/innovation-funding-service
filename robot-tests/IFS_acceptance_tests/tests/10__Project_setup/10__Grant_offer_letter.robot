@@ -407,6 +407,7 @@ Internal user accepts signed grant offer letter
     Then the user should see the element   jQuery = .success-alert h2:contains("These documents have been approved.")
     When the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     Then the user should see the element   jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok
+    [Teardown]   Sleep   60s
 
 Project manager's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377  IFS-6021
@@ -485,7 +486,6 @@ Support user should see completed project in previous tab
 
 Project is automatically sent to ACC if set up for the competition
     [Documentation]  IFS-6786
-    [Setup]   Sleep  30s
     Given log in as a different user         ${Elbow_Grease_Lead_PM_Email}   ${short_password}
     Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
 
@@ -534,6 +534,7 @@ the user should see project setup compeletion status
     the user clicks the button/link      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok a  # GOL
 
 the user should see live project on dashboard
+    the user clicks the button/link        id = dashboard-link-APPLICANT
     the user should not see the element    jQuery = .projects-in-setup ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQuery = .previous ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQUery = .task:contains("${Elbow_Grease_Title}") ~ .status:contains("Live project")
