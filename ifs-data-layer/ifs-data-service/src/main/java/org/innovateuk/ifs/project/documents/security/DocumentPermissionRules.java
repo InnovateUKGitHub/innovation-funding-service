@@ -7,6 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 
@@ -36,7 +37,7 @@ public class DocumentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "DOWNLOAD_DOCUMENT", description = "Stakeholder can download Document")
     public boolean stakeholderCanDownloadDocument(ProjectResource project, UserResource user) {
-        return userIsStakeholderOnCompetitionForProject(project.getId(), user.getId());
+        return areDocumentsApproved(project, user);
     }
 
     @PermissionRule(value = "DELETE_DOCUMENT", description = "Project Manager can delete document for their Project")
@@ -52,5 +53,13 @@ public class DocumentPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "REVIEW_DOCUMENT", description = "Comp admin, project finance and IFS admin users can approve or reject document")
     public boolean internalAdminCanApproveDocument(ProjectResource project, UserResource user) {
         return isInternalAdmin(user) || isIFSAdmin(user);
+    }
+
+    private boolean areDocumentsApproved(ProjectResource project, UserResource user) {
+        if (project.getProjectDocuments().stream().allMatch(documents -> APPROVED.equals(documents.getStatus()))) {
+            return userIsStakeholderOnCompetitionForProject(project.getId(), user.getId());
+        }
+
+        return false;
     }
 }
