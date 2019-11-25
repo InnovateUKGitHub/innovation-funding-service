@@ -51,5 +51,4 @@ public class SentProjectPartnerInviteResourceBuilder extends BaseBuilder<SentPro
         return withArray((sentOn, sentProjectPartnerInviteResource) -> setField("sentOn", sentOn, sentProjectPartnerInviteResource), sentOns);
     }
 
-
 }
