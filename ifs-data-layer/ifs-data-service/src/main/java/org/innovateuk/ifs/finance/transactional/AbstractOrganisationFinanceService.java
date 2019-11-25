@@ -27,7 +27,7 @@ import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceResource> extends BaseTransactionalService implements OrganisationFinanceService {
+public abstract class AbstractOrganisationFinanceService<Finance extends BaseFinanceResource> extends BaseTransactionalService implements OrganisationFinanceService {
 
     @Autowired
     private CompetitionService competitionService;
