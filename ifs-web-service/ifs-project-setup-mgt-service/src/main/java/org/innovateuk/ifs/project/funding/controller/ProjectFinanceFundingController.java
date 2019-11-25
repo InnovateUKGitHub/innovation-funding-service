@@ -1,5 +1,14 @@
 package org.innovateuk.ifs.project.funding.controller;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toMap;
+
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import javax.validation.Valid;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -17,16 +26,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/project/{projectId}/funding")
@@ -68,7 +73,7 @@ public class ProjectFinanceFundingController {
             validationHandler.addAnyErrors(saveFundingLevels(finances, form));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 redirectAttributes.addFlashAttribute("showFundingAmountMessage", true);
-                return String.format("redirect:/project/%d/finance-check-overview", projectId);
+                return format("redirect:/project/%d/finance-check-overview", projectId);
             });
         });
     }
