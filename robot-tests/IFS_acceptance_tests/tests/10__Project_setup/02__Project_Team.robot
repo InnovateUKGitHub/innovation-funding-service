@@ -204,7 +204,7 @@ Ifs Admin is able to add a new partner organisation
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
+    Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD  ${addNewPartnerOrgAppID}  ${applicationName}
 
 Ifs Admin is able to remove a partner organisation
     [Documentation]  IFS-6485
@@ -226,7 +226,7 @@ Project finance is able to add a new partner organisation
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation             Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
+    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD   ${addNewPartnerOrgAppID}  ${applicationName}
     And log in as a different user                            &{internal_finance_credentials}
     And the internal user checks for status after new org added/removed
 
@@ -267,19 +267,6 @@ The internal users checks for activity logs after partner added/removed
     And internal user should see entries in activity log after partner org added/removed
 
 *** Keywords ***
-a new organisation is able to accept project invite
-    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
-    logout as user
-    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
-    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
-    the user fills in account details                             ${fname}  ${sname}
-    the user clicks the button/link                               jQuery = button:contains("Create account")
-    the user verifies their account                               ${email}
-    a new organisation logs in and sees the project               ${email}
-    the user should see the element                               jQuery = ul:contains("PSC application 7") .status:contains("Ready to join project")
-    the user clicks the button/link                               link = PSC application 7
-    the user should see the element                               jQuery = h1:contains("Join project")
-
 A new organisation logs in and sees the project
     [Arguments]  ${email}
     the user clicks the button/link   link = Sign in
@@ -303,14 +290,6 @@ the user removes a partner organisation
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
     the user should not see the element         jQuery = h2:contains(${orgName})
-
-the user adds a new partner organisation
-    [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
-    the user enters text to a text field  id = organisationName  ${partnerOrgName}
-    the user enters text to a text field  id = userName  ${persFullName}
-    the user enters text to a text field  id = email  ${email}
-    the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
-    the user should see the element       jQuery = h2:contains(${partnerOrgName})
 
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")

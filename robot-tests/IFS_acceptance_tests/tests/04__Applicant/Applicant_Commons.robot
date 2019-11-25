@@ -285,6 +285,16 @@ the user checks Your Funding section
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
 
+the user checks for funding level guidance
+    the user clicks the button/link     link = Your project finances
+    the user clicks the button/link     link = Your funding
+    the user clicks the button/link     jQuery = button:contains("Edit your funding")
+    the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
+    the user clicks the button/link     link = competition's rules
+    the user closes the last opened tab
+    the user clicks the button/link     jQuery = button:contains("Mark as complete")
+    the user clicks the button/link     link = Back to application overview
+
 the user selects research area
     [Arguments]  ${Application}
     the user selects Research category from funding  Feasibility studies

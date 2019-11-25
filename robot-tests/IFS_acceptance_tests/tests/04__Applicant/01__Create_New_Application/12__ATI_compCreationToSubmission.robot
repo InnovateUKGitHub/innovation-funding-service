@@ -43,6 +43,7 @@ Single applicant cannot submit his application to a collaborative comp
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user does not see state aid information
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
+    And the user checks for funding level guidance
     And the user accept the competition terms and conditions     Return to application overview
     And the user checks the override value is applied
     And the user selects research category              Feasibility studies
@@ -63,10 +64,22 @@ Moving ATI Competition to Project Setup
     And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
     And moving competition to Project Setup            ${competitionId}
 
+Internal user add new partner orgnisation
+    [Documentation]
+    [Setup]  Requesting Project ID of this Project
+    Given the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team/partner
+    When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  test1@test.nom
+    Then a new organisation is able to accept project invite   Name  Surname  test1@test.nom  innovate  INNOVATE LTD  ${competitionId}  ${ATIapplicationTitle}
+
+New partner orgination checks for funding level guidance
+    [Documentation]
+    Given log in as a different user      test1@test.nom    ${short_password}
+    When the user clicks the button/link   link = ${ATIapplicationTitle}
+    Then the user checks for funding level guidance
+
 Applicant completes Project Details
     [Documentation]  IFS-2332
     [Tags]
-    [Setup]  Requesting Project ID of this Project
     When log in as a different user              &{lead_applicant_credentials}
     Then project lead submits project address    ${ProjectID}
 

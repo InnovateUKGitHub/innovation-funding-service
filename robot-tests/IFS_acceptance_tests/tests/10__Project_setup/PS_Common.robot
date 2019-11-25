@@ -471,3 +471,24 @@ Project finance is able to approve the bank details
     the user clicks the button/link    jQuery = button:contains("Approve bank account details")
     the user clicks the button/link    jQuery = button:contains("Approve account")
     the user should see the element    jQuery = h2:contains("The bank details provided have been approved.")
+
+the user adds a new partner organisation
+    [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
+    the user enters text to a text field  id = organisationName  ${partnerOrgName}
+    the user enters text to a text field  id = userName  ${persFullName}
+    the user enters text to a text field  id = email  ${email}
+    the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
+    the user should see the element       jQuery = h2:contains(${partnerOrgName})
+
+a new organisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}  ${compID}  ${appTitle}
+    logout as user
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${compID}: ${appTitle}  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
+    the user fills in account details                             ${fname}  ${sname}
+    the user clicks the button/link                               jQuery = button:contains("Create account")
+    the user verifies their account                               ${email}
+    a new organisation logs in and sees the project               ${email}
+    the user should see the element                               jQuery = ul:contains("PSC application 7") .status:contains("Ready to join project")
+    the user clicks the button/link                               link = PSC application 7
+    the user should see the element                               jQuery = h1:contains("Join project")
