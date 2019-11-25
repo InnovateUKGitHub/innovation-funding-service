@@ -34,6 +34,11 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isMonitoringOfficer(project.getId(), user.getId());
     }
 
+    @PermissionRule(value = "DOWNLOAD_DOCUMENT", description = "Stakeholder can download Document")
+    public boolean stakeholderCanDownloadDocument(ProjectResource project, UserResource user) {
+        return userIsStakeholderOnCompetitionForProject(project.getId(), user.getId());
+    }
+
     @PermissionRule(value = "DELETE_DOCUMENT", description = "Project Manager can delete document for their Project")
     public boolean projectManagerCanDeleteDocument(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId());

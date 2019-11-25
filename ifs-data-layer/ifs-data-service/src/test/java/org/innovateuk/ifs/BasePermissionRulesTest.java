@@ -128,6 +128,11 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
             .thenReturn(userIsMonitoringOfficer);
     }
 
+    protected void setupStakeholderExpectations(ProjectResource project, UserResource user) {
+        List<Role> stakeholderUser = singletonList(Role.STAKEHOLDER);
+        user.setRoles(stakeholderUser);
+    }
+
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, true);
     }

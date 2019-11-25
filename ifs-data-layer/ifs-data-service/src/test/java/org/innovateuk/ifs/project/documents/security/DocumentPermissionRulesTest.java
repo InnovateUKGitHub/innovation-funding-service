@@ -91,6 +91,16 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
     }
 
     @Test
+    public void stakeholderCanDownloadDocument() {
+        ProjectResource project = newProjectResource().build();
+
+        UserResource user = newUserResource().build();
+
+        setupStakeholderExpectations(project, user);
+        assertTrue(rules.stakeholderCanDownloadDocument(project, user));
+    }
+
+    @Test
     public void projectManagerCanDeleteDocument() {
         ProjectResource project = newProjectResource().build();
 
