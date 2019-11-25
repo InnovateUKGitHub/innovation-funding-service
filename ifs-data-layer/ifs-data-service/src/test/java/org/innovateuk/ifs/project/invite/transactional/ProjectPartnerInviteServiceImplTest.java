@@ -26,7 +26,6 @@ import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteReposito
 import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -163,6 +162,7 @@ public class ProjectPartnerInviteServiceImplTest {
     public void getPartnerInvites() {
         long projectId = 1L;
         long inviteId = 2L;
+        long applicationId =3L;
         String email = "Partner@gmail.com";
         String userName = "Partner";
         String organisationName = "Partners Ltd.";
@@ -172,7 +172,12 @@ public class ProjectPartnerInviteServiceImplTest {
         invite.setEmail(email);
         invite.setId(inviteId);
         invite.setName(userName);
-        invite.setProject(newProject().withName("project").build());
+        invite.setProject(newProject()
+                .withName("project")
+                .withApplication(newApplication()
+                        .withId(applicationId)
+                        .build())
+                .build());
         setField(invite, "status", InviteStatus.SENT);
         setField(invite, "sentOn", sentOn);
         invite.setInviteOrganisation(inviteOrganisation);
@@ -189,6 +194,7 @@ public class ProjectPartnerInviteServiceImplTest {
         assertEquals(organisationName, resource.getOrganisationName());
         assertEquals(sentOn, resource.getSentOn());
         assertEquals("project", resource.getProjectName());
+        assertEquals(applicationId, resource.getApplicationId());
     }
 
     @Test
@@ -252,13 +258,19 @@ public class ProjectPartnerInviteServiceImplTest {
         String email = "Partner@gmail.com";
         String userName = "Partner";
         String organisationName = "Partners Ltd.";
+        long applicationId =3L;
         ZonedDateTime sentOn = now();
         ProjectPartnerInvite invite = new ProjectPartnerInvite();
         InviteOrganisation inviteOrganisation = new InviteOrganisation();
         invite.setEmail(email);
         invite.setId(1L);
         invite.setName(userName);
-        invite.setProject(newProject().withName("project").build());
+        invite.setProject(newProject()
+                .withName("project")
+                .withApplication(newApplication()
+                        .withId(applicationId)
+                        .build())
+                .build());
         setField(invite, "status", InviteStatus.SENT);
         setField(invite, "sentOn", sentOn);
         invite.setInviteOrganisation(inviteOrganisation);
@@ -274,6 +286,7 @@ public class ProjectPartnerInviteServiceImplTest {
         assertEquals(organisationName, resource.getOrganisationName());
         assertEquals(sentOn, resource.getSentOn());
         assertEquals("project", resource.getProjectName());
+        assertEquals(applicationId, resource.getApplicationId());
     }
 
     @Test

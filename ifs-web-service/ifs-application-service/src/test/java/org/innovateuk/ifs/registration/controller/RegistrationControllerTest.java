@@ -36,7 +36,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,7 +43,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.project.invite.builder.SentProjectPartnerInviteResourceBuilder.newSentProjectPartnerInviteResource;
-import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
 import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
