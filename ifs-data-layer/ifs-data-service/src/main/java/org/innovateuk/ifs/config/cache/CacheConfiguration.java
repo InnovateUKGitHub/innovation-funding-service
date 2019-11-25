@@ -24,7 +24,6 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import javax.validation.Valid;
 import java.time.Duration;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
