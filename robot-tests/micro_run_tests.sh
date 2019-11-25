@@ -85,7 +85,7 @@ function initialiseTestEnvironment() {
         sleep 5
       else
         section "=> STARTING SELENIUM GRID, INJECTING ENVIRONMENT PARAMETERS, RESETTING DATABASE STATE"
-        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate --configure-on-demand
+        ./gradlew :robot-tests:deployHub :robot-tests:deployChrome :robotTestsFilter :ifs-data-layer:ifs-data-service:flywayClean :ifs-data-layer:ifs-data-service:flywayMigrate :docker:cache-provider:deploy -Pinitialise=true --configure-on-demand
         section "=> SYNCING SHIBBOLETH USERS"
         ./gradlew :ifs-data-layer:ifs-data-service:syncShib 2>&1 >/dev/null
     fi
