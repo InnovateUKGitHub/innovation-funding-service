@@ -65,7 +65,7 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
     }
 
     @Override
-    protected ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed) {
+    protected ServiceResult<Void> updateStateAidAgreed(long targetId) {
         // nowhere to save this in Project Setup.
         return serviceSuccess();
     }
