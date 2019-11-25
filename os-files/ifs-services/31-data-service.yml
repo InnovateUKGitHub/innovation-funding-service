@@ -116,7 +116,7 @@ items:
                     configMapKeyRef:
                       name: cache-config
                       key: IFS_DATA_SERVICE_REDIS_PORT
-                - name: SPRING_CACHE_REDIS_KEY-PREFIX
+                - name: SPRING_CACHE_REDIS_KEY_PREFIX
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
