@@ -22,6 +22,7 @@ items:
       IFS_DATA_SERVICE_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
       IFS_DATA_SERVICE_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
       IFS_DATA_SERVICE_CACHE_TTL_SECONDS: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
+      IFS_DATA_SERVICE_REDIS_CLUSTER: "${IFS_DATA_SERVICE_REDIS_CLUSTER}"
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -131,6 +132,11 @@ items:
                     configMapKeyRef:
                       name: cache-config
                       key: IFS_DATA_SERVICE_REDIS_PASSWORD
+                - name: IFS_DATA_SERVICE_REDIS_CLUSTER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_CLUSTER
                 - name: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
                   valueFrom:
                     configMapKeyRef:
