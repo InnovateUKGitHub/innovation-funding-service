@@ -37,7 +37,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     @Value("${ifs.data.service.cache.ttl.seconds}")
     private int ttlSeconds;
 
-    @Valid("${ifs.data.service.redis.cluster}")
+    @Value("${ifs.data.service.redis.cluster}")
     private boolean cluster;
 
     @Bean
