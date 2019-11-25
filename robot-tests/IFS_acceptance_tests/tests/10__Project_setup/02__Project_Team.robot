@@ -238,6 +238,12 @@ Project finance is able to add a new partner organisation
     And log in as a different user                            &{internal_finance_credentials}
     And the internal user checks for status after new org added/removed
 
+Project finance is able to remove a pending partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
+    Then the user is able to remove a pending partner organisation         Testing Pending Organisation
+
 The new partner cannot complete funding without organisation
     [Documentation]  IFS-6491
     Given log in as a different user                              ${intFinanceAddOrgEmail}  ${short_password}
@@ -256,13 +262,6 @@ The new partner completes your funding
     Given The user clicks the button/link   link = Your funding
     When the user completes your funding
     Then the user should see the element    jQuery = li div:contains("Your funding") ~ .task-status-complete
-
-Project finance is able to remove a pending partner organisation
-    [Documentation]  IFS-6485  IFS-6505
-    [Setup]  log in as a different user                                    &{internal_finance_credentials}
-    Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
-    When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
-    Then the user is able to remove a pending partner organisation         Testing Pending Organisation
 
 The new organisation partner accept terms and conditions
     [Documentation]  IFS-6492
