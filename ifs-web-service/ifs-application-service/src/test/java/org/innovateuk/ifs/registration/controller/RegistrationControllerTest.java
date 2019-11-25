@@ -8,7 +8,10 @@ import org.innovateuk.ifs.commons.exception.RegistrationTokenExpiredException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
+import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -33,16 +36,18 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.project.invite.builder.SentProjectPartnerInviteResourceBuilder.newSentProjectPartnerInviteResource;
+import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
 import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -89,6 +94,9 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Mock
     private OrganisationRestService organisationRestService;
+
+    @Mock
+    private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
     @Spy
     @SuppressWarnings("unused")
@@ -479,6 +487,54 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .andExpect(view().name("redirect:/registration/success"))
                 .andExpect(status().is3xxRedirection());
 
+    }
+
+    @Test
+    public void unsuccessfulPageReturnedForDuplicateOrganisationRegister() throws Exception {
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
+
+        UserResource userResource = newUserResource()
+                .withPassword("password")
+                .withFirstName("firstName")
+                .withLastName("lastName")
+                .withTitle(Mr)
+                .withPhoneNumber("0123456789")
+                .withEmail("invited@email.com")
+                .withId(1L)
+                .build();
+
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
+                eq(userResource.getLastName()),
+                eq(userResource.getPassword()),
+                eq(userResource.getEmail()),
+                nullable(String.class),
+                eq(userResource.getPhoneNumber()),
+                eq(1L),
+                eq(1L),
+                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
+
+        InviteAndIdCookie projectInviteCookie = new InviteAndIdCookie(1L, "hashy");
+
+        when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
+        when(registrationCookieService.getProjectInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(projectInviteCookie));
+        when(projectPartnerInviteRestService.getInviteByHash(projectInviteCookie.getId(), projectInviteCookie.getHash())).thenReturn(restSuccess(newSentProjectPartnerInviteResource().withEmail(userResource.getEmail()).withStatus(InviteStatus.SENT).build()));
+        when(projectPartnerInviteRestService.acceptInvite(anyLong(), anyLong(), anyLong())).thenReturn(restFailure(ORGANISATION_ALREADY_EXISTS_FOR_PROJECT));
+
+        mockMvc.perform(post("/registration/register")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .cookie(inviteHashCookie, organisationCookie)
+                .param("email", userResource.getEmail())
+                .param("password", userResource.getPassword())
+                .param("title", userResource.getTitle().toString())
+                .param("firstName", userResource.getFirstName())
+                .param("lastName", userResource.getLastName())
+                .param("phoneNumber", userResource.getPhoneNumber())
+                .param("termsAndConditions", "1")
+        )
+                .andExpect(view().name("redirect:/registration/duplicate-project-organisation"))
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test

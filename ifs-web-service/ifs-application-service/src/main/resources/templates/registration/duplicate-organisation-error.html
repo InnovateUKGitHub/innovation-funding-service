@@ -14,7 +14,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='You cannot join this project',subTitle=${model.getProjectName()},size='govuk-heading-l'"/>
+                  th:with="pageTitle='You cannot join this project',subTitle=${model.getApplicationId()+ ': ' + model.getProjectName()},size='govuk-heading-l'"/>
         <p class="govuk-body">The organisation you have chosen is already part of the project.
             <a th:href="@{/organisation/create/contributor-organisation-type}" class="govuk-link">Choose another organisation</a>
         </p>

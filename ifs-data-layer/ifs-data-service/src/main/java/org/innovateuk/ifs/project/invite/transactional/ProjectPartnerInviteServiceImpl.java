@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.invite.transactional;
 
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
-import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -31,7 +30,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.statemachine.transition.TransitionConflictPolicy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -155,7 +153,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     private SentProjectPartnerInviteResource mapToSentResource(ProjectPartnerInvite projectPartnerInvite) {
         return new SentProjectPartnerInviteResource(projectPartnerInvite.getId(), projectPartnerInvite.getSentOn(),
                 projectPartnerInvite.getProject().getName(), ofNullable(projectPartnerInvite.getUser()).map(User::getId).orElse(null), projectPartnerInvite.getStatus(),
-                projectPartnerInvite.getInviteOrganisation().getOrganisationName(), projectPartnerInvite.getName(), projectPartnerInvite.getEmail());
+                projectPartnerInvite.getInviteOrganisation().getOrganisationName(), projectPartnerInvite.getName(), projectPartnerInvite.getEmail(), projectPartnerInvite.getProject().getApplication().getId());
     }
 
     @Override

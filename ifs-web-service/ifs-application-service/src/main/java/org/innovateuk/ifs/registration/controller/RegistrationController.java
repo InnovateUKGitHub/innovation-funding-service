@@ -245,18 +245,29 @@ public class RegistrationController {
                                             removeCompetitionIdCookie(response);
                                             registrationCookieService.deleteOrganisationIdCookie(response);
 
-                                            InviteAndIdCookie projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request).get();
-                                            SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.getId(), projectInvite.getHash()).getSuccess();
-                                            model.addAttribute("model", invite);
-
-                                            return "registration/duplicate-organisation-error";
+                                            if (failure.getErrors().stream().anyMatch(
+                                                    error -> error.getErrorKey().equals("ORGANISATION_ALREADY_EXISTS_FOR_PROJECT"))) {
+                                                return "redirect:/registration/duplicate-project-organisation";
+                                            }
+                                            return failure.toString();
                                         },
                                         success -> {
                                             removeCompetitionIdCookie(response);
                                             registrationCookieService.deleteOrganisationIdCookie(response);
 
                                             return "redirect:/registration/success";
-                                        })));
+                                        }
+                                )));
+    }
+
+    @GetMapping("/duplicate-project-organisation")
+    public String displayErrorPage(HttpServletRequest request,
+                                   Model model) {
+
+        InviteAndIdCookie projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request).get();
+        SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.getId(), projectInvite.getHash()).getSuccess();
+        model.addAttribute("model", invite);
+        return "registration/duplicate-organisation-error";
     }
 
     @GetMapping("/resend-email-verification")
