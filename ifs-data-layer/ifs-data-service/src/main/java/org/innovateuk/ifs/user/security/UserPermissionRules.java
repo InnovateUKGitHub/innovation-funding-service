@@ -254,12 +254,6 @@ public class UserPermissionRules {
         return userToCheck.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "CHECK_USER_PROJECT", description = "The user can check if they have a project for " +
-        "the competition")
-    public boolean userCanCheckTheyHaveProjectForCompetition(UserResource userToCheck, UserResource user) {
-        return userToCheck.getId().equals(user.getId());
-    }
-
     @PermissionRule(value = "EDIT_INTERNAL_USER", description = "Only an IFS Administrator can edit an internal user")
     public boolean ifsAdminCanEditInternalUser(final UserResource userToEdit, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);

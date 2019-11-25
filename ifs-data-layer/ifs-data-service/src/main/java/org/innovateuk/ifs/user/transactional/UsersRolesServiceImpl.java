@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
@@ -31,9 +30,6 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Autowired
     private ProcessRoleMapper processRoleMapper;
-
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
 
     @Override
     public ServiceResult<ProcessRoleResource> getProcessRoleById(Long id) {
