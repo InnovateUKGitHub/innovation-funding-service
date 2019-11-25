@@ -71,7 +71,6 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
         });
     }
 
-
     @Override
     public ServiceResult<Void> updateProjectFinance(long projectFinanceId, ProjectFinanceResource projectFinanceResource) {
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {

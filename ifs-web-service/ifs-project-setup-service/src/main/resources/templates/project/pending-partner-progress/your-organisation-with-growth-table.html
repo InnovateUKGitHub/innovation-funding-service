@@ -33,7 +33,6 @@
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave='autosaveFormPost'"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">

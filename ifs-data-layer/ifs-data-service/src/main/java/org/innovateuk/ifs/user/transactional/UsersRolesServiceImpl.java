@@ -1,24 +1,27 @@
 package org.innovateuk.ifs.user.transactional;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service that encompasses functions that relate to users and their roles
@@ -28,6 +31,9 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Autowired
     private ProcessRoleMapper processRoleMapper;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
 
     @Override
     public ServiceResult<ProcessRoleResource> getProcessRoleById(Long id) {

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import javax.validation.Valid;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/your-organisation/without" +
@@ -83,18 +80,6 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
 
         updateYourOrganisationWithoutGrowthTable(projectId, organisationId, form);
         return redirectToLandingPage(projectId, organisationId);
-    }
-
-    @PostMapping(value = "/auto-save")
-    @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
-    public @ResponseBody JsonNode autosaveWithoutGrowthTable(
-        @PathVariable long projectId,
-        @PathVariable long organisationId,
-        @ModelAttribute YourOrganisationWithoutGrowthTableForm form) {
-
-        updateWithoutGrowthTable(projectId, organisationId, form);
-        return new ObjectMapper().createObjectNode();
     }
 
     @PostMapping(params = {"mark-as-complete"})
