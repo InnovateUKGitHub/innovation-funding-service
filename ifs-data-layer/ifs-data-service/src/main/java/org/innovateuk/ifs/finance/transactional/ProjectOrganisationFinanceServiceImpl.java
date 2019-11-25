@@ -44,7 +44,7 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
 
     @Override
     protected ServiceResult<Void> updateFinance(ProjectFinanceResource finance) {
-        return projectFinanceService.updateProjectFinance(finance.getId(), finance);
+        return projectFinanceService.updateProjectFinance(finance);
     }
 
     @Override

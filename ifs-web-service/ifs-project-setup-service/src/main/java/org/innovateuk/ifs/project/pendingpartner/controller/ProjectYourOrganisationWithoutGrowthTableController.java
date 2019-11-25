@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static java.lang.String.format;
+
+
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import javax.validation.Valid;
@@ -28,11 +29,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/project/{projectId}/organisation/{organisationId}/your-organisation/without" +
-    "-growth-table")
+@RequestMapping("/project/{projectId}/organisation/{organisationId}/your-organisation/without-growth-table")
 public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     /**
      * The Controller for the "Your organisation" page in the project setup process
@@ -83,18 +82,6 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
 
         updateYourOrganisationWithoutGrowthTable(projectId, organisationId, form);
         return redirectToLandingPage(projectId, organisationId);
-    }
-
-    @PostMapping(value = "/auto-save")
-    @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
-    public @ResponseBody JsonNode autosaveWithoutGrowthTable(
-        @PathVariable long projectId,
-        @PathVariable long organisationId,
-        @ModelAttribute YourOrganisationWithoutGrowthTableForm form) {
-
-        updateWithoutGrowthTable(projectId, organisationId, form);
-        return new ObjectMapper().createObjectNode();
     }
 
     @PostMapping(params = {"mark-as-complete"})
@@ -155,13 +142,13 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
     }
 
     private String redirectToViewPage(long projectId, long organisationId) {
-        return String.format("redirect:/project/%d/organisation/%d/your-organisation/without-growth-table",
+        return format("redirect:/project/%d/organisation/%d/your-organisation/without-growth-table",
             projectId,
             organisationId);
     }
 
     private String redirectToLandingPage(long projectId, long organisationId) {
-        return String.format("redirect:/project/%d/organisation/%d/pending-partner-progress",
+        return format("redirect:/project/%d/organisation/%d/pending-partner-progress",
             projectId,
             organisationId);
     }

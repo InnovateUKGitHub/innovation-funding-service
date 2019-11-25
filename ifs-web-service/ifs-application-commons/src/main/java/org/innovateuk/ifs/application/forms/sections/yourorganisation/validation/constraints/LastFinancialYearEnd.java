@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.commons.validation.constraints;
+package org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -11,7 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import org.innovateuk.ifs.commons.validation.LastFinancialYearEndValidator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.predicate.LastFinancialYearEndValidator;
 
 /**
  * Validation annotation to assert that entry is a valid end of last financial year.

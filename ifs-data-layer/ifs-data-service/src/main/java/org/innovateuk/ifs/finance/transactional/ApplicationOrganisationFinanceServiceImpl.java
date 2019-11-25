@@ -33,11 +33,6 @@ public class ApplicationOrganisationFinanceServiceImpl extends AbstractOrganisat
     @Autowired
     private SectionStatusService sectionStatusService;
 
-    static final String ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION = "Annual turnover";
-    static final String ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION = "Annual profits";
-    static final String ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION = "Annual export";
-    static final String RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION = "Research and development spend";
-
     @Override
     protected ServiceResult<ApplicationFinanceResource> getFinance(long applicationId, long organisationId) {
         return financeService.financeDetails(applicationId, organisationId);

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.pendingpartner.controller;
 
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -36,7 +37,7 @@ public class ProjectYourOrganisationController {
 
         boolean includeGrowthTable = isIncludingGrowthTable(project.getCompetition());
 
-        return String.format("redirect:/project/%d/organisation/%d/your-organisation/%s",
+        return format("redirect:/project/%d/organisation/%d/your-organisation/%s",
                         projectId,
                         organisationId,
                         includeGrowthTable ? "with-growth-table" : "without-growth-table");

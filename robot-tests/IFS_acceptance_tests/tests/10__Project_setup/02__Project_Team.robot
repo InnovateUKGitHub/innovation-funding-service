@@ -56,6 +56,7 @@ ${removeInviteEmail}         remove@test.nom
 ${internalViewTeamPage}      ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
 ${internalInviteeEmail}      internal@invitee.com
 ${ifsAdminAddOrgEmail}       admin@addorg.com
+${ifsPendingAddOrgEmail}     pending@pending.com
 ${intFinanceAddOrgEmail}     finance@addorg.com
 ${applicationName}           PSC application 7
 ${orgInviterName}            Ward Ltd
@@ -214,6 +215,13 @@ Ifs Admin is able to remove a partner organisation
     Then the user reads his email                          troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed SmithZone from this project.
     And the internal user checks for status after new org added/removed
 
+Ifs Admin is able to remove a pending partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    [Setup]  log in as a different user                                    &{ifs_admin_user_credentials}
+    Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
+    Then the user is able to remove a pending partner organisation         Testing Pending Organisation
+
 New org enter project setup details and lead resubmit the documents
     [Documentation]  IFS-6502
     Given applicant submits the project setup details
@@ -231,25 +239,40 @@ Project finance is able to add a new partner organisation
     And the internal user checks for status after new org added/removed
 
 The new partner cannot complete funding without organisation
+    [Documentation]  IFS-6491
     Given log in as a different user                              ${intFinanceAddOrgEmail}  ${short_password}
     And the user clicks the button/link                          link = ${applicationName}
     When the user clicks the button/link     link = Your funding
     Then the user should see the element     link = your organisation
 
 The new partner can complete Your organisation
+    [Documentation]  IFS-6491
     Given the user clicks the button/link    link = your organisation
     When the user completes your organisation
-    Then the user should see the element    jQuery = li div:contains("Your organisation") ~ .task-status-complete
+    Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
 
 The new partner completes your funding
+    [Documentation]  IFS-6491
     Given The user clicks the button/link   link = Your funding
     When the user completes your funding
-    Then the user should see the element   jQuery = li div:contains("Your funding") ~ .task-status-complete
+    Then the user should see the element    jQuery = li div:contains("Your funding") ~ .task-status-complete
+
+Project finance is able to remove a pending partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    [Setup]  log in as a different user                                    &{internal_finance_credentials}
+    Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
+    Then the user is able to remove a pending partner organisation         Testing Pending Organisation
 
 The new organisation partner accept terms and conditions
     [Documentation]  IFS-6492
-    When the user accept the competition terms and conditions      Return to join project
-    And the user should see the element                            jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
+    Given the user accept the competition terms and conditions      Return to join project
+    Then the user should see the element                            jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
+
+Editing org size resets your funding
+    Given the user clicks the button/link      link = Your organisation
+    When the user edits the org size
+    Then the user should not see the element   jQuery = li div:contains("Your funding") ~ .task-status-complete
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
@@ -267,6 +290,24 @@ The internal users checks for activity logs after partner added/removed
     And internal user should see entries in activity log after partner org added/removed
 
 *** Keywords ***
+the user is able to remove a pending partner organisation
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
+    the user should not see the element         jQuery = h2:contains(${orgName})
+
+a new organisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
+    logout as user
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
+    the user fills in account details                             ${fname}  ${sname}
+    the user clicks the button/link                               jQuery = button:contains("Create account")
+    the user verifies their account                               ${email}
+    a new organisation logs in and sees the project               ${email}
+    the user should see the element                               jQuery = ul:contains("PSC application 7") .status:contains("Ready to join project")
+    the user clicks the button/link                               link = PSC application 7
+    the user should see the element                               jQuery = h1:contains("Join project")
+
 A new organisation logs in and sees the project
     [Arguments]  ${email}
     the user clicks the button/link   link = Sign in
@@ -588,6 +629,12 @@ the user completes your funding
     the user enters text to a text field       css = [name^="grantClaimPercentage"]  35
     the user selects the radio button          otherFunding   false
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
+
+the user edits the org size
+    the user clicks the button/link                         id = mark_as_incomplete
+    the user selects the radio button                       organisationSize  SMALL
+    the user selects the checkbox                           stateAidAgreed
+    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 Custom suite setup
     The guest user opens the browser

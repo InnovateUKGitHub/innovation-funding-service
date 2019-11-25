@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.commons.validation;
+package org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.predicate;
 
 import static java.util.Objects.isNull;
 
@@ -6,7 +6,7 @@ import static java.util.Objects.isNull;
 import java.time.YearMonth;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import org.innovateuk.ifs.commons.validation.constraints.LastFinancialYearEnd;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints.LastFinancialYearEnd;
 
 public class LastFinancialYearEndValidator implements ConstraintValidator<LastFinancialYearEnd, YearMonth> {
 
@@ -23,6 +23,7 @@ public class LastFinancialYearEndValidator implements ConstraintValidator<LastFi
 
     @Override
     public boolean isValid(YearMonth value, ConstraintValidatorContext context) {
+        context.disableDefaultConstraintViolation();
         if(isNull(value)) {
             context.buildConstraintViolationWithTemplate(messageNotNull).addConstraintViolation();
             return false;
