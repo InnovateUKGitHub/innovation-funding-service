@@ -70,8 +70,6 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setAddress(address));
     }
 
-
-
     public ProjectResourceBuilder withSignedGrantOfferLetter(Long grantOfferLetter) {
         return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
     }
