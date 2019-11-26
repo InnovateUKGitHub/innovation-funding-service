@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.CostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
@@ -44,13 +44,13 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     private ProjectService projectService;
 
     @Autowired
-    private ProjectFinanceRowService financeRowService;
-
-    @Autowired
     private CostCategoryTypeRepository costCategoryTypeRepository;
 
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
 
     public final static String DESCRIPTION_PREFIX = "Cost Category Type for Categories ";
 
@@ -114,7 +114,7 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     }
 
     private Supplier<ServiceResult<ProjectFinanceResource>> projectFinanceResource(Long projectId, Long organisationId) {
-        return () -> financeRowService.financeChecksDetails(projectId, organisationId);
+        return () -> projectFinanceService.financeChecksDetails(projectId, organisationId);
     }
 
     /**

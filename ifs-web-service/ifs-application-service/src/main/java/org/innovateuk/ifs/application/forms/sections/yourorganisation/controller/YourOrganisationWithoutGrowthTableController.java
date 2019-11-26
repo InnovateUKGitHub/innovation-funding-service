@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
@@ -87,8 +87,10 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));
 
-        Future<YourOrganisationWithoutGrowthTableForm> formRequest = async(() ->
-                withoutGrowthTableFormPopulator.populate(applicationId, organisationId));
+        Future<YourOrganisationWithoutGrowthTableForm> formRequest = async(() -> {
+            OrganisationFinancesWithoutGrowthTableResource finances = yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(applicationId, organisationId).getSuccess();
+            return withoutGrowthTableFormPopulator.populate(finances);
+        });
 
         model.addAttribute("commonFinancesModel", commonViewModelRequest);
         model.addAttribute("model", viewModelRequest);
