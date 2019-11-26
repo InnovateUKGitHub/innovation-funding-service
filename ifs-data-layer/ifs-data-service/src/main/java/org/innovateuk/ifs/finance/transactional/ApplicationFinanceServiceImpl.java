@@ -20,15 +20,12 @@ import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
 import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
-import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
-import org.innovateuk.ifs.finance.resource.GrowthTableResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +47,7 @@ import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABO
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class ApplicationFinanceServiceImpl extends BaseTransactionalService implements ApplicationFinanceService {
+public class ApplicationFinanceServiceImpl extends AbstractFinanceService<ApplicationFinance, ApplicationFinanceResource> implements ApplicationFinanceService {
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
@@ -172,16 +169,9 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
     public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
         return getOpenApplication(applicationFinance.getApplication()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
-                    if (applicationFinance.getOrganisationSize() != null) {
-                        dbFinance.setOrganisationSize(applicationFinance.getOrganisationSize());
-                    }
+                    updateFinanceDetails(dbFinance, applicationFinance);
                     if (applicationFinance.getWorkPostcode() != null) {
                         dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
-                    }
-                    if (TRUE.equals(dbFinance.getApplication().getCompetition().getIncludeProjectGrowthTable())) {
-                        updateGrowthTable(applicationFinance, dbFinance);
-                    } else {
-                        updateEmployeesAndTurnover(applicationFinance, dbFinance);
                     }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
@@ -189,24 +179,6 @@ public class ApplicationFinanceServiceImpl extends BaseTransactionalService impl
                     return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
                 })
         );
-    }
-
-    private void updateEmployeesAndTurnover(ApplicationFinanceResource applicationFinance, ApplicationFinance dbFinance) {
-        EmployeesAndTurnover employeesAndTurnover = dbFinance.getEmployeesAndTurnover();
-        EmployeesAndTurnoverResource employeesAndTurnoverResource = (EmployeesAndTurnoverResource) applicationFinance.getFinancialYearAccounts();
-        employeesAndTurnover.setTurnover(employeesAndTurnoverResource.getTurnover());
-        employeesAndTurnover.setEmployees(employeesAndTurnoverResource.getEmployees());
-    }
-
-    private void updateGrowthTable(ApplicationFinanceResource applicationFinance, ApplicationFinance dbFinance) {
-        GrowthTable growthTable = dbFinance.getGrowthTable();
-        GrowthTableResource growthTableResource = (GrowthTableResource) applicationFinance.getFinancialYearAccounts();
-        growthTable.setAnnualExport(growthTableResource.getAnnualExport());
-        growthTable.setAnnualProfits(growthTableResource.getAnnualProfits());
-        growthTable.setAnnualTurnover(growthTableResource.getAnnualTurnover());
-        growthTable.setResearchAndDevelopment(growthTableResource.getResearchAndDevelopment());
-        growthTable.setFinancialYearEnd(growthTableResource.getFinancialYearEnd());
-        growthTable.setEmployees(growthTableResource.getEmployees());
     }
 
     /**
