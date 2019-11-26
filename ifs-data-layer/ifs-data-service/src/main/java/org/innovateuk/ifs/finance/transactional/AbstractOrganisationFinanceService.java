@@ -43,7 +43,7 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     protected abstract ServiceResult<FinanceRowItem> saveGrantClaim(GrantClaim grantClaim);
     protected abstract ServiceResult<CompetitionResource> getCompetitionFromTargetId(long targetId);
     protected abstract void resetYourFundingSection(Finance finance, long competitionId, long userId);
-    protected abstract ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed);
+    protected abstract ServiceResult<Void> updateStateAidAgreed(long targetId);
 
     @Override
     public ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationWithGrowthTable(long targetId, long organisationId) {
@@ -117,8 +117,8 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
 
         updateFinance(finance).getSuccess();
 
-        if (stateAidIncluded) {
-            updateStateAidAgreed(targetId, finances.getStateAidAgreed()).getSuccess();
+        if (stateAidIncluded && finances.getStateAidAgreed()) {
+            updateStateAidAgreed(targetId).getSuccess();
         }
 
         return serviceSuccess();
@@ -139,8 +139,8 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
 
         updateFinance(finance).getSuccess();
 
-        if (stateAidIncluded) {
-            updateStateAidAgreed(targetId, finances.getStateAidAgreed()).getSuccess();
+        if (stateAidIncluded && finances.getStateAidAgreed()) {
+            updateStateAidAgreed(targetId).getSuccess();
         }
 
         return serviceSuccess();

@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-
-
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -71,16 +68,12 @@ public class ApplicationOrganisationFinanceServiceImpl extends AbstractOrganisat
     }
 
     @Override
-    protected ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed) {
-        if (stateAidAgreed) {
-            return applicationService.getApplicationById(targetId).
-                andOnSuccess(application -> {
-                    application.setStateAidAgreed(stateAidAgreed);
-                    return applicationService.saveApplicationDetails(targetId, application);
-                }).
-                andOnSuccessReturnVoid();
-        }
-        return serviceSuccess();
-
+    protected ServiceResult<Void> updateStateAidAgreed(long targetId) {
+        return applicationService.getApplicationById(targetId).
+            andOnSuccess(application -> {
+                application.setStateAidAgreed(true);
+                return applicationService.saveApplicationDetails(targetId, application);
+            }).
+            andOnSuccessReturnVoid();
     }
 }

@@ -12,6 +12,7 @@ public interface ProjectYourOrganisationRestService {
     ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationFinancesWithGrowthTable(
             long projectId,
             long organisationId);
+
     ServiceResult<OrganisationFinancesWithoutGrowthTableResource> getOrganisationFinancesWithoutGrowthTable(
             long projectId,
             long organisationId);
