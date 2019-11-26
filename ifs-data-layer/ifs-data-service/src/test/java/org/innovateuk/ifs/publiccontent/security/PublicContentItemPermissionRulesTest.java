@@ -23,13 +23,13 @@ public class PublicContentItemPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testCanViewAllPublishedContent() {
+    public void canViewAllPublishedContent() {
         when(contentRepository.findByCompetitionId(1L)).thenReturn(newPublicContent().withPublishDate(ZonedDateTime.now()).build());
         assertTrue(rules.allUsersCanViewPublishedContent(CompetitionCompositeId.id(1L), allGlobalRoleUsers.get(0)));
     }
 
     @Test
-    public void testCannotViewUnpublishedContent() {
+    public void cannotViewUnpublishedContent() {
         when(contentRepository.findByCompetitionId(1L)).thenReturn(newPublicContent().build());
         assertFalse(rules.allUsersCanViewPublishedContent(CompetitionCompositeId.id(1L), allGlobalRoleUsers.get(0)));
     }

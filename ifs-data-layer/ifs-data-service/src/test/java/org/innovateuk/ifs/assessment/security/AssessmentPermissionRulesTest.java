@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -14,7 +13,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -41,11 +39,8 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     private UserResource otherUser;
     private Map<AssessmentState, AssessmentResource> assessments;
 
-    @Autowired
-    public AssessmentMapper assessmentMapper;
-
     @Mock
-    private AssessmentRepository assessmentRepositoryMock;
+    private AssessmentRepository assessmentRepository;
 
     @Mock
     private ReviewRepository reviewRepository;
@@ -63,7 +58,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         ProcessRole processRole = newProcessRole()
                 .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
-        when(processRoleRepositoryMock.findById(processRole.getId())).thenReturn(Optional.of(processRole));
+        when(processRoleRepository.findById(processRole.getId())).thenReturn(Optional.of(processRole));
 
         assessments = EnumSet.allOf(AssessmentState.class).stream().collect(toMap(identity(), state -> setupAssessment(processRole, state)));
     }
@@ -154,10 +149,11 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     @Test
     public void otherUsersCanNotReadPendingAssessmentsToRespond() {
         EnumSet.allOf(AssessmentState.class).forEach(state ->
-            assertFalse("other users should not be able to read assessments in order to respond to invitations",
-                    rules.userCanReadToAssign(assessments.get(state), otherUser)));
+                assertFalse("other users should not be able to read assessments in order to respond to invitations",
+                        rules.userCanReadToAssign(assessments.get(state), otherUser)));
     }
- @Test
+
+    @Test
     public void ownersCanReadAssessmentsToReject() {
         EnumSet<AssessmentState> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
         allowedStates.forEach(state ->
@@ -174,8 +170,8 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     @Test
     public void otherUsersCanNotReadAssessmentsToReject() {
         EnumSet.allOf(AssessmentState.class).forEach(state ->
-            assertFalse("other users should not be able to read assessments in order to respond to invitations",
-                    rules.userCanReadToReject(assessments.get(state), otherUser)));
+                assertFalse("other users should not be able to read assessments in order to respond to invitations",
+                        rules.userCanReadToReject(assessments.get(state), otherUser)));
     }
 
     @Test
@@ -199,7 +195,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
-    public void ownersCanSubmitAssessments() throws Exception {
+    public void ownersCanSubmitAssessments() {
         AssessmentSubmissionsResource assessmentSubmissionsResource = newAssessmentSubmissionsResource()
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
@@ -213,13 +209,13 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withParticipant(processRole)
                 .build();
 
-        when(assessmentRepositoryMock.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+        when(assessmentRepository.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
 
         assertTrue("the owner of a list of assessments can submit them", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
     }
 
     @Test
-    public void otherUsersCannotPartiallySubmitAssessments() throws Exception {
+    public void otherUsersCannotPartiallySubmitAssessments() {
         AssessmentSubmissionsResource assessmentSubmissionsResource = newAssessmentSubmissionsResource()
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
@@ -238,13 +234,13 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 )
                 .build();
 
-        when(assessmentRepositoryMock.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+        when(assessmentRepository.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
 
         assertFalse("other users cannot partially submit assessments", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
     }
 
     @Test
-    public void otherUsersCannotSubmitAssessments() throws Exception {
+    public void otherUsersCannotSubmitAssessments() {
         AssessmentSubmissionsResource assessmentSubmissionsResource = newAssessmentSubmissionsResource()
                 .withAssessmentIds(asList(1L, 2L))
                 .build();
@@ -263,7 +259,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 )
                 .build();
 
-        when(assessmentRepositoryMock.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+        when(assessmentRepository.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
 
         assertFalse("other users cannot submit assessments", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
     }
@@ -273,7 +269,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withProcessState(state)
                 .build();
 
-        when(assessmentRepositoryMock.findById(assessment.getId())).thenReturn(Optional.of(assessment));
+        when(assessmentRepository.findById(assessment.getId())).thenReturn(Optional.of(assessment));
 
         return newAssessmentResource()
                 .withId(assessment.getId())

@@ -4,13 +4,13 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -19,11 +19,11 @@ public class LegacyMonitoringOfficerPermissionRulesTest extends BasePermissionRu
     private ProjectProcess projectProcess;
 
     @Mock
-    private ProjectProcessRepository projectProcessRepositoryMock;
+    private ProjectProcessRepository projectProcessRepository;
 
     @Before
     public void setUp() throws Exception {
-        projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
+        projectProcess = newProjectProcess().withActivityState(SETUP).build();
     }
 
     @Override
@@ -35,10 +35,10 @@ public class LegacyMonitoringOfficerPermissionRulesTest extends BasePermissionRu
     public void internalUsersCanEditMonitoringOfficersOnProjects() {
 
         ProjectResource project = newProjectResource()
-                .withProjectState(ProjectState.SETUP)
+                .withProjectState(SETUP)
                 .build();
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
             if (allInternalUsers.contains(user)) {

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -15,15 +14,14 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import static java.math.BigDecimal.ZERO;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
@@ -45,7 +43,6 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
 
     private ApplicationFinanceRow cost;
     private FinanceRowItem costItem;
-    private FinanceRow otherCost;
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource compAdmin;
@@ -66,14 +63,14 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
 
         // Create a compAdmin
         compAdmin = compAdminUser();
         {
             // Set up users on an organisation and application
-            final Long applicationId = 1L;
-            final Long organisationId = 2L;
+            final long applicationId = 1L;
+            final long organisationId = 2L;
             final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
             final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
@@ -83,49 +80,47 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
             when(applicationFinanceRowRepositoryMock.findById(cost.getId())).thenReturn(Optional.of(cost));
-            when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
-            when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).thenReturn(newProcessRole().build());
         }
 
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
-            final long otherApplicationId = 3l;
-            final long otherOrganisationId = 4l;
-            final Organisation otherOrganisation = newOrganisation().with(id(otherOrganisationId)).build();
-            final Application otherApplication = newApplication().with(id(otherApplicationId)).build();
-            final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisation(otherOrganisation).withApplication(otherApplication).build();
-            otherCost = newApplicationFinanceRow().withOwningFinance(otherApplicationFinance).build();
+            final long otherApplicationId = 3L;
+            final long otherOrganisationId = 4L;
             otherLeadApplicant = newUserResource().build();
-            when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(),  Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
         }
 
         // Create project with users for testing getting of partner funding status
         {
-            final Long projectId = 1L;
+            final long projectId = 1L;
             final Long userId = 1L;
 
             project = newProjectResource().withId(projectId).build();
             projectUserResource = newUserResource().withId(userId).build();
 
-            when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER)).thenReturn(Collections.singletonList(newProjectUser().withId(userId).build()));
+            when(projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER))
+                    .thenReturn(singletonList(newProjectUser().withId(userId).build()));
         }
 
-        // Create differnet users with different project
+        // Create different users with different project
         {
-            final Long otherProjectProjectId = 2L;
+            final long otherProjectProjectId = 2L;
             final Long otherProjectUserId = 2L;
 
             otherProject = newProjectResource().withId(otherProjectProjectId).build();
             otherProjectUserResource = newUserResource().withId(otherProjectUserId).build();
 
-            when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(otherProjectProjectId, otherProjectUserId, PROJECT_PARTNER)).thenReturn(Collections.singletonList(newProjectUser().withId(otherProjectUserId).build()));
+            when(projectUserRepository.findByProjectIdAndUserIdAndRole(otherProjectProjectId, otherProjectUserId, PROJECT_PARTNER))
+                    .thenReturn(singletonList(newProjectUser().withId(otherProjectUserId).build()));
         }
 
         projectFinance = projectFinanceUser();
     }
 
     @Test
-    public void testConsortiumCanDeleteACostForTheirApplicationAndOrganis4ation() {
+    public void consortiumCanDeleteACostForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanDeleteACostForTheirApplicationAndOrganisation(cost, leadApplicant));
         assertTrue(rules.consortiumCanDeleteACostForTheirApplicationAndOrganisation(cost, collaborator));
 
@@ -134,7 +129,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     }
 
     @Test
-    public void testConsortiumCanUpdateACostForTheirApplicationAndOrganisation() {
+    public void consortiumCanUpdateACostForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanUpdateACostForTheirApplicationAndOrganisation(cost, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostForTheirApplicationAndOrganisation(cost, collaborator));
 
@@ -143,7 +138,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     }
 
     @Test
-    public void testConsortiumCanReadACostForTheirApplicationAndOrganisation() {
+    public void consortiumCanReadACostForTheirApplicationAndOrganisation() {
         assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(cost, leadApplicant));
         assertTrue(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(cost, collaborator));
 
@@ -154,20 +149,20 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     @Test
     public void monitoringOfficerCanReadACostForTheirApplicationAndOrganisation() {
         Project project = newProject().withId(1L).build();
-        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
-        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.hasRole(MONITORING_OFFICER)) {
                 assertTrue(rules.monitoringOfficerCanReadACostForTheApplication(cost, monitoringOfficerUser()));
             } else {
-                Assert.assertFalse(rules.monitoringOfficerCanReadACostForTheApplication(cost, user));
+                assertFalse(rules.monitoringOfficerCanReadACostForTheApplication(cost, user));
             }
         });
     }
 
     @Test
-    public void testConsortiumCanReadACostForTheirApplicationAndOrganisation2() {
+    public void consortiumCanReadACostForTheirApplicationAndOrganisation2() {
         assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, leadApplicant));
         assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, collaborator));
 
@@ -176,7 +171,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     }
 
     @Test
-    public void testProjectPartnersCanCheckFundingStatusOfTeam(){
+    public void projectPartnersCanCheckFundingStatusOfTeam() {
         assertFalse(rules.projectPartnersCanCheckFundingStatusOfTeam(project, compAdmin));
         assertFalse(rules.projectPartnersCanCheckFundingStatusOfTeam(project, otherProjectUserResource));
         assertFalse(rules.projectPartnersCanCheckFundingStatusOfTeam(otherProject, projectUserResource));
@@ -185,7 +180,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     }
 
     @Test
-    public void testInternalUsersCanCheckFundingStatusOfTeam(){
+    public void internalUsersCanCheckFundingStatusOfTeam() {
         assertTrue(rules.internalUsersCanCheckFundingStatusOfTeam(project, compAdmin));
         assertTrue(rules.internalUsersCanCheckFundingStatusOfTeam(project, projectFinance));
     }

@@ -48,13 +48,13 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     private ProjectProcess projectProcess;
 
     @Mock
-    private ApplicationRepository applicationRepositoryMock;
+    private ApplicationRepository applicationRepository;
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
 
     @Mock
-    private ProjectProcessRepository projectProcessRepositoryMock;
+    private ProjectProcessRepository projectProcessRepository;
 
     @Before
     public void setup() {
@@ -72,13 +72,13 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         projectResource1 = newProjectResource().withApplication(applicationResource1).build();
         projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
-        when(applicationRepositoryMock.findById(application1.getId())).thenReturn(Optional.of(application1));
+        when(applicationRepository.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
 
     @Test
-    public void testLeadPartnersCanCreateSignedGrantOfferLetter() {
+    public void leadPartnersCanCreateSignedGrantOfferLetter() {
         UserResource user = newUserResource().build();
 
         ProjectResource project = newProjectResource()
@@ -87,12 +87,12 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setupUserAsLeadPartner(project, user);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.leadPartnerCanUploadGrantOfferLetter(project, user));
     }
 
     @Test
-    public void testNonLeadPartnersCannotCreateSignedGrantOfferLetter() {
+    public void nonLeadPartnersCannotCreateSignedGrantOfferLetter() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -103,7 +103,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testProjectManagerCanCreateSignedGrantOfferLetter() {
+    public void projectManagerCanCreateSignedGrantOfferLetter() {
         UserResource user = newUserResource().build();
 
         ProjectResource project = newProjectResource()
@@ -112,12 +112,12 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserAsProjectManager(project, user);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.projectManagerCanUploadGrantOfferLetter(project, user));
     }
 
     @Test
-    public void testNonProjectManagerCannotCreateSignedGrantOfferLetter() {
+    public void nonProjectManagerCannotCreateSignedGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
@@ -127,9 +127,8 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
     }
 
-
     @Test
-    public void testPartnersCanViewGrantOfferLetterDetails() {
+    public void partnersCanViewGrantOfferLetterDetails() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -140,7 +139,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testNonPartnersCannotViewGrantOfferLetterDetails() {
+    public void nonPartnersCannotViewGrantOfferLetterDetails() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -151,7 +150,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testPartnersCanDownloadGrantOfferLetterDocuments() {
+    public void partnersCanDownloadGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -162,7 +161,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testNonPartnersCannotDownloadGrantOfferLetterDocuments() {
+    public void nonPartnersCannotDownloadGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -173,7 +172,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testCompAdminsCanDownloadGrantOfferLetterDocuments() {
+    public void compAdminsCanDownloadGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -184,7 +183,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testNonCompAdminsCannotDownloadGrantOfferLetterDocuments() {
+    public void nonCompAdminsCannotDownloadGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -195,7 +194,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testCompAdminsCanViewGrantOfferLetterDocuments() {
+    public void compAdminsCanViewGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -206,7 +205,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testNonCompAdminsCannotViewGrantOfferLetterDocuments() {
+    public void nonCompAdminsCannotViewGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -217,7 +216,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testProjectFinanceCanDownloadGrantOfferLetterDocuments() {
+    public void projectFinanceCanDownloadGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -228,7 +227,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testNonProjectFinanceCannotDownloadGrantOfferLetterDocuments() {
+    public void nonProjectFinanceCannotDownloadGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -239,7 +238,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testProjectFinanceCanViewGrantOfferLetterDocuments() {
+    public void projectFinanceCanViewGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -250,7 +249,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testNonProjectFinanceCannotViewGrantOfferLetterDocuments() {
+    public void nonProjectFinanceCannotViewGrantOfferLetterDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -261,7 +260,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testProjectManagerCanSubmitOfferLetter() {
+    public void projectManagerCanSubmitOfferLetter() {
         UserResource user = newUserResource().build();
 
         ProjectResource project = newProjectResource()
@@ -270,12 +269,12 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserAsProjectManager(project, user);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.projectManagerSubmitGrantOfferLetter(ProjectCompositeId.id(project.getId()), user));
     }
 
     @Test
-    public void testNonProjectManagerCannotSubmitOfferLetter() {
+    public void nonProjectManagerCannotSubmitOfferLetter() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
@@ -285,7 +284,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testCompAdminsCanApproveSignedGrantOfferLetters() {
+    public void compAdminsCanApproveSignedGrantOfferLetters() {
         UserResource user = newUserResource().build();
 
         ProjectResource project = newProjectResource()
@@ -294,12 +293,12 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserAsCompAdmin(project, user);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.internalUsersCanApproveOrRejectSignedGrantOfferLetter(project, user));
     }
 
     @Test
-    public void testNonCompAdminsCannotApproveSignedGrantOfferLetters() {
+    public void nonCompAdminsCannotApproveSignedGrantOfferLetters() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
@@ -309,7 +308,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testLeadPartnerCanDeleteSignedGrantOfferLetter() {
+    public void leadPartnerCanDeleteSignedGrantOfferLetter() {
         UserResource user = newUserResource().build();
 
         ProjectResource project = newProjectResource()
@@ -318,12 +317,12 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setupUserAsLeadPartner(project, user);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.leadPartnerCanDeleteSignedGrantOfferLetter(project, user));
     }
 
     @Test
-    public void testNonLeadPartnerCanDeleteSignedGrantOfferLetter() {
+    public void nonLeadPartnerCanDeleteSignedGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
@@ -334,27 +333,27 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testProjectFinanceUserCanSendGrantOfferLetter() {
+    public void projectFinanceUserCanSendGrantOfferLetter() {
         ProjectResource project = newProjectResource()
                 .withProjectState(ProjectState.SETUP)
                 .build();
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.internalUserCanSendGrantOfferLetter(project, projectFinanceUser()));
     }
 
     @Test
-    public void testCompAdminsUserCanSendGrantOfferLetter() {
+    public void compAdminsUserCanSendGrantOfferLetter() {
         ProjectResource project = newProjectResource()
                 .withProjectState(ProjectState.SETUP)
                 .build();
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.internalUserCanSendGrantOfferLetter(project, compAdminUser()));
     }
 
     @Test
-    public void testPartnerUserCannotSendGrantOfferLetter() {
+    public void partnerUserCannotSendGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
@@ -362,7 +361,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testInternalUserCanViewSendGrantOfferLetterStatus() {
+    public void internalUserCanViewSendGrantOfferLetterStatus() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -376,7 +375,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testPartnersCanViewSendGrantOfferLetterStatus() {
+    public void partnersCanViewSendGrantOfferLetterStatus() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -387,7 +386,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testNonPartnersCannotViewSendGrantOfferLetterStatus() {
+    public void nonPartnersCannotViewSendGrantOfferLetterStatus() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -401,7 +400,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testSupportUserCanViewSendGrantOfferLetterStatus() {
+    public void supportUserCanViewSendGrantOfferLetterStatus() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -423,7 +422,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testSupportUsersCanDownloadGrantOfferLetter() {
+    public void supportUsersCanDownloadGrantOfferLetter() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -437,7 +436,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testOnlyInnovationLeadUsersAssignedToCompetitionCanDownloadGrantOfferLetter() {
+    public void onlyInnovationLeadUsersAssignedToCompetitionCanDownloadGrantOfferLetter() {
         assertTrue(rules.innovationLeadUsersCanDownloadGrantOfferLetter(projectResource1, innovationLeadUserResourceOnProject1));
         assertFalse(rules.innovationLeadUsersCanDownloadGrantOfferLetter(projectResource1, innovationLeadUser()));
     }
@@ -451,7 +450,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testOnlyInnovationLeadUsersAssignedToCompetitionCanViewGrantOfferLetter() {
+    public void onlyInnovationLeadUsersAssignedToCompetitionCanViewGrantOfferLetter() {
         assertTrue(rules.innovationLeadUsersCanViewGrantOfferLetter(projectResource1, innovationLeadUserResourceOnProject1));
         assertFalse(rules.innovationLeadUsersCanViewGrantOfferLetter(projectResource1, innovationLeadUser()));
     }
@@ -466,18 +465,18 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
     @Test
     public void monitoringOfficersCanViewGrantOfferLetterOnTheirProjects() {
-        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(projectResource1.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectResource1.getId(), monitoringOfficerUser().getId())).thenReturn(true);
         assertTrue(rules.monitoringOfficerCanViewGrantOfferLetter(projectResource1, monitoringOfficerUser()));
     }
 
     @Test
     public void monitoringOfficersCanViewSendGrantOfferLetterOnTheirProjects() {
-        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(projectResource1.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectResource1.getId(), monitoringOfficerUser().getId())).thenReturn(true);
         assertTrue(rules.monitoringOfficerCanViewSendGrantOfferLetterStatus(projectResource1, monitoringOfficerUser()));
     }
 
     @Test
-    public void testSupportUsersCanViewGrantOfferLetter() {
+    public void supportUsersCanViewGrantOfferLetter() {
 
         ProjectResource project = newProjectResource().build();
 

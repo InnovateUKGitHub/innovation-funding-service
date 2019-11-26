@@ -15,7 +15,6 @@ import static org.junit.Assert.assertTrue;
 
 public class AssessorPermissionRulesTest extends BasePermissionRulesTest<AssessorPermissionRules> {
 
-    private long assessorId;
     private UserResource assessorUser;
     private UserResource otherUser;
     private UserResource compAdmin;
@@ -28,7 +27,7 @@ public class AssessorPermissionRulesTest extends BasePermissionRulesTest<Assesso
 
     @Before
     public void setup() {
-        assessorId = 1L;
+        long assessorId = 1L;
         assessorUser = newUserResource()
                 .withId(assessorId)
                 .build();
@@ -60,5 +59,4 @@ public class AssessorPermissionRulesTest extends BasePermissionRulesTest<Assesso
         assertTrue(rules.compAdminCanReadAssessorProfile(assessorProfileResource, compAdmin));
         assertFalse(rules.assessorCanReadTheirOwnProfile(assessorProfileResource, compAdmin));
     }
-
 }

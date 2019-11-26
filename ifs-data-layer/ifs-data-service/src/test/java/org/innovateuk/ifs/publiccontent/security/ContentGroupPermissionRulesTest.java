@@ -27,7 +27,7 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
     }
 
     @Test
-    public void testInternalUsersCanViewAllContentGroupFiles(){
+    public void internalUsersCanViewAllContentGroupFiles() {
         allGlobalRoleUsers.forEach(user -> {
             if (allInternalUsers.contains(user)) {
                 assertTrue(rules.internalUsersCanViewAllContentGroupFiles(ContentGroupCompositeId.id(1L), user));
@@ -38,7 +38,7 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
     }
 
     @Test
-    public void testExternalUsersCanViewPublishedContentGroupFiles(){
+    public void externalUsersCanViewPublishedContentGroupFiles() {
         ContentGroupCompositeId unpublishedContentGroupId = ContentGroupCompositeId.id(1L);
         when(contentGroupRepository.findById(unpublishedContentGroupId.id())).thenReturn(
                 Optional.of(newContentGroup().withContentSection(newContentSection()
@@ -52,8 +52,5 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
 
         assertFalse(rules.externalUsersCanViewPublishedContentGroupFiles(unpublishedContentGroupId, systemRegistrationUser()));
         assertTrue(rules.externalUsersCanViewPublishedContentGroupFiles(publishedContentGroupId, systemRegistrationUser()));
-
-
-
     }
 }

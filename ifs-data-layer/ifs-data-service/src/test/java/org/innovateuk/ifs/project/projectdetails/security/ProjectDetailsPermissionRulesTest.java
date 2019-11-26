@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +27,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -37,7 +37,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
     private ProjectResource project;
 
     @Mock
-    private ProjectProcessRepository projectProcessRepositoryMock;
+    private ProjectProcessRepository projectProcessRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -51,17 +51,17 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testLeadPartnersCanUpdateTheBasicProjectDetails() {
+    public void leadPartnersCanUpdateTheBasicProjectDetails() {
         UserResource user = newUserResource().build();
 
         setupUserAsLeadPartner(project, user);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
     }
 
     @Test
-    public void testLeadPartnersCanUpdateTheBasicProjectDetailsButUserNotLeadPartner() {
+    public void leadPartnersCanUpdateTheBasicProjectDetailsButUserNotLeadPartner() {
 
         Application originalApplication = newApplication().build();
         Project projectEntity = newProject().withApplication(originalApplication).build();
@@ -70,63 +70,63 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
-        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(projectEntity));
-        when(processRoleRepositoryMock.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(),  Role.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(projectEntity));
+        when(processRoleRepository.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(), LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
-        when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
+        when(organisationRepository.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(null);
 
         assertFalse(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
     }
 
     @Test
-    public void testPartnersCanUpdateTheirOwnOrganisationsFinanceContacts() {
+    public void partnersCanUpdateTheirOwnOrganisationsFinanceContacts() {
         Organisation organisation = newOrganisation().build();
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
 
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(new ProjectUser());
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(new ProjectUser());
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         assertTrue(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
     }
 
     @Test
-    public void testPartnersCanUpdateTheirOwnOrganisationsFinanceContactsButUserNotPartner() {
+    public void partnersCanUpdateTheirOwnOrganisationsFinanceContactsButUserNotPartner() {
         Organisation organisation = newOrganisation().build();
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
         UserResource user = newUserResource().build();
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
     }
 
     @Test
-    public void testPartnersCanUpdateTheirOwnOrganisationsFinanceContactsButUserNotMemberOfOrganisation() {
+    public void partnersCanUpdateTheirOwnOrganisationsFinanceContactsButUserNotMemberOfOrganisation() {
         Organisation organisation = newOrganisation().build();
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
 
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(null);
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(null);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
     }
 
     @Test
-    public void testPartnersCanUpdateProjectLocationForTheirOwnOrganisationWhenUserDoesNotBelongToGivenOrganisation() {
+    public void partnersCanUpdateProjectLocationForTheirOwnOrganisationWhenUserDoesNotBelongToGivenOrganisation() {
 
-        Long projectId = 1L;
-        Long organisationId = 2L;
+        long projectId = 1L;
+        long organisationId = 2L;
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         UserResource user = newUserResource().build();
 
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
 
         assertFalse(rules.partnersCanUpdateProjectLocationForTheirOwnOrganisation(composite, user));
     }
@@ -134,12 +134,12 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void testPartnersCanUpdateProjectLocationForTheirOwnOrganisationSuccess() {
 
-        Long projectId = 1L;
-        Long organisationId = 2L;
+        long projectId = 1L;
+        long organisationId = 2L;
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         UserResource user = newUserResource().build();
 
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(new ProjectUser());
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(new ProjectUser());
 
         assertTrue(rules.partnersCanUpdateProjectLocationForTheirOwnOrganisation(composite, user));
     }

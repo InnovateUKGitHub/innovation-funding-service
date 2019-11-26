@@ -46,10 +46,9 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     private UserResource innovationLeadUserResourceOnProject1;
     private UserResource stakeholderUserResourceOnCompetition;
     private Competition competition;
-    private Stakeholder stakeholder;
 
     @Mock
-    private ApplicationRepository applicationRepositoryMock;
+    private ApplicationRepository applicationRepository;
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
@@ -62,7 +61,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
-        stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
+        Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
         competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         competitionResource = newCompetitionResource().withId(competition.getId()).build();
@@ -70,7 +69,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
         projectResource1 = newProjectResource().withApplication(applicationResource1).build();
 
-        when(applicationRepositoryMock.findById(application1.getId())).thenReturn(Optional.of(application1));
+        when(applicationRepository.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(Collections.singletonList(innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
@@ -81,37 +80,37 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     }
 
     @Test
-    public void testPartnersCanViewTeamStatus() {
+    public void partnersCanViewTeamStatus() {
         setupUserAsPartner(project, user);
         assertTrue(rules.partnersCanViewTeamStatus(project, user));
     }
 
     @Test
-    public void testNonPartnersCannotViewTeamStatus() {
+    public void nonPartnersCannotViewTeamStatus() {
         setupUserNotAsPartner(project, user);
         assertFalse(rules.partnersCanViewTeamStatus(project, user));
     }
 
     @Test
-    public void testInternalUsersCanViewTeamStatus() {
+    public void internalUsersCanViewTeamStatus() {
         assertTrue(rules.internalUsersCanViewTeamStatus(project, compAdminUser()));
         assertTrue(rules.internalUsersCanViewTeamStatus(project, projectFinanceUser()));
     }
 
     @Test
-    public void testPartnersCanViewStatus(){
+    public void partnersCanViewStatus() {
         setupUserAsPartner(project, user);
         assertTrue(rules.partnersCanViewStatus(project, user));
     }
 
     @Test
-    public void testNonPartnersCannotViewStatus(){
+    public void nonPartnersCannotViewStatus() {
         setupUserNotAsPartner(project, user);
         assertFalse(rules.partnersCanViewStatus(project, user));
     }
 
     @Test
-    public void testInternalUsersCanViewStatus(){
+    public void internalUsersCanViewStatus() {
         allGlobalRoleUsers.forEach(user -> {
             if (isInternal(user)) {
                 assertTrue(rules.internalUsersCanViewStatus(newProjectResource().build(), user));
@@ -131,13 +130,12 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
         when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholdersCanViewTeamStatus(project, stakeholderUserResourceOnCompetition));
-        allInternalUsers.forEach(user -> {
-            assertFalse(rules.stakeholdersCanViewTeamStatus(project, user));
-        });
+        allInternalUsers.forEach(user ->
+                assertFalse(rules.stakeholdersCanViewTeamStatus(project, user)));
     }
 
     @Test
-    public void testInternalAdminTeamCanViewCompetitionStatus(){
+    public void internalAdminTeamCanViewCompetitionStatus() {
         allGlobalRoleUsers.forEach(user -> {
             if (isInternalAdmin(user)) {
                 assertTrue(rules.internalAdminTeamCanViewCompetitionStatus(newCompetitionResource().build(), user));
@@ -148,7 +146,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     }
 
     @Test
-    public void testSupportCanViewCompetitionStatus(){
+    public void supportCanViewCompetitionStatus() {
         allGlobalRoleUsers.forEach(user -> {
             if (isSupport(user)) {
                 assertTrue(rules.supportCanViewCompetitionStatus(newCompetitionResource().build(), user));
@@ -159,7 +157,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     }
 
     @Test
-    public void testAssignedInnovationLeadCanViewCompetitionStatus(){
+    public void assignedInnovationLeadCanViewCompetitionStatus() {
         assertTrue(rules.assignedInnovationLeadCanViewCompetitionStatus(competitionResource, innovationLeadUserResourceOnProject1));
         assertFalse(rules.assignedInnovationLeadCanViewCompetitionStatus(competitionResource, innovationLeadUser()));
     }
@@ -173,7 +171,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     }
 
     @Test
-    public void testInternalAdminTeamCanViewProjectStatus(){
+    public void internalAdminTeamCanViewProjectStatus() {
         allGlobalRoleUsers.forEach(user -> {
             if (isInternalAdmin(user)) {
                 assertTrue(rules.internalAdminTeamCanViewProjectStatus(newProjectResource().build(), user));
@@ -184,7 +182,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     }
 
     @Test
-    public void testSupportCanViewProjectStatus(){
+    public void supportCanViewProjectStatus() {
         allGlobalRoleUsers.forEach(user -> {
             if (isSupport(user)) {
                 assertTrue(rules.supportCanViewProjectStatus(newProjectResource().build(), user));
@@ -195,7 +193,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     }
 
     @Test
-    public void testAssignedInnovationLeadCanViewProjectStatus(){
+    public void assignedInnovationLeadCanViewProjectStatus() {
         assertTrue(rules.assignedInnovationLeadCanViewProjectStatus(projectResource1, innovationLeadUserResourceOnProject1));
         assertFalse(rules.assignedInnovationLeadCanViewProjectStatus(projectResource1, innovationLeadUser()));
     }

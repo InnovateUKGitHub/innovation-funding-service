@@ -43,13 +43,12 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
 
     private UserResource otherLeadApplicant;
     private UserResource otherCollaborator;
-    private ApplicationInvite otherInvite;
 
     @Mock
     private ApplicationRepository applicationRepository;
 
     @Mock
-    private InviteOrganisationRepository inviteOrganisationRepositoryMock;
+    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Override
     protected ApplicationInvitePermissionRules supplyPermissionRulesUnderTest() {
@@ -57,7 +56,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
 
         leadApplicant = newUserResource().build();
         collaborator = newUserResource().build();
@@ -72,10 +71,10 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             inviteResource.setInviteOrganisation(inviteOrganisation.getId());
             inviteResourceLead = newApplicationInviteResource().withApplication(application.getId()).withUsers(leadApplicant.getId()).build();
             inviteResourceCollab = newApplicationInviteResource().withApplication(application.getId()).withUsers(collaborator.getId()).build();
-            when(inviteOrganisationRepositoryMock.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
-            when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT)).thenReturn(true);
-            when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(collaborator.getId(), applicantProcessRoles(), application.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, application.getId(), organisation.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+            when(inviteOrganisationRepository.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT)).thenReturn(true);
+            when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(collaborator.getId(), applicantProcessRoles(), application.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, application.getId(), organisation.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
             when(applicationRepository.findById(invite.getTarget().getId())).thenReturn(Optional.of(application));
         }
 
@@ -84,51 +83,49 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         {
             final Application otherApplication = newApplication().withApplicationState(ApplicationState.OPENED).build();
             final Organisation otherOrganisation = OrganisationBuilder.newOrganisation().build();
-            final InviteOrganisation otherInviteOrganisation = newInviteOrganisation().withOrganisation(otherOrganisation).build();
-            otherInvite = newApplicationInvite().withApplication(otherApplication).withInviteOrganisation(otherInviteOrganisation).build();
-            when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(otherApplication.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
-            when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(otherCollaborator.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherCollaborator.getId(), Role.COLLABORATOR, otherApplication.getId(), otherOrganisation.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+            when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherApplication.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
+            when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherCollaborator.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherCollaborator.getId(), Role.COLLABORATOR, otherApplication.getId(), otherOrganisation.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
         }
     }
 
     @Test
-    public void testLeadApplicantCanInviteToTheApplication() {
+    public void leadApplicantCanInviteToTheApplication() {
         assertTrue(rules.leadApplicantCanInviteToTheApplication(invite, leadApplicant));
         assertFalse(rules.leadApplicantCanInviteToTheApplication(invite, collaborator));
         assertFalse(rules.leadApplicantCanInviteToTheApplication(invite, otherLeadApplicant));
     }
 
     @Test
-    public void testCollaboratorCanInviteToApplicantForTheirOrganisation() {
+    public void collaboratorCanInviteToApplicantForTheirOrganisation() {
         assertTrue(rules.collaboratorCanInviteToApplicationForTheirOrganisation(invite, collaborator));
         assertFalse(rules.collaboratorCanInviteToApplicationForTheirOrganisation(invite, leadApplicant));
         assertFalse(rules.collaboratorCanInviteToApplicationForTheirOrganisation(invite, otherCollaborator));
     }
 
     @Test
-    public void testLeadApplicantCanSaveInviteToTheApplication() {
+    public void leadApplicantCanSaveInviteToTheApplication() {
         assertTrue(rules.leadApplicantCanSaveInviteToTheApplication(inviteResource, leadApplicant));
         assertFalse(rules.leadApplicantCanSaveInviteToTheApplication(inviteResource, collaborator));
         assertFalse(rules.leadApplicantCanSaveInviteToTheApplication(inviteResource, otherLeadApplicant));
     }
 
     @Test
-    public void testCollaboratorCanSaveInviteToApplicantForTheirOrganisation() {
+    public void collaboratorCanSaveInviteToApplicantForTheirOrganisation() {
         assertTrue(rules.collaboratorCanSaveInviteToApplicationForTheirOrganisation(inviteResource, collaborator));
         assertFalse(rules.collaboratorCanSaveInviteToApplicationForTheirOrganisation(inviteResource, leadApplicant));
         assertFalse(rules.collaboratorCanSaveInviteToApplicationForTheirOrganisation(inviteResource, otherCollaborator));
     }
 
     @Test
-    public void testCollaboratorCanReadInviteForTheirApplicationForTheirOrganisation() {
+    public void collaboratorCanReadInviteForTheirApplicationForTheirOrganisation() {
         assertTrue(rules.collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(invite, collaborator));
         assertFalse(rules.collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(invite, leadApplicant));
         assertFalse(rules.collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(invite, otherCollaborator));
     }
 
     @Test
-    public void testLeadApplicantReadInviteToTheApplication() {
+    public void leadApplicantReadInviteToTheApplication() {
         assertTrue(rules.leadApplicantReadInviteToTheApplication(invite, leadApplicant));
         assertFalse(rules.leadApplicantReadInviteToTheApplication(invite, collaborator));
         assertFalse(rules.leadApplicantReadInviteToTheApplication(invite, otherLeadApplicant));
@@ -149,7 +146,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testNotDeleteOrSaveWhenApplicationIsNotEditable() {
+    public void notDeleteOrSaveWhenApplicationIsNotEditable() {
         Competition competition = newCompetition().build();
         Organisation organisation = OrganisationBuilder.newOrganisation().build();
         Application application = newApplication().withApplicationState(ApplicationState.SUBMITTED).withCompetition(competition).build();

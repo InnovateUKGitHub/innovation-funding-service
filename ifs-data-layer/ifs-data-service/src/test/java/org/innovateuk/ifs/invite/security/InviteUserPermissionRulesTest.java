@@ -39,7 +39,7 @@ public class InviteUserPermissionRulesTest extends BasePermissionRulesTest<Invit
     }
 
     @Test
-    public void testIfsAdminCanSaveNewUserInvite() {
+    public void ifsAdminCanSaveNewUserInvite() {
         assertTrue(rules.ifsAdminCanSaveNewUserInvite(invitedUser, ifsAdmin));
         assertFalse(rules.ifsAdminCanSaveNewUserInvite(invitedUser, nonIfsAdmin));
     }

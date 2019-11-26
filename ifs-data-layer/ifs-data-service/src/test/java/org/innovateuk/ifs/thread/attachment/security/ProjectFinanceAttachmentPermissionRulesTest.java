@@ -45,22 +45,22 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     private UserResource intruder;
 
     @Mock
-    private ProjectFinanceQueryPermissionRules queryPermissionRulesMock;
+    private ProjectFinanceQueryPermissionRules queryPermissionRules;
 
     @Mock
-    private QueryRepository queryRepositoryMock;
+    private QueryRepository queryRepository;
 
     @Mock
     private MessageThreadRepository threadRepository;
 
     @Mock
-    private AttachmentMapper attachmentMapperMock;
+    private AttachmentMapper attachmentMapper;
 
     @Mock
     private QueryMapper queryMapper;
 
     @Mock
-    private ProjectFinanceRepository projectFinanceRepositoryMock;
+    private ProjectFinanceRepository projectFinanceRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -81,21 +81,21 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     @Test
     public void thatOnlyProjectFinanceAndFinanceContactUsersCanUploadAttachments() {
         assertTrue(rules.projectFinanceCanUploadAttachments(projectResource, projectFinanceUser));
-        when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(projectResource.getId(), PROJECT_PARTNER, projectPartnerUser.getId()))
+        when(projectUserRepository.findByProjectIdAndRoleAndUserId(projectResource.getId(), PROJECT_PARTNER, projectPartnerUser.getId()))
                 .thenReturn(newProjectUser().withUser(newUser().withId(projectPartnerUser.getId()).build()).build());
         assertTrue(rules.projectPartnersCanUploadAttachments(projectResource, projectPartnerUser));
     }
 
     @Test
     public void thatANonProjectFinanceOrFinanceContactUserCanNotUploadAttachments() {
-        when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(projectResource.getId(), PROJECT_PARTNER, intruder.getId()))
+        when(projectUserRepository.findByProjectIdAndRoleAndUserId(projectResource.getId(), PROJECT_PARTNER, intruder.getId()))
                 .thenReturn(null);
         assertFalse(rules.projectPartnersCanUploadAttachments(projectResource, intruder));
     }
 
     @Test
     public void thatProjectFinanceUsersCanFetchOrphanAttachmentTheyHaveUploaded() {
-        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        when(attachmentMapper.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
     }
 
@@ -107,7 +107,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     @Test
     public void thatFinanceContactUsersCanAlwaysFetchTheOrphanAttachmentsTheyHaveUploaded() {
-        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectPartnerUser.getId()));
+        when(attachmentMapper.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectPartnerUser.getId()));
         assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, projectPartnerUser));
     }
 
@@ -116,11 +116,11 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         final Query query = query();
         final QueryResource queryResource = toResource(query);
         when(threadRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(mock(Thread.class)));
-        when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query));
+        when(queryRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query));
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
-        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
-        when(projectFinanceRepositoryMock.findById(query.contextClassPk())).thenReturn(Optional.of(projectFinanceWithUserAsFinanceContact(projectPartnerUser)));
-        when(queryPermissionRulesMock.projectFinanceUsersCanViewQueries(queryResource, projectPartnerUser)).thenReturn(true);
+        when(attachmentMapper.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        when(projectFinanceRepository.findById(query.contextClassPk())).thenReturn(Optional.of(projectFinanceWithUserAsFinanceContact(projectPartnerUser)));
+        when(queryPermissionRules.projectFinanceUsersCanViewQueries(queryResource, projectPartnerUser)).thenReturn(true);
         assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, projectPartnerUser));
     }
 
@@ -128,34 +128,34 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     public void thatFinanceContactUsersCannotFetchAttachmentsOfQueriesTheyAreNotRelatedTo() {
         final Query query = query();
         final QueryResource queryResource = toResource(query);
-        when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query()));
+        when(queryRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query()));
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
-        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        when(attachmentMapper.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         final UserResource unrelatedFinanceContactUser = newUserResource().withId(projectPartnerUser.getId() * 7).build();
-        when(projectFinanceRepositoryMock.findById(query.contextClassPk())).thenReturn(Optional.of(projectFinanceWithUserAsFinanceContact(projectPartnerUser)));
-        when(queryPermissionRulesMock.projectFinanceUsersCanViewQueries(queryResource, unrelatedFinanceContactUser)).thenReturn(false);
+        when(projectFinanceRepository.findById(query.contextClassPk())).thenReturn(Optional.of(projectFinanceWithUserAsFinanceContact(projectPartnerUser)));
+        when(queryPermissionRules.projectFinanceUsersCanViewQueries(queryResource, unrelatedFinanceContactUser)).thenReturn(false);
         assertFalse(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, unrelatedFinanceContactUser));
     }
 
     @Test
     public void thatUserCanDeleteAttachmentWhenTheUploaderAndWhenTheAttachmentIsStillOrphan() {
-        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
-        when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(emptyList());
+        when(attachmentMapper.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        when(queryRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(emptyList());
         assertTrue(rules.onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(attachmentResource, projectFinanceUser));
     }
 
     @Test
     public void thatUserCanNotDeleteAttachmentIfNotTheUploaderEvenIfAttachmentIsStillOrphan() {
-        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
-        when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(emptyList());
+        when(attachmentMapper.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        when(queryRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(emptyList());
         assertFalse(rules.onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(attachmentResource, projectPartnerUser));
     }
 
     @Test
     public void thatUserCanNotDeleteAttachmentEvenIfUploaderOnceTheAttachmentIsNoLongerOrphan() {
-        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectPartnerUser.getId()));
+        when(attachmentMapper.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectPartnerUser.getId()));
         when(threadRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(mock(Thread.class)));
-        when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query()));
+        when(queryRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query()));
         assertFalse(rules.onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(attachmentResource, projectPartnerUser));
     }
 

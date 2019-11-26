@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class FinanceRowMetaFieldPermissionRulesTest extends BasePermissionRulesTest<FinanceRowMetaFieldPermissionsRules> {
 
     private FinanceRowMetaFieldResource financeRowMetaFieldResource;
-    private UserResource user1;
+    private UserResource user;
 
     @Override
     protected FinanceRowMetaFieldPermissionsRules supplyPermissionRulesUnderTest() {
@@ -23,14 +23,14 @@ public class FinanceRowMetaFieldPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Before
-    public void setup() throws Exception {
-        user1 = newUserResource().build();
+    public void setup() {
+        user = newUserResource().build();
         financeRowMetaFieldResource = FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource().with(id(1L)).build();
     }
 
     @Test
     public void loggedInUsersCanSeeCostFields() {
-        assertTrue(rules.loggedInUsersCanReadCostFieldReferenceData(financeRowMetaFieldResource, user1));
+        assertTrue(rules.loggedInUsersCanReadCostFieldReferenceData(financeRowMetaFieldResource, user));
     }
 
     @Test
