@@ -47,7 +47,7 @@ public class PendingPartnerProgressLandingPageController {
 
     @PostMapping("/join-project-confirm-submit")
     public String joinProject(@PathVariable long projectId, @PathVariable long organisationId){
-//        pendingPartnerProgressRestService.completePartnerSetup(projectId, organisationId);
-        return "redirect:/TODO";
+        pendingPartnerProgressRestService.completePartnerSetup(projectId, organisationId);
+        return "redirect:/project/" + projectId;
     }
 }

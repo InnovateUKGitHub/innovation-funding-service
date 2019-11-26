@@ -56,6 +56,10 @@
             </li>
         </ul>
 
+        <div class="message-alert" th:if="${model.readyToJoinProject}">
+            <p class="govuk-body">You will not be able to make any changes after you submit.</p>
+        </div>
+
         <form class="govuk-!-margin-top-6" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
             <button id="submit-join-project-button"
                     th:disabled="${!model.readyToJoinProject}"

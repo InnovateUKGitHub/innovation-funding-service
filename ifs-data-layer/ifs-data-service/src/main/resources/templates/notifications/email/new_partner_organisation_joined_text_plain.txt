@@ -1,0 +1,12 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+Innovate UK has added ${organisationName} to this project.
+
+<@layout.button href="${projectTeamLink}" text="View project team" />
+
+Yours sincerely,
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

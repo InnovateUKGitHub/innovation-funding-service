@@ -26,6 +26,9 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
     @Autowired
     private PendingPartnerProgressRepository pendingPartnerProgressRepository;
 
+    @Autowired
+    private PendingPartnerNotificationService pendingPartnerNotificationService;
+
     @Override
     public ServiceResult<PendingPartnerProgressResource> getPendingPartnerProgress(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getPartnerProgress(projectOrganisationCompositeId)
@@ -79,7 +82,13 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
     public ServiceResult<Void> completePartnerSetup(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccess(this::isReadyToJoinProject)
+                .andOnSuccess(this::sendNotification)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::complete);
+    }
+
+    private ServiceResult<PendingPartnerProgress> sendNotification(PendingPartnerProgress pendingPartnerProgress){
+        pendingPartnerNotificationService.sendNotifications(pendingPartnerProgress.getPartnerOrganisation());
+        return serviceSuccess(pendingPartnerProgress);
     }
 
     private ServiceResult<PendingPartnerProgress> isReadyToJoinProject(PendingPartnerProgress progress) {
@@ -93,4 +102,6 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
         return find(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
                 notFoundError(PendingPartnerProgress.class, projectOrganisationCompositeId));
     }
+
+
 }
