@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <th:block
+        th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly, checkboxText)">
+
+        <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
+            <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
+            <p class="govuk-body">The organisation size is used to calculate your funding level. Changing this selection will reset your funding level.</p>
+        </div>
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    organisation-size(form=${form}, organisationSizeOptions=${organisationSizeOptions}, isH2020=${isH2020}, readOnly=${readOnly})" />
+
+        <th:block th:insert="fragments/form-elements/textfield ::
+                        textfield-integer(
+                            label='Turnover (£)',
+                            hint='Your turnover from the last financial year.',
+                            id='turnover',
+                            value=${readOnly ? ('£' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '0')) : form.turnover},
+                            required=true,
+                            readOnly=${readOnly},
+                            )" />
+
+        <th:block th:insert="fragments/form-elements/textfield ::
+                        textfield-integer(
+                            label='Full time employees',
+                            hint='Number of full time employees at your organisation.',
+                            id='headCount',
+                            value=${form.headCount},
+                            required=true,
+                            readOnly=${readOnly},
+                            )" />
+
+        <th:block th:if="${!readOnly && showStateAidAgreement}">
+
+            <div class="agree-to-terms-container">
+                <th:block th:insert="fragments/form-elements/checkbox ::
+                    checkbox(
+                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
+                        label=${checkboxText},
+                        id='stateAidAgreed',
+                        value='true',
+                        checked=${form.stateAidAgreed},
+                        switchesButtonStatus='#mark_as_complete'
+                    )" />
+            </div>
+
+            <div class="message-alert">
+                <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
+            </div>
+
+        </th:block>
+    </th:block>
+
+    <th:block
+        th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly, checkboxText)">
+
+        <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
+            <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
+            <p class="govuk-body">The organisation size is used to calculate your funding level. Changing this selection will reset your funding level.</p>
+        </div>
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    organisation-size(form=${form}, organisationSizeOptions=${organisationSizeOptions}, isH2020=${isH2020}, readOnly=${readOnly})" />
+
+
+        <th:block th:insert="fragments/form-elements/date ::
+                month-and-year(
+                    legend='End of last financial year',
+                    hint='Enter the date of your last financial year.',
+                    id='financialYearEnd',
+                    monthValue=${form.financialYearEnd != null ? form.financialYearEnd.monthValue : ''},
+                    yearValue=${form.financialYearEnd != null ? form.financialYearEnd.year : ''},
+                    required=true,
+                    readOnly=${readOnly},
+                    pastDate=true,
+                )" />
+
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
+                <h2 class="govuk-fieldset__heading">Financial overview</h2>
+            </legend>
+            <span class="govuk-hint">Details relating to your organisation over the last financial year.</span><br>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <table class="govuk-table govuk-!-margin-bottom-6">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Section</th>
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="last-year">
+                                Last financial year (&pound;)
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody class="govuk-table__body">
+
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    growth-table-row(
+                                        label='Annual turnover',
+                                        id='annualTurnoverAtLastFinancialYear',
+                                        value=${form.annualTurnoverAtLastFinancialYear},
+                                        readOnly=${readOnly},
+                                    )" />
+
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    growth-table-row(
+                                        label='Annual profits',
+                                        id='annualProfitsAtLastFinancialYear',
+                                        value=${form.annualProfitsAtLastFinancialYear},
+                                        readOnly=${readOnly},
+                                    )" />
+
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    growth-table-row(
+                                        label='Annual export',
+                                        id='annualExportAtLastFinancialYear',
+                                        value=${form.annualExportAtLastFinancialYear},
+                                        readOnly=${readOnly},
+                                    )" />
+
+                        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                    growth-table-row(
+                                        label='Research and development spend',
+                                        id='researchAndDevelopmentSpendAtLastFinancialYear',
+                                        value=${form.researchAndDevelopmentSpendAtLastFinancialYear},
+                                        readOnly=${readOnly},
+                                    )" />
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+
+        <th:block th:insert="fragments/form-elements/textfield ::
+                textfield-integer(
+                    label='Full time employees',
+                    hint='Number of full time employees at your organisation.',
+                    id='headCountAtLastFinancialYear',
+                    value=${form.headCountAtLastFinancialYear},
+                    required=true,
+                    readOnly=${readOnly},
+                )" />
+
+        <th:block th:if="${!readOnly && showStateAidAgreement}">
+
+            <div class="agree-to-terms-container">
+
+                <th:block
+                    th:insert="fragments/form-elements/checkbox ::
+                    checkbox(
+                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
+                        label=${checkboxText},
+                        id='stateAidAgreed',
+                        value='true',
+                        checked=${form.stateAidAgreed},
+                        switchesButtonStatus='#mark_as_complete'
+                    )" />
+            </div>
+
+            <div class="message-alert">
+                <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
+            </div>
+
+        </th:block>
+
+    </th:block>
+
+    <th:block th:fragment="growth-table-row(label, id, value, readOnly)">
+
+        <tr class="govuk-table__row govuk-form-group"
+            th:classappend="${#fields.hasErrors(id)} ? 'error'">
+
+            <td class="govuk-table__cell">
+                <label th:for="${id}">
+                    <span th:text="${label}">Growth table row</span>
+                    <th:block th:if="${#fields.hasErrors(id)}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
+                    </th:block>
+                </label>
+            </td>
+
+            <td class="govuk-table__cell govuk-table__cell--numeric">
+                <input class="govuk-input govuk-input--width-10"
+                       th:id="${id}"
+                       th:name="${id}"
+                       th:value="${value}"
+                       th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
+                       th:disabled="${readOnly}"
+                       type="number"
+                       pattern='[0-9]'
+                       data-prevent-input-regex='[^0-9]'
+                       required="required" />
+            </td>
+        </tr>
+
+    </th:block>
+
+
+    <th:block th:fragment="organisation-size(form, organisationSizeOptions, isH2020, readOnly)">
+        <th:block th:insert="fragments/form-elements/radiofield ::
+                        radiofield(
+                            legend='Size',
+                            id='organisationSize',
+                            value=${form.organisationSize},
+                            optionDescriptionsAndValues=${organisationSizeOptions},
+                            hint=${isH2020 ? 'Please provide your
+                                  business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
+                                  target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition</a> <span id=&quot;definition-hint&quot;>(opens in a new window)</span> for guidance.'
+                                  : 'To determine the level of funding you are eligible to receive please provide your
+                                  business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
+                                  target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition</a>  <span id=&quot;definition-hint&quot;>(opens in a new window)</span> for guidance.'},
+                            required=true,
+                            requiredMessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED},
+                            readOnly=${readOnly},
+                            valueDescription=${form.organisationSize != null ? form.organisationSize.description : null},
+                        )" />
+    </th:block>
+
+</html>

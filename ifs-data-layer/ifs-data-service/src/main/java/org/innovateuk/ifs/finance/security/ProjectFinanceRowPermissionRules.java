@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.finance.security;
 
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+
+
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
@@ -12,8 +15,6 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 
 /**
