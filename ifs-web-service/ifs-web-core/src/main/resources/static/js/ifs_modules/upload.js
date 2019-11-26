@@ -117,8 +117,8 @@ IFS.core.upload = (function () {
         })
       } else {
         IFS.core.upload.replaceMessageListWithResponse(wrapper, data, file.name)
-        jQuery('[' + s.enableButtonOnSuccess + ']').prop('disabled', false)
-        jQuery('[' + s.toggleOnSuccess + ']').toggle()
+        IFS.core.upload.findMatchingDataAttrs(wrapper, s.enableButtonOnSuccess).prop('disabled', false)
+        IFS.core.upload.findMatchingDataAttrs(wrapper, s.toggleOnSuccess).toggle()
       }
       IFS.core.upload.addMessage(wrapper, row)
       IFS.core.upload.toggleUploadView(wrapper)
@@ -144,11 +144,11 @@ IFS.core.upload = (function () {
       IFS.core.upload.toggleNoFileMessage(messageList)
     },
     toggleNoFileMessage: function (messageList) {
-      var noFileMessage = messageList.siblings('p:contains("No file currently uploaded.")')
+      var noFileMessage = messageList.siblings('p.no-file-uploaded')
       if (messageList.find('li').length) {
         noFileMessage.remove()
       } else {
-        messageList.before('<p class="govuk-body uploaded-file">No file currently uploaded.</p>')
+        messageList.before('<p class="govuk-body no-file-uploaded">No file currently uploaded.</p>')
       }
     },
     toggleUploadView: function (wrapper) {
@@ -183,8 +183,8 @@ IFS.core.upload = (function () {
           success: function (data) {
             IFS.core.upload.afterRemoveFile(row, wrapper)
             if (!wrapper.find('li').length) {
-              jQuery('[' + s.enableButtonOnSuccess + ']').prop('disabled', true)
-              jQuery('[' + s.toggleOnSuccess + ']').toggle()
+              IFS.core.upload.findMatchingDataAttrs(wrapper, s.enableButtonOnSuccess).prop('disabled', true)
+              IFS.core.upload.findMatchingDataAttrs(wrapper, s.toggleOnSuccess).toggle()
             }
           },
           error: function (error) {
@@ -197,6 +197,12 @@ IFS.core.upload = (function () {
       } else {
         IFS.core.upload.afterRemoveFile(row, wrapper)
       }
+    },
+    /*
+        Find elements with data attributes that have a blank value or the id of the wrapper.
+     */
+    findMatchingDataAttrs: function (wrapper, attr) {
+      return jQuery('[' + attr + '=""],[' + attr + '="' + wrapper.attr('id') + '"]')
     },
     afterRemoveFile: function (row, wrapper) {
       var messageList = IFS.core.upload.getMessageList(wrapper)

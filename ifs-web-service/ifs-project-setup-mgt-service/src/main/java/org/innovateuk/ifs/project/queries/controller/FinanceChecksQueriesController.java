@@ -218,6 +218,7 @@ public class FinanceChecksQueriesController {
         Supplier<String> onError = () -> {
             FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
             model.addAttribute("model", viewModel);
+            model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             model.addAttribute("form", form);
             return QUERIES_VIEW;
         };

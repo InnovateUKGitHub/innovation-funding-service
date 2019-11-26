@@ -175,7 +175,7 @@ Applicant can remove the uploaded response
     [Documentation]  IFS-3253  IFS-3378
     [Tags]  HappyPath
     Given an applicant uploads response to an applicantion
-    When the user clicks the button/link     css = .button-secondary  #remove
+    When the user clicks the button/link     css = .remove-file  #remove
     Then the user should see the element     jQuery = p:contains("No file currently uploaded") ~ label:contains("Upload")
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery = td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")

@@ -50,9 +50,18 @@
                     </div>
                 </div>
 
-                <div th:unless="${model.interviewFeedbackViewModel == null || model.interviewFeedbackViewModel.feedbackReleased}" class="message-alert">
-                    <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.bannerText}">Some info</p>
-                </div>
+                <th:block th:unless="${model.interviewFeedbackViewModel == null || model.interviewFeedbackViewModel.feedbackReleased}">
+                    <div class="message-alert"
+                         th:attr="aria-hidden=${!model.interviewFeedbackViewModel.hasResponse()}"
+                         data-js-toggle-on-file-upload="">
+                        <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.responseBannerText}">Some info</p>
+                    </div>
+                    <div class="message-alert"
+                         th:attr="aria-hidden=${model.interviewFeedbackViewModel.hasResponse()}"
+                         data-js-toggle-on-file-upload="">
+                        <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.noResponseBannerText}">Some info</p>
+                    </div>
+                </th:block>
 
                 <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.responseSectionEnabled}">
                     <th:block th:if="${model.interviewFeedbackViewModel.leadApplicant}">

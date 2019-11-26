@@ -116,7 +116,7 @@
          */-->
         <!--/* file upload has been submitted to innovate uk or marked as complete */-->
         <th:block th:if="${viewmode == 'readonly'}">
-            <p th:if="${#strings.isEmpty(filename)}" class="govuk-body uploaded-file">No file currently uploaded</p>
+            <p th:if="${#strings.isEmpty(filename)}" class="govuk-body no-file-uploaded">No file currently uploaded</p>
             <ul th:unless="${#strings.isEmpty(filename)}"
                 class="govuk-list file-list">
                 <li class="success">
@@ -141,6 +141,7 @@
                 field has been binded
             */-->
             <div class="ajax-upload"
+                 th:id="${wrapperId}"
                  th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'govuk-form-group--error')"
                  th:attr="data-js-download-location=${downloadUrl},
                  data-js-upload-button-name=${saveName},
@@ -150,10 +151,10 @@
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
-                    </th:block>
+                    </th:block> 
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">
-                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
+                    <p class="govuk-body no-file-uploaded ">No file currently uploaded.</p>
                     <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" aria-label="Upload a file"
                            data-set-section-valid=".ajax-upload" />
                     <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">Upload</label>

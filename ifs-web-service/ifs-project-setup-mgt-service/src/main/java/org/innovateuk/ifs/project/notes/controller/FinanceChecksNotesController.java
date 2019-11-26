@@ -201,6 +201,7 @@ public class FinanceChecksNotesController {
             Supplier<String> onSuccess = () -> redirectTo(formView(projectId, organisationId, noteId));
             Supplier<String> onError = () -> {
                 model.addAttribute("model", populateNoteViewModel(projectId, organisationId, noteId, attachments));
+                model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
                 model.addAttribute("form", form);
                 return NOTES_VIEW;
             };

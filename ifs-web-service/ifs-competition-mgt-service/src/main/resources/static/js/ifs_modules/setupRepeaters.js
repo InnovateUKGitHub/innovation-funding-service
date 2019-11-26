@@ -122,7 +122,7 @@ IFS.competitionManagement.repeater = (function () {
                         '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
                         '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary govuk-!-margin-top-6">Upload</label>' +
                         '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
-                        '<p class="govuk-body uploaded-file">No file currently uploaded</p>' +
+                        '<p class="govuk-body no-file-uploaded">No file currently uploaded</p>' +
                     '</div>' +
                     '<button type="button" class="button-clear govuk-!-margin-0" data-remove-row="contentGroup">Remove section</button>' +
                   '</div>'
