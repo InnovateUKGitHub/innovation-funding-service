@@ -4,8 +4,6 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -27,7 +25,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
@@ -57,9 +54,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
-
-    @Mock
-    private StakeholderRepository stakeholderRepositoryMock;
 
     @Test
     public void anyoneCanViewThemselves() {
@@ -92,7 +86,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
         Project project = newProject().withApplication(application).build();
-        Stakeholder stakeholder = newStakeholder().withCompetition(competition).build();
         UserResource stakeholderResource = newUserResource().withRoleGlobal(STAKEHOLDER).build();
         UserResource userResource = newUserResource().withRoleGlobal(LEADAPPLICANT).build();
         User user = newUser().withId(userResource.getId()).build();
@@ -106,13 +99,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         when(processRoleRepositoryMock.findByUserId(userResource.getId())).thenReturn(processRoles);
         when(projectUserRepositoryMock.findByUserId(userResource.getId())).thenReturn(projectUsers);
-        when(stakeholderRepositoryMock.findByStakeholderId(stakeholderResource.getId())).thenReturn(asList(stakeholder));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderResource.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, stakeholderResource));
 
-        allInternalUsers.forEach(internalUser -> {
-            assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser));
-        });
+        allInternalUsers.forEach(internalUser -> assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser)));
     }
 
     @Test
