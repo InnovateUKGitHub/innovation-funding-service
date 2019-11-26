@@ -7,9 +7,6 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -60,16 +57,7 @@ class GrantMapper {
     private FormInputResponseRepository formInputResponseRepository;
 
     @Autowired
-    private ProjectFinanceRepository projectFinanceRepository;
-
-    @Autowired
-    private ProjectFinanceRowRepository projectFinanceRowRepository;
-
-    @Autowired
     private SpendProfileRepository spendProfileRepository;
-
-    @Autowired
-    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Autowired
     private InnovationLeadRepository innovationLeadRepository;
@@ -159,6 +147,7 @@ class GrantMapper {
          * Calculate overhead percentage
          */
         SpendProfileCalculations grantCalculator = new SpendProfileCalculations(spendProfile.get());
+
 
         ProjectFinanceResource projectFinanceResource = projectFinanceHandler.getProjectOrganisationFinances(new ProjectFinanceResourceId(project.getId(), organisation.getId()))
                 .getSuccess();
