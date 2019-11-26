@@ -56,6 +56,7 @@ ${removeInviteEmail}         remove@test.nom
 ${internalViewTeamPage}      ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
 ${internalInviteeEmail}      internal@invitee.com
 ${ifsAdminAddOrgEmail}       admin@addorg.com
+${ifsPendingAddOrgEmail}     pending@pending.com
 ${intFinanceAddOrgEmail}     finance@addorg.com
 ${applicationName}           PSC application 7
 ${orgInviterName}            Ward Ltd
@@ -214,6 +215,13 @@ Ifs Admin is able to remove a partner organisation
     Then the user reads his email                          troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed SmithZone from this project.
     And the internal user checks for status after new org added/removed
 
+Ifs Admin is able to remove a pending partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    [Setup]  log in as a different user                                    &{ifs_admin_user_credentials}
+    Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
+    Then the user is able to remove a pending partner organisation         Testing Pending Organisation
+
 New org enter project setup details and lead resubmit the documents
     [Documentation]  IFS-6502
     Given applicant submits the project setup details
@@ -229,6 +237,12 @@ Project finance is able to add a new partner organisation
     Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
     And log in as a different user                            &{internal_finance_credentials}
     And the internal user checks for status after new org added/removed
+
+Project finance is able to remove a pending partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
+    Then the user is able to remove a pending partner organisation         Testing Pending Organisation
 
 The new partner cannot complete funding without organisation
     [Documentation]  IFS-6491
@@ -275,6 +289,11 @@ The internal users checks for activity logs after partner added/removed
     And internal user should see entries in activity log after partner org added/removed
 
 *** Keywords ***
+the user is able to remove a pending partner organisation
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
+    the user should not see the element         jQuery = h2:contains(${orgName})
+
 a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user

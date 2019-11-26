@@ -16,7 +16,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.transactional.OrganisationFinanceService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,14 +26,8 @@ public class AbstractOrganisationFinanceControllerTest extends BaseControllerMoc
     @Mock
     private OrganisationFinanceService organisationFinanceService;
 
-    private long targetId = 1L;
-    private long organisationId = 2L;
-
-    @Before
-    public void setup(){
-        targetId = 1L;
-        organisationId = 2L;
-    }
+    private static final long targetId = 1L;
+    private static final long organisationId = 2L;
 
     @Override
     protected AbstractOrganisationFinanceController supplyControllerUnderTest() {

@@ -27,7 +27,7 @@ import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceResource> extends BaseTransactionalService implements OrganisationFinanceService {
+public abstract class AbstractOrganisationFinanceService<Finance extends BaseFinanceResource> extends BaseTransactionalService implements OrganisationFinanceService {
 
     @Autowired
     private CompetitionService competitionService;
@@ -38,16 +38,16 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
     @Autowired
     private GrantClaimMaximumService grantClaimMaximumService;
 
-    protected abstract ServiceResult<F> getFinance(long targetId, long organisationId);
-    protected abstract ServiceResult<Void> updateFinance(F finance);
+    protected abstract ServiceResult<Finance> getFinance(long targetId, long organisationId);
+    protected abstract ServiceResult<Void> updateFinance(Finance finance);
     protected abstract ServiceResult<FinanceRowItem> saveGrantClaim(GrantClaim grantClaim);
     protected abstract ServiceResult<CompetitionResource> getCompetitionFromTargetId(long targetId);
-    protected abstract void resetYourFundingSection(F finance, long competitionId, long userId);
-    protected abstract ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed);
+    protected abstract void resetYourFundingSection(Finance finance, long competitionId, long userId);
+    protected abstract ServiceResult<Void> updateStateAidAgreed(long targetId);
 
     @Override
     public ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationWithGrowthTable(long targetId, long organisationId) {
-        F finance = getFinance(targetId, organisationId).getSuccess();
+        Finance finance = getFinance(targetId, organisationId).getSuccess();
 
         OrganisationSize organisationSize = finance.getOrganisationSize();
 
@@ -82,7 +82,7 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
 
     @Override
     public ServiceResult<OrganisationFinancesWithoutGrowthTableResource> getOrganisationWithoutGrowthTable(long targetId, long organisationId) {
-        F finance = getFinance(targetId, organisationId).getSuccess();
+        Finance finance = getFinance(targetId, organisationId).getSuccess();
 
         OrganisationSize organisationSize = finance.getOrganisationSize();
 
@@ -105,7 +105,7 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
         boolean stateAidIncluded = isShowStateAidAgreement(targetId, organisationId).getSuccess();
 
         // finance
-        F finance = getFinance(targetId, organisationId).getSuccess();
+        Finance finance = getFinance(targetId, organisationId).getSuccess();
         updateOrganisationSize(finance, competitionId, finances.getOrganisationSize());
         GrowthTableResource growthTable = (GrowthTableResource) finance.getFinancialYearAccounts();
         growthTable.setFinancialYearEnd(ofNullable(finances.getFinancialYearEnd()).map(YearMonth::atEndOfMonth).orElse(null));
@@ -117,8 +117,8 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
 
         updateFinance(finance).getSuccess();
 
-        if (stateAidIncluded) {
-            updateStateAidAgreed(targetId, finances.getStateAidAgreed()).getSuccess();
+        if (stateAidIncluded && finances.getStateAidAgreed()) {
+            updateStateAidAgreed(targetId).getSuccess();
         }
 
         return serviceSuccess();
@@ -131,7 +131,7 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
         boolean stateAidIncluded = isShowStateAidAgreement(targetId, organisationId).getSuccess();
 
         //finance
-        F finance = getFinance(targetId, organisationId).getSuccess();
+        Finance finance = getFinance(targetId, organisationId).getSuccess();
         updateOrganisationSize(finance, competitionId, finances.getOrganisationSize());
         EmployeesAndTurnoverResource employeesAndTurnover = (EmployeesAndTurnoverResource) finance.getFinancialYearAccounts();
         employeesAndTurnover.setTurnover(finances.getTurnover());
@@ -139,8 +139,8 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
 
         updateFinance(finance).getSuccess();
 
-        if (stateAidIncluded) {
-            updateStateAidAgreed(targetId, finances.getStateAidAgreed()).getSuccess();
+        if (stateAidIncluded && finances.getStateAidAgreed()) {
+            updateStateAidAgreed(targetId).getSuccess();
         }
 
         return serviceSuccess();
@@ -167,7 +167,7 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
                 andOnSuccessReturn(organisation -> organisation.getOrganisationType() == OrganisationTypeEnum.BUSINESS.getId());
     }
 
-    private void updateOrganisationSize(F finance, long competitionId, OrganisationSize organisationSize) {
+    private void updateOrganisationSize(Finance finance, long competitionId, OrganisationSize organisationSize) {
         if (finance.getOrganisationSize() != organisationSize) {
             finance.setOrganisationSize(organisationSize);
             long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
@@ -175,7 +175,7 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
         }
     }
 
-    private void handleOrganisationSizeChange(F finance,
+    private void handleOrganisationSizeChange(Finance finance,
                                               long competitionId,
                                               long userId) {
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
@@ -188,7 +188,7 @@ public abstract class AbstractOrganisationFinanceService<F extends BaseFinanceRe
         }
     }
 
-    private void resetFundingLevel(F finance) {
+    private void resetFundingLevel(Finance finance) {
         GrantClaim grantClaim = finance.getGrantClaim();
         grantClaim.reset();
         saveGrantClaim(grantClaim).getSuccess();

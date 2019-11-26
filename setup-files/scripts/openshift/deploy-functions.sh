@@ -185,10 +185,11 @@ function substituteMandatoryEnvVariable() {
 }
 
 function tailorAppInstance() {
-    if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf"  ]]
+    if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf" ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/shib/5-shib.yml
     fi
 }
 

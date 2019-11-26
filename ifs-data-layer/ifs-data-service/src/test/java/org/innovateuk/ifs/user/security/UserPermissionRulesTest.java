@@ -715,19 +715,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void userCanCheckTheyHaveProjectForCompetition() {
-        UserResource user = newUserResource().build();
-        assertTrue(rules.userCanCheckTheyHaveProjectForCompetition(user, user));
-    }
-
-    @Test
-    public void userCanCheckTheyHaveProjectForCompetitionButAttemptingToCheckAnotherUser() {
-        UserResource user = newUserResource().build();
-        UserResource anotherUser = newUserResource().build();
-        assertFalse(rules.userCanCheckTheyHaveProjectForCompetition(user, anotherUser));
-    }
-
-    @Test
     public void isViewingOwnDashboard() {
         UserResource user = newUserResource().build();
         assertTrue(rules.isViewingOwnDashboard(user, user));

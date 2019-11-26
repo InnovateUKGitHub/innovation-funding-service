@@ -22,6 +22,6 @@ public interface ProjectFinanceService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
     ServiceResult<Double> getResearchParticipationPercentageFromProject(long projectId);
 
-    @NotSecured(value = "Should only be called from other secure services")
-    ServiceResult<Void> updateProjectFinance(long projectFinanceId, ProjectFinanceResource projectFinanceResource);
+    @PreAuthorize("hasPermission(#projectFinanceResource, 'UPDATE_PROJECT_FINANCE')")
+    ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource);
 }
