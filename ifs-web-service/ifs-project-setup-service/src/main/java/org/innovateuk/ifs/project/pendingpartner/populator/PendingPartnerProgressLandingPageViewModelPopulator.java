@@ -37,7 +37,8 @@ public class PendingPartnerProgressLandingPageViewModelPopulator {
                 project,
                 organisationId,
                 progress,
-                !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())
+                !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum()),
+                progress.getYourFundingCompletedOn()
         );
     }
 }

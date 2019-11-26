@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.time.ZonedDateTime;
+
 public class PendingPartnerProgressLandingPageViewModel {
 
     private final long projectId;
@@ -13,8 +15,9 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean yourFundingComplete;
     private final boolean termsAndConditionsComplete;
     private final boolean showYourOrganisation;
+    private final ZonedDateTime completedOn;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation, ZonedDateTime completedOn) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.applicationId = project.getApplication();
@@ -23,6 +26,7 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.yourFundingComplete = progress.isYourFundingComplete();
         this.termsAndConditionsComplete = progress.isTermsAndConditionsComplete();
         this.showYourOrganisation = showYourOrganisation;
+        this.completedOn = completedOn;
     }
 
     public long getProjectId() {
@@ -58,6 +62,10 @@ public class PendingPartnerProgressLandingPageViewModel {
     }
 
     public boolean isReadyToJoinProject() {
-        return isYourFundingComplete() && isTermsAndConditionsComplete() && (!isShowYourOrganisation() || isYourOrganisationComplete());
+        return isYourFundingComplete() && isTermsAndConditionsComplete() && (!isShowYourOrganisation() || isYourOrganisationComplete()) && !isCompleted();
+    }
+
+    public boolean isCompleted() {
+        return completedOn != null;
     }
 }
