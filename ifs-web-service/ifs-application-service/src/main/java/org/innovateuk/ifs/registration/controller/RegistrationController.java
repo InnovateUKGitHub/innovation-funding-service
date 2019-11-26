@@ -249,15 +249,20 @@ public class RegistrationController {
                                                     error -> error.getErrorKey().equals("ORGANISATION_ALREADY_EXISTS_FOR_PROJECT"))) {
                                                 return "redirect:/registration/duplicate-project-organisation";
                                             }
-                                            return failure.toString();
+                                            validationHandler.addAnyErrors(failure,
+                                                    fieldErrorsToFieldErrors(
+                                                            e -> newFieldError(e, e.getFieldName(), e.getFieldRejectedValue(), "registration." + e.getErrorKey())
+                                                    ),
+                                                    asGlobalErrors()
+                                            );
+                                            return registerForm(registrationForm, model, user, request, response);
                                         },
                                         success -> {
                                             removeCompetitionIdCookie(response);
                                             registrationCookieService.deleteOrganisationIdCookie(response);
 
                                             return "redirect:/registration/success";
-                                        }
-                                )));
+                                        })));
     }
 
     @GetMapping("/duplicate-project-organisation")
