@@ -34,7 +34,9 @@ import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepos
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -73,6 +75,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
@@ -113,6 +116,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private CostCategoryRepository costCategoryRepository;
     @Autowired
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
+    @Autowired
     private UserMapper userMapper;
     @Autowired
     private SpendProfileValidationUtil validationUtil;
@@ -144,26 +149,27 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 .andOnSuccess(project -> canSpendProfileCanBeGenerated(project)
                         .andOnSuccess(() -> partnerOrganisationService.getProjectPartnerOrganisations(projectId)
                                 .andOnSuccess(partnerOrganisationResources -> {
-                                    List<Long> organisationIds = removeDuplicates(simpleMap(partnerOrganisationResources, partnerOrganisationResource -> partnerOrganisationResource.getOrganisation()));
+                                    List<Long> organisationIds = removeDuplicates(simpleMap(partnerOrganisationResources, PartnerOrganisationResource::getOrganisation));
                                     return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                                 }))
-                                .andOnSuccess(() ->
-                                    getCurrentlyLoggedInUser().andOnSuccess(user -> {
-                                        if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
-                                            return serviceSuccess();
-                                        } else {
-                                            LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
-                                            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                                        }
-                                    })
-                                )
+                        .andOnSuccess(() ->
+                                getCurrentlyLoggedInUser().andOnSuccess(user -> {
+                                    if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
+                                        return serviceSuccess();
+                                    } else {
+                                        LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
+                                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                                    }
+                                })
+                        )
                 );
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
         return (isViabilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
-                .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
+                .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project))
+                .andOnSuccess(() -> isNoPendingPartnerInvites(project));
     }
 
     private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
@@ -177,6 +183,24 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             return serviceSuccess();
         } else {
             return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
+        }
+    }
+
+    // ----
+    // Check the invite exists as looking for pending partner is incorrect.
+    // New repository call in ProjectPartnerInvite for existsByProjectIdandStatus
+    // check the invite exists
+    // repo call for projectPartnerinvite existsBybyprojectIdandstatusBySTATUENAME(s) boolean
+
+    private ServiceResult<Void> isNoPendingPartnerInvites(Project project) {
+
+        // Do we need to include OPENED status to the check as it is incomplete on the Internal users side.
+
+        boolean ppi = projectPartnerInviteRepository.existsByProjectIdAndStatus(project.getId(), SENT);
+        if (!ppi) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_PARTNERS_ARE_NO_LONGER_PENDING);
         }
     }
 
@@ -286,11 +310,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     /**
      * This method was written to recreate Spend Profile for one of the partner organisations on Production.
-     *
+     * <p>
      * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
      * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
      * Eligibility is approved, if the Spend Profile is already generated or the Spend Profile process state is valid.
-     *
      */
     @Override
     @Transactional
@@ -401,7 +424,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                     return serviceSuccess(table);
                 });
     }
-    
+
     private Map<Long, CostCategoryResource> buildCostCategoryIdMap(List<CostCategory> costCategories) {
         Map<Long, CostCategoryResource> returnMap = new HashMap<>();
         costCategories.forEach(costCategory -> {
@@ -439,7 +462,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private Map<String, List<Map<Long, List<BigDecimal>>>> orderResearchCategoryMap(Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap) {
         Map<String, List<Map<Long, List<BigDecimal>>>> orderedCatGroupMap = new LinkedHashMap<>();
         RESEARCH_CAT_GROUP_ORDER.forEach(groupName ->
-            orderedCatGroupMap.put(groupName, catGroupMap.get(groupName))
+                orderedCatGroupMap.put(groupName, catGroupMap.get(groupName))
         );
         return orderedCatGroupMap;
     }
@@ -645,7 +668,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         ArrayList<String> monthsRow = new ArrayList<>();
         monthsRow.add(CSV_MONTH);
-        if(isResearch) {
+        if (isResearch) {
             monthsRow.add(EMPTY_CELL);
         }
 
@@ -663,7 +686,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
             byCategory.add(String.valueOf(cc.getName()));
             values.forEach(val ->
-                byCategory.add(val.toString())
+                    byCategory.add(val.toString())
             );
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
@@ -680,7 +703,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         ArrayList<String> totals = new ArrayList<>();
         totals.add(CSV_TOTAL);
-        if(isResearch) {
+        if (isResearch) {
             totals.add(EMPTY_CELL);
         }
 
@@ -693,9 +716,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         rows.add(new String[0]);
 
         ArrayList<String> quartersRow = new ArrayList<>();
-        int noOfQuarters = (int) Math.ceil((double) spendProfileTableResource.getMonths().size()/3);
+        int noOfQuarters = (int) Math.ceil((double) spendProfileTableResource.getMonths().size() / 3);
         quartersRow.add(CSV_QUARTER);
-        if(isResearch) {
+        if (isResearch) {
             quartersRow.add(EMPTY_CELL);
         }
         IntStream.rangeClosed(1, noOfQuarters).forEach(num -> quartersRow.add("Quarter " + num));
@@ -704,14 +727,14 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
             CostCategory cc = costCategoryRepository.findById(category).get();
 
-            if(isResearch) {
+            if (isResearch) {
                 rows.add(calculateQuarterly(cc.getLabel(), cc.getName(), values).toArray(new String[0]));
             } else {
                 rows.add(calculateQuarterly(cc.getName(), values).toArray(new String[0]));
             }
         });
 
-        if(isResearch) {
+        if (isResearch) {
             rows.add(calculateQuarterly(CSV_TOTAL, "", totalForEachMonth).toArray(new String[0]));
         } else {
             rows.add(calculateQuarterly(CSV_TOTAL, totalForEachMonth).toArray(new String[0]));
@@ -736,15 +759,15 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ArrayList<String> calculateQuarterly(String categoryName, List<BigDecimal> values) {
         ArrayList<String> byCategoryQuarterly = new ArrayList<>();
         byCategoryQuarterly.add(categoryName);
-        for (int i = 0; i < (values.size()-2); i += 3) {
+        for (int i = 0; i < (values.size() - 2); i += 3) {
             BigDecimal quarterlyFigure = values.get(i).add(values.get(i + 1)).add(values.get(i + 2));
             byCategoryQuarterly.add(quarterlyFigure.toString());
         }
 
         // account for extra months that don't fit neatly in a quarter
-        if(values.size()%3 !=0) {
-            BigDecimal lastQuarterlyFigure = values.get(values.size()-1);
-            if(values.size()%3 ==2) {
+        if (values.size() % 3 != 0) {
+            BigDecimal lastQuarterlyFigure = values.get(values.size() - 1);
+            if (values.size() % 3 == 2) {
                 lastQuarterlyFigure = lastQuarterlyFigure.add(values.get(values.size() - 2));
             }
 
