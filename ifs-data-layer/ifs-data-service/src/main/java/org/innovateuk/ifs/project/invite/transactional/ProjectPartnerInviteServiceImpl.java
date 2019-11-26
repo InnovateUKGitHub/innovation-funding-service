@@ -151,9 +151,15 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     }
 
     private SentProjectPartnerInviteResource mapToSentResource(ProjectPartnerInvite projectPartnerInvite) {
-        return new SentProjectPartnerInviteResource(projectPartnerInvite.getId(), projectPartnerInvite.getSentOn(),
-                projectPartnerInvite.getProject().getName(), ofNullable(projectPartnerInvite.getUser()).map(User::getId).orElse(null), projectPartnerInvite.getStatus(),
-                projectPartnerInvite.getInviteOrganisation().getOrganisationName(), projectPartnerInvite.getName(), projectPartnerInvite.getEmail(), projectPartnerInvite.getProject().getApplication().getId());
+        return new SentProjectPartnerInviteResource(projectPartnerInvite.getId(),
+                projectPartnerInvite.getSentOn(),
+                projectPartnerInvite.getProject().getName(),
+                ofNullable(projectPartnerInvite.getUser()).map(User::getId).orElse(null),
+                projectPartnerInvite.getStatus(),
+                projectPartnerInvite.getInviteOrganisation().getOrganisationName(),
+                projectPartnerInvite.getName(),
+                projectPartnerInvite.getEmail(),
+                projectPartnerInvite.getProject().getApplication().getId());
     }
 
     @Override
