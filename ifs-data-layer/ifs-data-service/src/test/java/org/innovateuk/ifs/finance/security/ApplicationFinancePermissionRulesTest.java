@@ -22,7 +22,6 @@ import org.mockito.Mock;
 
 import java.util.Optional;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -71,7 +70,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     private StakeholderRepository stakeholderRepositoryMock;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
 
         // Create a compAdmin
         compAdmin = this.compAdminUser();
@@ -159,7 +158,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
                 .build();
 
         when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(Optional.of(application));
-        when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(application.getCompetition().getId(), stakeholderResource.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, stakeholderResource));
         allInternalUsers.forEach(user -> {
@@ -203,12 +202,10 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
                 .build();
 
         when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(Optional.of(application));
-        when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(application.getCompetition().getId(), stakeholderResource.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, stakeholderResource));
-        allInternalUsers.forEach(user -> {
-            assertFalse(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, user));
-        });
+        allInternalUsers.forEach(user -> assertFalse(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, user)));
     }
 
     @Test

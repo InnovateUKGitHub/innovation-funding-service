@@ -3,11 +3,10 @@ package org.innovateuk.ifs.competition.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,8 +19,8 @@ import java.util.Optional;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
-import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
@@ -33,9 +32,6 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
-
-    @Mock
-    private StakeholderRepository stakeholderRepository;
 
     @Mock
     private CompetitionRepository competitionRepository;
@@ -78,10 +74,10 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
         List<Role> stakeholderRoles = singletonList(STAKEHOLDER);
         UserResource stakeholderAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
         UserResource stakeholderNotAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
-        List<Stakeholder> stakeholders = newStakeholder().withUser(newUser().withId
-                (stakeholderAssignedToCompetition.getId()).build()).build(1);
 
-        when(stakeholderRepository.findStakeholders(competitionId)).thenReturn(stakeholders);
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderAssignedToCompetition.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholdersCanViewMilestonesOnAssignedComps(compositeId, stakeholderAssignedToCompetition));
         assertFalse(rules.stakeholdersCanViewMilestonesOnAssignedComps(compositeId, stakeholderNotAssignedToCompetition));

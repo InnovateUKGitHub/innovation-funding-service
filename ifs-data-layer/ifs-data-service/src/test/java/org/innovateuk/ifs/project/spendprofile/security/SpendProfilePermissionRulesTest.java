@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -54,6 +53,7 @@ import static org.mockito.Mockito.when;
 public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<SpendProfilePermissionRules> {
 
     private ProjectResource projectResource1;
+    private Competition competition;
     private UserResource innovationLeadUserResourceOnProject1;
     private UserResource stakeholderUserResourceOnCompetition;
     private ProjectProcess projectProcess;
@@ -67,9 +67,6 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
 
-    @Mock
-    private StakeholderRepository stakeholderRepository;
-
     @Before
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
@@ -80,7 +77,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
         Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
-        Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
+        competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
         projectResource1 = newProjectResource().withApplication(applicationResource1).build();
@@ -99,7 +96,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void internalAdminTeamCanViewCompetitionStatus(){
+    public void internalAdminTeamCanViewCompetitionStatus() {
         allGlobalRoleUsers.forEach(user -> {
             if (isInternalAdmin(user)) {
                 assertTrue(rules.internalAdminTeamCanViewCompetitionStatus(newProjectResource().build(), user));
@@ -110,7 +107,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void supportCanViewCompetitionStatus(){
+    public void supportCanViewCompetitionStatus() {
         allGlobalRoleUsers.forEach(user -> {
             if (isSupport(user)) {
                 assertTrue(rules.supportCanViewCompetitionStatus(newProjectResource().build(), user));
@@ -121,13 +118,15 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void assignedInnovationLeadCanViewProjectStatus(){
+    public void assignedInnovationLeadCanViewProjectStatus() {
         assertTrue(rules.assignedInnovationLeadCanViewSPStatus(projectResource1, innovationLeadUserResourceOnProject1));
         assertFalse(rules.assignedInnovationLeadCanViewSPStatus(projectResource1, innovationLeadUser()));
     }
 
     @Test
-    public void assignedStakeholderCanViewSPStatus(){
+    public void assignedStakeholderCanViewSPStatus() {
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
+
         assertTrue(rules.assignedStakeholderCanViewSPStatus(projectResource1, stakeholderUserResourceOnCompetition));
         assertFalse(rules.assignedStakeholderCanViewSPStatus(projectResource1, stakeholderUser()));
     }
@@ -205,7 +204,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void partnersCanViewTheirOwnSpendProfileData(){
+    public void partnersCanViewTheirOwnSpendProfileData() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         OrganisationResource org = newOrganisationResource().build();
@@ -220,7 +219,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void projectFinanceUserCanViewAnySpendProfileData(){
+    public void projectFinanceUserCanViewAnySpendProfileData() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
 
@@ -234,7 +233,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void partnersCanViewTheirOwnSpendProfileCsv(){
+    public void partnersCanViewTheirOwnSpendProfileCsv() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         OrganisationResource org = newOrganisationResource().build();
@@ -249,7 +248,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void internalAdminUsersCanSeeSpendProfileCsv(){
+    public void internalAdminUsersCanSeeSpendProfileCsv() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
 
@@ -263,7 +262,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void supportUsersCanSeeSpendProfileCsv(){
+    public void supportUsersCanSeeSpendProfileCsv() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
 
@@ -277,14 +276,17 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void stakeholdersCanSeeSpendProfileCsv(){
+    public void stakeholdersCanSeeSpendProfileCsv() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectResource1.getId(), newOrganisation().build().getId());
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
+
         assertTrue(rules.stakeholdersCanSeeSpendProfileCsv(projectOrganisationCompositeId, stakeholderUserResourceOnCompetition));
         assertFalse(rules.stakeholdersCanSeeSpendProfileCsv(projectOrganisationCompositeId, stakeholderUser()));
     }
 
     @Test
-    public void leadPartnerCanViewAnySpendProfileCsv(){
+    public void leadPartnerCanViewAnySpendProfileCsv() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
@@ -298,7 +300,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void partnersCanEditTheirOwnSpendProfileData(){
+    public void partnersCanEditTheirOwnSpendProfileData() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         OrganisationResource org = newOrganisationResource().build();
@@ -313,7 +315,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void partnersCanMarkSpendProfileAsComplete(){
+    public void partnersCanMarkSpendProfileAsComplete() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         OrganisationResource org = newOrganisationResource().build();
