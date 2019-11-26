@@ -9,6 +9,15 @@ public class PendingPartnerProgressResource {
     private ZonedDateTime yourOrganisationCompletedOn;
     private ZonedDateTime yourFundingCompletedOn;
     private ZonedDateTime termsAndConditionsCompletedOn;
+    private ZonedDateTime completedOn;
+
+    public ZonedDateTime getCompletedOn() {
+        return completedOn;
+    }
+
+    public void setCompletedOn(ZonedDateTime completedOn) {
+        this.completedOn = completedOn;
+    }
 
     public ZonedDateTime getYourOrganisationCompletedOn() {
         return yourOrganisationCompletedOn;
@@ -47,5 +56,10 @@ public class PendingPartnerProgressResource {
     @JsonIgnore
     public boolean isTermsAndConditionsComplete() {
         return termsAndConditionsCompletedOn != null;
+    }
+
+    @JsonIgnore
+    public boolean isCompleted() {
+        return completedOn != null;
     }
 }

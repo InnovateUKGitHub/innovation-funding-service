@@ -339,6 +339,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Project partner progress.
      */
     PARTNER_NOT_READY_TO_JOIN_PROJECT(BAD_REQUEST),
+    PARTNER_ALREADY_TO_JOINED_PROJECT(BAD_REQUEST),
 
     /**
      * SIL CRM

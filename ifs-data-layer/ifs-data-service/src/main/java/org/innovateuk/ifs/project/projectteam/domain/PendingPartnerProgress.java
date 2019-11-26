@@ -97,7 +97,8 @@ public class PendingPartnerProgress {
     public boolean isReadyToJoinProject() {
         return isYourOrganisationComplete() &&
                 isYourFundingComplete() &&
-                isTermsAndConditionsComplete();
+                isTermsAndConditionsComplete() &&
+                !isComplete();
     }
 
     public boolean isComplete() {

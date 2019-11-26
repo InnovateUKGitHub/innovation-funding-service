@@ -15,9 +15,9 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean yourFundingComplete;
     private final boolean termsAndConditionsComplete;
     private final boolean showYourOrganisation;
-    private final ZonedDateTime completedOn;
+    private final boolean completed;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation, ZonedDateTime completedOn) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.applicationId = project.getApplication();
@@ -26,7 +26,7 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.yourFundingComplete = progress.isYourFundingComplete();
         this.termsAndConditionsComplete = progress.isTermsAndConditionsComplete();
         this.showYourOrganisation = showYourOrganisation;
-        this.completedOn = completedOn;
+        this.completed = progress.isCompleted();
     }
 
     public long getProjectId() {
@@ -66,6 +66,6 @@ public class PendingPartnerProgressLandingPageViewModel {
     }
 
     public boolean isCompleted() {
-        return completedOn != null;
+        return completed;
     }
 }

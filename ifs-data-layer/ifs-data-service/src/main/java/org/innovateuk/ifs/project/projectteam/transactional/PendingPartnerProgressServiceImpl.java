@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PARTNER_ALREADY_TO_JOINED_PROJECT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PARTNER_NOT_READY_TO_JOIN_PROJECT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -81,7 +82,7 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
     @Transactional
     public ServiceResult<Void> completePartnerSetup(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getPartnerProgress(projectOrganisationCompositeId)
-                .andOnSuccess(this::isReadyToJoinProject)
+                .andOnSuccess(this::canJoinProject)
                 .andOnSuccess(this::sendNotification)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::complete);
     }
@@ -91,11 +92,14 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
         return serviceSuccess(pendingPartnerProgress);
     }
 
-    private ServiceResult<PendingPartnerProgress> isReadyToJoinProject(PendingPartnerProgress progress) {
-        if (progress.isReadyToJoinProject()) {
+    private ServiceResult<PendingPartnerProgress> canJoinProject(PendingPartnerProgress progress) {
+        if (progress.isComplete()){
+            return serviceFailure(PARTNER_ALREADY_TO_JOINED_PROJECT);
+        } else if (!progress.isReadyToJoinProject()) {
+            return serviceFailure(PARTNER_NOT_READY_TO_JOIN_PROJECT);
+        } else {
             return serviceSuccess(progress);
         }
-        return serviceFailure(PARTNER_NOT_READY_TO_JOIN_PROJECT);
     }
 
     private ServiceResult<PendingPartnerProgress> getPartnerProgress(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
