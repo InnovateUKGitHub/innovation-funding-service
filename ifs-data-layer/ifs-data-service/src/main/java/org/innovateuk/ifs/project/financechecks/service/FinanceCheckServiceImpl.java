@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -95,6 +96,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Autowired
     private ApplicationFinanceService financeService;
 
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
+
     private BigDecimal percentDivisor = new BigDecimal("100");
 
     @Override
@@ -132,7 +136,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
 
-        List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceRowService.financeChecksTotals(projectId).getSuccess();
+        List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceService.financeChecksTotals(projectId).getSuccess();
 
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
         BigDecimal totalFundingSought = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalFundingSought);
@@ -153,7 +157,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
 
-        return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
+        return projectFinanceService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
                         new FinanceCheckEligibilityResource(project.getId(),
                                 organisationId,
                                 application.getDurationInMonths(),
@@ -190,7 +194,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
         boolean actionRequired = false;
 
-        ServiceResult<ProjectFinanceResource> resource = projectFinanceRowService.financeChecksDetails(projectId, organisationId);
+        ServiceResult<ProjectFinanceResource> resource = projectFinanceService.financeChecksDetails(projectId, organisationId);
         if(resource.isSuccess()) {
                 ServiceResult<List<QueryResource>> queries = financeCheckQueriesService.findAll(resource.getSuccess().getId());
                 if(queries.isSuccess()) {
@@ -295,7 +299,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
-        return projectFinanceRowService.financeChecksTotals(projectId);
+        return projectFinanceService.financeChecksTotals(projectId);
     }
 
     @Override
@@ -484,7 +488,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
         projectFinance.setViabilityStatus(viabilityRagStatus);
-
         projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();
@@ -514,7 +517,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
 
         projectFinance.setEligibilityStatus(eligibilityRagStatus);
-
         projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();

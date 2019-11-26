@@ -151,7 +151,7 @@
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
-                    </th:block> 
+                    </th:block>
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">
                     <p class="govuk-body no-file-uploaded ">No file currently uploaded.</p>

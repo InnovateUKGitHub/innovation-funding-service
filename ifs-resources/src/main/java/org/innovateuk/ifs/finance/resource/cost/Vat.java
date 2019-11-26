@@ -55,11 +55,6 @@ public class Vat extends AbstractFinanceRowItem {
     }
 
     @Override
-    public int getMinRows() {
-        return 0;
-    }
-
-    @Override
     public FinanceRowType getCostType() {
         return FinanceRowType.VAT;
     }

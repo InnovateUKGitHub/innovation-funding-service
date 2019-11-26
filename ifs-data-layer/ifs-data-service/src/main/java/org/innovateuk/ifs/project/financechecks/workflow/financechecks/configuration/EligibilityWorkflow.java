@@ -33,8 +33,7 @@ public class EligibilityWorkflow extends StateMachineConfigurerAdapter<Eligibili
     public void configure(StateMachineStateConfigurer<EligibilityState, EligibilityEvent> states) throws Exception {
         states.withStates()
                 .initial(REVIEW)
-                .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED))
-                .end(EligibilityState.APPROVED);
+                .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED));
     }
 
     @Override
@@ -53,6 +52,11 @@ public class EligibilityWorkflow extends StateMachineConfigurerAdapter<Eligibili
                 .withExternal()
                     .source(REVIEW)
                     .event(ELIGIBILITY_APPROVED)
-                    .target(APPROVED);
+                    .target(APPROVED)
+                    .and()
+                .withExternal()
+                    .source(APPROVED)
+                    .event(ELIGIBILITY_RESET)
+                    .target(REVIEW);
     }
 }
