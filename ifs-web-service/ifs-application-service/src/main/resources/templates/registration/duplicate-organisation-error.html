@@ -14,10 +14,11 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='You cannot join this project',subTitle=${model.getApplicationId()+ ': ' + model.getProjectName()},size='govuk-heading-l'"/>
-        <p class="govuk-body">The organisation you have chosen is already part of the project.
-            <a th:href="@{/organisation/create/contributor-organisation-type}" class="govuk-link">Choose another organisation</a>
-        </p>
+                  th:with="pageTitle='Contact our customer support team',subTitle=${model.getApplicationId()+ ': ' + model.getProjectName()},size='govuk-heading-l'"/>
+        <p class="govuk-body">This organisation is already part of the project.</p>
+
+        <p class="govuk-body">You need to call customer support services on 0300 321 4357 (9:00am to 5:30pm, 5 days a week) or
+            email <a href="mailto:support@innovateuk.ukri.org" class="govuk-link">support@innovateuk.ukri.org</a>. </p>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
