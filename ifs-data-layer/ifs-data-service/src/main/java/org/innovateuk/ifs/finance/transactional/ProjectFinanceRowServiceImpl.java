@@ -214,7 +214,6 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
                 .stream()
                 .filter(c -> c.getValue() != null)
                 .filter(c -> !"null".equals(c.getValue()))
-                .peek(c -> LOG.debug("FinanceRowMetaValue: " + c.getValue()))
                 .forEach(costValue -> updateCostValue(costValue, savedCost));
 
             // refresh the object, since we need to reload the costvalues, on the cost object.

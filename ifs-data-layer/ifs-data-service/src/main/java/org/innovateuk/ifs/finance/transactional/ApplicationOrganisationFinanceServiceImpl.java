@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-
-
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -32,11 +29,6 @@ public class ApplicationOrganisationFinanceServiceImpl extends AbstractOrganisat
     private UsersRolesService usersRolesService;
     @Autowired
     private SectionStatusService sectionStatusService;
-
-    static final String ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION = "Annual turnover";
-    static final String ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION = "Annual profits";
-    static final String ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION = "Annual export";
-    static final String RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION = "Research and development spend";
 
     @Override
     protected ServiceResult<ApplicationFinanceResource> getFinance(long applicationId, long organisationId) {
@@ -76,16 +68,12 @@ public class ApplicationOrganisationFinanceServiceImpl extends AbstractOrganisat
     }
 
     @Override
-    protected ServiceResult<Void> updateStateAidAgreed(long targetId, boolean stateAidAgreed) {
-        if (stateAidAgreed) {
-            return applicationService.getApplicationById(targetId).
-                andOnSuccess(application -> {
-                    application.setStateAidAgreed(stateAidAgreed);
-                    return applicationService.saveApplicationDetails(targetId, application);
-                }).
-                andOnSuccessReturnVoid();
-        }
-        return serviceSuccess();
-
+    protected ServiceResult<Void> updateStateAidAgreed(long targetId) {
+        return applicationService.getApplicationById(targetId).
+            andOnSuccess(application -> {
+                application.setStateAidAgreed(true);
+                return applicationService.saveApplicationDetails(targetId, application);
+            }).
+            andOnSuccessReturnVoid();
     }
 }
