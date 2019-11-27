@@ -436,11 +436,11 @@ compAdmin reject uploaded documents
 Partners can see both documents rejected
     the user navigates to the page       ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     the user clicks the button/link      link = Collaboration agreement
-    the user should see the element      jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
+    the user should see the element      jQuery = .warning-alert h2:contains("We have marked this document as incomplete because a change has been made to your project team. If you need to update the document you must contact your project manager.")
     the user should not see the element  jQuery = label:contains("Upload")
     the user clicks the button/link      link = Return to documents
     the user clicks the button/link      link = Exploitation plan
-    the user should see the element      jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
+    the user should see the element      jQuery = .warning-alert h2:contains("We have marked this document as incomplete because a change has been made to your project team. If you need to update the document you must contact your project manager.")
     the user should not see the element  jQuery = label:contains("Upload")
 
 Partners can see both documents approved
