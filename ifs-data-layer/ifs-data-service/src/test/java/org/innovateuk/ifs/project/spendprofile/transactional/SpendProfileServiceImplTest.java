@@ -91,6 +91,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
     private Long projectId = 123L;
     private Long organisationId = 456L;
+
     @Mock
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
     @Mock
@@ -1046,7 +1047,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         projectInDb.setSpendProfileSubmittedDate(ZonedDateTime.now());
         SpendProfile spendProfileInDb = new SpendProfile();
         spendProfileInDb.setMarkedAsComplete(true);
-        projectInDb.setSpendProfiles(asList(spendProfileInDb));
+        projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
 
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);

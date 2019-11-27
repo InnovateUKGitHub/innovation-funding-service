@@ -296,7 +296,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     /**
      * This method was written to recreate Spend Profile for one of the partner organisations on Production.
-     * <p>
      * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
      * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
      * Eligibility is approved, if the Spend Profile is already generated or the Spend Profile process state is valid.
