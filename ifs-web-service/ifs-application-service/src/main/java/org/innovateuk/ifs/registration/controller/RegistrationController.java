@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
@@ -60,6 +61,7 @@ public class RegistrationController {
     @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
+
     @Autowired
     private UserService userService;
 
@@ -114,8 +116,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/verify-email/{hash}")
-    public String verifyEmailAddress(@PathVariable("hash") final String hash,
-                                     final HttpServletResponse response) {
+    public String verifyEmailAddress(@PathVariable("hash") final String hash, final HttpServletResponse response) {
         userRestService.verifyEmail(hash).getSuccess();
         cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
         return "redirect:/registration/verified";
@@ -151,6 +152,77 @@ public class RegistrationController {
 
         return destination;
     }
+
+    @PostMapping("/register")
+    public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
+                                     BindingResult bindingResult,
+                                     HttpServletResponse response,
+                                     UserResource user,
+                                     HttpServletRequest request,
+                                     Model model) {
+
+        try {
+            if (setInviteeEmailAddress(registrationForm, request, model)) {
+                bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
+                validator.validate(registrationForm, bindingResult);
+            }
+        } catch (InviteAlreadyAcceptedException e) {
+            LOG.info("invite already accepted", e);
+            cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
+
+            return "redirect:/login";
+        }
+
+        checkForExistingEmail(registrationForm.getEmail(), bindingResult);
+        model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "registrationForm", bindingResult);
+        ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
+
+        return validationHandler.failNowOrSucceedWith(
+                () -> registerForm(registrationForm, model, user, request, response),
+                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request)).handleSuccessOrFailure(
+                        failure -> {
+                            addValidationErrors(validationHandler, failure);
+                            return registerForm(registrationForm, model, user, request, response);
+                        },
+                        userResource ->
+                                acceptInvite(request, userResource).handleSuccessOrFailure(
+                                        failure -> {
+                                            removeInviteCookie(response);
+                                            return handleAcceptInviteFailure(registrationForm, response, user, request, model, validationHandler, failure);
+                                        },
+                                        success -> {
+                                            removeInviteCookie(response);
+                                            return "redirect:/registration/success";
+                                        })));
+    }
+
+    @GetMapping("/duplicate-project-organisation")
+    public String displayErrorPage(HttpServletRequest request, Model model) {
+
+        InviteAndIdCookie projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request).get();
+        SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.getId(), projectInvite.getHash()).getSuccess();
+        model.addAttribute("model", invite);
+        return "registration/duplicate-organisation-error";
+    }
+
+    @GetMapping("/resend-email-verification")
+    public String resendEmailVerification(final ResendEmailVerificationForm resendEmailVerificationForm, final Model model) {
+        model.addAttribute("resendEmailVerificationForm", resendEmailVerificationForm);
+        return "registration/resend-email-verification";
+    }
+
+    @PostMapping("/resend-email-verification")
+    public String resendEmailVerification(@Valid final ResendEmailVerificationForm resendEmailVerificationForm, final BindingResult bindingResult, final Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("resendEmailVerificationForm", resendEmailVerificationForm);
+            return "registration/resend-email-verification";
+        }
+
+        userService.resendEmailVerificationNotification(resendEmailVerificationForm.getEmail());
+        return "registration/resend-email-verification-send";
+    }
+
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
         RestResult<OrganisationResource> result = organisationRestService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request));
@@ -200,97 +272,27 @@ public class RegistrationController {
         return false;
     }
 
-    @PostMapping("/register")
-    public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
-                                     BindingResult bindingResult,
-                                     HttpServletResponse response,
-                                     UserResource user,
-                                     HttpServletRequest request,
-                                     Model model) {
-
-        try {
-            if (setInviteeEmailAddress(registrationForm, request, model)) {
-                bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
-                validator.validate(registrationForm, bindingResult);
-            }
-        } catch (InviteAlreadyAcceptedException e) {
-            LOG.info("invite already accepted", e);
-            cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-
-            return "redirect:/login";
+    private String handleAcceptInviteFailure(@ModelAttribute("registrationForm") @Valid RegistrationForm registrationForm, HttpServletResponse response, UserResource user, HttpServletRequest request, Model model, ValidationHandler validationHandler, ServiceFailure failure) {
+        if (failure.getErrors().stream().anyMatch(
+                error -> error.getErrorKey().equals("ORGANISATION_ALREADY_EXISTS_FOR_PROJECT"))) {
+            return "redirect:/registration/duplicate-project-organisation";
         }
-
-        checkForExistingEmail(registrationForm.getEmail(), bindingResult);
-
-        model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "registrationForm", bindingResult);
-
-        ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
-
-        return validationHandler.failNowOrSucceedWith(
-                () -> registerForm(registrationForm, model, user, request, response),
-                () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request)).handleSuccessOrFailure(
-                        failure -> {
-                            validationHandler.addAnyErrors(failure,
-                                    fieldErrorsToFieldErrors(
-                                            e -> newFieldError(e, e.getFieldName(), e.getFieldRejectedValue(), "registration." + e.getErrorKey())
-                                    ),
-                                    asGlobalErrors()
-                            );
-
-                            return registerForm(registrationForm, model, user, request, response);
-                        },
-                        userResource ->
-                                acceptInvite(request, userResource).handleSuccessOrFailure(
-                                        failure -> {
-                                            removeCompetitionIdCookie(response);
-                                            registrationCookieService.deleteOrganisationIdCookie(response);
-
-                                            if (failure.getErrors().stream().anyMatch(
-                                                    error -> error.getErrorKey().equals("ORGANISATION_ALREADY_EXISTS_FOR_PROJECT"))) {
-                                                return "redirect:/registration/duplicate-project-organisation";
-                                            }
-                                            validationHandler.addAnyErrors(failure,
-                                                    fieldErrorsToFieldErrors(
-                                                            e -> newFieldError(e, e.getFieldName(), e.getFieldRejectedValue(), "registration." + e.getErrorKey())
-                                                    ),
-                                                    asGlobalErrors()
-                                            );
-                                            return registerForm(registrationForm, model, user, request, response);
-                                        },
-                                        success -> {
-                                            removeCompetitionIdCookie(response);
-                                            registrationCookieService.deleteOrganisationIdCookie(response);
-
-                                            return "redirect:/registration/success";
-                                        })));
+        addValidationErrors(validationHandler, failure);
+        return registerForm(registrationForm, model, user, request, response);
     }
 
-    @GetMapping("/duplicate-project-organisation")
-    public String displayErrorPage(HttpServletRequest request,
-                                   Model model) {
-
-        InviteAndIdCookie projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request).get();
-        SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.getId(), projectInvite.getHash()).getSuccess();
-        model.addAttribute("model", invite);
-        return "registration/duplicate-organisation-error";
+    private void removeInviteCookie(HttpServletResponse response) {
+        removeCompetitionIdCookie(response);
+        registrationCookieService.deleteOrganisationIdCookie(response);
     }
 
-    @GetMapping("/resend-email-verification")
-    public String resendEmailVerification(final ResendEmailVerificationForm resendEmailVerificationForm, final Model model) {
-        model.addAttribute("resendEmailVerificationForm", resendEmailVerificationForm);
-        return "registration/resend-email-verification";
-    }
-
-    @PostMapping("/resend-email-verification")
-    public String resendEmailVerification(@Valid final ResendEmailVerificationForm resendEmailVerificationForm, final BindingResult bindingResult, final Model model) {
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("resendEmailVerificationForm", resendEmailVerificationForm);
-            return "registration/resend-email-verification";
-        }
-
-        userService.resendEmailVerificationNotification(resendEmailVerificationForm.getEmail());
-        return "registration/resend-email-verification-send";
+    private void addValidationErrors(ValidationHandler validationHandler, ServiceFailure failure) {
+        validationHandler.addAnyErrors(failure,
+                fieldErrorsToFieldErrors(
+                        e -> newFieldError(e, e.getFieldName(), e.getFieldRejectedValue(), "registration." + e.getErrorKey())
+                ),
+                asGlobalErrors()
+        );
     }
 
     private void removeCompetitionIdCookie(HttpServletResponse response) {
