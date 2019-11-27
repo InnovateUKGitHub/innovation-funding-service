@@ -224,7 +224,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
     private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Predicate<T> filterFn, Consumer<T> updateFn) {
         return with(data -> {
-            List<FinanceRowItem> existingItems = financeRowCostsService.getCostItems(data.getApplicationFinance().getId(), financeRowType).getSuccess();
+            List<FinanceRowItem> existingItems = getCostItems(data.getApplicationFinance().getId(), financeRowType);
             simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
         });
     }

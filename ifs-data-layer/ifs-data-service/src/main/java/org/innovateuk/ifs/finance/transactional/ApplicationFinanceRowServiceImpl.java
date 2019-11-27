@@ -1,10 +1,26 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FINANCE_TYPE_NOT_SUPPORTED_BY_COMPETITION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.*;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
+import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -13,24 +29,11 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
-
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FINANCE_TYPE_NOT_SUPPORTED_BY_COMPETITION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService implements ApplicationFinanceRowService {
@@ -108,7 +111,6 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
                             .stream()
                             .filter(c -> c.getValue() != null)
                             .filter(c -> !"null".equals(c.getValue()))
-                            .peek(c -> LOG.debug("FinanceRowMetaValue: " + c.getValue()))
                             .forEach(costValue -> updateOrCreateCostValue(costValue, savedCost));
 
                     // refresh the object, since we need to reload the costvalues, on the cost object.
@@ -125,16 +127,6 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
             financeRowMetaValueRepository.deleteByFinanceRowId(financeRowId);
             financeRowRepository.deleteById(financeRowId);
             return serviceSuccess();
-        });
-    }
-
-
-    @Override
-    public ServiceResult<List<FinanceRowItem>> getCostItems(long applicationFinanceId, FinanceRowType type) {
-        return getApplicationFinance(applicationFinanceId).andOnSuccessReturn(applicationFinance -> {
-            OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
-            List<ApplicationFinanceRow> costs = financeRowRepository.findByTargetIdAndType(applicationFinanceId, type);
-            return organisationFinanceHandler.toResources(costs);
         });
     }
 

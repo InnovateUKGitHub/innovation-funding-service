@@ -206,7 +206,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @PostMapping("add-row/{rowType}")
     public String ajaxAddRow(Model model,
                              @PathVariable long projectId,
-                             @PathVariable long organisationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
         YourProjectCostsForm form = new YourProjectCostsForm();
         Map.Entry<String, AbstractCostRowForm> entry = yourProjectCostsSaver.addRowForm(form, rowType);
