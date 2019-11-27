@@ -6,13 +6,10 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
@@ -53,8 +50,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -63,10 +64,9 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
@@ -80,22 +80,16 @@ public class GrantMapperTest {
     private final Parameter parameter;
 
     @Mock
-    private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Mock
-    private ProjectFinanceRepository projectFinanceRepository;
-
-    @Mock
-    private ProjectFinanceRowRepository projectFinanceRowRepository;
+    private FormInputResponseRepository formInputResponseRepository;
 
     @Mock
     private SpendProfileRepository spendProfileRepository;
 
     @Mock
-    private FormInputResponseRepository formInputResponseRepository;
+    private InnovationLeadRepository innovationLeadRepository;
 
     @Mock
-    private InnovationLeadRepository innovationLeadRepository;
+    private ProjectFinanceHandler projectFinanceHandler;
 
     @InjectMocks
     protected GrantMapper grantMapper = new GrantMapper();
@@ -120,19 +114,19 @@ public class GrantMapperTest {
                 .thenReturn(parameter.publicDescriptionResponse());
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(any(), any()))
                 .thenAnswer(i -> Optional.of(parameter.createSpendProfile()));
-        ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
-        when(applicationFinance.getMaximumFundingLevel()).thenReturn(50);
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(any(), any()))
-                .thenReturn(applicationFinance);
-        ProjectFinance projectFinance = mock(ProjectFinance.class);
-        when(projectFinance.getOrganisationSize()).thenReturn(OrganisationSize.MEDIUM);
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(anyLong(), anyLong()))
-                .thenReturn(projectFinance);
-        ProjectFinanceRow projectFinanceRow = mock(ProjectFinanceRow.class);
-        when(projectFinanceRow.getName()).thenReturn("grant-claim");
-        when(projectFinanceRow.getQuantity()).thenReturn(30);
-        when(projectFinanceRowRepository.findByTargetId(anyLong()))
-                .thenReturn(Collections.singletonList(projectFinanceRow));
+
+        Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
+                FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+                        newGrantClaimPercentage().
+                                withGrantClaimPercentage(30).
+                                build(1)).
+                        build());
+        ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFinanceOrganisationDetails(industrialOrganisationFinances)
+                .withMaximumFundingLevel(50)
+                .build();
+
+        when(projectFinanceHandler.getProjectOrganisationFinances(any())).thenReturn(serviceSuccess(projectFinance));
 
         List<InnovationLead> innovationLeads = newInnovationLead().
                 withUser(newUser().withEmailAddress("il1@example.com", "il2@example.com").buildArray(2, User.class)).

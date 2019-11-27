@@ -4,9 +4,6 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,12 +12,12 @@ import java.util.List;
  * Handler for retrieving project finance data.
  */
 public interface ProjectFinanceHandler {
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
-    BigDecimal getResearchParticipationPercentageFromProject(@P("projectId")final Long projectId);
+    @NotSecured(value = "This service must be secured by other services")
+    BigDecimal getResearchParticipationPercentageFromProject(long projectId);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
+    @NotSecured(value = "This service should be secured by others. Unless being called by a scheduled job.", mustBeSecuredByOtherServices = false)
     ServiceResult<ProjectFinanceResource> getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
 
-    @NotSecured(value = "This service must be secured by other services", mustBeSecuredByOtherServices = true)
-    List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId);
+    @NotSecured(value = "This service must be secured by other service")
+    List<ProjectFinanceResource> getFinanceChecksTotals(long projectId);
 }
