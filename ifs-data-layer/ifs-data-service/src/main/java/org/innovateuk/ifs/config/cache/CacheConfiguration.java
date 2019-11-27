@@ -28,6 +28,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.time.Duration;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.springframework.util.Assert.isTrue;
+import static org.springframework.util.Assert.notNull;
+import static org.springframework.util.StringUtils.split;
 
 @Configuration
 public class CacheConfiguration extends CachingConfigurerSupport {
@@ -37,18 +40,14 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     @Value("${ifs.data.service.cache.ttl.seconds}")
     private int ttlSeconds;
 
-    @Value("${ifs.data.service.redis.cluster}")
-    private boolean cluster;
-
     @Bean
     @ConditionalOnProperty(value = "spring.cache.type", havingValue = "redis")
     public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
-        if (cluster) {
+        if (redisProperties.getCluster() != null && !redisProperties.getCluster().getNodes().isEmpty()) {
             return clusterConfiguration(redisProperties);
         } else {
             return standaloneConfiguration(redisProperties);
         }
-
     }
 
     private LettuceConnectionFactory clusterConfiguration(RedisProperties redisProperties) {
@@ -60,9 +59,14 @@ public class CacheConfiguration extends CachingConfigurerSupport {
             builder.useSsl();
         }
         RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
-        clusterConfiguration.clusterNode(redisProperties.getHost(), redisProperties.getPort());
+        redisProperties.getCluster().getNodes().forEach(node -> {
+            String[] args = split(node, ":");
+            notNull(args, "HostAndPort need to be seperated by  ':'.");
+            isTrue(args.length == 2, "Host and Port String needs to specified as host:port");
+            clusterConfiguration.clusterNode(args[0], Integer.valueOf(args[1]));
+        });
         clusterConfiguration.setPassword(RedisPassword.of(redisProperties.getPassword()));
-        clusterConfiguration.setMaxRedirects(3);
+        clusterConfiguration.setMaxRedirects(redisProperties.getCluster().getMaxRedirects());
         return new LettuceConnectionFactory(clusterConfiguration, builder.build());
     }
 
