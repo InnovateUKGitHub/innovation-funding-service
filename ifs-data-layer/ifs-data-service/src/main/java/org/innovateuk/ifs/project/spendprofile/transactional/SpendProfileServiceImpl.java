@@ -34,7 +34,6 @@ import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepos
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
-import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -75,7 +74,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
@@ -115,8 +113,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private CostCategoryTypeRepository costCategoryTypeRepository;
     @Autowired
     private CostCategoryRepository costCategoryRepository;
-    @Autowired
-    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -169,7 +165,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return (isViabilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project))
-                .andOnSuccess(() -> isThereAnyPendingPartners(project));
+                .andOnSuccess(() -> isThereAnyPendingPartnersOnProject(project));
     }
 
     private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
@@ -186,20 +182,12 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         }
     }
 
-    private ServiceResult<Void> isThereAnyPendingPartners(Project project) {
-
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-        List<PartnerOrganisation> pendingPartnerOrganisation = partnerOrganisations.stream()
-                .filter(PartnerOrganisation::isPendingPartner)
-                .collect(toList());
-
-        boolean noPendingPartners = pendingPartnerOrganisation.isEmpty();
-        boolean noSentStatusPartnerInvites = projectPartnerInviteRepository.existsByProjectIdAndStatus(project.getId(), SENT);
-
-        if (!noPendingPartners || noSentStatusPartnerInvites) {
+    private ServiceResult<Void> isThereAnyPendingPartnersOnProject(Project project) {
+        if (spendProfileWorkflowHandler.projectHasNoPendingPartners(project)) {
+            return serviceSuccess();
+        } else {
             return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_PARTNERS_ARE_NO_LONGER_PENDING);
         }
-        return serviceSuccess();
     }
 
     private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {

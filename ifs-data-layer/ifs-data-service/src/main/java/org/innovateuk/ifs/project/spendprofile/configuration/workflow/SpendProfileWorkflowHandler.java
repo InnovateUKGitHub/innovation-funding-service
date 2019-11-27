@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.project.spendprofile.configuration.workflow;
 
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileProcessRepository;
@@ -20,8 +22,11 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent.*;
 
 @Component
@@ -39,6 +44,9 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
 
     public boolean projectCreated(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUser), SpendProfileState.PENDING);
@@ -69,7 +77,18 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
         if (process == null)
             return false;
         return !SpendProfileState.PENDING.equals(process.getProcessState());
+    }
 
+    public boolean projectHasNoPendingPartners(Project project) {
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+        List<PartnerOrganisation> pendingPartnerOrganisation = partnerOrganisations.stream()
+                .filter(PartnerOrganisation::isPendingPartner)
+                .collect(toList());
+
+        boolean pendingPartnerProgressComplete = pendingPartnerOrganisation.isEmpty();
+        boolean noSentStatusPartnerInvites = projectPartnerInviteRepository.existsByProjectIdAndStatus(project.getId(), SENT);
+
+        return pendingPartnerProgressComplete && !noSentStatusPartnerInvites;
     }
 
     public boolean isReadyToApprove(Project project) {

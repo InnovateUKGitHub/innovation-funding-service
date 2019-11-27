@@ -31,7 +31,6 @@ import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepositor
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -125,7 +124,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Mock
     private SystemNotificationSource systemNotificationSource;
 
-
     @Test
     public void generateSpendProfile() {
 
@@ -149,6 +147,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
         when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(true);
         when(spendProfileWorkflowHandler.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
@@ -246,6 +245,35 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
+    public void generateSpendProfileButWithPendingPartner() {
+
+        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+
+        Organisation organisation1 = generateSpendProfileData.getOrganisation1();
+        Organisation organisation2 = generateSpendProfileData.getOrganisation2();
+        PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
+        PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
+
+        setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
+
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(false);
+
+        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
+        assertTrue(generateResult.isFailure());
+        assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_PARTNERS_ARE_NO_LONGER_PENDING));
+
+        verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepository);
+    }
+
+    @Test
     public void generateSpendProfileWhenNotAllEligibilityApproved() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
@@ -320,6 +348,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
         when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(true);
         when(spendProfileWorkflowHandler.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
@@ -378,6 +407,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
         when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(true);
         when(spendProfileWorkflowHandler.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
@@ -461,7 +491,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 .withId(projectId)
                 .withDuration(3L)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                .build(2))
+                        .build(2))
                 .withApplication(application)
                 .build();
 
@@ -611,7 +641,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         assertTrue(serviceResult.getSuccess().getFileName().startsWith("TEST_Spend_Profile_" + dateFormat.format(date)));
         assertFalse(serviceResult.getSuccess().getCsvData().contains("Group Name"));
-        assertEquals(Arrays.asList(serviceResult.getSuccess().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
+        assertEquals(Arrays.stream(serviceResult.getSuccess().getCsvData().split("\n")).filter(s -> s.contains("Group Name")
                 && !s.contains("Month") && !s.contains("TOTAL")).count(), 0);
     }
 
@@ -665,7 +695,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
         assertTrue(result.isSuccess());
-;
         verify(spendProfileRepository).saveAll(spendProfileList);
         verify(spendProfileWorkflowHandler).spendProfileApproved(project, user);
     }
@@ -690,7 +719,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> resultNew = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
         assertTrue(resultNew.isSuccess());
-        assertTrue(project.getSpendProfileSubmittedDate() == null);
+        assertNull(project.getSpendProfileSubmittedDate());
 
         verify(spendProfileRepository).saveAll(spendProfileList);
         verify(spendProfileWorkflowHandler).spendProfileRejected(project, user);
@@ -716,7 +745,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         assertEquals(SPEND_PROFILE_CANNOT_BE_APPROVED.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
         verify(spendProfileRepository).saveAll(spendProfileList);
-        verify(spendProfileWorkflowHandler).spendProfileApproved(project,user);
+        verify(spendProfileWorkflowHandler).spendProfileApproved(project, user);
     }
 
     @Test
@@ -985,7 +1014,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
         spendProfileInDb.setMarkedAsComplete(true);
-        projectInDb.setSpendProfiles(asList(spendProfileInDb));
+        projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
         assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
         when(spendProfileWorkflowHandler.submit(projectInDb)).thenReturn(true);
@@ -1002,7 +1031,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
         spendProfileInDb.setMarkedAsComplete(false);
-        projectInDb.setSpendProfiles(asList(spendProfileInDb));
+        projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
         assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
 
@@ -1035,34 +1064,28 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         User generatedBy = newUser().build();
         Calendar generatedDate = Calendar.getInstance();
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, true);
-
-        return spendProfileInDB;
+        return new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, true);
     }
 
     private CostCategoryType createCostCategoryType() {
 
         CostCategoryGroup costCategoryGroup = createCostCategoryGroup();
 
-        CostCategoryType costCategoryType = new CostCategoryType("Cost Category Type for Categories Labour, Materials, Other costs", costCategoryGroup);
-
-        return costCategoryType;
+        return new CostCategoryType("Cost Category Type for Categories Labour, Materials, Other costs", costCategoryGroup);
     }
 
     private CostCategoryGroup createCostCategoryGroup() {
 
         List<CostCategory> costCategories = createCostCategories(Arrays.asList(1L, 2L, 3L));
 
-        CostCategoryGroup costCategoryGroup = new CostCategoryGroup("Cost Category Group for Categories Labour, Materials, Other costs", costCategories);
-
-        return costCategoryGroup;
+        return new CostCategoryGroup("Cost Category Group for Categories Labour, Materials, Other costs", costCategories);
     }
 
     private List<CostCategory> createCostCategories(List<Long> categories) {
 
         List<CostCategory> costCategories = new ArrayList<>();
 
-        categories.stream().forEach(category -> {
+        categories.forEach(category -> {
             CostCategory costCategory = new CostCategory();
             costCategory.setId(category);
             costCategories.add(costCategory);
@@ -1075,11 +1098,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         List<Cost> eligibleCostForAllCategories = new ArrayList<>();
 
-        categoryCost.forEach((category, value) -> {
-
-            eligibleCostForAllCategories.add(createEligibleCost(category, value, costCategoryGroup));
-
-        });
+        categoryCost.forEach((category, value) ->
+                eligibleCostForAllCategories.add(createEligibleCost(category, value, costCategoryGroup)));
 
         return eligibleCostForAllCategories;
     }
@@ -1310,7 +1330,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                     .withCostCategoryGroup(
                             newCostCategoryGroup()
                                     .withDescription("Group 2")
-                                    .withCostCategories(asList(type2Cat1))
+                                    .withCostCategories(singletonList(type2Cat1))
                                     .build())
                     .build();
 
