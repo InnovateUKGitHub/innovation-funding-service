@@ -282,7 +282,7 @@ public class RegistrationController {
     }
 
     private void removeInviteCookie(HttpServletResponse response) {
-        removeCompetitionIdCookie(response);
+        registrationCookieService.deleteCompetitionIdCookie(response);
         registrationCookieService.deleteOrganisationIdCookie(response);
     }
 
@@ -293,10 +293,6 @@ public class RegistrationController {
                 ),
                 asGlobalErrors()
         );
-    }
-
-    private void removeCompetitionIdCookie(HttpServletResponse response) {
-        registrationCookieService.deleteCompetitionIdCookie(response);
     }
 
     private Long getCompetitionId(HttpServletRequest request) {

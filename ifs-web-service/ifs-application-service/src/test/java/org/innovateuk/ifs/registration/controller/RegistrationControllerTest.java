@@ -23,10 +23,7 @@ import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -533,6 +530,28 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         )
                 .andExpect(view().name("redirect:/registration/duplicate-project-organisation"))
                 .andExpect(status().is3xxRedirection());
+
+        InOrder inOrder = inOrder(registrationCookieService, projectPartnerInviteRestService, userService );
+
+        inOrder.verify(registrationCookieService).getInviteHashCookieValue(any(HttpServletRequest.class));
+        inOrder.verify(projectPartnerInviteRestService).getInviteByHash(projectInviteCookie.getId(), projectInviteCookie.getHash());
+        inOrder.verify(userService).findUserByEmail(eq(userResource.getEmail()));
+        inOrder.verify(userService).createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
+                eq(userResource.getLastName()),
+                eq(userResource.getPassword()),
+                eq(userResource.getEmail()),
+                nullable(String.class),
+                eq(userResource.getPhoneNumber()),
+                eq(1L),
+                eq(1L),
+                nullable(Boolean.class));
+        inOrder.verify(registrationCookieService).getProjectInviteHashCookieValue(any(HttpServletRequest.class));
+        inOrder.verify(projectPartnerInviteRestService).getInviteByHash(projectInviteCookie.getId(), projectInviteCookie.getHash());
+        inOrder.verify(registrationCookieService).getOrganisationIdCookieValue(any(HttpServletRequest.class));
+        inOrder.verify(projectPartnerInviteRestService).acceptInvite(anyLong(), anyLong(), anyLong());
+        inOrder.verify(registrationCookieService).deleteCompetitionIdCookie(any(HttpServletResponse.class));
+        inOrder.verify(registrationCookieService).deleteOrganisationIdCookie(any(HttpServletResponse.class));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
