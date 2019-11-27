@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.financechecks.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -22,6 +23,9 @@ public class ProjectFinanceController {
 
     @Autowired
     private FinanceCheckService financeCheckService;
+
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
 
     @GetMapping("/{projectId}/project-finances")
     public RestResult<List<ProjectFinanceResource>> getProjectFinances(@PathVariable("projectId") final Long projectId) {
@@ -74,6 +78,6 @@ public class ProjectFinanceController {
 
     @GetMapping("/{projectId}/organisation/{organisationId}/finance-details")
     public RestResult<ProjectFinanceResource> financeDetails(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId) {
-        return financeRowService.financeChecksDetails(projectId, organisationId).toGetResponse();
+        return projectFinanceService.financeChecksDetails(projectId, organisationId).toGetResponse();
     }
 }
