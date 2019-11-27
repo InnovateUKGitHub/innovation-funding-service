@@ -99,6 +99,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-cache"
     compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
 
+
+
     compile "org.springframework:spring-web"
     compile "com.jayway.jsonpath:json-path-assert:2.0.0"
     compile "com.jayway.jsonpath:json-path"
@@ -134,7 +136,7 @@ test {
 
     minHeapSize = "1024m"
     maxHeapSize = "2048m"
-    
+
     finalizedBy asciidoctor
 
     if (project.hasProperty('excludeTests')) {

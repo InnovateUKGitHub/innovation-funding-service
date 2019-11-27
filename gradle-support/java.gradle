@@ -49,6 +49,7 @@ compileJava {
 
 dependencies {
     compile "commons-logging:commons-logging:1.2"
+    compile "org.bouncycastle:bcprov-jdk15on:1.64"
 
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-core:2.21.0"
