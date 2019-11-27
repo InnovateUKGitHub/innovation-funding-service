@@ -6,7 +6,6 @@ items:
     metadata:
       name: db-config
     data:
-      DB_URL: "${DB_URL}"
       DB_NAME: "${DB_NAME}"
       DB_USER: "${DB_USER}"
       DB_PASS: "${DB_PASS}"
@@ -71,15 +70,15 @@ items:
               . /clean-migrate-db-sync-ldap.sh
           env:
             - name: DB_HOST
-                valueFrom:
-                  configMapKeyRef:
-                    name: db-config
-                    key: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: DB_HOST
             - name: DB_PORT
-                valueFrom:
-                  configMapKeyRef:
-                    name: db-config
-                    key: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: DB_PORT
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
