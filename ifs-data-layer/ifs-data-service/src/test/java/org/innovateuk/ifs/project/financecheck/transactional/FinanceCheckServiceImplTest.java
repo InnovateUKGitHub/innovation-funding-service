@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -150,6 +151,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Test
     public void testGetByProjectAndOrganisationNotFound() {
@@ -307,7 +311,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
         when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-
+        when(applicationFinanceRepository.existsByApplicationIdAndOrganisationId(application.getId(), organisationId)).thenReturn(false);
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isSuccess());
 
@@ -319,6 +323,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());
         assertEquals(projectFinanceResource.getTotalOtherFunding(), eligibility.getOtherPublicSectorFunding());
         assertEquals(projectFinanceResource.getTotalContribution(), eligibility.getContributionToProject());
+        assertFalse(eligibility.isHasApplicationFinances());
     }
 
     @Test
