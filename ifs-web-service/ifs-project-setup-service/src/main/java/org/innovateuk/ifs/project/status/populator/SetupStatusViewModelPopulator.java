@@ -60,9 +60,10 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
+        boolean existsOnApplication = projectService.existsOnApplication(projectId, loggedInUser.getId());
+
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean monitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
-
         List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer))
                 .collect(toList());
@@ -71,7 +72,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 project,
                 monitoringOfficer,
                 stages,
-                competition.isLoan());
+                competition.isLoan(),
+                existsOnApplication);
     }
 
     private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer) {

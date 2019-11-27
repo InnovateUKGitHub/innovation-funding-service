@@ -26,6 +26,7 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
@@ -100,6 +101,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<ProjectResource> getByApplicationId(long applicationId) {
         return getProjectByApplication(applicationId).andOnSuccessReturn(projectMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<Boolean> existsOnApplication(long projectId,  long userId) {
+        return getProject(projectId).andOnSuccessReturn(p -> p.getApplication().getProcessRoles().stream().anyMatch(pr -> pr.getUser().getId() == userId));
     }
 
     @Override
