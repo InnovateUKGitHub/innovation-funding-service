@@ -18,8 +18,24 @@ INTERNAL_REGISTRY=$(getInternalRegistry)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
+function applyConfigMaps {
+    oc apply -f $(getBuildLocation)/config-maps/acc-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/cache-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/data-service-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/db-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/finance-db-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/flyway-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/grant-db-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/ldap-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/performance-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/survey-db-config.yml ${SVC_ACCOUNT_CLAUSE}
+}
+
 function upgradeServices {
-  # Deploying finance-data-service before data-service as latter submits updates to former.
+
+   applyConfigMaps
+
+    # Deploying finance-data-service before data-service as latter submits updates to former.
     # rolloutStatus checks ensure that service has been deployed successfully before proceeding further.
     oc apply -f $(getBuildLocation)/ifs-services/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "finance-data-service"
