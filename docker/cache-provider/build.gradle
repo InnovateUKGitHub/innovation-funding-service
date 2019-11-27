@@ -3,7 +3,7 @@ apply from: rootProject.file("gradle-support/openshift-build.gradle")
 buildscript {
     repositories { jcenter() }
 }
-def redisVersion = "5.0.6"
+def redisVersion = "5.0.5"
 
 buildDocker.inputDir = project.file("$project.projectDir/docker")
 buildDocker.tag = "innovateuk/cache-provider:" + redisVersion

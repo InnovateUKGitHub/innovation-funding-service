@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 
 public interface GrantService {
+
     @NotSecured(value = "Only called by scheduled process", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> sendReadyProjects();
 }

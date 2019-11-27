@@ -14,7 +14,7 @@ public interface GrantProcessService {
     Optional<GrantProcess> findOneReadyToSend();
 
     @NotSecured(value = "Service is called from other services always")
-    void createGrantProcess(long id);
+    void createGrantProcess(long applicationId);
 
     @NotSecured(value = "Only called by scheduled process", mustBeSecuredByOtherServices = false)
     void sendSucceeded(long applicationId);

@@ -8,12 +8,13 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -114,9 +115,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private SpendProfileRepository spendProfileRepository;
-
+    
     @Mock
-    private ProjectFinanceRowService projectFinanceRowService;
+    private ProjectFinanceService projectFinanceService;
 
     @Mock
     private StatusService statusService;
@@ -150,6 +151,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Test
     public void testGetByProjectAndOrganisationNotFound() {
@@ -218,7 +222,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(partnerOrganisationRepository.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
-        when(projectFinanceRowService.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
+        when(projectFinanceService.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
 
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisations[0].getId())).thenReturn(partnerOrganisations.get(0));
@@ -244,16 +248,16 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(projectFinanceInDB3);
 
         ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisations[1].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[1]));
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisations[2].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[2]));
+        when(projectFinanceService.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
+        when(projectFinanceService.financeChecksDetails(projectId, organisations[1].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[1]));
+        when(projectFinanceService.financeChecksDetails(projectId, organisations[2].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[2]));
 
         QueryResource queryResource1 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , true, ZonedDateTime.now(), null, null);
         QueryResource queryResource2 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , false, ZonedDateTime.now(), null, null);
         when(financeCheckQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
         when(financeCheckQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(financeCheckQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
-        when(financeService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -306,8 +310,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(applicationFinanceRepository.existsByApplicationIdAndOrganisationId(application.getId(), organisationId)).thenReturn(false);
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isSuccess());
 
@@ -319,6 +323,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());
         assertEquals(projectFinanceResource.getTotalOtherFunding(), eligibility.getOtherPublicSectorFunding());
         assertEquals(projectFinanceResource.getTotalContribution(), eligibility.getContributionToProject());
+        assertFalse(eligibility.isHasApplicationFinances());
     }
 
     @Test
@@ -332,7 +337,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isFailure());
@@ -352,7 +357,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", true, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
         when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
@@ -373,7 +378,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
         when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
@@ -394,7 +399,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
         when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
@@ -413,7 +418,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         List<QueryResource> queries = Collections.emptyList();
 
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
         when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
@@ -432,7 +437,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
         when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceFailure(internalServerErrorError()));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
@@ -451,7 +456,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
-        when(projectFinanceRowService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
         when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(null));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
@@ -509,8 +514,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectFinanceRowService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -576,8 +581,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectFinanceRowService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+        when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -643,8 +648,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectFinanceRowService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
+        when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());

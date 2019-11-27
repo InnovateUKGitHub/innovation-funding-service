@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import org.checkerframework.checker.units.qual.A;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
 import org.innovateuk.ifs.finance.domain.GrowthTable;
@@ -8,17 +7,17 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
-import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
 import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -72,13 +71,22 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
         });
     }
 
-
     @Override
-    public ServiceResult<Void> updateProjectFinance(long projectFinanceId, ProjectFinanceResource projectFinanceResource) {
+    public ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource) {
+        long projectFinanceId = projectFinanceResource.getId();
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {
             updateFinanceDetails(dbFinance, projectFinanceResource);
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<Double> getResearchParticipationPercentageFromProject(long projectId) {
+        return getResearchPercentageFromProject(projectId).andOnSuccessReturn(BigDecimal::doubleValue);
+    }
+
+    private ServiceResult<BigDecimal> getResearchPercentageFromProject(Long projectId) {
+        return find(projectFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
     }
 
     private ServiceResult<ProjectFinanceResource> getProjectFinanceForOrganisation(ProjectFinanceResourceId projectFinanceResourceId) {

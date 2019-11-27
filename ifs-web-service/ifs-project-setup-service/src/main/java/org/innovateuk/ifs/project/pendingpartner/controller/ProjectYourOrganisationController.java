@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.pendingpartner.controller;
 
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/your-organisation")
-@SecuredBySpring(value = "Controller", description = "Applicants and internal users can see the Your Organisation page",
+@SecuredBySpring(value = "Controller", description = "Project partners can see the Your Organisation page for their organisation",
     securedType = SetupStatusController.class)
-@PreAuthorize("hasAnyAuthority('applicant')")
+@PreAuthorize("hasAuthority('applicant')")
 public class ProjectYourOrganisationController {
 
     @Autowired
@@ -36,7 +37,7 @@ public class ProjectYourOrganisationController {
 
         boolean includeGrowthTable = isIncludingGrowthTable(project.getCompetition());
 
-        return String.format("redirect:/project/%d/organisation/%d/your-organisation/%s",
+        return format("redirect:/project/%d/organisation/%d/your-organisation/%s",
                         projectId,
                         organisationId,
                         includeGrowthTable ? "with-growth-table" : "without-growth-table");

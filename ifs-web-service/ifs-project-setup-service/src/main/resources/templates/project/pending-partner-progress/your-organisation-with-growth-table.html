@@ -25,15 +25,8 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <div class="message-alert">
-            <p class="govuk-body">If you are a partner enterprise or a linked
-                enterprise you must give the size of the main organisation
-                you are linked to.</p>
-        </div>
-
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave='autosaveFormPost'"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
@@ -67,11 +60,11 @@
                 <a th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}"
                    th:if="${model.readOnly}"
                    class="govuk-!-margin-top-6 button-secondary">Return to
-                    organisation details.
+                    join project
                 </a>
                 <button type="submit" th:unless="${model.readOnly}"
                         class="govuk-!-margin-top-6 govuk-button">
-                    Save and return to organisation details.
+                    Save and return to join project
                 </button>
             </div>
 

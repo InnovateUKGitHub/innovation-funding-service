@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static java.lang.String.format;
+
+
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import javax.validation.Valid;
@@ -28,16 +29,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * The Controller for the "Your organisation" page in the project setup process
+ * when a a new partner has been invited and a growth table is not required.
+ */
 @Controller
-@RequestMapping("/project/{projectId}/organisation/{organisationId}/your-organisation/without" +
-    "-growth-table")
+@RequestMapping("/project/{projectId}/organisation/{organisationId}/your-organisation/without-growth-table")
 public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
-    /**
-     * The Controller for the "Your organisation" page in the project setup process
-     * when a a new partner has been invited and a growth table is not required.
-     */
 
     private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/pending-partner-progress/your-organisation-without-growth-table";
 
@@ -56,10 +55,7 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
     @AsyncMethod
     @PreAuthorize("hasAnyAuthority('applicant')")
     @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants and internal users can view the Your organisation page")
-    public String viewPage(
-        @PathVariable long projectId,
-        @PathVariable long organisationId,
-        Model model) {
+    public String viewPage(@PathVariable long projectId, @PathVariable long organisationId, Model model) {
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
             getViewModel(projectId, organisationId));
@@ -76,38 +72,18 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
     @PostMapping
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
-    public String updateWithoutGrowthTable(
-        @PathVariable long projectId,
-        @PathVariable long organisationId,
-        @ModelAttribute YourOrganisationWithoutGrowthTableForm form) {
+    public String updateWithoutGrowthTable(@PathVariable long projectId, @PathVariable long organisationId, @ModelAttribute YourOrganisationWithoutGrowthTableForm form) {
 
         updateYourOrganisationWithoutGrowthTable(projectId, organisationId, form);
         return redirectToLandingPage(projectId, organisationId);
     }
 
-    @PostMapping(value = "/auto-save")
-    @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation details")
-    public @ResponseBody JsonNode autosaveWithoutGrowthTable(
-        @PathVariable long projectId,
-        @PathVariable long organisationId,
-        @ModelAttribute YourOrganisationWithoutGrowthTableForm form) {
-
-        updateWithoutGrowthTable(projectId, organisationId, form);
-        return new ObjectMapper().createObjectNode();
-    }
-
     @PostMapping(params = {"mark-as-complete"})
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_COMPLETE", description = "Applicants can mark their organisation details as complete")
-    public String markAsCompleteWithoutGrowthTable(
-        @PathVariable long projectId,
-        @PathVariable long organisationId,
-        UserResource loggedInUser,
-        @Valid @ModelAttribute("form") YourOrganisationWithoutGrowthTableForm form,
-        @SuppressWarnings("unused") BindingResult bindingResult,
-        ValidationHandler validationHandler,
-        Model model) {
+    public String markAsCompleteWithoutGrowthTable(@PathVariable long projectId, @PathVariable long organisationId,
+                                                   UserResource loggedInUser, @Valid @ModelAttribute("form") YourOrganisationWithoutGrowthTableForm form,
+                                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler, Model model) {
 
         Supplier<String> failureHandler = () -> {
             YourOrganisationViewModel viewModel = getViewModel(projectId, organisationId);
@@ -128,9 +104,7 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
     @PostMapping(params = "mark-as-incomplete")
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_INCOMPLETE", description = "Applicants can mark their organisation details as incomplete")
-    public String markAsIncomplete(
-        @PathVariable long projectId,
-        @PathVariable long organisationId) {
+    public String markAsIncomplete(@PathVariable long projectId, @PathVariable long organisationId) {
 
         pendingPartnerProgressRestService.markYourOrganisationIncomplete(projectId, organisationId);
         return redirectToViewPage(projectId, organisationId);
@@ -155,13 +129,13 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
     }
 
     private String redirectToViewPage(long projectId, long organisationId) {
-        return String.format("redirect:/project/%d/organisation/%d/your-organisation/without-growth-table",
+        return format("redirect:/project/%d/organisation/%d/your-organisation/without-growth-table",
             projectId,
             organisationId);
     }
 
     private String redirectToLandingPage(long projectId, long organisationId) {
-        return String.format("redirect:/project/%d/organisation/%d/pending-partner-progress",
+        return format("redirect:/project/%d/organisation/%d/pending-partner-progress",
             projectId,
             organisationId);
     }
