@@ -12,13 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/pending-partner-progress")
@@ -56,11 +52,10 @@ public class PendingPartnerProgressLandingPageController {
                               @PathVariable long organisationId,
                               Model model,
                               @ModelAttribute("form") JoinProjectForm form,
-                              BindingResult bindingResult,
                               ValidationHandler validationHandler){
         Supplier<String> failureView = () -> joinProjectConfirm(projectId, organisationId, form, model);
         Supplier<String> successView = () -> "redirect:/project/" + projectId;
         RestResult<Void> result = pendingPartnerProgressRestService.completePartnerSetup(projectId, organisationId);
-        return validationHandler.addAnyErrors(result,fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(failureView, successView);
+        return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, successView);
     }
 }

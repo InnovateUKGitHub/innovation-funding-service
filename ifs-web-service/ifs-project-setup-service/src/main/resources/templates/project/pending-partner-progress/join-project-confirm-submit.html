@@ -10,8 +10,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='This is your final chance to make changes.',size='govuk-heading-xl'" />
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              aria-labelledby="error-summary-title"
              role="alert"
@@ -20,6 +20,7 @@
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
+        <p class="govuk-body">Are you sure you want to submit?</p>
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}">
             <input type="submit" tabindex="0" class="govuk-button" value="Yes, I want to join the project" />
             <a role="button" tabindex="1" class="button-clear" th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${projectId}, organisationId=${organisationId})}">Cancel</a>

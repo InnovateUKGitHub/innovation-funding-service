@@ -3,8 +3,6 @@ package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
-import java.time.ZonedDateTime;
-
 public class PendingPartnerProgressLandingPageViewModel {
 
     private final long projectId;
@@ -16,6 +14,7 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean termsAndConditionsComplete;
     private final boolean showYourOrganisation;
     private final boolean completed;
+    private final boolean isReadyToJoinProject;
 
     public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
         this.projectId = project.getId();
@@ -27,6 +26,8 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.termsAndConditionsComplete = progress.isTermsAndConditionsComplete();
         this.showYourOrganisation = showYourOrganisation;
         this.completed = progress.isCompleted();
+        this.isReadyToJoinProject = progress.isReadyToJoinProject();
+
     }
 
     public long getProjectId() {
@@ -62,7 +63,7 @@ public class PendingPartnerProgressLandingPageViewModel {
     }
 
     public boolean isReadyToJoinProject() {
-        return isYourFundingComplete() && isTermsAndConditionsComplete() && (!isShowYourOrganisation() || isYourOrganisationComplete()) && !isCompleted();
+        return isReadyToJoinProject;
     }
 
     public boolean isCompleted() {
