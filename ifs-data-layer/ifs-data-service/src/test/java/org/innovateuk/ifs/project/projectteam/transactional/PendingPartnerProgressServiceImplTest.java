@@ -1,7 +1,14 @@
 package org.innovateuk.ifs.project.projectteam.transactional;
 
+import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
+import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
+import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
+import org.innovateuk.ifs.project.projectteam.builder.PendingPartnerProgressBuilder;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.projectteam.mapper.PendingPartnerProgressMapper;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -13,7 +20,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PARTNER_NOT_READY_TO_JOIN_PROJECT;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.projectteam.builder.PendingPartnerProgressBuilder.newPendingPartnerProgress;
 import static org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId.id;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -113,7 +127,17 @@ public class PendingPartnerProgressServiceImplTest {
 
     @Test
     public void completePartnerSetup_failure() {
-        PendingPartnerProgress pendingPartnerProgress = new PendingPartnerProgress(null);
+        PendingPartnerProgress pendingPartnerProgress
+                = newPendingPartnerProgress()
+                .withPartnerOrganisation(newPartnerOrganisation()
+                        .withOrganisation(newOrganisation().withOrganisationType(BUSINESS).build())
+                        .withProject(newProject()
+                                .withApplication(newApplication()
+                                        .withCompetition(newCompetition().build())
+                                        .build())
+                                .build())
+                        .build())
+                .build();
         when(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(PROJECT_ID, ORGANISATION_ID)).thenReturn(Optional.of(pendingPartnerProgress));
 
         ServiceResult<Void> result = service.completePartnerSetup(id(PROJECT_ID, ORGANISATION_ID));
@@ -124,7 +148,7 @@ public class PendingPartnerProgressServiceImplTest {
 
     @Test
     public void completePartnerSetup_success() {
-        PendingPartnerProgress pendingPartnerProgress = new PendingPartnerProgress(null);
+        PendingPartnerProgress pendingPartnerProgress = newPendingPartnerProgress().build();
         pendingPartnerProgress.markYourOrganisationComplete();
         pendingPartnerProgress.markYourFundingComplete();
         pendingPartnerProgress.markTermsAndConditionsComplete();

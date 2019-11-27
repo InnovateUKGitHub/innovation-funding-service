@@ -26,7 +26,7 @@ public class PendingPartnerProgress {
     private ZonedDateTime termsAndConditionsCompletedOn;
     private ZonedDateTime completedOn;
 
-    private PendingPartnerProgress() {}
+    public PendingPartnerProgress() {}
 
     public PendingPartnerProgress(PartnerOrganisation partnerOrganisation) {
         this.partnerOrganisation = partnerOrganisation;
