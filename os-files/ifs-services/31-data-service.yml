@@ -9,6 +9,11 @@ items:
       DB_URL: "${DB_URL}"
       DB_USER: "${DB_USER}"
       DB_PASS: "${DB_PASS}"
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: flyway-config
+    data:
       FLYWAY_LOCATIONS: "${FLYWAY_LOCATIONS}"
   - apiVersion: v1
     kind: ConfigMap
@@ -99,7 +104,7 @@ items:
                 - name: SPRING_FLYWAY_LOCATIONS
                   valueFrom:
                     configMapKeyRef:
-                      name: db-config
+                      name: flyway-config
                       key: FLYWAY_LOCATIONS
                 - name: SPRING_CACHE_TYPE
                   valueFrom:
