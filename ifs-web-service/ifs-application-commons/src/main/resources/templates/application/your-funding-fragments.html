@@ -304,7 +304,7 @@
 <th:block th:fragment="applicant-business">
     <th:block th:if="${model.overridingFundingRules}">
         The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
-        based on the <a class="govuk-link" target="_blank"
+        based on this <a class="govuk-link" target="_blank"
                         th:href="@{/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">competition's rules (opens in a new window)</a>.
     </th:block>
     <th:block th:unless="${model.overridingFundingRules}">
@@ -323,7 +323,7 @@
 <th:block th:fragment="project-business">
     <th:block th:if="${model.overridingFundingRules}">
         The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
-        based on the <a class="govuk-link" target="_blank"
+        based on this <a class="govuk-link" target="_blank"
                         th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">competition's rules (opens in a new window)</a>.
     </th:block>
     <th:block th:unless="${model.overridingFundingRules}">
