@@ -28,11 +28,6 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
     @Override
-    public RestResult<List<SectionResource>> getByIds(List<Long> sectionIds) {
-        return getWithRestResult(sectionRestURL + "/" + sectionIds, sectionResourceListType());
-    }
-
-    @Override
     public RestResult<List<SectionResource>> getByCompetition(final Long competitionId) {
         return getWithRestResult(sectionRestURL + "/get-by-competition/" + competitionId, sectionResourceListType());
     }
@@ -56,5 +51,4 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     public RestResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(Long competitionId) {
         return getWithRestResult(sectionRestURL + "/get-by-competition-id-visible-for-assessment/" + competitionId, sectionResourceListType());
     }
-
 }

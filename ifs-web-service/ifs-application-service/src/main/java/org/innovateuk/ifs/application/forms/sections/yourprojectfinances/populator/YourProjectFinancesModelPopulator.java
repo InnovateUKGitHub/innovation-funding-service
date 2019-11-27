@@ -55,8 +55,9 @@ public class YourProjectFinancesModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
-        List<YourFinancesRowViewModel> rows = sectionRestService.getByIds(yourFinances.getChildSections()).getSuccess()
-                .stream()
+        List<YourFinancesRowViewModel> rows = yourFinances.getChildSections().stream()
+                .map(sectionRestService::getById)
+                .map(RestResult::getSuccess)
                 .filter(subSection -> !isSectionExcluded(subSection, competition, organisation))
                 .map(subSection ->
                         new YourFinancesRowViewModel(subSection.getName(),
