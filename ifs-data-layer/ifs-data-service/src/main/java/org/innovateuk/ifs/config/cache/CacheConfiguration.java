@@ -2,6 +2,7 @@ package org.innovateuk.ifs.config.cache;
 
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.DisconnectedBehavior;
+import io.lettuce.core.cluster.ClusterClientOptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,23 +43,22 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     @Bean
     @ConditionalOnProperty(value = "spring.cache.type", havingValue = "redis")
     public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
+        if (cluster) {
+            return clusterConfiguration(redisProperties);
+        } else {
+            return standaloneConfiguration(redisProperties);
+        }
+
+    }
+
+    private LettuceConnectionFactory clusterConfiguration(RedisProperties redisProperties) {
         LettuceClientConfigurationBuilder builder = LettuceClientConfiguration.builder()
-                .clientOptions(ClientOptions.builder()
+                .clientOptions(ClusterClientOptions.builder()
                         .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS)
                         .build());
         if (redisProperties.isSsl()) {
             builder.useSsl();
         }
-
-        if (cluster) {
-            return clusterConfiguration(redisProperties, builder);
-        } else {
-            return standaloneConfiguration(redisProperties, builder);
-        }
-
-    }
-
-    private LettuceConnectionFactory clusterConfiguration(RedisProperties redisProperties, LettuceClientConfigurationBuilder builder) {
         RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
         clusterConfiguration.clusterNode(redisProperties.getHost(), redisProperties.getPort());
         clusterConfiguration.setPassword(RedisPassword.of(redisProperties.getPassword()));
@@ -66,7 +66,14 @@ public class CacheConfiguration extends CachingConfigurerSupport {
         return new LettuceConnectionFactory(clusterConfiguration, builder.build());
     }
 
-    private LettuceConnectionFactory standaloneConfiguration(RedisProperties redisProperties, LettuceClientConfigurationBuilder builder) {
+    private LettuceConnectionFactory standaloneConfiguration(RedisProperties redisProperties) {
+        LettuceClientConfigurationBuilder builder = LettuceClientConfiguration.builder()
+                .clientOptions(ClientOptions.builder()
+                        .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS)
+                        .build());
+        if (redisProperties.isSsl()) {
+            builder.useSsl();
+        }
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
         config.setPassword(RedisPassword.of(redisProperties.getPassword()));
         return new LettuceConnectionFactory(config, builder.build());
