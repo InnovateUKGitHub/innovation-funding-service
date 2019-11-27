@@ -21,7 +21,7 @@
             <li th:if="${model.showYourOrganisation}">
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a href="#" class="govuk-link">Your organisation</a>
+                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-organisation(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Your organisation</a>
                     </h3>
                 </div>
                 <div th:if="${model.yourOrganisationComplete}"
