@@ -37,6 +37,17 @@ function deploy() {
         oc create -f $(getBuildLocation)/redis/cache-provider.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
+    oc apply -f $(getBuildLocation)/config-maps/acc-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/cache-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/data-service-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/db-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/finance-db-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/flyway-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/grant-db-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/ldap-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/performance-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/survey-db-config.yml ${SVC_ACCOUNT_CLAUSE}
+
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         oc create -f $(getBuildLocation)/sil-stub/ ${SVC_ACCOUNT_CLAUSE}
