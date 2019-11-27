@@ -128,6 +128,21 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
+    public void existsOnApplication() {
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(1L)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.existsOnApplication(1L,2L ), () -> {
+            verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUsersCanViewProjects(project, getLoggedInUser());
+            verify(projectPermissionRules).monitoringOfficerOnProjectCanView(project, getLoggedInUser());
+            verify(projectPermissionRules).stakeholdersCanViewProjects(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
     public void addPartner_deniedIfNotSystemRegistrar() {
         NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
