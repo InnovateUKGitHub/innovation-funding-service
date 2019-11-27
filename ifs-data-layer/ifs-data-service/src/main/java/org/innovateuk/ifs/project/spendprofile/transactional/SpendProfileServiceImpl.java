@@ -169,7 +169,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return (isViabilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project))
-                .andOnSuccess(() -> isNoPendingPartnerInvites(project));
+                .andOnSuccess(() -> isThereAnyPendingPartners(project));
     }
 
     private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
@@ -186,22 +186,20 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         }
     }
 
-    // ----
-    // Check the invite exists as looking for pending partner is incorrect.
-    // New repository call in ProjectPartnerInvite for existsByProjectIdandStatus
-    // check the invite exists
-    // repo call for projectPartnerinvite existsBybyprojectIdandstatusBySTATUENAME(s) boolean
+    private ServiceResult<Void> isThereAnyPendingPartners(Project project) {
 
-    private ServiceResult<Void> isNoPendingPartnerInvites(Project project) {
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+        List<PartnerOrganisation> pendingPartnerOrganisation = partnerOrganisations.stream()
+                .filter(PartnerOrganisation::isPendingPartner)
+                .collect(toList());
 
-        // Do we need to include OPENED status to the check as it is incomplete on the Internal users side.
+        boolean noPendingPartners = pendingPartnerOrganisation.isEmpty();
+        boolean noSentStatusPartnerInvites = projectPartnerInviteRepository.existsByProjectIdAndStatus(project.getId(), SENT);
 
-        boolean ppi = projectPartnerInviteRepository.existsByProjectIdAndStatus(project.getId(), SENT);
-        if (!ppi) {
-            return serviceSuccess();
-        } else {
+        if (!noPendingPartners || noSentStatusPartnerInvites) {
             return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_PARTNERS_ARE_NO_LONGER_PENDING);
         }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
