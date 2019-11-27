@@ -8,6 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface PendingPartnerNotificationService {
 
-    @NotSecured(value = "TODO do we need permissions for this?", mustBeSecuredByOtherServices = true)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     void sendNotifications(PartnerOrganisation partnerOrganisation);
 }
