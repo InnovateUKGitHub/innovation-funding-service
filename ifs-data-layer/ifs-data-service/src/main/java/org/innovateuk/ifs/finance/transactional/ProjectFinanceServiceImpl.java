@@ -1,12 +1,5 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import static java.lang.Boolean.TRUE;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-
-
-import java.util.List;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
 import org.innovateuk.ifs.finance.domain.GrowthTable;
@@ -20,8 +13,17 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFinance, ProjectFinanceResource> implements ProjectFinanceService {
@@ -76,6 +78,15 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
             updateFinanceDetails(dbFinance, projectFinanceResource);
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<Double> getResearchParticipationPercentageFromProject(long projectId) {
+        return getResearchPercentageFromProject(projectId).andOnSuccessReturn(BigDecimal::doubleValue);
+    }
+
+    private ServiceResult<BigDecimal> getResearchPercentageFromProject(Long projectId) {
+        return find(projectFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
     }
 
     private ServiceResult<ProjectFinanceResource> getProjectFinanceForOrganisation(ProjectFinanceResourceId projectFinanceResourceId) {

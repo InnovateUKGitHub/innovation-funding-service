@@ -139,6 +139,7 @@
                     Innovate UK will be reflected here. Substantial changes to your project costs should be
                     discussed with your Project Manager.</p>
                 <p class="govuk-body"><a
+                    th:if="${summaryModel.showChangesLink}"
                     th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}"
                     class="govuk-link">View changes to finances</a></p>
             </th:block>
@@ -153,17 +154,12 @@
                             <th:block th:unless="${summaryModel.collaborativeProject}">The organisation will be able to see all saved changes to finances.</th:block>
                             You must discuss all changes with them by raising queries through the Innovation Funding Service.
                         </p>
-                        <p class="govuk-body"><a
-                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-                            class="govuk-link">Review all changes to project finances</a></p>
                     </th:block>
 
                     <th:block th:if="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Detailed finances</h2>
                         <p class="govuk-body">These finances were initially submitted during the request for a Horizon 2020 grant transfer.</p>
-                        <p class="govuk-body"><a
-                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-                            class="govuk-link">View changes to finances</a></p></th:block>
+                    </th:block>
                 </th:block>
 
                 <th:block th:unless="${summaryModel.isH2020()}">
@@ -177,21 +173,19 @@
                             You can do this by raising queries through the Innovation Funding Service.</p>
                         <p class="govuk-body" th:unless="${summaryModel.collaborativeProject}"> All potential changes must be discussed with the organisation.
                             You can do this by raising queries through the Innovation Funding Service.</p>
-                        <p class="govuk-body"><a
-                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-                            class="govuk-link">Review all changes to project finances</a></p>
                     </th:block>
 
                     <th:block th:if="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Detailed finances</h2>
                         <p class="govuk-body">These finances were submitted by the applicant during the
                             application stage. They include all changes made during the eligibility checks.</p>
-                        <p class="govuk-body"><a
-                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-                            class="govuk-link">View changes to finances</a></p>
                     </th:block>
                 </th:block>
-
+                <p class="govuk-body"><a
+                    th:if="${summaryModel.showChangesLink}"
+                    th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+                    class="govuk-link"
+                    th:text="${summaryModel.isApproved() ? 'View changes to finances' : 'Review all changes to project finances'}">Review all changes to project finances</a></p>
             </th:block>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
