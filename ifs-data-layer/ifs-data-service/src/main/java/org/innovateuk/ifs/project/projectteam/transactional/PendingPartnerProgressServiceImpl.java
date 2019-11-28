@@ -106,6 +106,4 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
         return find(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()),
                 notFoundError(PendingPartnerProgress.class, projectOrganisationCompositeId));
     }
-
-
 }
