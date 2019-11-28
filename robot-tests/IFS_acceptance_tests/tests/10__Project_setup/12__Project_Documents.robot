@@ -345,6 +345,11 @@ After rejection, mandatory document submission
     And the user reloads the page
     Then PM submits both documents          ${Grade_Crossing_Project_Id}
 
+Stakeholder is unable to view the documents before approval
+    [Documentation]  IFS-6806
+    Given log in as a different user   &{stakeholder_user}
+    Then the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all   ${403_error_message}
+
 CompAdmin approves both documents
     [Documentation]    INFUND-4621, INFUND-5507, INFUND-7345
     [Tags]  HappyPath
@@ -364,6 +369,14 @@ Partners can see the documents approved
      Then Partners can see both documents approved
      When log in as a different user         &{collaborator2_credentials_bd}
      Then Partners can see both documents approved
+
+Stakeholders can see approved documents
+    [Documentation]  IFS-6806
+    [Setup]  log in as a different user   &{stakeholder_user}
+    Given the user navigates to the page  ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link  link = Collaboration agreement
+    And open pdf link                     testing.pdf
+
 
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
