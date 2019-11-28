@@ -185,6 +185,7 @@ the user can see JeS details
     the user should see the element  css = a[href*="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system"]
 
 the applicant enters invalid inputs
+    the user clicks the button/link       jQuery = button:contains("Open all")
     The user enters text to a text field  css = [name="incurredStaff"]  ${EMPTY}
     The user enters text to a text field  css = [name="incurredTravel"]  ${EMPTY}
     The user enters text to a text field  css = [name="incurredOtherCosts"]  ${EMPTY}
