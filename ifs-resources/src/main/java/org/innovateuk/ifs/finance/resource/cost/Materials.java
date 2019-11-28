@@ -99,9 +99,4 @@ public class Materials extends AbstractFinanceRowItem {
     public boolean isEmpty() {
         return false;
     }
-
-    @Override
-    public int getMinRows() {
-        return 0;
-    }
 }

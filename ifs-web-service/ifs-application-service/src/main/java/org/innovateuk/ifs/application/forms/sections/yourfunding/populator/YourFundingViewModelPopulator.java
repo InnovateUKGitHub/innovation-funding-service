@@ -48,7 +48,6 @@ public class YourFundingViewModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
-
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         if (user.isInternalUser()) {
             return populateManagement(applicationId, sectionId, organisationId);

@@ -42,12 +42,6 @@ items:
             failureThreshold: 1
           imagePullPolicy: Always
           env:
-          - name: SP_PROXY_CERTIFICATE
-            value: "<<SSLCERT>>"
-          - name: SP_PROXY_CACERTIFICATE
-            value: "<<SSLCACERT>>"
-          - name: SP_PROXY_KEY
-            value: "<<SSLKEY>>"
           - name: SP_DOMAIN
             value: ${SHIB_ADDRESS}
           - name: IDP_DOMAIN

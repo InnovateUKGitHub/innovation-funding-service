@@ -5,6 +5,7 @@ import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.Cache;
@@ -14,8 +15,10 @@ import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration.LettuceClientConfigurationBuilder;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -35,12 +38,17 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     @Bean
     @ConditionalOnProperty(value = "spring.cache.type", havingValue = "redis")
     public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort()),
-                LettuceClientConfiguration.builder()
-                        .clientOptions(ClientOptions.builder()
-                                .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS)
-                                .build())
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
+        config.setPassword(RedisPassword.of(redisProperties.getPassword()));
+
+        LettuceClientConfigurationBuilder builder = LettuceClientConfiguration.builder()
+                .clientOptions(ClientOptions.builder()
+                        .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS)
                         .build());
+        if (redisProperties.isSsl()) {
+            builder.useSsl();
+        }
+        return new LettuceConnectionFactory(config, builder.build());
     }
 
     @Bean
@@ -49,7 +57,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     }
 
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration(ServiceResultWrappingSerializer serviceResultWrappingSerializer) {
+    public RedisCacheConfiguration redisCacheConfiguration(ServiceResultWrappingSerializer serviceResultWrappingSerializer, CacheProperties cacheProperties) {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(
@@ -61,7 +69,8 @@ public class CacheConfiguration extends CachingConfigurerSupport {
                                 serviceResultWrappingSerializer
                         )
                 )
-                .entryTtl(Duration.of(ttlSeconds, SECONDS));
+                .entryTtl(Duration.of(ttlSeconds, SECONDS))
+                .prefixKeysWith(cacheProperties.getRedis().getKeyPrefix());
     }
 
     @Override

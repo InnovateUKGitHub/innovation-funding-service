@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Join project'}" />
 </head>
-<body class="govuk-template__body project-other-documents">
+<body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-configured-partner-document" />
@@ -21,7 +21,7 @@
             <li th:if="${model.showYourOrganisation}">
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a href="#" class="govuk-link">Your organisation</a>
+                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-organisation(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Your organisation</a>
                     </h3>
                 </div>
                 <div th:if="${model.yourOrganisationComplete}"
@@ -33,7 +33,7 @@
             <li>
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a href="#" class="govuk-link">Your funding</a>
+                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-funding(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Your funding</a>
                     </h3>
                 </div>
                 <div th:if="${model.yourFundingComplete}"
@@ -45,7 +45,8 @@
             <li>
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a href="#" class="govuk-link">Award terms and conditions</a>
+                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/terms-and-conditions(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                           class="govuk-link">Award terms and conditions</a>
                     </h3>
                 </div>
                 <div th:if="${model.termsAndConditionsComplete}"

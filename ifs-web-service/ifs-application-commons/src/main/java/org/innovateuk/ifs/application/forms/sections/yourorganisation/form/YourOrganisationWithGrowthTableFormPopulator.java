@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.springframework.stereotype.Component;
 
@@ -10,18 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class YourOrganisationWithGrowthTableFormPopulator {
 
-    private YourOrganisationRestService yourOrganisationRestService;
-
-    public YourOrganisationWithGrowthTableFormPopulator(YourOrganisationRestService yourOrganisationRestService) {
-        this.yourOrganisationRestService = yourOrganisationRestService;
-    }
-
-    public YourOrganisationWithGrowthTableForm populate(long applicationId, long organisationId) {
-
-        OrganisationFinancesWithGrowthTableResource finances =
-                yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(applicationId, organisationId).
-                        getSuccess();
-
+    public YourOrganisationWithGrowthTableForm populate(OrganisationFinancesWithGrowthTableResource finances) {
         return new YourOrganisationWithGrowthTableForm(
                 finances.getOrganisationSize(),
                 finances.getStateAidAgreed(),
@@ -31,9 +19,5 @@ public class YourOrganisationWithGrowthTableFormPopulator {
                 finances.getAnnualProfitsAtLastFinancialYear(),
                 finances.getAnnualExportAtLastFinancialYear(),
                 finances.getResearchAndDevelopmentSpendAtLastFinancialYear());
-
-        // TODO DW - readOnlyAllApplicantApplicationFinances
-
-        // TODO DW - formInputViewModelGenerator.fromSection
     }
 }

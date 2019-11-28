@@ -18,6 +18,12 @@ public abstract class BaseFinanceRowRestServiceImpl extends BaseRestService impl
     }
 
     @Override
+    public RestResult<FinanceRowItem> get(long financeRowItemId) {
+        return getWithRestResult(financeRowRestUrl + "/" + financeRowItemId,
+                FinanceRowItem.class);
+    }
+
+    @Override
     public RestResult<FinanceRowItem> create(FinanceRowItem financeRowItem) {
         return postWithRestResult(financeRowRestUrl, financeRowItem,
                 FinanceRowItem.class);

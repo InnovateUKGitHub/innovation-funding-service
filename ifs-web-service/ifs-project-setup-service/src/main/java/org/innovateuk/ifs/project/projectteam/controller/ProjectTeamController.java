@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.project.projectteam.controller;
 
 
+import static java.lang.String.format;
+
+
+import java.util.function.Supplier;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
 import org.innovateuk.ifs.project.projectteam.populator.ProjectTeamViewModelPopulator;
-import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectteam.form.ProjectTeamForm;
 import org.innovateuk.ifs.projectteam.util.ProjectInviteHelper;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -14,11 +19,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.function.Supplier;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * This controller will handle all requests that are related to the project team.
@@ -90,7 +96,7 @@ public class ProjectTeamController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @PostMapping(value = "/{projectId}/team", params = "close-add-team-member-form")
     public String closeAddTeamMemberForm(@PathVariable("projectId") final long projectId) {
-        return String.format("redirect:/project/%d/team", projectId);
+        return format("redirect:/project/%d/team", projectId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
@@ -108,7 +114,7 @@ public class ProjectTeamController {
             return "projectteam/project-team";
         };
 
-        Supplier<String> successView = () -> String.format("redirect:/project/%d/team", projectId);
+        Supplier<String> successView = () -> format("redirect:/project/%d/team", projectId);
 
         return projectInviteHelper.sendInvite(form.getName(), form.getEmail(), loggedInUser, validationHandler,
                 failureView, successView, projectId, organisationId);

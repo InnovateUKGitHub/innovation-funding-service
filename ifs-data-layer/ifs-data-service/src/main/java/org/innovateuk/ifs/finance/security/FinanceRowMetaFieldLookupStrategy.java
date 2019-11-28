@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 @PermissionEntityLookupStrategies
 public class FinanceRowMetaFieldLookupStrategy {
 
-
     @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
 

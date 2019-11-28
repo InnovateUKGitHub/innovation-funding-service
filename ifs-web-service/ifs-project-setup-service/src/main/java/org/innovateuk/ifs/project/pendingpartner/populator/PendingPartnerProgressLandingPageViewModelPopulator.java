@@ -30,16 +30,14 @@ public class PendingPartnerProgressLandingPageViewModelPopulator {
     public PendingPartnerProgressLandingPageViewModel populate(long projectId, long organisationId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
-        CompetitionResource competition =  competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         return new PendingPartnerProgressLandingPageViewModel(
                 project,
+                organisationId,
                 progress,
                 !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())
         );
-
-
     }
-
 }

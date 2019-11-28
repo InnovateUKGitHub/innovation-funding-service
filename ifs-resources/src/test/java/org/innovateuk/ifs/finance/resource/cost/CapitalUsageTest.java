@@ -84,11 +84,6 @@ public class CapitalUsageTest {
     }
 
     @Test
-    public void getMinRows() {
-        assertEquals(0, capitalUsage.getMinRows());
-    }
-
-    @Test
     public void getCostType() {
         assertEquals(CAPITAL_USAGE, capitalUsage.getCostType());
     }

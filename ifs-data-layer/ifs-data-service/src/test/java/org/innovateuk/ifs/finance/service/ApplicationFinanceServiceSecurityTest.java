@@ -34,7 +34,7 @@ public class ApplicationFinanceServiceSecurityTest extends BaseServiceSecurityTe
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
-    private FinanceRowLookupStrategy financeRowLookupStrategy;
+    private ApplicationFinanceRowLookupStrategy applicationFinanceRowLookupStrategy;
     private FinanceRowMetaFieldLookupStrategy financeRowMetaFieldLookupStrategy;
     private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
 
@@ -48,7 +48,7 @@ public class ApplicationFinanceServiceSecurityTest extends BaseServiceSecurityTe
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
-        financeRowLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowLookupStrategy.class);
+        applicationFinanceRowLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceRowLookupStrategy.class);
         financeRowMetaFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowMetaFieldLookupStrategy.class);
         applicationFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceLookupStrategy.class);
 

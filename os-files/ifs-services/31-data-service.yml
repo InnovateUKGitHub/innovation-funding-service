@@ -16,6 +16,9 @@ items:
       name: cache-config
     data:
       IFS_DATA_SERVICE_CACHE_TYPE: "${IFS_DATA_SERVICE_CACHE_TYPE}"
+      IFS_DATA_SERVICE_CACHE_PREFIX: "${IFS_DATA_SERVICE_CACHE_PREFIX}"
+      IFS_DATA_SERVICE_REDIS_SSL: "${IFS_DATA_SERVICE_REDIS_SSL}"
+      IFS_DATA_SERVICE_REDIS_PASSWORD: "${IFS_DATA_SERVICE_REDIS_PASSWORD}"
       IFS_DATA_SERVICE_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
       IFS_DATA_SERVICE_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
       IFS_DATA_SERVICE_CACHE_TTL_SECONDS: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
@@ -113,6 +116,21 @@ items:
                     configMapKeyRef:
                       name: cache-config
                       key: IFS_DATA_SERVICE_REDIS_PORT
+                - name: SPRING_CACHE_REDIS_KEY_PREFIX
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_CACHE_PREFIX
+                - name: SPRING_REDIS_SSL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_SSL
+                - name: SPRING_REDIS_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_PASSWORD
                 - name: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
                   valueFrom:
                     configMapKeyRef:

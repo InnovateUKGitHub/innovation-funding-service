@@ -3,12 +3,10 @@ package org.innovateuk.ifs.finance.service;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowServiceImpl;
@@ -17,15 +15,13 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing how the secured methods in {@link ApplicationFinanceRowService} interact with Spring Security
@@ -38,7 +34,7 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
-    private FinanceRowLookupStrategy financeRowLookupStrategy;
+    private ApplicationFinanceRowLookupStrategy applicationFinanceRowLookupStrategy;
     private FinanceRowMetaFieldLookupStrategy financeRowMetaFieldLookupStrategy;
     private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
 
@@ -52,7 +48,7 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
-        financeRowLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowLookupStrategy.class);
+        applicationFinanceRowLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceRowLookupStrategy.class);
         financeRowMetaFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(FinanceRowMetaFieldLookupStrategy.class);
         applicationFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceLookupStrategy.class);
 
@@ -62,22 +58,22 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
     @Test
     public void update() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
+        when(applicationFinanceRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.update(costId, new AcademicCost(1L)),
                 () -> verify(costPermissionsRules)
-                        .consortiumCanUpdateACostForTheirApplicationAndOrganisation(isA(FinanceRow.class), isA(UserResource.class))
+                        .consortiumCanUpdateACostForTheirApplicationAndOrganisation(isA(ApplicationFinanceRow.class), isA(UserResource.class))
         );
     }
 
     @Test
     public void delete() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
+        when(applicationFinanceRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.delete(costId),
                 () -> verify(costPermissionsRules)
-                        .consortiumCanDeleteACostForTheirApplicationAndOrganisation(isA(FinanceRow.class), isA(UserResource.class))
+                        .consortiumCanDeleteACostForTheirApplicationAndOrganisation(isA(ApplicationFinanceRow.class), isA(UserResource.class))
         );
     }
 
@@ -107,27 +103,6 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
                 () -> verify(costPermissionsRules)
                         .consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class))
         );
-    }
-
-    @Test
-    public void getCostItems() {
-        final Long applicationFinanceId = 1L;
-        final Long questionId = 2L;
-
-        when(classUnderTestMock.getCostItems(applicationFinanceId, FinanceRowType.LABOUR))
-                .thenReturn(costs());
-
-        classUnderTest.getCostItems(applicationFinanceId, FinanceRowType.LABOUR);
-        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
-                .consortiumCanReadACostItemForTheirApplicationAndOrganisation(isA(FinanceRowItem.class), isA(UserResource.class));
-    }
-
-    private ServiceResult<List<FinanceRowItem>> costs() {
-        final List<FinanceRowItem> items = new ArrayList<>();
-        for (int i = 0; i < ARRAY_SIZE_FOR_POST_FILTER_TESTS; i++) {
-            items.add(new AcademicCost(1L));
-        }
-        return serviceSuccess(items);
     }
 
     @Override

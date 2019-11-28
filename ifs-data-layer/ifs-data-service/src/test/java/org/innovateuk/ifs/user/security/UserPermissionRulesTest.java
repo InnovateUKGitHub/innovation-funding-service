@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -58,9 +57,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Mock
     private ApplicationRepository applicationRepositoryMock;
 
-    @Mock
-    private StakeholderRepository stakeholderRepositoryMock;
-
     @Test
     public void anyoneCanViewThemselves() {
         allGlobalRoleUsers.forEach(user -> {
@@ -106,13 +102,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         when(processRoleRepositoryMock.findByUserId(userResource.getId())).thenReturn(processRoles);
         when(projectUserRepositoryMock.findByUserId(userResource.getId())).thenReturn(projectUsers);
-        when(stakeholderRepositoryMock.findByStakeholderId(stakeholderResource.getId())).thenReturn(asList(stakeholder));
+        when(stakeholderRepository.findByStakeholderId(stakeholderResource.getId())).thenReturn(asList(stakeholder));
 
         assertTrue(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, stakeholderResource));
 
-        allInternalUsers.forEach(internalUser -> {
-            assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser));
-        });
+        allInternalUsers.forEach(internalUser -> assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser)));
     }
 
     @Test
