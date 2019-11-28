@@ -102,7 +102,7 @@ task osUpgradeUat(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "ifs-uat", project.version]
 }
 
-task dbResetUat(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults]) {
+task dbResetUat(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "ifs-uat", project.version]
 }
@@ -163,7 +163,7 @@ task osUpgradeSysint(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
-task dbResetSysint(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults]) {
+task dbResetSysint(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "ifs-sysint", project.version]
 }
@@ -192,7 +192,7 @@ task osUpgradePerf(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "ifs-perf", project.version]
 }
 
-task dbResetPerf(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults]) {
+task dbResetPerf(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "ifs-perf", project.version]
 }
