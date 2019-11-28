@@ -133,6 +133,7 @@ Alert shows If the academic research participation is too high
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Then the user navigates to Your-finances page  Academic robot test application
     And The user clicks the button/link            link = Your project costs
+    And the user clicks the button/link            jQuery = button:contains("Open all")
     When the user enters text to a text field      css = [name$="incurredStaff"]  1000000
     And log in as a different user                 &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
