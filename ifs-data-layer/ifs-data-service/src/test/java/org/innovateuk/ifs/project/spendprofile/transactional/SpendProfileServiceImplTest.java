@@ -95,7 +95,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Mock
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
     @Mock
-    private NotificationService notificationServiceMock;
+    private NotificationService notificationService;
     @Mock
     private SpendProfileValidationUtil validationUtil;
     @Mock
@@ -208,8 +208,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
         Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
@@ -217,8 +217,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation1Profile));
         verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation2Profile));
 
-        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
-        verify(notificationServiceMock).sendNotificationWithFlush(notification2, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification2, EMAIL);
     }
 
     @Test
@@ -377,8 +377,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
         Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
+        when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
@@ -386,8 +386,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         verify(spendProfileRepository, times(2)).save(isA(SpendProfile.class));
 
-        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
-        verify(notificationServiceMock).sendNotificationWithFlush(notification2, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification2, EMAIL);
     }
 
     @Test
@@ -561,13 +561,13 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> generateResult = service.generateSpendProfileForPartnerOrganisation(projectId, organisation1.getId(), userId);
         assertTrue(generateResult.isSuccess());
 
         verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation1Profile));
-        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification1, EMAIL);
         verifyNoMoreInteractions(spendProfileRepository);
     }
 

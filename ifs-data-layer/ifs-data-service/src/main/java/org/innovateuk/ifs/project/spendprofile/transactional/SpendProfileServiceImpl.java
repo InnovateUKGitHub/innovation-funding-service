@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.opencsv.CSVWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
@@ -154,7 +153,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                         return serviceSuccess();
                                     } else {
                                         LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
-                                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                                        return serviceFailure(GENERAL_UNEXPECTED_ERROR);
                                     }
                                 })
                         )
@@ -165,7 +164,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return (isViabilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project))
-                .andOnSuccess(() -> isThereAnyPendingPartnersOnProject(project));
+                .andOnSuccess(() -> areThereAnyPendingPartnersOnProject(project));
     }
 
     private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
@@ -182,7 +181,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         }
     }
 
-    private ServiceResult<Void> isThereAnyPendingPartnersOnProject(Project project) {
+    private ServiceResult<Void> areThereAnyPendingPartnersOnProject(Project project) {
         if (spendProfileWorkflowHandler.projectHasNoPendingPartners(project)) {
             return serviceSuccess();
         } else {
@@ -256,7 +255,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             Notification notification = new Notification(systemNotificationSource, financeContactTarget, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, globalArguments);
             return notificationService.sendNotificationWithFlush(notification, EMAIL);
         }
-        return serviceFailure(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
+        return serviceFailure(SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
     }
 
     private Map<String, Object> createGlobalArgsForFinanceContactSpendProfileAvailableEmail(Project project) {
@@ -294,12 +293,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return flattenLists(spendProfileCostsPerCategory);
     }
 
-    /**
-     * This method was written to recreate Spend Profile for one of the partner organisations on Production.
-     * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
-     * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
-     * Eligibility is approved, if the Spend Profile is already generated or the Spend Profile process state is valid.
-     */
     @Override
     @Transactional
     public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
@@ -319,7 +312,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             updateApprovalOfSpendProfile(projectId, approvalType);
             return approveSpendProfile(approvalType, project);
         } else {
-            return serviceFailure(CommonFailureKeys.SPEND_PROFILE_NOT_READY_TO_APPROVE);
+            return serviceFailure(SPEND_PROFILE_NOT_READY_TO_APPROVE);
         }
     }
 
