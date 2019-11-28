@@ -111,8 +111,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                         .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
     }
-
-
+    
     @Test
     public void existsOnApplication() throws Exception {
         Long userId = 1L;
