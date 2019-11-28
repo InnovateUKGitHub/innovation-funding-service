@@ -37,7 +37,7 @@ task prepareDeployment(type: Copy) {
 task prepareReset(type: Copy) {
 
     destinationDir = file('build/resources/main')
-    from('os-files/db-reset') {
+    from('os-files/db-reset/') {
         include '**/*.yml'
     }
     filesMatching("**/**.*") {
