@@ -22,10 +22,8 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.function.BiFunction;
 
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent.*;
 
@@ -80,12 +78,10 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
     }
 
     public boolean projectHasNoPendingPartners(Project project) {
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-        List<PartnerOrganisation> pendingPartnerOrganisation = partnerOrganisations.stream()
-                .filter(PartnerOrganisation::isPendingPartner)
-                .collect(toList());
+        boolean pendingPartnerProgressComplete = project.getPartnerOrganisations()
+                .stream()
+                .noneMatch(PartnerOrganisation::isPendingPartner);
 
-        boolean pendingPartnerProgressComplete = pendingPartnerOrganisation.isEmpty();
         boolean noSentStatusPartnerInvites = projectPartnerInviteRepository.existsByProjectIdAndStatus(project.getId(), SENT);
 
         return pendingPartnerProgressComplete && !noSentStatusPartnerInvites;
