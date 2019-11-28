@@ -269,9 +269,17 @@ The new organisation partner accept terms and conditions
     Then the user should see the element                            jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
 
 Editing org size resets your funding
+    [Documentation]  IFS-6491
     Given the user clicks the button/link      link = Your organisation
     When the user edits the org size
     Then the user should not see the element   jQuery = li div:contains("Your funding") ~ .task-status-complete
+
+###NEED to submit this once functionality is in to then continue the PS journey for the new partner
+Internal does not see change finances link for new partner
+    [Documentation]  IFS-6770
+    Given Log in as a different user          &{internal_finance_credentials}
+    When the internal partner does not see link for added partner
+    Then the internal patner does see link for existing partner
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
@@ -590,4 +598,16 @@ Custom suite setup
 
 Custom suite teardown
     The user closes the browser
+
+the internal partner does not see link for added partner
+    the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
+    the user clicks the button/link       css = .action a
+    the user clicks the button/link       jQuery = tr:contains("NOMENSA LTD") td:nth-child(4)
+    the user should not see the element   link = Review all changes to project finances
+
+the internal patner does see link for existing partner
+    the user clicks the button/link       link = Finance checks
+    the user clicks the button/link       jQuery = tr:contains("Ward Ltd") td:nth-child(4)
+    the user should see the element       link = Review all changes to project finances
+
 
