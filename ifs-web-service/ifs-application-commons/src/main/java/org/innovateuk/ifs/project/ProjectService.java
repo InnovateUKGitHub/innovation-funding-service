@@ -39,6 +39,4 @@ public interface ProjectService {
     boolean userIsPartnerInOrganisationForProject(long projectId, long organisationId, long userId);
 
     Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException;
-
-    Boolean existsOnApplication(long projectId, long userId);
 }

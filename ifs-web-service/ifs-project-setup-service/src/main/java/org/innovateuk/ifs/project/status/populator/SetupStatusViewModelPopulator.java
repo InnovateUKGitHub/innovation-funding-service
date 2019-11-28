@@ -60,7 +60,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
-        boolean existsOnApplication = projectService.existsOnApplication(projectId, loggedInUser.getId());
+        boolean existsOnApplication = projectRestService.existsOnApplication(projectId, loggedInUser.getId()).getSuccess();
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean monitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());

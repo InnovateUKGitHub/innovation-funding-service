@@ -134,8 +134,4 @@ public class ProjectServiceImpl implements ProjectService {
                 user.getId().equals(pu.getUser()) && Role.PARTNER.getId() == pu.getRole());
         return projectUser.map(ProjectUserResource::getOrganisation).orElseThrow(() -> new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(projectId)));
     }
-
-    public Boolean existsOnApplication(long projectId, long userId) {
-        return projectRestService.existsOnApplication(projectId, userId).getSuccess();
-    }
 }
