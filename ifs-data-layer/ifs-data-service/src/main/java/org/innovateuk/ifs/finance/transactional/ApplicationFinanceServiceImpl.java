@@ -13,7 +13,6 @@ import org.innovateuk.ifs.finance.domain.GrowthTable;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
-import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
@@ -25,7 +24,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,9 +58,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
-
-    @Autowired
-    private ProjectFinanceHandler projectFinanceHandler;
 
     @Autowired
     private FileEntryRepository fileEntryRepository;
@@ -100,11 +95,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     @Override
     public ServiceResult<Double> getResearchParticipationPercentage(long applicationId) {
         return getResearchPercentage(applicationId).andOnSuccessReturn(BigDecimal::doubleValue);
-    }
-
-    @Override
-    public ServiceResult<Double> getResearchParticipationPercentageFromProject(long projectId) {
-        return getResearchPercentageFromProject(projectId).andOnSuccessReturn(BigDecimal::doubleValue);
     }
 
     @Override
@@ -243,10 +233,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
                 return serviceSuccess(true);
             }
         });
-    }
-
-    private ServiceResult<BigDecimal> getResearchPercentageFromProject(Long projectId) {
-        return find(projectFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
     }
 
     private ServiceResult<BigDecimal> getResearchPercentage(Long applicationId) {

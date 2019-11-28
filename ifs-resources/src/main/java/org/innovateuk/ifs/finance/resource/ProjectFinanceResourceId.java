@@ -5,7 +5,7 @@ package org.innovateuk.ifs.finance.resource;
  */
 public class ProjectFinanceResourceId extends BaseFinanceResourceId {
 
-    public ProjectFinanceResourceId(Long projectId, Long organisationId) {
+    public ProjectFinanceResourceId(long projectId, long organisationId) {
         super(projectId, organisationId);
     }
 
