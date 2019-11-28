@@ -69,5 +69,9 @@ public class PendingPartnerProgressBuilder extends BaseBuilder<PendingPartnerPro
         return withArraySetFieldByReflection("partnerOrganisation", partnerOrganisations);
     }
 
+    public PendingPartnerProgressBuilder withCompletedOn(ZonedDateTime... completedOn){
+        return withArraySetFieldByReflection("completedOn", completedOn);
+    }
+
 
 }

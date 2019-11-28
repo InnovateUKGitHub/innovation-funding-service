@@ -22,10 +22,10 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.projectteam.transactional.PendingPartnerPartnerNotificationServiceImpl.Notifications.NEW_PARTNER_ORGANISATION_JOINED;
+import static org.innovateuk.ifs.project.projectteam.transactional.PendingPartnerNotificationServiceImpl.Notifications.NEW_PARTNER_ORGANISATION_JOINED;
 
 @Service
-public class PendingPartnerPartnerNotificationServiceImpl implements PendingPartnerNotificationService {
+public class PendingPartnerNotificationServiceImpl implements PendingPartnerNotificationService {
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
