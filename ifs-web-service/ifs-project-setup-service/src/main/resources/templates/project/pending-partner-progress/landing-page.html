@@ -14,6 +14,14 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join project',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+                aria-labelledby="error-summary-title"
+                role="alert"
+                tabindex="-1"
+                data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
 
         <p class="govuk-body">You need to complete all sections before you can join this project.</p>
         <ul class="task-list">
