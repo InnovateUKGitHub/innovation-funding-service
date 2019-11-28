@@ -61,8 +61,8 @@ public class ProjectController {
         return projectService.getLeadOrganisation(projectId).toGetResponse();
     }
 
-    @GetMapping("/{projectId}/user/{userId}/application-exists")
-    public RestResult<Boolean> existsOnApplication(@PathVariable long projectId, @PathVariable long userId){
-        return projectService.existsOnApplication(projectId, userId).toGetResponse();
+    @GetMapping("/{projectId}/user/{organisationId}/application-exists")
+    public RestResult<Boolean> existsOnApplication(@PathVariable long projectId, @PathVariable long organisationId){
+        return projectService.existsOnApplication(projectId, organisationId).toGetResponse();
     }
 }

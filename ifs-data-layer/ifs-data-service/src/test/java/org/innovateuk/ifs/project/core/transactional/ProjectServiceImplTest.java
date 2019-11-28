@@ -381,7 +381,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.ofNullable(project));
 
         // Method under test
-        ServiceResult<Boolean> shouldSucceed = service.existsOnApplication(project.getId(), user.getId()); // User on the application
+        ServiceResult<Boolean> shouldSucceed = service.existsOnApplication(project.getId(), organisation.getId()); // Organisation on the application
         // Expectations
         assertTrue(shouldSucceed.isSuccess());
         assertTrue(shouldSucceed.getSuccess());
@@ -392,7 +392,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.ofNullable(project));
 
         // Method under test
-        ServiceResult<Boolean> shouldSucceed = service.existsOnApplication(project.getId(), newUser().build().getId()); // User on the application
+        ServiceResult<Boolean> shouldSucceed = service.existsOnApplication(project.getId(), newOrganisation().build().getId()); // Organisation on the application
         // Expectations
         assertTrue(shouldSucceed.isSuccess());
         assertFalse(shouldSucceed.getSuccess());

@@ -52,5 +52,5 @@ public interface ProjectService {
     ServiceResult<OrganisationResource> getLeadOrganisation(long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
-    ServiceResult<Boolean> existsOnApplication(long projectId, long userId);
+    ServiceResult<Boolean> existsOnApplication(long projectId, long organisationId);
 }

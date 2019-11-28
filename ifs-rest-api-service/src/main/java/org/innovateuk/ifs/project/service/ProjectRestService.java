@@ -27,5 +27,5 @@ public interface ProjectRestService {
 
     RestResult<OrganisationResource> getLeadOrganisationByProject(long projectId);
 
-    RestResult<Boolean> existsOnApplication(long projectId, long userId);
+    RestResult<Boolean> existsOnApplication(long projectId, long organisationId);
 }

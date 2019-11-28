@@ -115,18 +115,18 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void existsOnApplication() throws Exception {
         Long userId = 1L;
-        Long projectId = 2L;
+        Long organisationId = 2L;
 
-        when(projectServiceMock.existsOnApplication(projectId, userId)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(projectServiceMock.existsOnApplication(organisationId, userId)).thenReturn(serviceSuccess(Boolean.TRUE));
 
-        mockMvc.perform(get("/project/{projectId}/user/{userId}/application-exists", projectId, userId)
+        mockMvc.perform(get("/project/{projectId}/user/{organisationId}/application-exists", organisationId, userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(true)))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project"),
-                                parameterWithName("userId").description("Id of the user on the project")
+                                parameterWithName("organisationId").description("Id of the organisation on the project")
                         )
                 ));
     }
