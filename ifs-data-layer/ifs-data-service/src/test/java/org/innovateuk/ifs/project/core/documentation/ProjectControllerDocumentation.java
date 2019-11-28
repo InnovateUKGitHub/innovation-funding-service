@@ -111,4 +111,24 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                         .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
     }
+
+
+    @Test
+    public void existsOnApplication() throws Exception {
+        Long userId = 1L;
+        Long projectId = 2L;
+
+        when(projectServiceMock.existsOnApplication(projectId, userId)).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        mockMvc.perform(get("/project/{projectId}/user/{userId}/application-exists", projectId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(true)))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project"),
+                                parameterWithName("userId").description("Id of the user on the project")
+                        )
+                ));
+    }
 }
