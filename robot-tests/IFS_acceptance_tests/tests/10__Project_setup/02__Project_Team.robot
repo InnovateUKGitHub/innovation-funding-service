@@ -207,9 +207,16 @@ Ifs Admin is able to add a new partner organisation
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
     Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
 
+Two organisations with the same name are not able to join
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724
+        [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
+        Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
+        When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  test1@test.nom
+        Then the same organisation isnt able to join the project   Name  Surname  test1@test.nom  innovate  INNOVATE LTD
+
 Ifs Admin is able to remove a partner organisation
     [Documentation]  IFS-6485
-    [Setup]  log in as a different user                    &{ifs_admin_user_credentials}
+    [Setup]  The user logs-in in new browser               &{ifs_admin_user_credentials}
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     When the user removes a partner organisation           SmithZone
     Then the user reads his email                          troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed SmithZone from this project.
@@ -301,6 +308,16 @@ the user is able to remove a pending partner organisation
     [Arguments]  ${orgName}
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user should not see the element         jQuery = h2:contains(${orgName})
+
+the same organisation isnt able to join the project
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
+    logout as user
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
+    the user fills in account details                             ${fname}  ${sname}
+    the user clicks the button/link                               jQuery = button:contains("Create account")
+    the user should see the element                               jQuery = h1:contains("Contact our customer support team")
+    The user closes the browser
 
 a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
