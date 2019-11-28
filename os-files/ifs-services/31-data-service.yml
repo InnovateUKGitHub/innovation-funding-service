@@ -137,7 +137,7 @@ items:
                     configMapKeyRef:
                       name: cache-config
                       key: IFS_DATA_SERVICE_REDIS_CLUSTER_NODES
-                - name: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
+                - name: SPRING_CACHE_REDIS_TIME_TO_LIVE
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config

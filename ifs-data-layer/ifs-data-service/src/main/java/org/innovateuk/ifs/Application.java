@@ -5,10 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.config.repository.RefreshableCrudRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -21,10 +18,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-@SpringBootApplication(exclude = { RedisAutoConfiguration.class })
+@SpringBootApplication
 @EnableScheduling
 @EnableSpringDataWebSupport
-@EnableConfigurationProperties(RedisProperties.class)
 @EnableJpaRepositories(repositoryBaseClass = RefreshableCrudRepositoryImpl.class)
 @EnableCaching
 public class Application extends SpringBootServletInitializer {

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.util.Either;
 import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +21,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
  */
-public abstract class BaseFailingOrSucceedingResult<T, FailureType extends ErrorHolder> implements FailingOrSucceedingResult<T, FailureType> {
+public abstract class BaseFailingOrSucceedingResult<T, FailureType extends ErrorHolder> implements FailingOrSucceedingResult<T, FailureType>, Serializable {
 
     private static final Log LOG = LogFactory.getLog(BaseFailingOrSucceedingResult.class);
+    private static final long serialVersionUID = -6721910676145820581L;
 
     protected Either<FailureType, T> result;
 
