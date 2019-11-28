@@ -43,23 +43,6 @@
     </form>
 </th:block>
 
-<!-- Confirm submit join project modal -->
-<th:block th:fragment="modal-confirm-submit-application (messageTitle, message, submitLink, submitText, submittedText, cancelText)">
-    <form id="modal-confirm-submit-join-project" method="post" th:action="${submitLink}">
-        <div class="modal-confirm-submit-join-project" role="dialog" aria-hidden="true">
-            <th:block th:insert="fragments/modals :: close-button" />
-            <h2 th:text="${messageTitle}" class="govuk-heading-m"></h2>
-            <p class="govuk-body" th:text="${message}"></p>
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-            <div>
-                <button type="submit" class="govuk-button" th:attr="data-submitted-text=${submittedText}" th:text="${submitText}" />
-                <button type="button" tabindex="1" class="js-close button-clear"
-                        th:text="${cancelText}"></button>
-            </div>
-        </div>
-    </form>
-</th:block>
-
 <!-- Confirm submit modal -->
 <th:block th:fragment="modal-confirm-submit-post (messageTitle, message, submitName, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">

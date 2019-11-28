@@ -30,30 +30,18 @@ public class PendingPartnerProgressLandingPageController {
     private PendingPartnerProgressLandingPageViewModelPopulator populator;
 
     @GetMapping
-    public String progressLandingPage(@PathVariable long projectId, @PathVariable long organisationId, Model model) {
+    public String progressLandingPage(@PathVariable long projectId, @PathVariable long organisationId, Model model, @ModelAttribute("form") JoinProjectForm form) {
         model.addAttribute("model", populator.populate(projectId, organisationId));
         return "project/pending-partner-progress/landing-page";
     }
 
-    @PostMapping()
-    public String redirectToJoinProjectConfirm(@PathVariable long projectId, @PathVariable long organisationId){
-        return "redirect:/project/" + projectId + "/organisation/" + organisationId+ "/pending-partner-progress/join-project-confirm-submit";
-    }
-
-    @GetMapping("/join-project-confirm-submit")
-    public String joinProjectConfirm(@PathVariable long projectId, @PathVariable long organisationId, @ModelAttribute("form") JoinProjectForm form, Model model){
-        model.addAttribute("projectId", projectId);
-        model.addAttribute("organisationId", organisationId);
-        return "project/pending-partner-progress/join-project-confirm-submit";
-    }
-
-    @PostMapping("/join-project-confirm-submit")
+    @PostMapping
     public String joinProject(@PathVariable long projectId,
                               @PathVariable long organisationId,
                               Model model,
                               @ModelAttribute("form") JoinProjectForm form,
                               ValidationHandler validationHandler){
-        Supplier<String> failureView = () -> joinProjectConfirm(projectId, organisationId, form, model);
+        Supplier<String> failureView = () -> progressLandingPage(projectId, organisationId, model, form);
         Supplier<String> successView = () -> "redirect:/project/" + projectId;
         RestResult<Void> result = pendingPartnerProgressRestService.completePartnerSetup(projectId, organisationId);
         return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, successView);

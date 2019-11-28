@@ -8,14 +8,6 @@
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-configured-partner-document" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
-<th:block th:if="${model.readyToJoinProject}" th:include="fragments/modals ::modal-confirm-submit-application
-            (messageTitle='This is your final chance to make changes.',
-             message='Are you sure you want to submit?',
-             submitLink='/project-setup/project/'+${model.getProjectId()}+'/organisation/'+${model.getOrganisationId()}+'/pending-partner-progress/join-project-confirm-submit',
-             submitText='Yes, I want to join the project',
-             submittedText='Submitting, please wait...',
-             cancelText='Cancel')" />
-
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to dashboard',linkUrl='/applicant/dashboard'" />
@@ -78,8 +70,7 @@
             <button id="submit-join-project-button"
                     th:disabled="${!model.readyToJoinProject}"
                     class="govuk-button"
-                    name="submit-and-continue"
-                    data-js-modal="modal-confirm-submit-join-project">Submit and continue</button>
+                    name="submit-and-continue">Submit and continue</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
