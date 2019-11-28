@@ -34,6 +34,17 @@ task prepareDeployment(type: Copy) {
     }
 }
 
+task prepareReset(type: Copy) {
+
+    destinationDir = file('build/resources/main')
+    from('os-files/db-reset') {
+        include '**/*.yml'
+    }
+    filesMatching("**/**.*") {
+        expand project.properties
+    }
+}
+
 task setDatabaseDefaults {
     if (!project.hasProperty('DB_PORT')) {
         project.ext.DB_PORT = 3306
@@ -102,7 +113,7 @@ task osUpgradeUat(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "ifs-uat", project.version]
 }
 
-task dbResetUat(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetUat(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareReset]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "ifs-uat", project.version]
 }
@@ -163,7 +174,7 @@ task osUpgradeSysint(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
-task dbResetSysint(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetSysint(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareReset]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "ifs-sysint", project.version]
 }
@@ -192,7 +203,7 @@ task osUpgradePerf(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "ifs-perf", project.version]
 }
 
-task dbResetPerf(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetPerf(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareReset]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "ifs-perf", project.version]
 }
@@ -224,7 +235,7 @@ task osUpgradeLocal(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "local", project.version]
 }
 
-task dbResetLocal(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetLocal(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareReset]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "local", project.version]
 }
@@ -352,7 +363,7 @@ task importAnonDataIntoRemote(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "remote", project.version]
 }
 
-task dbResetRemote(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareDeployment]) {
+task dbResetRemote(type: Exec, dependsOn: [setDatabaseDefaults, setDbResetDefaults, prepareReset]) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "remote", project.version]
 }
