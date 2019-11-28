@@ -43,7 +43,7 @@ public class PendingPartnerProgressResource {
     public void setTermsAndConditionsCompletedOn(ZonedDateTime termsAndConditionsCompletedOn) {
         this.termsAndConditionsCompletedOn = termsAndConditionsCompletedOn;
     }
-    
+
     @JsonIgnore
     public boolean isYourOrganisationComplete() {
         return yourOrganisationCompletedOn != null;

@@ -27,7 +27,6 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.showYourOrganisation = showYourOrganisation;
         this.completed = progress.isCompleted();
         this.isReadyToJoinProject = progress.isReadyToJoinProject();
-
     }
 
     public long getProjectId() {
