@@ -82,6 +82,5 @@ public class PendingPartnerProgressLandingPageViewModelPopulatorTest {
         assertTrue(viewModel.isTermsAndConditionsComplete());
         assertTrue(viewModel.isYourFundingComplete());
         assertTrue(viewModel.isYourOrganisationComplete());
-        assertTrue(viewModel.isJoinProjectReadyForSubmit());
     }
 }
