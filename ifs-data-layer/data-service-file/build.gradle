@@ -27,7 +27,7 @@ artifacts {
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
 
-    compile "org.springframework.boot:spring-boot-starter-data-jpa:2.1.10.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.22"
     configurations.compile.exclude(group: 'org.quartz-scheduler', module: 'quartz')
 //    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
