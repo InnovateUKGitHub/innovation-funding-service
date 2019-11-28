@@ -373,7 +373,7 @@ Partners can see the documents approved
 Stakeholders can see approved documents
     [Documentation]  IFS-6806
     [Setup]  log in as a different user   &{stakeholder_user}
-    Given the user navigates to the page  ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
+    Given the user navigates to the page  ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link  link = Collaboration agreement
     And open pdf link                     testing.pdf
 
