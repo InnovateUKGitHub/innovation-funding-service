@@ -246,7 +246,7 @@
                     internal=${!summaryModel.externalView}
                 )" />
 
-                <th:block th:unless="${summaryModel.externalView}">
+                <th:block th:unless="${summaryModel.externalView or summaryModel.isApproved()}">
                     <a th:unless="${summaryModel.canEditAcademicFinances}"
                        th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#academic-cost-actions'}(editAcademicFinances=${true})}" class="button-secondary" name="edit-academic-finances">Edit</a>
                     <div id="academic-cost-actions" th:if="${summaryModel.canEditAcademicFinances}">
@@ -279,11 +279,6 @@
 
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
-                <p class="govuk-body">After making any necessary changes, the eligible costs should be approved.</p>
-                <th:block th:unless="${summaryModel.isH2020()}">
-                    <p th:if="${summaryModel.collaborativeProject}" class="govuk-body">Make sure the partner has reviewed and understood all changes before you approve.</p>
-                    <p th:unless="${summaryModel.collaborativeProject}" class="govuk-body">Make sure the organisation has reviewed and understood all changes before you approve.</p>
-                </th:block>
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item" data-target="add-rag-rating">
@@ -296,7 +291,7 @@
                                    class="govuk-label govuk-checkboxes__label"
                                    th:text="${summaryModel.isH2020()?
                                    'These funding costs have been reviewed against the EU Reconciliation report and are acceptable' :
-                                   'These funding costs have been reviewed and are acceptable'}">
+                                   'I confirm these funding costs are eligible and I have agreed any changes with the organisation.'}">
 
                             </label>
                         </div>

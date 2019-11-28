@@ -109,7 +109,7 @@
                                    th:errorclass="govuk-input--error"/>
                         </div>
                     </div>
-                    <p class="govuk-body govuk-!-font-weight-bold">Total directly incurred costs <span data-mirror="#subtotal-resources"></span></p>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total directly incurred costs <span data-mirror="#subtotal-resources" th:text="'£' + ${#numbers.formatInteger(form.getTotalIncurred(),0, 'DEFAULT')}"></span></p>
                     <input class="govuk-input"
                            id="subtotal-resources"
                            data-calculation-fields="#incurredStaff,#incurredTravel,#incurredOtherCosts"
@@ -182,7 +182,7 @@
                         </div>
                     </div>
 
-                    <p class="govuk-body govuk-!-font-weight-bold">Total directly allocated costs <span data-mirror="#subtotal-directly-allocated"></span></p>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total directly allocated costs <span data-mirror="#subtotal-directly-allocated" th:text="'£' + ${#numbers.formatInteger(form.getTotalAllocated(),0, 'DEFAULT')}"></span></p>
                     <input class="govuk-input"
                            data-calculation-fields="#allocatedInvestigators,#allocatedEstateCosts,#allocatedOtherCosts"
                            data-calculation-operations="+"
@@ -194,7 +194,7 @@
                 <div class="govuk-accordion__section-header">
                     <h3 class="govuk-accordion__section-heading">
                         <span class="govuk-accordion__section-button">Indirect costs
-                            <span class="finance-total" data-mirror="#indirect-costs"></span></span>
+                            <span class="finance-total" data-mirror="#subtotal-indirect"></span></span>
                     </h3>
                 </div>
                 <div class="govuk-accordion__section-content">
@@ -217,7 +217,13 @@
                                    th:errorclass="govuk-input--error"/>
                         </div>
                     </div>
-                    <p class="govuk-body govuk-!-font-weight-bold">Total indirect costs <span data-mirror="#indirect-costs"></span></p>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total indirect costs <span data-mirror="#subtotal-indirect" th:text="'£' + ${#numbers.formatInteger(form.indirectCosts,0, 'DEFAULT')}"></span></p>
+                    <input id="subtotal-indirect"
+                           class="govuk-input"
+                           data-calculation-fields="#exceptionsStaff,#exceptionsOtherCosts"
+                           data-calculation-operations="+"
+                           type="hidden"
+                           th:value="'£' + ${#numbers.formatInteger(form.indirectCosts,0, 'DEFAULT')}"/>
                 </div>
             </div>
 
@@ -266,7 +272,7 @@
                                    th:errorclass="govuk-input--error"/>
                         </div>
                     </div>
-                    <p class="govuk-body govuk-!-font-weight-bold">Total exceptions costs <span data-mirror="#subtotal-exceptions"></span></p>
+                    <p class="govuk-body govuk-!-font-weight-bold">Total exceptions costs <span data-mirror="#subtotal-exceptions" th:text="'£' + ${#numbers.formatInteger(form.getTotalExceptions(),0, 'DEFAULT')}"></span></p>
                     <input id="subtotal-exceptions"
                            class="govuk-input"
                            data-calculation-fields="#exceptionsStaff,#exceptionsOtherCosts"
@@ -276,9 +282,9 @@
                 </div>
             </div>
         </div>
-        <p class="govuk-body govuk-!-font-weight-bold">Total project costs <span data-mirror="#total"></span></p>
+        <p class="govuk-body govuk-!-font-weight-bold">Total project costs <span data-mirror="#total" th:text="'£' + ${#numbers.formatInteger(form.getTotal(),0, 'DEFAULT')}"></span></p>
         <input class="govuk-input"
-               data-calculation-fields="#subtotal-resources,#indirect-costs,#subtotal-directly-allocated,#subtotal-exceptions"
+               data-calculation-fields="#subtotal-resources,#subtotal-indirect,#subtotal-directly-allocated,#subtotal-exceptions"
                data-calculation-operations="+"
                id="total"
                type="hidden"
