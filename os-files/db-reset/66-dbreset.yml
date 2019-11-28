@@ -9,7 +9,7 @@ items:
       containers:
         - name: dbreset
           image: innovateuk/dbreset:1.0-SNAPSHOT
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: [ "/bin/bash", "-exec" ]
           args:
             - |
