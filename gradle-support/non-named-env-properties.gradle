@@ -121,3 +121,6 @@ ext.IFS_DATA_SERVICE_REDIS_PASSWORD=""
 
 // 5hrs max length of ATs.
 ext.IFS_DATA_SERVICE_CACHE_TTL_SECONDS=18000
+
+// Used by the idp, location of resources
+ext.RESOURCE_DOMAIN=""
