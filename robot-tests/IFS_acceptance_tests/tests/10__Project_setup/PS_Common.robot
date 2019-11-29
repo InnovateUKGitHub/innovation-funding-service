@@ -473,6 +473,15 @@ Project finance is able to approve the bank details
     the user clicks the button/link    jQuery = button:contains("Approve account")
     the user should see the element    jQuery = h2:contains("The bank details provided have been approved.")
 
+the user updates the project location in project setup
+    [Arguments]  ${link}
+    the user navigates to the page        ${link}
+    the user clicks the button/link       link = Edit
+    the user enters text to a text field  css = #postcode  ${Postcode}
+    the user clicks the button/link       css = button[type = "submit"]
+    the user clicks the button/link       link = Set up your project
+
+
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
     the user enters text to a text field  id = organisationName  ${partnerOrgName}

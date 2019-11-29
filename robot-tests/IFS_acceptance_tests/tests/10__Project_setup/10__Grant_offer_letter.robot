@@ -50,6 +50,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-6054 Display completed projects in the previous tab
 ...
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
+...
+...               IFS-6731 Enable new partners to enter their location when joining a project & MO has been assigned
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -57,6 +59,11 @@ Resource          PS_Common.robot
 
 
 *** Test Cases ***
+Applicant able to update project location until GOL not generated
+    [Documentation]  IFS-6731
+    Given log in as a different user    ${Elbow_Grease_Lead_PM_Email}   ${short_password}
+    Then the user updates the project location in project setup    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details
+
 External user cannot view the GOL section before spend profiles have been approved
     [Documentation]    INFUND-6741
     [Tags]  HappyPath
@@ -216,6 +223,15 @@ PM should be able upload a file and then access the Send button
     When the user clicks the button/link             link = View the status of partners
     Then the user should see the element             jQuery = h1:contains("Project team status")
     And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(8)
+
+Applicant not able to update project location after GOL generated
+    [Documentation]  IFS-6731
+    Given the user navigates to the page                   ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details
+    And the user clicks the button/link                    link = Edit
+    When the user enters text to a text field              css = #postcode  AB2 1AB
+    And the user clicks the button/link                    css = button[type = "submit"]
+    Then the user should see a field and summary error     You cannot edit the organisation's project location because we have already generated the grant offer letter.
+    And the user clicks the button/link                    link = Project details
 
 Project finance cannot access the GOL before it is sent by PM
     [Documentation]    INFUND-7361
