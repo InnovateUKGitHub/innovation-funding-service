@@ -274,7 +274,12 @@ Editing org size resets your funding
     When the user edits the org size
     Then the user should not see the element   jQuery = li div:contains("Your funding") ~ .task-status-complete
 
-###NEED to submit this once functionality is in to then continue the PS journey for the new partner
+New partner can join project
+    [Documentation]  IFS-6558
+     Given The user clicks the button/link   link = Your funding
+     When the user completes your funding
+     Then the user can join the project
+
 Internal does not see change finances link for new partner
     [Documentation]  IFS-6770
     Given Log in as a different user          &{internal_finance_credentials}
@@ -668,4 +673,10 @@ the internal patner does see link for existing partner
     the user clicks the button/link       jQuery = tr:contains("Ward Ltd") td:nth-child(4)
     the user should see the element       link = Review all changes to project finances
 
+the user can join the project
+    the user should see the element   css = .message-alert
+    the user clicks the button/link   id = submit-join-project-button
+    the user should see the element   jQuery = h1:contains("Set up your project")
+    the user clicks the button/link   link = Dashboard
+    the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
 
