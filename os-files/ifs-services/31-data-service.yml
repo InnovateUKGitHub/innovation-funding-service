@@ -21,8 +21,10 @@ items:
       IFS_DATA_SERVICE_REDIS_PASSWORD: "${IFS_DATA_SERVICE_REDIS_PASSWORD}"
       IFS_DATA_SERVICE_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
       IFS_DATA_SERVICE_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
-      IFS_DATA_SERVICE_CACHE_TTL_SECONDS: "${IFS_DATA_SERVICE_CACHE_TTL_SECONDS}"
+      IFS_DATA_SERVICE_CACHE_TTL: "${IFS_DATA_SERVICE_CACHE_TTL}"
       IFS_DATA_SERVICE_REDIS_CLUSTER_NODES: "${IFS_DATA_SERVICE_REDIS_CLUSTER_NODES}"
+      IFS_DATA_SERVICE_REDIS_CLUSTER_MAX_REDIRECTS: "${IFS_DATA_SERVICE_REDIS_CLUSTER_MAX_REDIRECTS}"
+      IFS_DATA_SERVICE_REDIS_MAX_ACTIVE: "${IFS_DATA_SERVICE_REDIS_MAX_ACTIVE}"
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -141,7 +143,17 @@ items:
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
+                      key: IFS_DATA_SERVICE_CACHE_TTL
+                - name: SPRING_REDIS_CLUSTER_MAXREDIRECTS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_CLUSTER_MAX_REDIRECTS
+                - name: SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_MAX_ACTIVE
                 - name: IFS_WEB_BASEURL
                   value: 'https://${SHIB_ADDRESS}'
                 - name: IDP_REST_BASEURL
