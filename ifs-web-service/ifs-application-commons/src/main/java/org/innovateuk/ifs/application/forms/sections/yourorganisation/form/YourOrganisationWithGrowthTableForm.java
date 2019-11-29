@@ -36,7 +36,7 @@ public class YourOrganisationWithGrowthTableForm {
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal researchAndDevelopmentSpendAtLastFinancialYear;
 
-    YourOrganisationWithGrowthTableForm(
+    public YourOrganisationWithGrowthTableForm(
             OrganisationSize organisationSize,
             Boolean stateAidAgreed,
             YearMonth financialYearEnd,
