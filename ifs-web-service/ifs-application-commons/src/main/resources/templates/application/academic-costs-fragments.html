@@ -220,8 +220,8 @@
                     <p class="govuk-body govuk-!-font-weight-bold">Total indirect costs <span data-mirror="#subtotal-indirect" th:text="'£' + ${#numbers.formatInteger(form.indirectCosts,0, 'DEFAULT')}"></span></p>
                     <input id="subtotal-indirect"
                            class="govuk-input"
-                           data-calculation-fields="#exceptionsStaff,#exceptionsOtherCosts"
-                           data-calculation-operations="+"
+                           data-calculation-fields="#indirect-costs,1"
+                           data-calculation-operations="*"
                            type="hidden"
                            th:value="'£' + ${#numbers.formatInteger(form.indirectCosts,0, 'DEFAULT')}"/>
                 </div>
