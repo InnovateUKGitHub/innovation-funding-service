@@ -60,25 +60,19 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
     @Mock
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
-    @Mock
-    private YourOrganisationWithoutGrowthTableForm yourOrganisationWithoutGrowthTableForm;
-
     @Captor
     ArgumentCaptor<OrganisationFinancesWithoutGrowthTableResource> argCaptor;
 
     private static final long projectId = 3L;
     private static final long organisationId = 5L;
     private OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource;
+    private YourOrganisationWithoutGrowthTableForm yourOrganisationWithoutGrowthTableForm;
     private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/pending-partner-progress/your-organisation-without-growth-table";
 
 
     @Override
     protected ProjectYourOrganisationWithoutGrowthTableController supplyControllerUnderTest() {
         return new ProjectYourOrganisationWithoutGrowthTableController();
-    }
-
-    private void setupExpectations(){
-        setupAsyncExpectations(asyncFuturesGenerator);
     }
 
     public void setupResource() {
@@ -93,7 +87,8 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
     @Test
     public void viewPage() throws Exception {
         setupResource();
-        setupExpectations();
+        setupAsyncExpectations(asyncFuturesGenerator);
+        yourOrganisationWithoutGrowthTableForm = new YourOrganisationWithoutGrowthTableForm();
         when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(withoutGrowthTableFormPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);

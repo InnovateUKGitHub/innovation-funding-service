@@ -56,7 +56,7 @@ public class YourOrganisationWithGrowthTableForm {
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
     }
 
-    YourOrganisationWithGrowthTableForm() {
+    public YourOrganisationWithGrowthTableForm() {
     }
 
     public OrganisationSize getOrganisationSize() {

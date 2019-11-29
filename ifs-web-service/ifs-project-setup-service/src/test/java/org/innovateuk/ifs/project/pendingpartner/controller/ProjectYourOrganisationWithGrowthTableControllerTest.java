@@ -53,9 +53,6 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
 
     @Mock
-    private YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm;
-
-    @Mock
     private ProjectYourOrganisationRestService yourOrganisationRestService;
 
     @Mock
@@ -71,6 +68,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     private static final long organisationId = 5L;
     private OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource;
     private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/pending-partner-progress/your-organisation-with-growth-table";
+    private YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm;
 
     @Override
     protected ProjectYourOrganisationWithGrowthTableController supplyControllerUnderTest() {
@@ -90,14 +88,11 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
             .build();
     }
 
-    private void setupExpectations(){
-        setupAsyncExpectations(asyncFuturesGenerator);
-    }
-
     @Test
     public void viewPage() throws Exception {
         setupResource();
-        setupExpectations();
+        setupAsyncExpectations(asyncFuturesGenerator);
+        yourOrganisationWithGrowthTableForm = new YourOrganisationWithGrowthTableForm();
         when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
         when(withGrowthTableFormPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
