@@ -32,7 +32,6 @@ public class YearMonthPropertyEditor extends PropertyEditorSupport {
         int month = returnMinusOneWhenNotValid(parameterMap, dateFieldName + "MonthValue", ChronoField.MONTH_OF_YEAR);
 
         if (year == -1 || month == -1) {
-
             setValue(null);
         } else {
             try {
