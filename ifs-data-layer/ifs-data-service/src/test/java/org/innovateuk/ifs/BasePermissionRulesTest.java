@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -54,11 +55,14 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
 
+    @Mock
+    protected StakeholderRepository stakeholderRepository;
+
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), PROJECT_MANAGER ))
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), PROJECT_MANAGER))
                 .thenReturn(projectManagerUser);
     }
 
@@ -125,7 +129,7 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     protected void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
         when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId()))
-            .thenReturn(userIsMonitoringOfficer);
+                .thenReturn(userIsMonitoringOfficer);
     }
 
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
