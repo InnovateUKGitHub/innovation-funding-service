@@ -20,14 +20,14 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final long competitionId;
     private final boolean loanCompetition;
     private final boolean collaborativeProject;
-    private final boolean existsOnApplication;
+    private final boolean showApplicationFeedbackLink;
     private final List<SetupStatusStageViewModel> stages;
 
     public SetupStatusViewModel(ProjectResource project,
                                 boolean monitoringOfficer,
                                 List<SetupStatusStageViewModel> stages,
                                 boolean loanCompetition,
-                                boolean existsOnApplication) {
+                                boolean showApplicationFeedbackLink) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.monitoringOfficer = monitoringOfficer;
@@ -38,7 +38,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.stages = stages;
         this.loanCompetition = loanCompetition;
         this.collaborativeProject = project.isCollaborativeProject();
-        this.existsOnApplication = existsOnApplication;
+        this.showApplicationFeedbackLink = showApplicationFeedbackLink;
     }
 
     public Long getProjectId() {
@@ -81,8 +81,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return collaborativeProject;
     }
 
-    public boolean isExistsOnApplication() {
-        return existsOnApplication;
+    public boolean isShowApplicationFeedbackLink() {
+        return showApplicationFeedbackLink;
     }
 
     public boolean shouldShowStatus(SetupStatusStageViewModel stage) {

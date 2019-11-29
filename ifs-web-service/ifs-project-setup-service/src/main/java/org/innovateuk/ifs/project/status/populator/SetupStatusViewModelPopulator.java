@@ -60,11 +60,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
-        long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
-        boolean existsOnApplication = projectRestService.existsOnApplication(projectId, organisationId).getSuccess();
+        boolean monitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        boolean monitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
         List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer))
                 .collect(toList());
@@ -74,7 +72,17 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 monitoringOfficer,
                 stages,
                 competition.isLoan(),
-                existsOnApplication);
+                showApplicationFeedbackLink(project, loggedInUser));
+    }
+
+    private boolean showApplicationFeedbackLink(ProjectResource project,
+                                               UserResource loggedInUser){
+        if (loggedInUser.getId().equals(project.getMonitoringOfficerUser())){
+            return true;
+        } else {
+            long organisationId = projectService.getOrganisationIdFromUser(project.getId(), loggedInUser);
+            return projectRestService.existsOnApplication(project.getId(), organisationId).getSuccess();
+        }
     }
 
     private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer) {
