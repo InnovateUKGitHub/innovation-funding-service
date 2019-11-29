@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
@@ -16,7 +15,6 @@ import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
@@ -27,15 +25,12 @@ import org.mockito.Mock;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertFalse;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
@@ -144,20 +139,12 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         UserResource stakeholderUserResource = newUserResource()
                 .withRoleGlobal(STAKEHOLDER)
                 .build();
-        User stakeholderUser = newUser()
-                .withId(stakeholderUserResource.getId())
-                .build();
-        Stakeholder stakeholder = newStakeholder()
-                .withUser(stakeholderUser)
-                .build();
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(asList(stakeholder));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResource.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholdersCanSeeFormInputResponsesForApplications(sharedInputResponse, stakeholderUserResource));
-        allInternalUsers.forEach(user -> {
-            Assert.assertFalse(rules.stakeholdersCanSeeFormInputResponsesForApplications(sharedInputResponse, user));
-        });
+        allInternalUsers.forEach(user -> Assert.assertFalse(rules.stakeholdersCanSeeFormInputResponsesForApplications(sharedInputResponse, user)));
     }
 
     @Test

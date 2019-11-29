@@ -6,12 +6,9 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -60,19 +57,13 @@ class GrantMapper {
     private FormInputResponseRepository formInputResponseRepository;
 
     @Autowired
-    private ProjectFinanceRepository projectFinanceRepository;
-
-    @Autowired
-    private ProjectFinanceRowRepository projectFinanceRowRepository;
-
-    @Autowired
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private ApplicationFinanceRepository applicationFinanceRepository;
+    private InnovationLeadRepository innovationLeadRepository;
 
     @Autowired
-    private InnovationLeadRepository innovationLeadRepository;
+    private ProjectFinanceHandler projectFinanceHandler;
 
     public Grant mapToGrant(Project project) {
 
@@ -157,25 +148,12 @@ class GrantMapper {
          */
         SpendProfileCalculations grantCalculator = new SpendProfileCalculations(spendProfile.get());
 
-        /*
-         * Get cap limit
-         */
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
-                project.getApplication().getId(), organisation.getId()
-        );
 
-        /*
-         * Calculate award
-         */
-        ProjectFinance projectFinance = projectFinanceRepository
-                .findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+        ProjectFinanceResource projectFinanceResource = projectFinanceHandler.getProjectOrganisationFinances(new ProjectFinanceResourceId(project.getId(), organisation.getId()))
+                .getSuccess();
 
-        String organisationSizeOrAcademic = projectFinance.getOrganisationSize() != null ?
-                projectFinance.getOrganisationSize().name() : ACADEMIC_ORGANISATION_SIZE_VALUE;
-
-        List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinance.getId());
-        ProjectFinanceRow awardRow = simpleFindFirstMandatory(projectFinanceRows, row -> "grant-claim".equals(row.getName()));
-        BigDecimal awardPercentage = awardRow.getQuantity() == null ? BigDecimal.ZERO : BigDecimal.valueOf(awardRow.getQuantity());
+        String organisationSizeOrAcademic = projectFinanceResource.getOrganisationSize() != null ?
+                projectFinanceResource.getOrganisationSize().name() : ACADEMIC_ORGANISATION_SIZE_VALUE;
 
         List<Forecast> forecasts = contactUser.isFinanceContact() ? spendProfile.get()
                 .getSpendProfileFigures()
@@ -196,8 +174,8 @@ class GrantMapper {
                 contactUser.getUser().getEmail(),
                 organisationSizeOrAcademic,
                 partnerOrganisation.getPostcode(),
-                BigDecimal.valueOf(applicationFinance.getMaximumFundingLevel()),
-                awardPercentage,
+                BigDecimal.valueOf(projectFinanceResource.getMaximumFundingLevel()),
+                BigDecimal.valueOf(projectFinanceResource.getGrantClaimPercentage()),
                 grantCalculator.getOverheadPercentage(),
                 forecasts);
     }

@@ -41,7 +41,11 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         extends BaseBuilder<FinanceResourceType, S> {
 
     public S withOrganisation(Long... organisationIds) {
-        return withArray((organisationId, applicationFinanceResource) -> setField("organisation", organisationId, applicationFinanceResource), organisationIds);
+        return withArray((organisationId, finance) -> setField("organisation", organisationId, finance), organisationIds);
+    }
+
+    public S withMaximumFundingLevel(Integer... maximumFundingLevels) {
+        return withArray((maximumFundingLevel, finance) -> finance.setMaximumFundingLevel(maximumFundingLevel), maximumFundingLevels);
     }
 
     public S withOrganisationSize(OrganisationSize... value) {
