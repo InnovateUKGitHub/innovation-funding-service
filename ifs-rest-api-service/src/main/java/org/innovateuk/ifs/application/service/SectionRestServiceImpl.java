@@ -28,6 +28,11 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
     @Override
+    public RestResult<List<SectionResource>> getChildSectionsByParentId(Long parentId) {
+        return getWithRestResult(sectionRestURL + "/get-child-sections/" + parentId, sectionResourceListType());
+    }
+
+    @Override
     public RestResult<List<SectionResource>> getByCompetition(final Long competitionId) {
         return getWithRestResult(sectionRestURL + "/get-by-competition/" + competitionId, sectionResourceListType());
     }

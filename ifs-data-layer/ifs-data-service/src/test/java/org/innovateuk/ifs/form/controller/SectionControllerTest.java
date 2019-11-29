@@ -77,4 +77,19 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         verify(sectionServiceMock, only()).getByCompetitionIdVisibleForAssessment(competitionId);
     }
+
+    @Test
+    public void getChildSectionsByParentId() throws Exception {
+        Section parentSection = newSection().withId(30L).build();
+        List<SectionResource> childSections = newSectionResource().withParentSection(parentSection.getId()).build(4);
+
+        when(sectionServiceMock.getChildSectionsByParentId(parentSection.getId())).thenReturn(serviceSuccess(childSections));
+
+        mockMvc.perform(get("/section/get-child-sections/" + parentSection.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(sectionServiceMock, only()).getChildSectionsByParentId(parentSection.getId());
+    }
 }
