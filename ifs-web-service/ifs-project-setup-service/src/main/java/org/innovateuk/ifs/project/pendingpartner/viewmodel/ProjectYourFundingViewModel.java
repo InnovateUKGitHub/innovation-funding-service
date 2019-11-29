@@ -11,8 +11,17 @@ public class ProjectYourFundingViewModel {
     private final boolean business;
     private final int maximumFundingLevel;
     private final boolean fundingSectionLocked;
+    private final long competitionId;
+    private final boolean overridingFundingRules;
 
-    public ProjectYourFundingViewModel(ProjectResource project, long organisationId, boolean readOnly, boolean business, int maximumFundingLevel, boolean fundingSectionLocked) {
+    public ProjectYourFundingViewModel(ProjectResource project,
+                                       long organisationId,
+                                       boolean readOnly,
+                                       boolean business,
+                                       int maximumFundingLevel,
+                                       boolean fundingSectionLocked,
+                                       long competitionId,
+                                       boolean overridingFundingRules) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -20,6 +29,8 @@ public class ProjectYourFundingViewModel {
         this.business = business;
         this.maximumFundingLevel = maximumFundingLevel;
         this.fundingSectionLocked = fundingSectionLocked;
+        this.competitionId = competitionId;
+        this.overridingFundingRules = overridingFundingRules;
     }
 
     public String getProjectName() {
@@ -48,5 +59,13 @@ public class ProjectYourFundingViewModel {
 
     public boolean isFundingSectionLocked() {
         return fundingSectionLocked;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
+    }
+
+    public boolean isOverridingFundingRules() {
+        return overridingFundingRules;
     }
 }
