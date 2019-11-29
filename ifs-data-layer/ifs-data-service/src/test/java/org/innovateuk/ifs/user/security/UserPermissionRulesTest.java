@@ -1,5 +1,27 @@
 package org.innovateuk.ifs.user.security;
 
+import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.*;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -18,13 +40,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
@@ -33,38 +49,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
-import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.command.GrantRoleCommand;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.AffiliationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
-import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserProfileResource;
-import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Test;
-import org.mockito.Mock;
-
 /**
  * Tests around the permissions for UserService and related services
  */
@@ -72,9 +56,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
-
-    @Mock
-    private StakeholderRepository stakeholderRepositoryMock;
 
     @Test
     public void anyoneCanViewThemselves() {
@@ -121,13 +102,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         when(processRoleRepositoryMock.findByUserId(userResource.getId())).thenReturn(processRoles);
         when(projectUserRepositoryMock.findByUserId(userResource.getId())).thenReturn(projectUsers);
-        when(stakeholderRepositoryMock.findByStakeholderId(stakeholderResource.getId())).thenReturn(asList(stakeholder));
+        when(stakeholderRepository.findByStakeholderId(stakeholderResource.getId())).thenReturn(asList(stakeholder));
 
         assertTrue(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, stakeholderResource));
 
-        allInternalUsers.forEach(internalUser -> {
-            assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser));
-        });
+        allInternalUsers.forEach(internalUser -> assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser)));
     }
 
     @Test

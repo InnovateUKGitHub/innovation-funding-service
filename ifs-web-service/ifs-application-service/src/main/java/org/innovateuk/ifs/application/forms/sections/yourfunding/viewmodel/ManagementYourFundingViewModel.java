@@ -14,11 +14,12 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                 true,
                 applicationName,
                 false,
-        false,
-        false,
-        0L,
-        0L,
+                false,
+                false,
+                0L,
                 0,
-                url);
+                0,
+                url,
+                false);
     }
 }
