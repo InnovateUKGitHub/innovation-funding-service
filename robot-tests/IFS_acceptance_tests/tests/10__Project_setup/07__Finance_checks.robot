@@ -843,7 +843,7 @@ Project finance user can view updated finances summary for the consortium
     Then the Categories Are Verified For Finances Summary Section   3   £177,784  30%     50,867    2,468     124,449
     #check total
     And the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1   £356,559   101,735    7,404     248,898
+    And The Total Calculation For Finances Summary Are Verified    1   £356,469   101,735    7,404     248,898
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
