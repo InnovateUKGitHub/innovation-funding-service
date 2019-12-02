@@ -8,20 +8,28 @@
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-configured-partner-document" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
-
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to dashboard',linkUrl='/applicant/dashboard'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join project',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+                aria-labelledby="error-summary-title"
+                role="alert"
+                tabindex="-1"
+                data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
 
         <p class="govuk-body">You need to complete all sections before you can join this project.</p>
         <ul class="task-list">
             <li th:if="${model.showYourOrganisation}">
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-organisation(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Your organisation</a>
+                        <span th:if="${model.completed}">Your organisation</span>
+                        <a th:if="${!model.completed}" th:href="@{/project/{projectId}/organisation/{organisationId}/your-organisation(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Your organisation</a>
                     </h3>
                 </div>
                 <div th:if="${model.yourOrganisationComplete}"
@@ -33,7 +41,8 @@
             <li>
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-funding(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Your funding</a>
+                        <span th:if="${model.completed}">Your funding</span>
+                        <a th:if="${!model.completed}" th:href="@{/project/{projectId}/organisation/{organisationId}/your-funding(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Your funding</a>
                     </h3>
                 </div>
                 <div th:if="${model.yourFundingComplete}"
@@ -45,7 +54,8 @@
             <li>
                 <div class="task">
                     <h3 class="govuk-heading-s">
-                        <a th:href="@{/project/{projectId}/organisation/{organisationId}/terms-and-conditions(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                        <span th:if="${model.completed}">Award terms and conditions</span>
+                        <a th:if="${!model.completed}" th:href="@{/project/{projectId}/organisation/{organisationId}/terms-and-conditions(projectId=${model.projectId},organisationId=${model.organisationId})}"
                            class="govuk-link">Award terms and conditions</a>
                     </h3>
                 </div>
@@ -55,6 +65,21 @@
                      class="task-status-incomplete"><span>Incomplete</span></div>
             </li>
         </ul>
+
+        <div class="message-alert" th:if="${model.readyToJoinProject}">
+            <p class="govuk-body">You will not be able to make any changes after you submit.</p>
+        </div>
+
+        <div class="message-alert" th:if="${model.completed}">
+            <p class="govuk-body">You have already joined the project</p>
+        </div>
+
+        <form class="govuk-!-margin-top-6" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
+            <button id="submit-join-project-button"
+                    th:disabled="${!model.readyToJoinProject}"
+                    class="govuk-button"
+                    name="submit-and-continue">Submit and continue</button>
+        </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
