@@ -638,13 +638,16 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         long organisationId = 2L;
         String postcode = "TW14 9QG";
 
+        Project existingProject = newProject().withId(projectId).withGrantOfferLetter(newFileEntry().build()).build();
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
+
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(new LegacyMonitoringOfficer());
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_LOCATION_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
     }
 
     @Test
@@ -655,6 +658,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         String postcode = "TW14 9QG";
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        Project existingProject = newProject().withId(projectId).build();
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
 
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
         assertTrue(updateResult.isFailure());
@@ -670,6 +675,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
 
+        Project existingProject = newProject().withId(projectId).build();
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
@@ -687,6 +694,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation(project, null, true);
 
+        Project existingProject = newProject().withId(projectId).build();
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
