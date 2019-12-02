@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.pendingpartner.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
@@ -33,6 +34,9 @@ public class ProjectYourFundingViewModelPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+
     public ProjectYourFundingViewModel populate(long projectId, long organisationId) {
         PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
         ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
@@ -41,10 +45,13 @@ public class ProjectYourFundingViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean organisationSectionRequired = !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         boolean locked = organisationSectionRequired && !progress.isYourOrganisationComplete();
+        boolean fundingOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess();
 
         return new ProjectYourFundingViewModel(project, organisationId, progress.isYourFundingComplete(),
                 organisation.getOrganisationTypeEnum().equals(OrganisationTypeEnum.BUSINESS),
                 projectFinance.getMaximumFundingLevel(),
-                locked);
+                locked,
+                competition.getId(),
+                fundingOverridden);
     }
 }

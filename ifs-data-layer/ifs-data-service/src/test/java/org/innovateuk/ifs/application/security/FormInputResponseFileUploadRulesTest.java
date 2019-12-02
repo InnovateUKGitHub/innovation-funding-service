@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.security;
 
-import org.codehaus.groovy.runtime.InvokerHelper;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -9,7 +8,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -56,9 +54,6 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
-
-    @Mock
-    private StakeholderRepository stakeholderRepositoryMock;
 
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;
@@ -140,7 +135,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
                 .build();
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(InvokerHelper.asList(stakeholder));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResource.getId())).thenReturn(true);
 
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
         fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, application.getId(), 2L));

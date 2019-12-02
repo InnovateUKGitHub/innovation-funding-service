@@ -187,7 +187,7 @@ Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]  HappyPath
     [Setup]  the user logs in and navigates to project details     &{lead_applicant_credentials}
-    Given the user updates the project location in project setup    Empire
+    Given the user updates the project location in project setup   ${Project_In_Setup_Details_Page}
     And the user clicks the button/link   link = Project details
     When all the fields are completed
     Then the user navigates to the page    ${Project_In_Setup_Page}
@@ -329,14 +329,6 @@ The user resends and clicks the button
     The user clicks the button/link    jQuery = label:contains("John Smith") ~ a:contains("Resend invite")
     The user should see the element    jQuery = h2:contains("Resend invite to team member")
     The user clicks the button/link    jQuery = button:contains("${Resend_OR_Cancel}")
-
-the user updates the project location in project setup
-    [Arguments]  ${org}
-    the user navigates to the page        ${Project_In_Setup_Details_Page}
-    the user clicks the button/link       link = Edit
-    the user enters text to a text field  css = #postcode  ${Postcode}
-    the user clicks the button/link       css = button[type = "submit"]
-    the user clicks the button/link       link = Set up your project
 
 the user should see the project setup stages
     the user should see the element    link = Project details
