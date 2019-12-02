@@ -4,6 +4,8 @@ EXPOSE 3306
 COPY mysql-docker-healthcheck.sh /usr/local/bin/docker-healthcheck.sh
 RUN chmod 755 /usr/local/bin/docker-healthcheck.sh
 
+COPY my-small.cnf /etc/mysql/conf.d
+
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD bash /usr/local/bin/docker-healthcheck.sh
 
