@@ -44,6 +44,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ORGANISATION_ALREADY_EXISTS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
@@ -274,7 +275,7 @@ public class RegistrationController {
 
     private String handleAcceptInviteFailure(@ModelAttribute("registrationForm") @Valid RegistrationForm registrationForm, HttpServletResponse response, UserResource user, HttpServletRequest request, Model model, ValidationHandler validationHandler, ServiceFailure failure) {
         if (failure.getErrors().stream().anyMatch(
-                error -> error.getErrorKey().equals("ORGANISATION_ALREADY_EXISTS_FOR_PROJECT"))) {
+                error -> error.getErrorKey().equals(ORGANISATION_ALREADY_EXISTS_FOR_PROJECT.name()))) {
             return "redirect:/registration/duplicate-project-organisation";
         }
         addValidationErrors(validationHandler, failure);
