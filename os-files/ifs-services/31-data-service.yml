@@ -19,11 +19,10 @@ items:
       IFS_DATA_SERVICE_CACHE_PREFIX: "${IFS_DATA_SERVICE_CACHE_PREFIX}"
       IFS_DATA_SERVICE_REDIS_SSL: "${IFS_DATA_SERVICE_REDIS_SSL}"
       IFS_DATA_SERVICE_REDIS_PASSWORD: "${IFS_DATA_SERVICE_REDIS_PASSWORD}"
-      IFS_DATA_SERVICE_REDIS_HOST: "${IFS_DATA_SERVICE_REDIS_HOST}"
-      IFS_DATA_SERVICE_REDIS_PORT: "${IFS_DATA_SERVICE_REDIS_PORT}"
+      IFS_DATA_SERVICE_REDIS_STANDALONE_HOST: "${IFS_DATA_SERVICE_REDIS_STANDALONE_HOST}"
+      IFS_DATA_SERVICE_REDIS_STANDALONE_PORT: "${IFS_DATA_SERVICE_REDIS_STANDALONE_PORT}"
       IFS_DATA_SERVICE_CACHE_TTL: "${IFS_DATA_SERVICE_CACHE_TTL}"
       IFS_DATA_SERVICE_REDIS_CLUSTER_NODES: "${IFS_DATA_SERVICE_REDIS_CLUSTER_NODES}"
-      IFS_DATA_SERVICE_REDIS_CLUSTER_MAX_REDIRECTS: "${IFS_DATA_SERVICE_REDIS_CLUSTER_MAX_REDIRECTS}"
       IFS_DATA_SERVICE_REDIS_MAX_ACTIVE: "${IFS_DATA_SERVICE_REDIS_MAX_ACTIVE}"
   - apiVersion: v1
     kind: DeploymentConfig
@@ -113,12 +112,12 @@ items:
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: IFS_DATA_SERVICE_REDIS_HOST
+                      key: IFS_DATA_SERVICE_REDIS_STANDALONE_HOST
                 - name: SPRING_REDIS_PORT
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: IFS_DATA_SERVICE_REDIS_PORT
+                      key: IFS_DATA_SERVICE_REDIS_STANDALONE_PORT
                 - name: SPRING_CACHE_REDIS_KEY_PREFIX
                   valueFrom:
                     configMapKeyRef:
@@ -144,11 +143,6 @@ items:
                     configMapKeyRef:
                       name: cache-config
                       key: IFS_DATA_SERVICE_CACHE_TTL
-                - name: SPRING_REDIS_CLUSTER_MAXREDIRECTS
-                  valueFrom:
-                    configMapKeyRef:
-                      name: cache-config
-                      key: IFS_DATA_SERVICE_REDIS_CLUSTER_MAX_REDIRECTS
                 - name: SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE
                   valueFrom:
                     configMapKeyRef:
