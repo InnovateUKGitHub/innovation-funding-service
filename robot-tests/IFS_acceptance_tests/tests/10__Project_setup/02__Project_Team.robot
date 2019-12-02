@@ -205,18 +205,19 @@ Ifs Admin is able to add a new partner organisation
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD  ${addNewPartnerOrgAppID}  ${applicationName}
+    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
 
 Two organisations with the same name are not able to join
     [Documentation]  IFS-6485  IFS-6505  IFS-6724
         [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
         Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
-        When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  test1@test.nom
-        Then the same organisation isnt able to join the project   Name  Surname  test1@test.nom  innovate  INNOVATE LTD
+        When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
+        Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  innovate  INNOVATE LTD
+        [Teardown]  the user navigates to the page                 ${LOGIN_URL}
 
 Ifs Admin is able to remove a partner organisation
     [Documentation]  IFS-6485
-    [Setup]  The user logs-in in new browser               &{ifs_admin_user_credentials}
+    [Setup]    Logging in and Error Checking               &{ifs_admin_user_credentials}
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     When the user removes a partner organisation           SmithZone
     Then the user reads his email                          troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed SmithZone from this project.
@@ -241,7 +242,7 @@ Project finance is able to add a new partner organisation
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation             Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD   ${addNewPartnerOrgAppID}  ${applicationName}
+    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
     And log in as a different user                            &{internal_finance_credentials}
     And the internal user checks for status after new org added/removed
 
@@ -314,7 +315,6 @@ the user is able to remove a pending partner organisation
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user should not see the element         jQuery = h2:contains(${orgName})
 
-<<<<<<< HEAD
 the same organisation isnt able to join the project
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
@@ -322,8 +322,7 @@ the same organisation isnt able to join the project
     the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
-    the user should see the element                               jQuery = h1:contains("Contact our customer support team")
-    The user closes the browser
+    the user should see the element                               jQuery = h1:contains("Contact our Customer Support team")
 
 a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
@@ -350,8 +349,6 @@ The user accepts invitation and selects organisation type
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
-=======
->>>>>>> a1494319b6f1ccdb2a2a9dd7db6b270236084c70
 the relevant users recieve an email notification
     [Arguments]  ${orgName}
     the user reads his email       troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
