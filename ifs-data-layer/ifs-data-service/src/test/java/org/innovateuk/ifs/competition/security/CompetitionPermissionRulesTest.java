@@ -34,11 +34,11 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
 
-	@Override
-	protected CompetitionPermissionRules supplyPermissionRulesUnderTest() {
-		return new CompetitionPermissionRules();
-	}
-	
+    @Override
+    protected CompetitionPermissionRules supplyPermissionRulesUnderTest() {
+        return new CompetitionPermissionRules();
+    }
+
     @Test
     public void externalUsersCannotViewACompetitionInSetup() {
         //null user cannot see competition in setup.
@@ -141,7 +141,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void onlyStakeholdersAssignedToCompCanAccess() {
 
-	    long competitionId = 1L;
+        long competitionId = 1L;
 
         List<Role> stakeholdersRoles = singletonList(STAKEHOLDER);
         UserResource stakeholderAssignedToCompetition = newUserResource().withRolesGlobal(stakeholdersRoles).build();
@@ -166,7 +166,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<InnovationLead> innovationLeads = newInnovationLead().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
-        CompetitionResource openCompetition= newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
+        CompetitionResource openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
         CompetitionResource feedbackReleasedCompetition = newCompetitionResource().withId(2L).withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).withId(2L).build();
 
         when(innovationLeadRepository.findInnovationsLeads(1L)).thenReturn(innovationLeads);
@@ -187,7 +187,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         UserResource stakeholderAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
         UserResource stakeholderNotAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
 
-        CompetitionResource openCompetition= newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(competitionId).build();
+        CompetitionResource openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(competitionId).build();
         CompetitionResource feedbackReleasedCompetition = newCompetitionResource().withId(2L).withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).withId(2L).build();
 
         when(stakeholderRepository.existsByCompetitionIdAndUserId(openCompetition.getId(), stakeholderAssignedToCompetition.getId())).thenReturn(true);
@@ -208,7 +208,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         allGlobalRoleUsers.forEach(user -> competitions.forEach(competitionResource -> {
             if ((user.hasRole(COMP_ADMIN) || user.hasRole(PROJECT_FINANCE) || user.hasRole(IFS_ADMINISTRATOR)) &&
                     (competitionResource.getCompetitionStatus() == COMPETITION_SETUP ||
-                    competitionResource.getCompetitionStatus() == READY_TO_OPEN)) {
+                            competitionResource.getCompetitionStatus() == READY_TO_OPEN)) {
                 assertTrue(rules.internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(competitionResource, user));
             } else {
                 assertFalse(rules.internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(competitionResource, user));
