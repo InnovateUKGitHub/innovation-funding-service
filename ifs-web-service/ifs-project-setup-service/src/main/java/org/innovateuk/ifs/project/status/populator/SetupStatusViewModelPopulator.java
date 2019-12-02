@@ -127,7 +127,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             case DOCUMENTS:
                 boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
                 List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(project.getId());
-                boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
+                boolean collaborationAgreementRequired = !partnerOrganisations.isEmpty();
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         isProjectManager ? "You must upload supporting documents to be reviewed."
                                 : "The Project Manager must upload supporting documents to be reviewed.",

@@ -138,11 +138,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return monitoringOfficerService.findMonitoringOfficerForProject(projectId);
     }
 
-    private boolean projectContainsStage(Project project, ProjectSetupStage projectSetupStage) {
+    private boolean projectContainsStage(Project project) {
         return project.getApplication().getCompetition().getProjectStages().stream()
-                .filter(stage -> stage.getProjectSetupStage().equals(projectSetupStage))
-                .findFirst()
-                .isPresent();
+                .anyMatch(stage -> stage.getProjectSetupStage().equals(ProjectSetupStage.DOCUMENTS));
     }
 
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, PartnerOrganisation partnerOrganisation) {
@@ -214,7 +212,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates createDocumentStatus(Project project) {
 
-        if (!projectContainsStage(project, ProjectSetupStage.DOCUMENTS)) {
+        if (!projectContainsStage(project)) {
             return COMPLETE;
         }
 
