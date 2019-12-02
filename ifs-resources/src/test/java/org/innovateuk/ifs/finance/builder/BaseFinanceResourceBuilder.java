@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.finance.builder.AcademicCostBuilder.newAcademicCost;
 import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
@@ -187,4 +188,32 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                         .build()));
     }
 
+    public S thatIsRequestingFunding() {
+        return withFinanceOrganisationDetails(asMap(
+                FINANCE, newExcludedCostCategory().withCosts(
+                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(10).build(1)
+                ).build(),
+                FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
+                        newOtherCost().
+                                withId(1L, 2L).
+                                withDescription("Something", "Else").
+                                withCost(new BigDecimal("100"), new BigDecimal("300")).
+                                build(2))
+                        .build())
+        );
+    }
+    public S thatIsNotRequestingFunding() {
+        return withFinanceOrganisationDetails(asMap(
+                FINANCE, newExcludedCostCategory().withCosts(
+                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(0).build(1)
+                ).build(),
+                FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
+                        newOtherCost().
+                                withId(1L, 2L).
+                                withDescription("Something", "Else").
+                                withCost(new BigDecimal("100"), new BigDecimal("300")).
+                                build(2))
+                        .build())
+        );
+    }
 }

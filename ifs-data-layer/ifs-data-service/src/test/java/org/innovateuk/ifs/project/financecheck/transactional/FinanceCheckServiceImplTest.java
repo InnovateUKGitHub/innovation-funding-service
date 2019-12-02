@@ -69,7 +69,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
+import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
@@ -685,7 +685,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                 withQuantity(1).
                                 build(1)).
                         build(),
-                FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+                FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
                                 withGrantClaimPercentage(30).
                                 build(1)).
