@@ -375,6 +375,29 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(shouldFail.isSuccess());
     }
 
+
+    @Test
+    public void existsOnApplication(){
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+
+        // Method under test
+        ServiceResult<Boolean> shouldSucceed = service.existsOnApplication(project.getId(), organisation.getId()); // Organisation on the application
+        // Expectations
+        assertTrue(shouldSucceed.isSuccess());
+        assertTrue(shouldSucceed.getSuccess());
+    }
+
+    @Test
+    public void doesNotExistsOnApplication(){
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+
+        // Method under test
+        ServiceResult<Boolean> shouldSucceed = service.existsOnApplication(project.getId(), newOrganisation().build().getId()); // Organisation on the application
+        // Expectations
+        assertTrue(shouldSucceed.isSuccess());
+        assertFalse(shouldSucceed.getSuccess());
+    }
+
     @Test
     public void addPartner(){
         User newUser = newUser().build();

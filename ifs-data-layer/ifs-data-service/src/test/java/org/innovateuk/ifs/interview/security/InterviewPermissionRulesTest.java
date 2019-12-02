@@ -2,7 +2,6 @@ package org.innovateuk.ifs.interview.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.interview.domain.Interview;
-import org.innovateuk.ifs.interview.mapper.InterviewMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.resource.InterviewState;
@@ -11,7 +10,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -37,10 +35,7 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
     private Map<InterviewState, InterviewResource> assessmentInterviews;
 
     @Mock
-    private InterviewRepository interviewRepositoryMock;
-
-    @Autowired
-    public InterviewMapper interviewMapper;
+    private InterviewRepository interviewRepository;
 
     @Override
     protected InterviewPermissionRules supplyPermissionRulesUnderTest() {
@@ -55,7 +50,7 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
         ProcessRole processRole = newProcessRole()
                 .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
-        when(processRoleRepositoryMock.findById(processRole.getId())).thenReturn(Optional.of(processRole));
+        when(processRoleRepository.findById(processRole.getId())).thenReturn(Optional.of(processRole));
 
         assessmentInterviews = EnumSet.allOf(InterviewState.class).stream().collect(toMap(identity(), state -> setupAssessmentInterview(processRole, state)));
     }
@@ -85,7 +80,7 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
                 .withState(state)
                 .build();
 
-        when(interviewRepositoryMock.findById(interview.getId())).thenReturn(Optional.of(interview));
+        when(interviewRepository.findById(interview.getId())).thenReturn(Optional.of(interview));
 
         return newInterviewResource()
                 .withId(interview.getId())

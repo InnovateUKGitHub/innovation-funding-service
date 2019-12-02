@@ -25,19 +25,19 @@ public class QuestionPermissionRulesTest extends BasePermissionRulesTest<Questio
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         loggedInUser = newUserResource().build();
         questionResource = newQuestionResource().build();
     }
 
     @Test
-    public void testAllUsersCanSeeQuestions() {
+    public void allUsersCanSeeQuestions() {
         assertTrue(rules.loggedInUsersCanSeeAllQuestions(questionResource, loggedInUser));
         assertFalse(rules.loggedInUsersCanSeeAllQuestions(questionResource, anonymousUser()));
     }
 
     @Test
-    public void testNoUserCanUpdateAny() {
+    public void noUserCanUpdateAny() {
         assertFalse(rules.noUserCanUpdateAny(questionResource, loggedInUser));
     }
 }
