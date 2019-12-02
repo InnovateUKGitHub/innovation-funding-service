@@ -250,8 +250,8 @@
                     <a th:unless="${summaryModel.canEditAcademicFinances}"
                        th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#academic-cost-actions'}(editAcademicFinances=${true})}" class="button-secondary" name="edit-academic-finances">Edit</a>
                     <div id="academic-cost-actions" th:if="${summaryModel.canEditAcademicFinances}">
-                        <button id="save-academic-costs" class="govuk-button vertical-align-baseline" name="save-academic-costs">Save</button>
-                        <a class="govuk-!-margin-left-1 govuk-link govuk-body vertical-align-baseline" th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">Cancel changes</a>
+                        <button id="save-academic-costs" class="govuk-button vertical-align-baseline govuk-!-margin-right-4" name="save-academic-costs">Save</button>
+                        <a class="govuk-link govuk-body vertical-align-baseline" th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">Cancel changes</a>
                     </div>
                 </th:block>
 
