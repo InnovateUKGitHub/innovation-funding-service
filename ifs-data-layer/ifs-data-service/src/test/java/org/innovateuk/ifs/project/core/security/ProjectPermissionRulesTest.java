@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectPermissionRules> {
 
     @Mock
-    private ProjectProcessRepository projectProcessRepositoryMock;
+    private ProjectProcessRepository projectProcessRepository;
 
     @Override
     protected ProjectPermissionRules supplyPermissionRulesUnderTest() {
@@ -51,7 +51,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         ProjectResource project = newProjectResource().build();
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
 
         assertFalse(rules.partnersOnProjectCanView(project, user));
     }
@@ -116,7 +116,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         ProjectResource project = newProjectResource().build();
         ProjectProcess projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
             if (systemRegistrationUser().equals(user)) {

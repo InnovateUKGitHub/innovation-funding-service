@@ -1,5 +1,12 @@
 package org.innovateuk.ifs.finance.security;
 
+import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UsersRolesService;
+import org.junit.Test;
+import org.mockito.Mock;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -7,28 +14,12 @@ import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-
-import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.UsersRolesService;
-import org.junit.Test;
-import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 
 public class GrantClaimMaximumPermissionRulesTest extends BasePermissionRulesTest<GrantClaimMaximumPermissionRules> {
 
     @Mock
     private UsersRolesService usersRolesService;
-
-    @Mock
-    private ProjectUserRepository projectUserRepository;
 
     @Override
     protected GrantClaimMaximumPermissionRules supplyPermissionRulesUnderTest() {

@@ -23,6 +23,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -47,7 +48,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
     @Test
     public void internalUsersOtherThanInnovationLeadsCanViewAllMilestones() {
         allGlobalRoleUsers.forEach(user -> {
-            if (!user.hasRole(Role.INNOVATION_LEAD) && !user.hasRole(STAKEHOLDER) && allInternalUsers.contains(user)) {
+            if (!user.hasRole(INNOVATION_LEAD) && !user.hasRole(STAKEHOLDER) && allInternalUsers.contains(user)) {
                 assertTrue(rules.allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(compositeId, user));
             } else {
                 assertFalse(rules.allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(compositeId, user));
@@ -57,7 +58,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
 
     @Test
     public void onlyInnovationLeadUsersAssignedToCompCanAccess() {
-        List<Role> innovationLeadRoles = singletonList(Role.INNOVATION_LEAD);
+        List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<InnovationLead> innovationLeads = newInnovationLead().withUser(newUser().withId

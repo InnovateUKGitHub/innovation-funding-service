@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissio
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -29,6 +28,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.junit.Assert.assertTrue;
@@ -39,17 +39,17 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     private ProjectResource project;
 
     @Mock
-    private ProjectProcessRepository projectProcessRepositoryMock;
+    private ProjectProcessRepository projectProcessRepository;
 
 
     @Before
     public void setUp() throws Exception {
-        projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
-        project = newProjectResource().withId(1L).withProjectState(ProjectState.SETUP).build();
+        projectProcess = newProjectProcess().withActivityState(SETUP).build();
+        project = newProjectResource().withId(1L).withProjectState(SETUP).build();
     }
 
     @Test
-    public void testProjectFinanceUserCanViewViability() {
+    public void projectFinanceUserCanViewViability() {
 
         Long organisationId = 1L;
 
@@ -65,13 +65,13 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectFinanceUserCanSaveViability() {
+    public void projectFinanceUserCanSaveViability() {
 
         Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(projectFinanceUser())) {
@@ -83,7 +83,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectFinanceUserCanViewEligibility() {
+    public void projectFinanceUserCanViewEligibility() {
 
         Long organisationId = 1L;
 
@@ -99,13 +99,13 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectFinanceUserCanSaveEligibility() {
+    public void projectFinanceUserCanSaveEligibility() {
 
         Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(projectFinanceUser())) {
@@ -117,11 +117,11 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectFinanceUserCanSaveCreditReport() {
+    public void projectFinanceUserCanSaveCreditReport() {
 
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(projectFinanceUser())) {
@@ -133,7 +133,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectFinanceUserCanViewCreditReport() {
+    public void projectFinanceUserCanViewCreditReport() {
 
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
 
@@ -147,13 +147,13 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testInternalUserCanViewFinanceChecks() {
+    public void internalUserCanViewFinanceChecks() {
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         allInternalUsers.forEach(user -> assertTrue(rules.internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user)));
     }
 
     @Test
-    public void testProjectUsersCanViewFinanceChecks() {
+    public void projectUsersCanViewFinanceChecks() {
         UserResource user = newUserResource().build();
 
         setupUserAsPartner(project, user);
@@ -162,7 +162,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectFinanceContactCanViewFinanceChecks() {
+    public void projectFinanceContactCanViewFinanceChecks() {
         UserResource user = newUserResource().build();
 
         setupFinanceContactExpectations(project, user);
@@ -176,13 +176,13 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     private void setupFinanceContactExpectations(ProjectResource project, UserResource user) {
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_FINANCE_CONTACT)).thenReturn(partnerProjectUser);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_FINANCE_CONTACT)).thenReturn(partnerProjectUser);
     }
 
     @Test
-    public void testProjectPartnersCanViewEligibility(){
+    public void projectPartnersCanViewEligibility() {
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
@@ -195,7 +195,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testPartnersCanSeeTheProjectFinancesForTheirOrganisationProjectFinanceResource(){
+    public void partnersCanSeeTheProjectFinancesForTheirOrganisationProjectFinanceResource() {
         UserResource user = newUserResource().build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
 
@@ -207,7 +207,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testInternalUserCanSeeProjectFinancesForOrganisations(){
+    public void internalUserCanSeeProjectFinancesForOrganisations() {
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
 
         allGlobalRoleUsers.forEach(user -> {
@@ -220,12 +220,12 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testPartnersCanAddEmptyRowWhenReadingProjectCosts(){
+    public void partnersCanAddEmptyRowWhenReadingProjectCosts() {
 
         UserResource user = newUserResource().build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         setupUserAsPartner(project, user);
         assertTrue(rules.partnersCanAddEmptyRowWhenReadingProjectCosts(projectFinanceResource, user));
@@ -235,10 +235,10 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testInternalUsersCanAddEmptyRowWhenReadingProjectCosts(){
+    public void internalUsersCanAddEmptyRowWhenReadingProjectCosts() {
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
 
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
             if (isInternal(user)) {
@@ -250,7 +250,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testPartnersCanSeeTheProjectFinancesForTheirOrganisation(){
+    public void partnersCanSeeTheProjectFinancesForTheirOrganisation() {
         UserResource user = newUserResource().build();
         FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withProjectId(project.getId()).build();
 
@@ -262,7 +262,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testInternalUsersCanSeeTheProjectFinancesForTheirOrganisation(){
+    public void internalUsersCanSeeTheProjectFinancesForTheirOrganisation() {
         FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withProjectId(project.getId()).build();
 
         allGlobalRoleUsers.forEach(user -> {
