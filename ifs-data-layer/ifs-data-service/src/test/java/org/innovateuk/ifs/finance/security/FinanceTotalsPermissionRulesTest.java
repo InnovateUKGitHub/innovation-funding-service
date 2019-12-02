@@ -2,10 +2,8 @@ package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -16,9 +14,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<FinanceTotalsPermissionRules> {
-
-    @Mock
-    private ProcessRoleRepository processRoleRepository;
 
     @Override
     protected FinanceTotalsPermissionRules supplyPermissionRulesUnderTest() {
