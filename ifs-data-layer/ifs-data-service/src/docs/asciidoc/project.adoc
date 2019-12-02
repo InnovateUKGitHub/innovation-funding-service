@@ -175,6 +175,18 @@ include::{snippets}/project/create-project-from-application/response-fields.adoc
 ==== Curl Example
 include::{snippets}/project/create-project-from-application/curl-request.adoc[]
 
+=== Exists on Application
+==== Request
+include::{snippets}/project/exists-on-application/http-request.adoc[]
+include::{snippets}/project/exists-on-application/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/exists-on-application/http-response.adoc[]
+include::{snippets}/project/exists-on-application/response-body.adoc[]
+
+==== Curl Example
+include::{snippets}/project/exists-on-application/curl-request.adoc[]
+
 === Withdraw Project
 ==== Request
 include::{snippets}/project/withdraw-project/http-request.adoc[]
