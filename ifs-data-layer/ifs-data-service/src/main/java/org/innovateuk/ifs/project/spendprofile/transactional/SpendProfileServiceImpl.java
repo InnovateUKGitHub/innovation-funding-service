@@ -164,7 +164,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return (isViabilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project))
-                .andOnSuccess(() -> areThereAnyPendingPartnersOnProject(project));
+                .andOnSuccess(() -> areThereNoPendingPartnersOnProject(project));
     }
 
     private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
@@ -181,7 +181,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         }
     }
 
-    private ServiceResult<Void> areThereAnyPendingPartnersOnProject(Project project) {
+    private ServiceResult<Void> areThereNoPendingPartnersOnProject(Project project) {
         if (spendProfileWorkflowHandler.projectHasNoPendingPartners(project)) {
             return serviceSuccess();
         } else {

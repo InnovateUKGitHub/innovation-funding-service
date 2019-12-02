@@ -269,7 +269,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
             PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
             PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
 
-            Long projectId = 123L;
+            long projectId = 123L;
             project = newProject().
                     withId(projectId).
                     withDuration(3L).
