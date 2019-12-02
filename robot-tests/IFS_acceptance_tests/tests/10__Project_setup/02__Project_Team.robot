@@ -205,7 +205,7 @@ Ifs Admin is able to add a new partner organisation
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
+    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD  ${addNewPartnerOrgAppID}  ${applicationName}
 
 Two organisations with the same name are not able to join
     [Documentation]  IFS-6485  IFS-6505  IFS-6724
@@ -241,7 +241,7 @@ Project finance is able to add a new partner organisation
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation             Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
+    Then a new organisation is able to accept project invite  FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD   ${addNewPartnerOrgAppID}  ${applicationName}
     And log in as a different user                            &{internal_finance_credentials}
     And the internal user checks for status after new org added/removed
 
@@ -265,7 +265,7 @@ The new partner can complete Your organisation
     Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
 
 The new partner completes your funding
-    [Documentation]  IFS-6491
+    [Documentation]  IFS-6491  IFS-6725
     Given The user clicks the button/link   link = Your funding
     When the user completes your funding
     Then the user should see the element    jQuery = li div:contains("Your funding") ~ .task-status-complete
@@ -281,7 +281,12 @@ Editing org size resets your funding
     When the user edits the org size
     Then the user should not see the element   jQuery = li div:contains("Your funding") ~ .task-status-complete
 
-###NEED to submit this once functionality is in to then continue the PS journey for the new partner
+New partner can join project
+    [Documentation]  IFS-6558
+     Given The user clicks the button/link   link = Your funding
+     When the user completes your funding
+     Then the user can join the project
+
 Internal does not see change finances link for new partner
     [Documentation]  IFS-6770
     Given Log in as a different user          &{internal_finance_credentials}
@@ -309,6 +314,7 @@ the user is able to remove a pending partner organisation
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user should not see the element         jQuery = h2:contains(${orgName})
 
+<<<<<<< HEAD
 the same organisation isnt able to join the project
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
@@ -344,6 +350,8 @@ The user accepts invitation and selects organisation type
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
+=======
+>>>>>>> a1494319b6f1ccdb2a2a9dd7db6b270236084c70
 the relevant users recieve an email notification
     [Arguments]  ${orgName}
     the user reads his email       troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
@@ -355,14 +363,6 @@ the user removes a partner organisation
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
     the user should not see the element         jQuery = h2:contains(${orgName})
-
-the user adds a new partner organisation
-    [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
-    the user enters text to a text field  id = organisationName  ${partnerOrgName}
-    the user enters text to a text field  id = userName  ${persFullName}
-    the user enters text to a text field  id = email  ${email}
-    the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
-    the user should see the element       jQuery = h2:contains(${partnerOrgName})
 
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
@@ -484,20 +484,6 @@ The user creates a new account
     the user clicks the button/link     jQuery = button:contains("Create account")
     the user verifies their account     ${email}
     the user clicks the button/link     link = Sign in
-
-The user verifies their account
-    [Arguments]  ${email}
-    the user should see the element                jQuery = h1:contains("Please verify your email address")
-    the user reads his email and clicks the link   ${email}  Please verify your email address  You have recently set up an account with the Innovation Funding Service.  1
-    the user should see the element                jQuery = h1:contains("Account verified")
-
-The user fills in account details
-    [Arguments]  ${firstName}  ${lastName}
-    the user enters text to a text field   id = firstName     ${firstName}
-    the user enters text to a text field   id = lastName      ${lastName}
-    the user enters text to a text field   id = phoneNumber   07123456789
-    the user enters text to a text field   id = password      ${short_password}
-    the user selects the checkbox          termsAndConditions
 
 the applicants completes the project setup details
     log in as a different user          ${leadApplicantEmail}   ${short_password}
@@ -644,20 +630,9 @@ internal user should see entries in activity log after partner org added/removed
     the user should see the element       jQuery = li div span:contains("NOMENSA LTD") strong:contains("Organisation added:")
     the user should see the element       jQuery = li div span:contains("SmithZone") strong:contains("Organisation removed:")
 
-the user completes your organisation
-    the user enters text to a text field                    css = #financialYearEndMonthValue    12
-    the user enters text to a text field                    css = #financialYearEndYearValue    2016
-    the user selects the radio button                       organisationSize  MEDIUM
-    the user enters text to a text field                    css = #annualTurnoverAtLastFinancialYear   5600
-    the user enters text to a text field                    css = #annualProfitsAtLastFinancialYear    3000
-    the user enters text to a text field                    css = #annualExportAtLastFinancialYear    4000
-    the user enters text to a text field                    css = #researchAndDevelopmentSpendAtLastFinancialYear    5660
-    the user enters text to a text field                    css = #headCountAtLastFinancialYear    0
-    the user selects the checkbox                           stateAidAgreed
-    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
-
 the user completes your funding
     the user selects the radio button          requestingFunding   true
+    the user should see the element            jQuery = .govuk-hint:contains("based on your organisation size and project research category.")
     the user enters text to a text field       css = [name^="grantClaimPercentage"]  35
     the user selects the radio button          otherFunding   false
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
@@ -685,4 +660,10 @@ the internal patner does see link for existing partner
     the user clicks the button/link       jQuery = tr:contains("Ward Ltd") td:nth-child(4)
     the user should see the element       link = Review all changes to project finances
 
+the user can join the project
+    the user should see the element   css = .message-alert
+    the user clicks the button/link   id = submit-join-project-button
+    the user should see the element   jQuery = h1:contains("Set up your project")
+    the user clicks the button/link   link = Dashboard
+    the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
 

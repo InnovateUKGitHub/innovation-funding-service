@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -84,9 +83,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
-
-    @Mock
-    private StakeholderRepository stakeholderRepository;
 
     @Before
     public void setup() {
@@ -185,6 +181,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void onlyStakeholdersAssignedToCompetitionForApplicationCanAccessApplication() {
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
+
         assertTrue(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUserResourceOnCompetition));
         assertFalse(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, monitoringOfficerUser()));
     }
@@ -240,6 +238,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competition.getId())
                 .build();
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
+
         assertTrue(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, stakeholderUserResourceOnCompetition));
         assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
         assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
@@ -266,6 +267,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competition.getId())
                 .build();
+
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
+
         assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, stakeholderUserResourceOnCompetition));
         assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user2));
         assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user3));

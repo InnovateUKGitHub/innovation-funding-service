@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.project.core.transactional;
+package org.innovateuk.ifs.project.projectteam.transactional;
 
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
@@ -21,10 +22,10 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.core.transactional.RemovePartnerNotificationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
+import static org.innovateuk.ifs.project.projectteam.transactional.PendingPartnerNotificationServiceImpl.Notifications.NEW_PARTNER_ORGANISATION_JOINED;
 
 @Service
-public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotificationService {
+public class PendingPartnerNotificationServiceImpl implements PendingPartnerNotificationService {
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
@@ -39,11 +40,13 @@ public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotifi
     private String webBaseUrl;
 
     enum Notifications {
-        REMOVE_PROJECT_ORGANISATION
+        NEW_PARTNER_ORGANISATION_JOINED
     }
 
     @Override
-    public void sendNotifications(Project project, Organisation organisation) {
+    public void sendNotifications(PartnerOrganisation partnerOrganisation) {
+        Project project = partnerOrganisation.getProject();
+        Organisation organisation = partnerOrganisation.getOrganisation();
         sendNotificationToProjectTeam(project, organisation);
         sendNotificationToMonitoringOfficer(project, organisation);
     }
@@ -80,7 +83,7 @@ public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotifi
         notificationArguments.put("organisationName", organisation.getName());
         notificationArguments.put("projectTeamLink", getProjectTeamLink(project.getId()));
 
-        Notification notification = new Notification(from, singletonList(to), REMOVE_PROJECT_ORGANISATION, notificationArguments);
+        Notification notification = new Notification(from, singletonList(to), NEW_PARTNER_ORGANISATION_JOINED, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 

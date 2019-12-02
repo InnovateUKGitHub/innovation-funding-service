@@ -1,17 +1,31 @@
 package org.innovateuk.ifs.project.documents.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Optional;
+
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class DocumentPermissionRulesTest extends BasePermissionRulesTest<DocumentPermissionRules> {
 
@@ -76,6 +90,80 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
     }
 
     @Test
+    public void stakeholderCanDownloadDocument() {
+        long projectId = 100L;
+
+        Competition competition = newCompetition()
+                .withId(1L)
+                .build();
+
+        List<ProjectDocumentResource> projectDocuments = newProjectDocumentResource()
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
+
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withProjectDocuments(projectDocuments)
+                .build();
+
+        Application application = newApplication()
+                .withId(1L)
+                .withCompetition(competition)
+                .withName("Application Name")
+                .build();
+
+        Project project = newProject()
+                .withId(projectId)
+                .withApplication(application)
+                .build();
+
+        UserResource user = newUserResource()
+                .withRoleGlobal(STAKEHOLDER).build();
+
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+
+        assertTrue(rules.stakeholderCanDownloadDocument(projectResource, user));
+    }
+
+    @Test
+    public void stakeholderCannotDownloadDocument() {
+        long projectId = 100L;
+
+        Competition competition = newCompetition()
+                .withId(1L)
+                .build();
+
+        List<ProjectDocumentResource> projectDocuments = newProjectDocumentResource()
+                .withStatus(DocumentStatus.UNSET)
+                .build(1);
+
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withProjectDocuments(projectDocuments)
+                .build();
+
+        Application application = newApplication()
+                .withId(1L)
+                .withCompetition(competition)
+                .withName("Application Name")
+                .build();
+
+        Project project = newProject()
+                .withId(projectId)
+                .withApplication(application)
+                .build();
+
+        UserResource user = newUserResource()
+                .withRoleGlobal(STAKEHOLDER).build();
+
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(false);
+
+        assertFalse(rules.stakeholderCanDownloadDocument(projectResource, user));
+    }
+
+    @Test
     public void monitoringOfficerCanDownloadDocument() {
         ProjectResource project = newProjectResource().build();
 
@@ -89,6 +177,7 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
             }
         });
     }
+
 
     @Test
     public void projectManagerCanDeleteDocument() {

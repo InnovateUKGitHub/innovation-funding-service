@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
@@ -16,7 +15,6 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -26,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 
 /**
@@ -124,8 +121,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsStakeholderInCompetition(long competitionId, long loggedInUserId) {
-        List<Stakeholder> competitionParticipants = stakeholderRepository.findStakeholders(competitionId);
-        return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
+        return stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, loggedInUserId);
     }
 
     protected boolean userIsStakeholderOnCompetitionForProject(long projectId, long loggedInUserId) {
@@ -138,13 +134,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsMonitoringOfficerInCompetition(long competitionId, long loggedInUserId) {
-        List<MonitoringOfficer> projectMonitoringOfficers = monitoringOfficerRepository.findByUserId(loggedInUserId);
-        List<Long> monitoringOfficerCompetitionIds = projectMonitoringOfficers.stream()
-                .map(pmo -> pmo.getProject())
-                .map(project -> project.getApplication().getCompetition().getId())
-                .collect(toList());
-
-        return monitoringOfficerCompetitionIds.contains(competitionId);
+        return monitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competitionId, loggedInUserId);
     }
 
     protected boolean isProjectActive(long projectId) {
