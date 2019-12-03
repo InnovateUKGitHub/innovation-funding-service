@@ -56,13 +56,12 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     private Competition competition;
     private UserResource innovationLeadUserResourceOnProject1;
     private UserResource stakeholderUserResourceOnCompetition;
-    private ProjectProcess projectProcess;
 
     @Mock
-    private ProjectProcessRepository projectProcessRepositoryMock;
+    private ProjectProcessRepository projectProcessRepository;
 
     @Mock
-    private ApplicationRepository applicationRepositoryMock;
+    private ApplicationRepository applicationRepository;
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
@@ -81,16 +80,16 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
         projectResource1 = newProjectResource().withApplication(applicationResource1).build();
-        projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
+        ProjectProcess projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
 
         Project project = ProjectBuilder.newProject()
                 .withId(projectResource1.getId())
                 .withApplication(application1)
                 .build();
 
-        when(projectRepositoryMock.findById(projectResource1.getId())).thenReturn(Optional.of(project));
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcess);
-        when(applicationRepositoryMock.findById(application1.getId())).thenReturn(Optional.of(application1));
+        when(projectRepository.findById(projectResource1.getId())).thenReturn(Optional.of(project));
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcess);
+        when(applicationRepository.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
@@ -132,7 +131,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void projectManagerCanCompleteSpendProfile() throws Exception {
+    public void projectManagerCanCompleteSpendProfile() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
@@ -142,7 +141,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void leadPartnerCanIncompleteAnySpendProfile() throws Exception {
+    public void leadPartnerCanIncompleteAnySpendProfile() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
@@ -154,7 +153,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void nonLeadPartnerCannotIncompleteSpendProfile() throws Exception {
+    public void nonLeadPartnerCannotIncompleteSpendProfile() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
@@ -166,7 +165,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void leadPartnerCanViewAnySpendProfileData() throws Exception {
+    public void leadPartnerCanViewAnySpendProfileData() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -179,7 +178,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void monitoringOfficerCanViewAnySpendProfileData() throws Exception {
+    public void monitoringOfficerCanViewAnySpendProfileData() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -192,7 +191,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void userNotLeadPartnerCannotViewSpendProfile() throws Exception {
+    public void userNotLeadPartnerCannotViewSpendProfile() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =

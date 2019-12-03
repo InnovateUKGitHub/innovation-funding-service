@@ -120,7 +120,7 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
         UserResource user = newUserResource()
                 .withRoleGlobal(STAKEHOLDER).build();
 
-        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
         when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholderCanDownloadDocument(projectResource, user));
@@ -157,7 +157,7 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
         UserResource user = newUserResource()
                 .withRoleGlobal(STAKEHOLDER).build();
 
-        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
         when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(false);
 
         assertFalse(rules.stakeholderCanDownloadDocument(projectResource, user));
