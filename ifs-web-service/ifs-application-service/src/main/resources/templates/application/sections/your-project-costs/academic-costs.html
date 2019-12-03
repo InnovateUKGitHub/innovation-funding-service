@@ -42,39 +42,30 @@
             <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Provide the project costs for '${model.organisationName}'|"/>
             <p class="govuk-body">Only your organisation can see this level of detail. All members of your organisation can access and edit your project finances. We recommend assigning completion of your project finances to one member of your team.</p>
 
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                    <h2 class="govuk-fieldset__heading">Innovate UK funding</h2>
-                </legend>
-                <p class="govuk-body">Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
+            <th:block th:insert="application/academic-costs-fragments :: costs (
+                form=${form},
+                readOnly=${model.readOnly},
+                internal=${!model.applicant}
+            )" />
 
-                <p class="govuk-body">To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="https://je-s.rcuk.ac.uk/" class="govuk-link" rel="external">Je-S website</a>.</p>
-
-                <p class="govuk-body">All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
-                    application will not be submitted into this competition.</p>
-
-                <h3 class="govuk-heading-s">Your project costs</h3>
-
-                <p class="govuk-body">Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
-                    UK</p>
-                <p class="govuk-body">Enter the figures from the following fields on the Je-S form:</p>
-
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('tsbReference')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="tsbReference">
-                        TSB reference
-                    </label>
-                    <span class="govuk-hint">This number is found at the top of your Je-S form</span>
-                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=tsbReference)"/>
-                    <input type="text"
-                           class="govuk-input"
-                           th:field="*{tsbReference}"
-                           required="required"
-                           th:readonly="${model.readOnly}"
-                           th:errorclass="govuk-input--error" />
-                </div>
-            </fieldset>
-
-            <th:block th:insert="application/academic-costs-fragments :: costs" />
+            <div class="upload-section">
+                <h3 th:unless="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">Upload a pdf copy of the Je-S output
+                    form once you have a status of 'With Council'.</h3>
+                <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">Download Je-S form</h3>
+                <p th:unless="${model.readOnly}" class="govuk-body">
+                    <a target="_blank"
+                       href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system">How
+                        do I create my Je-S output?</a>
+                </p>
+                <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
+                                    @{/application/{applicationId}/form/{applicationFinanceId}/finance-download(applicationId=${model.applicationId},applicationFinanceId=${model.applicationFinanceId})},
+                                    ${form.filename},
+                                    jesFile,
+                                    jesFile,
+                                    true,
+                                    remove_jes,
+                                    upload_jes)"/>
+            </div>
 
             <div class="form-footer" th:if="${model.open}">
                 <div class="form-footer__actions">

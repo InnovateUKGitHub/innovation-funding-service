@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 
+import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
@@ -14,10 +15,12 @@ import java.util.function.Supplier;
  * chained together using the {@link Either#mapLeftOrRight(ExceptionThrowingFunction, ExceptionThrowingFunction)} method
  * so that the if a "left" value is encountered during the execution of the chain, the processing will "short circuit"
  * and return the left response without evaluating any further Either producers in the chain.
+ * Serializable so that it can be persisted in a redis cache.
  */
-public class Either<L, R> {
+public class Either<L, R> implements Serializable {
 
     private static final Log LOG = LogFactory.getLog(Either.class);
+    private static final long serialVersionUID = -9187477879525439737L;
 
     private boolean leftSet = false;
     private boolean rightSet = false;
