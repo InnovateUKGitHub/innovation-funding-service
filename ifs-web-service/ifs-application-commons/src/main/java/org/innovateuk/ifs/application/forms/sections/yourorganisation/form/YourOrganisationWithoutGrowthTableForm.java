@@ -36,7 +36,7 @@ public class YourOrganisationWithoutGrowthTableForm {
         this.stateAidAgreed = stateAidAgreed;
     }
 
-    YourOrganisationWithoutGrowthTableForm() {
+    public YourOrganisationWithoutGrowthTableForm() {
     }
 
     public OrganisationSize getOrganisationSize() {

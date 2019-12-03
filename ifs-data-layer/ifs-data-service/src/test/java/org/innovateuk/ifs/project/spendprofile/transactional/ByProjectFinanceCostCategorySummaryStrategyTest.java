@@ -60,7 +60,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
     private OrganisationService organisationServiceMock;
 
     @Mock
-    private ProjectFinanceService projectFinanceServiceMock;
+    private ProjectFinanceService projectFinanceService;
 
     @Mock
     private CompetitionService competitionServiceMock;
@@ -112,7 +112,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
-        when(projectFinanceServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceService.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
@@ -192,7 +192,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
-        when(projectFinanceServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceService.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 

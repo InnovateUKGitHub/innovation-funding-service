@@ -65,7 +65,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -1324,7 +1325,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                     .build();
 
             // Second cost category type and everything that goes with it.
-            type2Cat1 = newCostCategory().withName(ACADEMIC.getName()).build();
+            type2Cat1 = newCostCategory().build();
 
             costCategoryType2 = newCostCategoryType()
                     .withName("Type 2")
