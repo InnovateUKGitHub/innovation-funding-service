@@ -276,9 +276,15 @@ Editing org size resets your funding
 
 New partner can join project
     [Documentation]  IFS-6558
-     Given The user clicks the button/link   link = Your funding
-     When the user completes your funding
-     Then the user can join the project
+    Given The user clicks the button/link   link = Your funding
+    When the user completes your funding
+    Then the user can join the project
+
+New partner can provide bank details
+    [Documentation]  IFS-6871
+    Given navigate to external finance contact page, choose finance contact and save  127  financeContact1  28
+    When the applicant fills in bank details
+    Then internal and external users see correct status
 
 Internal does not see change finances link for new partner
     [Documentation]  IFS-6770
@@ -606,7 +612,7 @@ Custom suite teardown
 
 the internal partner does not see link for added partner
     the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
-    the user clicks the button/link       css = .action a
+    the user clicks the button/link       css = .action ~ .action a
     the user clicks the button/link       jQuery = tr:contains("NOMENSA LTD") td:nth-child(4)
     the user should not see the element   link = Review all changes to project finances
 
@@ -622,3 +628,22 @@ the user can join the project
     the user clicks the button/link   link = Dashboard
     the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
 
+the applicant fills in bank details
+    the user clicks the button/link                      link = Return to setup your project
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    applicant user enters bank details
+
+internal and external users see correct status
+    the user should see the element                     jQuery = p:contains("The bank account details below are being")
+    the user navigates to the page                      ${server}/project-setup/project/${addNewPartnerOrgProjID}
+    the user should see the element                     jQuery = ul li.waiting:nth-child(5)
+    the user clicks the button/link                     link = View the status of partners
+    the user navigates to the page                      ${server}/project-setup/project/${addNewPartnerOrgProjID}/team-status
+    the user should see the element                     jQuery = h1:contains("Project team status")
+    the user should see the element                     css = #table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
+    log in as a different user                          &{internal_finance_credentials}
+    the user navigates to the page                      ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status
+    the user should see the element                     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action
