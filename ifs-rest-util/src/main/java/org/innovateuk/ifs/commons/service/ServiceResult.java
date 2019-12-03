@@ -11,6 +11,7 @@ import org.innovateuk.ifs.util.Either;
 import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +31,11 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
+ * Serializable so that it can be persisted in a redis cache.
  */
-public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFailure> {
-
+public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFailure>  implements Serializable {
     private static final Log LOG = LogFactory.getLog(ServiceResult.class);
+    private static final long serialVersionUID = -1593842731866554856L;
 
     private ServiceResult(Either<ServiceFailure, T> result) {
         super(result);
