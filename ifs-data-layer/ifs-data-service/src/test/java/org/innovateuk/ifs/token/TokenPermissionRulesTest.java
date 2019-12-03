@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class TokenPermissionRulesTest extends BasePermissionRulesTest<TokenPermissionRules> {
 
     @Test
-    public void testSystemRegistrationUserCanReadTokens() {
+    public void systemRegistrationUserCanReadTokens() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanReadTokens(new Token(), user));
@@ -25,7 +25,7 @@ public class TokenPermissionRulesTest extends BasePermissionRulesTest<TokenPermi
     }
 
     @Test
-    public void testSystemRegistrationUserCanUseTokensToResetPaswords() {
+    public void systemRegistrationUserCanUseTokensToResetPaswords() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanUseTokensToResetPaswords(new Token(), user));
@@ -36,7 +36,7 @@ public class TokenPermissionRulesTest extends BasePermissionRulesTest<TokenPermi
     }
 
     @Test
-    public void testSystemRegistrationUserCanDeleteTokens() {
+    public void systemRegistrationUserCanDeleteTokens() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanDeleteTokens(new Token(), user));
