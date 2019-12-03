@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.invite.repository;
 
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
 
@@ -9,4 +10,5 @@ public interface ProjectPartnerInviteRepository extends InviteRepository<Project
     List<ProjectPartnerInvite> findByProjectIdAndEmail(long projectId, String email);
     List<ProjectPartnerInvite> findByProjectId(long projectId);
     void deleteByProjectIdAndInviteOrganisationOrganisationId(long projectId, long organisationId);
+    boolean existsByProjectIdAndStatus(long projectId, InviteStatus inviteStatus);
 }
