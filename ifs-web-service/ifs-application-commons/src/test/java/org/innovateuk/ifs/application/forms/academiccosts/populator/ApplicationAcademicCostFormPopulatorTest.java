@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
-public class AcademicCostFormPopulatorTest extends BaseServiceUnitTest<AcademicCostFormPopulator> {
+public class ApplicationAcademicCostFormPopulatorTest extends BaseServiceUnitTest<ApplicationAcademicCostFormPopulator> {
 
     private static final long APPLICATION_ID = 1L;
     private static final long ORGANISATION_ID = 2L;
@@ -44,8 +44,8 @@ public class AcademicCostFormPopulatorTest extends BaseServiceUnitTest<AcademicC
     private ApplicationFinanceRowRestService defaultFinanceRowRestService;
 
     @Override
-    protected AcademicCostFormPopulator supplyServiceUnderTest() {
-        return new AcademicCostFormPopulator();
+    protected ApplicationAcademicCostFormPopulator supplyServiceUnderTest() {
+        return new ApplicationAcademicCostFormPopulator();
     }
 
     @Test
