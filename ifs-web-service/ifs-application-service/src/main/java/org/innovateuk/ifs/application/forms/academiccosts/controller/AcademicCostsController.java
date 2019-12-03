@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
-import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostFormPopulator;
+import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
@@ -45,7 +45,7 @@ public class AcademicCostsController {
     private static final String VIEW = "application/sections/your-project-costs/academic-costs";
 
     @Autowired
-    private AcademicCostFormPopulator formPopulator;
+    private ApplicationAcademicCostFormPopulator formPopulator;
 
     @Autowired
     private AcademicCostViewModelPopulator viewModelPopulator;
