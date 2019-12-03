@@ -1,33 +1,40 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.*;
+import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
+import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
-import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
+import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
-import static java.lang.Boolean.TRUE;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional service to support operations on ProjectFinanceRow.  This is only permitted for use by internal finance users.
@@ -125,25 +132,6 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
                 }).getSuccess();
     }
 
-    @Override
-    public ServiceResult<Void> createProjectFinance(long projectId, long organisationId) {
-        return find(project(projectId), organisation(organisationId)).andOnSuccessReturnVoid((project, organisation) -> {
-            ProjectFinance projectFinance = projectFinanceRepository.save(new ProjectFinance(project, organisation));
-            if (TRUE.equals(projectFinance.getCompetition().getIncludeProjectGrowthTable())) {
-                projectFinance.setGrowthTable(new GrowthTable());
-                growthTableRepository.save(projectFinance.getGrowthTable());
-            } else {
-                projectFinance.setEmployeesAndTurnover(new EmployeesAndTurnover());
-                employeesAndTurnoverRepository.save(projectFinance.getEmployeesAndTurnover());
-            }
-            OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
-
-            for (FinanceRowType costType : projectFinance.getCompetition().getFinanceRowTypes()) {
-                organisationFinanceHandler.initialiseCostType(projectFinance, costType);
-            }
-        });
-    }
-
     private Supplier<ServiceResult<ProjectFinance>> projectFinance(long projectFinanceId) {
         return () -> getProjectFinance(projectFinanceId);
     }
@@ -227,11 +215,10 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
             ProjectFinanceRow savedCost = projectFinanceRowRepository.save(updatedCost);
 
             newCost.getFinanceRowMetadata()
-                    .stream()
-                    .filter(c -> c.getValue() != null)
-                    .filter(c -> !"null".equals(c.getValue()))
-                    .peek(c -> LOG.debug("FinanceRowMetaValue: " + c.getValue()))
-                    .forEach(costValue -> updateCostValue(costValue, savedCost));
+                .stream()
+                .filter(c -> c.getValue() != null)
+                .filter(c -> !"null".equals(c.getValue()))
+                .forEach(costValue -> updateCostValue(costValue, savedCost));
 
             // refresh the object, since we need to reload the costvalues, on the cost object.
             return savedCost;

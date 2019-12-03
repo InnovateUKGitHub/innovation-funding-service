@@ -2,9 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -17,7 +15,6 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOf
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
@@ -28,12 +25,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -46,7 +41,6 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
@@ -56,7 +50,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
@@ -81,11 +74,6 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
             withPostcode("").
             build();
 
-    private ApplicationResource application = newApplicationResource().
-            withId(applicationId).
-            withCompetition(competitionId).
-            build();
-
     private CompetitionResource competition = newCompetitionResource().
             withInnovationAreaNames(CollectionFunctions.asLinkedSet("Some Area", "Some other area")).
             build();
@@ -104,13 +92,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     private ProjectService projectService;
 
     @Mock
-    private StatusService statusService;
-
-    @Mock
     private MonitoringOfficerRestService monitoringOfficerService;
-
-    @Mock
-    private ApplicationService applicationService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -182,26 +164,6 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
     }
 
-    @Test
-    public void testViewMonitoringOfficerPageButProjectDetailsNotYetSubmitted() throws Exception {
-
-        ProjectResource project = projectBuilder.build();
-
-        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectPartnerStatusResource().
-                        withProjectDetailsStatus(PENDING).
-                        withIsLeadPartner(true).
-                        build()).
-                build();
-
-        when(projectService.getById(123L)).thenReturn(project);
-        when(statusService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
-
-        mockMvc.perform(get("/project/123/monitoring-officer")).
-                andExpect(view().name("forbidden")).
-                andExpect(status().isForbidden());
-    }
-
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
         LegacyMonitoringOfficerForm form = (LegacyMonitoringOfficerForm) modelMap.get("form");
         assertEquals("First", form.getFirstName());
@@ -226,12 +188,10 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         when(monitoringOfficerService.findMonitoringOfficerForProject(projectId)).thenReturn(existingMonitoringOfficer ? restSuccess(mo) : restFailure(NOT_FOUND));
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummary));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1").build());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));
-        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         List<ProjectUserResource> projectUsers = newProjectUserResource().with(id(999L)).withUserName("Dave Smith").
                 withRole(PROJECT_MANAGER).build(1);
 
@@ -248,14 +208,6 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         assertEquals(asList("Partner Org 1", "Partner Org 2"), model.getPartnerOrganisationNames());
         assertEquals(LocalDate.of(2017, 01, 05), model.getTargetProjectStartDate());
         assertTrue(model.isEditable());
-    }
-
-    private void assertMonitoringOfficerFormNotPrepopulated(Map<String, Object> modelMap) {
-        LegacyMonitoringOfficerForm form = (LegacyMonitoringOfficerForm) modelMap.get("form");
-        assertNull(form.getFirstName());
-        assertNull(form.getLastName());
-        assertNull(form.getEmailAddress());
-        assertNull(form.getPhoneNumber());
     }
 
     @Override

@@ -222,4 +222,8 @@ public class FinanceChecksEligibilityViewModel {
     public boolean isCollaborativeProject() {
         return collaborativeProject;
     }
+
+    public boolean isShowChangesLink() {
+        return eligibilityOverview.isHasApplicationFinances();
+    }
 }

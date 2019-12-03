@@ -1,29 +1,5 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
-import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.junit.Test;
-import org.mockito.Mock;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -45,11 +21,40 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilde
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.spendprofile.transactional.ByProjectFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.containsAll;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.junit.Test;
+import org.mockito.Mock;
 
     public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategoriesStrategy> {
 
@@ -60,7 +65,7 @@ import static org.mockito.Mockito.*;
     private OrganisationService organisationServiceMock;
 
     @Mock
-    private ProjectFinanceRowService projectFinanceRowServiceMock;
+    private ProjectFinanceService projectFinanceService;
 
     @Mock
     private CostCategoryTypeRepository costCategoryTypeRepositoryMock;
@@ -91,7 +96,7 @@ import static org.mockito.Mockito.*;
 
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceService.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
         when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
@@ -127,7 +132,7 @@ import static org.mockito.Mockito.*;
 
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceService.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(singletonList(expectedCct)); // This is the one already created and should be returned
         when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
 
@@ -135,7 +140,7 @@ import static org.mockito.Mockito.*;
 
         verify(projectServiceMock).getProjectById((anyLong()));
         verify(organisationServiceMock).findById(anyLong());
-        verify(projectFinanceRowServiceMock).financeChecksDetails(anyLong(), anyLong());
+        verify(projectFinanceService).financeChecksDetails(anyLong(), anyLong());
         verify(costCategoryTypeRepositoryMock).findAll();
         verifyNoMoreInteractions(costCategoryTypeRepositoryMock);
 
@@ -170,7 +175,7 @@ import static org.mockito.Mockito.*;
 
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceService.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
         when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));

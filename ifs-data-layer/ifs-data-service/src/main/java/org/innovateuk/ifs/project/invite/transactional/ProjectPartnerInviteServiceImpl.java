@@ -3,11 +3,15 @@ package org.innovateuk.ifs.project.invite.transactional;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationSource;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
@@ -42,6 +46,8 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ORGANISATION_ALREADY_EXISTS_FOR_PROJECT;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -72,7 +78,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     private LoggedInUserSupplier loggedInUserSupplier;
 
     @Autowired
-    private ProjectFinanceRowService projectFinanceRowService;
+    private ProjectFinanceService projectFinanceService;
 
     @Autowired
     private PartnerOrganisationRepository partnerOrganisationRepository;
@@ -149,9 +155,15 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     }
 
     private SentProjectPartnerInviteResource mapToSentResource(ProjectPartnerInvite projectPartnerInvite) {
-        return new SentProjectPartnerInviteResource(projectPartnerInvite.getId(), projectPartnerInvite.getSentOn(),
-                projectPartnerInvite.getProject().getName(), ofNullable(projectPartnerInvite.getUser()).map(User::getId).orElse(null), projectPartnerInvite.getStatus(),
-                projectPartnerInvite.getInviteOrganisation().getOrganisationName(), projectPartnerInvite.getName(), projectPartnerInvite.getEmail());
+        return new SentProjectPartnerInviteResource(projectPartnerInvite.getId(),
+                projectPartnerInvite.getSentOn(),
+                projectPartnerInvite.getProject().getName(),
+                ofNullable(projectPartnerInvite.getUser()).map(User::getId).orElse(null),
+                projectPartnerInvite.getStatus(),
+                projectPartnerInvite.getInviteOrganisation().getOrganisationName(),
+                projectPartnerInvite.getName(),
+                projectPartnerInvite.getEmail(),
+                projectPartnerInvite.getProject().getApplication().getId());
     }
 
     @Override
@@ -181,33 +193,36 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
         return find(projectPartnerInviteRepository.findById(inviteId), notFoundError(ProjectPartnerInvite.class, inviteId))
                 .andOnSuccess(invite ->
                         find(organisation(organisationId))
-                                .andOnSuccessReturnVoid((organisation) -> {
-
+                                .andOnSuccess((organisation) -> {
                                     Project project = invite.getProject();
                                     invite.getInviteOrganisation().setOrganisation(organisation);
 
                                     PartnerOrganisation partnerOrganisation = new PartnerOrganisation(project, organisation, false);
+
+                                    if (partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId()) != null) {
+                                        return serviceFailure(ORGANISATION_ALREADY_EXISTS_FOR_PROJECT);
+                                    }
+
                                     partnerOrganisation = partnerOrganisationRepository.save(partnerOrganisation);
 
                                     pendingPartnerProgressRepository.save(new PendingPartnerProgress(partnerOrganisation));
 
                                     ProjectUser projectUser = new ProjectUser(invite.getUser(), project, ProjectParticipantRole.PROJECT_PARTNER, organisation);
                                     projectUser = projectUserRepository.save(projectUser);
-
                                     projectPartnerChangeService.updateProjectWhenPartnersChange(project.getId());
-                                    projectFinanceRowService.createProjectFinance(project.getId(),
+                                    projectFinanceService.createProjectFinance(project.getId(),
                                             organisation.getId());
 
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
 
-                                    if(project.getApplication().getCompetition().applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+                                    if (project.getApplication().getCompetition().applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
                                         viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
                                     }
                                     invite.open();
 
                                     activityLogService.recordActivityByProjectIdAndOrganisationIdAndAuthorId(project.getId(), organisationId, invite.getSentBy().getId(), ActivityType.ORGANISATION_ADDED);
+                                    return serviceSuccess();
                                 }));
-
     }
 }
