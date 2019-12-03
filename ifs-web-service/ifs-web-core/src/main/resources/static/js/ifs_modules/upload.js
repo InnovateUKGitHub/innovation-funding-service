@@ -2,11 +2,11 @@ IFS.core.upload = (function () {
   'use strict'
   var s // private alias to settings
   var promise = jQuery.when({})
+  var successHandlers = []
   return {
     settings: {
       uploadEl: '[type="file"][class="inputfile"]',
       wrapper: '.ajax-upload',
-      downloadLocation: 'data-js-download-location',
       uploadButtonName: 'data-js-upload-button-name',
       uploadFileInput: 'data-js-upload-file-input',
       numberOfFiles: 'data-js-number-of-files',
@@ -47,6 +47,9 @@ IFS.core.upload = (function () {
         e.preventDefault()
         IFS.core.upload.removeFile(jQuery(this))
       })
+    },
+    registerSuccessHandler: function (handler) {
+      successHandlers.push(handler)
     },
     ajaxFileUpload: function (fileInput) {
       var wrapper = fileInput.closest(s.wrapper)
@@ -108,7 +111,8 @@ IFS.core.upload = (function () {
       return jQuery('[data-for-file-upload="' + fileInputId + '"]')
     },
     processAjaxResult: function (wrapper, file, data) {
-      var errorMessage = jQuery(data).find('ul.govuk-error-summary__list li')
+      var html = jQuery(data)
+      var errorMessage = html.find('ul.govuk-error-summary__list li')
       var row
       if (errorMessage.length) {
         row = IFS.core.template.replaceInTemplate(s.errorRow, {
@@ -119,6 +123,9 @@ IFS.core.upload = (function () {
         IFS.core.upload.replaceMessageListWithResponse(wrapper, data, file.name)
         IFS.core.upload.findMatchingDataAttrs(wrapper, s.enableButtonOnSuccess).prop('disabled', false)
         IFS.core.upload.findMatchingDataAttrs(wrapper, s.toggleOnSuccess).toggle()
+        jQuery.each(successHandlers, function () {
+          this(html, wrapper)
+        })
       }
       IFS.core.upload.addMessage(wrapper, row)
       IFS.core.upload.toggleUploadView(wrapper)

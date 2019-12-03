@@ -143,8 +143,7 @@
             <div class="ajax-upload"
                  th:id="${wrapperId}"
                  th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'govuk-form-group--error')"
-                 th:attr="data-js-download-location=${downloadUrl},
-                 data-js-upload-button-name=${saveName},
+                 th:attr="data-js-upload-button-name=${saveName},
                  data-js-upload-file-input=${inputField},
                  data-js-max-size=${maxSize}"
                  data-js-number-of-files="1">

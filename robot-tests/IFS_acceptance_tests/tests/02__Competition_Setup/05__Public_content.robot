@@ -195,247 +195,247 @@ Eligibility: Contains the correct values when viewed, Edit sections
     And the user clicks the button/link       jQuery = .contentGroup:first-of-type button:contains("Remove")
     And the user clicks the button/link       jQuery = .contentGroup:nth-of-type(2) button:contains("Remove")
     Then the user uploads the file            css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    And the user uploads the file             css = .contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
-#    And the user uploads the file             css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button:contains("Remove")
-#    And the user uploads the file             css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    When the user clicks the button/link      jQuery = button:contains("Save and review")
-#    And the user clicks the button/link       link = Return to public content
-#    Then the user should see the element      css = li:nth-child(3) .task-status-complete
-#
-#Scope: Server side validation
-#    [Documentation]  INFUND-7488
-#    [Tags]
-#    When the user clicks the button/link      link = Scope
-#    And the user clicks the button/link       jQuery = button:contains("Save and review")
-#    Then the user should see a summary error  Please enter content.
-#    And the user should see a summary error   Please enter a heading.
-#
-#Scope: Add, remove sections and submit
-#    [Documentation]    INFUND-6918, INFUND-7602
-#    [Tags]
-#    Given the user can add and remove multiple content groups
-#    When the user clicks the button/link  jQuery = button:contains("Save and review")
-#    And the user clicks the button/link   link = Return to public content
-#    Then the user should see the element  css = li:nth-child(4) .task-status-complete
-#
-#Dates: Add, remove dates and submit
-#    [Documentation]    INFUND-6919
-#    [Tags]
-#    When the user clicks the button/link           link = Dates
-#    Then the user should see the element           jQuery = h2:contains("${tomorrowMonthWord} ${nextyear}")
-#    And the user should see the element            jQuery = .govuk-body:contains("Competition opens")
-#    And the user should see the element            jQuery = .govuk-body:contains("Submission deadline, competition closed.")
-#    And the user should see the element            jQuery = .govuk-body:contains("Applicants notified")
-#    And the user can add and remove multiple event groups
-#    And the user should see the element            css = li:nth-child(5) .task-status-complete
-#
-#How to apply: server side validation and autosave
-#    [Documentation]    INFUND-7490
-#    [Tags]
-#    When the user clicks the button/link          link = How to apply
-#    Then the user should see the element          jQuery = h1:contains("Public content how to apply")
-#    And the user should see the element           jQuery = p:contains("Text entered into this section will appear within the how to apply tab.")
-#    When the user clicks the button/link          jQuery = button:contains("Save and review")
-#    Then the user should see a summary error      Please enter content.
-#    And the user should see a summary error       Please enter a heading.
-#    When the user enters valid data in How-to-apply details
-#    Then the user should see the element          jQuery = .button-clear:contains("+ add new section")
-#
-#How to apply: User enters valid values and saves
-#    [Documentation]    INFUND-7490
-#    [Tags]
-#    Given the internal user navigates to public content     ${public_content_competition_name}
-#    When the user clicks the button/link                    link = How to apply
-#    And the user enters valid data in How-to-apply details
-#    Then the user enters text to a text field               css = .contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   The application process
-#    And the user enters text to a text field                css = .contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
-#    And the user uploads the file                           css = .contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
-#    Then the user clicks the button/link                    jQuery = button:contains("+ add new section")
-#    And The user enters text to a text field                css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Application questions
-#    And The user enters text to a text field                css = .contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
-#    And the user uploads the file                           css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    When the user clicks the button/link                    jQuery = button:contains("Save and review")
-#    Then the user clicks the button/link                    link = Return to public content
-#    And the user should be redirected to the correct page   ${public_content_overview}
-#    Then the user should see the element                    link = How to apply
-#    And the user should see the element                     css = li:nth-child(6) .task-status-complete
-#
-#How to apply: Contains the correct values when viewed, Edit sections
-#    [Documentation]    INFUND-6920  INFUND-7602  INFUND-7490
-#    [Tags]
-#    When the user clicks the button/link      link = How to apply
-#    Then the user should see the element      jQuery = h2:contains("The application process")
-#    And the user should see the element       jQuery = a:contains("${valid_pdf}")
-#    And the user should see the element       link = Return to public content
-#    When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
-#    And the user enters text to a text field  css = .contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
-#    And Set Focus To Element                  css = #contentGroup-row-1 >div.govuk-form-group.textarea-wrapped >div.editor
-#    And The user enters text to a text field  css = .contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
-#    Then the user clicks the button/link      jQuery = button:contains("+ add new section")
-#    And The user enters text to a text field  css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Application Rules -- Competition Procedures
-#    And the user enters text to a text field  css = .contentGroup:nth-of-type(3) .editor   Sets out the rules for Competition framework provision funded by the CodeTechnology: ADReedoor8793£$%^^&&*^%%!@. This document forms part of the ADReedoor8793£$%^^&&*^%%!@ - Funding Rules 2016 to 2017. This document sets out the additional funding rules for Competition frameworks. You must read it together with other relevant funding rule documents. These include: Follow the Instructions.
-#    Then the user clicks the button/link      jQuery = button:contains("+ add new section")
-#    And The user enters text to a text field  css = .contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="heading"]    Competition Officers Contact
-#    And the user enters text to a text field  css = .contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
-#    And the user uploads the file             css = .contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    And the user clicks the button/link       jQuery = .contentGroup:first-of-type button:contains("Remove")
-#    And the user clicks the button/link       jQuery = .contentGroup:nth-of-type(2) button:contains("Remove")
-#    Then the user clicks the button/link      jQuery = button:contains("+ add new section")
-#    And The user enters text to a text field  css = .contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="heading"]    Confidentiality and Conflicts
-#    And the user enters text to a text field  css = .contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
-#    Then the user uploads the file            css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    And the user uploads the file             css = .contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
-#    And the user uploads the file             css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button:contains("Remove")
-#    And the user uploads the file             css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    And the user uploads the file             css = .contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-#    When the user clicks the button/link      jQuery = button:contains("Save and review")
-#    And the user clicks the button/link       link = Return to public content
-#    Then the user should see the element      css = li:nth-child(6) .task-status-complete
-#
-#Supporting information: Add, remove sections and submit
-#    [Documentation]    INFUND-6921 INFUND-7602
-#    [Tags]
-#    When the user clicks the button/link  link = Supporting information
-#    Then the user can add and remove multiple content groups
-#    When the user clicks the button/link  jQuery = button:contains("Save and review")
-#    And the user clicks the button/link   link = Return to public content
-#    Then the user should see the element  css = li:nth-child(7) .task-status-complete
-#
-#Publish public content: Publish once all sections are complete
-#    [Documentation]    INFUND-6914
-#    [Tags]
-#    Given the user should not see the element           jQuery = small:contains("Last published")
-#    When the user clicks the button/link                jQuery = button:contains("Publish content")
-#    Then the user should see the element                jQuery = small:contains("Last published")
-#    And the user should not see the element             jQuery = button:contains("Publish content")
-#    When the user clicks the button/link                link = Competition information and search
-#    And the user clicks the button/link                 link = Edit
-#    Then the user should not see the element            jQuery = button:contains("Save and review")
-#    And the user should see the element                 jQuery = button:contains("Publish and review")
-#    Then the user clicks the button/link                jQuery = a:contains("Public content")
-#
-#User can view the competition url for invite only competitions
-#    [Documentation]    IFS-262  IFS-5370
-#    [Tags]
-#    Given the user should not see the element           jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
-#    When the user clicks the button/link                jQuery = a:contains("${server}/competition/${competitionId}/overview")
-#    Then the user should see the element                jQuery = h1:contains("Public content competition")
-#    And the user should see the element                 jQUery = .govuk-body:contains("This is a Summary description")
-#    Then the internal user navigates to public content  ${public_content_competition_name}
-#    When the user clicks the button/link                link = Competition information and search
-#    And the user clicks the button/link                 link = Edit
-#    Then the user selects the radio button              publishSetting  public
-#    When the user clicks the button/link                jQuery = button:contains("Publish and review")
-#    Then the user should see the element                jQuery = h1:contains("Competition information and search")
-#    And the user clicks the button/link                 link = Return to public content
-#    Then the user should see the element                jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
-#    And the user should not see the element             jQuery = p:contains("Competition URL:")
-#    Then the user clicks the button/link                link = Competition information and search
-#    And the user clicks the button/link                 link = Edit
-#    Then the user selects the radio button              publishSetting  invite
-#
-#The user is able to edit and publish again
-#    [Documentation]  INFUND-6914
-#    [Tags]
-#    Given the user enters text to a text field  css = [aria-labelledby="eligibilitySummary"]  Some other summary
-#    And the user clicks the button/link         jQuery = button:contains("Publish and review")
-#    Then the user clicks the button/link        link = Return to public content
-#    When the user should see all sections completed
-#    Then the user should see the element        jQuery = small:contains("${today}")
-#    And the user should not see the element     jQuery = button:contains("Publish and review")
-#    When the user clicks the button/link        link = Return to setup overview
-#    Then the user should see the element        JQuery = .notification:contains("${today}")
-#
-#Guest user not find the invite only competition by Keywords
-#    [Documentation]  IFS-261
-#    [Tags]
-#    [Setup]  the user logs out if they are logged in
-#    Given the user navigates to the page       ${frontDoor}
-#    When the user enters text to a text field  id = keywords  Robot
-#    And the user clicks the button/link        jQuery = button:contains("Update results")
-#    Then the user should not see the element   jQuery = a:contains("${public_content_competition_name}")
-#
-#The user is able to make the competition public
-#    [Documentation]  IFS-261, IFS-179  IFS-5370
-#    [Tags]
-#    [Setup]  The user logs-in in new browser             &{Comp_admin1_credentials}
-#    Given the internal user navigates to public content  ${public_content_competition_name}
-#    Then the user should see the element                 link = Competition information and search
-#    When the user clicks the button/link                 link = Competition information and search
-#    And the user clicks the button/link                  link = Edit
-#    Then the user selects the radio button               publishSetting  public
-#    And the user clicks the button/link                  jQuery = .govuk-button:contains("Publish and review")
-#    When the user clicks the button/link                 link = Return to public content
-#    And the user should redirect to the correct page after publish and review
-#    Then the user should see the element                 jQuery = .button-secondary:contains("Return to setup overview")
-#    [Teardown]  the user logs out if they are logged in
-#
-#Guest user can filter competitions by Keywords
-#    [Documentation]  INFUND-6923
-#    [Tags]
-#    Given the user navigates to the page       ${frontDoor}
-#    When the user enters text to a text field  id = keywords  Robot
-#    And the user clicks the button/link        jQuery = button:contains("Update results")
-#    Then the user should see the element       link = ${public_content_competition_name}
-#
-#Guest user can see the updated Summary information
-#    [Documentation]  INFUND-7486 IFS-1969
-#    [Tags]
-#    Given the user clicks the button/link                  link = Public content competition
-#    And the user clicks the button/link                    link = Summary
-#    Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Description") ~ .govuk-grid-column-two-thirds:contains("This is a Summary description")
-#    And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Project size") ~ .govuk-grid-column-two-thirds:contains("10 millions")
-#    And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("A nice new Heading") ~ .govuk-grid-column-two-thirds:contains("Ut enim ad minim veniam,")
-#    Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
-#    [Teardown]  Remove the file from the operating system  summary.pdf
-#
-#Guest user can see the updated Eligibility information
-#    [Documentation]  INFUND-7487
-#    [Tags]
-#    Given the user clicks the button/link  link = Eligibility
-#    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Nationality Eligibility Heading") ~ .govuk-grid-column-two-thirds:contains("changing government policies")
-#    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Minimum Eligibility Threshold") ~ .govuk-grid-column-two-thirds:contains("new changes we are introducing")
-#    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Draft Care and Support - Eligibility Criteria") ~ .govuk-grid-column-two-thirds:contains("basic personal care activities")
-#
-#Guest user downloads Eligibility files
-#    [Documentation]  INFUND-7487
-#    [Tags]
-#    When guest user downloads the file              ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
-#    Then Remove the file from the operating system  eli.pdf
-#    When guest user downloads the file              ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
-#    Then Remove the file from the operating system  eligi.pdf
-#    When guest user downloads the file              ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
-#    Then Remove the file from the operating system  eligibility.pdf
-#
-#The guest user can see updated scope information
-#    [Documentation]    INFUND-7488
-#    [Tags]
-#    Given the user clicks the button/link                  link = Scope
-#    Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Heading 1") ~ .govuk-grid-column-two-thirds:contains("Content 1")
-#    And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Heading 2") ~ .govuk-grid-column-two-thirds:contains("Content 2")
-#    And guest user downloads the file                      ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
-#    [Teardown]  Remove the file from the operating system  scope.pdf
-#
-#The guest user can see updated date information
-#   [Documentation]    INFUND-7489
-#   [Tags]
-#   Given the user clicks the button/link  link = Dates
-#   And the user should see the element    jQuery = dt:contains("${nextyear}") + dd:contains("Competition opens")
-#   And the user should see the element    jQuery = dt:contains("${nextyear}") + dd:contains("Competition closes")
-#   And the user should see the element    jQuery = dt:contains("${nextyear}") + dd:contains("Applicants notified")
-#   And the user should see the element    jQuery = dt:contains("${nextyear}") + dd:contains("Content 1")
-#
-#Guest user can see the updated How-to-apply information
-#    [Documentation]  INFUND-7490
-#    [Tags]
-#    Given the user clicks the button/link  link = How to apply
-#    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("The application process") ~ .govuk-grid-column-two-thirds:contains("independent experts assess the quality your application")
-#    And the user should see the element    jQuery = .govuk-grid-column-one-third:contains("Application questions") ~ .govuk-grid-column-two-thirds:contains("contact the competition helpline on 0700 123 98765")
-#    And the user should see the element    jQuery = .govuk-grid-column-one-third:contains("Application Rules -- Competition Procedures") ~ .govuk-grid-column-two-thirds:contains("additional funding rules for Competition frameworks")
-#    And the user should see the element    jQuery = .govuk-grid-column-one-third:contains("Competition Officers Contact") ~ .govuk-grid-column-two-thirds:contains("can access an up-to-date list of areas")
-#    And the user should see the element    jQuery = .govuk-grid-column-one-third:contains("Confidentiality and Conflicts") ~ .govuk-grid-column-two-thirds:contains("confident that awarding an increase to your funding")
+    And the user uploads the file             css = .contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file             css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button:contains("Remove")
+    And the user uploads the file             css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    When the user clicks the button/link      jQuery = button:contains("Save and review")
+    And the user clicks the button/link       link = Return to public content
+    Then the user should see the element      css = li:nth-child(3) .task-status-complete
+
+Scope: Server side validation
+    [Documentation]  INFUND-7488
+    [Tags]
+    When the user clicks the button/link      link = Scope
+    And the user clicks the button/link       jQuery = button:contains("Save and review")
+    Then the user should see a summary error  Please enter content.
+    And the user should see a summary error   Please enter a heading.
+
+Scope: Add, remove sections and submit
+    [Documentation]    INFUND-6918, INFUND-7602
+    [Tags]
+    Given the user can add and remove multiple content groups
+    When the user clicks the button/link  jQuery = button:contains("Save and review")
+    And the user clicks the button/link   link = Return to public content
+    Then the user should see the element  css = li:nth-child(4) .task-status-complete
+
+Dates: Add, remove dates and submit
+    [Documentation]    INFUND-6919
+    [Tags]
+    When the user clicks the button/link           link = Dates
+    Then the user should see the element           jQuery = h2:contains("${tomorrowMonthWord} ${nextyear}")
+    And the user should see the element            jQuery = .govuk-body:contains("Competition opens")
+    And the user should see the element            jQuery = .govuk-body:contains("Submission deadline, competition closed.")
+    And the user should see the element            jQuery = .govuk-body:contains("Applicants notified")
+    And the user can add and remove multiple event groups
+    And the user should see the element            css = li:nth-child(5) .task-status-complete
+
+How to apply: server side validation and autosave
+    [Documentation]    INFUND-7490
+    [Tags]
+    When the user clicks the button/link          link = How to apply
+    Then the user should see the element          jQuery = h1:contains("Public content how to apply")
+    And the user should see the element           jQuery = p:contains("Text entered into this section will appear within the how to apply tab.")
+    When the user clicks the button/link          jQuery = button:contains("Save and review")
+    Then the user should see a summary error      Please enter content.
+    And the user should see a summary error       Please enter a heading.
+    When the user enters valid data in How-to-apply details
+    Then the user should see the element          jQuery = .button-clear:contains("+ add new section")
+
+How to apply: User enters valid values and saves
+    [Documentation]    INFUND-7490
+    [Tags]
+    Given the internal user navigates to public content     ${public_content_competition_name}
+    When the user clicks the button/link                    link = How to apply
+    And the user enters valid data in How-to-apply details
+    Then the user enters text to a text field               css = .contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   The application process
+    And the user enters text to a text field                css = .contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
+    And the user uploads the file                           css = .contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    Then the user clicks the button/link                    jQuery = button:contains("+ add new section")
+    And The user enters text to a text field                css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Application questions
+    And The user enters text to a text field                css = .contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
+    And the user uploads the file                           css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    When the user clicks the button/link                    jQuery = button:contains("Save and review")
+    Then the user clicks the button/link                    link = Return to public content
+    And the user should be redirected to the correct page   ${public_content_overview}
+    Then the user should see the element                    link = How to apply
+    And the user should see the element                     css = li:nth-child(6) .task-status-complete
+
+How to apply: Contains the correct values when viewed, Edit sections
+    [Documentation]    INFUND-6920  INFUND-7602  INFUND-7490
+    [Tags]
+    When the user clicks the button/link      link = How to apply
+    Then the user should see the element      jQuery = h2:contains("The application process")
+    And the user should see the element       jQuery = a:contains("${valid_pdf}")
+    And the user should see the element       link = Return to public content
+    When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
+    And the user enters text to a text field  css = .contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
+    And Set Focus To Element                  css = #contentGroup-row-1 >div.govuk-form-group.textarea-wrapped >div.editor
+    And The user enters text to a text field  css = .contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
+    Then the user clicks the button/link      jQuery = button:contains("+ add new section")
+    And The user enters text to a text field  css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Application Rules -- Competition Procedures
+    And the user enters text to a text field  css = .contentGroup:nth-of-type(3) .editor   Sets out the rules for Competition framework provision funded by the CodeTechnology: ADReedoor8793£$%^^&&*^%%!@. This document forms part of the ADReedoor8793£$%^^&&*^%%!@ - Funding Rules 2016 to 2017. This document sets out the additional funding rules for Competition frameworks. You must read it together with other relevant funding rule documents. These include: Follow the Instructions.
+    Then the user clicks the button/link      jQuery = button:contains("+ add new section")
+    And The user enters text to a text field  css = .contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="heading"]    Competition Officers Contact
+    And the user enters text to a text field  css = .contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
+    And the user uploads the file             css = .contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user clicks the button/link       jQuery = .contentGroup:first-of-type button:contains("Remove")
+    And the user clicks the button/link       jQuery = .contentGroup:nth-of-type(2) button:contains("Remove")
+    Then the user clicks the button/link      jQuery = button:contains("+ add new section")
+    And The user enters text to a text field  css = .contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="heading"]    Confidentiality and Conflicts
+    And the user enters text to a text field  css = .contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
+    Then the user uploads the file            css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             css = .contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file             css = .contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button:contains("Remove")
+    And the user uploads the file             css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             css = .contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    When the user clicks the button/link      jQuery = button:contains("Save and review")
+    And the user clicks the button/link       link = Return to public content
+    Then the user should see the element      css = li:nth-child(6) .task-status-complete
+
+Supporting information: Add, remove sections and submit
+    [Documentation]    INFUND-6921 INFUND-7602
+    [Tags]
+    When the user clicks the button/link  link = Supporting information
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link  jQuery = button:contains("Save and review")
+    And the user clicks the button/link   link = Return to public content
+    Then the user should see the element  css = li:nth-child(7) .task-status-complete
+
+Publish public content: Publish once all sections are complete
+    [Documentation]    INFUND-6914
+    [Tags]
+    Given the user should not see the element           jQuery = small:contains("Last published")
+    When the user clicks the button/link                jQuery = button:contains("Publish content")
+    Then the user should see the element                jQuery = small:contains("Last published")
+    And the user should not see the element             jQuery = button:contains("Publish content")
+    When the user clicks the button/link                link = Competition information and search
+    And the user clicks the button/link                 link = Edit
+    Then the user should not see the element            jQuery = button:contains("Save and review")
+    And the user should see the element                 jQuery = button:contains("Publish and review")
+    Then the user clicks the button/link                jQuery = a:contains("Public content")
+
+User can view the competition url for invite only competitions
+    [Documentation]    IFS-262  IFS-5370
+    [Tags]
+    Given the user should not see the element           jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
+    When the user clicks the button/link                jQuery = a:contains("${server}/competition/${competitionId}/overview")
+    Then the user should see the element                jQuery = h1:contains("Public content competition")
+    And the user should see the element                 jQUery = .govuk-body:contains("This is a Summary description")
+    Then the internal user navigates to public content  ${public_content_competition_name}
+    When the user clicks the button/link                link = Competition information and search
+    And the user clicks the button/link                 link = Edit
+    Then the user selects the radio button              publishSetting  public
+    When the user clicks the button/link                jQuery = button:contains("Publish and review")
+    Then the user should see the element                jQuery = h1:contains("Competition information and search")
+    And the user clicks the button/link                 link = Return to public content
+    Then the user should see the element                jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
+    And the user should not see the element             jQuery = p:contains("Competition URL:")
+    Then the user clicks the button/link                link = Competition information and search
+    And the user clicks the button/link                 link = Edit
+    Then the user selects the radio button              publishSetting  invite
+
+The user is able to edit and publish again
+    [Documentation]  INFUND-6914
+    [Tags]
+    Given the user enters text to a text field  css = [aria-labelledby="eligibilitySummary"]  Some other summary
+    And the user clicks the button/link         jQuery = button:contains("Publish and review")
+    Then the user clicks the button/link        link = Return to public content
+    When the user should see all sections completed
+    Then the user should see the element        jQuery = small:contains("${today}")
+    And the user should not see the element     jQuery = button:contains("Publish and review")
+    When the user clicks the button/link        link = Return to setup overview
+    Then the user should see the element        JQuery = .notification:contains("${today}")
+
+Guest user not find the invite only competition by Keywords
+    [Documentation]  IFS-261
+    [Tags]
+    [Setup]  the user logs out if they are logged in
+    Given the user navigates to the page       ${frontDoor}
+    When the user enters text to a text field  id = keywords  Robot
+    And the user clicks the button/link        jQuery = button:contains("Update results")
+    Then the user should not see the element   jQuery = a:contains("${public_content_competition_name}")
+
+The user is able to make the competition public
+    [Documentation]  IFS-261, IFS-179  IFS-5370
+    [Tags]
+    [Setup]  The user logs-in in new browser             &{Comp_admin1_credentials}
+    Given the internal user navigates to public content  ${public_content_competition_name}
+    Then the user should see the element                 link = Competition information and search
+    When the user clicks the button/link                 link = Competition information and search
+    And the user clicks the button/link                  link = Edit
+    Then the user selects the radio button               publishSetting  public
+    And the user clicks the button/link                  jQuery = .govuk-button:contains("Publish and review")
+    When the user clicks the button/link                 link = Return to public content
+    And the user should redirect to the correct page after publish and review
+    Then the user should see the element                 jQuery = .button-secondary:contains("Return to setup overview")
+    [Teardown]  the user logs out if they are logged in
+
+Guest user can filter competitions by Keywords
+    [Documentation]  INFUND-6923
+    [Tags]
+    Given the user navigates to the page       ${frontDoor}
+    When the user enters text to a text field  id = keywords  Robot
+    And the user clicks the button/link        jQuery = button:contains("Update results")
+    Then the user should see the element       link = ${public_content_competition_name}
+
+Guest user can see the updated Summary information
+    [Documentation]  INFUND-7486 IFS-1969
+    [Tags]
+    Given the user clicks the button/link                  link = Public content competition
+    And the user clicks the button/link                    link = Summary
+    Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Description") ~ .govuk-grid-column-two-thirds:contains("This is a Summary description")
+    And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Project size") ~ .govuk-grid-column-two-thirds:contains("10 millions")
+    And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("A nice new Heading") ~ .govuk-grid-column-two-thirds:contains("Ut enim ad minim veniam,")
+    Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
+    [Teardown]  Remove the file from the operating system  summary.pdf
+
+Guest user can see the updated Eligibility information
+    [Documentation]  INFUND-7487
+    [Tags]
+    Given the user clicks the button/link  link = Eligibility
+    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Nationality Eligibility Heading") ~ .govuk-grid-column-two-thirds:contains("changing government policies")
+    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Minimum Eligibility Threshold") ~ .govuk-grid-column-two-thirds:contains("new changes we are introducing")
+    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("Draft Care and Support - Eligibility Criteria") ~ .govuk-grid-column-two-thirds:contains("basic personal care activities")
+
+Guest user downloads Eligibility files
+    [Documentation]  INFUND-7487
+    [Tags]
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
+    Then Remove the file from the operating system  eli.pdf
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
+    Then Remove the file from the operating system  eligi.pdf
+    When guest user downloads the file              ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
+    Then Remove the file from the operating system  eligibility.pdf
+
+The guest user can see updated scope information
+    [Documentation]    INFUND-7488
+    [Tags]
+    Given the user clicks the button/link                  link = Scope
+    Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Heading 1") ~ .govuk-grid-column-two-thirds:contains("Content 1")
+    And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Heading 2") ~ .govuk-grid-column-two-thirds:contains("Content 2")
+    And guest user downloads the file                      ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
+    [Teardown]  Remove the file from the operating system  scope.pdf
+
+The guest user can see updated date information
+   [Documentation]    INFUND-7489
+   [Tags]
+   Given the user clicks the button/link  link = Dates
+   And the user should see the element    jQuery = dt:contains("${nextyear}") + dd:contains("Competition opens")
+   And the user should see the element    jQuery = dt:contains("${nextyear}") + dd:contains("Competition closes")
+   And the user should see the element    jQuery = dt:contains("${nextyear}") + dd:contains("Applicants notified")
+   And the user should see the element    jQuery = dt:contains("${nextyear}") + dd:contains("Content 1")
+
+Guest user can see the updated How-to-apply information
+    [Documentation]  INFUND-7490
+    [Tags]
+    Given the user clicks the button/link  link = How to apply
+    Then the user should see the element   jQuery = .govuk-grid-column-one-third:contains("The application process") ~ .govuk-grid-column-two-thirds:contains("independent experts assess the quality your application")
+    And the user should see the element    jQuery = .govuk-grid-column-one-third:contains("Application questions") ~ .govuk-grid-column-two-thirds:contains("contact the competition helpline on 0700 123 98765")
+    And the user should see the element    jQuery = .govuk-grid-column-one-third:contains("Application Rules -- Competition Procedures") ~ .govuk-grid-column-two-thirds:contains("additional funding rules for Competition frameworks")
+    And the user should see the element    jQuery = .govuk-grid-column-one-third:contains("Competition Officers Contact") ~ .govuk-grid-column-two-thirds:contains("can access an up-to-date list of areas")
+    And the user should see the element    jQuery = .govuk-grid-column-one-third:contains("Confidentiality and Conflicts") ~ .govuk-grid-column-two-thirds:contains("confident that awarding an increase to your funding")
 
 *** Keywords ***
 Custom suite setup
