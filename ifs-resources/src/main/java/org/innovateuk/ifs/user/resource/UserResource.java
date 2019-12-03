@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 
 /**
  * User Data Transfer Object
+ * Serializable so that it can be persisted in a redis cache.
  */
 public class UserResource implements Serializable {
     private static final long serialVersionUID = 746809237007138492L;

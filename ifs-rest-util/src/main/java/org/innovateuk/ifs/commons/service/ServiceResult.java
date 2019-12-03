@@ -31,6 +31,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
+ * Serializable so that it can be persisted in a redis cache.
  */
 public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFailure>  implements Serializable {
     private static final Log LOG = LogFactory.getLog(ServiceResult.class);

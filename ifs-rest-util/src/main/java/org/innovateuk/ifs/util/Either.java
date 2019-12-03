@@ -15,6 +15,7 @@ import java.util.function.Supplier;
  * chained together using the {@link Either#mapLeftOrRight(ExceptionThrowingFunction, ExceptionThrowingFunction)} method
  * so that the if a "left" value is encountered during the execution of the chain, the processing will "short circuit"
  * and return the left response without evaluating any further Either producers in the chain.
+ * Serializable so that it can be persisted in a redis cache.
  */
 public class Either<L, R> implements Serializable {
 
