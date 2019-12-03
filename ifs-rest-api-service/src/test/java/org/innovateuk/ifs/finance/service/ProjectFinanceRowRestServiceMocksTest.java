@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.finance.service;
 
+import static org.junit.Assert.assertEquals;
+
+
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
-
-import static org.junit.Assert.assertEquals;
 
 public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<ProjectFinanceRowRestServiceImpl> {
     private static final String costRestURL = "/project-finance-row";
