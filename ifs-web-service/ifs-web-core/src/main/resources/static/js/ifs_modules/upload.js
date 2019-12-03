@@ -57,7 +57,7 @@ IFS.core.upload = (function () {
 
       var formData = new window.FormData(wrapper.closest('form').get(0))
       formData.append(fileInput.attr('name'), file)
-      formData.append(submitButton.attr('name'), true)
+      formData.append(submitButton.attr('name'), submitButton.attr('value') || '')
 
       if (wrapper.get(0).hasAttribute(s.oneAtATime)) {
         promise = promise.then(IFS.core.upload.doAjaxUpload(wrapper, file, pendingRow, formData))
