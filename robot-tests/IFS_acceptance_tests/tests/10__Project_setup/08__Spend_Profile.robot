@@ -70,6 +70,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-2016 Project Setup task management: Spend Profile
 ...
 ...               IFS-2221 Spend Profile Generation - Ensure Bank Details are approved or not required
+...
+...               IFS-6732 Ensure spend profile cannot be generated when there is a pending invite
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
@@ -83,10 +85,16 @@ ${project_duration}    48
 &{collaborator2_credentials_sp}   email=${PS_SP_Academic_Partner_Email}  password=${short_password}
 
 *** Test Cases ***
+Internal user can not generate SP with pending invites
+    [Documentation]  IFS-6732
+    Given the user invites a new partner org
+    And the user can not generates the Spend Profile
+    [Teardown]  the user removes a new partner org
+
 Check if target start date can be changed until SP approval
     [Documentation]    IFS-1576
     [Tags]  HappyPath
-    Given the user logs-in in new browser    &{lead_applicant_credentials_sp}
+    Given log in as a different user          &{lead_applicant_credentials_sp}
     When the user navigates to the page      ${server}/project-setup/project/${PS_SP_Project_Id}/details
     And the user changes the start date      2021
     Then the user should see the element     jQuery = #start-date:contains("1 Jan 2021")
@@ -870,3 +878,20 @@ the project finance approves to SP
     the user clicks the button/link          jQuery = .modal-accept-profile button:contains("Approve")
     the user should see the element          jQuery = th div:contains("${PS_SP_Application_Title}")
     the user should not see the element      jQuery = h3:contains("The spend profile has been approved")
+
+the user invites a new partner org
+    the user logs-in in new browser             &{internal_finance_credentials}
+    the user navigates to the page              ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/team/partner
+    the user adds a new partner organisation    Spend Profile Organisation  FName Surname  spendprofile@test.com
+
+the user can not generates the Spend Profile
+    the user navigates to the page      ${server}/project-setup-management/project/${PS_SP_Project_Id}/finance-check
+    the user clicks the button/link     css = .generate-spend-profile-main-button
+    the user clicks the button/link     css = #generate-spend-profile-modal-button
+    the user should see a summary error   You do not have the necessary permissions for your request.
+    the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
+    the user should not see the element  jQUery = #table-project-status tr:nth-of-type(6) td:nth-of-type(7).waiting
+
+the user removes a new partner org
+    the user navigates to the page                   ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/team
+    the user is able to remove a pending partner organisation          Spend Profile Organisation
