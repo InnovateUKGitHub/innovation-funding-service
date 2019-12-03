@@ -885,13 +885,13 @@ the user invites a new partner org
     the user adds a new partner organisation    Spend Profile Organisation  FName Surname  spendprofile@test.com
 
 the user can not generates the Spend Profile
-    the user navigates to the page      ${server}/project-setup-management/project/${PS_SP_Project_Id}/finance-check
-    the user clicks the button/link     css = .generate-spend-profile-main-button
-    the user clicks the button/link     css = #generate-spend-profile-modal-button
-    the user should see a summary error   You do not have the necessary permissions for your request.
-    the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
-    the user should not see the element  jQUery = #table-project-status tr:nth-of-type(6) td:nth-of-type(7).waiting
+    the user navigates to the page          ${server}/project-setup-management/project/${PS_SP_Project_Id}/finance-check
+    the user clicks the button/link         css = .generate-spend-profile-main-button
+    the user clicks the button/link         css = #generate-spend-profile-modal-button
+    the user should see a summary error     You cannot generate the spend profile because a new partner has not accepted their invitation to join the project.
+    the user navigates to the page          ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
+    the user should not see the element     jQuery = #table-project-status tr:nth-of-type(6) td:nth-of-type(7).waiting
 
 the user removes a new partner org
-    the user navigates to the page                   ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/team
-    the user is able to remove a pending partner organisation          Spend Profile Organisation
+    the user navigates to the page                               ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/team
+    the user is able to remove a pending partner organisation    Spend Profile Organisation

@@ -653,3 +653,8 @@ the user can join the project
     the user clicks the button/link   link = Dashboard
     the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
 
+the user removes a partner organisation
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
+    the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
+    the user should not see the element         jQuery = h2:contains(${orgName})
