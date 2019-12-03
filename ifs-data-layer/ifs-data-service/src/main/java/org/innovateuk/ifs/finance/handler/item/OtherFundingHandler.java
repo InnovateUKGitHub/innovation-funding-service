@@ -53,8 +53,8 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return OTHER_FUNDING;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(OTHER_FUNDING);
     }
 
     private OtherFunding buildRowItem(FinanceRow cost) {
