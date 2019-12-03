@@ -194,7 +194,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void getCostHandler() {
-        when(projectFinanceRowRepositoryMock.findById(material.getId())).thenReturn(Optional.of(newProjectFinanceRow().withType(MATERIALS).withOwningFinance(newFinance).build()));
+        when(projectFinanceRowRepositoryMock.findById(material.getId())).thenReturn(
+            Optional.of(newProjectFinanceRow()
+                .withType(MATERIALS)
+                .withOwningFinance(newFinance)
+                .build())
+        );
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(newFinance.getCompetition().getId(), newFinance.getOrganisation().getOrganisationType().getId()))
         .thenReturn(organisationFinanceDefaultHandlerMock);
 

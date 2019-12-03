@@ -9,8 +9,6 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +22,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 public abstract class AbstractAcademicCostSaver extends AsyncAdaptor {
-    private final static Logger LOG = LoggerFactory.getLogger(AbstractAcademicCostSaver.class);
-
     protected static final Map<String, String> formFieldToCostName = asMap(
             "incurredStaff", "incurred_staff",
             "incurredTravel", "incurred_travel_subsistence",
