@@ -9,7 +9,9 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
@@ -96,7 +98,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     private ProjectUsersHelper projectUsersHelper;
 
     @Autowired
-    private ApplicationFinanceService financeService;
+    private ProjectFinanceService projectFinanceService;
 
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
@@ -149,7 +151,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org) {
 
-        if (!isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), org.getId())) {
+        if (!isOrganisationSeekingFunding(project.getId(), org.getId())) {
             return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
         }
 
@@ -165,8 +167,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                 andOnSuccessReturn(bankDetails -> bankDetailsMapper.mapToResource(bankDetails));
     }
 
-    private boolean isOrganisationSeekingFunding(long projectId, long applicationId, long organisationId) {
-        return financeService.organisationSeeksFunding(projectId, applicationId, organisationId)
+    private boolean isOrganisationSeekingFunding(long projectId, long organisationId) {
+        return projectFinanceService.financeChecksDetails(projectId, organisationId)
+                .andOnSuccessReturn(ProjectFinanceResource::isRequestingFunding)
                 .getOptionalSuccessObject()
                 .orElse(false);
     }
