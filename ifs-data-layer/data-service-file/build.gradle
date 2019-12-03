@@ -13,8 +13,6 @@ configurations {
     testArtifacts
 }
 
-
-
 task testJar (type: Jar) {
     baseName = "${project.name}-test"
     from sourceSets.test.output
@@ -23,14 +21,15 @@ artifacts {
     testArtifacts testJar
 }
 
-
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.22"
     configurations.compile.exclude(group: 'org.quartz-scheduler', module: 'quartz')
-//    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
+    compile ("org.apache.commons:commons-compress:1.19") {
+        force = true
+    }
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
