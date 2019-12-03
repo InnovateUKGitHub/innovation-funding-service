@@ -56,10 +56,8 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
 
-    private Long projectId = 123L;
-
     @Test
-    public void testProjectCreated() {
+    public void projectCreated() {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
@@ -80,7 +78,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileGenerated() {
+    public void spendProfileGenerated() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileGenerated(project, internalUser)),
 
@@ -89,7 +87,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileSubmitted() {
+    public void spendProfileSubmitted() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithProjectUser(((project, projectUser) -> spendProfileWorkflowHandler.spendProfileSubmitted(project, projectUser)),
 
@@ -98,7 +96,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileApproved() {
+    public void spendProfileApproved() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileApproved(project, internalUser)),
 
@@ -107,7 +105,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileRejected() {
+    public void spendProfileRejected() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileRejected(project, internalUser)),
 
@@ -116,7 +114,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileRejectedIsSubmitted() {
+    public void spendProfileRejectedIsSubmitted() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithProjectUser(((project, projectUser) -> spendProfileWorkflowHandler.spendProfileSubmitted(project, projectUser)),
 
@@ -125,7 +123,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSubmitSpendProfileWithoutProjectUser() {
+    public void submitSpendProfileWithoutProjectUser() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> spendProfileWorkflowHandler.submit(project)),
 
@@ -134,7 +132,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testIsReadyToGenerate() {
+    public void isReadyToGenerate() {
         SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData generateSpendProfileData = new SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData().build();
 
         Project project = generateSpendProfileData.getProject();
@@ -146,7 +144,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testIsAlreadyGenerated() {
+    public void isAlreadyGenerated() {
         SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData generateSpendProfileData = new SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData().build();
 
         Project project = generateSpendProfileData.getProject();
@@ -155,6 +153,18 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
         assertTrue(spendProfileWorkflowHandler.isAlreadyGenerated(project));
+    }
+
+    @Test
+    public void projectHasNoPendingPartners() {
+        SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData generateSpendProfileData = new SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+
+        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, SpendProfileState.CREATED);
+        when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
+
+        assertTrue(spendProfileWorkflowHandler.projectHasNoPendingPartners(project));
     }
 
     private void callWorkflowAndCheckTransitionAndEventFiredInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, SpendProfileState currentSpendProfileState, SpendProfileState destinationSpendProfileState, SpendProfileEvent expectedEventToBeFired) {
@@ -259,6 +269,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
             PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
             PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
 
+            long projectId = 123L;
             project = newProject().
                     withId(projectId).
                     withDuration(3L).

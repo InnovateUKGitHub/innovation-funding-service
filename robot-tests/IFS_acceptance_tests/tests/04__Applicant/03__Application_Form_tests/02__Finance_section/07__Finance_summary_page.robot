@@ -133,6 +133,7 @@ Alert shows If the academic research participation is too high
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Then the user navigates to Your-finances page  Academic robot test application
     And The user clicks the button/link            link = Your project costs
+    And the user clicks the button/link            jQuery = button:contains("Open all")
     When the user enters text to a text field      css = [name$="incurredStaff"]  1000000
     And log in as a different user                 &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
@@ -325,10 +326,11 @@ the red warning should be visible
     the user should see the element  jQuery = .warning-alert h2:contains("not marked their finances as complete")
 
 Lead enters a valid research participation value
-    the user navigates to Your-finances page  Academic robot test application
+    the user navigates to Your-finances page          Academic robot test application
     the user clicks the button/link                   link = Your project costs
     run keyword and ignore error without screenshots  the user clicks the button/link  jQuery = .button-clear:contains("Edit")
     the user clicks the button/link                   jQuery = button:contains("Labour")
+    the user clicks the button/link                   jQuery = button:contains("Open all")
     the user should see the element                   name = add_cost
     the user clicks the button/link                   jQuery = button:contains('Add another role')
     the user should see the element                   css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
