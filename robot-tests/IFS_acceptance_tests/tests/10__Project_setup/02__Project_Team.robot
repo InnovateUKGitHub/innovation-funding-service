@@ -310,11 +310,6 @@ The internal users checks for activity logs after partner added/removed
     And internal user should see entries in activity log after partner org added/removed
 
 *** Keywords ***
-the user is able to remove a pending partner organisation
-    [Arguments]  ${orgName}
-    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
-    the user should not see the element         jQuery = h2:contains(${orgName})
-
 the same organisation isnt able to join the project
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
@@ -354,12 +349,6 @@ the relevant users recieve an email notification
     the user reads his email       troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
     the user reads his email       sian.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
     the user reads his email       megan.rowland@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
-
-the user removes a partner organisation
-    [Arguments]  ${orgName}
-    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
-    the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
-    the user should not see the element         jQuery = h2:contains(${orgName})
 
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
@@ -664,3 +653,8 @@ the user can join the project
     the user clicks the button/link   link = Dashboard
     the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
 
+the user removes a partner organisation
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
+    the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
+    the user should not see the element         jQuery = h2:contains(${orgName})
