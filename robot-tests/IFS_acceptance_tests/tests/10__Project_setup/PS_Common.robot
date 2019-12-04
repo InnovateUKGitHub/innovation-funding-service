@@ -481,7 +481,6 @@ the user updates the project location in project setup
     the user clicks the button/link       css = button[type = "submit"]
     the user clicks the button/link       link = Set up your project
 
-
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
     the user enters text to a text field  id = organisationName  ${partnerOrgName}

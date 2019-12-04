@@ -32,6 +32,9 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               IFS-2371-2258 Prevent submission without both doc
 ...
 ...               project-documents-main
+...
+...               IFS-6728 - Mop up ticket for ifs 6502
+...
 Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -40,7 +43,11 @@ Resource          PS_Common.robot
 *** Variables ***
 
 ${PROJ_WITH_SOLE_APPLICANT}  ${project_ids["High-speed rail and its effects on soil compaction"]}
+${RollingStockCompId}        ${competition_ids["Rolling stock future developments"]}
 ${USER_BECKY_ORG_PUBSECTOR}  becky.mason@gmail.com
+${rejectedDocumentMessage}   We will contact you to discuss this document.
+${newOrgRejectedDocumentMessagePM}  We have marked this document as incomplete because you have made a change to your project team. If you need to update the document you must remove it and upload a new version.
+${newOrgRejectedDocumentMessagePartner}  We have marked this document as incomplete because a change has been made to your project team. If you need to update the document you must contact your project manager.
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
@@ -279,9 +286,19 @@ CompAdmin can see uploaded files
     When the user goes to documents page    Documents  Exploitation plan
     Then open pdf link                      ${valid_pdf}
 
+IfsAdmin adds a partner organisation and all partners can see rejected documents
+    [Documentation]  IFS-6728
+    [Setup]  Log in as a different user  &{ifs_admin_user_credentials} 
+    Given compAdmin approves all documents
+    When the user adds a new partner organisation            Testing Errors Organisation  FName Surname  testErrMsg@gmail.com
+    And a new organisation is able to accept project invite  FName  Surname testErrMsg@gmail.com  Nomensa  NOMENSA LTD
+    Then partners can see rejected documents due to new organisation
+    [Teardown]  user reuploads project files
+
 CompAdmin rejects both documents
     [Documentation]    INFUND-4620
     [Tags]  HappyPath
+    [Setup]  Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then compAdmin reject uploaded documents
@@ -291,12 +308,12 @@ CompAdmin rejects both documents
 Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342, IFS-218
     [Tags]  HappyPath
-    When log in as a different user              &{lead_applicant_credentials_bd}
-    Then Partners can see both documents rejected
-    When log in as a different user              &{collaborator1_credentials_bd}
-    Then Partners can see both documents rejected
-    When log in as a different user              &{collaborator2_credentials_bd}
-    Then Partners can see both documents rejected
+    When log in as a different user                &{lead_applicant_credentials_bd}
+    Then Partners can see both documents rejected  ${rejectedDocumentMessage}
+    When log in as a different user                &{collaborator1_credentials_bd}
+    Then Partners can see both documents rejected  ${rejectedDocumentMessage}
+    When log in as a different user                &{collaborator2_credentials_bd}
+    Then Partners can see both documents rejected  ${rejectedDocumentMessage}
 
 After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
@@ -431,6 +448,26 @@ Sole applicant can see documents approval
     Then the user should see the element   jQuery = .success-alert h2:contains("This document has been approved by us.")
 
 *** Keywords ***
+user reuploads project files
+    log in as a different user    &{lead_applicant_credentials_bd}
+    PM uploads the project documents   ${Grade_Crossing_Project_Id}
+
+partners can see rejected documents due to new organisation
+    log in as a different user                &{lead_applicant_credentials_bd}
+    Partners can see both documents rejected  ${newOrgRejectedDocumentMessagePM}
+    log in as a different user                &{collaborator1_credentials_bd}
+    Partners can see both documents rejected  ${newOrgRejectedDocumentMessagePartner}
+    log in as a different user                &{collaborator2_credentials_bd}
+    Partners can see both documents rejected  ${newOrgRejectedDocumentMessagePartner}
+
+compAdmin approves all documents
+    the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    the user clicks the button/link        link = Collaboration agreement
+    compAdmin approves uploaded documents
+    the user goes to documents page        Return to documents  Exploitation plan
+    compAdmin approves uploaded documents
+    the user navigates to the page        ${SERVER}/project-setup-management/competition/${RollingStockCompId}/project/${Grade_Crossing_Project_Id}/team
+
 the user navigates to the competition
     the user navigates to the page      ${COMP_MANAGEMENT_PROJECT_SETUP}
     the user clicks the button/link     jQuery = button:contains("Next")
@@ -446,14 +483,20 @@ compAdmin reject uploaded documents
     the user clicks the button/link             id = reject-document
     the user should see the element             jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
 
+compAdmin approves uploaded documents
+    the user selects the radio button           approved   true
+    the user clicks the button/link             id = submit-button
+    the user clicks the button/link             id = accept-document
+
 Partners can see both documents rejected
+    [Arguments]  ${warningMessage}
     the user navigates to the page       ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     the user clicks the button/link      link = Collaboration agreement
-    the user should see the element      jQuery = .warning-alert h2:contains("We have marked this document as incomplete because a change has been made to your project team. If you need to update the document you must contact your project manager.")
+    the user should see the element      jQuery = .warning-alert h2:contains(${warningMessage})
     the user should not see the element  jQuery = label:contains("Upload")
     the user clicks the button/link      link = Return to documents
     the user clicks the button/link      link = Exploitation plan
-    the user should see the element      jQuery = .warning-alert h2:contains("We have marked this document as incomplete because a change has been made to your project team. If you need to update the document you must contact your project manager.")
+    the user should see the element      jQuery = .warning-alert h2:contains(${warningMessage})
     the user should not see the element  jQuery = label:contains("Upload")
 
 Partners can see both documents approved
