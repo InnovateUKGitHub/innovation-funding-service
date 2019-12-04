@@ -56,12 +56,9 @@
         </th:block>
         <th:block th:unless="${model.isApproved()}">
             <p class="govuk-body">Innovate UK is reviewing
-                <th:block th:unless="${model.isAcademic()}">
+                <th:block>
                     <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                        class="govuk-link">your project finances</a>.
-                </th:block>
-                <th:block th:if="${model.isAcademic()}">
-                    your project finances.
                 </th:block>
                 <th:block th:unless="${model.loanCompetition}">
                 You can also view the <a
