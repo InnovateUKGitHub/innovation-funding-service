@@ -52,14 +52,14 @@ public class FinanceCheckController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
-                                          @ModelAttribute(binding = false) FinanceCheckSummaryForm form) {
+                                          @ModelAttribute(binding = false, value = "form") FinanceCheckSummaryForm form) {
         return doViewFinanceCheckSummary(projectId, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @PostMapping("/generate")
+    @PostMapping
     public String generateSpendProfile(@PathVariable Long projectId, Model model,
-                                       @ModelAttribute FinanceCheckSummaryForm form,
+                                       @ModelAttribute("form") FinanceCheckSummaryForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
 

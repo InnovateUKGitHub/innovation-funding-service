@@ -33,12 +33,6 @@ public interface ApplicationFinanceService {
     @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'UPDATE_COST')")
     ServiceResult<ApplicationFinanceResource> updateApplicationFinance(long applicationFinanceId, ApplicationFinanceResource applicationFinance);
 
-    /**
-     * Not included in REST API classes as only meant to be used within data layer
-     */
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource','READ_ORGANISATION_FUNDING_STATUS')")
-    ServiceResult<Boolean> organisationSeeksFunding(long projectId, long applicationId, long organisationId);
-
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource','CHECK_COLLABORATIVE_FUNDING_CRITERIA_MET')")
     ServiceResult<Boolean> collaborativeFundingCriteriaMet(long applicationId);
 }
