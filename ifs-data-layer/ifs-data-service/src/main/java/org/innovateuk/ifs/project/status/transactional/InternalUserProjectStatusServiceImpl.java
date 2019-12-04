@@ -284,19 +284,13 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     private ProjectActivityStates getDocumentsStatus(Project project) {
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
         List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
-
         if (!project.isCollaborativeProject()) {
-
-            List<String> documentNames = expectedDocuments.stream()
-                    .map(DocumentConfig::getTitle)
+            projectDocuments = projectDocuments.stream()
+                .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getCompetitionDocument().getTitle()))
+                .collect(Collectors.toList());
+            expectedDocuments = expectedDocuments.stream()
+                    .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getTitle()))
                     .collect(Collectors.toList());
-
-            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
-                return getDocumentsState(projectDocuments,
-                                         projectDocuments.size(),
-                                         expectedDocuments.size() - 1,
-                                         project.getProjectState());
-            }
         }
 
         return getDocumentsState(projectDocuments,
