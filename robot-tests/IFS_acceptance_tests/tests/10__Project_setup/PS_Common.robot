@@ -481,7 +481,6 @@ the user updates the project location in project setup
     the user clicks the button/link       css = button[type = "submit"]
     the user clicks the button/link       link = Set up your project
 
-
 the user adds a new partner organisation
     [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
     the user enters text to a text field  id = organisationName  ${partnerOrgName}
@@ -542,6 +541,11 @@ the user completes your organisation
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 The new partner can complete Your organisation
-    Given the user clicks the button/link    link = Your organisation
-    When the user completes your organisation
-    Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
+    the user clicks the button/link    link = Your organisation
+    the user completes your organisation
+    the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
+
+the user is able to remove a pending partner organisation
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
+    the user should not see the element         jQuery = h2:contains(${orgName})

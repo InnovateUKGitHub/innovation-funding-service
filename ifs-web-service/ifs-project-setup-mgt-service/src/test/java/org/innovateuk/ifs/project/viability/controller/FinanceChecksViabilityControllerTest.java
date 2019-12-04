@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
+import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
@@ -111,7 +111,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                             withQuantity(1, 2).
                             build(2)).
                     build(),
-            FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+            FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                     newGrantClaimPercentage().
                             withGrantClaimPercentage(30).
                             build(1)).
@@ -139,7 +139,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                             withDescription("direct_costs", "exceptions_costs").
                             build(2)).
                     build(),
-            FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+            FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                     newGrantClaimPercentage().
                             withGrantClaimPercentage(100).
                             build(1)).
