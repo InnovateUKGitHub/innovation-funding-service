@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -111,5 +112,21 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<List<SectionResource>> result = sectionService.getByCompetitionIdVisibleForAssessment(competitionId);
         assertTrue(result.isSuccess());
         assertEquals(sectionResources, result.getSuccess());
+    }
+
+    @Test
+    public void getChildSectionsByParentId() throws Exception {
+        List<SectionResource> childSectionResources = newSectionResource().build(2);
+        List<Section> childSections = newSection().build(2);
+        Section parentSection = newSection().withChildSections(childSections).build();
+
+        when(sectionRepositoryMock.findById(parentSection.getId())).thenReturn(Optional.of(parentSection));
+        when(sectionService.getChildSectionsByParentId(parentSection.getId())).thenReturn(serviceSuccess(childSectionResources));
+        when(sectionMapper.mapToResource(same(childSections.get(0)))).thenReturn(childSectionResources.get(0));
+        when(sectionMapper.mapToResource(same(childSections.get(1)))).thenReturn(childSectionResources.get(1));
+
+        ServiceResult<List<SectionResource>> result = sectionService.getChildSectionsByParentId(parentSection.getId());
+        assertTrue(result.isSuccess());
+        assertEquals(childSectionResources, result.getSuccess());
     }
 }
