@@ -123,5 +123,5 @@ ext.IFS_DATA_SERVICE_REDIS_MAX_ACTIVE=8
 // 5hrs max length of ATs.
 
 // Used by the idp, location of resources
-ext.RESOURCE_DOMAIN="https://auth-ifs-sysint.apps.org-env-0.org.innovateuk.ukri.org/"
+ext.RESOURCE_DOMAIN=""
 ext.IFS_DATA_SERVICE_CACHE_TTL=18000000
