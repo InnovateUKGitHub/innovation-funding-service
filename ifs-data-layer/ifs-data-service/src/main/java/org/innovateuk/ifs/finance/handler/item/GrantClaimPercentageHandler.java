@@ -51,8 +51,8 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return FINANCE;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(FINANCE);
     }
 
     @Override

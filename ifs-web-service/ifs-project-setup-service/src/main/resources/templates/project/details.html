@@ -62,8 +62,8 @@
             </tbody>
         </table>
         <h2 class="govuk-heading-m">Project location</h2>
-        <p class="govuk-body" th:if="${model.isCollaborativeProject()}">Each partner must provide a project location. We will assign the Monitoring Officer based on the location.</p>
-        <p class="govuk-body" th:unless="${model.isCollaborativeProject()}">Your organisation must provide a project location. We will assign the monitoring officer based on the location.</p>
+        <p class="govuk-body" th:if="${model.isCollaborativeProject()}">Each partner must provide a project location. We assign the monitoring officer based on location.</p>
+        <p class="govuk-body" th:unless="${model.isCollaborativeProject()}">Your organisation must provide a project location. We assign the monitoring officer based on location.</p>
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
