@@ -28,7 +28,7 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
     @Override
-    public RestResult<List<SectionResource>> getChildSectionsByParentId(Long parentId) {
+    public RestResult<List<SectionResource>> getChildSectionsByParentId(long parentId) {
         return getWithRestResult(sectionRestURL + "/get-child-sections/" + parentId, sectionResourceListType());
     }
 

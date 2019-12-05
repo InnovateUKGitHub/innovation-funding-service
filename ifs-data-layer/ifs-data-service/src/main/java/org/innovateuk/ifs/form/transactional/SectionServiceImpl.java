@@ -136,7 +136,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
-    public ServiceResult<List<SectionResource>> getChildSectionsByParentId(Long parentId) {
+    public ServiceResult<List<SectionResource>> getChildSectionsByParentId(long parentId) {
         return serviceSuccess(getSection(parentId).getSuccess()
                 .getChildSections().stream()
                 .map(sectionMapper::mapToResource)
