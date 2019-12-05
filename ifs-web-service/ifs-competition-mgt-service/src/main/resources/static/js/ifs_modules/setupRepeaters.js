@@ -117,6 +117,7 @@ IFS.competitionManagement.repeater = (function () {
       var headerRequiredErrorMessage = 'Please enter a heading.'
       var contentRequiredErrorMessage = 'Please enter content.'
       var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
+        '<input type="hidden" id="contentGroups' + idCount + '.id" name="contentGroups[' + count + '].id" value="" />' +
         '<div class="govuk-form-group">' +
         '<label class="govuk-label" for="contentGroups[' + idCount + '].heading">Heading</label>' +
         '<input class="govuk-input" id="contentGroups[' + idCount + '].heading" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
@@ -127,10 +128,10 @@ IFS.competitionManagement.repeater = (function () {
         '</div>' +
         '<div class="govuk-form-group upload-section">' +
             '<div class="ajax-upload" data-js-number-of-files="1" data-js-upload-button-name="uploadFile" data-js-upload-file-input="contentGroups[' + count + '].attachment">' +
-                '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
-                '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary govuk-!-margin-top-6">Upload</label>' +
-                '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
-                '<p class="govuk-body no-file-uploaded">No file currently uploaded</p>' +
+              '<p class="govuk-body no-file-uploaded">No file currently uploaded</p>' +
+              '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
+              '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary govuk-!-margin-top-6">Upload</label>' +
+              '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
             '</div>' +
           '</div>' +
           '<button type="button" class="button-clear govuk-!-margin-0" data-remove-row="contentGroup">Remove section</button>' +
