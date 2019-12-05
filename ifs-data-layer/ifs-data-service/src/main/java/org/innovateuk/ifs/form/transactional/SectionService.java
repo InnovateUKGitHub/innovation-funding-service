@@ -46,5 +46,5 @@ public interface SectionService {
     ServiceResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(final Long competitionId);
 
     @PreAuthorize("hasPermission(#parentId, 'org.innovateuk.ifs.form.resource.SectionResource', 'READ')")
-    ServiceResult<List<SectionResource>> getChildSectionsByParentId(Long parentId);
+    ServiceResult<List<SectionResource>> getChildSectionsByParentId(long parentId);
 }

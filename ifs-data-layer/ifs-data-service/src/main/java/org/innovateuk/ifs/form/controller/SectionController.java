@@ -26,7 +26,7 @@ public class SectionController {
     }
 
     @GetMapping("/get-child-sections/{parentId}")
-    public RestResult<List<SectionResource>> getChildSectionsByParentId(@PathVariable("parentId") final Long parentId) {
+    public RestResult<List<SectionResource>> getChildSectionsByParentId(@PathVariable long parentId) {
         return sectionService.getChildSectionsByParentId(parentId).toGetResponse();
     }
 
