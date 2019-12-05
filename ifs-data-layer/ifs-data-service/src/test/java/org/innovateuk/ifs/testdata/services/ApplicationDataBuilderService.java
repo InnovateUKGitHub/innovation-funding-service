@@ -533,7 +533,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     case OTHER_FUNDING:
                         builder[0] = builder[0].withOtherFunding("Lottery", LocalDate.of(2016, 4, 1), bd("2468"));
                         break;
-                    case ACADEMIC:
                     case YOUR_FINANCE:
                         //none for industrial costs.
                         break;

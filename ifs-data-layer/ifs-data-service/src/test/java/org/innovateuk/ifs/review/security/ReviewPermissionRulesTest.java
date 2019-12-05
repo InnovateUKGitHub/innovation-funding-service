@@ -2,7 +2,6 @@ package org.innovateuk.ifs.review.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.review.domain.Review;
-import org.innovateuk.ifs.review.mapper.ReviewMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.resource.ReviewState;
@@ -11,7 +10,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -38,10 +36,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
     private Map<ReviewState, ReviewResource> assessmentReviews;
 
     @Mock
-    private ReviewRepository reviewRepositoryMock;
-
-    @Autowired
-    public ReviewMapper reviewMapper;
+    private ReviewRepository reviewRepository;
 
     @Override
     protected ReviewPermissionRules supplyPermissionRulesUnderTest() {
@@ -56,7 +51,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
         ProcessRole processRole = newProcessRole()
                 .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
-        when(processRoleRepositoryMock.findById(processRole.getId())).thenReturn(Optional.of(processRole));
+        when(processRoleRepository.findById(processRole.getId())).thenReturn(Optional.of(processRole));
 
         assessmentReviews = EnumSet.allOf(ReviewState.class).stream().collect(toMap(identity(), state -> setupAssessmentReview(processRole, state)));
     }
@@ -86,7 +81,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
                 .withState(state)
                 .build();
 
-        when(reviewRepositoryMock.findById(review.getId())).thenReturn(Optional.of(review));
+        when(reviewRepository.findById(review.getId())).thenReturn(Optional.of(review));
 
         return newReviewResource()
                 .withId(review.getId())

@@ -24,52 +24,52 @@ public class ProjectApplicationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjects() {
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjects() {
 
         UserResource user = newUserResource().build();
         ApplicationResource application = newApplicationResource().build();
         Project linkedProject = newProject().build();
 
-        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
                 thenReturn(newProjectUser().build(1));
 
         assertTrue(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
 
-        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
-        verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
     }
 
     @Test
-    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjectsButNoProjectForApplication() {
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjectsButNoProjectForApplication() {
 
         UserResource user = newUserResource().build();
         ApplicationResource application = newApplicationResource().build();
         Project linkedProject = newProject().build();
 
-        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(null);
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(null);
 
         assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
 
-        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
-        verify(projectUserRepositoryMock, never()).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository, never()).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
     }
 
     @Test
-    public void testProjectPartnerCanViewApplicationsLinkedToTheirProjectsButNotPartnerOnLinkedProject() {
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjectsButNotPartnerOnLinkedProject() {
 
         UserResource user = newUserResource().build();
         ApplicationResource application = newApplicationResource().build();
         Project linkedProject = newProject().build();
 
-        when(projectRepositoryMock.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
                 thenReturn(emptyList());
 
         assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
 
-        verify(projectRepositoryMock).findOneByApplicationId(application.getId());
-        verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
     }
 
 

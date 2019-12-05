@@ -80,6 +80,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               IFS-1904 Only 1 row is saved on adding multiple new rows in eligibility > finances as internal user
 ...
 ...               IFS-2313 Project Setup: Ability to edit project duration
+...
+...               IFS-6706 Enable Project Finance to adjust academic finances in the Eligibility section
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -150,7 +152,7 @@ Project Finance user can view academic Jes form
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     Given the user navigates to the page             ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link             css = a.eligibility-1
-    Then the user should see the element             jQuery = h3:contains("Download Je-S form:")
+    Then the user should see the element             jQuery = h3:contains("Download Je-S form")
     When The user clicks the button/link             link = jes-form104.pdf
     And the user closes the last opened tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
@@ -800,12 +802,15 @@ Project finance can see updated finance breakdown for different categories
     And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£356,559
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
+Project finance can edit academic finances
+    [Documentation]  IFS-6706
+    Given the user clicks the button/link            jQuery = table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    When project finance edits academic finances
+    Then the user should see the element             jQuery = [data-mirror^="#total"]:contains("£900")
+
 Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
-    [Tags]
-    When the user clicks the button/link            jQuery = table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
-    Then the user should see the element            jQuery = h2:contains("Je-S Form overview")
-    When the user selects the checkbox              project-eligible
+    Given the user selects the checkbox              project-eligible
     And the user selects the option from the drop-down menu    Green    id = rag-rating
     And the user clicks the button/link             jQuery = .govuk-button:contains("Approve eligible costs")
     And the user clicks the button/link             name = confirm-eligibility    # Clicking the confirm button on the modal
@@ -820,7 +825,7 @@ Project finance user can view Updated finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,559   101,735    7,404     29%
+    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,469   101,735    7,404     29%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -832,13 +837,13 @@ Project finance user can view updated finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section   1   £177,784   30%     50,867    2,468     124,449
     #check breakdown for academic user
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
-    Then the Categories Are Verified For Finances Summary Section   2   £990   100%  0     2,468     0
+    Then the Categories Are Verified For Finances Summary Section   2   £900   100%  0     2,468     0
     #check breakdown for non lead partner
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
     Then the Categories Are Verified For Finances Summary Section   3   £177,784  30%     50,867    2,468     124,449
     #check total
     And the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1   £356,559   101,735    7,404     248,898
+    And The Total Calculation For Finances Summary Are Verified    1   £356,469   101,735    7,404     248,898
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
@@ -1114,6 +1119,19 @@ Project finance user adds, modifies and removes labour rows
     And the user should not see the element        jQuery = #accordion-finances-content-1 tr:nth-of-type(5) td:contains("£976")  # This is the row which was removed
 
 *** Keywords ***
+project finance edits academic finances
+    the user clicks the button/link          jQuery = a:contains("Edit")
+    the user enters text to a text field     css = [name$="incurredStaff"]  100
+    the user enters text to a text field     css = [name$="incurredTravel"]  100
+    the user enters text to a text field     css = [name$="incurredOtherCosts"]  100
+    the user enters text to a text field     css = [name$="allocatedInvestigators"]  100
+    the user enters text to a text field     css = [name$="allocatedEstateCosts"]  100
+    the user enters text to a text field     css = [name$="allocatedOtherCosts"]  100
+    the user enters text to a text field     css = [name$="indirectCosts"]  100
+    the user enters text to a text field     css = [name$="exceptionsStaff"]  100
+    the user enters text to a text field     css = [name$="exceptionsOtherCosts"]  100
+    the user clicks the button/link          id = save-academic-costs
+
 Custom suite setup
     ${today}  get today
     set suite variable  ${today}
