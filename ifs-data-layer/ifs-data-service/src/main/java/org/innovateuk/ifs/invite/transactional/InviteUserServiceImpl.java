@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -41,7 +42,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -50,7 +50,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -81,6 +80,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private AssessmentInviteMapper assessmentInviteMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -228,7 +230,11 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Override
     public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
         Page<RoleInvite> pagedResult = roleInviteRepository.findByStatus(InviteStatus.SENT, pageable);
-        List<RoleInviteResource> roleInviteResources = simpleMap(pagedResult.getContent(), roleInvite -> roleInviteMapper.mapToResource(roleInvite));
+
+        List<RoleInviteResource> roleInviteResources = pagedResult.getContent()
+                .stream()
+                .map(roleInviteMapper::mapToResource)
+                .collect(Collectors.toList());
         return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), roleInviteResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 

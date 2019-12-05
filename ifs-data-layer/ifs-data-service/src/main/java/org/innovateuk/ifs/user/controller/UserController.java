@@ -78,6 +78,18 @@ public class UserController {
         return baseUserService.findByProcessRole(userRole).toGetResponse();
     }
 
+    @GetMapping("/active")
+    public RestResult<UserPageResource> findActiveUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return userService.findActive(PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+    }
+
+    @GetMapping("/inactive")
+    public RestResult<UserPageResource> findInactiveUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                  @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
+        return userService.findInactive(PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+    }
+
     @GetMapping("/internal/active")
     public RestResult<UserPageResource> findActiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                 @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {

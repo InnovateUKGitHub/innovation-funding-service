@@ -1,25 +1,23 @@
 package org.innovateuk.ifs.management.admin.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
-import org.innovateuk.ifs.management.admin.form.EditUserForm;
-import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
-import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
-import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
+import org.innovateuk.ifs.management.admin.form.EditUserForm;
+import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
+import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
+import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -60,9 +58,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestServiceMock.getActiveInternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getActiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(userRestServiceMock.getInactiveInternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
         when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(restSuccess(roleInvitePageResource));
     }

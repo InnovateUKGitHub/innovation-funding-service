@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
 import static java.util.Collections.disjoint;
 import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
@@ -182,7 +183,7 @@ public class UserResource implements Serializable {
     }
 
     public boolean hasMoreThanOneRoleOf(Role... acceptedRoles){
-        return CollectionUtils.retainAll(roles, Arrays.asList(acceptedRoles)).size() > 1;
+        return CollectionUtils.retainAll(roles, asList(acceptedRoles)).size() > 1;
     }
 
     public boolean hasMoreThanOneRoleOf(Collection<Role> acceptedRoles){

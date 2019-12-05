@@ -122,7 +122,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<Set<UserResource>> findAssignableUsers(final Long applicationId) {
+    public ServiceResult<Set<UserResource>> findAssignableUsers(final long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<UserResource> assignables = roles.stream()
@@ -135,7 +135,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<Set<UserResource>> findRelatedUsers(final Long applicationId) {
+    public ServiceResult<Set<UserResource>> findRelatedUsers(final long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
 
@@ -264,6 +264,20 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Override
     public ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable) {
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
+        List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<UserPageResource> findActive(Pageable pageable) {
+        Page<User> pagedResult = userRepository.findByStatus(UserStatus.ACTIVE, pageable);
+        List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<UserPageResource> findInactive(Pageable pageable) {
+        Page<User> pagedResult = userRepository.findByStatus(UserStatus.INACTIVE, pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }

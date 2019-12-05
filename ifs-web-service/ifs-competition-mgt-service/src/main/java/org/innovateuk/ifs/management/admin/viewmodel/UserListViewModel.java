@@ -33,9 +33,16 @@ public class UserListViewModel {
 
     private Pagination pendingInvitesPagination;
 
-    public UserListViewModel(String tab, List<UserResource> activeUsers, List<UserResource> inactiveUsers, List<RoleInviteResource> pendingInvites,
-                             long activeCount, long inactiveCount, long pendingCount,
-                             Pagination activeUsersPagination, Pagination inactiveUsersPagination, Pagination pendingInvitesPagination) {
+    public UserListViewModel(String tab,
+                             List<UserResource> activeUsers,
+                             List<UserResource> inactiveUsers,
+                             List<RoleInviteResource> pendingInvites,
+                             long activeCount,
+                             long inactiveCount,
+                             long pendingCount,
+                             Pagination activeUsersPagination,
+                             Pagination inactiveUsersPagination,
+                             Pagination pendingInvitesPagination) {
         this.tab = tab;
         this.activeUsers = activeUsers;
         this.inactiveUsers = inactiveUsers;
