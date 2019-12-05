@@ -6,7 +6,7 @@ Resource          ../defaultResources.robot
 the user uploads the file
     [Arguments]  ${selector}  ${file}
     Choose File  ${selector}  ${UPLOAD_FOLDER}/${file}
-    Wait Until Page Does Not Contain Without Screenshots    Uploading
+    Wait Until Page Does Not Contain Without Screenshots    Uploading   30s
 
 the user can remove the uploaded file
     [Arguments]  ${name}  ${file_name}
