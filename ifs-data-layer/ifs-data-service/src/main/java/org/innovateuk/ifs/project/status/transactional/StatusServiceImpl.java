@@ -46,6 +46,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
@@ -226,10 +227,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         if (!project.isCollaborativeProject()) {
             projectDocuments = projectDocuments.stream()
                     .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getCompetitionDocument().getTitle()))
-                    .collect(Collectors.toList());
+                    .collect(toList());
             expectedDocuments = expectedDocuments.stream()
                     .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getTitle()))
-                    .collect(Collectors.toList());
+                    .collect(toList());
         }
         int actualNumberOfDocuments = projectDocuments.size();
         int expectedNumberOfDocuments = expectedDocuments.size();

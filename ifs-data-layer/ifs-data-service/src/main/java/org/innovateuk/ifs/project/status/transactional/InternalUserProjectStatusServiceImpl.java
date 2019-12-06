@@ -36,6 +36,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -103,7 +104,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         return projectSupplier.get().stream()
                 .map(this::getProjectStatusResourceByProject)
                 .sorted(comparing(ProjectStatusResource::getApplicationNumber))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
@@ -287,10 +288,10 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         if (!project.isCollaborativeProject()) {
             projectDocuments = projectDocuments.stream()
                 .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getCompetitionDocument().getTitle()))
-                .collect(Collectors.toList());
+                .collect(toList());
             expectedDocuments = expectedDocuments.stream()
                     .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getTitle()))
-                    .collect(Collectors.toList());
+                    .collect(toList());
         }
 
         return getDocumentsState(projectDocuments,
