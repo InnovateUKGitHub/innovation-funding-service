@@ -41,7 +41,6 @@ Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
-
 ${PROJ_WITH_SOLE_APPLICANT}  ${project_ids["High-speed rail and its effects on soil compaction"]}
 ${USER_BECKY_ORG_PUBSECTOR}  becky.mason@gmail.com
 ${newOrgRejectedDocumentMessagePM}  We have marked this document as incomplete because you have made a change to your project team.
