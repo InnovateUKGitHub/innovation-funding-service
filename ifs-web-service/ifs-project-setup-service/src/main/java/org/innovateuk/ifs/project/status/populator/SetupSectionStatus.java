@@ -106,7 +106,8 @@ public class SetupSectionStatus {
 
         if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
                 .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
-                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
+                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus())
+                        || DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE.equals(projectDocumentResource.getStatus()))) {
             return isProjectManager ? FLAG : EMPTY;
         }
 
