@@ -45,7 +45,7 @@ Applicant submits his application
     Then the lead applicant fills all the questions and marks as complete(APC)
     When the user navigates to Your-finances page       ${apcApplicationTitle}
     And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
-    And the user accept the competition terms and conditions
+    And the user accept the competition terms and conditions    Return to application overview
     Then the applicant submits the application
 
 The internal user checks accepted terms and conditions for submitted application

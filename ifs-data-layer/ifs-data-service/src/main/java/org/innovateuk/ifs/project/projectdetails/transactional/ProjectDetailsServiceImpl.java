@@ -329,7 +329,8 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postcode) {
         return validatePostcode(postcode).
-                andOnSuccess(() -> validateIfPartnerProjectLocationCanBeChanged(composite.getProjectId())).
+                andOnSuccess(() -> getProject(composite.getProjectId())).
+                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_LOCATION_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
                 andOnSuccessReturn(partnerOrganisation -> {
                     partnerOrganisation.setPostcode(postcode.toUpperCase());
@@ -351,13 +352,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
             return serviceFailure(new Error("validation.field.too.many.characters", asList("", MAX_POSTCODE_LENGTH), HttpStatus.BAD_REQUEST));
         }
 
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> validateIfPartnerProjectLocationCanBeChanged(long projectId) {
-        if (isMonitoringOfficerAssigned(projectId)) {
-            return serviceFailure(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED);
-        }
         return serviceSuccess();
     }
 

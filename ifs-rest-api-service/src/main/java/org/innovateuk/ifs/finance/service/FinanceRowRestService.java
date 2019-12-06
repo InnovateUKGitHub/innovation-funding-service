@@ -15,4 +15,6 @@ public interface FinanceRowRestService {
 
     RestResult<Void> delete(long financeRowId);
 
+    RestResult<FinanceRowItem> get(long financeRowId);
+
 }

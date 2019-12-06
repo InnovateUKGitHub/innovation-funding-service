@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -15,6 +14,8 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -29,7 +30,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void internalUsersCanViewPartnerOrgs() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
 
@@ -57,7 +58,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .withProject(projectId)
                 .withOrganisation(organisationId)
                 .build();
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
 
         assertFalse(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
     }
@@ -75,7 +76,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
         ProjectUser projectUser = newProjectUser()
                 .build();
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
 
         assertTrue(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
     }
@@ -83,11 +84,11 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void partnersCanView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().withProject(project).build();
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(singletonList(projectUser));
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(singletonList(projectUser));
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
 
@@ -97,10 +98,10 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void nonPartnersCannotView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();
         Project project = newProject().build();
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
 
@@ -110,7 +111,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void internalUserCanView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();
         Project project = newProject().build();
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
@@ -121,11 +122,11 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void monitoringOfficerCanView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.MONITORING_OFFICER)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(MONITORING_OFFICER)).build();
         Project project = newProject().build();
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
-        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
 
         assertTrue(rules.monitoringOfficersUsersCanView(partnerOrg, user));
     }
@@ -133,7 +134,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void externalUsersCannotView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.PARTNER)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(PARTNER)).build();
         Project project = newProject().build();
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
@@ -152,7 +153,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .withProject(projectId)
                 .withOrganisation(organisationId)
                 .build();
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
 
         assertFalse(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
     }
@@ -170,8 +171,27 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
         ProjectUser projectUser = newProjectUser()
                 .build();
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
 
         assertTrue(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
+    }
+
+    @Test
+    public void internalUsersCanRemovePartnerOrganisations() {
+        long projectId = 1L;
+        long organisationId = 2L;
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+                .withProject(projectId)
+                .withOrganisation(organisationId)
+                .build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isInternalAdmin(user)) {
+                assertTrue(rules.internalUsersCanRemovePartnerOrganisations(partnerOrg, user));
+            } else {
+                assertFalse(rules.internalUsersCanRemovePartnerOrganisations(partnerOrg, user));
+            }
+        });
     }
 }

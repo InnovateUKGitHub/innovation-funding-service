@@ -1,5 +1,11 @@
 package org.innovateuk.ifs.project.invite.controller;
 
+import static java.lang.String.format;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -16,11 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 @Controller
 @RequestMapping("/project/{projectId}/partner-invite")
@@ -61,9 +62,9 @@ public class AcceptProjectPartnerInviteController {
             }
             registrationCookieService.saveToProjectInviteHashCookie(new InviteAndIdCookie(projectId, hash), response);
             if (invite.getUser() == null) {
-                return String.format("redirect:/project/%d/partner-invite/new-user", projectId);
+                return format("redirect:/project/%d/partner-invite/new-user", projectId);
             } else {
-                return String.format("redirect:/project/%d/partner-invite/existing-user", projectId);
+                return format("redirect:/project/%d/partner-invite/existing-user", projectId);
             }
         }).getSuccess();
     }

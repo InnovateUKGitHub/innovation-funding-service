@@ -361,7 +361,7 @@ Non-lead can mark terms and conditions as complete
     [Documentation]  IFS-5920
     [Setup]  the user clicks the button/link      link = Your project finances
     Given the user clicks the button/link         link = Back to application overview
-    When the user accept the competition terms and conditions
+    When the user accept the competition terms and conditions     Return to application overview
     Then the user should see the element          jQuery = li:contains("Award terms and conditions") > .task-status-complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
@@ -382,7 +382,7 @@ The lead applicant checks for terms and conditions partners status
     [Documentation]  IFS-5920
     [Tags]
     [Setup]  the user navigate to competition
-    Given the user accept the competition terms and conditions
+    Given the user accept the competition terms and conditions    Return to application overview
     And the user clicks the button/link             link = Award terms and conditions
     When the user clicks the button/link            link = View partners' acceptance
     Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Accepted")

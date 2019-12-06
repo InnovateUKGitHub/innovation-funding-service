@@ -6,19 +6,16 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
@@ -28,14 +25,15 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<OverheadFilePermissionRules> {
 
-    private FinanceRow overheads;
-    private FinanceRow submittedOverheads;
+    private ApplicationFinanceRow overheads;
+    private ApplicationFinanceRow submittedOverheads;
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource compAdmin;
@@ -46,10 +44,10 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     private UserResource innovationLead;
 
     @Mock
-    private ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
+    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
 
     @Mock
-    private ApplicationRepository applicationRepositoryMock;
+    private ApplicationRepository applicationRepository;
 
     @Override
     protected OverheadFilePermissionRules supplyPermissionRulesUnderTest() {
@@ -57,15 +55,15 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
 
         // Create a compAdmin
         compAdmin = compAdminUser();
         {
             // Set up users on an organisation and application
-            final Long applicationId = 1L;
+            final long applicationId = 1L;
             final Long submittedApplicationId = 2L;
-            final Long organisationId = 2L;
+            final long organisationId = 2L;
 
             final Application application = newApplication()
                     .with(id(applicationId))
@@ -88,47 +86,47 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
-            when(applicationFinanceRowRepositoryMock.findById(overheads.getId())).thenReturn(Optional.of((ApplicationFinanceRow) overheads));
-            when(applicationFinanceRowRepositoryMock.findById(submittedOverheads.getId())).thenReturn(Optional.of((ApplicationFinanceRow) submittedOverheads));
-            when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).
+            when(applicationFinanceRowRepository.findById(overheads.getId())).thenReturn(Optional.of(overheads));
+            when(applicationFinanceRowRepository.findById(submittedOverheads.getId())).thenReturn(Optional.of(submittedOverheads));
+            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), LEADAPPLICANT, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
-            when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).
+            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), COLLABORATOR, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
 
-            when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
-            when(applicationRepositoryMock.findById(submittedApplicationId)).thenReturn(Optional.of(submittedApplication));
+            when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+            when(applicationRepository.findById(submittedApplicationId)).thenReturn(Optional.of(submittedApplication));
         }
 
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
-            final long otherApplicationId = 3l;
-            final long otherOrganisationId = 4l;
+            final long otherApplicationId = 3L;
+            final long otherOrganisationId = 4L;
             otherLeadApplicant = newUserResource().build();
-            when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(),
-                    Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(),
+                    LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
         }
 
         // Create project with users for testing getting of partner funding status
         {
-            final Long projectId = 1L;
-            final Long userId = 1L;
-            when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER)).
-                    thenReturn(Collections.singletonList(newProjectUser().withId(userId).build()));
+            final long projectId = 1L;
+            final long userId = 1L;
+            when(projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER)).
+                    thenReturn(singletonList(newProjectUser().withId(userId).build()));
         }
 
-        // Create differnet users with different project
+        // Create different users with different project
         {
-            final Long otherProjectProjectId = 2L;
-            final Long otherProjectUserId = 2L;
-            when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(otherProjectProjectId, otherProjectUserId, PROJECT_PARTNER)).
-                    thenReturn(Collections.singletonList(newProjectUser().withId(otherProjectUserId).build()));
+            final long otherProjectProjectId = 2L;
+            final long otherProjectUserId = 2L;
+            when(projectUserRepository.findByProjectIdAndUserIdAndRole(otherProjectProjectId, otherProjectUserId, PROJECT_PARTNER))
+                    .thenReturn(singletonList(newProjectUser().withId(otherProjectUserId).build()));
         }
-        //Create users with roles
+        // Create users with roles
         {
-            ifsAdmin = newUserResource().withRolesGlobal(asList(Role.IFS_ADMINISTRATOR)).build();
-            supportUser = newUserResource().withRolesGlobal(asList(Role.SUPPORT)).build();
-            innovationLead = newUserResource().withRolesGlobal(asList(Role.INNOVATION_LEAD)).build();
-            projectFinance = newUserResource().withRolesGlobal(asList(Role.PROJECT_FINANCE)).build();
+            ifsAdmin = newUserResource().withRolesGlobal(singletonList(IFS_ADMINISTRATOR)).build();
+            supportUser = newUserResource().withRolesGlobal(singletonList(SUPPORT)).build();
+            innovationLead = newUserResource().withRolesGlobal(singletonList(INNOVATION_LEAD)).build();
+            projectFinance = newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build();
         }
     }
 

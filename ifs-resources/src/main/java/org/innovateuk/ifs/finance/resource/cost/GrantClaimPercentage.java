@@ -63,12 +63,6 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
 
     @Override
     @JsonIgnore
-    public int getMinRows() {
-        return 0;
-    }
-
-    @Override
-    @JsonIgnore
     public FinanceRowType getCostType() {
         return FinanceRowType.FINANCE;
     }

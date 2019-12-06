@@ -25,9 +25,9 @@ dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
+    compile "org.apache.tomcat.embed:tomcat-embed-core:8.5.47"
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-
 }
 
 processResources {

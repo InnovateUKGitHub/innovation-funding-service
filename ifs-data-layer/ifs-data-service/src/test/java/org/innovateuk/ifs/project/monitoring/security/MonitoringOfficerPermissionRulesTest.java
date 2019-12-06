@@ -2,17 +2,13 @@ package org.innovateuk.ifs.project.monitoring.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -23,9 +19,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTest<MonitoringOfficerPermissionRules> {
-
-    @Mock
-    private StakeholderRepository stakeholderRepositoryMock;
 
     @Override
     protected MonitoringOfficerPermissionRules supplyPermissionRulesUnderTest() {
@@ -75,20 +68,17 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
         UserResource stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
-        Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
         Competition competition = newCompetition().build();
 
         ProjectResource project = newProjectResource()
                 .withCompetition(competition.getId())
                 .build();
 
-        when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, stakeholderUserResourceOnCompetition));
 
-        allInternalUsers.forEach(user -> {
-            assertFalse(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(newProjectResource().build(), user));
-        });
+        allInternalUsers.forEach(user -> assertFalse(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(newProjectResource().build(), user)));
     }
 
     @Test
@@ -110,7 +100,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
 
         setupUserAsMonitoringOfficer(project, user);
 
-        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
 
         assertTrue(rules.monitoringOfficersCanViewThemselves(project, user));
     }
@@ -122,7 +112,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
 
         ProjectResource project = newProjectResource().build();
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
 
         assertFalse(rules.partnersCanViewMonitoringOfficersOnTheirProjects(project, user));
     }

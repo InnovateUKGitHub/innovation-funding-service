@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.service;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,10 +11,5 @@ public class ApplicationFinanceRowRestServiceImpl extends BaseFinanceRowRestServ
 
     public ApplicationFinanceRowRestServiceImpl() {
         super("/application-finance-row");
-    }
-
-    @Override
-    public RestResult<FinanceRowItem> get(long financeRowId) {
-        return getWithRestResult(getFinanceRowRestUrl() + "/" + financeRowId, FinanceRowItem.class);
     }
 }

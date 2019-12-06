@@ -96,10 +96,10 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     @Override
     public List<ValidationMessages> validateCostItem(Long applicationId, FinanceRowType type, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
-                financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
-                        financeRowCostsService.getCostItems(financeDetails.getId(), type).andOnSuccessReturn(costItems ->
-                                financeValidationUtil.validateCostItem(costItems)
-                        )
+                financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccessReturn(financeDetails ->
+                    financeValidationUtil.validateCostItem(type,
+                        financeDetails.getFinanceOrganisationDetails().get(type)
+                    )
                 )
         ).getSuccess();
     }

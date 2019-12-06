@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,8 +19,10 @@ import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 
 /**
  * User Data Transfer Object
+ * Serializable so that it can be persisted in a redis cache.
  */
-public class UserResource {
+public class UserResource implements Serializable {
+    private static final long serialVersionUID = 746809237007138492L;
     private Long id;
     private String uid;
     private Title title;

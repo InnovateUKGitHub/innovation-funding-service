@@ -50,6 +50,7 @@ Applicant fills in project costs with VAT
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
+    [Setup]  get application id by name and set as suite variable  ${appl_name}
     Given the user accept the procurement terms and conditions
     When the user selects research category                      Feasibility studies
     Then the applicant submits the procurement application
@@ -187,11 +188,15 @@ the user should see all procurement finance subsections complete
     the user should see the element  css = li:nth-of-type(3) .task-status-complete
 
 the applicant submits the procurement application
-    the user clicks the button/link                    link = Review and submit
-    the user should not see the element                jQuery = .task-status-incomplete
-    the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
-    the user should be redirected to the correct page  track
+    the user clicks the button/link                             link = Review and submit
+    the user should not see the element                         jQuery = .task-status-incomplete
+    the user clicks the button/link                             jQuery = .govuk-button:contains("Submit application")
+    the user clicks the button/link                             jQuery = .govuk-button:contains("Yes, I want to submit my application")
+    the user should be redirected to the correct page           track
+    the user should see the element                             link = Print application
+    the user navigates to the page without the usual headers    ${SERVER}/application/${application_id}/print?noprint    #This URL its only for testing purposes
+    the user should see the element                             jQuery = .govuk-button:contains("Print your application")
+    the user navigates to the page                              ${server}
 
 Competition is closed
     Get competitions id and set it as suite variable    ${comp_name}
@@ -243,9 +248,7 @@ the user completes the project details
     the user should see the element       css = ul li.complete:nth-child(1)
 
 Requesting Project ID of this Project
-    ${ApplicationID} =  get application id by name  ${appl_name}
     ${ProjectID} =  get project id by name    ${appl_name}
-    Set suite variable    ${ApplicationID}
     Set suite variable    ${ProjectID}
 
 the user enters bank details
@@ -261,7 +264,7 @@ the user enters bank details
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Search for MO                            Orvill  Orville Gibbs
-    The internal user assign project to MO   ${ApplicationID}  ${appl_name}
+    The internal user assign project to MO   ${application_id}  ${appl_name}
 
 internal user approve bank details
     the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/review-all-bank-details
@@ -275,7 +278,7 @@ internal user generate SP
     the user selects the option from the drop-down menu  Green  id = rag-rating
     the user clicks the button/link          css = #confirm-button
     the user clicks the button/link          css = [name="confirm-viability"]
-     the user clicks the button/link         link = Finance checks
+    the user clicks the button/link         link = Finance checks
     the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
     the user selects the checkbox            project-eligible
     the user selects the option from the drop-down menu  Green  id = rag-rating

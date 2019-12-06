@@ -68,7 +68,7 @@
         </th:block>
 
         <th:block th:unless="${model.internal or model.readOnly}">
-            <th:block th:insert="projectteam/project-team-fragments :: assign-role(${model})" />
+            <th:block th:insert="projectteam/project-team-fragments :: assign-role(${model})"/>
         </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
@@ -90,30 +90,43 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                        <tr th:each="user : ${organisation.users}"
-                            class="govuk-table__row">
-                            <th:block th:insert="projectteam/project-team-fragments :: partner-invite-row(${model}, ${organisation}, ${user})"
-                                      th:if="${organisation.partnerInvite}"/>
-                            <th:block th:insert="projectteam/project-team-fragments :: project-invite-row(${model}, ${organisation}, ${user})"
-                                      th:if="${user.invite && !organisation.partnerInvite}"/>
-                            <th:block th:insert="projectteam/project-team-fragments :: project-user-row(${model}, ${organisation}, ${user})"
-                                      th:if="${!user.invite && !organisation.partnerInvite}"/>
-                        </tr>
+                    <tr th:each="user : ${organisation.users}"
+                        class="govuk-table__row">
+                        <th:block
+                            th:insert="projectteam/project-team-fragments :: partner-invite-row(${model}, ${organisation}, ${user})"
+                            th:if="${organisation.partnerInvite}"/>
+                        <th:block
+                            th:insert="projectteam/project-team-fragments :: project-invite-row(${model}, ${organisation}, ${user})"
+                            th:if="${user.invite && !organisation.partnerInvite}"/>
+                        <th:block
+                            th:insert="projectteam/project-team-fragments :: project-user-row(${model}, ${organisation}, ${user})"
+                            th:if="${!user.invite && !organisation.partnerInvite}"/>
+                    </tr>
                     </tbody>
                 </table>
                 <th:block th:if="${organisation.canAddUsers}">
-                    <th:block th:insert="projectteam/project-team-fragments :: invite-form(${model}, ${organisation})" />
+                    <th:block th:insert="projectteam/project-team-fragments :: invite-form(${model}, ${organisation})"/>
                 </th:block>
                 <span th:if="${!organisation.lead and model.canRemovePartnerOrganisation and organisation.canAddUsers}"
                       class="vertical-align-baseline govuk-body govuk-!-margin-left-1 govuk-!-margin-right-1 hint">|</span>
                 <th:block th:if="${!organisation.lead and model.canRemovePartnerOrganisation}">
-                    <button name="remove-organisation"
-                            class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
-                            th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.id}">
-                        Remove organisation
-                    </button>
+                    <th:block th:unless="${organisation.partnerInvite}">
+                        <button name="remove-organisation"
+                                class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
+                                th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.id}">
+                            Remove organisation
+                        </button>
+                    </th:block>
                     <th:block
                         th:insert="fragments/modals :: modal-project-team-remove-organisation (${organisation})"/>
+                </th:block>
+                <th:block th:if="${organisation.partnerInvite and model.canInvitePartnerOrganisation}">
+                    <button name="remove-partner-invite"
+                            class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
+                            type="submit"
+                            th:value="${organisation.id}">
+                        Remove organisation
+                    </button>
                 </th:block>
             </th:block>
         </form>

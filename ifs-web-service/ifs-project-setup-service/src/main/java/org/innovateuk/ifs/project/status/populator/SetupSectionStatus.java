@@ -1,15 +1,18 @@
 package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
 
@@ -93,11 +96,20 @@ public class SetupSectionStatus {
     }
 
     public SectionStatus documentsSectionStatus(final boolean isProjectManager,
-                                                List<CompetitionDocumentResource> expectedDocuments,
-                                                List<ProjectDocumentResource> projectDocuments) {
+                                                ProjectResource project,
+                                                CompetitionResource competition) {
+        List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
+        List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
+
+        if (!project.isCollaborativeProject()) {
+            competitionDocuments.removeIf(
+                    document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
+            projectDocuments.removeIf(
+                    document -> document.getCompetitionDocument().getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
+        }
 
         int actualNumberOfDocuments = projectDocuments.size();
-        int expectedNumberOfDocuments = expectedDocuments.size();
+        int expectedNumberOfDocuments = competitionDocuments.size();
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
                 .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
@@ -48,7 +49,6 @@ public class YourFundingViewModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
-
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         if (user.isInternalUser()) {
             return populateManagement(applicationId, sectionId, organisationId);
@@ -73,6 +73,7 @@ public class YourFundingViewModelPopulator {
         boolean yourOrganisationRequired = !completedSectionIds.contains(yourOrganisationSectionId);
         boolean fundingSectionLocked = isFundingSectionLocked(section, researchCategoryRequired,
                 yourOrganisationRequired);
+        boolean overridingFundingRules = isMaximumFundingLevelOverridden(section);
 
         return new YourFundingViewModel(applicationId,
                 section.getSection().getId(),
@@ -89,13 +90,14 @@ public class YourFundingViewModelPopulator {
                 researchCategoryQuestionId,
                 yourOrganisationSectionId,
                 applicationFinance.getMaximumFundingLevel(),
-                String.format("/application/%d/form/FINANCE", applicationId));
+                format("/application/%d/form/FINANCE", applicationId),
+                overridingFundingRules);
     }
 
     private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         return new ManagementYourFundingViewModel(applicationId, sectionId, organisationId, application.getCompetition(), application.getName(),
-                String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
 
     }
 
@@ -151,5 +153,4 @@ public class YourFundingViewModelPopulator {
     private boolean isMaximumFundingLevelOverridden(ApplicantSectionResource section) {
         return grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId()).getSuccess();
     }
-
 }

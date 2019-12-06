@@ -60,7 +60,7 @@ createContainer.networkAliases=["ifs-data-service"]
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 
-ext.companiesHouseLookupEnabled = ext.has('ifs.companies.house.enabled') ? ext.get('ifs.companies.house.enabled') : true
+ext.companiesHouseLookupEnabled = ext.has('ifs.companies.house.enabled') ? ext.get('ifs.companies.house.enabled') : false
 ext.companiesHouseKey = ext.has('ifs.companies.house.key') ? ext.get('ifs.companies.house.key') : 'mock-key'
 
 ext {
@@ -92,14 +92,16 @@ dependencies {
     compile project(":ifs-sil-resources")
     compile project(":ifs-error-util")
 
-
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.springframework.boot:spring-boot-starter-data-redis"
-    compile "org.springframework.boot:spring-boot-starter-cache"
 
-    compile "mysql:mysql-connector-java"
+    compile "org.springframework.boot:spring-boot-starter-data-redis"
+    compile "org.apache.commons:commons-pool2"
+
+    compile "org.springframework.boot:spring-boot-starter-cache"
+    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
+
     compile "org.springframework:spring-web"
     compile "com.jayway.jsonpath:json-path-assert:2.0.0"
     compile "com.jayway.jsonpath:json-path"

@@ -34,7 +34,7 @@
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
-                    <li><a th:href="${'/application/' + model.applicationId + '/feedback'}"
+                    <li th:if="${model.showApplicationFeedbackLink}"><a th:href="${'/application/' + model.applicationId + '/feedback'}"
                            class="govuk-link">
                         view application feedback</a></li>
                     <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"

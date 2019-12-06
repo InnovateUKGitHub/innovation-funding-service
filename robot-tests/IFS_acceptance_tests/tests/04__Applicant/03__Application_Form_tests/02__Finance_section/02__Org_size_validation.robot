@@ -50,7 +50,7 @@ User sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
     [Tags]  HappyPath
     When the user clicks the button/link             link = Your organisation
-    Then the user should see the element             jQuery = .message-alert p:contains("The organisation size is used to calculate your funding level in the application.")
+    Then the user should see the element             jQuery = .message-alert p:contains("The organisation size is used to calculate your funding level.")
     And the user should see the element              jQuery = .message-alert p:contains("Changing this selection will reset your funding level.")
 
 Medium org can be selected
@@ -87,7 +87,7 @@ User still sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
     [Tags]  HappyPath
     When the user clicks the button/link             link = Your organisation
-    Then the user should see the element             jQuery = .message-alert p:contains("The organisation size is used to calculate your funding level in the application.")
+    Then the user should see the element             jQuery = .message-alert p:contains("The organisation size is used to calculate your funding level.")
     And the user should see the element              jQuery = .message-alert p:contains("Changing this selection will reset your funding level.")
 
 Large organisation can be selected

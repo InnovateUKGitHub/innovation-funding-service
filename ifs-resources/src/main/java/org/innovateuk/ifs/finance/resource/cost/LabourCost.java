@@ -82,11 +82,6 @@ public class LabourCost extends AbstractFinanceRowItem {
         return false;
     }
 
-    @Override
-    public int getMinRows() {
-        return 0;
-    }
-
     public String getRole() {
         return role;
     }

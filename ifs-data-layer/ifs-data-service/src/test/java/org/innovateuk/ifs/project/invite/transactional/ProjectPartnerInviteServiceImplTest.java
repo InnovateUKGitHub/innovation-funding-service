@@ -1,14 +1,45 @@
 package org.innovateuk.ifs.project.invite.transactional;
 
+import static java.time.ZonedDateTime.now;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+
+
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -26,35 +57,12 @@ import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteReposito
 import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singletonList;
-import static java.util.Optional.of;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectPartnerInviteServiceImplTest {
@@ -96,7 +104,7 @@ public class ProjectPartnerInviteServiceImplTest {
     private ProjectUserRepository projectUserRepository;
 
     @Mock
-    private ProjectFinanceRowService projectFinanceRowService;
+    private ProjectFinanceService projectFinanceService;
 
     @Mock
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
@@ -163,6 +171,7 @@ public class ProjectPartnerInviteServiceImplTest {
     public void getPartnerInvites() {
         long projectId = 1L;
         long inviteId = 2L;
+        long applicationId =3L;
         String email = "Partner@gmail.com";
         String userName = "Partner";
         String organisationName = "Partners Ltd.";
@@ -172,7 +181,12 @@ public class ProjectPartnerInviteServiceImplTest {
         invite.setEmail(email);
         invite.setId(inviteId);
         invite.setName(userName);
-        invite.setProject(newProject().withName("project").build());
+        invite.setProject(newProject()
+                .withName("project")
+                .withApplication(newApplication()
+                        .withId(applicationId)
+                        .build())
+                .build());
         setField(invite, "status", InviteStatus.SENT);
         setField(invite, "sentOn", sentOn);
         invite.setInviteOrganisation(inviteOrganisation);
@@ -189,6 +203,7 @@ public class ProjectPartnerInviteServiceImplTest {
         assertEquals(organisationName, resource.getOrganisationName());
         assertEquals(sentOn, resource.getSentOn());
         assertEquals("project", resource.getProjectName());
+        assertEquals(applicationId, resource.getApplicationId());
     }
 
     @Test
@@ -252,13 +267,19 @@ public class ProjectPartnerInviteServiceImplTest {
         String email = "Partner@gmail.com";
         String userName = "Partner";
         String organisationName = "Partners Ltd.";
+        long applicationId =3L;
         ZonedDateTime sentOn = now();
         ProjectPartnerInvite invite = new ProjectPartnerInvite();
         InviteOrganisation inviteOrganisation = new InviteOrganisation();
         invite.setEmail(email);
         invite.setId(1L);
         invite.setName(userName);
-        invite.setProject(newProject().withName("project").build());
+        invite.setProject(newProject()
+                .withName("project")
+                .withApplication(newApplication()
+                        .withId(applicationId)
+                        .build())
+                .build());
         setField(invite, "status", InviteStatus.SENT);
         setField(invite, "sentOn", sentOn);
         invite.setInviteOrganisation(inviteOrganisation);
@@ -274,6 +295,7 @@ public class ProjectPartnerInviteServiceImplTest {
         assertEquals(organisationName, resource.getOrganisationName());
         assertEquals(sentOn, resource.getSentOn());
         assertEquals("project", resource.getProjectName());
+        assertEquals(applicationId, resource.getApplicationId());
     }
 
     @Test
@@ -301,11 +323,11 @@ public class ProjectPartnerInviteServiceImplTest {
         assertTrue(result.isSuccess());
         assertEquals(inviteOrganisation.getOrganisation(), organisation);
         verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
-        verify(projectFinanceRowService, times(1)).createProjectFinance(project.getId(), organisationId);
+        verify(projectFinanceService, times(1)).createProjectFinance(project.getId(), organisationId);
         verify(viabilityWorkflowHandler, times(1)).projectCreated(any(), any());
         verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
         verify(viabilityWorkflowHandler, times(1)).viabilityNotApplicable(any(), any());
         verify(pendingPartnerProgressRepository, times(1)).save(any());
-        verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceRowService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
+        verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
     }
 }

@@ -50,13 +50,20 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-6054 Display completed projects in the previous tab
 ...
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
-Suite Setup       the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
+...
+...               IFS-6731 Enable new partners to enter their location when joining a project & MO has been assigned
+Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
 
 *** Test Cases ***
+Applicant able to update project location until GOL not generated
+    [Documentation]  IFS-6731
+    Given log in as a different user    ${Elbow_Grease_Lead_PM_Email}   ${short_password}
+    Then the user updates the project location in project setup    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details
+
 External user cannot view the GOL section before spend profiles have been approved
     [Documentation]    INFUND-6741
     [Tags]  HappyPath
@@ -216,6 +223,15 @@ PM should be able upload a file and then access the Send button
     When the user clicks the button/link             link = View the status of partners
     Then the user should see the element             jQuery = h1:contains("Project team status")
     And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(8)
+
+Applicant not able to update project location after GOL generated
+    [Documentation]  IFS-6731
+    Given the user navigates to the page                   ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details
+    And the user clicks the button/link                    link = Edit
+    When the user enters text to a text field              css = #postcode  AB2 1AB
+    And the user clicks the button/link                    css = button[type = "submit"]
+    Then the user should see a field and summary error     You cannot edit the organisation's project location because we have already generated the grant offer letter.
+    And the user clicks the button/link                    link = Project details
 
 Project finance cannot access the GOL before it is sent by PM
     [Documentation]    INFUND-7361
@@ -407,6 +423,7 @@ Internal user accepts signed grant offer letter
     Then the user should see the element   jQuery = .success-alert h2:contains("These documents have been approved.")
     When the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     Then the user should see the element   jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok
+    [Teardown]   Sleep   60s
 
 Project manager's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377  IFS-6021
@@ -478,10 +495,15 @@ Verify support users permissions in project setup tab
     And the user should see the element                                     jQuery = .success-alert h2:contains("These documents have been approved.")
 
 Support user should see completed project in previous tab
-   [Documentation]  IFS-6054
-   Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
-   And the user expands the section        Projects
-   Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
+    [Documentation]  IFS-6054
+    Given the user navigates to the page    ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
+    And the user expands the section        Projects
+    Then the user should see the element    jQuery = th:contains("${Elbow_Grease_Title}")
+
+Project is automatically sent to ACC if set up for the competition
+    [Documentation]  IFS-6786
+    Given log in as a different user         ${Elbow_Grease_Lead_PM_Email}   ${short_password}
+    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
 
 *** Keywords ***
 the user uploads a file
@@ -528,6 +550,12 @@ the user should see project setup compeletion status
     the user clicks the button/link      jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.ok a  # GOL
 
 the user should see live project on dashboard
+    the user clicks the button/link        id = dashboard-link-APPLICANT
     the user should not see the element    jQuery = .projects-in-setup ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQuery = .previous ul li a:contains("${Elbow_Grease_Title}")
     the user should see the element        jQUery = .task:contains("${Elbow_Grease_Title}") ~ .status:contains("Live project")
+
+Custom suite setup
+    Connect to database  @{database}
+    the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
+    execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`id`, `competition_id`, `send_by_default`) VALUES ('1', '${PROJECT_SETUP_COMPETITION}', '1');

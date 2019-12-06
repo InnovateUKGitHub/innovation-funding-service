@@ -1,11 +1,14 @@
 ext.activeProfile="environment"
 
-ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_finance_test"
+def jdbcUrl = "jdbc:mysql://127.0.0.1:3306"
+def mariaDbFlywayWorkaround = "characterEncoding=utf8&useMysqlMetadata=true"
+
+ext.testIfsDatasourceUrl="$jdbcUrl/ifs_finance_test?$mariaDbFlywayWorkaround"
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
 
-project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
-project.ext['flyway.schemas']='ifs_finance_test'
-project.ext['flyway.user']="ifs"
-project.ext['flyway.password']="ifs"
-project.ext['flyway.table']="schema_version"
+ext['flyway.url']="$jdbcUrl?$mariaDbFlywayWorkaround"
+ext['flyway.schemas']='ifs_finance_test'
+ext['flyway.user']="ifs"
+ext['flyway.password']="ifs"
+ext['flyway.table']="schema_version"

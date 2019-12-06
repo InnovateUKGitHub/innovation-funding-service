@@ -189,7 +189,7 @@ the user checks the Appendix guidance
     the user should see the element           jQuery = p:contains("It must be less than 10MB in size.")
 
 User verifies if uploaded document can be viewed
-     the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${academic_applicaton_id}
+     the user navigates to the page            ${SERVER}/management/competition/${openCompetitionBusinessRTO}/application/${application_id}
      the user expands the section              5. Technical approach
      open pdf link                             ${5mb_pdf}
 

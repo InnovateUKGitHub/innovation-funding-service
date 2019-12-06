@@ -35,7 +35,7 @@ if (enabled) {
     deploy.mustRunAfter ":docker:ifs-mysql:eu-grant-registration-database:deploy"
 }
 
-createContainer.networkAliases=["ifs-eu-grant-registration-data-service"]
+createContainer.networkAliases = ["ifs-eu-grant-registration-data-service"]
 
 afterEvaluate {
     ext {
@@ -75,7 +75,7 @@ prepareDockerBaseInput {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile 'mysql:mysql-connector-java'
+    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
     compile "com.opencsv:opencsv:4.3.2"
 
     compile project(':ifs-commons')
@@ -88,12 +88,12 @@ dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile 'com.h2database:h2'
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-resources:eu-grant-registration-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources:eu-grant-registration-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
 
     testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }
