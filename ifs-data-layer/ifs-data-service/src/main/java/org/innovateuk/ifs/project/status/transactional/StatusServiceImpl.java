@@ -46,6 +46,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
@@ -220,9 +221,17 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-
-        int expectedNumberOfDocuments = expectedNumberOfDocuments(project);
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
+        if (!project.isCollaborativeProject()) {
+            projectDocuments = projectDocuments.stream()
+                    .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getCompetitionDocument().getTitle()))
+                    .collect(toList());
+            expectedDocuments = expectedDocuments.stream()
+                    .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getTitle()))
+                    .collect(toList());
+        }
         int actualNumberOfDocuments = projectDocuments.size();
+        int expectedNumberOfDocuments = expectedDocuments.size();
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
                 .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
@@ -236,20 +245,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
 
         return PENDING;
-    }
-
-    private int expectedNumberOfDocuments(Project project) {
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
-
-        int expectedNumberOfDocuments = expectedDocuments.size();
-        if (partnerOrganisations.size() == 1) {
-            List<String> documentNames = expectedDocuments.stream().map(CompetitionDocument::getTitle).collect(Collectors.toList());
-            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
-                expectedNumberOfDocuments = expectedDocuments.size() - 1;
-            }
-        }
-        return expectedNumberOfDocuments;
     }
 
     private ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {

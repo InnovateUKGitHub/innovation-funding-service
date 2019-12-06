@@ -1413,6 +1413,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         List<ProjectDocumentResource> projectDocumentResources = newProjectDocumentResource()
                 .withStatus(document1Status, document2Status)
+                .withCompetitionDocument(projectDocumentConfig.get(0), projectDocumentConfig.get(1))
                 .build(2);
 
         project = newProjectResource()
@@ -1428,7 +1429,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER).build())));
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-
 
         return viewModel;
     }
