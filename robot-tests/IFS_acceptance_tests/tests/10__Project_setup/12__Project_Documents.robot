@@ -111,9 +111,9 @@ Lead partner can view both documents
     Given Log in as a different user                lewis.poole@vitruvius.example.com  ${short_password}
     When the user navigates to the page             ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link             link = Collaboration agreement
-    Then open pdf link                              jQuery = a:contains(${valid_pdf}(opens in a new window))
+    Then open pdf link                              jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page            Back to document overview  Exploitation plan
-    And open pdf link                               jQuery = a:contains(${valid_pdf}(opens in a new window))
+    And open pdf link                               jQuery = a:contains("${valid_pdf} (opens in a new window)")
     [Teardown]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}
 
 Lead partner does not have the option to submit the documents
@@ -139,9 +139,9 @@ Non-lead partner can view both documents
     Given log in as a different user        &{collaborator1_credentials_bd}
     When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user goes to documents page     Documents  Collaboration agreement
-    And open pdf link                       jQuery = a:contains(${valid_pdf}(opens in a new window))
+    And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page    Return to documents  Exploitation plan
-    Then open pdf link                      jQuery = a:contains(${valid_pdf}(opens in a new window))
+    Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 Non-lead partner cannot remove or submit right
     [Documentation]  INFUND-3013
@@ -155,9 +155,9 @@ PM can view both documents
     Given log in as a different user         &{lead_applicant_credentials_bd}
     And the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link     link = Collaboration agreement
-    Then the user should see the element     link = ${valid_pdf}
+    Then the user should see the element     jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page     Back to document overview  Exploitation plan
-    Then the user should see the element     link = ${valid_pdf}
+    Then the user should see the element     jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM can remove the Exploitation plan
     [Documentation]  INFUND-3011
@@ -171,7 +171,7 @@ Non-lead partner can still view the Collaboration agreement
     [Setup]    log in as a different user            &{collaborator1_credentials_bd}
     When the user navigates to the page              ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user goes to documents page              Documents  Collaboration agreement
-    Then the user should see the element             link = ${valid_pdf}
+    Then the user should see the element             jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM can remove the first document
     [Documentation]    INFUND-3011
@@ -180,7 +180,7 @@ PM can remove the first document
     Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user goes to documents page         Documents  Collaboration agreement
     When the user clicks the button/link        name = deleteDocument
-    Then the user should not see the element    link = ${valid_pdf}
+    Then the user should not see the element    jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 Non-lead partner cannot view either document once removed
     [Documentation]    INFUND-4252
@@ -188,9 +188,9 @@ Non-lead partner cannot view either document once removed
     [Setup]    log in as a different user         &{collaborator1_credentials_bd}
     When the user navigates to the page           ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link           link = Collaboration agreement
-    Then the user should not see the element      link = ${valid_pdf}
+    Then the user should not see the element      jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page          Back to document overview  Exploitation plan
-    Then the user should not see the element      link = ${valid_pdf}
+    Then the user should not see the element      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
@@ -219,9 +219,9 @@ PM can still view both documents after submitting
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link    link = Collaboration agreement
-    And open pdf link                       jQuery = a:contains(${valid_pdf}(opens in a new window))
+    And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page    Return to documents  Exploitation plan
-    Then open pdf link                      jQuery = a:contains(${valid_pdf}(opens in a new window))
+    Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -242,9 +242,9 @@ Lead partner cannot remove the documents after submission by PM
 Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]
-    Given open pdf link                     jQuery = a:contains(${valid_pdf}(opens in a new window))
+    Given open pdf link                     jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page    Return to documents  Collaboration agreement
-    Then open pdf link                      jQuery = a:contains(${valid_pdf}(opens in a new window))
+    Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
@@ -259,9 +259,9 @@ Non-lead partner cannot remove the documents after submission by PM
 Non-lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
     [Tags]
-    Given open pdf link                         jQuery = a:contains(${valid_pdf}(opens in a new window))
+    Given open pdf link                         jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page        Return to documents  Collaboration agreement
-    Then open pdf link                          jQuery = a:contains(${valid_pdf}(opens in a new window))
+    Then open pdf link                          jQuery = a:contains("${valid_pdf} (opens in a new window)")
     And the user navigates to the page          ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user clicks the button/link         link = View the status of partners
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
@@ -275,9 +275,9 @@ CompAdmin can see uploaded files
     And the user clicks the button/link     link = ${PS_Competition_Name}
     When the user navigates to the page     ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link     link = Collaboration agreement
-    And open pdf link                       jQuery = a:contains(${valid_pdf}(opens in a new window))
+    And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page    Documents  Exploitation plan
-    Then open pdf link                      jQuery = a:contains(${valid_pdf}(opens in a new window))
+    Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 CompAdmin rejects both documents
     [Documentation]    INFUND-4620
@@ -312,10 +312,10 @@ Project Manager can remove the offending documents
     Given the user navigates to the page      ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link      link = Collaboration agreement
     And the user clicks the button/link       name = deleteDocument
-    Then the user should not see the element  link = ${valid_pdf}
+    Then the user should not see the element  jQuery = a:contains("${valid_pdf} (opens in a new window)")
     When the user goes to documents page      Back to document overview  Exploitation plan
     And the user clicks the button/link       name = deleteDocument
-    Then the user should not see the element  link = ${valid_pdf}
+    Then the user should not see the element  jQuery = a:contains("${valid_pdf} (opens in a new window)")f
 
 After rejection, non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-7342
@@ -405,7 +405,7 @@ CompAdmin sees uploaded file and approves it
     Given the user navigates to the page        ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/document/all
     Then the user should not see the element    link = Collaboration agreement
     And the user clicks the button/link         link = Exploitation plan
-    When open pdf link                          jQuery = a:contains(${valid_pdf}(opens in a new window))
+    When open pdf link                          jQuery = a:contains("${valid_pdf} (opens in a new window)")
     And internal user approve uploaded documents
 
 Sole applicant can see documents approval
@@ -438,7 +438,7 @@ Partners can see both documents rejected
     the user clicks the button/link      link = Collaboration agreement
     the user should see the element      jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
     the user should not see the element  jQuery = label:contains("Upload")
-    the user clicks the button/link      link = Return to documents
+    the user clicks the button/link      link = Back to document overview
     the user clicks the button/link      link = Exploitation plan
     the user should see the element      jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
     the user should not see the element  jQuery = label:contains("Upload")
