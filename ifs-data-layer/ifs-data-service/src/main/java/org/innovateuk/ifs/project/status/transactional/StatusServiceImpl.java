@@ -43,7 +43,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -144,7 +143,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private boolean projectContainsStage(Project project, ProjectSetupStage projectSetupStage) {
         return project.getApplication().getCompetition().getProjectStages().stream()
-                .anyMatch(stage -> stage.getProjectSetupStage().equals(projectSetupStage);
+                .anyMatch(stage -> stage.getProjectSetupStage().equals(projectSetupStage));
     }
 
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, PartnerOrganisation partnerOrganisation) {
