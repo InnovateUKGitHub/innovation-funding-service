@@ -5,10 +5,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -26,6 +23,11 @@ public class SectionController {
     @GetMapping("/{sectionId}")
     public RestResult<SectionResource> getById(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getById(sectionId).toGetResponse();
+    }
+
+    @GetMapping("/get-child-sections/{parentId}")
+    public RestResult<List<SectionResource>> getChildSectionsByParentId(@PathVariable long parentId) {
+        return sectionService.getChildSectionsByParentId(parentId).toGetResponse();
     }
 
     @GetMapping("/get-next-section/{sectionId}")
