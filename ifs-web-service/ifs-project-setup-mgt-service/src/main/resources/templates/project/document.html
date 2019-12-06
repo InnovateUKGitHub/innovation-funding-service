@@ -41,7 +41,6 @@
                     <a th:href="@{/project/{projectId}/document/config/{documentConfigId}/download(projectId=${model.projectId}, documentConfigId=${model.documentConfigId})}"
                        class="govuk-link"
                        target="_blank"
-                       aria-describedby="file-uploaded-hint"
                        th:text="|${model.fileDetails.filename} (opens in a new window)|">The-uploaded-file-example.pdf</a>
                 </p>
             </th:block>
