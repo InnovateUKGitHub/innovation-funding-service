@@ -312,11 +312,7 @@
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
             </th:block>
 
-            <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary"
-                    name="save-and-continue">
-                Return to finance checks
-            </button>
-            <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button-secondary"
+            <a class="button-secondary"
                th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}"
                th:classappend="${summaryModel.isApproved() ? 'govuk-!-margin-top-9' : ''}">Return to finance checks</a>
         </form>
