@@ -126,19 +126,14 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                     );
             case DOCUMENTS:
                 boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
-                List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(project.getId());
-                boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         isProjectManager ? "You must upload supporting documents to be reviewed."
                                 : "The Project Manager must upload supporting documents to be reviewed.",
                         format("/project/%d/document/all", project.getId()),
                         sectionStatus.documentsSectionStatus(
                                 isProjectManager,
-                                getCompetitionDocuments(
-                                        competition,
-                                        collaborationAgreementRequired
-                                ),
-                                project.getProjectDocuments()
+                                project,
+                                competition
                         ),
                         statusAccessor.canAccessDocumentsSection(resolve(organisationRequest))
                 );
@@ -211,19 +206,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());
-    }
-
-
-    private List<CompetitionDocumentResource> getCompetitionDocuments(CompetitionResource competition, boolean collaborationAgreementRequired) {
-
-        List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
-
-        if (!collaborationAgreementRequired) {
-            competitionDocuments.removeIf(
-                    document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
-        }
-
-        return competitionDocuments;
     }
 
     private boolean isLeadPartner(ProjectTeamStatusResource teamStatus, OrganisationResource organisation) {

@@ -209,11 +209,11 @@ Ifs Admin is able to add a new partner organisation
 
 Two organisations with the same name are not able to join
     [Documentation]  IFS-6485  IFS-6505  IFS-6724
-        [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
-        Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
-        When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
-        Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  innovate  INNOVATE LTD
-        [Teardown]  the user navigates to the page                 ${LOGIN_URL}
+    [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
+    Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
+    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  innovate  INNOVATE LTD
+    [Teardown]  the user navigates to the page                 ${LOGIN_URL}
 
 Ifs Admin is able to remove a partner organisation
     [Documentation]  IFS-6485
@@ -290,7 +290,8 @@ New partner can join project
 
 New partner can provide bank details
     [Documentation]  IFS-6871
-    Given navigate to external finance contact page, choose finance contact and save  127  financeContact1  28
+    ${organisationId} =  get organisation id by name  NOMENSA LTD
+    Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  28
     When the applicant fills in bank details
     Then internal and external users see correct status
 
@@ -314,6 +315,13 @@ The internal users checks for activity logs after partner added/removed
     Then internal user should see entries in activity log after partner org added/removed
     And log in as a different user       &{ifs_admin_user_credentials}
     And internal user should see entries in activity log after partner org added/removed
+
+lead able to submit only exploitation plan when all partners removed from project
+    [Documentation]  IFS-6891
+    Given lead submits project documents          ${project_ids["PSC application 20"]}
+    When the internal user removed all partners
+    And lead uploads the exploitation plan
+    Then the internal user approves the exploitation plan
 
 *** Keywords ***
 the same organisation isnt able to join the project
@@ -477,15 +485,19 @@ The user creates a new account
     the user verifies their account     ${email}
     the user clicks the button/link     link = Sign in
 
-the applicants completes the project setup details
+lead submits project documents
+    [Arguments]  ${projectID}
     log in as a different user          ${leadApplicantEmail}   ${short_password}
-    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}/details/project-address
+    the user navigates to the page      ${server}/project-setup/project/${projectID}/details/project-address
     the user enter the Correspondence address
     the user clicks the button/link     link = Return to set up your project
     the user completes the project team details
-    PM uploads the project documents    ${addNewPartnerOrgProjID}
-    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}//document/all
-    PM submits both documents           ${addNewPartnerOrgProjID}
+    PM uploads the project documents    ${projectID}
+    the user navigates to the page      ${server}/project-setup/project/${projectID}/document/all
+    PM submits both documents           ${projectID}
+
+the applicants completes the project setup details
+    lead submits project documents      ${addNewPartnerOrgProjID}
     applicant submits the bank details
     log in as a different user          ${partnerApplicantEmail}   ${short_password}
     the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}/team
@@ -637,9 +649,11 @@ the user edits the org size
 
 Custom suite setup
     The guest user opens the browser
+    Connect to database  @{database}
 
 Custom suite teardown
     The user closes the browser
+    Disconnect from database
 
 the internal partner does not see link for added partner
     the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
@@ -684,3 +698,30 @@ the user removes a partner organisation
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
     the user should not see the element         jQuery = h2:contains(${orgName})
+
+the internal user removed all partners
+    log in as a different user                       &{internal_finance_credentials}
+    the user navigates to the page                   ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 20"]}/project/${project_ids["PSC application 20"]}/team
+    the user removes a partner organisation           Red Planet
+    the user removes a partner organisation           SmithZone
+
+lead uploads the exploitation plan
+    log in as a different user          ${leadApplicantEmail}   ${short_password}
+    the user navigates to the page      ${server}/project-setup/project/${project_ids["PSC application 20"]}/document/all
+    the user clicks the button/link     link = Exploitation plan
+    the user clicks the button/link     name = deleteDocument
+    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+    the user clicks the button/link     link = Set up your project
+    the user should see the element     jQuery = li:contains("Documents") span:contains("Awaiting review")
+
+the internal user approves the exploitation plan
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/project-setup-management/project/${project_ids["PSC application 20"]}/document/all
+    the user clicks the button/link     link = Exploitation plan
+    internal user approve uploaded documents
+    the user clicks the button/link     link = Return to documents
+    the user navigates to the page      ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 20"]}/status
+    the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok
