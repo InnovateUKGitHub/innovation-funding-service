@@ -43,7 +43,6 @@ Resource          PS_Common.robot
 *** Variables ***
 
 ${PROJ_WITH_SOLE_APPLICANT}  ${project_ids["High-speed rail and its effects on soil compaction"]}
-${RollingStockCompId}        ${competition_ids["Rolling stock future developments"]}
 ${USER_BECKY_ORG_PUBSECTOR}  becky.mason@gmail.com
 ${newOrgRejectedDocumentMessagePM}  We have marked this document as incomplete because you have made a change to your project team.
 ${newOrgRejectedDocumentMessagePartner}  We have marked this document as incomplete because a change has been made to your project team.
@@ -479,7 +478,7 @@ compAdmin approves all documents
     compAdmin approves uploaded documents
     the user goes to documents page        Return to documents  Exploitation plan
     compAdmin approves uploaded documents
-    the user navigates to the page        ${SERVER}/project-setup-management/competition/${RollingStockCompId}/project/${Grade_Crossing_Project_Id}/team
+    the user navigates to the page        ${SERVER}/project-setup-management/competition/${PS_Competition_Id}/project/${Grade_Crossing_Project_Id}/team
 
 the user navigates to the competition
     the user navigates to the page      ${COMP_MANAGEMENT_PROJECT_SETUP}
