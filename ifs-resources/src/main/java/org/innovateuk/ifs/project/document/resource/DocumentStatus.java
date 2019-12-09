@@ -8,5 +8,6 @@ public enum DocumentStatus {
     UPLOADED,
     SUBMITTED,
     APPROVED,
-    REJECTED
+    REJECTED,
+    REJECTED_DUE_TO_TEAM_CHANGE
 }
