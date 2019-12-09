@@ -2,17 +2,13 @@ package org.innovateuk.ifs.project.financechecks.service;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -64,9 +60,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
-    private ProjectFinanceRowService projectFinanceRowService;
-
-    @Autowired
     private StatusService statusService;
 
     @Autowired
@@ -79,27 +72,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FinanceCheckQueriesService financeCheckQueriesService;
 
     @Autowired
-    private FormInputRepository formInputRepository;
-
-    @Autowired
-    private FormInputResponseRepository formInputResponseRepository;
-
-    @Autowired
-    private CompetitionSetupTransactionalService competitionSetupTransactionalService;
-
-    @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private ApplicationFinanceService financeService;
-
-    @Autowired
     private ProjectFinanceService projectFinanceService;
 
-    private BigDecimal percentDivisor = new BigDecimal("100");
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -143,7 +125,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
-        ServiceResult<Double> researchParticipationPercentage = financeService.getResearchParticipationPercentageFromProject(project.getId());
+        ServiceResult<Double> researchParticipationPercentage = projectFinanceService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
@@ -165,8 +147,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                                 BigDecimal.valueOf(projectFinance.getGrantClaimPercentage()),
                                 projectFinance.getTotalFundingSought(),
                                 projectFinance.getTotalOtherFunding(),
-                                projectFinance.getTotalContribution())
+                                projectFinance.getTotalContribution(),
+                                hasAnyApplicationFinances(application, projectFinance))
         );
+    }
+
+    private boolean hasAnyApplicationFinances(Application application, ProjectFinanceResource projectFinance) {
+        return applicationFinanceRepository.existsByApplicationIdAndOrganisationId(application.getId(), projectFinance.getOrganisation());
     }
 
     private boolean getBankDetailsApprovalStatus(Long projectId) {

@@ -237,7 +237,7 @@ the academic fills in the project costs
     The user enters text to a text field  css = [name$="exceptionsStaff"]  123
     The user enters text to a text field  css = [name$="exceptionsOtherCosts"]  7890
     The user enters text to a text field  css = input[name$="tsbReference"]  L33t
-    Textfield Value Should Be             id = total  £32,698
+    the user should see the element       jQuery = [data-mirror^="#total"]:contains("£32,698")
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       link = ${5mb_pdf}
     the user selects the checkbox         termsAgreed
@@ -284,6 +284,23 @@ the user checks Your Funding section
     ${Research_category_selected} =   run keyword and return status without screenshots    Element Should Not Be Visible   jQuery = a:contains("research category")
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
+
+the user checks for funding level guidance at application level
+    the user clicks the button/link     link = Your funding
+    the user clicks the button/link     jQuery = button:contains("Edit your funding")
+    the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
+    the user clicks the button/link     link = competition's rules (opens in a new window)
+    the user closes the last opened tab
+    the user clicks the button/link     jQuery = button:contains("Mark as complete")
+    the user clicks the button/link     link = Back to application overview
+
+the user checks for funding level guidance at PS level
+    the user clicks the button/link     link = Your funding
+    the user selects the radio button   requestingFunding   true
+    the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
+    the user clicks the button/link     link = competition's rules (opens in a new window)
+    the user closes the last opened tab
+    the user clicks the button/link     link = Back to join project
 
 the user selects research area
     [Arguments]  ${Application}

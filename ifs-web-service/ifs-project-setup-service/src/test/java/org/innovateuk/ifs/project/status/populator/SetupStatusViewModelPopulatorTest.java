@@ -305,6 +305,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         build();
 
         when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationResource.getId());
+        when(projectRestService.existsOnApplication(project.getId(), organisationResource.getId())).thenReturn(restSuccess(true));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
@@ -848,6 +850,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         build();
 
         when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationResource.getId());
+        when(projectRestService.existsOnApplication(project.getId(), organisationResource.getId())).thenReturn(restSuccess(true));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerFoundResult);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
@@ -1409,6 +1413,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         List<ProjectDocumentResource> projectDocumentResources = newProjectDocumentResource()
                 .withStatus(document1Status, document2Status)
+                .withCompetitionDocument(projectDocumentConfig.get(0), projectDocumentConfig.get(1))
                 .build(2);
 
         project = newProjectResource()
@@ -1424,7 +1429,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withRole(PROJECT_MANAGER).build())));
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
-
 
         return viewModel;
     }
@@ -1488,6 +1492,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .build();
 
         when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationResource.getId());
+        when(projectRestService.existsOnApplication(project.getId(), organisationResource.getId())).thenReturn(restSuccess(true));
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerResult);
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));

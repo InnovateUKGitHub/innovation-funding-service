@@ -1,10 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-
-
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
@@ -43,7 +38,7 @@ public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService im
     }
 
     private void rejectProjectDocuments(long projectId) {
-        projectDocumentRepository.findAllByProjectId(projectId).stream()
-            .filter(document -> !document.getStatus().equals(DocumentStatus.REJECTED)).forEach(document -> document.setStatus(DocumentStatus.REJECTED));
+        projectDocumentRepository.findAllByProjectId(projectId)
+                .forEach(document -> document.setStatus(DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE));
     }
 }

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.SUBCONTRACTING_COSTS;
 
@@ -38,8 +39,8 @@ public class SubContractingCostHandler extends FinanceRowHandler<SubContractingC
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return SUBCONTRACTING_COSTS;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(SUBCONTRACTING_COSTS);
     }
 
     private SubContractingCost buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){

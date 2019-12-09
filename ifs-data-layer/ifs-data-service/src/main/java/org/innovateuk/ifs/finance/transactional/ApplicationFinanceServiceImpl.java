@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.finance.domain.GrowthTable;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
-import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
@@ -25,7 +23,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +35,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -60,9 +54,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
-
-    @Autowired
-    private ProjectFinanceHandler projectFinanceHandler;
 
     @Autowired
     private FileEntryRepository fileEntryRepository;
@@ -100,11 +91,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     @Override
     public ServiceResult<Double> getResearchParticipationPercentage(long applicationId) {
         return getResearchPercentage(applicationId).andOnSuccessReturn(BigDecimal::doubleValue);
-    }
-
-    @Override
-    public ServiceResult<Double> getResearchParticipationPercentageFromProject(long projectId) {
-        return getResearchPercentageFromProject(projectId).andOnSuccessReturn(BigDecimal::doubleValue);
     }
 
     @Override
@@ -206,27 +192,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     }
 
     @Override
-    public ServiceResult<Boolean> organisationSeeksFunding(long projectId, long applicationId, long organisationId) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
-                applicationId, organisationId);
-
-        if (applicationFinance != null) {
-            OrganisationType organisationType = organisationRepository.findById(organisationId).get().getOrganisationType();
-
-            if (isAcademic(organisationType)) {   // Academic organisations will always be funded.
-                return serviceSuccess(true);
-            } else {
-                //TODO: IFS-3822 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setFinanceDetails.  We should find a better way to handle this.
-                ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-                setFinanceDetails(organisationType, applicationFinanceResource, applicationFinance.getApplication().getCompetition());
-                return serviceSuccess(applicationFinanceResource.getGrantClaimPercentage() > 0);
-            }
-        } else {
-            return serviceFailure(new Error(PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST, asList(applicationId, organisationId)));
-        }
-    }
-
-    @Override
     public ServiceResult<Boolean> collaborativeFundingCriteriaMet(long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             Competition competition = application.getCompetition();
@@ -243,10 +208,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
                 return serviceSuccess(true);
             }
         });
-    }
-
-    private ServiceResult<BigDecimal> getResearchPercentageFromProject(Long projectId) {
-        return find(projectFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
     }
 
     private ServiceResult<BigDecimal> getResearchPercentage(Long applicationId) {

@@ -45,4 +45,6 @@ public interface SectionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(final Long competitionId);
 
+    @PreAuthorize("hasPermission(#parentId, 'org.innovateuk.ifs.form.resource.SectionResource', 'READ')")
+    ServiceResult<List<SectionResource>> getChildSectionsByParentId(long parentId);
 }
