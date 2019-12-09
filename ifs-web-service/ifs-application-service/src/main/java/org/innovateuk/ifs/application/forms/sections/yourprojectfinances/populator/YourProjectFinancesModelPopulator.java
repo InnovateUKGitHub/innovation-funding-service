@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -48,16 +47,14 @@ public class YourProjectFinancesModelPopulator {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     public YourProjectFinancesViewModel populate(long applicationId, long sectionId, long organisationId) {
-        SectionResource yourFinances = sectionRestService.getById(sectionId).getSuccess();
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<Long> completedSections = sectionStatusRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
-        List<YourFinancesRowViewModel> rows = yourFinances.getChildSections().stream()
-                .map(sectionRestService::getById)
-                .map(RestResult::getSuccess)
+        List<YourFinancesRowViewModel> rows = sectionRestService.getChildSectionsByParentId(sectionId).getSuccess()
+                .stream()
                 .filter(subSection -> !isSectionExcluded(subSection, competition, organisation))
                 .map(subSection ->
                         new YourFinancesRowViewModel(subSection.getName(),

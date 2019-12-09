@@ -78,14 +78,6 @@ public class FinanceChecksEligibilityViewModel {
         return canEditAcademicFinances;
     }
 
-    public boolean isShowSaveAndContinueButton() {
-        return !isApproved() && projectIsActive;
-    }
-
-    public boolean isShowBackToFinanceCheckButton() {
-        return isApproved() || !projectIsActive;
-    }
-
     public boolean isShowApprovalMessage() {
         return isApproved();
     }

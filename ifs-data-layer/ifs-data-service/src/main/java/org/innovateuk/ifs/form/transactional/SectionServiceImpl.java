@@ -135,4 +135,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return serviceSuccess(simpleMap(sectionRepository.findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(competitionId), sectionMapper::mapToResource));
     }
 
+    @Override
+    public ServiceResult<List<SectionResource>> getChildSectionsByParentId(long parentId) {
+        return serviceSuccess(getSection(parentId).getSuccess()
+                .getChildSections().stream()
+                .map(sectionMapper::mapToResource)
+                .collect(toList()));
+    }
 }
