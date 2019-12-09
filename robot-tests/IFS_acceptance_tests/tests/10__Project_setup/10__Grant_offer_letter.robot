@@ -509,7 +509,7 @@ Project is automatically sent to ACC if set up for the competition
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}
-    choose file    name = ${name}    ${upload_folder}/${file}
+    the user uploads the file    name = ${name}    ${file}
     Wait Until Page Does Not Contain Without Screenshots    Uploading
 
 the user is able to see the Grant Offer letter page

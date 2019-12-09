@@ -152,7 +152,7 @@ the subtotals should be correctly updated
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
-    Choose File    css = .upload-section input    ${UPLOAD_FOLDER}/${file_name}
+    the user uploads the file    css = .upload-section input    ${file_name}
     Wait Until Page Does Not Contain Without Screenshots    Uploading
     the user should see the element   css = .remove-file
 

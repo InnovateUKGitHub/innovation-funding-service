@@ -14,7 +14,7 @@ the user can remove the uploaded file
     Click Button    name=${name}
     Wait Until Page Does Not Contain Without Screenshots    Removing
     Wait Until Page Does Not Contain Without Screenshots    Remove
-    the user clicks the button/link    jQuery = .button-secondary:contains("Upload")
+    Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
 
 #Download
