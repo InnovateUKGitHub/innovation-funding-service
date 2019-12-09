@@ -22,7 +22,7 @@ Documentation     INFUND-550 As an assessor I want the ‘Assessment summary’ 
 ...               INFUND-3743 As an Assessor I want to see all the assessments that I have already submitted in this competition so that I can see what I have done already.
 ...
 ...               INFUND-3719 As an Assessor and I have accepted applications to assess within a competition, I can see progress on my dashboard so I can keep track of my work
-Suite Setup       The user logs-in in new browser  &{assessor2_credentials}
+Suite Setup       The user logs-in in new browser  apc-assessor-user1@example.com  Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -32,9 +32,9 @@ Resource          ../../07__Assessor/Assessor_Commons.robot
 Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]  HappyPath
-    Given The user clicks the button/link                    link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Given The user clicks the button/link                    link = Val is awesome
     And the user should see that the element is disabled    id = submit-assessment-button
-    When the user clicks the button/link                     link = Intelligent Building
+    When the user clicks the button/link                     link = Val is awesome - Application 3
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Review and complete your assessment")
     Then the user should see the element                    jQuery = h2:contains("Review assessment")
     And the user should see the element                     jQuery = legend:contains("Do you believe that this application is suitable for funding?")
@@ -65,8 +65,8 @@ Summary: Questions should show without score
 Summary:Questions should show as complete
     [Documentation]    INFUND-550
     [Tags]  HappyPath
-    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
-    Given The user clicks the button/link                           link = Intelligent Building
+    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/33
+    Given The user clicks the button/link                           link = Val is awesome - Application 3
     And the assessor adds score and feedback for every question     11   # 11 is the number of questions to iterate through
     When the user clicks the button/link                            link = Review and complete your assessment
     Then the user should see the text in the element                jQuery = button:contains("Scope")    Complete
@@ -145,7 +145,7 @@ User Saves the Assessment as Recommended
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712  INFUND-3726  INFUND-6040  INFUND-3724
     [Tags]  HappyPath
-    Given The user clicks the button/link                    link = Park living
+    Given The user clicks the button/link                    link = Val is awesome - Application 1
     And the assessor adds score and feedback for every question  11  # value 11: is the number of questions to loop through to submit feedback
     And the user clicks the button/link                      jQuery = .govuk-button:contains("Review and complete your assessment")
     When the user selects the radio button                   fundingConfirmation    false
@@ -156,7 +156,7 @@ User Saves the Assessment as Not Recommended
 Submit Assessments
     [Documentation]    INFUND-5739  INFUND-3743  INFUND-6358
     [Tags]  HappyPath
-    Given the user should see the element          jQuery = .in-progress li:nth-child(7):contains("Intelligent Building")
+    Given the user should see the element          jQuery = .in-progress li:nth-child(3):contains("Val is awesome - Application 3")
     And the user should see that the element is disabled    id = submit-assessment-button
     When the user submits the assessment
     Then the user should see correct details after assessment submitted
@@ -170,7 +170,7 @@ Progress of the applications in Dashboard
     ${EXPECTED_TOTAL_PENDING} =     Get Length     ${PENDING_LIST}
     When The user navigates to the page            ${ASSESSOR_DASHBOARD_URL}
     Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
-    And the user should see the element             jQuery = h3:contains("Sustainable living models for the future") ~ div:contains("${EXPECTED_TOTAL_PENDING} applications awaiting acceptance | ${EXPECTED_TOTAL_ACCEPTED} applications to assess")
+    And the user should see the element             jQuery = h3:contains("Val is awesome") ~ div:contains("${EXPECTED_TOTAL_ACCEPTED} applications to assess")
 
 *** Keywords ***
 the word count should be correct
@@ -178,7 +178,7 @@ the word count should be correct
     the user should see the element     jQuery = span:contains("${wordCount}")
 
 The user accepts the juggling is word that sound funny application
-    The user clicks the button/link             link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    The user clicks the button/link             link = Val is awesome
     The user clicks the button/link             jQuery = a:contains("Accept or reject")
     The user should see the element             jQUery = h1:contains("Accept application")
     And the user selects the radio button       assessmentAccept  true
@@ -195,8 +195,7 @@ the application should have the correct status
 
 the progress of the applications should be correct
     [Arguments]    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
-    ${TOTAL_PENDING} =     Get text    css = .action-required .pending-applications    #gets the pending apps
-    Should Be Equal As Integers    ${TOTAL_PENDING}    ${EXPECTED_TOTAL_PENDING}
+    Should Be Equal As Integers    0    ${EXPECTED_TOTAL_PENDING}
     ${TOTAL_ACCEPTED} =     Get text    css = .action-required .accepted-applications    #gets the total number
     Should Be Equal As Integers    ${TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_ACCEPTED}
 
@@ -224,25 +223,25 @@ the user enter text more than maximum word count limit
 the user should see correct details
     the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
     the user should see the element                     jQuery = .status-msg:contains("Assessed")
-    the user should see the element                     css = li:nth-child(7) .positive
-    the user should see the element                     css = li:nth-child(7) input[type = "checkbox"] ~ label
-    the application should have the correct status      css = .progress-list li:nth-child(7)    Assessed
+    the user should see the element                     css = li:nth-child(3) .positive
+    the user should see the element                     css = li:nth-child(3) input[type = "checkbox"] ~ label
+    the application should have the correct status      css = .progress-list li:nth-child(3)    Assessed
 
 the user should see assessment as not recommended details
-    The user should see the element                      css = li:nth-child(6) .negative
-    the user should see the element                      css = li:nth-child(6) input[type = "checkbox"] ~ label
-    the application should have the correct status       css = .progress-list li:nth-child(6)    Assessed
-    the application should have the correct status       css = .progress-list li:nth-child(7)    Assessed
+    The user should see the element                      css = li:nth-child(2) .negative
+    the user should see the element                      css = li:nth-child(2) input[type = "checkbox"] ~ label
+    the application should have the correct status       css = .progress-list li:nth-child(2)    Assessed
+    the application should have the correct status       css = .progress-list li:nth-child(3)    Assessed
 
 the user should see correct details after assessment submitted
     the application should have the correct status    css = div.submitted    Submitted assessment
-    the user should see the element                   css = li:nth-child(6) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
-    the user should see the element                   jQuery = h4:contains("Intelligent Building")
+    the user should see the element                   css = li:nth-child(2) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
+    the user should see the element                   jQuery = h4:contains("Val is awesome - Application 3")
     the user should see the element                   jQuery = strong:contains("98")
-    the user should not see the element               link = Intelligent Building
+    the user should not see the element               link = Val is awesome - Application 3
 
 the user submits the assessment
-    the user clicks the button/link            css = .in-progress li:nth-child(7) input[type = "checkbox"] ~ label
+    the user clicks the button/link            css = .in-progress li:nth-child(3) input[type = "checkbox"] ~ label
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
     the user clicks the button/link            jQuery = button:contains("Cancel")
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
