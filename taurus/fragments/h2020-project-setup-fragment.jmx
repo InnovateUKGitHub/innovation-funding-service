@@ -1366,13 +1366,20 @@
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                   <stringProp name="Argument.name">_csrf</stringProp>
                 </elementProp>
+                <elementProp name="submit-app-details" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value"></stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">submit-app-details</stringProp>
+                </elementProp>
               </collectionProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain"></stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/project-setup-management/project/${project_id}/finance-check/generate</stringProp>
+            <stringProp name="HTTPSampler.path">/project-setup-management/project/${project_id}/finance-check</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1952,7 +1959,7 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload signed GOL" enabled="true">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
-                <elementProp name="testing.pdf" elementType="HTTPFileArg">
+                <elementProp name="resources/testing.pdf" elementType="HTTPFileArg">
                   <stringProp name="File.path">resources/testing.pdf</stringProp>
                   <stringProp name="File.paramname">signedGrantOfferLetter</stringProp>
                   <stringProp name="File.mimetype">application/pdf</stringProp>
