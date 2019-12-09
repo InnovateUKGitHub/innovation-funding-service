@@ -82,6 +82,9 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               IFS-2313 Project Setup: Ability to edit project duration
 ...
 ...               IFS-6706 Enable Project Finance to adjust academic finances in the Eligibility section
+...
+...               IFS-6893 Academic users can't see their finances in PS
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -1057,8 +1060,12 @@ Academic user can view Finance checks page
     And the user should see the element     jQuery = ul li.complete:nth-of-type(6):contains("Completed")
     When the user clicks the button/link    link = Finance checks
     Then the user should see the element    jQuery = .success-alert:contains("The checks have been completed and your project finances approved.")
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${organisationEggsId}/finance-checks/eligibility    ${404_error_message}
-    Then the user clicks the button/link    link = your dashboard
+
+Academic user can view Review your Finances page
+    [Documentation]  IFS-6893
+    Given the user clicks the button/link             jQuery = a:contains("finances")
+    Then the user should not see an error in the page
+    And the user should see the element               jQuery = h1:contains("Eligibility check for")
 
 Non Lead Partner can view finance checks page
     [Documentation]     INFUND-8787
