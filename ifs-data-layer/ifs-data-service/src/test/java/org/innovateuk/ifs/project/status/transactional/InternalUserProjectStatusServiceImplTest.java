@@ -851,6 +851,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     public void getProjectStatusProjectDocumentsNotFullyApproved() {
         long projectId = 2345L;
         List<ProjectDocument> docs = newProjectDocument()
+                .withCompetitionDocument(newCompetitionDocument().build())
                 .withStatus(DocumentStatus.SUBMITTED, DocumentStatus.APPROVED)
                 .build(2);
 
@@ -877,6 +878,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     public void getProjectStatusProjectDocumentsApproved() {
         long projectId = 2345L;
         List<ProjectDocument> docs = newProjectDocument()
+                .withCompetitionDocument(newCompetitionDocument().build())
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
 
@@ -903,11 +905,12 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     @Test
     public void getProjectStatusProjectDocumentsRejected() {
         long projectId = 2345L;
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(1));
         List<ProjectDocument> docs = newProjectDocument()
                 .withStatus(DocumentStatus.REJECTED)
+                .withCompetitionDocument(competition.getCompetitionDocuments().get(0))
                 .build(1);
 
-        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(1));
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
                                                       false,
@@ -931,6 +934,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     public void getProjectStatusProjectDocumentsPending() {
         long projectId = 2345L;
         List<ProjectDocument> docs = newProjectDocument()
+                .withCompetitionDocument(newCompetitionDocument().build())
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
 
@@ -985,12 +989,13 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     @Test
     public void getProjectStatusProjectDocumentsApprovedWithSingleOrganisations() {
         long projectId = 2345L;
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
         List<ProjectDocument> docs = newProjectDocument()
                 .withStatus(DocumentStatus.APPROVED)
+                .withCompetitionDocument(competition.getCompetitionDocuments().get(1))
                 .build(1);
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
-        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
                                                       false,
@@ -1174,6 +1179,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         List<ProjectDocument> projectDocuments = newProjectDocument()
                 .withProject(project)
                 .withStatus(DocumentStatus.APPROVED)
+                .withCompetitionDocument(competitionDocuments.get(0))
                 .build(1);
         ProjectProcess projectProcess = newProjectProcess().withProject(project).withActivityState(projectState).build();
 

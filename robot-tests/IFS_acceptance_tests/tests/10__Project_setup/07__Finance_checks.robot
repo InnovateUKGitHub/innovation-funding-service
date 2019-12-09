@@ -82,6 +82,9 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               IFS-2313 Project Setup: Ability to edit project duration
 ...
 ...               IFS-6706 Enable Project Finance to adjust academic finances in the Eligibility section
+...
+...               IFS-6893 Academic users can't see their finances in PS
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -587,15 +590,6 @@ Checking the approve eligibility checkbox enables RAG selection but not Approve 
     Then the user should see the element    id = rag-rating
     And the user should see the element     jQuery = .disabled:contains("Approve eligible costs")
 
-RAG choices update on the finance checks page for eligibility
-    [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]
-    When the rag rating updates on the finance check page for lead for eligibility   Green
-    And the rag rating updates on the finance check page for lead for eligibility    Amber
-    And the rag rating updates on the finance check page for lead for eligibility    Red
-    When the user selects the option from the drop-down menu    --    id = rag-rating
-    Then the user should see the element    jQuery = .disabled:contains("Approve eligible costs")
-
 Clicking cancel on the eligibility modal
     [Documentation]    INFUND-4839
     [Tags]
@@ -737,15 +731,6 @@ Checking the approve eligibility checkbox enables RAG selection but not confirm 
     When the user selects the checkbox     project-eligible
     Then the user should see the element   id = rag-rating
     And the user should see the element    jQuery = .disabled:contains("Approve eligible costs")
-
-RAG choices update on the finance checks page for eligibility for partner
-    [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]
-    When the rag rating updates on the finance check page for partner for eligibility   Green
-    And the rag rating updates on the finance check page for partner for eligibility    Amber
-    And the rag rating updates on the finance check page for partner for eligibility    Red
-    When the user selects the option from the drop-down menu    --    id = rag-rating
-    Then the user should see the element    jQuery = .disabled:contains("Approve eligible costs")
 
 Clicking cancel on the eligibility modal for partner
     [Documentation]    INFUND-4839
@@ -1075,8 +1060,12 @@ Academic user can view Finance checks page
     And the user should see the element     jQuery = ul li.complete:nth-of-type(6):contains("Completed")
     When the user clicks the button/link    link = Finance checks
     Then the user should see the element    jQuery = .success-alert:contains("The checks have been completed and your project finances approved.")
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${organisationEggsId}/finance-checks/eligibility    ${404_error_message}
-    Then the user clicks the button/link    link = your dashboard
+
+Academic user can view Review your Finances page
+    [Documentation]  IFS-6893
+    Given the user clicks the button/link             jQuery = a:contains("finances")
+    Then the user should not see an error in the page
+    And the user should see the element               jQuery = h1:contains("Eligibility check for")
 
 Non Lead Partner can view finance checks page
     [Documentation]     INFUND-8787
@@ -1120,6 +1109,9 @@ Project finance user adds, modifies and removes labour rows
 
 *** Keywords ***
 project finance edits academic finances
+    the user clicks the button/link          jQuery = a:contains("Edit")
+    the user clicks the button/link          link = Return to finance checks     #checking not gettign ISE IFS-6891
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     the user clicks the button/link          jQuery = a:contains("Edit")
     the user enters text to a text field     css = [name$="incurredStaff"]  100
     the user enters text to a text field     css = [name$="incurredTravel"]  100
@@ -1183,22 +1175,6 @@ the rag rating updates on the finance check page for partner for viability
    Then the user should see the text in the element    css = table.table-progress tr:nth-child(3) td:nth-child(3)    ${rag_rating}
    And the user clicks the button/link    jQuery = table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
    And the user should see the element    jQuery = .govuk-button:contains("Confirm viability"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
-
-the rag rating updates on the finance check page for lead for eligibility
-   [Arguments]    ${rag_rating}
-   When the user selects the option from the drop-down menu    ${rag_rating}    id = rag-rating
-   And the user clicks the button/link    jQuery = .button-secondary:contains("Return to finance checks")
-   Then the user should see the text in the element    css = table.table-progress tr:nth-child(1) td:nth-child(5)    ${rag_rating}
-   And the user clicks the button/link    jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
-   And the user should see the element    jQuery = .govuk-button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
-
-the rag rating updates on the finance check page for partner for eligibility
-   [Arguments]    ${rag_rating}
-   When the user selects the option from the drop-down menu    ${rag_rating}    id = rag-rating
-   And the user clicks the button/link    jQuery = .button-secondary:contains("Return to finance checks")
-   Then the user should see the text in the element    css = table.table-progress tr:nth-child(3) td:nth-child(5)    ${rag_rating}
-   And the user clicks the button/link    jQuery = table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
-   And the user should see the element    jQuery = .govuk-button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 verify total costs of project
     [Arguments]    ${total_costs}
