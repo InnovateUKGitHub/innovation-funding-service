@@ -26,6 +26,7 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.apache.tika:tika-parsers:1.22"
+    // Exclusions and upgrades of tika dependencies to fix whitesource issues.
     configurations.compile.exclude(group: 'org.quartz-scheduler', module: 'quartz')
     compile ("org.apache.commons:commons-compress:1.19") {
         force = true
