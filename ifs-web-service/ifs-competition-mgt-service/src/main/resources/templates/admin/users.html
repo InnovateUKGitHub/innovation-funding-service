@@ -16,8 +16,9 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='govuk-heading-l'" />
 
-        <p class="govuk-body">You can view the status of all users.</p>
-        <p class="govuk-body"><a th:href="@{/admin/invite-user}" class="govuk-link">Invite a new internal user</a></p>
+        <p th:if="${model.includeInternalUsers}" class="govuk-body">You can view the status of all users.</p>
+        <p th:unless="${model.includeInternalUsers}" class="govuk-body">You can view the status of all external users.</p>
+        <p th:if="${model.includeInternalUsers}" class="govuk-body"><a th:href="@{/admin/invite-user}" class="govuk-link">Invite a new internal user</a></p>
 
         <div class="govuk-tabs">
             <h2 class="govuk-tabs__title">
@@ -30,7 +31,7 @@
                 <li class="govuk-tabs__list-item">
                     <a th:href="inactive" th:text="|Inactive (${model.inactiveCount})|" th:classappend="${model.tab == 'inactive' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Inactive (10)</a>
                 </li>
-                <li class="govuk-tabs__list-item">
+                <li th:if="${model.includeInternalUsers}" class="govuk-tabs__list-item">
                     <a th:href="pending" th:text="|Pending (${model.pendingCount})|" th:classappend="${model.tab == 'pending' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Pending (10)</a>
                 </li>
             </ul>

@@ -8,13 +8,16 @@ import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.disjoint;
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.joining;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 
@@ -148,6 +151,11 @@ public class UserResource implements Serializable {
         return roles;
     }
 
+    @JsonIgnore
+    public String getRoleDisplayNames() {
+        return roles.stream().map(Role::getDisplayName).collect(joining(", "));
+    }
+
     public void setRoles(List<Role> roles) {
         roles.sort(comparing(Role::getId));
         this.roles = roles;
@@ -259,7 +267,7 @@ public class UserResource implements Serializable {
         } else {    // Most are not yet hierarchical so in most cases this will also return single role at present.
             return roles.stream()
                     .map(Role::getDisplayName)
-                    .collect(Collectors.joining(", "));
+                    .collect(joining(", "));
         }
     }
 

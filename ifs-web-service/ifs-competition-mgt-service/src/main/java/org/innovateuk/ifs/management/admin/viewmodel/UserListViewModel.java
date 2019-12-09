@@ -33,6 +33,8 @@ public class UserListViewModel {
 
     private Pagination pendingInvitesPagination;
 
+    private boolean includeInternalUsers;
+
     public UserListViewModel(String tab,
                              List<UserResource> activeUsers,
                              List<UserResource> inactiveUsers,
@@ -42,7 +44,8 @@ public class UserListViewModel {
                              long pendingCount,
                              Pagination activeUsersPagination,
                              Pagination inactiveUsersPagination,
-                             Pagination pendingInvitesPagination) {
+                             Pagination pendingInvitesPagination,
+                             boolean includeInternalUsers) {
         this.tab = tab;
         this.activeUsers = activeUsers;
         this.inactiveUsers = inactiveUsers;
@@ -53,6 +56,7 @@ public class UserListViewModel {
         this.activeUsersPagination = activeUsersPagination;
         this.inactiveUsersPagination = inactiveUsersPagination;
         this.pendingInvitesPagination = pendingInvitesPagination;
+        this.includeInternalUsers = includeInternalUsers;
     }
 
     public long getActiveCount() {
@@ -95,6 +99,10 @@ public class UserListViewModel {
         return tab;
     }
 
+    public boolean isIncludeInternalUsers() {
+        return includeInternalUsers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,6 +122,7 @@ public class UserListViewModel {
                 .append(activeUsersPagination, that.activeUsersPagination)
                 .append(inactiveUsersPagination, that.inactiveUsersPagination)
                 .append(pendingInvitesPagination, that.pendingInvitesPagination)
+                .append(includeInternalUsers, that.includeInternalUsers)
                 .isEquals();
     }
 
@@ -130,6 +139,7 @@ public class UserListViewModel {
                 .append(activeUsersPagination)
                 .append(inactiveUsersPagination)
                 .append(pendingInvitesPagination)
+                .append(includeInternalUsers)
                 .toHashCode();
     }
 }
