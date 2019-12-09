@@ -1959,7 +1959,7 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload signed GOL" enabled="true">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
-                <elementProp name="resources/testing.pdf" elementType="HTTPFileArg">
+                <elementProp name="testing.pdf" elementType="HTTPFileArg">
                   <stringProp name="File.path">resources/testing.pdf</stringProp>
                   <stringProp name="File.paramname">signedGrantOfferLetter</stringProp>
                   <stringProp name="File.mimetype">application/pdf</stringProp>
