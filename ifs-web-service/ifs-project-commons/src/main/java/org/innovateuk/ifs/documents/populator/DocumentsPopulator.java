@@ -62,7 +62,7 @@ public class DocumentsPopulator {
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
 
         return simpleFindAny(projectDocuments, projectDocumentResource -> projectDocumentResource.getCompetitionDocument().getId().equals(documentConfigId))
-                .map(projectDocumentResource -> projectDocumentResource.getStatus())
+                .map(ProjectDocumentResource::getStatus)
                 .orElse(DocumentStatus.UNSET);
     }
 
@@ -80,7 +80,7 @@ public class DocumentsPopulator {
         Optional<ProjectDocumentResource> projectDocument = simpleFindAny(project.getProjectDocuments(),
                 projectDocumentResource -> projectDocumentResource.getCompetitionDocument().getId().equals(documentConfigId));
 
-        FileDetailsViewModel fileDetails = projectDocument.map(projectDocumentResource -> projectDocumentResource.getFileEntry())
+        FileDetailsViewModel fileDetails = projectDocument.map(ProjectDocumentResource::getFileEntry)
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
@@ -91,8 +91,8 @@ public class DocumentsPopulator {
                 configuredProjectDocument.getTitle(),
                 configuredProjectDocument.getGuidance(),
                 fileDetails,
-                projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatus()).orElse(DocumentStatus.UNSET),
-                projectDocument.map(projectDocumentResource -> projectDocumentResource.getStatusComments()).orElse(""),
+                projectDocument.map(ProjectDocumentResource::getStatus).orElse(DocumentStatus.UNSET),
+                projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
                 isProjectManager(loggedInUserId, projectId),
                 project.getProjectState().isActive());
     }
