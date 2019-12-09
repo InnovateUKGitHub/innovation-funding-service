@@ -510,7 +510,7 @@ lead submits project documents
 
 the internal user checks for status after new org added/removed
     the user navigates to the page     ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
-    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(4) a:contains("Rejected")
+    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(4) a:contains("Pending")
     the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(5) a:contains("Assigned")
     the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(6) a:contains("Complete")
     the user clicks the button/link    jQuery = th:contains("${applicationName}") ~ td:nth-child(7) a:contains("Review")
