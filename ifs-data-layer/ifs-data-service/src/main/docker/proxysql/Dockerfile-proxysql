@@ -6,9 +6,9 @@ MAINTAINER Duncan Watson <duncan@hiveit.co.uk>
 
 RUN apt-get update && \
     apt-get install -y wget mysql-client rsync && \
-    wget https://github.com/sysown/proxysql/releases/download/v2.0.8/proxysql_2.0.8-dbg-debian8_amd64.deb -O /opt/proxysql_2.0.8f-debian8_amd64.deb && \
-    dpkg -i /opt/proxysql_2.0.8f-debian8_amd64.deb && \
-    rm -rf /opt/proxysql_2.0.8f-debian8_amd64.deb /var/lib/apt/lists/*
+    wget https://github.com/sysown/proxysql/releases/download/v2.0.8/proxysql_2.0.8-dbg-debian8_amd64.deb -O /opt/proxysql_2.0.8-debian8_amd64.deb && \
+    dpkg -i /opt/proxysql_2.0.8-debian8_amd64.deb && \
+    rm -rf /opt/proxysql_2.0.8-debian8_amd64.deb /var/lib/apt/lists/*
 
 RUN mkdir -p /dump/rewrites
 
