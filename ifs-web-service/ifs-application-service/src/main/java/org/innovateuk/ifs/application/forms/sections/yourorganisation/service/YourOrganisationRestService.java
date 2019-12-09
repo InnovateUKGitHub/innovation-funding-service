@@ -66,4 +66,9 @@ public class YourOrganisationRestService extends BaseRestService {
                 andOnSuccessReturn(competition -> TRUE.equals(competition.getIncludeProjectGrowthTable())).
                 toServiceResult();
     }
+
+    public ServiceResult<Boolean> isShowStateAidAgreement(long applicationId, long organisationId) {
+        String url = format(baseUrl + "/show-state-aid", applicationId, organisationId);
+        return getWithRestResult(url, Boolean.class).toServiceResult();
+    }
 }

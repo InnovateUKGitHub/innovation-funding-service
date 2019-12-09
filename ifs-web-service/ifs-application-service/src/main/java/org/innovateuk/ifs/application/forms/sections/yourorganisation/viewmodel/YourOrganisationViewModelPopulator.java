@@ -34,6 +34,9 @@ public class YourOrganisationViewModelPopulator {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
+        boolean showStateAidAgreement =
+                yourOrganisationRestService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
+
         List<SectionResource> fundingSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES);
 
         boolean fundingSectionComplete = fundingSections.stream().findAny().map(fundingSection -> {
@@ -41,6 +44,6 @@ public class YourOrganisationViewModelPopulator {
             return completedSectionIds.contains(fundingSection.getId());
         }).orElse(false);
 
-        return new YourOrganisationViewModel(false, fundingSectionComplete, competition.isH2020());
+        return new YourOrganisationViewModel(showStateAidAgreement, fundingSectionComplete, competition.isH2020());
     }
 }
