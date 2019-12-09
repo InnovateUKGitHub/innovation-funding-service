@@ -19,16 +19,15 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceNotePermissionRules> {
@@ -36,17 +35,15 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     private UserResource projectFinanceUserOne;
     private UserResource projectFinanceUserTwo;
     private UserResource intruder;
-    private Project project;
-    private ProjectFinance projectFinance;
     private ProjectProcess projectProcessInSetup;
     private ProjectProcess projectProcessInLive;
     private ProjectProcess projectProcessInWithdrawn;
 
     @Mock
-    private ProjectFinanceRepository projectFinanceRepositoryMock;
+    private ProjectFinanceRepository projectFinanceRepository;
 
     @Mock
-    private ProjectProcessRepository projectProcessRepositoryMock;
+    private ProjectProcessRepository projectProcessRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -55,17 +52,17 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
         intruder = getUserWithRole(FINANCE_CONTACT);
         noteResource = sampleNote();
 
-        project = newProject().build();
-        projectFinance = newProjectFinance().withProject(project).build();
+        Project project = newProject().build();
+        ProjectFinance projectFinance = newProjectFinance().withProject(project).build();
         projectProcessInSetup = newProjectProcess().withActivityState(ProjectState.SETUP).build();
         projectProcessInLive = newProjectProcess().withActivityState(ProjectState.LIVE).build();
         projectProcessInWithdrawn = newProjectProcess().withActivityState(ProjectState.WITHDRAWN).build();
 
-        when(projectFinanceRepositoryMock.findById(anyLong())).thenReturn(Optional.of(projectFinance));
+        when(projectFinanceRepository.findById(anyLong())).thenReturn(Optional.of(projectFinance));
     }
 
     private NoteResource sampleNote() {
-        return sampleNote(asList(new PostResource(null, projectFinanceUserOne, null, null, null)));
+        return sampleNote(singletonList(new PostResource(null, projectFinanceUserOne, null, null, null)));
     }
 
     private NoteResource sampleNoteWithoutPosts() {
@@ -73,7 +70,7 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     }
 
     private NoteResource sampleNote(List<PostResource> posts) {
-        return noteResource = new NoteResource(3L, 22L, posts,null, null);
+        return noteResource = new NoteResource(3L, 22L, posts, null, null);
     }
 
     @Override
@@ -82,47 +79,49 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testThatOnlyProjectFinanceProjectFinanceUsersCanCreateNotes() throws Exception {
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
+    public void thatOnlyProjectFinanceProjectFinanceUsersCanCreateNotes() {
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, intruder));
     }
 
-    public void testThatProjectFinanceUsersCannotCreateNotesWhenProjectIsInLive() throws Exception {
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInLive);
-        assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
-    }
-
-    public void testThatProjectFinanceUsersCannotCreateNotesWhenProjectIsInWithdrawn() throws Exception {
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInWithdrawn);
+    @Test
+    public void thatProjectFinanceUsersCannotCreateNotesWhenProjectIsInLive() {
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInLive);
         assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
     }
 
     @Test
-    public void testThatNoteCreationRequiresTheInitialPost() throws Exception {
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
+    public void thatProjectFinanceUsersCannotCreateNotesWhenProjectIsInWithdrawn() {
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInWithdrawn);
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
+    }
+
+    @Test
+    public void thatNoteCreationRequiresTheInitialPost() {
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(sampleNoteWithoutPosts(), projectFinanceUserOne));
     }
 
     @Test
-    public void testThatNoteCreationRequiresTheInitialPostAuthorToBeTheCurrentUser() throws Exception {
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
+    public void thatNoteCreationRequiresTheInitialPostAuthorToBeTheCurrentUser() {
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserTwo));
     }
 
     @Test
-    public void testThatOnlyProjectFinanceUserCanAddPostsToANote() throws Exception {
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
+    public void thatOnlyProjectFinanceUserCanAddPostsToANote() {
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, projectFinanceUserOne));
         assertTrue(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, projectFinanceUserTwo));
         assertFalse(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, intruder));
     }
 
     @Test
-    public void testThatOnlyProjectFinanceUsersViewNotes() {
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
+    public void thatOnlyProjectFinanceUsersViewNotes() {
+        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserOne));
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserTwo));
         assertFalse(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, intruder));

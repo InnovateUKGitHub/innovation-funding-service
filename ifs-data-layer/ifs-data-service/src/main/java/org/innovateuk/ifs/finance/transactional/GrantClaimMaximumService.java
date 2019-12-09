@@ -31,5 +31,4 @@ public interface GrantClaimMaximumService {
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', " +
             "'MAX_FUNDING_LEVEL_OVERRIDDEN')")
     ServiceResult<Boolean> isMaximumFundingLevelOverridden(long competitionId);
-
 }

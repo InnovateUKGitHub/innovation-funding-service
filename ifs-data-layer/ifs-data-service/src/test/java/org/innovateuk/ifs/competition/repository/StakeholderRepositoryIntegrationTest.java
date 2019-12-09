@@ -43,7 +43,7 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
         loginCompAdmin();
 
         competition = competitionRepository.save(newCompetition()
-                .withId(100l)
+                .withId(100L)
                 .withName("competition")
                 .build());
 
@@ -64,7 +64,7 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Stakeholder> retrievedStakeholders = repository.findByStakeholderId(expectedUser.getId());
 
         assertFalse(retrievedStakeholders.isEmpty());
-        assertTrue(retrievedStakeholders.size() == 1);
+        assertEquals(1, retrievedStakeholders.size());
         assertEquals(retrievedStakeholders.get(0).getUser().getId(), expectedUser.getId());
     }
 
@@ -81,6 +81,17 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         boolean foundExpectedUser = repository.existsByCompetitionIdAndStakeholderEmail(competition.getId(), expectedUser.getEmail());
 
+        assertTrue(foundExpectedUser);
+    }
+
+    @Test
+    public void findStakeholderByCompetitionIdAndUserId() {
+        User expectedUser = newUser().build();
+        Stakeholder expectedStakeholder = new Stakeholder(competition, expectedUser);
+
+        repository.save(expectedStakeholder);
+
+        boolean foundExpectedUser = repository.existsByCompetitionIdAndUserId(competition.getId(), expectedUser.getId());
         assertTrue(foundExpectedUser);
     }
 }

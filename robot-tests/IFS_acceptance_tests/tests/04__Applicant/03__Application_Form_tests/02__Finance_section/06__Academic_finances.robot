@@ -147,8 +147,8 @@ Custom Suite Setup
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the subtotals should be correctly updated
-    Textfield Value Should Be  id = subtotal-directly-allocated  £3,047
-    Textfield Value Should Be  id = subtotal-exceptions  £8,013
+    the user should see the element  jQuery = [data-mirror="#subtotal-directly-allocated"]:contains("£3,047")
+    the user should see the element  jQuery = [data-mirror="#subtotal-exceptions"]:contains("£8,013")
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
@@ -185,6 +185,7 @@ the user can see JeS details
     the user should see the element  css = a[href*="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system"]
 
 the applicant enters invalid inputs
+    the user clicks the button/link       jQuery = button:contains("Open all")
     The user enters text to a text field  css = [name="incurredStaff"]  ${EMPTY}
     The user enters text to a text field  css = [name="incurredTravel"]  ${EMPTY}
     The user enters text to a text field  css = [name="incurredOtherCosts"]  ${EMPTY}

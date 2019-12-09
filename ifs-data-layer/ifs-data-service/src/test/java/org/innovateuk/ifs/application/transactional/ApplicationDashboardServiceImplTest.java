@@ -46,8 +46,6 @@ public class ApplicationDashboardServiceImplTest {
     @Mock
     private InterviewAssignmentService interviewAssignmentService;
     @Mock
-    private QuestionStatusService questionStatusService;
-    @Mock
     private ApplicationRepository applicationRepository;
 
     private Competition closedCompetition = newCompetition().withSetupComplete(true)
@@ -69,7 +67,7 @@ public class ApplicationDashboardServiceImplTest {
         Application inProgressOpenCompApplication = inProgressOpenCompApplication();
         Application inProgressClosedCompApplication = inProgressClosedCompApplication();
         Application onHoldNotifiedApplication = onHoldNotifiedApplication();
-        Application unsuccessfulNotifedApplication = unsuccessfulNotifedApplication();
+        Application unsuccessfulNotifiedApplication = unsuccessfulNotifiedApplication();
         Application ineligibleApplication = ineligibleApplication();
         Application submittedAwaitingDecisionApplication = submittedAwaitingDecisionApplication();
 
@@ -78,7 +76,7 @@ public class ApplicationDashboardServiceImplTest {
         when(applicationRepository.findApplicationsForDashboard(USER_ID))
                 .thenReturn(asList(h2020Application, projectInSetupApplication, pendingPartnerInSetupApplication, completedProjectApplication,
                         inProgressOpenCompApplication, inProgressClosedCompApplication, onHoldNotifiedApplication,
-                        unsuccessfulNotifedApplication, ineligibleApplication, submittedAwaitingDecisionApplication));
+                        unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication));
 
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
 
@@ -94,7 +92,7 @@ public class ApplicationDashboardServiceImplTest {
         assertListContainsApplication(inProgressOpenCompApplication, dashboardResource.getInProgress());
         assertListContainsApplication(inProgressClosedCompApplication, dashboardResource.getPrevious());
         assertListContainsApplication(onHoldNotifiedApplication, dashboardResource.getInProgress());
-        assertListContainsApplication(unsuccessfulNotifedApplication, dashboardResource.getPrevious());
+        assertListContainsApplication(unsuccessfulNotifiedApplication, dashboardResource.getPrevious());
         assertListContainsApplication(ineligibleApplication, dashboardResource.getPrevious());
         assertListContainsApplication(submittedAwaitingDecisionApplication, dashboardResource.getInProgress());
 
@@ -123,7 +121,7 @@ public class ApplicationDashboardServiceImplTest {
                 .build();
     }
 
-    private Application unsuccessfulNotifedApplication() {
+    private Application unsuccessfulNotifiedApplication() {
         return newApplication()
                 .withCompetition(closedCompetition)
                 .withApplicationState(ApplicationState.REJECTED)

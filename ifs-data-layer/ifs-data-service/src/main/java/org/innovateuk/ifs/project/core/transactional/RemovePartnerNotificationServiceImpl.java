@@ -5,7 +5,6 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.user.domain.User;
@@ -29,9 +28,6 @@ public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotifi
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -70,7 +66,6 @@ public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotifi
 
     private void sendNotificationToProjectUsers(Project project, Organisation organisation) {
         long leadOrganisationId = project.getLeadOrganisation().get().getOrganisation().getId();
-
         List<ProjectUser> projectUsers = projectUserRepository.findByProjectIdAndOrganisationId(project.getId(), leadOrganisationId);
         projectUsers.forEach(pu -> sendNotificationToUser(pu.getUser(), project, organisation));
     }

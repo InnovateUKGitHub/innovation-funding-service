@@ -14,12 +14,13 @@ public class FinanceCheckEligibilityResource {
     private BigDecimal fundingSought;
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal contributionToProject;
+    private boolean hasApplicationFinances;
 
     public FinanceCheckEligibilityResource() {
 
     }
 
-    public FinanceCheckEligibilityResource(Long projectId, Long organisationId, Long durationInMonths, BigDecimal totalCost, BigDecimal percentageGrant, BigDecimal fundingSought, BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject) {
+    public FinanceCheckEligibilityResource(Long projectId, Long organisationId, Long durationInMonths, BigDecimal totalCost, BigDecimal percentageGrant, BigDecimal fundingSought, BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject, boolean hasApplicationFinances) {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.durationInMonths = durationInMonths;
@@ -28,60 +29,42 @@ public class FinanceCheckEligibilityResource {
         this.fundingSought = fundingSought;
         this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.contributionToProject = contributionToProject;
+        this.hasApplicationFinances = hasApplicationFinances;
     }
 
     public Long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Long getOrganisationId() { return organisationId; }
-
-    public void setOrganisationId(Long organisationId) {
-        this.organisationId = organisationId;
+    public Long getOrganisationId() {
+        return organisationId;
     }
 
     public Long getDurationInMonths() {
         return durationInMonths;
     }
 
-    public void setDurationInMonths(Long durationInMonths) {
-        this.durationInMonths = durationInMonths;
-    }
-
     public BigDecimal getTotalCost() {
         return totalCost;
-    }
-
-    public void setTotalCost(BigDecimal totalCost) {
-        this.totalCost = totalCost;
-    }
-
-
-    public BigDecimal getOtherPublicSectorFunding() {
-        return otherPublicSectorFunding;
-    }
-
-    public void setOtherPublicSectorFunding(BigDecimal otherPublicSectorFunding) {
-        this.otherPublicSectorFunding = otherPublicSectorFunding;
     }
 
     public BigDecimal getPercentageGrant() {
         return percentageGrant;
     }
 
-    public void setPercentageGrant(BigDecimal percentageGrant) {
-        this.percentageGrant = percentageGrant;
+    public BigDecimal getFundingSought() {
+        return fundingSought;
     }
 
-    public BigDecimal getContributionToProject() { return contributionToProject; }
+    public BigDecimal getOtherPublicSectorFunding() {
+        return otherPublicSectorFunding;
+    }
 
-    public void setContributionToProject(BigDecimal contributionToProject) {this.contributionToProject = contributionToProject; }
+    public BigDecimal getContributionToProject() {
+        return contributionToProject;
+    }
 
-    public BigDecimal getFundingSought() { return fundingSought; }
-
-    public void setFundingSought(BigDecimal fundingSought) {this.fundingSought = fundingSought; }
+    public boolean isHasApplicationFinances() {
+        return hasApplicationFinances;
+    }
 }

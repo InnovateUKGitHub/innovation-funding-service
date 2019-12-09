@@ -16,7 +16,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * messages within it.
  */
 public class ServiceFailure implements ErrorHolder {
-
     private List<Error> errors;
     private Throwable cause;
 

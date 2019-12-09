@@ -1,72 +1,5 @@
 package org.innovateuk.ifs.project.financecheck.transactional;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ELIGIBILITY_RAG_STATUS_MUST_BE_SET;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.VIABILITY_HAS_ALREADY_BEEN_APPROVED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.VIABILITY_RAG_STATUS_MUST_BE_SET;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
-import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
-import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
-import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
-import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
-import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
-import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
-import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.resource.FormInputType.FINANCIAL_OVERVIEW_ROW;
-import static org.innovateuk.ifs.form.resource.FormInputType.FINANCIAL_STAFF_COUNT;
-import static org.innovateuk.ifs.form.resource.FormInputType.FINANCIAL_YEAR_END;
-import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOVER;
-import static org.innovateuk.ifs.form.resource.FormInputType.STAFF_COUNT;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
-import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
-import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
-import static org.innovateuk.ifs.project.financecheck.builder.CostGroupBuilder.newCostGroup;
-import static org.innovateuk.ifs.project.financecheck.builder.FinanceCheckBuilder.newFinanceCheck;
-import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
@@ -75,6 +8,7 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -92,18 +26,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
@@ -126,6 +49,54 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
+import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
+import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
+import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
+import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
+import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
+import static org.innovateuk.ifs.project.financecheck.builder.CostGroupBuilder.newCostGroup;
+import static org.innovateuk.ifs.project.financecheck.builder.FinanceCheckBuilder.newFinanceCheck;
+import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
     private Long applicationId = 123L;
@@ -180,6 +151,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Test
     public void testGetByProjectAndOrganisationNotFound() {
@@ -283,7 +257,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeCheckQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
         when(financeCheckQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(financeCheckQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
-        when(financeService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -337,7 +311,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
         when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-
+        when(applicationFinanceRepository.existsByApplicationIdAndOrganisationId(application.getId(), organisationId)).thenReturn(false);
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isSuccess());
 
@@ -349,6 +323,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());
         assertEquals(projectFinanceResource.getTotalOtherFunding(), eligibility.getOtherPublicSectorFunding());
         assertEquals(projectFinanceResource.getTotalContribution(), eligibility.getContributionToProject());
+        assertFalse(eligibility.isHasApplicationFinances());
     }
 
     @Test
@@ -540,7 +515,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -607,7 +582,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -674,7 +649,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -710,7 +685,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                 withQuantity(1).
                                 build(1)).
                         build(),
-                FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+                FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
                                 withGrantClaimPercentage(30).
                                 build(1)).

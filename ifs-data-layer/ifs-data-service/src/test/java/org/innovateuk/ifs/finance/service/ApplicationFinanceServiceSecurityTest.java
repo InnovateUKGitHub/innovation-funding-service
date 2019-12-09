@@ -10,7 +10,6 @@ import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceServiceImpl;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +19,6 @@ import java.util.List;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -152,22 +150,6 @@ public class ApplicationFinanceServiceSecurityTest extends BaseServiceSecurityTe
                             .internalUsersCanSeeTheResearchParticipantPercentageInApplications(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules)
                             .consortiumCanSeeTheResearchParticipantPercentage(isA(ApplicationResource.class), isA(UserResource.class));
-                });
-    }
-
-    @Test
-    public void testOrganisationSeeksFunding() {
-        final Long projectId = 1L;
-        final Long applicationId = 1L;
-        final Long organisationId = 1L;
-
-        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(newProjectResource().withId(projectId).build());
-
-        assertAccessDenied(
-                () -> classUnderTest.organisationSeeksFunding(projectId, applicationId, organisationId),
-                () -> {
-                    verify(costPermissionsRules).projectPartnersCanCheckFundingStatusOfTeam(isA(ProjectResource.class), isA(UserResource.class));
-                    verify(costPermissionsRules).projectPartnersCanCheckFundingStatusOfTeam(isA(ProjectResource.class), isA(UserResource.class));
                 });
     }
 

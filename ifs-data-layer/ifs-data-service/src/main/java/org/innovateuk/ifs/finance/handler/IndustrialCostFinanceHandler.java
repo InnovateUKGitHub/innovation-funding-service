@@ -37,7 +37,9 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     @Autowired
     public void setFinanceRowHandlers(Collection<FinanceRowHandler<?>> autowiredFinanceRowHandlers) {
-        this.financeRowHandlers = autowiredFinanceRowHandlers.stream().collect(Collectors.toMap(FinanceRowHandler::getFinanceRowType, Function.identity()));
+        this.financeRowHandlers = autowiredFinanceRowHandlers.stream()
+                .filter(h -> h.getFinanceRowType().isPresent())
+                .collect(Collectors.toMap(h -> h.getFinanceRowType().get(), Function.identity()));
     }
 
     @Override
@@ -84,7 +86,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
     @Override
     protected boolean initialiseCostTypeSupported(FinanceRowType costType) {
-        return !(FinanceRowType.YOUR_FINANCE.equals(costType) || FinanceRowType.ACADEMIC.equals(costType));
+        return !(FinanceRowType.YOUR_FINANCE.equals(costType));
     }
 
     @Override
