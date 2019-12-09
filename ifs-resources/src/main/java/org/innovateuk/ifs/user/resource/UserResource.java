@@ -18,8 +18,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.disjoint;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.internalRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * User Data Transfer Object
@@ -176,6 +175,11 @@ public class UserResource implements Serializable {
     @JsonIgnore
     public boolean isInternalUser() {
         return CollectionUtils.containsAny(internalRoles(), roles);
+    }
+
+    @JsonIgnore
+    public boolean isExternalUser() {
+        return CollectionUtils.containsAny(externalApplicantRoles(), roles);
     }
 
     public boolean hasAnyRoles(Role... acceptedRoles) {

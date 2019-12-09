@@ -2,7 +2,6 @@ package org.innovateuk.ifs.user.resource;
 
 import org.innovateuk.ifs.identity.Identifiable;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -88,9 +87,9 @@ public enum Role implements Identifiable {
 
     public boolean isStakeHolder() {return this == STAKEHOLDER; }
 
-    public static List<Role> applicantProcessRoles() { return Arrays.asList(LEADAPPLICANT, COLLABORATOR); }
+    public static List<Role> applicantProcessRoles() { return asList(LEADAPPLICANT, COLLABORATOR); }
 
-    public static List<Role> asessorProcessRoles() { return Arrays.asList(ASSESSOR, INTERVIEW_ASSESSOR, PANEL_ASSESSOR); }
+    public static List<Role> assessorProcessRoles() { return asList(ASSESSOR, INTERVIEW_ASSESSOR, PANEL_ASSESSOR); }
 
     public static Set<Role> internalRoles(){
         return new HashSet<>(asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));

@@ -117,12 +117,12 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
     public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
     }
 
-    @PermissionRule(value = "READ", description = "Support users can view everyone") // TODO rename name these methods to match what's actually hapenning
-    public boolean supportUsersCanViewUsers(UserPageResource userToView, UserResource user) {
-        return user.hasRole(SUPPORT);
+    @PermissionRule(value = "READ", description = "Support users can view external users")
+    public boolean supportUsersCanViewExternalUsers(UserResource userToView, UserResource user) {
+        return user.hasRole(SUPPORT) && userToView.isExternalUser();
     }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")

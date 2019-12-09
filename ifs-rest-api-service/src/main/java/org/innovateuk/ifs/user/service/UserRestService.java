@@ -26,6 +26,10 @@ public interface UserRestService {
 
     RestResult<UserPageResource> getInactiveUsers(int pageNumber, int pageSize);
 
+    RestResult<UserPageResource> getActiveExternalUsers(int pageNumber, int pageSize);
+
+    RestResult<UserPageResource> getInactiveExternalUsers(int pageNumber, int pageSize);
+
     RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId);
 
     RestResult<List<ProcessRoleResource>> findProcessRole(long applicationId);

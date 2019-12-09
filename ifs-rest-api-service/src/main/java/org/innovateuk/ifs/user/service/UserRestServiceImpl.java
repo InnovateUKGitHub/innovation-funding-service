@@ -112,6 +112,20 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
+    public RestResult<UserPageResource> getActiveExternalUsers(int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String uriWithParams = buildPaginationUri(userRestURL + "/external/active", pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, UserPageResource.class);
+    }
+
+    @Override
+    public RestResult<UserPageResource> getInactiveExternalUsers(int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String uriWithParams = buildPaginationUri(userRestURL + "/external/inactive", pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, UserPageResource.class);
+    }
+
+    @Override
     public RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId) {
         return getWithRestResult(processRoleRestURL + "/find-by-user-application/" + userId + "/" + applicationId, ProcessRoleResource.class);
     }

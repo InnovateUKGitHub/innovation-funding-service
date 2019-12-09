@@ -102,6 +102,18 @@ public class UserController {
         return userService.findInactiveByRoles(Role.internalRoles(), PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
+    @GetMapping("/external/active")
+    public RestResult<UserPageResource> findActiveExternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return userService.findActiveByRoles(Role.externalApplicantRoles(), PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+    }
+
+    @GetMapping("/external/inactive")
+    public RestResult<UserPageResource> findInactiveExternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                  @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
+        return userService.findInactiveByRoles(Role.externalApplicantRoles(), PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+    }
+
     @PostMapping("/internal/create/{inviteHash}")
     public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource){
         return registrationService.createInternalUser(inviteHash, internalUserRegistrationResource).toPostCreateResponse();

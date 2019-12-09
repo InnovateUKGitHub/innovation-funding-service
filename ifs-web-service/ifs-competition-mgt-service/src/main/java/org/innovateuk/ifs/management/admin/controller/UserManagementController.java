@@ -104,46 +104,42 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     private String view(Model model, String activeTab, int page, int size, String existingQueryString, boolean adminUser) {
-
-        CompletableFuture<UserPageResource> activeUsers = async(() ->
-                userRestService.getActiveUsers(page, size).getSuccess());
-
-        CompletableFuture<UserPageResource> inactiveUsers = async(() ->
-                userRestService.getInactiveUsers(page, size).getSuccess());
-
-        // todo not for support users
-        CompletableFuture<RoleInvitePageResource> pendingUsers;
+        final CompletableFuture<UserPageResource> activeUsers;
+        final CompletableFuture<UserPageResource> inactiveUsers;
+        final CompletableFuture<RoleInvitePageResource> pendingUsers;
         if (adminUser) {
-             pendingUsers = async(() ->
-                    inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveUsers(page, size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveUsers(page, size).getSuccess());
+            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccess());
         }
         else {
+            activeUsers = async(() -> userRestService.getActiveExternalUsers(page, size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveExternalUsers(page, size).getSuccess());
             pendingUsers = async(() -> new RoleInvitePageResource());
         }
-        awaitAll(activeUsers, inactiveUsers, pendingUsers).thenAccept(
-                (activeInternalUsers, inactiveInternalUsers, pendingInternalUserInvites) -> {
 
-            UserListViewModel viewModel = new UserListViewModel(
-                    activeTab,
-                    activeInternalUsers.getContent(),
-                    inactiveInternalUsers.getContent(),
-                    pendingInternalUserInvites.getContent(),
-                    activeInternalUsers.getTotalElements(),
-                    inactiveInternalUsers.getTotalElements(),
-                    pendingInternalUserInvites.getTotalElements(),
-                    new Pagination(activeInternalUsers, "active?" + existingQueryString),
-                    new Pagination(inactiveInternalUsers, "inactive?" + existingQueryString),
-                    new Pagination(pendingInternalUserInvites, "pending?" + existingQueryString),
-                    adminUser
-            );
-
-            model.addAttribute("model", viewModel);
-        });
+        awaitAll(activeUsers, inactiveUsers, pendingUsers)
+                .thenAccept((activeInternalUsers, inactiveInternalUsers, pendingInternalUserInvites) -> {
+                    UserListViewModel viewModel = new UserListViewModel(
+                            activeTab,
+                            activeInternalUsers.getContent(),
+                            inactiveInternalUsers.getContent(),
+                            pendingInternalUserInvites.getContent(),
+                            activeInternalUsers.getTotalElements(),
+                            inactiveInternalUsers.getTotalElements(),
+                            pendingInternalUserInvites.getTotalElements(),
+                            new Pagination(activeInternalUsers, "active?" + existingQueryString),
+                            new Pagination(inactiveInternalUsers, "inactive?" + existingQueryString),
+                            new Pagination(pendingInternalUserInvites, "pending?" + existingQueryString),
+                            adminUser
+                    );
+                    model.addAttribute("model", viewModel);
+                });
 
         return "admin/users";
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId' ,'ACCESS_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId' ,'ACCESS_USER')")
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable long userId, Model model) {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
@@ -152,7 +148,7 @@ public class UserManagementController extends AsyncAdaptor {
         }).getSuccess();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_USER')")
     @GetMapping("/user/{userId}/edit")
     public String viewEditUser(@PathVariable long userId, Model model) {
         return viewEditUser(model, userId, new EditUserForm());
@@ -200,14 +196,14 @@ public class UserManagementController extends AsyncAdaptor {
         return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_USER')")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
     public String deactivateUser(@PathVariable long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_USER')")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
     public String reactivateUser(@PathVariable long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
