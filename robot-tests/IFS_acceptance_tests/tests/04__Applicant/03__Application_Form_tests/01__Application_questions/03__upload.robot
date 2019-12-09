@@ -58,7 +58,6 @@ Lead applicant can upload a pdf file
     And the user clicks the button/link     link = Academic robot test application
     And the user clicks the button/link     link = 5. Technical approach
     Then the user uploads the file          css = .inputfile    ${5mb_pdf}
-    sleep    200ms
     And the user should see the element     jQuery = a:contains(${5mb_pdf} (opens in a new window))
 
 Lead applicant can view a file
