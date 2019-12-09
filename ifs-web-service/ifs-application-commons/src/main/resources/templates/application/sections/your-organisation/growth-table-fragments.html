@@ -34,17 +34,17 @@
 
         <th:block th:if="${!readOnly && showStateAidAgreement}">
 
-            <div class="agree-to-terms-container">
-                <th:block th:insert="fragments/form-elements/checkbox ::
-                    checkbox(
-                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
-                        label=${checkboxText},
-                        id='stateAidAgreed',
-                        value='true',
-                        checked=${form.stateAidAgreed},
-                        switchesButtonStatus='#mark_as_complete'
-                    )" />
-            </div>
+            <!--<div class="agree-to-terms-container">-->
+                <!--<th:block th:insert="fragments/form-elements/checkbox ::-->
+                    <!--checkbox(-->
+                        <!--legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',-->
+                        <!--label=${checkboxText},-->
+                        <!--id='stateAidAgreed',-->
+                        <!--value='true',-->
+                        <!--checked=${form.stateAidAgreed},-->
+                        <!--switchesButtonStatus='#mark_as_complete'-->
+                    <!--)" />-->
+            <!--</div>-->
 
             <div class="message-alert">
                 <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
@@ -147,16 +147,16 @@
 
             <div class="agree-to-terms-container">
 
-                <th:block
-                    th:insert="fragments/form-elements/checkbox ::
-                    checkbox(
-                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
-                        label=${checkboxText},
-                        id='stateAidAgreed',
-                        value='true',
-                        checked=${form.stateAidAgreed},
-                        switchesButtonStatus='#mark_as_complete'
-                    )" />
+                <!--<th:block-->
+                    <!--th:insert="fragments/form-elements/checkbox ::-->
+                    <!--checkbox(-->
+                        <!--legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',-->
+                        <!--label=${checkboxText},-->
+                        <!--id='stateAidAgreed',-->
+                        <!--value='true',-->
+                        <!--checked=${form.stateAidAgreed},-->
+                        <!--switchesButtonStatus='#mark_as_complete'-->
+                    <!--)" />-->
             </div>
 
             <div class="message-alert">

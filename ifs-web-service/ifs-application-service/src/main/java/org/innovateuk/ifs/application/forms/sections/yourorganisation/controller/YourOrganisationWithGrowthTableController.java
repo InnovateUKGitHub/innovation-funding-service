@@ -182,7 +182,6 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
 
         OrganisationFinancesWithGrowthTableResource finances = new OrganisationFinancesWithGrowthTableResource(
                 form.getOrganisationSize(),
-                form.getStateAidAgreed(),
                 form.getFinancialYearEnd(),
                 form.getHeadCountAtLastFinancialYear(),
                 form.getAnnualTurnoverAtLastFinancialYear(),

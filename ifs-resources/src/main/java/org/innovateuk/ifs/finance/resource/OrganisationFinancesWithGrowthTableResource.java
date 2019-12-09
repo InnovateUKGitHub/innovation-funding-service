@@ -12,7 +12,6 @@ import java.time.YearMonth;
 public class OrganisationFinancesWithGrowthTableResource {
 
     private OrganisationSize organisationSize;
-    private Boolean stateAidAgreed;
     private YearMonth financialYearEnd;
     private Long headCountAtLastFinancialYear;
     private BigDecimal annualTurnoverAtLastFinancialYear;
@@ -23,9 +22,8 @@ public class OrganisationFinancesWithGrowthTableResource {
     public OrganisationFinancesWithGrowthTableResource() {
     }
 
-    public OrganisationFinancesWithGrowthTableResource(OrganisationSize organisationSize, Boolean stateAidAgreed, YearMonth financialYearEnd, Long headCountAtLastFinancialYear, BigDecimal annualTurnoverAtLastFinancialYear, BigDecimal annualProfitsAtLastFinancialYear, BigDecimal annualExportAtLastFinancialYear, BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
+    public OrganisationFinancesWithGrowthTableResource(OrganisationSize organisationSize, YearMonth financialYearEnd, Long headCountAtLastFinancialYear, BigDecimal annualTurnoverAtLastFinancialYear, BigDecimal annualProfitsAtLastFinancialYear, BigDecimal annualExportAtLastFinancialYear, BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.organisationSize = organisationSize;
-        this.stateAidAgreed = stateAidAgreed;
         this.financialYearEnd = financialYearEnd;
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
         this.annualTurnoverAtLastFinancialYear = annualTurnoverAtLastFinancialYear;
@@ -40,14 +38,6 @@ public class OrganisationFinancesWithGrowthTableResource {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
-    }
-
-    public Boolean getStateAidAgreed() {
-        return stateAidAgreed;
-    }
-
-    public void setStateAidAgreed(Boolean stateAidAgreed) {
-        this.stateAidAgreed = stateAidAgreed;
     }
 
     public YearMonth getFinancialYearEnd() {
@@ -108,7 +98,6 @@ public class OrganisationFinancesWithGrowthTableResource {
 
         return new EqualsBuilder()
                 .append(organisationSize, that.organisationSize)
-                .append(stateAidAgreed, that.stateAidAgreed)
                 .append(financialYearEnd, that.financialYearEnd)
                 .append(headCountAtLastFinancialYear, that.headCountAtLastFinancialYear)
                 .append(annualTurnoverAtLastFinancialYear, that.annualTurnoverAtLastFinancialYear)
@@ -122,7 +111,6 @@ public class OrganisationFinancesWithGrowthTableResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(organisationSize)
-                .append(stateAidAgreed)
                 .append(financialYearEnd)
                 .append(headCountAtLastFinancialYear)
                 .append(annualTurnoverAtLastFinancialYear)
