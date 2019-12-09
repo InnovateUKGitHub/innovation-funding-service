@@ -221,10 +221,11 @@ Two organisations with the same name are not able to join
 
 Ifs Admin is able to remove a partner organisation
     [Documentation]  IFS-6485
-    [Setup]  log in as a different user                    &{ifs_admin_user_credentials}
+    [Setup]  Logging in and Error Checking                 &{ifs_admin_user_credentials}
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId6}/project/${addNewPartnerOrgProjID6}/team
     When the user removes a partner organisation           SmithZone
     Then the user reads his email                          troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID6}: PSC application 6  Innovate UK has removed SmithZone from this project.
+    And log in as a different user                         &{ifs_admin_user_credentials}
     And the internal user checks for status after new org added/removed
 
 Ifs Admin is able to remove a pending partner organisation
@@ -233,13 +234,6 @@ Ifs Admin is able to remove a pending partner organisation
     Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
     Then the user is able to remove a pending partner organisation         Testing Pending Organisation
-
-New org enter project setup details and lead resubmit the documents
-    [Documentation]  IFS-6502
-    Given applicant submits the project setup details
-    Then PM removes the rejected documents and resubmit
-    And the internal user approves the project setup details after new org added
-    And the internal user checks for completed status
 
 Project finance is able to add a new partner organisation
     [Documentation]  IFS-6485  IFS-6505
@@ -258,8 +252,8 @@ Project finance is able to remove a pending partner organisation
 
 The new partner cannot complete funding without organisation
     [Documentation]  IFS-6491
-    Given log in as a different user                              ${intFinanceAddOrgEmail}  ${short_password}
-    And the user clicks the button/link                          link = ${applicationName}
+    Given log in as a different user         ${intFinanceAddOrgEmail}  ${short_password}
+    And the user clicks the button/link      link = ${applicationName}
     When the user clicks the button/link     link = Your funding
     Then the user should see the element     link = your organisation
 
@@ -514,88 +508,6 @@ lead submits project documents
     the user navigates to the page      ${server}/project-setup/project/${projectID}/document/all
     PM submits both documents           ${projectID}
 
-the applicants completes the project setup details
-    lead submits project documents      ${addNewPartnerOrgProjID}
-    applicant submits the bank details
-    log in as a different user          ${partnerApplicantEmail}   ${short_password}
-    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}/team
-    the user clicks the button/link     link = Your finance contact
-    the user selects the radio button   financeContact   financeContact1
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
-    the user clicks the button/link     link = Set up your project
-    applicant submits the bank details
-
-applicant submits the bank details
-    the user navigates to the page                       ${server}/project-setup/project/${addNewPartnerOrgProjID}/bank-details
-    the user enters text to a text field                 name = accountNumber  ${Account_Two}
-    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
-    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link                      id = postcode-lookup
-    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                      id = submit-bank-details
-
-the internal user approves the project setup details
-    log in as a different user               &{internal_finance_credentials}
-    the user navigates to the page           ${server}/project-setup-management/project/${addNewPartnerOrgProjID}/document/all
-    the user clicks the button/link          link = Collaboration agreement
-    internal user approve uploaded documents
-    the user goes to documents page          Return to documents  Exploitation plan
-    internal user approve uploaded documents
-    internal user assign MO to project
-    internal user approve the viability and eligibility
-    internal user approves the bank details
-
-the internal user approves the project setup details after new org added
-    log in as a different user                                        &{internal_finance_credentials}
-    the user navigates to the page                                    ${server}/project-setup-management/project/${addNewPartnerOrgProjID}/document/all
-    the user clicks the button/link                                   link = Collaboration agreement
-    internal user approve uploaded documents
-    the user goes to documents page                                   Return to documents  Exploitation plan
-    internal user approve uploaded documents
-    the user navigates to the page                                    ${server}/project-setup-management/project/${addNewPartnerOrgProjID}/finance-check
-    the rag rating updates on the finance check page for viability    2  Green
-    the rag rating updates on the finance check page for eligibility  1  Green
-    the rag rating updates on the finance check page for eligibility  2  Green
-
-internal user approve the viability and eligibility
-    the user navigates to the page     ${server}/project-setup-management/project/${addNewPartnerOrgProjID}/finance-check
-    the rag rating updates on the finance check page for viability    1  Green
-    the rag rating updates on the finance check page for viability    2  Green
-    the rag rating updates on the finance check page for eligibility  1  Green
-    the rag rating updates on the finance check page for eligibility  2  Green
-
-the rag rating updates on the finance check page for viability
-   [Arguments]    ${row_id}  ${rag_rating}
-   the user clicks the button/link                jQuery = table.table-progress tr:nth-child(${row_id}) td:nth-child(2) a:contains("Review")
-   the user selects the checkbox                  project-viable
-   the user selects the option from the drop-down menu    ${rag_rating}    id = rag-rating
-   the user clicks the button/link                jQuery = .govuk-button:contains("Confirm viability")
-   the user clicks the button/link                name = confirm-viability
-   the user clicks the button/link                link = Return to finance checks
-   the user should see the text in the element    css = table.table-progress tr:nth-child(${row_id}) td:nth-child(3)    ${rag_rating}
-
-the rag rating updates on the finance check page for eligibility
-   [Arguments]    ${row_id}  ${rag_rating}
-   the user clicks the button/link                jQuery = table.table-progress tr:nth-child(${row_id}) td:nth-child(4) a:contains("Review")
-   the user selects the checkbox                  project-eligible
-   the user selects the option from the drop-down menu    ${rag_rating}    id = rag-rating
-   the user clicks the button/link                jQuery = .govuk-button:contains("Approve eligible costs")
-   the user clicks the button/link                name = confirm-eligibility
-   the user clicks the button/link                link = Return to finance checks
-   the user should see the text in the element    css = table.table-progress tr:nth-child(${row_id}) td:nth-child(5)    ${rag_rating}
-
-the internal user checks for completed status
-    the user navigates to the page     ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
-    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(2) a:contains("Complete")
-    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(3) a:contains("Complete")
-    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(4) a:contains("Complete")
-    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(5) a:contains("Assigned")
-    the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(6) a:contains("Complete")
-    the user clicks the button/link    jQuery = th:contains("${applicationName}") ~ td:nth-child(7) a:contains("Review")
-    the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
-    the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
-
 the internal user checks for status after new org added/removed
     the user navigates to the page     ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
     the user should see the element    jQuery = th:contains("${applicationName}") ~ td:nth-child(4) a:contains("Rejected")
@@ -628,7 +540,6 @@ the user edits the org size
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 Custom suite setup
-    The guest user opens the browser
     Connect to database  @{database}
 
 Custom suite teardown
