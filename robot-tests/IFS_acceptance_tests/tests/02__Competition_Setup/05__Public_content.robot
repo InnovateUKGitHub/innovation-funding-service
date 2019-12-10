@@ -192,12 +192,12 @@ Eligibility: Contains the correct values when viewed, Edit sections
     Then the user clicks the button/link      jQuery = button:contains("+ add new section")
     And The user enters text to a text field  css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Draft Care and Support - Eligibility Criteria
     And the user enters text to a text field  css = .contentGroup:nth-of-type(3) .editor   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
-    And the user clicks the button/link       jQuery = .contentGroup:first-of-type button:contains("Remove")
-    And the user clicks the button/link       jQuery = .contentGroup:nth-of-type(2) button:contains("Remove")
+    And the user clicks the button/link       jQuery = .contentGroup:first-of-type button.remove-file
+    And the user clicks the button/link       jQuery = .contentGroup:nth-of-type(2) button.remove-file
     Then the user uploads the file            css = .contentGroup:nth-of-type(3) input[name^="contentGroups"][name$="attachment"]    ${valid_pdf}
     And the user uploads the file             css = .contentGroup:first-of-type input[name^="contentGroups"][name$="attachment"]     ${valid_pdf}
     And the user uploads the file             css = .contentGroup:nth-of-type(2) input[name^="contentGroups"][name$="attachment"]    ${valid_pdf}
-    Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button:contains("Remove")
+    Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button.remove-file
     And the user should see the element       jQuery = .contentGroup:nth-of-type(3) label:contains("Upload")
     And the user uploads the file             css = .contentGroup:nth-of-type(3) input[name^="contentGroups"][name$="attachment"]    ${valid_pdf}
     When the user clicks the button/link      jQuery = button:contains("Save and review")
@@ -280,15 +280,15 @@ How to apply: Contains the correct values when viewed, Edit sections
     And The user enters text to a text field  css = .contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="heading"]    Competition Officers Contact
     And the user enters text to a text field  css = .contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
     And the user uploads the file             css = .contentGroup:nth-of-type(4) input[name^="contentGroups"][name$="attachment"]    ${valid_pdf}
-    And the user clicks the button/link       jQuery = .contentGroup:first-of-type button:contains("Remove")
-    And the user clicks the button/link       jQuery = .contentGroup:nth-of-type(2) button:contains("Remove")
+    And the user clicks the button/link       jQuery = .contentGroup:first-of-type button.remove-file
+    And the user clicks the button/link       jQuery = .contentGroup:nth-of-type(2) button.remove-file
     Then the user clicks the button/link      jQuery = button:contains("+ add new section")
     And The user enters text to a text field  css = .contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="heading"]    Confidentiality and Conflicts
     And the user enters text to a text field  css = .contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
     Then the user uploads the file            css = .contentGroup:nth-of-type(3) input[name^="contentGroups"][name$="attachment"]    ${valid_pdf}
     And the user uploads the file             css = .contentGroup:first-of-type input[name^="contentGroups"][name$="attachment"]     ${valid_pdf}
     And the user uploads the file             css = .contentGroup:nth-of-type(2) input[name^="contentGroups"][name$="attachment"]    ${valid_pdf}
-    Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button:contains("Remove")
+    Then the user clicks the button/link      jQuery = .contentGroup:nth-of-type(3) button.remove-file
     And the user should see the element       jQuery = .contentGroup:nth-of-type(3) label:contains("Upload")
     And the user uploads the file             css = .contentGroup:nth-of-type(3) input[name^="contentGroups"][name$="attachment"]    ${valid_pdf}
     And the user uploads the file             css = .contentGroup:nth-of-type(5) input[name^="contentGroups"][name$="attachment"]    ${valid_pdf}
@@ -486,7 +486,7 @@ the user can add and remove multiple content groups
     And the user enters text to a text field   jQuery = .editor:eq(0)     Content 1
     And the user uploads the file              name = contentGroups[0].attachment  ${5mb_pdf}
     Then the user should see the element       jQuery = a:contains("testing_5MB.pdf")
-    And the user clicks the button/link        jQuery = button:contains("Remove")
+    And the user clicks the button/link        jQuery = button.remove-file
     And the user clicks the button/link        jQuery = button:contains("+ add new section")
     And the user enters text to a text field   id = contentGroups[1].heading    Heading 2
     And the user enters text to a text field   jQuery = .editor:eq(1)     Content 2

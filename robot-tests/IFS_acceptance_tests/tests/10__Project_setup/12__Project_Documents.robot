@@ -451,6 +451,7 @@ the user removes and reuploads project files
     the user navigates to the page         ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     the user clicks the button/link        link = Exploitation plan
     the user clicks the button/link        jQuery = button:contains("Remove")
+    Wait Until Page Does Not Contain Without Screenshots    Removing
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
     the user should see the element        jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
     the user clicks the button/link        jQuery = button:contains("Submit"):nth(1)

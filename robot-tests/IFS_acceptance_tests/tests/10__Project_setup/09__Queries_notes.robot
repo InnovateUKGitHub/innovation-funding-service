@@ -357,7 +357,7 @@ Large pdf uploads not allowed for note comments
     [Tags]
     Given the user clicks the button/link            id = post-new-comment
     When the user uploads the file                   name = attachment    ${too_large_pdf}
-    Then the user should see a field error           The file you submitted is too large. Please limit it to the sizes specified. The file was not uploaded.
+    Then the user should see a field error           ${too_large_10MB_validation_error}
 
 Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756
