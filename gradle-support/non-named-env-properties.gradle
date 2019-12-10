@@ -122,3 +122,6 @@ ext.IFS_DATA_SERVICE_REDIS_CLUSTER_NODES=""
 ext.IFS_DATA_SERVICE_REDIS_MAX_ACTIVE=8
 // 5hrs max length of ATs.
 ext.IFS_DATA_SERVICE_CACHE_TTL=18000000
+
+// Used by the idp, location of resources
+ext.RESOURCE_DOMAIN=""
