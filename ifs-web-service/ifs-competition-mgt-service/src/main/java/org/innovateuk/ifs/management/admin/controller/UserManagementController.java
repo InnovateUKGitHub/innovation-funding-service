@@ -49,7 +49,7 @@ public class UserManagementController extends AsyncAdaptor {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
-    private static final String DEFAULT_PAGE_SIZE = "8";
+    private static final String DEFAULT_PAGE_SIZE = "20";
 
     private static final String FORM_ATTR_NAME = "form";
 
