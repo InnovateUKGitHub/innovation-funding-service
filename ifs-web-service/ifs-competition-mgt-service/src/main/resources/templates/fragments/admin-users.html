@@ -65,8 +65,8 @@
     <th:block th:each="user : ${users}">
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
 
-        <div th:if="${active}" style="float: right"><a th:href="@{/admin/user/{userId}/edit(userId=${user.id})}">Edit</a></div>
-        <div th:unless="${active}" style="float: right"><a th:href="@{/admin/user/{userId}(userId=${user.id})}">Edit</a></div>
+        <div th:if="${active}" style="float: right"><a class="govuk-link" th:href="@{/admin/user/{userId}/edit(userId=${user.id})}">Edit</a></div>
+        <div th:unless="${active}" style="float: right"><a class="govuk-link" th:href="@{/admin/user/{userId}(userId=${user.id})}">Edit</a></div>
 
         <p class="govuk-body govuk-!-margin-0">Full name: <b><span th:text="${user.name}" class="govuk-">Steve Smith</span></b></p>
         <p class="govuk-body govuk-!-margin-0">Email address: <b><a th:href="|mailto:${user.email}|" th:text="${user.email}" class="govuk-link">steve.smith@empire.com</a></b></p>
