@@ -458,6 +458,7 @@ the user removes and reuploads project files
     the user clicks the button/link        jQuery = .modal-configured-partner-document button:contains("Submit")
     the user goes to documents page        Back to document overview  Collaboration agreement
     the user clicks the button/link        jQuery = button:contains("Remove")
+    Wait Until Page Does Not Contain Without Screenshots    Removing
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
     the user should see the element        jQuery = .upload-section:contains("Collaboration agreement") a:contains("${valid_pdf}")
     the user clicks the button/link        jQuery = button:contains("Submit"):nth(1)

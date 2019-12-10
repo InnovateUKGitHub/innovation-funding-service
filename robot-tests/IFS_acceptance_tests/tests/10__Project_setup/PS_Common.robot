@@ -289,12 +289,12 @@ project manager submits both documents
     log in as a different user          ${email}  ${password}
     the user navigates to the page      ${server}/project-setup/project/${project}/document/all
     the user clicks the button/link     link = Collaboration agreement
-    the user uploads the file           name = document    ${valid_pdf}
+    the user uploads the file           css = .inputfile    ${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
     the user clicks the button/link     link = Exploitation plan
-    the user uploads the file           name = document    ${upload_folder}/${valid_pdf}
+    the user uploads the file           css = .inputfile    ${upload_folder}/${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
 
@@ -400,7 +400,7 @@ the user enter the Correspondence address
 
 the user uploads to the collaboration agreement/exploitation plan
     [Arguments]   ${file_name}
-    the user uploads the file  name = uploadDocument  ${file_name}
+    the user uploads the file  css = .inputfile  ${file_name}
 
 the user goes to documents page
     [Arguments]  ${link1}  ${link2}
