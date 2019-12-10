@@ -171,7 +171,7 @@ public class UserManagementController extends AsyncAdaptor {
         return "admin/edit-user";
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_USER')")
     @PostMapping("/user/{userId}/edit")
     public String updateUser(@PathVariable long userId,
                              Model model,

@@ -81,7 +81,6 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         CompetitionResearchCategoryLinkResource competitionResearchCategoryLinkTwo = newCompetitionResearchCategoryLinkResource()
                 .withCompetition(competitionResource).withCategory(researchCategoryTwo).build();
 
-
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName(competitionResource.getName())
@@ -91,11 +90,11 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         QuestionResource questionResource = newQuestionResource().build();
         ApplicantResource applicantResource = newApplicantResource()
                 .withOrganisation(newOrganisationResource().build()).build();
-        ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().build();
         UserResource leadApplicant = newUserResource()
                 .withFirstName("Steve")
                 .withLastName("Smith")
                 .build();
+        ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().withUser(leadApplicant).build();
 
         when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition()))
                 .thenReturn(restSuccess(asList(competitionResearchCategoryLinkOne, competitionResearchCategoryLinkTwo)));
@@ -142,7 +141,6 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         CompetitionResearchCategoryLinkResource competitionResearchCategoryLink = newCompetitionResearchCategoryLinkResource()
                 .withCompetition(competitionResource).withCategory(researchCategory).build();
 
-
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName(competitionResource.getName())
@@ -152,12 +150,11 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         QuestionResource questionResource = newQuestionResource().build();
         ApplicantResource applicantResource = newApplicantResource()
                 .withOrganisation(newOrganisationResource().build()).build();
-        ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().build();
         UserResource leadApplicant = newUserResource()
                 .withFirstName("Steve")
                 .withLastName("Smith")
                 .build();
-
+        ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().withUser(leadApplicant).build();
 
         when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition()))
                 .thenReturn(restSuccess(asList(competitionResearchCategoryLink)));
@@ -208,11 +205,11 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withResearchCategories(asSet(researchCategoryOne.getId(), researchCategoryTwo.getId())).build();
         ApplicantResource applicantResource = newApplicantResource()
                 .withOrganisation(newOrganisationResource().build()).build();
-        ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().build();
         UserResource leadApplicant = newUserResource()
                 .withFirstName("Steve")
                 .withLastName("Smith")
                 .build();
+        ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().withUser(leadApplicant).build();
 
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionResource.getId())

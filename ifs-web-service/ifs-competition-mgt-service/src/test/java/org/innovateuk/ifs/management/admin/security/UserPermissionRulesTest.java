@@ -27,7 +27,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
-        return new UserPermissionRules();
+        return new UserPermissionRules(userRestServiceMock);
     }
 
     @Test
@@ -35,8 +35,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.PROJECT_FINANCE;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertTrue(rules.internalUser(UserCompositeId.id(1L), getLoggedInUser()));
-        assertFalse(rules.internalUser(UserCompositeId.id(1L), user));
+        assertTrue(rules.accessUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.accessUser(UserCompositeId.id(1L), user));
     }
 
     @Test
@@ -44,8 +44,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.COMP_ADMIN;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertTrue(rules.internalUser(UserCompositeId.id(1L), getLoggedInUser()));
-        assertFalse(rules.internalUser(UserCompositeId.id(1L), user));
+        assertTrue(rules.accessUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.accessUser(UserCompositeId.id(1L), user));
     }
 
     @Test
@@ -53,8 +53,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.SUPPORT;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertTrue(rules.internalUser(UserCompositeId.id(1L), getLoggedInUser()));
-        assertFalse(rules.internalUser(UserCompositeId.id(1L), user));
+        assertTrue(rules.accessUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.accessUser(UserCompositeId.id(1L), user));
     }
 
     @Test
@@ -62,8 +62,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.INNOVATION_LEAD;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertTrue(rules.internalUser(UserCompositeId.id(1L), getLoggedInUser()));
-        assertFalse(rules.internalUser(UserCompositeId.id(1L), user));
+        assertTrue(rules.accessUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.accessUser(UserCompositeId.id(1L), user));
     }
 
     @Test
@@ -71,8 +71,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.PROJECT_FINANCE;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.ACTIVE).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertTrue(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
-        assertFalse(rules.canEditInternalUser(UserCompositeId.id(1L), user));
+        assertTrue(rules.editUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.editUser(UserCompositeId.id(1L), user));
     }
 
     @Test
@@ -80,8 +80,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.COMP_ADMIN;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.ACTIVE).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertTrue(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
-        assertFalse(rules.canEditInternalUser(UserCompositeId.id(1L), user));
+        assertTrue(rules.editUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.editUser(UserCompositeId.id(1L), user));
     }
 
     @Test
@@ -89,8 +89,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.SUPPORT;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.ACTIVE).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertTrue(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
-        assertFalse(rules.canEditInternalUser(UserCompositeId.id(1L), user));
+        assertTrue(rules.editUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.editUser(UserCompositeId.id(1L), user));
     }
 
     @Test
@@ -98,8 +98,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.INNOVATION_LEAD;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.ACTIVE).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertTrue(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
-        assertFalse(rules.canEditInternalUser(UserCompositeId.id(1L), user));
+        assertTrue(rules.editUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.editUser(UserCompositeId.id(1L), user));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role role = Role.INNOVATION_LEAD;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.INACTIVE).build();
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
-        assertFalse(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
+        assertFalse(rules.editUser(UserCompositeId.id(1L), getLoggedInUser()));
     }
 
     @Before

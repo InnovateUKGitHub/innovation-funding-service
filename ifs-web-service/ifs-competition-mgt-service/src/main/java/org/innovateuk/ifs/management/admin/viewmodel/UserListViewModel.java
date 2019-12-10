@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.admin.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -141,5 +142,22 @@ public class UserListViewModel {
                 .append(pendingInvitesPagination)
                 .append(includeInternalUsers)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("tab", tab)
+                .append("activeUsers", activeUsers)
+                .append("inactiveUsers", inactiveUsers)
+                .append("pendingInvites", pendingInvites)
+                .append("activeCount", activeCount)
+                .append("inactiveCount", inactiveCount)
+                .append("pendingCount", pendingCount)
+                .append("activeUsersPagination", activeUsersPagination)
+                .append("inactiveUsersPagination", inactiveUsersPagination)
+                .append("pendingInvitesPagination", pendingInvitesPagination)
+                .append("includeInternalUsers", includeInternalUsers)
+                .toString();
     }
 }

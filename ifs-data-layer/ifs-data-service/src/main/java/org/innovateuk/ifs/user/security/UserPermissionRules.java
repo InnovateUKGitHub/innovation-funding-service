@@ -117,7 +117,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
     public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
-        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
+        return user.hasAnyRoles(IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "Support users can view external users")
