@@ -56,6 +56,7 @@ ${removeInviteEmail}         remove@test.nom
 ${internalViewTeamPage}      ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
 ${internalInviteeEmail}      internal@invitee.com
 ${ifsAdminAddOrgEmail}       admin@addorg.com
+${ifsPendingAddOrgEmail}     pending@pending.com
 ${intFinanceAddOrgEmail}     finance@addorg.com
 ${applicationName}           PSC application 7
 ${orgInviterName}            Ward Ltd
@@ -204,15 +205,30 @@ Ifs Admin is able to add a new partner organisation
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite  Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
+    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
+
+Two organisations with the same name are not able to join
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724
+    [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
+    Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
+    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  innovate  INNOVATE LTD
+    [Teardown]  the user navigates to the page                 ${LOGIN_URL}
 
 Ifs Admin is able to remove a partner organisation
     [Documentation]  IFS-6485
-    [Setup]  log in as a different user                    &{ifs_admin_user_credentials}
+    [Setup]    Logging in and Error Checking               &{ifs_admin_user_credentials}
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team
     When the user removes a partner organisation           SmithZone
     Then the user reads his email                          troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed SmithZone from this project.
     And the internal user checks for status after new org added/removed
+
+Ifs Admin is able to remove a pending partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    [Setup]  log in as a different user                                    &{ifs_admin_user_credentials}
+    Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
+    Then the user is able to remove a pending partner organisation         Testing Pending Organisation
 
 New org enter project setup details and lead resubmit the documents
     [Documentation]  IFS-6502
@@ -230,12 +246,60 @@ Project finance is able to add a new partner organisation
     And log in as a different user                            &{internal_finance_credentials}
     And the internal user checks for status after new org added/removed
 
+Project finance is able to remove a pending partner organisation
+    [Documentation]  IFS-6485  IFS-6505
+    Given the user navigates to the page                                   ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                          Testing Pending Organisation  Name Surname  ${ifsPendingAddOrgEmail}
+    Then the user is able to remove a pending partner organisation         Testing Pending Organisation
+
+The new partner cannot complete funding without organisation
+    [Documentation]  IFS-6491
+    Given log in as a different user                              ${intFinanceAddOrgEmail}  ${short_password}
+    And the user clicks the button/link                          link = ${applicationName}
+    When the user clicks the button/link     link = Your funding
+    Then the user should see the element     link = your organisation
+
+The new partner can complete Your organisation
+    [Documentation]  IFS-6491
+    Given the user clicks the button/link    link = your organisation
+    When the user completes your organisation
+    Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
+
+The new partner completes your funding
+    [Documentation]  IFS-6491  IFS-6725
+    Given The user clicks the button/link   link = Your funding
+    When the user completes your funding
+    Then the user should see the element    jQuery = li div:contains("Your funding") ~ .task-status-complete
+
 The new organisation partner accept terms and conditions
     [Documentation]  IFS-6492
-    Given log in as a different user                              ${intFinanceAddOrgEmail}  ${short_password}
-    When the user clicks the button/link                          link = ${applicationName}
-    Then the user accept the competition terms and conditions     Return to join project
-    And the user should see the element                           jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
+    Given the user accept the competition terms and conditions      Return to join project
+    Then the user should see the element                            jQuery = li div:contains("Award terms and conditions") ~ .task-status-complete
+
+Editing org size resets your funding
+    [Documentation]  IFS-6491
+    Given the user clicks the button/link      link = Your organisation
+    When the user edits the org size
+    Then the user should not see the element   jQuery = li div:contains("Your funding") ~ .task-status-complete
+
+New partner can join project
+    [Documentation]  IFS-6558
+    Given The user clicks the button/link   link = Your funding
+    When the user completes your funding
+    Then the user can join the project
+
+New partner can provide bank details
+    [Documentation]  IFS-6871
+    ${organisationId} =  get organisation id by name  NOMENSA LTD
+    Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  28
+    When the applicant fills in bank details
+    Then internal and external users see correct status
+
+Internal does not see change finances link for new partner
+    [Documentation]  IFS-6770
+    Given Log in as a different user          &{internal_finance_credentials}
+    When the internal partner does not see link for added partner
+    Then the internal patner does see link for existing partner
 
 Comp Admin isn't able to add or remove a partner organisation
     [Documentation]  IFS-6485 IFS-6485
@@ -252,7 +316,23 @@ The internal users checks for activity logs after partner added/removed
     And log in as a different user       &{ifs_admin_user_credentials}
     And internal user should see entries in activity log after partner org added/removed
 
+lead able to submit only exploitation plan when all partners removed from project
+    [Documentation]  IFS-6891
+    Given lead submits project documents          ${project_ids["PSC application 20"]}
+    When the internal user removed all partners
+    And lead uploads the exploitation plan
+    Then the internal user approves the exploitation plan
+
 *** Keywords ***
+the same organisation isnt able to join the project
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
+    logout as user
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
+    the user fills in account details                             ${fname}  ${sname}
+    the user clicks the button/link                               jQuery = button:contains("Create account")
+    the user should see the element                               jQuery = h1:contains("Contact our Customer Support team")
+
 a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
@@ -283,20 +363,6 @@ the relevant users recieve an email notification
     the user reads his email       troy.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
     the user reads his email       sian.ward@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
     the user reads his email       megan.rowland@gmail.com  Partner removed from ${addNewPartnerOrgAppID}: PSC application 7  Innovate UK has removed ${orgName} from this project.
-
-the user removes a partner organisation
-    [Arguments]  ${orgName}
-    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
-    the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
-    the user should not see the element         jQuery = h2:contains(${orgName})
-
-the user adds a new partner organisation
-    [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
-    the user enters text to a text field  id = organisationName  ${partnerOrgName}
-    the user enters text to a text field  id = userName  ${persFullName}
-    the user enters text to a text field  id = email  ${email}
-    the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
-    the user should see the element       jQuery = h2:contains(${partnerOrgName})
 
 the internal user posts a query
     the user clicks the button/link        jQuery = tr:contains("Magic") td:contains("Review")
@@ -419,29 +485,19 @@ The user creates a new account
     the user verifies their account     ${email}
     the user clicks the button/link     link = Sign in
 
-The user verifies their account
-    [Arguments]  ${email}
-    the user should see the element                jQuery = h1:contains("Please verify your email address")
-    the user reads his email and clicks the link   ${email}  Please verify your email address  You have recently set up an account with the Innovation Funding Service.  1
-    the user should see the element                jQuery = h1:contains("Account verified")
-
-The user fills in account details
-    [Arguments]  ${firstName}  ${lastName}
-    the user enters text to a text field   id = firstName     ${firstName}
-    the user enters text to a text field   id = lastName      ${lastName}
-    the user enters text to a text field   id = phoneNumber   07123456789
-    the user enters text to a text field   id = password      ${short_password}
-    the user selects the checkbox          termsAndConditions
-
-the applicants completes the project setup details
+lead submits project documents
+    [Arguments]  ${projectID}
     log in as a different user          ${leadApplicantEmail}   ${short_password}
-    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}/details/project-address
+    the user navigates to the page      ${server}/project-setup/project/${projectID}/details/project-address
     the user enter the Correspondence address
     the user clicks the button/link     link = Return to set up your project
     the user completes the project team details
-    PM uploads the project documents    ${addNewPartnerOrgProjID}
-    the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}//document/all
-    PM submits both documents           ${addNewPartnerOrgProjID}
+    PM uploads the project documents    ${projectID}
+    the user navigates to the page      ${server}/project-setup/project/${projectID}/document/all
+    PM submits both documents           ${projectID}
+
+the applicants completes the project setup details
+    lead submits project documents      ${addNewPartnerOrgProjID}
     applicant submits the bank details
     log in as a different user          ${partnerApplicantEmail}   ${short_password}
     the user navigates to the page      ${server}/project-setup/project/${addNewPartnerOrgProjID}/team
@@ -578,9 +634,94 @@ internal user should see entries in activity log after partner org added/removed
     the user should see the element       jQuery = li div span:contains("NOMENSA LTD") strong:contains("Organisation added:")
     the user should see the element       jQuery = li div span:contains("SmithZone") strong:contains("Organisation removed:")
 
+the user completes your funding
+    the user selects the radio button          requestingFunding   true
+    the user should see the element            jQuery = .govuk-hint:contains("based on your organisation size and project research category.")
+    the user enters text to a text field       css = [name^="grantClaimPercentage"]  35
+    the user selects the radio button          otherFunding   false
+    the user clicks the button/link            jQuery = button:contains("Mark as complete")
+
+the user edits the org size
+    the user clicks the button/link                         id = mark_as_incomplete
+    the user selects the radio button                       organisationSize  SMALL
+    the user selects the checkbox                           stateAidAgreed
+    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
+
 Custom suite setup
     The guest user opens the browser
+    Connect to database  @{database}
 
 Custom suite teardown
     The user closes the browser
+    Disconnect from database
 
+the internal partner does not see link for added partner
+    the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
+    the user clicks the button/link       css = .action ~ .action a
+    the user clicks the button/link       jQuery = tr:contains("NOMENSA LTD") td:nth-child(4)
+    the user should not see the element   link = Review all changes to project finances
+
+the internal patner does see link for existing partner
+    the user clicks the button/link       link = Finance checks
+    the user clicks the button/link       jQuery = tr:contains("Ward Ltd") td:nth-child(4)
+    the user should see the element       link = Review all changes to project finances
+
+the user can join the project
+    the user should see the element   css = .message-alert
+    the user clicks the button/link   id = submit-join-project-button
+    the user should see the element   jQuery = h1:contains("Set up your project")
+    the user clicks the button/link   link = Dashboard
+    the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
+
+the applicant fills in bank details
+    the user clicks the button/link                      link = Return to setup your project
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    applicant user enters bank details
+
+internal and external users see correct status
+    the user should see the element                     jQuery = p:contains("The bank account details below are being")
+    the user navigates to the page                      ${server}/project-setup/project/${addNewPartnerOrgProjID}
+    the user should see the element                     jQuery = ul li.waiting:nth-child(5)
+    the user clicks the button/link                     link = View the status of partners
+    the user navigates to the page                      ${server}/project-setup/project/${addNewPartnerOrgProjID}/team-status
+    the user should see the element                     jQuery = h1:contains("Project team status")
+    the user should see the element                     css = #table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
+    log in as a different user                          &{internal_finance_credentials}
+    the user navigates to the page                      ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status
+    the user should see the element                     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action
+
+the user removes a partner organisation
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
+    the user clicks the button/link             jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
+    the user should not see the element         jQuery = h2:contains(${orgName})
+
+the internal user removed all partners
+    log in as a different user                       &{internal_finance_credentials}
+    the user navigates to the page                   ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 20"]}/project/${project_ids["PSC application 20"]}/team
+    the user removes a partner organisation           Red Planet
+    the user removes a partner organisation           SmithZone
+
+lead uploads the exploitation plan
+    log in as a different user          ${leadApplicantEmail}   ${short_password}
+    the user navigates to the page      ${server}/project-setup/project/${project_ids["PSC application 20"]}/document/all
+    the user clicks the button/link     link = Exploitation plan
+    the user clicks the button/link     name = deleteDocument
+    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+    the user clicks the button/link     link = Set up your project
+    the user should see the element     jQuery = li:contains("Documents") span:contains("Awaiting review")
+
+the internal user approves the exploitation plan
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/project-setup-management/project/${project_ids["PSC application 20"]}/document/all
+    the user clicks the button/link     link = Exploitation plan
+    internal user approve uploaded documents
+    the user clicks the button/link     link = Return to documents
+    the user navigates to the page      ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 20"]}/status
+    the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok

@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -14,8 +12,6 @@ import org.innovateuk.ifs.project.monitoringofficer.form.LegacyMonitoringOfficer
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -50,13 +45,7 @@ public class LegacyMonitoringOfficerController {
     private ProjectService projectService;
 
     @Autowired
-    private StatusService statusService;
-
-    @Autowired
     private MonitoringOfficerRestService monitoringOfficerService;
-
-    @Autowired
-    private ApplicationService applicationService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -68,9 +57,6 @@ public class LegacyMonitoringOfficerController {
     @GetMapping
     public String viewMonitoringOfficer(Model model, @P("projectId")@PathVariable("projectId") final Long projectId,
                                 UserResource loggedInUser) {
-
-        checkInCorrectStateToUseMonitoringOfficerPage(projectId);
-
         ProjectResource project =  projectService.getById(projectId);
         Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
         if (!existingMonitoringOfficer.isPresent()) {
@@ -78,14 +64,6 @@ public class LegacyMonitoringOfficerController {
         }
         LegacyMonitoringOfficerForm form = new LegacyMonitoringOfficerForm(existingMonitoringOfficer);
         return viewMonitoringOfficer(model, project, form, loggedInUser);
-    }
-
-    private void checkInCorrectStateToUseMonitoringOfficerPage(Long projectId) {
-        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
-
-        if (!COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus())) {
-            throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
-        }
     }
 
     private String viewMonitoringOfficer(Model model, ProjectResource project, LegacyMonitoringOfficerForm form, UserResource user) {

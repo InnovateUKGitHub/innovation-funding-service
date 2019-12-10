@@ -12,7 +12,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -75,6 +75,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder.
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -160,7 +161,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     private ProjectUserMapper projectUserMapperMock;
 
     @Mock
-    private ApplicationFinanceService financeServiceMock;
+    private ProjectFinanceService projectFinanceService;
 
     @Mock
     private ProjectUsersHelper projectUsersHelperMock;
@@ -415,9 +416,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUserMapperMock.mapToResource(pu.get(1))).thenReturn(puResource.get(1));
         when(projectUserMapperMock.mapToResource(pu.get(2))).thenReturn(puResource.get(2));
 
-        when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(true));
-        when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(false));
-        when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(true));
+        when(projectFinanceService.financeChecksDetails(p.getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
+        when(projectFinanceService.financeChecksDetails(p.getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsNotRequestingFunding().build()));
+        when(projectFinanceService.financeChecksDetails(p.getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
 
         partnerOrganisations.forEach(org ->
                 when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(org.getProject().getId(),
@@ -690,8 +691,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         // Same flow but when GOL is in Ready To Approve state.
         when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(true);
 
-        when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), o.getId())).thenReturn(serviceSuccess(true));
-        when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), nonLeadOrg.getId())).thenReturn(serviceSuccess(true));
+        when(projectFinanceService.financeChecksDetails(p.getId(), o.getId())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
+        when(projectFinanceService.financeChecksDetails(p.getId(), nonLeadOrg.getId())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
         when(financeCheckServiceMock.isQueryActionRequired(anyLong(), anyLong())).thenReturn(serviceSuccess(false));
         when(monitoringOfficerServiceMock.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
 

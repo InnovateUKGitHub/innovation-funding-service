@@ -1,5 +1,14 @@
 package org.innovateuk.ifs.finance.service;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
@@ -9,14 +18,6 @@ import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class GrantClaimMaximumServiceSecurityTest extends BaseServiceSecurityTest<GrantClaimMaximumService> {
 
@@ -55,7 +56,7 @@ public class GrantClaimMaximumServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(
                 () -> classUnderTest.isMaximumFundingLevelOverridden(competition.getId()),
                 () -> verify(grantClaimMaximumPermissionRules)
-                        .internalAdminAndUsersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden(
+                        .internalAdminCanCheckMaxFundingLevelOverridden(
                                 isA(CompetitionResource.class), isA(UserResource.class))
         );
     }

@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
+import static java.lang.String.format;
+
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
@@ -208,13 +211,13 @@ public class ProjectYourFundingController {
 
 
     private String redirectToViewPage(long projectId, long organisationId) {
-        return String.format("redirect:/project/%d/organisation/%d/your-funding",
+        return format("redirect:/project/%d/organisation/%d/your-funding",
                 projectId,
                 organisationId);
     }
 
     private String redirectToLandingPage(long projectId, long organisationId) {
-        return String.format("redirect:/project/%d/organisation/%d/pending-partner-progress",
+        return format("redirect:/project/%d/organisation/%d/pending-partner-progress",
                 projectId,
                 organisationId);
     }

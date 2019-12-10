@@ -10,19 +10,19 @@ import java.io.Serializable;
  * Compound class for holding the application finance resource keys
  */
 public abstract class BaseFinanceResourceId implements Serializable {
-    private Long targetId;
-    private Long organisationId;
+    private long targetId;
+    private long organisationId;
 
-    public BaseFinanceResourceId(Long targetId, Long organisationId) {
+    public BaseFinanceResourceId(long targetId, long organisationId) {
         this.targetId = targetId;
         this.organisationId = organisationId;
     }
 
-    public Long getTargetId() {
+    public long getTargetId() {
         return targetId;
     }
 
-    public Long getOrganisationId() {
+    public long getOrganisationId() {
         return organisationId;
     }
 

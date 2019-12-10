@@ -62,4 +62,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     public RestResult<OrganisationResource> getLeadOrganisationByProject(long projectId) {
         return getWithRestResult(format(PROJECT_REST_URL + "%d/lead-organisation", projectId), OrganisationResource.class);
     }
+
+    @Override
+    public RestResult<Boolean> existsOnApplication(long projectId, long organisationId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/user/%d/application-exists", projectId, organisationId), Boolean.class);
+    }
 }

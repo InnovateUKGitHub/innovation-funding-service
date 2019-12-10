@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.invite.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 
 import java.time.ZonedDateTime;
@@ -34,6 +35,10 @@ public class SentProjectPartnerInviteResourceBuilder extends BaseBuilder<SentPro
         return withArray((organisationName, sentProjectPartnerInviteResource) -> setField("organisationName", organisationName, sentProjectPartnerInviteResource), organisationNames);
     }
 
+    public SentProjectPartnerInviteResourceBuilder withStatus(InviteStatus... inviteStatuses) {
+        return withArray((inviteStatus, sentProjectPartnerInviteResource) -> setField("status", inviteStatus, sentProjectPartnerInviteResource), inviteStatuses);
+    }
+
     public SentProjectPartnerInviteResourceBuilder withUserName(String... userNames) {
         return withArray((userName, sentProjectPartnerInviteResource) -> setField("userName", userName, sentProjectPartnerInviteResource), userNames);
     }
@@ -45,6 +50,5 @@ public class SentProjectPartnerInviteResourceBuilder extends BaseBuilder<SentPro
     public SentProjectPartnerInviteResourceBuilder withSentOn(ZonedDateTime... sentOns) {
         return withArray((sentOn, sentProjectPartnerInviteResource) -> setField("sentOn", sentOn, sentProjectPartnerInviteResource), sentOns);
     }
-
 
 }

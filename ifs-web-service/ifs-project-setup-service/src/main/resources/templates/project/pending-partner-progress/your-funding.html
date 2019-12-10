@@ -25,16 +25,14 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your funding',subTitle=${model.projectName},size='govuk-heading-xl'" />
         <th:block th:if="${model.fundingSectionLocked}">
             <p class="govuk-body">
-                Before you can supply your funding details you must:
+                Before you can supply your funding details:
             </p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>
                     you must mark the
                     <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-organisation(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                       class="govuk-link">
-                        your organisation
-                    </a>
-                    page as complete
+                       class="govuk-link">your organisation</a>
+                     page as complete
                 </li>
             </ul>
         </th:block>
@@ -66,11 +64,12 @@
                 <div>
                     <a th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}"
                        th:if="${model.readOnly}"
-                       class="govuk-!-margin-top-6 button-secondary">Return to organisation details
+                       class="govuk-!-margin-top-6 button-secondary">Return
+                        to join project
                     </a>
                     <button type="submit" th:unless="${model.readOnly}"
                             class="govuk-!-margin-top-6 govuk-button">
-                        Save and return to organisationDetails
+                        Save and return to join project
                     </button>
                 </div>
             </form>

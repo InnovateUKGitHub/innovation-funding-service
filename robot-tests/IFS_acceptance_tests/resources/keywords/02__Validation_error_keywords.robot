@@ -21,7 +21,7 @@ The user cannot see a validation error in the page
 
 The user should see a summary error
     [Arguments]    ${ERROR_TEXT}
-    Wait Until Page Contains Element Without Screenshots    jQuery=.govuk-error-summary:contains('${ERROR_TEXT}')    5s
+    Wait Until Page Contains Element Without Screenshots    jQuery=.govuk-error-summary:contains("${ERROR_TEXT}")    5s
 
 The user should see a field and summary error
     [Arguments]    ${ERROR_TEXT}

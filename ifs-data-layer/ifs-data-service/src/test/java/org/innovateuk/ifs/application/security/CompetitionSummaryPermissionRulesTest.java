@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -29,9 +26,6 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
-
-    @Mock
-    private StakeholderRepository stakeholderRepository;
 
     @Override
     protected CompetitionSummaryPermissionRules supplyPermissionRulesUnderTest() {
@@ -71,10 +65,8 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
         List<Role> stakeholderRoles = singletonList(STAKEHOLDER);
         UserResource stakeholderAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
         UserResource stakeholderNotAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
-        List<Stakeholder> stakeholders = StakeholderBuilder.newStakeholder().withUser(newUser().withId
-                (stakeholderAssignedToCompetition.getId()).build()).build(1);
 
-        when(stakeholderRepository.findStakeholders(competitionResource.getId())).thenReturn(stakeholders);
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competitionResource.getId(), stakeholderAssignedToCompetition.getId())).thenReturn(true);
 
         assertTrue(rules.stakeholdersCanViewCompetitionSummaryOnAssignedComps(competitionResource, stakeholderAssignedToCompetition));
         assertFalse(rules.stakeholdersCanViewCompetitionSummaryOnAssignedComps(competitionResource, stakeholderNotAssignedToCompetition));

@@ -12,7 +12,6 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -33,9 +32,6 @@ import static org.mockito.Mockito.when;
  * Test the {@link QuestionStatusRules}
  */
 public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionStatusRules> {
-
-    @Mock
-    private ProcessRoleRepository processRoleRepository;
 
     @Mock
     private QuestionStatusRepository questionStatusRepository;

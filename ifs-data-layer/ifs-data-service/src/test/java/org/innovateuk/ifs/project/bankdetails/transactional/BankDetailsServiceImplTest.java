@@ -12,6 +12,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
@@ -53,6 +54,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -90,9 +92,6 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     private ProjectRepository projectRepositoryMock;
 
     @Mock
-    private OrganisationAddressRepository organisationAddressRepositoryMock;
-
-    @Mock
     private SilExperianEndpoint silExperianEndpointMock;
 
     @Mock
@@ -102,7 +101,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     private ProjectUsersHelper projectUsersHelperMock;
 
     @Mock
-    private ApplicationFinanceService financeServiceMock;
+    private ProjectFinanceService projectFinanceService;
 
     @Mock
     private OrganisationRepository organisationRepositoryMock;
@@ -112,6 +111,9 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
     @Mock
     private OrganisationAddressMapper organisationAddressMapper;
+
+    @Mock
+    private OrganisationAddressRepository organisationAddressRepository;
 
     @Before
     public void setUp() {
@@ -280,7 +282,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisation.getId())).thenReturn(Optional.of(bankDetails));
         when(bankDetailsMapperMock.mapToResource(bankDetails)).thenReturn(bankDetailsResource);
         when(projectUsersHelperMock.getPartnerOrganisations(projectId)).thenReturn(singletonList(organisation));
-        when(financeServiceMock.organisationSeeksFunding(project.getId(), project.getApplication().getId(), organisation.getId())).thenReturn(serviceSuccess(true));
+        when(projectFinanceService.financeChecksDetails(projectId, organisation.getId())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
         when(organisationRepositoryMock.findById(leadApplicantRole.getOrganisationId())).thenReturn(Optional.of(organisation));
 
         List<BankDetailsStatusResource> bankDetailsStatusResource = newBankDetailsStatusResource()

@@ -43,7 +43,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     private OrganisationRepository organisationRepository;
 
     @Override
-    public BigDecimal getResearchParticipationPercentageFromProject(Long projectId){
+    public BigDecimal getResearchParticipationPercentageFromProject(long projectId){
         List<ProjectFinanceResource> applicationFinanceResources = this.getFinanceChecksTotals(projectId);
 
         BigDecimal totalCosts = applicationFinanceResources.stream()
@@ -83,7 +83,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     }
 
     @Override
-    public List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId) {
+    public List<ProjectFinanceResource> getFinanceChecksTotals(long projectId) {
         List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(projectId);
         List<ProjectFinanceResource> financeResources = new ArrayList<>();
 

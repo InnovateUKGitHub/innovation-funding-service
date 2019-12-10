@@ -7,6 +7,8 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherCost;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COSTS;
 
 /**
@@ -33,7 +35,7 @@ public class OtherCostHandler extends FinanceRowHandler<OtherCost> {
     }
 
     @Override
-    public FinanceRowType getFinanceRowType() {
-        return OTHER_COSTS;
+    public Optional<FinanceRowType> getFinanceRowType() {
+        return Optional.of(OTHER_COSTS);
     }
 }
