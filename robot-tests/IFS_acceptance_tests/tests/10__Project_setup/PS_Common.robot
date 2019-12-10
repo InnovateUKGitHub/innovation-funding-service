@@ -400,7 +400,7 @@ the user enter the Correspondence address
 
 the user uploads to the collaboration agreement/exploitation plan
     [Arguments]   ${file_name}
-    the user uploads the file  name = document  ${file_name}
+    the user uploads the file  name = uploadDocument  ${file_name}
 
 the user goes to documents page
     [Arguments]  ${link1}  ${link2}
