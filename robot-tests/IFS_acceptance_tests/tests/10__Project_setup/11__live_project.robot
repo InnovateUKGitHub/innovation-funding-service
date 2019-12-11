@@ -240,7 +240,7 @@ users upload signed grant offer letter and submit
     the lead partner logs in and navigate to applications dashboard
     the user clicks the button/link    link = ${PS_LP_Application_Title}
     the user clicks the button/link    link = Grant offer letter
-    choose file                        signedGrantOfferLetter    ${upload_folder}/${valid_pdf}
+    the user uploads the file          id = signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link    jQuery = a:contains("Send to Innovate UK")
     the user clicks the button/link    id = submit-gol-for-review
 
@@ -255,12 +255,12 @@ Project fiance approves the grant offer letter
 
 the use can see the mandatory documents
     the user clicks the button/link        link = Collaboration agreement
-    the user clicks the button/link        link = ${valid_pdf}
+    the user clicks the button/link        link = ${valid_pdf} (opens in a new window)
     Select Window                          NEW
     the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
     the user clicks the button/link        link = Exploitation plan
-    the user clicks the button/link        link = ${valid_pdf}
+    the user clicks the button/link        link = ${valid_pdf} (opens in a new window)
     Select Window                          NEW
     the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
