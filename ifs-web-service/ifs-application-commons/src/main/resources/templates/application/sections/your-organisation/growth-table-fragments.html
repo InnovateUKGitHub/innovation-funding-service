@@ -4,13 +4,7 @@
     <th:block
         th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
 
-        <th:block th:if="${!readOnly && showStateAidAgreement}">
-            <div class="message-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body">
-                    If we decide to award you funding you must be eligible to receive state aid at the point of the award.
-                    If you are found to be ineligible, we will withdraw our offer.
-                </p>
-            </div>
+        <th:block th:insert="fragments/state-aid-warning"/>
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
@@ -45,13 +39,7 @@
     <th:block
         th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
 
-        <th:block th:if="${!readOnly && showStateAidAgreement}">
-            <div class="message-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body">
-                    If we decide to award you funding you must be eligible to receive state aid at the point of the award.
-                    If you are found to be ineligible, we will withdraw our offer.
-                </p>
-            </div>
+        <th:block th:insert="fragments/state-aid-warning"/>
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
