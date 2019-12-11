@@ -246,14 +246,24 @@ public class UserPermissionRules {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
+    @PermissionRule(value = "DEACTIVATE", description = "A Support user can deactivate external Users")
+    public boolean supportUserCanDeactivateExternalUsers(UserResource userToDeactivate, UserResource user) {
+        return userToDeactivate.isExternalUser() && user.hasRole(SUPPORT);
+    }
+
     @PermissionRule(value = "DEACTIVATE", description = "System Maintenance can deactivate Users")
     public boolean systemMaintenanceUserCanDeactivateUsers(UserResource userToCreate, UserResource user) {
         return isSystemMaintenanceUser(user);
     }
 
-    @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
+    @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users") // This doesn't seem right -- should that be reactivate
     public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "ACTIVATE", description = "A Support user can reactivate external Users")
+    public boolean supportUserCanReactivateExternalUsers(UserResource userToActivate, UserResource user) {
+        return userToActivate.isExternalUser() && user.hasRole(SUPPORT);
     }
 
     @PermissionRule(value = "AGREE_TERMS", description = "A user can accept the site terms and conditions")

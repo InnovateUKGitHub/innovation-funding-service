@@ -6,6 +6,7 @@ import org.innovateuk.ifs.user.resource.UserCompositeId;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isIFSAdmin;
@@ -23,6 +24,7 @@ public class UserPermissionRules {
     protected UserPermissionRules() {
     }
 
+    @Autowired
     public UserPermissionRules(UserRestService userRestService) {
         this.userRestService = userRestService;
     }
