@@ -115,15 +115,15 @@ public class UserPermissionRules {
         return isSystemMaintenanceUser(user);
     }
 
-    @PermissionRule(value = "READ", description = "Administrators can view users")
+    @PermissionRule(value = "READ_INTERNAL", description = "Administrators can view internal users")
     public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
-        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
+        return user.hasAnyRoles(IFS_ADMINISTRATOR);
     }
 
-//    @PermissionRule(value = "READ_EXTERNAL", description = "Support users and administrators can view external users")
-//    public boolean supportUsersCanViewExternalUsers(UserPageResource userToView, UserResource user) {
-//        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
-//    }
+    @PermissionRule(value = "READ", description = "Support users and administrators can view external users")
+    public boolean supportUsersCanViewExternalUsers(UserPageResource userToView, UserResource user) {
+        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
+    }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
     public boolean systemRegistrationUserCanViewEveryone(UserResource userToView, UserResource user) {

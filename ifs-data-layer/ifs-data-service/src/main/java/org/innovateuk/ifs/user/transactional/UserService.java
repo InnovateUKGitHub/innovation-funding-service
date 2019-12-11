@@ -35,20 +35,21 @@ public interface UserService {
     @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.token.domain.Token', 'CHANGE_PASSWORD')")
     ServiceResult<Void> changePassword(String hash, String password);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ_INTERNAL')")
     ServiceResult<UserPageResource> findActive(Pageable pageable);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findActiveByRoles(Set<Role> roleTypes, Pageable pageable);
+    ServiceResult<UserPageResource> findActiveExternal(Pageable pageable);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ_INTERNAL')")
+    ServiceResult<UserPageResource> findInactive(Pageable pageable);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<UserPageResource> findInactiveExternal(Pageable pageable);
 
     @PostFilter("hasPermission(filterObject, 'READ_USER_ORGANISATION')")
     ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<Role> roleTypes, String searchString, SearchCategory searchCategory);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable);
-
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findInactive(Pageable pageable);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'AGREE_TERMS')")
     ServiceResult<UserResource> agreeNewTermsAndConditions(long userId);
