@@ -390,8 +390,7 @@ Stakeholders can see approved documents
     [Setup]  log in as a different user   &{stakeholder_user}
     Given the user navigates to the page  ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link  link = Collaboration agreement
-    And open pdf link                     testing.pdf
-
+    And open pdf link                     link = ${valid_pdf} (opens in a new window)
 
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
