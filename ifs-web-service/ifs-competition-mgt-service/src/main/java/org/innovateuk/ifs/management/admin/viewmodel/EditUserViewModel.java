@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.admin.viewmodel;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 /**
@@ -9,41 +7,37 @@ import org.innovateuk.ifs.user.resource.UserResource;
  */
 public class EditUserViewModel {
 
-    private UserResource user;
+    private final UserResource user;
+    private final boolean ifsAdmin;
+    private final boolean editEmailFeatureToggle;
 
-    public EditUserViewModel(UserResource user) {
+    public EditUserViewModel(UserResource user, boolean ifsAdmin, boolean editEmailFeatureToggle) {
         this.user = user;
+        this.ifsAdmin = ifsAdmin;
+        this.editEmailFeatureToggle = editEmailFeatureToggle;
     }
 
     public UserResource getUser() {
         return user;
     }
 
-    public void setUser(UserResource user) {
-        this.user = user;
+    public boolean isIfsAdmin() {
+        return ifsAdmin;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        EditUserViewModel that = (EditUserViewModel) o;
-
-        return new EqualsBuilder()
-                .append(user, that.user)
-                .isEquals();
+    public boolean isCanEditEmail() {
+        return editEmailFeatureToggle && (ifsAdmin || user.isExternalUser());
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(user)
-                .toHashCode();
+    public boolean isCanEditUserDetails() {
+        return ifsAdmin && user.isInternalUser();
+    }
+
+    public boolean isInternal() {
+        return user.isInternalUser();
+    }
+
+    public boolean isReadOnly() {
+        return !ifsAdmin && (!editEmailFeatureToggle || user.isInternalUser());
     }
 }

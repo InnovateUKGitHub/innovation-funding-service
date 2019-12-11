@@ -110,9 +110,14 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any user's email address")
-    public boolean systemMaintenanceUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
-        return isSystemMaintenanceUser(user);
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "IFS admins can update all users email addresses")
+    public boolean ifsAdminCanUpdateAllEmailAddresses(UserResource userToUpdate, UserResource user) {
+        return user.hasRole(IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "Support users can update external users email addresses ")
+    public boolean supportCanUpdateExternalUsersEmailAddresses(UserResource userToUpdate, UserResource user) {
+        return userToUpdate.isExternalUser() && user.hasRole(SUPPORT);
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")

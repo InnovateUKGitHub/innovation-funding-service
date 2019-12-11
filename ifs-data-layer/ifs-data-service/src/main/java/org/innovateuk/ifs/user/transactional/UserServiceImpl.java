@@ -44,8 +44,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
@@ -64,7 +63,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     public enum Notifications {
         VERIFY_EMAIL_ADDRESS,
-        RESET_PASSWORD
+        RESET_PASSWORD,
+        EMAIL_CHANGE_OLD,
+        EMAIL_CHANGE_NEW
     }
 
     @Value("${ifs.web.baseURL}")
@@ -194,11 +195,28 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     private ServiceResult<User> updateUserEmail(User existingUser, String emailToUpdate) {
         userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
+        String oldEmail = existingUser.getEmail();
         existingUser.setEmail(emailToUpdate);
         User user = userRepository.save(existingUser);
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
                 .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate))
+                .andOnSuccess(() -> notifyEmailChange(oldEmail, emailToUpdate, user))
                 .andOnSuccessReturn(() -> user);
+    }
+
+    private ServiceResult<Void> notifyEmailChange(String oldEmail, String newEmail, User user) {
+        NotificationSource from = systemNotificationSource;
+        NotificationTarget oldEmailTarget = new UserNotificationTarget(user.getName(), oldEmail);
+        NotificationTarget newEmailTarget = new UserNotificationTarget(user.getName(), newEmail);
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("newEmail", newEmail);
+
+        Notification oldNotification = new Notification(from, singletonList(oldEmailTarget), Notifications.EMAIL_CHANGE_OLD, notificationArguments);
+        Notification newNotification = new Notification(from, singletonList(newEmailTarget), Notifications.EMAIL_CHANGE_NEW, notificationArguments);
+        ServiceResult<Void> oldResult = notificationService.sendNotificationWithFlush(oldNotification, EMAIL);
+        ServiceResult<Void> newResult = notificationService.sendNotification(newNotification, EMAIL);
+        return aggregate(oldResult, newResult).andOnSuccessReturnVoid();
     }
 
     private void logEmailChange(String oldEmail, String newEmail){

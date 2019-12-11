@@ -78,3 +78,22 @@
      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
 
 </th:block>
+
+<th:block th:fragment="confirm-checkbox" >
+    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmation')} ? 'govuk-form-group--error'">
+        <span class="govuk-error-message" th:each="err : ${#fields.errors('confirmation')}" th:text="${err}"></span>
+        <div class="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+                <input id="confirmation"
+                       class="govuk-checkboxes__input"
+                       type="checkbox"
+                       th:field="*{confirmation}"
+                       th:errorclass="govuk-input--error"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.manage.users.email.change.confirmation}" />
+                <label for="confirmation"
+                       class="govuk-label govuk-checkboxes__label">Tick this box to confirm you have permission to make changes to the user's email address.</label>
+            </div>
+        </div>
+    </div>
+</th:block>

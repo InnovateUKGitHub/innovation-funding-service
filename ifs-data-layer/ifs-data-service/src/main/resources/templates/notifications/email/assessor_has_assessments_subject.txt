@@ -1,1 +1,1 @@
-Your applications for the competition ${competitionName} are ready for you to assess
+    Your applications for the competition ${competitionName} are ready for you to assess

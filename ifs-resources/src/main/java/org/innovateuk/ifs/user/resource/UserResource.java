@@ -164,6 +164,19 @@ public class UserResource implements Serializable {
         return status;
     }
 
+    @JsonIgnore
+    public String getStatusDisplay() {
+        switch (getStatus()) {
+            case ACTIVE:
+                return "Active";
+            case INACTIVE:
+            case PENDING:
+                return "Inactive";
+            default:
+                return "";
+        }
+    }
+
     public void setStatus(UserStatus status) {
         this.status = status;
     }
