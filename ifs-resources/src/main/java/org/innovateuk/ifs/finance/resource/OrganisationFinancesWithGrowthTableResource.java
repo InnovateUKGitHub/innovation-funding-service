@@ -22,7 +22,13 @@ public class OrganisationFinancesWithGrowthTableResource {
     public OrganisationFinancesWithGrowthTableResource() {
     }
 
-    public OrganisationFinancesWithGrowthTableResource(OrganisationSize organisationSize, YearMonth financialYearEnd, Long headCountAtLastFinancialYear, BigDecimal annualTurnoverAtLastFinancialYear, BigDecimal annualProfitsAtLastFinancialYear, BigDecimal annualExportAtLastFinancialYear, BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
+    public OrganisationFinancesWithGrowthTableResource(OrganisationSize organisationSize,
+                                                       YearMonth financialYearEnd,
+                                                       Long headCountAtLastFinancialYear,
+                                                       BigDecimal annualTurnoverAtLastFinancialYear,
+                                                       BigDecimal annualProfitsAtLastFinancialYear,
+                                                       BigDecimal annualExportAtLastFinancialYear,
+                                                       BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
         this.organisationSize = organisationSize;
         this.financialYearEnd = financialYearEnd;
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
