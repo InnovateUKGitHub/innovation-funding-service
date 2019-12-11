@@ -45,17 +45,15 @@ Academic finance calculations
 
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
-    [Tags]
-    Given the user clicks the button/link         jQuery = .button-clear:contains("Edit your project costs")
-    Then the user clicks the button/link          css = button[name="remove_jes"]
-    When the academic partner uploads a file      ${too_large_pdf}
-    Then the user should see a field and summary error   ${too_large_10MB_validation_error}
+    [Setup]  the user clicks the button/link         jQuery = .button-clear:contains("Edit your project costs")
+    Given the user can remove the uploaded file      remove_jes  ${5mb_pdf}
+    When the academic partner uploads a file         ${too_large_pdf}
+    Then the user should see a field error           ${too_large_10MB_validation_error}
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-2720
-    [Tags]
-    When the academic partner uploads a file               ${text_file}
-    Then the user should see a field and summary error     ${wrong_filetype_validation_error}
+    When the academic partner uploads a file        ${text_file}
+    Then the user should see a field error          ${wrong_filetype_validation_error}
 
 Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
@@ -73,8 +71,8 @@ Academics upload
     And the user clicks the button/link                link = Your project costs
     When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
-    And the user should see the element                link = ${5mb_pdf}
-    And open pdf link                                  ${5mb_pdf}
+    And the user should see the element                jQuery = a:contains(${5mb_pdf} (opens in a new window))
+    And open pdf link                                  jQuery = a:contains(${5mb_pdf} (opens in a new window))
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
@@ -106,7 +104,7 @@ Mark all as complete
     Given log in as a different user               ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     And the user navigates to Your-finances page   Academic robot test application
     And the user clicks the button/link            link = Your project costs
-    And the user should see the element            link = ${5mb_pdf}
+    And the user should see the element            jQuery = a:contains(${5mb_pdf} (opens in a new window))
     When the user enters text to a text field      css = input[name="tsbReference"]  123123
     Then textfield value should be                 css = input[name="tsbReference"]  123123
     And the user selects the checkbox              termsAgreed
@@ -154,7 +152,9 @@ the subtotals should be correctly updated
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
-    Choose File    css = .upload-section input    ${UPLOAD_FOLDER}/${file_name}
+    the user uploads the file    css = .upload-section input    ${file_name}
+    Wait Until Page Does Not Contain Without Screenshots    Uploading
+    the user should see the element   css = .remove-file
 
 the finance table should be correct
     Wait Until Element Contains Without Screenshots  css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)  £32,698
