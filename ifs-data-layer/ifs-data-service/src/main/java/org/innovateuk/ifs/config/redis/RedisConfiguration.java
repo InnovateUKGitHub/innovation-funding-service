@@ -2,6 +2,7 @@ package org.innovateuk.ifs.config.redis;
 
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.DisconnectedBehavior;
+import io.lettuce.core.cluster.ClusterClientOptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedisConfiguration extends CachingConfigurerSupport {
     private static final Log LOG = LogFactory.getLog(RedisConfiguration.class);
+    private RedisProperties redisProperties;
 
     /*
         Modify the redis properties. We set the redis connection with env variables. We want to use env variables
@@ -28,11 +30,19 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         if (properties.getCluster() != null && properties.getCluster().getNodes().isEmpty()) {
             properties.setCluster(null);
         }
+        this.redisProperties = properties;
     }
 
     @Bean
     public LettuceClientConfigurationBuilderCustomizer lettuceClientConfigurationBuilderCustomizer() {
-        return builder -> builder.clientOptions(ClientOptions.builder()
+        final ClientOptions.Builder options;
+        if (redisProperties.getCluster() != null) {
+            options = ClusterClientOptions.builder()
+                    .validateClusterNodeMembership(false);
+        } else {
+            options = ClientOptions.builder();
+        }
+        return builder -> builder.clientOptions(options
                 .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS).build());
     }
 
