@@ -98,15 +98,17 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserPageResource> getActiveUsers(int pageNumber, int pageSize) {
+    public RestResult<UserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", filter);
         String uriWithParams = buildPaginationUri(userRestURL + "/active", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
     @Override
-    public RestResult<UserPageResource> getInactiveUsers(int pageNumber, int pageSize) {
+    public RestResult<UserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", filter);
         String uriWithParams = buildPaginationUri(userRestURL + "/inactive", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
@@ -114,7 +116,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<UserPageResource> getActiveExternalUsers(int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(userRestURL + "/external/active", pageNumber, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(userRestURL + "/external/active", pageNumber, pageSize, null, params, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 

@@ -12,6 +12,7 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.admin.form.EditUserForm;
 import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
+import org.innovateuk.ifs.management.admin.form.UserManagementFilterForm;
 import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -72,9 +73,10 @@ public class UserManagementController extends AsyncAdaptor {
     public String viewActive(Model model,
                              HttpServletRequest request,
                              UserResource user,
-                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
+                             @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                             @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                             @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return view(model, "active", filterForm.getFilter(), page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -85,9 +87,10 @@ public class UserManagementController extends AsyncAdaptor {
     public String viewInactive(Model model,
                                HttpServletRequest request,
                                UserResource user,
-                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                               @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
+                               @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                               @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                               @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return view(model, "inactive", filterForm.getFilter(), page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -98,19 +101,20 @@ public class UserManagementController extends AsyncAdaptor {
     public String viewPending(Model model,
                               HttpServletRequest request,
                               UserResource user,
-                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "pending", page, size, Objects.toString(request.getQueryString(), ""), true);
+                              @Valid @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                              @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                              @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return view(model, "pending", filterForm.getFilter(), page, size, Objects.toString(request.getQueryString(), ""), true);
     }
 
-    private String view(Model model, String activeTab, int page, int size, String existingQueryString, boolean adminUser) {
+    private String view(Model model, String activeTab, String filter, int page, int size, String existingQueryString, boolean adminUser) {
         final CompletableFuture<UserPageResource> activeUsers;
         final CompletableFuture<UserPageResource> inactiveUsers;
         final CompletableFuture<RoleInvitePageResource> pendingUsers;
         if (adminUser) {
-            activeUsers = async(() -> userRestService.getActiveUsers(page, size).getSuccess());
-            inactiveUsers = async(() -> userRestService.getInactiveUsers(page, size).getSuccess());
-            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveUsers(filter, page, size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveUsers(filter, page, size).getSuccess());
+            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(filter, page, size).getSuccess());
         }
         else {
             activeUsers = async(() -> userRestService.getActiveExternalUsers(page, size).getSuccess());
@@ -122,6 +126,7 @@ public class UserManagementController extends AsyncAdaptor {
                 .thenAccept((activeInternalUsers, inactiveInternalUsers, pendingInternalUserInvites) -> {
                     UserListViewModel viewModel = new UserListViewModel(
                             activeTab,
+                            filter,
                             activeInternalUsers.getContent(),
                             inactiveInternalUsers.getContent(),
                             pendingInternalUserInvites.getContent(),

@@ -39,8 +39,9 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
     }
 
     @Override
-    public RestResult<RoleInvitePageResource> getPendingInternalUserInvites(int pageNumber, int pageSize) {
+    public RestResult<RoleInvitePageResource> getPendingInternalUserInvites(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", filter);
         String uriWithParams = buildPaginationUri(INVITE_REST_URL + "/internal/pending", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, RoleInvitePageResource.class);
     }

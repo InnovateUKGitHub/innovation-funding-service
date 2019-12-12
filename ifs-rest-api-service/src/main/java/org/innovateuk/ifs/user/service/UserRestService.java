@@ -22,9 +22,9 @@ public interface UserRestService {
 
     RestResult<List<UserResource>> findByUserRole(Role role);
 
-    RestResult<UserPageResource> getActiveUsers(int pageNumber, int pageSize);
+    RestResult<UserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize);
 
-    RestResult<UserPageResource> getInactiveUsers(int pageNumber, int pageSize);
+    RestResult<UserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize);
 
     RestResult<UserPageResource> getActiveExternalUsers(int pageNumber, int pageSize);
 

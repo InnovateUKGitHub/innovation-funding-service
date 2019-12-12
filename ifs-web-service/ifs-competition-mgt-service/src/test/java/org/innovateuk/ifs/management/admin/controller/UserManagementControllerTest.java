@@ -58,11 +58,11 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestServiceMock.getActiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getActiveUsers("", 1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(userRestServiceMock.getInactiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveUsers("", 1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(restSuccess(roleInvitePageResource));
+        when(inviteUserRestServiceMock.getPendingInternalUserInvites("", 1, 5)).thenReturn(restSuccess(roleInvitePageResource));
     }
 
     @Test
@@ -78,6 +78,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(model().attribute("model",
                         new UserListViewModel(
                                 "active",
+                                "",
                                 userPageResource.getContent(),
                                 userPageResource.getContent(),
                                 roleInvitePageResource.getContent(),
@@ -104,6 +105,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(model().attribute("model",
                         new UserListViewModel(
                                 "inactive",
+                                "",
                                 userPageResource.getContent(),
                                 userPageResource.getContent(),
                                 roleInvitePageResource.getContent(),
@@ -124,9 +126,21 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("pending", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
-                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                        new Pagination(userPageResource, "active"), new Pagination(userPageResource, "inactive"), new Pagination(roleInvitePageResource, "pending"), true)));
+                .andExpect(model().attribute("model",
+                        new UserListViewModel(
+                                "pending",
+                                "",
+                                userPageResource.getContent(),
+                                userPageResource.getContent(),
+                                roleInvitePageResource.getContent(),
+                                userPageResource.getTotalElements(),
+                                userPageResource.getTotalElements(),
+                                roleInvitePageResource.getTotalElements(),
+                                new Pagination(userPageResource, "active"),
+                                new Pagination(userPageResource, "inactive"),
+                                new Pagination(roleInvitePageResource, "pending"),
+                                true)
+                ));
     }
 
     @Test

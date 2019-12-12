@@ -36,7 +36,10 @@ public class UserListViewModel {
 
     private boolean includeInternalUsers;
 
+    private String filter; //  TODO might not need this
+
     public UserListViewModel(String tab,
+                             String filter,
                              List<UserResource> activeUsers,
                              List<UserResource> inactiveUsers,
                              List<RoleInviteResource> pendingInvites,
@@ -48,6 +51,7 @@ public class UserListViewModel {
                              Pagination pendingInvitesPagination,
                              boolean includeInternalUsers) {
         this.tab = tab;
+        this.filter = filter;
         this.activeUsers = activeUsers;
         this.inactiveUsers = inactiveUsers;
         this.pendingInvites = pendingInvites;
@@ -104,6 +108,10 @@ public class UserListViewModel {
         return includeInternalUsers;
     }
 
+    public String getFilter() {
+        return filter;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,6 +132,7 @@ public class UserListViewModel {
                 .append(inactiveUsersPagination, that.inactiveUsersPagination)
                 .append(pendingInvitesPagination, that.pendingInvitesPagination)
                 .append(includeInternalUsers, that.includeInternalUsers)
+                .append(filter, that.filter)
                 .isEquals();
     }
 
@@ -141,6 +150,7 @@ public class UserListViewModel {
                 .append(inactiveUsersPagination)
                 .append(pendingInvitesPagination)
                 .append(includeInternalUsers)
+                .append(filter)
                 .toHashCode();
     }
 
@@ -148,6 +158,7 @@ public class UserListViewModel {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("tab", tab)
+                .append("filter", filter)
                 .append("activeUsers", activeUsers)
                 .append("inactiveUsers", inactiveUsers)
                 .append("pendingInvites", pendingInvites)
