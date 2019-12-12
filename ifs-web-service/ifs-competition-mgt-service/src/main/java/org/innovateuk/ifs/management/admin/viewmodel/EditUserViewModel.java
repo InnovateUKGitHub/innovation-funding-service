@@ -9,12 +9,10 @@ public class EditUserViewModel {
 
     private final UserResource user;
     private final boolean ifsAdmin;
-    private final boolean editEmailFeatureToggle;
 
-    public EditUserViewModel(UserResource user, boolean ifsAdmin, boolean editEmailFeatureToggle) {
+    public EditUserViewModel(UserResource user, boolean ifsAdmin) {
         this.user = user;
         this.ifsAdmin = ifsAdmin;
-        this.editEmailFeatureToggle = editEmailFeatureToggle;
     }
 
     public UserResource getUser() {
@@ -26,7 +24,7 @@ public class EditUserViewModel {
     }
 
     public boolean isCanEditEmail() {
-        return editEmailFeatureToggle && (ifsAdmin || user.isExternalUser());
+        return ifsAdmin || user.isExternalUser();
     }
 
     public boolean isCanEditUserDetails() {
@@ -37,7 +35,4 @@ public class EditUserViewModel {
         return user.isInternalUser();
     }
 
-    public boolean isReadOnly() {
-        return !ifsAdmin && (!editEmailFeatureToggle || user.isInternalUser());
-    }
 }

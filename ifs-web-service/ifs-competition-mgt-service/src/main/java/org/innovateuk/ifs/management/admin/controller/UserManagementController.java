@@ -12,7 +12,6 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.admin.form.ConfirmEmailForm;
 import org.innovateuk.ifs.management.admin.form.EditUserForm;
-import org.innovateuk.ifs.management.admin.form.EditUserForm.EmailFeatureToggleGroup;
 import org.innovateuk.ifs.management.admin.form.EditUserForm.InternalUserFieldsGroup;
 import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.management.admin.viewmodel.ConfirmEmailViewModel;
@@ -27,7 +26,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +36,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.Validator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -77,9 +78,6 @@ public class UserManagementController extends AsyncAdaptor {
 
     @Autowired
     private EncryptedCookieService cookieService;
-
-    @Value("${ifs.user.management.email.change.enabled:false}")
-    private boolean editEmailFeatureToggle;
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
@@ -160,7 +158,7 @@ public class UserManagementController extends AsyncAdaptor {
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
-                    model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(Role.IFS_ADMINISTRATOR), editEmailFeatureToggle));
+                    model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(Role.IFS_ADMINISTRATOR)));
                     return "admin/user";
         }).getSuccess();
     }
@@ -188,7 +186,7 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     private String viewEditUser(Model model, UserResource user, UserResource loggedInUser) {
-        model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(Role.IFS_ADMINISTRATOR), editEmailFeatureToggle));
+        model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(Role.IFS_ADMINISTRATOR)));
         return "admin/edit-user";
     }
 
@@ -210,7 +208,7 @@ public class UserManagementController extends AsyncAdaptor {
             cookieService.saveToCookie(response, NEW_EMAIL_COOKIE, form.getEmail());
             return String.format("redirect:/admin/user/%d/edit/confirm", userId);
         };
-        Supplier<String> successView = !user.getEmail().equals(form.getEmail()) && editEmailFeatureToggle ? emailChangeSuccess : noEmailChangeSuccess;
+        Supplier<String> successView = !user.getEmail().equals(form.getEmail()) ? emailChangeSuccess : noEmailChangeSuccess;
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> saveResult = serviceSuccess();
@@ -227,9 +225,6 @@ public class UserManagementController extends AsyncAdaptor {
         List<Class<?>> groups = new ArrayList<>();
         if (user.isInternalUser()) {
             groups.add(InternalUserFieldsGroup.class);
-        }
-        if (editEmailFeatureToggle) {
-            groups.add(EmailFeatureToggleGroup.class);
         }
         validator.validate(form, groups.toArray(new Class<?>[0]));
     }

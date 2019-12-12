@@ -18,8 +18,6 @@ public class EditUserForm extends BaseBindingResultTarget {
 
     public interface InternalUserFieldsGroup {
     }
-    public interface EmailFeatureToggleGroup {
-    }
     @NotBlank(message = "{validation.standard.firstname.required}", groups = InternalUserFieldsGroup.class)
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}", groups = InternalUserFieldsGroup.class)
     @Size.List ({
@@ -36,9 +34,9 @@ public class EditUserForm extends BaseBindingResultTarget {
     })
     private String lastName;
 
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}", groups = EmailFeatureToggleGroup.class)
-    @NotBlank(message = "{validation.standard.email.required}", groups = EmailFeatureToggleGroup.class)
-    @Size(max = 254, message = "{validation.standard.email.length.max}", groups = EmailFeatureToggleGroup.class)
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
+    @NotBlank(message = "{validation.standard.email.required}")
+    @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String email;
 
     private Role role;
