@@ -116,15 +116,20 @@
          */-->
         <!--/* file upload has been submitted to innovate uk or marked as complete */-->
         <th:block th:if="${viewmode == 'readonly'}">
-            <p th:if="${#strings.isEmpty(filename)}" class="govuk-body uploaded-file">No file currently uploaded</p>
-            <p th:unless="${#strings.isEmpty(filename)}"
-                 class="govuk-body uploaded-file">
-                <a class="govuk-link"
-                   th:href="${downloadUrl}"
-                   th:text="${filename}" target="_blank"
-                   aria-describedby="uploaded-file-hint">The-uploaded-file-example.pdf</a>
-                <span id="uploaded-file-hint">(opens in a new window)</span>.
-            </p>
+            <p th:if="${#strings.isEmpty(filename)}" class="govuk-body no-file-uploaded">No file currently uploaded</p>
+            <ul th:unless="${#strings.isEmpty(filename)}"
+                class="govuk-list file-list">
+                <li class="success">
+                    <div class="file-row">
+                        <a th:href="${downloadUrl}"
+                           th:text="|${filename} (opens in a new window)|"
+                           target="_blank"
+                           class="govuk-link"
+                           aria-describedby="file-hint">File</a>
+                    </div>
+                </li>
+            </ul>
+
         </th:block>
         <!--/* file upload can still be changed */-->
         <th:block th:if="${viewmode == 'edit'}">
@@ -135,33 +140,38 @@
                 #fields.hasErrors('notBindedField') will throw an exception, and there is no quick way of checking if a
                 field has been binded
             */-->
-            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'govuk-form-group--error')">
+            <div class="ajax-upload"
+                 th:id="${wrapperId}"
+                 th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'govuk-form-group--error')"
+                 th:attr="data-js-upload-button-name=${saveName},
+                 data-js-upload-file-input=${inputField},
+                 data-js-max-size=${maxSize}"
+                 data-js-number-of-files="1">
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
                     </th:block>
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">
-                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
-                    <th:block th:if="${autoSaveOff}">
-                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" data-autosave-disabled="" aria-label="Upload a file"/>
-                    </th:block>
-                    <th:block th:unless="${autoSaveOff}">
-                        <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" aria-label="Upload a file" />
-                    </th:block>
-                    <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                    <p class="govuk-body no-file-uploaded ">No file currently uploaded.</p>
+                    <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" aria-label="Upload a file"
+                           data-set-section-valid=".ajax-upload" />
+                    <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">Upload</label>
                     <button th:name="${saveName}" th:id="${inputField+'-button'}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}" aria-label="Upload document">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">
-                    <p class="uploaded-file govuk-body">
-                        <a class="govuk-link"
-                           th:href="${downloadUrl}"
-                           th:text="${filename}"
-                           target="_blank"
-                           aria-describedby="uploaded-file-hint">The-uploaded-file-example.pdf</a>
-                        <span id="uploaded-file-hint">(opens in a new window)</span>.
-                    </p>
-                    <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit" aria-label="Remove uploaded document">Remove</button>
+                    <ul class="govuk-list file-list">
+                        <li class="success">
+                            <div class="file-row">
+                                <a th:href="${downloadUrl}"
+                                   th:text="|${filename} (opens in a new window)|"
+                                   target="_blank"
+                                   class="govuk-link"
+                                   aria-describedby="file-hint">File</a>
+                                <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-clear remove-file" aria-label="Remove uploaded document">Remove</button>
+                            </div>
+                        </li>
+                    </ul>
                 </th:block>
             </div>
         </th:block>

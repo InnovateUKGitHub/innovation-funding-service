@@ -134,7 +134,7 @@ Comp Admin cannot upload big or non-pdf grant offer letter
     [Setup]  log in as a different user                 &{Comp_admin1_credentials}
     Given the user navigates to the page                ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     When the user uploads a file                        grantOfferLetter  ${too_large_pdf}
-    Then The user should see a field and summary error  ${too_large_10MB_validation_error}
+    Then the user should see a field error              ${too_large_10MB_validation_error}
     And the user uploads a file                         grantOfferLetter  ${text_file}
     Then the user should see a field error              ${wrong_filetype_validation_error}
 
@@ -173,7 +173,7 @@ PM can view the grant offer letter page
     Then the user should see the element             css = li.require-action:last-of-type
     When the user clicks the button/link             link = Grant offer letter
     Then the user should see the element             jQuery = p:contains("The grant offer letter has been provided by Innovate UK.")
-    And the user should see the element              jQuery = label:contains(+ Upload)
+    And the user should see the element              jQuery = label:contains(Upload)
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
     Then the user should see the element             jQuery = h1:contains("Project team status")
@@ -185,7 +185,7 @@ Partners should not be able to send the Grant Offer
     [Setup]    log in as a different user       ${Elbow_Grease_Partner_Email}    ${short_password}
     Given the user clicks the button/link       link = ${Elbow_Grease_Title}
     And the user clicks the button/link         link = Grant offer letter
-    Then the user should not see the element    jQuery = label:contains(+ Upload)
+    Then the user should not see the element    jQuery = label:contains(Upload)
     And the user should not see the element     css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -206,7 +206,7 @@ PM should not be able to upload big Grant Offer files
     Given the user clicks the button/link               link = ${Elbow_Grease_Title}
     And the user clicks the button/link                 link = Grant offer letter
     When the user uploads a file                        signedGrantOfferLetter    ${too_large_pdf}
-    Then the user should see a field and summary error  ${too_large_10MB_validation_error}
+    Then the user should see the element                jQuery = .file-list .govuk-error-message:contains("${too_large_10MB_validation_error}")
 
 PM should be able upload a file and then access the Send button
     [Documentation]    INFUND-4851, INFUND-4972, INFUND-6829
@@ -307,7 +307,7 @@ PM can view the uploaded Annex file
     [Tags]  HappyPath
     [Setup]    log in as a different user        ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user navigates to the page         ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then open pdf link                           ${valid_pdf}
+    Then open pdf link                           jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM can download the annex
     [Documentation]    INFUND-5998
@@ -321,6 +321,7 @@ PM can remove the signed grant offer letter
     [Tags]  HappyPath
     When the user clicks the button/link              name = removeSignedGrantOfferLetterClicked
     Then the user should not see the element          jQuery = button:contains("Remove")
+    And the user should see the element               jQuery = label:contains("Upload")
     And the user should not see the element           jQuery = .upload-section a:contains("${valid_pdf}")
 
 PM can upload new signed grant offer letter
@@ -508,7 +509,8 @@ Project is automatically sent to ACC if set up for the competition
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}
-    choose file    name = ${name}    ${upload_folder}/${file}
+    the user uploads the file    name = ${name}    ${file}
+    Wait Until Page Does Not Contain Without Screenshots    Uploading
 
 the user is able to see the Grant Offer letter page
     Select Window                          title = Print version with CSS
@@ -516,6 +518,7 @@ the user is able to see the Grant Offer letter page
 
 the user removes existing and uploads new grant offer letter
     the user clicks the button/link  css = button[name = "removeSignedGrantOfferLetterClicked"]
+    the user should see the element  jQuery = label:contains("Upload")
     the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link  css = .govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     the user clicks the button/link  id = submit-gol-for-review
