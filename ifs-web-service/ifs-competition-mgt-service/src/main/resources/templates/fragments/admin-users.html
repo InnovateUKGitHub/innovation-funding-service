@@ -62,7 +62,7 @@
 
 <th:block th:fragment="users-table(users,active)" xmlns:th="http://www.w3.org/1999/html">
 
-    <th:block th:each="user : ${users}">
+    <div class="user-profile" th:each="user : ${users}">
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
 
         <div th:if="${active}" style="float: right"><a class="govuk-link" th:href="@{/admin/user/{userId}/edit(userId=${user.id})}">Edit</a></div>
@@ -73,7 +73,7 @@
         <p class="govuk-body govuk-!-margin-0">Role profile: <b><span th:text="${user.roleDisplayNames}">Applicant, Monitoring Officer</span></b></p>
         <p class="govuk-body govuk-!-margin-0"><small>Created by <span th:text="${user.createdBy}">IFS Web System User</span> on <span th:text="${#temporals.format(user.createdOn, 'd MMMM yyyy')}">30 July 2019</span></small></p>
 
-    </th:block>
+    </div>
 
      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
 
