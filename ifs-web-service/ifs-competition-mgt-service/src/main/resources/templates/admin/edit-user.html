@@ -129,7 +129,7 @@
                 <dd th:text="${model.user.statusDisplay}">Active</dd>
             </dl>
 
-            <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE) and model.ifsAdmin}">
+            <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE) and !model.readOnly}">
                 <button class="button-clear" data-js-modal="modal-confirm-deactivate-user" type="button">Deactivate user</button>
                 <th:block th:insert="fragments/modals :: modal-confirm-deactivate-user" />
             </th:block>
