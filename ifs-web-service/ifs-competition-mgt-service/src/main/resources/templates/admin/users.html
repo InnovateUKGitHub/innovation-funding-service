@@ -14,7 +14,11 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${showEmailUpdateSuccess}" class="success-alert">
+            <p class="govuk-body">Email has been changed successfully</p>
+        </div>
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='govuk-heading-l'" />
+
 
         <p th:if="${model.includeInternalUsers}" class="govuk-body">You can view the status of all users.</p>
         <p th:unless="${model.includeInternalUsers}" class="govuk-body">You can view the status of all external users.</p>

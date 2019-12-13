@@ -31,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,11 +56,8 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 public class UserManagementController extends AsyncAdaptor {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
-
     private static final String DEFAULT_PAGE_SIZE = "20";
-
     private static final String FORM_ATTR_NAME = "form";
-
     private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";
     private static final String NEW_EMAIL_COOKIE = "NEW_EMAIL_COOKIE";
 
@@ -245,15 +243,17 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @PostMapping("/user/{userId}/edit/confirm")
     public String confirmEmailChangePost(@PathVariable long userId,
-                                     Model model,
-                                     @Valid @ModelAttribute(value = FORM_ATTR_NAME) ConfirmEmailForm form,
-                                     @SuppressWarnings("unused") BindingResult bindingResult,
-                                     ValidationHandler validationHandler,
-                                     HttpServletRequest request,
-                                     HttpServletResponse response) {
+                                         Model model,
+                                         @Valid @ModelAttribute(value = FORM_ATTR_NAME) ConfirmEmailForm form,
+                                         @SuppressWarnings("unused") BindingResult bindingResult,
+                                         ValidationHandler validationHandler,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response,
+                                         RedirectAttributes redirectAttributes) {
         Supplier<String> failureView = () -> confirmEmailChange(userId, model, form, bindingResult, request);
         Supplier<String> successView = () -> {
             cookieService.removeCookie(response, NEW_EMAIL_COOKIE);
+            redirectAttributes.addFlashAttribute("showEmailUpdateSuccess", true);
             return "redirect:/admin/users/active";
         };
 
