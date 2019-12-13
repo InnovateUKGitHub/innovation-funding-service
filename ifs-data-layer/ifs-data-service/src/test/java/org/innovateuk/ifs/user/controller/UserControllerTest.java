@@ -296,13 +296,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void findActive() throws Exception {
-        when(userServiceMock.findActive("", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new UserPageResource()));
+        when(userServiceMock.findActive(null, PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new UserPageResource()));
         mockMvc.perform(get(buildPaginationUri("/user/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
     }
 
     @Test
     public void findInactive() throws Exception {
-        when(userServiceMock.findInactive("", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new UserPageResource()));
+        when(userServiceMock.findInactive(null, PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new UserPageResource()));
         mockMvc.perform(get(buildPaginationUri("/user/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
     }
 

@@ -344,7 +344,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         roleInviteResource.setEmail("Arden.Pimenta@innovateuk.test");
         roleInviteResource.setRoleName("ifs_administrator");
 
-        when(roleInviteRepositoryMock.findByStatus(SENT, pageable)).thenReturn(page);
+        when(roleInviteRepositoryMock.findByEmailContainsAndStatus("", SENT, pageable)).thenReturn(page);
         when(roleInviteMapperMock.mapToResource(Mockito.any(RoleInvite.class))).thenReturn(roleInviteResource);
 
         ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites("", pageable);

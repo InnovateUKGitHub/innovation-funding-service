@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Collections;
 import java.util.List;
@@ -122,7 +123,9 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
     public void findPendingInternalUserInvites() throws Exception {
         RoleInvitePageResource roleInvitePageResource = buildRoleInvitePageResource();
         when(inviteUserServiceMock.findPendingInternalUserInvites(anyString(), any(PageRequest.class))).thenReturn(serviceSuccess(roleInvitePageResource));
-        mockMvc.perform(get(buildPaginationUri("/invite-user/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()))
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", "");
+        mockMvc.perform(get(buildPaginationUri("/invite-user/internal/pending", 0, 5, null, params))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("inviteUser/internal/pending/{method-name}",
