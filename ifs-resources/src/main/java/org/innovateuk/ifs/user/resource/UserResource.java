@@ -152,6 +152,9 @@ public class UserResource implements Serializable {
 
     @JsonIgnore
     public String getRoleDisplayNames() {
+        if (roles.contains(IFS_ADMINISTRATOR)) {
+            return IFS_ADMINISTRATOR.getDisplayName();
+        }
         return roles.stream().map(Role::getDisplayName).collect(joining(", "));
     }
 
