@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -28,11 +28,11 @@ public class UserListViewModel {
 
     private long pendingCount;
 
-    private Pagination activeUsersPagination;
+    private PaginationViewModel activeUsersPagination;
 
-    private Pagination inactiveUsersPagination;
+    private PaginationViewModel inactiveUsersPagination;
 
-    private Pagination pendingInvitesPagination;
+    private PaginationViewModel pendingInvitesPagination;
 
     private boolean includeInternalUsers;
 
@@ -43,9 +43,9 @@ public class UserListViewModel {
                              long activeCount,
                              long inactiveCount,
                              long pendingCount,
-                             Pagination activeUsersPagination,
-                             Pagination inactiveUsersPagination,
-                             Pagination pendingInvitesPagination,
+                             PaginationViewModel activeUsersPagination,
+                             PaginationViewModel inactiveUsersPagination,
+                             PaginationViewModel pendingInvitesPagination,
                              boolean includeInternalUsers) {
         this.tab = tab;
         this.activeUsers = activeUsers;
@@ -84,15 +84,15 @@ public class UserListViewModel {
         return pendingInvites;
     }
 
-    public Pagination getActiveUsersPagination() {
+    public PaginationViewModel getActiveUsersPagination() {
         return activeUsersPagination;
     }
 
-    public Pagination getInactiveUsersPagination() {
+    public PaginationViewModel getInactiveUsersPagination() {
         return inactiveUsersPagination;
     }
 
-    public Pagination getPendingInvitesPagination() {
+    public PaginationViewModel getPendingInvitesPagination() {
         return pendingInvitesPagination;
     }
 

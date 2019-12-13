@@ -14,8 +14,8 @@ import org.innovateuk.ifs.management.admin.form.EditUserForm;
 import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
-import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -74,7 +73,7 @@ public class UserManagementController extends AsyncAdaptor {
                              UserResource user,
                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "active", page, size, user.hasRole(Role.IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -87,7 +86,7 @@ public class UserManagementController extends AsyncAdaptor {
                                UserResource user,
                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "inactive", page, size, user.hasRole(Role.IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -100,10 +99,10 @@ public class UserManagementController extends AsyncAdaptor {
                               UserResource user,
                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                               @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "pending", page, size, Objects.toString(request.getQueryString(), ""), true);
+        return view(model, "pending", page, size,  true);
     }
 
-    private String view(Model model, String activeTab, int page, int size, String existingQueryString, boolean adminUser) {
+    private String view(Model model, String activeTab, int page, int size, boolean adminUser) {
         final CompletableFuture<UserPageResource> activeUsers;
         final CompletableFuture<UserPageResource> inactiveUsers;
         final CompletableFuture<RoleInvitePageResource> pendingUsers;
@@ -128,9 +127,9 @@ public class UserManagementController extends AsyncAdaptor {
                             activeInternalUsers.getTotalElements(),
                             inactiveInternalUsers.getTotalElements(),
                             pendingInternalUserInvites.getTotalElements(),
-                            new Pagination(activeInternalUsers, "active?" + existingQueryString),
-                            new Pagination(inactiveInternalUsers, "inactive?" + existingQueryString),
-                            new Pagination(pendingInternalUserInvites, "pending?" + existingQueryString),
+                            new PaginationViewModel(activeInternalUsers),
+                            new PaginationViewModel(inactiveInternalUsers),
+                            new PaginationViewModel(pendingInternalUserInvites),
                             adminUser
                     );
                     model.addAttribute("model", viewModel);

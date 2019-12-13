@@ -308,6 +308,29 @@
         </ul>
     </div>
 </th:block>
+
+<th:block th:fragment="pagination(pagination)">
+    <div class="pagination-links">
+        <a th:if="${pagination.currentPage != 1}" th:href="${pagination.urlForPage(pagination.currentPage - 1)}">Previous</a>
+        <th:block th:if="${pagination.startPage != 1}">
+            <a th:href="${pagination.urlForPage(1)}">1</a>
+            <span>...</span>
+        </th:block>
+        <th:block th:each="i : ${#numbers.sequence(pagination.startPage, pagination.endPage)}">
+            <a th:if="${pagination.currentPage != i}"
+                th:href="${pagination.urlForPage(i)}"
+                th:text="${i}"></a>
+            <span th:if="${pagination.currentPage == i}" th:text="${i}"></span>
+        </th:block>
+        <th:block th:if="${pagination.endPage != pagination.totalPages}">
+            <span>...</span>
+            <a th:href="${pagination.urlForPage(pagination.totalPages)}" th:text="${pagination.totalPages}">1</a>
+        </th:block>
+        <a th:if="${pagination.currentPage != pagination.totalPages}" th:href="${pagination.urlForPage(pagination.currentPage + 1)}">Next</a>
+
+        <span th:text="|Showing ${pagination.currentElementsFrom} - ${pagination.currentElementsTo} of ${pagination.totalElements} results|"></span>
+    </div>
+</th:block>
 </html>
 
 
