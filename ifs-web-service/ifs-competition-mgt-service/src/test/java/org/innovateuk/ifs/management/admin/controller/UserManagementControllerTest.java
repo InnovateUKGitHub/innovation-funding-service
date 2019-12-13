@@ -129,7 +129,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(model().attribute("model",
                         new UserListViewModel(
                                 "pending",
-                                "",
+                                null,
                                 userPageResource.getContent(),
                                 userPageResource.getContent(),
                                 roleInvitePageResource.getContent(),
