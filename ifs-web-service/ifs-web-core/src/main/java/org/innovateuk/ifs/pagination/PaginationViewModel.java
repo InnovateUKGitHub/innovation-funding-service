@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.pagination;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.http.client.utils.URIBuilder;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -123,5 +125,37 @@ public class PaginationViewModel {
         return builder.build().toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PaginationViewModel that = (PaginationViewModel) o;
+
+        return new EqualsBuilder()
+                .append(totalElements, that.totalElements)
+                .append(currentPage, that.currentPage)
+                .append(size, that.size)
+                .append(totalPages, that.totalPages)
+                .append(startPage, that.startPage)
+                .append(endPage, that.endPage)
+                .append(currentElementsTo, that.currentElementsTo)
+                .append(currentElementsFrom, that.currentElementsFrom)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(totalElements)
+                .append(currentPage)
+                .append(size)
+                .append(totalPages)
+                .append(startPage)
+                .append(endPage)
+                .append(currentElementsTo)
+                .append(currentElementsFrom)
+                .toHashCode();
+    }
 }
