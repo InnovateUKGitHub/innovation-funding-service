@@ -58,11 +58,11 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestServiceMock.getActiveUsers("", 1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getActiveUsers(null, 1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(userRestServiceMock.getInactiveUsers("", 1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveUsers(null, 1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(inviteUserRestServiceMock.getPendingInternalUserInvites("", 1, 5)).thenReturn(restSuccess(roleInvitePageResource));
+        when(inviteUserRestServiceMock.getPendingInternalUserInvites(null, 1, 5)).thenReturn(restSuccess(roleInvitePageResource));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(model().attribute("model",
                         new UserListViewModel(
                                 "active",
-                                "",
+                                null,
                                 userPageResource.getContent(),
                                 userPageResource.getContent(),
                                 roleInvitePageResource.getContent(),
@@ -105,7 +105,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(model().attribute("model",
                         new UserListViewModel(
                                 "inactive",
-                                "",
+                                null,
                                 userPageResource.getContent(),
                                 userPageResource.getContent(),
                                 roleInvitePageResource.getContent(),
