@@ -2,12 +2,12 @@ package org.innovateuk.ifs.management.admin.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Role;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -34,8 +34,8 @@ public class EditUserForm extends BaseBindingResultTarget {
     })
     private String lastName;
 
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @NotBlank(message = "{validation.standard.email.required}")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String email;
 

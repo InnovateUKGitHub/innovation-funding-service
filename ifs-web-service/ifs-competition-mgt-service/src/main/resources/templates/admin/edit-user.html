@@ -21,6 +21,7 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View user details',size='govuk-heading-xl'" />
         <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <th:block th:if="${model.canEditUserDetails}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
                   <label class="govuk-label" th:for="${#ids.next('firstName')}">

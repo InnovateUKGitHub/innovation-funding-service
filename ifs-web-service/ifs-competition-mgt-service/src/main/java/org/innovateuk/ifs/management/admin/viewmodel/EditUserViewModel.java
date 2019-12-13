@@ -24,7 +24,7 @@ public class EditUserViewModel {
     }
 
     public boolean isReadOnly() {
-        return !ifsAdmin && user.isExternalUser();
+        return !ifsAdmin && !user.isExternalUser();
     }
 
     public boolean isCanEditUserDetails() {

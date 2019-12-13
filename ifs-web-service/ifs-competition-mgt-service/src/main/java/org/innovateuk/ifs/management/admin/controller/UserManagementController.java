@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.Validator;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -195,12 +194,12 @@ public class UserManagementController extends AsyncAdaptor {
     public String updateUser(@PathVariable long userId,
                              Model model,
                              UserResource loggedInUser,
-                             @ModelAttribute(FORM_ATTR_NAME) EditUserForm form,
+                             @Valid @ModelAttribute(FORM_ATTR_NAME) EditUserForm form,
                              @SuppressWarnings("unused") BindingResult bindingResult,
                              ValidationHandler validationHandler,
                              HttpServletResponse response) {
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
-        validateForm(form, user);
+        validateInternalUser(form, user);
 
         Supplier<String> failureView = () -> viewEditUser(model, user, loggedInUser);
         Supplier<String> noEmailChangeSuccess = () -> "redirect:/admin/users/active";
@@ -221,12 +220,10 @@ public class UserManagementController extends AsyncAdaptor {
         });
     }
 
-    private void validateForm(EditUserForm form, UserResource user) {
-        List<Class<?>> groups = new ArrayList<>();
+    private void validateInternalUser(EditUserForm form, UserResource user) {
         if (user.isInternalUser()) {
-            groups.add(InternalUserFieldsGroup.class);
+            validator.validate(form, InternalUserFieldsGroup.class);
         }
-        validator.validate(form, groups.toArray(new Class<?>[0]));
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
@@ -244,6 +241,7 @@ public class UserManagementController extends AsyncAdaptor {
         model.addAttribute("model", new ConfirmEmailViewModel(user, email));
         return "admin/confirm-email";
     }
+
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @PostMapping("/user/{userId}/edit/confirm")
     public String confirmEmailChangePost(@PathVariable long userId,
@@ -273,14 +271,14 @@ public class UserManagementController extends AsyncAdaptor {
         return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_USER')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
     public String deactivateUser(@PathVariable long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_USER')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
     public String reactivateUser(@PathVariable long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
