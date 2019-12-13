@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +60,8 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     @Test
     public void getPendingInternalUsers() {
         RoleInvitePageResource expected = new RoleInvitePageResource();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", "");
         setupGetWithRestResultExpectations(buildPaginationUri(inviteRestBaseUrl + "/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()), RoleInvitePageResource.class, expected, OK);
         RoleInvitePageResource result = service.getPendingInternalUserInvites("",0, 5).getSuccess();
         assertEquals(expected, result);
