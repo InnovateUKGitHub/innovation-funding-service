@@ -40,7 +40,7 @@ Companies House: Invalid company name
     Then the user should see the element             jQuery = li p:contains("No results found.")
 
 Companies House: Valid registration number
-    [Documentation]    INFUND-887
+    [Documentation]    INFUND-8870
     [Tags]  HappyPath
     When the user enters text to a text field    id = organisationSearchName    05493105
     And the user clicks the button/link          id = org-search

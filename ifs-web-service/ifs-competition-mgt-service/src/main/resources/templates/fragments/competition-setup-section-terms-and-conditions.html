@@ -38,19 +38,14 @@
             </div>
 
             <div id="procurement-upload" class="upload-section">
-                <div th:unless="${model.termsAndConditionsDocUploaded}">
-                    <th:block th:if="${#fields.hasErrors('termsAndConditionsDoc')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('termsAndConditionsDoc')}" th:text="${err}" />
-                    </th:block>
-                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
-                    <input type="file" id="terms-and-conditions-doc" name="termsAndConditionsDoc" class="inputfile">
-                    <label for="terms-and-conditions-doc" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                    <button name="uploadTermsAndConditionsDoc" class="button-secondary" data-for-file-upload="terms-and-conditions-doc"></button>
-                </div>
-                <div th:if="${model.termsAndConditionsDocUploaded}">
-                    <p class="govuk-body"><a target="_blank" th:text="${model.general.competition.competitionTerms.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})}">FileName.pdf</a> (opens in a new window).</p>
-                    <button name="deleteTermsAndConditionsDoc" class="button-secondary" type="submit">Remove</button>
-                </div>
+                <th:block th:insert="question-type/types :: fileupload-fragment(edit,
+                                @{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})},
+                                ${model.general.competition.competitionTerms?.name},
+                                termsAndConditionsDoc,
+                                termsAndConditionsDoc,
+                                true,
+                                deleteTermsAndConditionsDoc,
+                                uploadTermsAndConditionsDoc)"/>
             </div>
 
             <button class="govuk-button govuk-!-margin-top-5">Done</button>

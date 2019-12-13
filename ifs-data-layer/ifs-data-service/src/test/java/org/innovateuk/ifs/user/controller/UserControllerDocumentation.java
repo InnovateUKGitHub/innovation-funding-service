@@ -135,10 +135,10 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     }
 
     @Test
-    public void testFindActiveInternalUsers() throws Exception {
+    public void findActive() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
-        when(userServiceMock.findActiveByRoles(Role.internalRoles(), PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
-        mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))
+        when(userServiceMock.findActive(PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
+        mockMvc.perform(get(buildPaginationUri("/user/active", 0, 5, null, new LinkedMultiValueMap<>()))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
@@ -148,10 +148,10 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     }
 
     @Test
-    public void testFindInactiveInternalUsers() throws Exception {
+    public void findInactive() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
-        when(userServiceMock.findInactiveByRoles(Role.internalRoles(), PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
-        mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))
+        when(userServiceMock.findInactive(PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
+        mockMvc.perform(get(buildPaginationUri("/user/inactive", 0, 5, null, new LinkedMultiValueMap<>()))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",

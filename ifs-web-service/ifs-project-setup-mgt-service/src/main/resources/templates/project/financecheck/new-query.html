@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Post a new query for ${model.organisationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Post a new query for ${model.organisationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
 <body class="govuk-template__body competition-management project-management query-form">
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Queries',linkUrl=@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId})},currentCompetition=null" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Queries',linkUrl=@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId})},currentCompetition=null"/>
 
-    <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-            <h2 class="govuk-error-summary__title"  id="error-summary-title">We are unable to post a query.</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    <main class="govuk-main-wrapper" id="main-content" role="main"
+          th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to post a query.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Post a new query for ${model.organisationName}|,subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle=|Post a new query for ${model.organisationName}|,subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'"/>
         <h2 class="govuk-heading-m">Finance Contact</h2>
         <p class="govuk-body">
-            <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
-            <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" class="govuk-link">example@example.com</a> <br />
+            <th:block th:text="${model.financeContactName}">Finance Contact</th:block>
+            <br/>
+            <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}"
+               class="govuk-link">example@example.com</a> <br/>
             <th:block th:text="${model.financeContactPhoneNumber}">0</th:block>
         </p>
 
@@ -33,67 +40,80 @@
             You must confirm any finance changes with the contact before you approve.
         </p>
 
-        <form class="govuk-!-margin-top-6" id="post-new-query-form" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
+        <form class="govuk-!-margin-top-6" id="post-new-query-form"
+              th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
               th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-                <h2 class="govuk-heading-m">Post a new query</h2>
-                <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('queryTitle')}? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-label--s" for="queryTitle">
-                        Title
-                    </label>
-                    <th:block th:if="${#fields.hasErrors('queryTitle')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}"></span>
-                    </th:block>
-                    <input name="queryTitle"
-                           id="queryTitle"
-                           type="text"
-                           class="govuk-input"
-                           required="required"
-                           th:errorclass="govuk-input--error"
-                           th:field="*{queryTitle}"
-                           th:attr="maxlength=${model.maxTitleCharacters},
+            <h2 class="govuk-heading-m">Post a new query</h2>
+            <div class="govuk-form-group govuk-!-width-one-half"
+                 th:classappend="${#fields.hasErrors('queryTitle')}? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="queryTitle">
+                    Title
+                </label>
+                <th:block th:if="${#fields.hasErrors('queryTitle')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('queryTitle')}"
+                          th:text="${err}"></span>
+                </th:block>
+                <input name="queryTitle"
+                       id="queryTitle"
+                       type="text"
+                       class="govuk-input"
+                       required="required"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{queryTitle}"
+                       th:attr="maxlength=${model.maxTitleCharacters},
                                     data-required-errormessage=#{validation.field.must.not.be.blank},
-                                    data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
-                </div>
-                <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('section')}? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-label--s" for="section">
-                        Section
-                    </label>
-                    <th:block th:if="${#fields.hasErrors('section')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}"></span>
-                    </th:block>
-                    <select name="section"
-                            id="section"
-                            class="govuk-select">
-                        <th:block th:each="section_type : ${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).values()}">
-                            <th:block th:if="*{section}">
+                                    data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}"/>
+            </div>
+            <div class="govuk-form-group govuk-!-width-one-half"
+                 th:classappend="${#fields.hasErrors('section')}? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="section">
+                    Section
+                </label>
+                <th:block th:if="${#fields.hasErrors('section')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('section')}"
+                          th:text="${err}"></span>
+                </th:block>
+                <select name="section"
+                        id="section"
+                        class="govuk-select">
+                    <th:block
+                        th:each="section_type : ${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).values()}">
+                        <th:block th:if="*{section}">
+                            <option th:value="${section_type.name()}"
+                                    th:selected="${#strings.toUpperCase(section_type.name())} == ${#strings.toUpperCase(form.section)}"
+                                    th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option
+                            </option>
+                        </th:block>
+                        <th:block th:unless="*{section}">
+                            <th:block th:if="${model.querySection}">
                                 <option th:value="${section_type.name()}"
-                                        th:selected="${#strings.toUpperCase(section_type.name())} == ${#strings.toUpperCase(form.section)}"
-                                        th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
+                                        th:selected="${#strings.toLowerCase(section_type.name()) == #strings.toLowerCase(model.querySection)}"
+                                        th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">
+                                    option
+                                </option>
                             </th:block>
-                            <th:block th:unless="*{section}">
-                                <th:block th:if="${model.querySection}">
-                                    <option th:value="${section_type.name()}"
-                                            th:selected="${#strings.toLowerCase(section_type.name()) == #strings.toLowerCase(model.querySection)}"
-                                            th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
-                                </th:block>
-                                <th:block th:unless="${model.querySection}">
-                                    <option th:value="${section_type.name()}"
-                                            th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
-                                </th:block>
+                            <th:block th:unless="${model.querySection}">
+                                <option th:value="${section_type.name()}"
+                                        th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">
+                                    option
+                                </option>
                             </th:block>
                         </th:block>
-                    </select>
-                </div>
-                <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('query')}? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-label--s" for="query">
-                        Query
-                    </label>
-                    <th:block th:if="${#fields.hasErrors('query')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}"></span>
                     </th:block>
-                    <div class="textarea-wrapped word-count">
+                </select>
+            </div>
+            <div class="govuk-form-group govuk-!-width-one-half"
+                 th:classappend="${#fields.hasErrors('query')}? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="query">
+                    Query
+                </label>
+                <th:block th:if="${#fields.hasErrors('query')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('query')}"
+                          th:text="${err}"></span>
+                </th:block>
+                <div class="textarea-wrapped word-count">
                         <textarea data-editor="md"
-                                  required = "required"
+                                  required="required"
                                   class="govuk-textarea"
                                   id="query"
                                   name="query"
@@ -105,52 +125,66 @@
                           data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
                           data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxQueryCharacters})},
                           data-required-errormessage=#{validation.field.must.not.be.blank}"></textarea>
-                        <div class="textarea-footer" th:with="query=*{query}" aria-live="polite" aria-atomic="true" role="status">
-                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" />
-                        </div>
+                    <div class="textarea-footer" th:with="query=*{query}" aria-live="polite" aria-atomic="true"
+                         role="status">
+                        <th:block
+                            th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})"/>
                     </div>
                 </div>
-                <div class="upload-section govuk-!-width-one-half">
-                    <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                        <h3 class="govuk-heading-s">Supporting documentation</h3>
-                        <ul class="govuk-list">
-                            <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+            </div>
+            <div class="upload-section govuk-!-width-one-half">
+                <div class="ajax-upload"
+                     data-js-upload-button-name="uploadAttachment"
+                     data-js-upload-file-input="attachment"
+                     data-js-number-of-files="10"
+                     data-js-upload-one-at-a-time="">
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
+                    <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No file currently
+                        uploaded.</p>
+                    <ul class="govuk-list file-list">
+                        <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
+                            class="success">
+                            <div class="file-row">
                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}"
-                                   th:text="${model.newAttachmentLinks.get(attachmentId)}"
-                                   class="govuk-link"
+                                   th:text="|${model.newAttachmentLinks.get(attachmentId)} (opens in a new window)|"
                                    target="_blank"
-                                   aria-describedby="supporting-documentation-hint">filename</a>
-                                <span id="supporting-documentation-hint" class="govuk-body">(opens in a new window)</span>
-                                <button name="removeAttachment" class="button-clear govuk-!-padding-top-0 govuk-!-margin-left-6" th:value="${attachmentId}">Remove</button>
-                            </li>
-                        </ul>
-                    </th:block>
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Upload supporting documentation in PDF format.</h3>
-                    <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error': ''">
+                                   class="govuk-link"
+                                   aria-describedby="file-hint">File</a>
+                                <button name="removeAttachment" th:value="${attachmentId}"
+                                        class="button-clear remove-file" aria-label="Remove uploaded document">Remove
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                    <h2 class="govuk-heading-s">Upload supporting documentation in pdf format</h2>
+                    <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                         <th:block th:if="${#fields.hasErrors('attachment')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}"
+                                  th:text="${err}"/>
                         </th:block>
                         <input type="file" id="attachment" class="inputfile" name="attachment">
-                        <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                        <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                        <label for="attachment" class="button-secondary govuk-!-margin-top-6">Upload</label>
+                        <button name="uploadAttachment" class="button-secondary" type="submit"
+                                data-for-file-upload="attachment">Save
+                        </button>
                     </div>
                 </div>
-                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                <input type="hidden" id="action" value="postQuery">
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-one-half">
-                        <button type="submit" id="post-query" class="govuk-button govuk-!-margin-0">Post query</button>
-                    </div>
-                    <div class="govuk-grid-column-one-half alignright">
-                        <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-body govuk-link">Cancel</a>
-                    </div>
+            </div>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+            <input type="hidden" id="action" value="postQuery">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <button type="submit" id="post-query" class="govuk-button govuk-!-margin-0">Post query</button>
                 </div>
+                <div class="govuk-grid-column-one-half alignright">
+                    <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-body govuk-link">Cancel</a>
+                </div>
+            </div>
         </form>
-
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
 </body>
 </html>
