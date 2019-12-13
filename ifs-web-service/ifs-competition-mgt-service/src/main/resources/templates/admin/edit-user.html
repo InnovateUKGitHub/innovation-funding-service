@@ -77,7 +77,7 @@
                     <dd th:text="${model.user.phoneNumber}">999</dd>
                 </th:block>
             </dl>
-            <th:block th:if="${model.canEditEmail}">
+            <th:block th:unless="${model.readOnly}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="email">
                         Email
@@ -96,7 +96,7 @@
                                     data-required-errormessage=#{validation.standard.email.required}" />
                 </div>
             </th:block>
-            <th:block th:unless="${model.canEditEmail}">
+            <th:block th:if="${model.readOnly}">
                 <dl class="govuk-list">
                     <dt>Email address</dt>
                     <dd th:text="${model.user.email}">email@email.com</dd>
@@ -134,13 +134,15 @@
                 <th:block th:insert="fragments/modals :: modal-confirm-deactivate-user" />
             </th:block>
 
-            <div class="govuk-form-group govuk-!-margin-top-6">
+            <div th:unless="${model.readOnly}" class="govuk-form-group govuk-!-margin-top-6">
                 <button class="govuk-button">Save and return</button>
                 <a class="button-clear" th:href="@{/admin/users/active}">Cancel</a>
             </div>
 
-            <a th:href="@{/admin/users/active}"
-               class="button-secondary">Return to manage users</a>
+            <div class="govuk-form-group govuk-!-margin-top-6">
+                <a th:href="@{/admin/users/active}"
+                   class="button-secondary">Return to manage users</a>
+            </div>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

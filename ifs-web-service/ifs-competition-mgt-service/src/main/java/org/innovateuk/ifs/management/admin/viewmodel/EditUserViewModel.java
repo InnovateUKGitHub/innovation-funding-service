@@ -23,8 +23,8 @@ public class EditUserViewModel {
         return ifsAdmin;
     }
 
-    public boolean isCanEditEmail() {
-        return ifsAdmin || user.isExternalUser();
+    public boolean isReadOnly() {
+        return !ifsAdmin && user.isExternalUser();
     }
 
     public boolean isCanEditUserDetails() {
