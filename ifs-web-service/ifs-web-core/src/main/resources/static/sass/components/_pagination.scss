@@ -162,6 +162,10 @@
     @extend .govuk-link
   }
 
+  span {
+    @extend .govuk-body
+  }
+
   a,
   span {
     margin: 0 7px;
