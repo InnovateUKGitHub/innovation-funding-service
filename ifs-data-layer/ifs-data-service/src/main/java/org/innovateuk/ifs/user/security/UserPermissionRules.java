@@ -256,7 +256,6 @@ public class UserPermissionRules {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
-
     @PermissionRule(value = "DEACTIVATE", description = "A Support user can deactivate external Users")
     public boolean supportUserCanDeactivateExternalUsers(UserResource userToDeactivate, UserResource user) {
         return userToDeactivate.isExternalUser() && user.hasRole(SUPPORT);
