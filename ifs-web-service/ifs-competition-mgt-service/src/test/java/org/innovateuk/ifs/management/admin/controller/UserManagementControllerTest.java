@@ -138,30 +138,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel(user)));
-    }
-
-    @Test
-    public void updateUserWhenUpdateFails() throws Exception {
-
-        when(internalUserServiceMock.editInternalUser(Mockito.any()))
-                .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE));
-
-        Role role = IFS_ADMINISTRATOR;
-
-        UserResource userResource = newUserResource()
-                .withRolesGlobal(Collections.singletonList(role))
-                .build();
-        when(userRestServiceMock.retrieveUserById(1L))
-                .thenReturn(restSuccess(userResource));
-
-        mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
-                param("firstName", "First").
-                param("lastName", "Last").
-                param("emailAddress", "asdf@asdf.com").
-                param("role", "COLLABORATOR"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/edit-user"));
+                .andExpect(model().attribute("model", new EditUserViewModel(user, true)));
     }
 
     @Test
@@ -197,7 +174,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         expectedForm.setFirstName("first");
         expectedForm.setLastName("last");
         expectedForm.setRole(IFS_ADMINISTRATOR);
-        expectedForm.setEmailAddress(email);
+        expectedForm.setEmail(email);
 
         mockMvc.perform(get("/admin/user/{userId}/edit", 1L))
                 .andExpect(status().isOk())

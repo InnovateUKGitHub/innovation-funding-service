@@ -89,9 +89,7 @@
                        type="checkbox"
                        th:field="*{confirmation}"
                        th:errorclass="govuk-input--error"
-                       required="required"
-                       data-switches-button-status="#confirm-email-change"
-                       th:attr="data-required-errormessage=#{validation.manage.users.email.change.confirmation}" />
+                       data-switches-button-status="#confirm-email-change">
                 <label for="confirmation"
                        class="govuk-label govuk-checkboxes__label">Tick this box to confirm you have permission to make changes to the user's email address.</label>
             </div>
