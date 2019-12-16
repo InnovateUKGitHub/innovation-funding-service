@@ -16,7 +16,6 @@ import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -38,6 +37,7 @@ import java.util.function.Supplier;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -72,7 +72,7 @@ public class UserManagementController extends AsyncAdaptor {
                              UserResource user,
                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", page, size, user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "active", page, size, user.hasRole(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -84,7 +84,7 @@ public class UserManagementController extends AsyncAdaptor {
                                UserResource user,
                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", page, size, user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "inactive", page, size, user.hasRole(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -154,8 +154,8 @@ public class UserManagementController extends AsyncAdaptor {
         form.setFirstName(userResource.getFirstName());
         form.setLastName(userResource.getLastName());
 
-        if (userResource.getRoles().contains(Role.IFS_ADMINISTRATOR)) {
-            form.setRole(Role.IFS_ADMINISTRATOR);
+        if (userResource.getRoles().contains(IFS_ADMINISTRATOR)) {
+            form.setRole(IFS_ADMINISTRATOR);
         } else {
             form.setRole(userResource.getRoles().stream().findFirst().get());
         }
