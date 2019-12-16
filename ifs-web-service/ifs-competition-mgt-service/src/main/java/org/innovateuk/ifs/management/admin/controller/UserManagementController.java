@@ -69,7 +69,6 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @GetMapping("/users/active")
     public String viewActive(Model model,
-                             HttpServletRequest request,
                              UserResource user,
                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
@@ -82,7 +81,6 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
-                               HttpServletRequest request,
                                UserResource user,
                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
@@ -95,8 +93,6 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
-                              HttpServletRequest request,
-                              UserResource user,
                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                               @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
         return view(model, "pending", page, size,  true);

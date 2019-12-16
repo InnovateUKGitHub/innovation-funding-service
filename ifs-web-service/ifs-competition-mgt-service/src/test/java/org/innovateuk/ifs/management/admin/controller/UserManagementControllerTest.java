@@ -59,17 +59,17 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestServiceMock.getActiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getActiveUsers(0, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(userRestServiceMock.getInactiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveUsers(0, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(restSuccess(roleInvitePageResource));
+        when(inviteUserRestServiceMock.getPendingInternalUserInvites(0, 5)).thenReturn(restSuccess(roleInvitePageResource));
     }
 
     @Test
     public void testViewActive() throws Exception {
-        when(userRestServiceMock.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestServiceMock.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getActiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/active")
                 .param("page", "1")
@@ -94,8 +94,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void testViewInactive() throws Exception {
-        when(userRestServiceMock.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestServiceMock.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getActiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/inactive")
                 .param("page", "1")
