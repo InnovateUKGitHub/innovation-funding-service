@@ -80,8 +80,8 @@ public class PaginationViewModel {
             this.endPage = currentPage + EACH_SIDE;
         }
 
-        this.currentElementsFrom = (currentPage * size) - size;
-        this.currentElementsTo = Math.min((currentElementsFrom + size), totalElements);
+        this.currentElementsFrom = ((currentPage * size) - size) + 1;
+        this.currentElementsTo = Math.min((currentElementsFrom + size - 1), totalElements);
     }
 
     public long getTotalElements() {
@@ -121,7 +121,7 @@ public class PaginationViewModel {
                 .getRequestAttributes()).getRequest();
         String uri = request.getRequestURI();
         URIBuilder builder = new URIBuilder(uri);
-        builder.addParameter("page", String.valueOf(page - 1));
+        builder.addParameter("page", String.valueOf(page));
         return builder.build().toString();
     }
 

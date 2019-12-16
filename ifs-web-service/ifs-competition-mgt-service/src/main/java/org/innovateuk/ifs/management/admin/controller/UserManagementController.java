@@ -46,7 +46,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 @RequestMapping("/admin")
 public class UserManagementController extends AsyncAdaptor {
 
-    private static final String DEFAULT_PAGE_NUMBER = "0";
+    private static final String DEFAULT_PAGE_NUMBER = "1";
 
     private static final String DEFAULT_PAGE_SIZE = "20";
 
@@ -107,13 +107,13 @@ public class UserManagementController extends AsyncAdaptor {
         final CompletableFuture<UserPageResource> inactiveUsers;
         final CompletableFuture<RoleInvitePageResource> pendingUsers;
         if (adminUser) {
-            activeUsers = async(() -> userRestService.getActiveUsers(page, size).getSuccess());
-            inactiveUsers = async(() -> userRestService.getInactiveUsers(page, size).getSuccess());
-            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveUsers(page - 1, size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveUsers(page - 1, size).getSuccess());
+            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(page - 1, size).getSuccess());
         }
         else {
-            activeUsers = async(() -> userRestService.getActiveExternalUsers(page, size).getSuccess());
-            inactiveUsers = async(() -> userRestService.getInactiveExternalUsers(page, size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveExternalUsers(page - 1, size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveExternalUsers(page - 1, size).getSuccess());
             pendingUsers = async(() -> new RoleInvitePageResource());
         }
 
