@@ -256,7 +256,7 @@ public class UserPermissionRules {
         return isSystemMaintenanceUser(user);
     }
 
-    @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users") // This doesn't seem right -- should that be reactivate
+    @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
     public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
