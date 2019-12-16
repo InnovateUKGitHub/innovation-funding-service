@@ -266,11 +266,6 @@ public class UserPermissionRules {
         return isSystemMaintenanceUser(user);
     }
 
-    @PermissionRule(value = "ACTIVATE", description = "Support users can reactivate external users")
-    public boolean supportCanReactivateExternal(UserResource userToDeactivate, UserResource user) {
-        return user.hasRole(SUPPORT) && userToDeactivate.isExternalUser();
-    }
-
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
     public boolean ifsAdminCanReactivateUsers(UserResource userToReactivate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
