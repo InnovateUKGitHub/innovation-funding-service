@@ -38,7 +38,6 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     protected abstract ServiceResult<FinanceRowItem> saveGrantClaim(GrantClaim grantClaim);
     protected abstract ServiceResult<CompetitionResource> getCompetitionFromTargetId(long targetId);
     protected abstract void resetYourFundingSection(Finance finance, long competitionId, long userId);
-    protected abstract ServiceResult<Void> updateStateAidAgreed(long targetId);
 
     @Override
     public ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationWithGrowthTable(long targetId, long organisationId) {

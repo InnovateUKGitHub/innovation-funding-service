@@ -123,11 +123,6 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
             protected void resetYourFundingSection(BaseFinanceResource baseFinanceResource, long competitionId,
                                                    long userId) {
             }
-
-            @Override
-            protected ServiceResult<Void> updateStateAidAgreed(long targetId) {
-                return serviceSuccess();
-            }
         };
     }
 

@@ -181,4 +181,14 @@
                         )" />
     </th:block>
 
+    <th:block th:fragment="state-aid-warning">
+        <th:block th:if="${!readOnly && showStateAidAgreement}">
+            <div class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">
+                    If we decide to award you funding you must be eligible to receive state aid at the point of the award.
+                    If you are found to be ineligible, we will withdraw our offer.
+                </p>
+            </div>
+        </th:block>
+    </th:block>
 </html>
