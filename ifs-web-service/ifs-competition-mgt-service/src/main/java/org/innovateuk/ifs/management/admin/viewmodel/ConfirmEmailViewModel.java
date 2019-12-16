@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.management.admin.viewmodel;
 
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
 
 public class ConfirmEmailViewModel {
@@ -22,7 +24,7 @@ public class ConfirmEmailViewModel {
         return email;
     }
 
-    public boolean isUserHasLiveProjectRole() {
-        return user.hasRole(Role.LIVE_PROJECTS_USER);
+    public boolean doesUserNeedCrmUpdate() {
+        return user.hasAnyRoles(APPLICANT, MONITORING_OFFICER);
     }
 }

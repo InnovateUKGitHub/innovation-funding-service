@@ -15,7 +15,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to update internal user's details.</h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title">You are unable to change this email address.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
@@ -43,11 +43,11 @@
             </dl>
 
             <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
-                <th:block th:unless="${model.userHasLiveProjectRole}">
+                <th:block th:unless="${model.doesUserNeedCrmUpdate()}">
                     <hr/>
                     <th:block th:insert="fragments/admin-users :: confirm-checkbox" />
                 </th:block>
-                <th:block th:if="${model.userHasLiveProjectRole}">
+                <th:block th:if="${model.doesUserNeedCrmUpdate()}">
                     <div class="message-alert govuk-!-margin-bottom-6">
                         <p class="govuk-body">Once you confirm the change of email address, it is your responsibility to make sure these changes
                             are reflected in the service across pre-award and post-award.</p>

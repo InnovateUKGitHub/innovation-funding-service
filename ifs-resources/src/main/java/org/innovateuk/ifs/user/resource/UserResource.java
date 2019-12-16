@@ -50,6 +50,10 @@ public class UserResource implements Serializable {
         // no-arg constructor
     }
 
+    public UserResource(String uid) {
+        this.uid = uid;
+    }
+    
     public Long getId() {
         return id;
     }

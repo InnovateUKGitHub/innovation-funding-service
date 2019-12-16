@@ -282,6 +282,8 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.deactivateUser() method",
+            description = "IFS admins and support users can deactivate users.")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
     public String deactivateUser(@PathVariable long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
@@ -289,6 +291,8 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.reactivateUser() method",
+            description = "IFS admins and support users can reactivate users.")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
     public String reactivateUser(@PathVariable long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->

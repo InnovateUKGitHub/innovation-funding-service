@@ -43,6 +43,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_EMAIL_UPDATE_EMAIL_ALREADY_EXISTS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -368,10 +369,18 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @UserUpdate
     public ServiceResult<UserResource> updateEmail(long userId, String email) {
         return find(userRepository.findById(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> validateEmailDoesntAlreadyExist(user, email))
                 .andOnSuccess(user -> updateUserEmail(user, email))
                 .andOnSuccessReturn(userMapper::mapToResource);
     }
 
+    public ServiceResult<User> validateEmailDoesntAlreadyExist(User user, String email) {
+        Optional<User> existingUserWithSameEmail = userRepository.findByEmail(email);
+        if (existingUserWithSameEmail.isPresent()) {
+            return serviceFailure(USER_EMAIL_UPDATE_EMAIL_ALREADY_EXISTS);
+        }
+        return serviceSuccess(user);
+    }
     private ServiceResult<Void> validateSearchString(String searchString) {
 
         searchString = StringUtils.trim(searchString);
