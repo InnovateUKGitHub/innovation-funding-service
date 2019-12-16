@@ -14,6 +14,7 @@ import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,6 +28,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,6 +53,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Mock
     private InviteUserRestService inviteUserRestServiceMock;
+
+    @Mock
+    private EncryptedCookieService cookieService;
 
     @Before
     public void setUpCommonExpectations() {
@@ -138,22 +144,46 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel(user, true)));
+                .andExpect(model().attribute("model", new EditUserViewModel(user, false)));
     }
 
     @Test
     public void updateUserSuccess() throws Exception {
-
+        ZonedDateTime now = ZonedDateTime.now();
         when(internalUserServiceMock.editInternalUser(Mockito.any()))
                 .thenReturn(serviceSuccess());
+        UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc")
+                .withEmail("asdf@asdf.com")
+                .build();
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
         mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
                 param("firstName", "First").
                 param("lastName", "Last").
-                param("emailAddress", "asdf@asdf.com").
+                param("email", "asdf@asdf.com").
                 param("role", "IFS_ADMINISTRATOR"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/admin/users/active"));
+    }
+    @Test
+    public void updateUserSuccess_changeEmail() throws Exception {
+        ZonedDateTime now = ZonedDateTime.now();
+        when(internalUserServiceMock.editInternalUser(Mockito.any()))
+                .thenReturn(serviceSuccess());
+        UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc")
+                .withEmail("asdf@asdf.com")
+                .build();
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
+
+        mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("email", "new-email@asdf.com").
+                param("role", "IFS_ADMINISTRATOR"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/admin/user/" + 1 + "/edit/confirm"));
+
+        verify(cookieService).saveToCookie(any(), eq("NEW_EMAIL_COOKIE"), any());
     }
 
     @Test
@@ -180,7 +210,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/edit-user"))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("user", userResource));
+                .andExpect(model().attribute("model", new EditUserViewModel(userResource, false)));
     }
 
     @Test

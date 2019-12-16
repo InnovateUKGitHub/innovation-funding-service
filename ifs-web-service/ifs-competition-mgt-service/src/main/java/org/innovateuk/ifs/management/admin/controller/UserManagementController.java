@@ -152,6 +152,8 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.viewUser() method",
+            description = "IFS admins and support users can view users.")
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
@@ -161,6 +163,8 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.viewEditUser() method",
+            description = "IFS admins and support users can edit users.")
     @GetMapping("/user/{userId}/edit")
     public String viewEditUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
@@ -188,6 +192,8 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.updateUser() method",
+            description = "IFS admins and support users can edit users.")
     @PostMapping("/user/{userId}/edit")
     public String updateUser(@PathVariable long userId,
                              Model model,
@@ -225,6 +231,8 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.confirmEmailChange() method",
+            description = "IFS admins and support users can confirm email change.")
     @GetMapping("/user/{userId}/edit/confirm")
     public String confirmEmailChange(@PathVariable long userId,
                                      Model model,
@@ -241,6 +249,8 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.confirmEmailChange() method",
+            description = "IFS admins and support users can confirm email change.")
     @PostMapping("/user/{userId}/edit/confirm")
     public String confirmEmailChangePost(@PathVariable long userId,
                                          Model model,
