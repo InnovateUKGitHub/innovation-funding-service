@@ -301,7 +301,7 @@ The user is able to complete Public description section
 The user is able to complete Horizon 2020 grant agreement section
     the user clicks the button/link           jQuery = a:contains("Horizon 2020 grant agreement")
     the user should see the element           jQuery = h1:contains("Horizon 2020 grant agreement")
-    the user uploads the file                 id = grant-agreement  ${valid_pdf}
+    the user uploads the file                 id = grantAgreement  ${valid_pdf}
     the user clicks the button/link           id = mark-as-complete
     the user clicks the button/link           link = Return to application overview
     the user should see the element           jQuery = li:contains("Horizon 2020 grant agreement") > .task-status-complete
