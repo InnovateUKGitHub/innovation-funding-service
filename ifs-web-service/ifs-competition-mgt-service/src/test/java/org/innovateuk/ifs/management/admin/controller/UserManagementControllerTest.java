@@ -46,13 +46,13 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     private RoleInvitePageResource roleInvitePageResource;
 
     @Mock
-    private InternalUserService internalUserServiceMock;
+    private InternalUserService internalUserService;
 
     @Mock
-    private UserRestService userRestServiceMock;
+    private UserRestService userRestService;
 
     @Mock
-    private InviteUserRestService inviteUserRestServiceMock;
+    private InviteUserRestService inviteUserRestService;
 
     @Mock
     private EncryptedCookieService cookieService;
@@ -64,17 +64,17 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestServiceMock.getActiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(userRestServiceMock.getInactiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(restSuccess(roleInvitePageResource));
+        when(inviteUserRestService.getPendingInternalUserInvites(1, 5)).thenReturn(restSuccess(roleInvitePageResource));
     }
 
     @Test
     public void testViewActive() throws Exception {
-        when(userRestServiceMock.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestServiceMock.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/active")
                 .param("page", "1")
@@ -99,8 +99,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void testViewInactive() throws Exception {
-        when(userRestServiceMock.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestServiceMock.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/inactive")
                 .param("page", "1")
@@ -139,7 +139,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     public void testViewUser() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
         UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc").build();
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
@@ -150,12 +150,12 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     @Test
     public void updateUserSuccess() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        when(internalUserServiceMock.editInternalUser(Mockito.any()))
+        when(internalUserService.editInternalUser(Mockito.any()))
                 .thenReturn(serviceSuccess());
         UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc")
                 .withEmail("asdf@asdf.com")
                 .build();
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
         mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
                 param("firstName", "First").
@@ -168,12 +168,12 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     @Test
     public void updateUserSuccess_changeEmail() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
-        when(internalUserServiceMock.editInternalUser(Mockito.any()))
+        when(internalUserService.editInternalUser(Mockito.any()))
                 .thenReturn(serviceSuccess());
         UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc")
                 .withEmail("asdf@asdf.com")
                 .build();
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
         mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
                 param("firstName", "First").
@@ -197,7 +197,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withStatus(UserStatus.ACTIVE)
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L))
+        when(userRestService.retrieveUserById(1L))
                 .thenReturn(restSuccess(userResource));
 
         EditUserForm expectedForm = new EditUserForm();
@@ -225,14 +225,14 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
-        when(userRestServiceMock.deactivateUser(1L)).thenReturn(restSuccess());
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestService.deactivateUser(1L)).thenReturn(restSuccess());
         mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/user/1"));
 
-        verify(userRestServiceMock).deactivateUser(1L);
+        verify(userRestService).deactivateUser(1L);
     }
 
     @Test
@@ -247,18 +247,18 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
-        when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestService.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().isNotFound());
 
-        verify(userRestServiceMock).deactivateUser(1L);
+        verify(userRestService).deactivateUser(1L);
     }
 
     @Test
     public void deactivateUserFindUserFails() throws Exception {
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        when(userRestService.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
         mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().isForbidden());
@@ -276,14 +276,14 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
-        when(userRestServiceMock.reactivateUser(1L)).thenReturn(restSuccess());
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestService.reactivateUser(1L)).thenReturn(restSuccess());
         mockMvc.perform(post("/admin/user/{userId}", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/user/1"));
 
-        verify(userRestServiceMock).reactivateUser(1L);
+        verify(userRestService).reactivateUser(1L);
     }
 
     @Test
@@ -298,19 +298,19 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
-        when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestService.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         mockMvc.perform(post("/admin/user/{userId}", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().isNotFound());
 
-        verify(userRestServiceMock).reactivateUser(1L);
+        verify(userRestService).reactivateUser(1L);
     }
 
     @Test
     public void reactivateUserFindUserFails() throws Exception {
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        when(userRestService.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
         mockMvc.perform(post("/admin/user/{userId}", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().isForbidden());
@@ -342,7 +342,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     public void findExternalUsers() throws Exception {
         String searchString = "smith";
 
-        when(userRestServiceMock.findExternalUsers(searchString, SearchCategory.EMAIL)).thenReturn(restSuccess(emptyList()));
+        when(userRestService.findExternalUsers(searchString, SearchCategory.EMAIL)).thenReturn(restSuccess(emptyList()));
         mockMvc.perform(post("/admin/external/users").
                 param("searchString", searchString).
                 param("searchCategory", "EMAIL"))
@@ -356,7 +356,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     public void findExternalInvites() throws Exception {
         String searchString = "smith";
 
-        when(inviteUserRestServiceMock.findExternalInvites(searchString, SearchCategory.ORGANISATION_NAME)).thenReturn(restSuccess(emptyList()));
+        when(inviteUserRestService.findExternalInvites(searchString, SearchCategory.ORGANISATION_NAME)).thenReturn(restSuccess(emptyList()));
         mockMvc.perform(post("/admin/external/users").
                 param("searchString", searchString).
                 param("searchCategory", "ORGANISATION_NAME").
@@ -370,14 +370,14 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     @Test
     public void resendInvite() throws Exception {
 
-        when(inviteUserRestServiceMock.resendInternalUserInvite(123L)).
+        when(inviteUserRestService.resendInternalUserInvite(123L)).
                 thenReturn(restSuccess());
 
         mockMvc.perform(post("/admin/users/pending/resend-invite?inviteId=" + 123L))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/admin/users/pending"));
 
-        verify(inviteUserRestServiceMock).resendInternalUserInvite(123L);
+        verify(inviteUserRestService).resendInternalUserInvite(123L);
     }
 
     @Override
