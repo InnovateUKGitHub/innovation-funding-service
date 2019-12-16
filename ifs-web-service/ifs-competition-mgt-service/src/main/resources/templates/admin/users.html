@@ -21,21 +21,17 @@
         <p th:if="${model.includeInternalUsers}" class="govuk-body"><a th:href="@{/admin/invite-user}" class="govuk-link">Invite a new internal user</a></p>
 
         <form method="GET" th:object="${form}">
-            <div class="search-filters govuk-!-margin-top-6">
+            <div class="govuk-!-margin-top-6">
                     <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-one-third">
+                        <div class="alignright">
                             <div class="govuk-form-group">
-                                <input class="govuk-input" id="filter" name="filter" value="" placeholder="Search for a user">
+                                <input class="govuk-input govuk-input--width-20" id="filter" name="filter" th:value="*{filter}" placeholder="Search for a user.">
+                                <button class="govuk-button govuk-!-margin-0" type="submit">Filter</button>
                             </div>
                         </div>
                     </div>
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-full alignright">
-                            <button class="govuk-button govuk-!-margin-0" type="submit">Filter</button>
-                        </div>
-                    </div>
-                <div class="clear-search-filter">
-                    <a href="?page=0" class="govuk-link">Clear filters</a>
+                <div th:unless="${form.cleared}" class="clear-search-filter">
+                    <p class="govuk-body"><b th:text="${model.totalCount}">7</b> users matching the search <b th:text="${form.filter}">Brad.smith@example.com</b> <a href="?page=0" class="govuk-link">Clear filters</a></p>
                 </div>
             </div>
         </form>

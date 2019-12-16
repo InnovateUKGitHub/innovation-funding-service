@@ -18,6 +18,10 @@ public class UserManagementFilterForm extends BaseBindingResultTarget {
         this.filter = filter;
     }
 
+    public boolean isCleared() {
+        return filter == null || filter.trim().isEmpty();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
