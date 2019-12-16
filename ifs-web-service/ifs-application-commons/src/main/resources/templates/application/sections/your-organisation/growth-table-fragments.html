@@ -4,7 +4,7 @@
     <th:block
         th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
 
-        <th:block th:insert="fragments/state-aid-warning"/>
+        <th:block th:insert="this::state-aid-warning"/>
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
@@ -39,7 +39,7 @@
     <th:block
         th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
 
-        <th:block th:insert="fragments/state-aid-warning"/>
+        <th:block th:insert="this::state-aid-warning"/>
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
