@@ -217,7 +217,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Notification oldNotification = new Notification(from, singletonList(oldEmailTarget), Notifications.EMAIL_CHANGE_OLD, notificationArguments);
         Notification newNotification = new Notification(from, singletonList(newEmailTarget), Notifications.EMAIL_CHANGE_NEW, notificationArguments);
         ServiceResult<Void> oldResult = notificationService.sendNotificationWithFlush(oldNotification, EMAIL);
-        ServiceResult<Void> newResult = notificationService.sendNotification(newNotification, EMAIL);
+        ServiceResult<Void> newResult = notificationService.sendNotificationWithFlush(newNotification, EMAIL);
         return aggregate(oldResult, newResult).andOnSuccessReturnVoid();
     }
 
@@ -374,7 +374,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 .andOnSuccessReturn(userMapper::mapToResource);
     }
 
-    public ServiceResult<User> validateEmailDoesntAlreadyExist(User user, String email) {
+    private ServiceResult<User> validateEmailDoesntAlreadyExist(User user, String email) {
         Optional<User> existingUserWithSameEmail = userRepository.findByEmail(email);
         if (existingUserWithSameEmail.isPresent()) {
             return serviceFailure(USER_EMAIL_UPDATE_EMAIL_ALREADY_EXISTS);
