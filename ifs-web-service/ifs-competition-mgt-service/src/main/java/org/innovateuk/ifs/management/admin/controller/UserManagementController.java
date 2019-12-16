@@ -90,7 +90,7 @@ public class UserManagementController extends AsyncAdaptor {
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewPending() method",
             description = "IFS administrators can view pending user invites")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
