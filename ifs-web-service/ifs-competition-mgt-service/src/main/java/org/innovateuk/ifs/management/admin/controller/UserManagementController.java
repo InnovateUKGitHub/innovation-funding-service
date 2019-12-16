@@ -203,7 +203,7 @@ public class UserManagementController extends AsyncAdaptor {
                              ValidationHandler validationHandler,
                              HttpServletResponse response) {
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
-        validateInternalUser(form, user);
+        validateUser(form, user);
 
         Supplier<String> failureView = () -> viewEditUser(model, user, loggedInUser);
         Supplier<String> noEmailChangeSuccess = () -> "redirect:/admin/users/active";
@@ -216,15 +216,14 @@ public class UserManagementController extends AsyncAdaptor {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> saveResult = serviceSuccess();
             if (user.isInternalUser()) {
-                EditUserResource editUserResource = constructEditUserResource(form, userId);
-                saveResult = internalUserService.editInternalUser(editUserResource);
+                saveResult = internalUserService.editInternalUser(constructEditUserResource(form, userId));
             }
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, successView);
         });
     }
 
-    private void validateInternalUser(EditUserForm form, UserResource user) {
+    private void validateUser(EditUserForm form, UserResource user) {
         if (user.isInternalUser()) {
             validator.validate(form, InternalUserFieldsGroup.class);
         }
