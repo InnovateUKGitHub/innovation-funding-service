@@ -72,8 +72,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void testViewActive() throws Exception {
-        when(userRestService.getActiveExternalUsers("", 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers("",0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveExternalUsers(null, 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/active")
                 .param("page", "1")
@@ -99,8 +99,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void testViewInactive() throws Exception {
-        when(userRestService.getActiveExternalUsers("",0, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers("",0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/inactive")
                 .param("page", "1")
