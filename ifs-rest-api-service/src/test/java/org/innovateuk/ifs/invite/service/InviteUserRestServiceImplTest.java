@@ -9,10 +9,13 @@ import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Collections;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.externalInviteResourceListType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -60,11 +63,10 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     @Test
     public void getPendingInternalUsers() {
         RoleInvitePageResource expected = new RoleInvitePageResource();
-        String filter = "";
-        int page = 0;
-        int size = 5;
-        setupGetWithRestResultExpectations(inviteRestBaseUrl + "/internal/pending?filter=" + filter + "&page=" + page + "&size=" + size, RoleInvitePageResource.class, expected, OK);
-        RoleInvitePageResource result = service.getPendingInternalUserInvites("",0, 5).getSuccess();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", "");
+        setupGetWithRestResultExpectations(buildPaginationUri(inviteRestBaseUrl + "/internal/pending", 0, 5, null, params), RoleInvitePageResource.class, expected, OK);
+        RoleInvitePageResource result = service.getPendingInternalUserInvites("", 0, 5).getSuccess();
         assertEquals(expected, result);
     }
 
