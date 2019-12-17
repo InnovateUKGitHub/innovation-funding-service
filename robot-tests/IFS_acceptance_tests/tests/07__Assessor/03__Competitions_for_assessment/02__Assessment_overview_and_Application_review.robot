@@ -217,8 +217,8 @@ the finance summary total should be correct
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
     Element Should Contain    css = .finance-summary tbody tr:nth-child(2) td:nth-child(2)    990
-    Element Should Contain    css = .finance-summary tbody tr:nth-child(2) td:nth-child(4)    0
-    Element Should Contain    css = .finance-summary tbody tr:nth-child(2) td:nth-child(5)    2,468
+    Element Should Contain    css = .finance-summary tbody tr:nth-child(2) td:nth-child(4)    990
+    Element Should Contain    css = .finance-summary tbody tr:nth-child(2) td:nth-child(5)    0
     Element Should Contain    css = .finance-summary tbody tr:nth-child(2) td:nth-child(6)    0
 
 the project cost breakdown total should be correct

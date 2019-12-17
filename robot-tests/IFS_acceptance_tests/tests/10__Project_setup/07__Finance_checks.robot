@@ -232,7 +232,7 @@ Project finance user can view finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    115,606    7,404    29%
+    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    116,596    4,936    29%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -244,13 +244,13 @@ Project finance user can view finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section    1    200,903    30%    57,803    2,468    140,632
     #Check finances summary for academic user
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
-    Then the Categories Are Verified For Finances Summary Section    2    990    100%    0    2,468   0
+    Then the Categories Are Verified For Finances Summary Section    2    990    100%    990    0   0
     #Check finances summary for non lead partner
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
     Then the Categories Are Verified For Finances Summary Section    3    200,903    30%    57,803    2,468    140,632
     #Check total
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1    402,797    115,606    7,404    281,265
+    And The Total Calculation For Finances Summary Are Verified    1    402,797    116,596    4,936    281,265
 
 Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -633,7 +633,7 @@ Project finance user can see updated finance overview after lead changes to elig
     [Tags]
     When the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    css = .standard-definition-list dd:nth-child(2)    £379,678  # Total project cost
-    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(4)    108,670   # Grant applied for
+    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(4)    109,660   # Grant applied for
     And the user should see the text in the element     css = .standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
 
 Project finance user can see the Eligibility check page for the partner
@@ -766,7 +766,7 @@ Project finance user can see updated finance overview after partner changes to e
     Given log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     Then the user should see the text in the element   css = .standard-definition-list dd:nth-child(2)    £356,559  #Total project cost
-    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(4)    101,735   #Grant applied for
+    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(4)    102,725   #Grant applied for
     And the user should see the text in the element    css = .standard-definition-list dd:nth-child(8)    29%       #Total percentage grant
 
 Project finance can see updated finance breakdown for different categories
@@ -810,7 +810,7 @@ Project finance user can view Updated finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,469   101,735    7,404     29%
+    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,469   102,635    4,936     29%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -1131,8 +1131,8 @@ Custom suite setup
 
 the table row has expected values
     the user sees the text in the element    css = .standard-definition-list dd:nth-child(2)    £402,797   # Total project cost
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(4)    115,606   # Grant applied for
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(6)    7,404     # Other public sector funding
+    the user sees the text in the element    css = .standard-definition-list dd:nth-child(4)    116,596   # Grant applied for
+    the user sees the text in the element    css = .standard-definition-list dd:nth-child(6)    4,936     # Other public sector funding
     the user sees the text in the element    css = .standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
 
 the user fills in project costs
