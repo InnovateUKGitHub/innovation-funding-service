@@ -1,0 +1,12 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+    <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+
+    <p style="margin: 0 0 1em 0;">We recently received a request to change your email to this address on the Innovation Funding Service.</p>
+
+    <p style="margin: 0 0 1em 0;">This is now completed and we will not use your old email address.</p>
+
+    <p style="margin: 0 0 1em 0;">For any queries about your account please contact the support desk at <a href="mailto:support@innovateuk.ukri.org">support@innovateuk.ukri.org</a></p>
+<@layout.senderHTML />
+</@layout.default>

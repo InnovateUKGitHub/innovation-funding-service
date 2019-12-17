@@ -50,6 +50,10 @@ public class UserResource implements Serializable {
         // no-arg constructor
     }
 
+    public UserResource(String uid) {
+        this.uid = uid;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -152,6 +156,9 @@ public class UserResource implements Serializable {
 
     @JsonIgnore
     public String getRoleDisplayNames() {
+        if (roles.contains(IFS_ADMINISTRATOR)) {
+            return IFS_ADMINISTRATOR.getDisplayName();
+        }
         return roles.stream().map(Role::getDisplayName).collect(joining(", "));
     }
 
@@ -162,6 +169,19 @@ public class UserResource implements Serializable {
 
     public UserStatus getStatus() {
         return status;
+    }
+
+    @JsonIgnore
+    public String getStatusDisplay() {
+        switch (getStatus()) {
+            case ACTIVE:
+                return "Active";
+            case INACTIVE:
+            case PENDING:
+                return "Inactive";
+            default:
+                return "";
+        }
     }
 
     public void setStatus(UserStatus status) {

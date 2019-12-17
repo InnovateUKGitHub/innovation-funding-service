@@ -776,15 +776,80 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void systemMaintenanceUserCanUpdateUsersEmailAddress() {
+    public void systemMaintenanceUserCanUpdateUsersEmailAddresses() {
 
         UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemMaintenanceUser())) {
-                assertTrue(rules.systemMaintenanceUserCanUpdateUsersEmailAddress(userResource, user));
+                assertTrue(rules.systemMaintenanceUserCanUpdateUsersEmailAddresses(userResource, user));
             } else {
-                assertFalse(rules.systemMaintenanceUserCanUpdateUsersEmailAddress(userResource, user));
+                assertFalse(rules.systemMaintenanceUserCanUpdateUsersEmailAddresses(userResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void supportCanUpdateExternalUsersEmailAddresses() {
+
+        UserResource externalUser = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource internalUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(SUPPORT)) {
+                assertTrue(rules.supportCanUpdateExternalUsersEmailAddresses(externalUser, user));
+                assertFalse(rules.supportCanUpdateExternalUsersEmailAddresses(internalUser, user));
+            } else {
+                assertFalse(rules.supportCanUpdateExternalUsersEmailAddresses(externalUser, user));
+                assertFalse(rules.supportCanUpdateExternalUsersEmailAddresses(internalUser, user));
+            }
+        });
+    }
+
+    @Test
+    public void ifsAdminCanUpdateAllEmailAddresses() {
+
+        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(IFS_ADMINISTRATOR)) {
+                assertTrue(rules.ifsAdminCanUpdateAllEmailAddresses(userResource, user));
+            } else {
+                assertFalse(rules.ifsAdminCanUpdateAllEmailAddresses(userResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void supportUserCanDeactivateExternalUsers() {
+
+        UserResource externalUser = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource internalUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(SUPPORT)) {
+                assertTrue(rules.supportUserCanDeactivateExternalUsers(externalUser, user));
+                assertFalse(rules.supportUserCanDeactivateExternalUsers(internalUser, user));
+            } else {
+                assertFalse(rules.supportUserCanDeactivateExternalUsers(externalUser, user));
+                assertFalse(rules.supportUserCanDeactivateExternalUsers(internalUser, user));
+            }
+        });
+    }
+
+    @Test
+    public void supportUserCanReactivateExternalUsers() {
+
+        UserResource externalUser = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource internalUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(SUPPORT)) {
+                assertTrue(rules.supportUserCanReactivateExternalUsers(externalUser, user));
+                assertFalse(rules.supportUserCanReactivateExternalUsers(internalUser, user));
+            } else {
+                assertFalse(rules.supportUserCanReactivateExternalUsers(externalUser, user));
+                assertFalse(rules.supportUserCanReactivateExternalUsers(internalUser, user));
             }
         });
     }

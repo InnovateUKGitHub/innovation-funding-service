@@ -59,8 +59,6 @@ items:
                   value: "${NEW_RELIC_LICENCE_KEY}"
                 - name: NEW_RELIC_LOG
                   value: "STDOUT"
-                - name: IFS_PROJECT_TEAM_CHANGE_ENABLED
-                  value: "${IFS_PROJECT_TEAM_CHANGE_ENABLED}"
               ports:
                 - containerPort: 8080
               resources:
