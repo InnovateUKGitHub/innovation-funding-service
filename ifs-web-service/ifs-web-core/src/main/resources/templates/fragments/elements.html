@@ -145,7 +145,7 @@
     <th:block th:text="${#strings.toLowerCase(#temporals.format(date, 'h:mma'))}"/>
 </th:block>
 
-<!--  ========================== Element: Agree to eligible for state aid =============== -->
+<!--  ========================== Element: Agree to eligible for State aid =============== -->
 <th:block th:fragment="application-agree-eligible-for-state-aid">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('stateAidAgreed')} ? 'govuk-form-group--error'">
         <fieldset class="govuk-fieldset">
@@ -170,7 +170,7 @@
                         <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid"
                            target="_blank"
                            class="govuk-link"
-                           aria-describedby="state-aid-hint">eligible for state aid</a>
+                           aria-describedby="state-aid-hint">eligible for State aid</a>
                         <span id="state-aid-hint">(opens in a new window)</span>
                         within 90 days of any offer being made.
                     </label>
