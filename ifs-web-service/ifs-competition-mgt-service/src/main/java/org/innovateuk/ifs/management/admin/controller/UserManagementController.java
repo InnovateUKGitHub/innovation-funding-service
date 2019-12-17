@@ -47,6 +47,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -86,7 +87,7 @@ public class UserManagementController extends AsyncAdaptor {
                              UserResource user,
                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "active", page, size, Objects.toString(request.getQueryString()), user.hasRole(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -99,7 +100,7 @@ public class UserManagementController extends AsyncAdaptor {
                                UserResource user,
                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "inactive", page, size, Objects.toString(request.getQueryString()), user.hasRole(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -157,7 +158,7 @@ public class UserManagementController extends AsyncAdaptor {
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
-                    model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(Role.IFS_ADMINISTRATOR)));
+                    model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR)));
                     return "admin/user";
         }).getSuccess();
     }
@@ -177,8 +178,8 @@ public class UserManagementController extends AsyncAdaptor {
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
 
-        if (user.getRoles().contains(Role.IFS_ADMINISTRATOR)) {
-            form.setRole(Role.IFS_ADMINISTRATOR);
+        if (user.getRoles().contains(IFS_ADMINISTRATOR)) {
+            form.setRole(IFS_ADMINISTRATOR);
         } else {
             form.setRole(user.getRoles().stream().findFirst().get());
         }
@@ -187,7 +188,7 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     private String viewEditUser(Model model, UserResource user, UserResource loggedInUser) {
-        model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(Role.IFS_ADMINISTRATOR)));
+        model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR)));
         return "admin/edit-user";
     }
 
