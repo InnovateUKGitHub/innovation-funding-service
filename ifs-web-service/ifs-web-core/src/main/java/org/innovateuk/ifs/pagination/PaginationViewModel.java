@@ -10,6 +10,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URISyntaxException;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 public class PaginationViewModel {
     /**
      * How many results to display each side of the current page.
@@ -120,6 +122,10 @@ public class PaginationViewModel {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
         String uri = request.getRequestURI();
+        String query = request.getQueryString();
+        if (!isNullOrEmpty(query)) {
+            uri = uri + "?" + query;
+        }
         URIBuilder builder = new URIBuilder(uri);
         builder.addParameter("page", String.valueOf(page));
         return builder.build().toString();

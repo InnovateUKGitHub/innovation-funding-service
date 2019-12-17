@@ -224,8 +224,8 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     @Override
-    public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
-        Page<RoleInvite> pagedResult = roleInviteRepository.findByStatus(InviteStatus.SENT, pageable);
+    public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(String filter, Pageable pageable) {
+        Page<RoleInvite> pagedResult = roleInviteRepository.findByEmailContainsAndStatus(filter, InviteStatus.SENT, pageable);
 
         List<RoleInviteResource> roleInviteResources = pagedResult.getContent()
                 .stream()

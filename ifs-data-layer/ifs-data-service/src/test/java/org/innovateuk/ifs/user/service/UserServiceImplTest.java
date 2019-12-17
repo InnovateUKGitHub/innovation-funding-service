@@ -452,10 +452,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE).withRoles(internalRoles).build(6);
         Page<User> expectedPage = new PageImpl<>(activeUsers, pageable, 6L);
 
-        when(userRepositoryMock.findByStatus(UserStatus.ACTIVE, pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findByEmailContainingAndStatus("", UserStatus.ACTIVE, pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
-        ServiceResult<UserPageResource> result = service.findActive(pageable);
+        ServiceResult<UserPageResource> result = service.findActive("", pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());
@@ -470,10 +470,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         List<User> inactiveUsers = newUser().withStatus(UserStatus.INACTIVE).withRoles(internalRoles).build(4);
         Page<User> expectedPage = new PageImpl<>(inactiveUsers, pageable, 4L);
 
-        when(userRepositoryMock.findByStatus(UserStatus.INACTIVE, pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findByEmailContainingAndStatus("", UserStatus.INACTIVE, pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
-        ServiceResult<UserPageResource> result = service.findInactive(pageable);
+        ServiceResult<UserPageResource> result = service.findInactive("", pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());

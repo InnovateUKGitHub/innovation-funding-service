@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -137,8 +138,10 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void findActive() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
-        when(userServiceMock.findActive(PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
-        mockMvc.perform(get(buildPaginationUri("/user/active", 0, 5, null, new LinkedMultiValueMap<>()))
+        when(userServiceMock.findActive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", "filter");
+        mockMvc.perform(get(buildPaginationUri("/user/active", 0, 5, null, params))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
@@ -150,8 +153,10 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void findInactive() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
-        when(userServiceMock.findInactive(PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
-        mockMvc.perform(get(buildPaginationUri("/user/inactive", 0, 5, null, new LinkedMultiValueMap<>()))
+        when(userServiceMock.findInactive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", "filter");
+        mockMvc.perform(get(buildPaginationUri("/user/inactive", 0, 5, null, params))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",

@@ -37,6 +37,7 @@ public class UserListViewModel {
     private boolean includeInternalUsers;
 
     public UserListViewModel(String tab,
+                             String filter,
                              List<UserResource> activeUsers,
                              List<UserResource> inactiveUsers,
                              List<RoleInviteResource> pendingInvites,
@@ -102,6 +103,10 @@ public class UserListViewModel {
 
     public boolean isIncludeInternalUsers() {
         return includeInternalUsers;
+    }
+
+    public long getTotalCount() {
+        return getActiveCount() + getInactiveCount() + getPendingCount();
     }
 
     @Override

@@ -275,31 +275,32 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActive(Pageable pageable) {
-        Page<User> pagedResult = userRepository.findByStatus(UserStatus.ACTIVE, pageable);
+    public ServiceResult<UserPageResource> findActive(String filter, Pageable pageable) {
+        Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.ACTIVE, pageable);
         List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActiveExternal(Pageable pageable) {
-        return findUserPageResource(pageable, ACTIVE, externalApplicantRoles());
+    public ServiceResult<UserPageResource> findActiveExternal(String filter, Pageable pageable) {
+        return findUserPageResource(filter, pageable, ACTIVE, externalApplicantRoles());
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactive(Pageable pageable) {
-        Page<User> pagedResult = userRepository.findByStatus(UserStatus.INACTIVE, pageable);
+    public ServiceResult<UserPageResource> findInactive(String filter, Pageable pageable) {
+        Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.INACTIVE, pageable);
         List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactiveExternal(Pageable pageable) {
-        return findUserPageResource(pageable, INACTIVE, externalApplicantRoles());
+    public ServiceResult<UserPageResource> findInactiveExternal(String filter, Pageable pageable) {
+        return findUserPageResource(filter, pageable, INACTIVE, externalApplicantRoles());
     }
 
-    private ServiceResult<UserPageResource> findUserPageResource(Pageable pageable, UserStatus userStatus, Set<Role> roles) {
-        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(
+    private ServiceResult<UserPageResource> findUserPageResource(String filter, Pageable pageable, UserStatus userStatus, Set<Role> roles) {
+        Page<User> pagedResult = userRepository.findByEmailContainingAndStatusAndRolesIn(
+                filter,
                 userStatus,
                 externalApplicantRoles()
                         .stream()
