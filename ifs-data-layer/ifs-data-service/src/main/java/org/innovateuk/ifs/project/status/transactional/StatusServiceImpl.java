@@ -340,10 +340,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeCheckStatus, spendProfile);
-
         if (COMPLETE.equals(spendProfileStatus) && !ApprovalType.APPROVED.equals(spendProfileWorkflowHandler.getApproval(project))) {
             return project.getSpendProfileSubmittedDate() != null ? PENDING : ACTION_REQUIRED;
-        }  else {
+        } else {
             return spendProfileStatus;
         }
     }
@@ -353,8 +352,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             return NOT_STARTED;
         } else if (financeCheckStatus.equals(COMPLETE) && spendProfile.get().isMarkedAsComplete()) {
             return COMPLETE;
-//        } else if (financeCheckStatus.equals(COMPLETE) && !spendProfile.get().isMarkedAsComplete()) {
-//           return LEAD_ACTION_REQUIRED;
         } else {
             return ACTION_REQUIRED;
         }

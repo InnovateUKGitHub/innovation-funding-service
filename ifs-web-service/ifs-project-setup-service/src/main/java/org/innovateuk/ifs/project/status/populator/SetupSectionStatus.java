@@ -78,8 +78,6 @@ public class SetupSectionStatus {
             return HOURGLASS;
         } else if (ACTION_REQUIRED.equals(spendProfileState)) {
             return FLAG;
-        } else if (LEAD_ACTION_REQUIRED.equals(spendProfileState)) {
-            return LEAD_FLAG;
         } else if (COMPLETE.equals(spendProfileState)) {
             return TICK;
         } else {
