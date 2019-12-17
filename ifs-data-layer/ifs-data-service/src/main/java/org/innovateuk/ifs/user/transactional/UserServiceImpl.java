@@ -37,10 +37,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
@@ -48,6 +48,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -122,7 +123,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<Set<UserResource>> findAssignableUsers(final Long applicationId) {
+    public ServiceResult<Set<UserResource>> findAssignableUsers(final long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<UserResource> assignables = roles.stream()
@@ -135,7 +136,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<Set<UserResource>> findRelatedUsers(final Long applicationId) {
+    public ServiceResult<Set<UserResource>> findRelatedUsers(final long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
 
@@ -255,17 +256,46 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActiveByRoles(Set<Role> roleTypes, Pageable pageable) {
-        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
-        List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
+    public ServiceResult<UserPageResource> findActive(Pageable pageable) {
+        Page<User> pagedResult = userRepository.findByStatus(UserStatus.ACTIVE, pageable);
+        List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable) {
-        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
-        List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
+    public ServiceResult<UserPageResource> findActiveExternal(Pageable pageable) {
+        return findUserPageResource(pageable, ACTIVE, externalApplicantRoles());
+    }
+
+    @Override
+    public ServiceResult<UserPageResource> findInactive(Pageable pageable) {
+        Page<User> pagedResult = userRepository.findByStatus(UserStatus.INACTIVE, pageable);
+        List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<UserPageResource> findInactiveExternal(Pageable pageable) {
+        return findUserPageResource(pageable, INACTIVE, externalApplicantRoles());
+    }
+
+    private ServiceResult<UserPageResource> findUserPageResource(Pageable pageable, UserStatus userStatus, Set<Role> roles) {
+        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(
+                userStatus,
+                externalApplicantRoles()
+                        .stream()
+                        .map(r -> Role.getByName(r.getName()))
+                        .collect(toSet()),
+                pageable
+        );
+        List<UserResource> userResources = simpleMap(pagedResult.getContent(), userMapper::mapToResource);
+        return serviceSuccess(new UserPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                userResources,
+                pagedResult.getNumber(),
+                pagedResult.getSize())
+        );
     }
 
     @Override

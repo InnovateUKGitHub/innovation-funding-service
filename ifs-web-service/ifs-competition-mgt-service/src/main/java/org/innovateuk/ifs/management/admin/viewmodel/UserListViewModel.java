@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.admin.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -33,9 +34,19 @@ public class UserListViewModel {
 
     private Pagination pendingInvitesPagination;
 
-    public UserListViewModel(String tab, List<UserResource> activeUsers, List<UserResource> inactiveUsers, List<RoleInviteResource> pendingInvites,
-                             long activeCount, long inactiveCount, long pendingCount,
-                             Pagination activeUsersPagination, Pagination inactiveUsersPagination, Pagination pendingInvitesPagination) {
+    private boolean includeInternalUsers;
+
+    public UserListViewModel(String tab,
+                             List<UserResource> activeUsers,
+                             List<UserResource> inactiveUsers,
+                             List<RoleInviteResource> pendingInvites,
+                             long activeCount,
+                             long inactiveCount,
+                             long pendingCount,
+                             Pagination activeUsersPagination,
+                             Pagination inactiveUsersPagination,
+                             Pagination pendingInvitesPagination,
+                             boolean includeInternalUsers) {
         this.tab = tab;
         this.activeUsers = activeUsers;
         this.inactiveUsers = inactiveUsers;
@@ -46,6 +57,7 @@ public class UserListViewModel {
         this.activeUsersPagination = activeUsersPagination;
         this.inactiveUsersPagination = inactiveUsersPagination;
         this.pendingInvitesPagination = pendingInvitesPagination;
+        this.includeInternalUsers = includeInternalUsers;
     }
 
     public long getActiveCount() {
@@ -88,6 +100,10 @@ public class UserListViewModel {
         return tab;
     }
 
+    public boolean isIncludeInternalUsers() {
+        return includeInternalUsers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,6 +123,7 @@ public class UserListViewModel {
                 .append(activeUsersPagination, that.activeUsersPagination)
                 .append(inactiveUsersPagination, that.inactiveUsersPagination)
                 .append(pendingInvitesPagination, that.pendingInvitesPagination)
+                .append(includeInternalUsers, that.includeInternalUsers)
                 .isEquals();
     }
 
@@ -123,6 +140,24 @@ public class UserListViewModel {
                 .append(activeUsersPagination)
                 .append(inactiveUsersPagination)
                 .append(pendingInvitesPagination)
+                .append(includeInternalUsers)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("tab", tab)
+                .append("activeUsers", activeUsers)
+                .append("inactiveUsers", inactiveUsers)
+                .append("pendingInvites", pendingInvites)
+                .append("activeCount", activeCount)
+                .append("inactiveCount", inactiveCount)
+                .append("pendingCount", pendingCount)
+                .append("activeUsersPagination", activeUsersPagination)
+                .append("inactiveUsersPagination", inactiveUsersPagination)
+                .append("pendingInvitesPagination", pendingInvitesPagination)
+                .append("includeInternalUsers", includeInternalUsers)
+                .toString();
     }
 }

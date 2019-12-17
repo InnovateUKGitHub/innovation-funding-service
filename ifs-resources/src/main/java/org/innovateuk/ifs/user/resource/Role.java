@@ -2,13 +2,9 @@ package org.innovateuk.ifs.user.resource;
 
 import org.innovateuk.ifs.identity.Identifiable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import static java.util.Arrays.asList;
 
 /**
  * Role defines database relations and a model to use client side and server side.
@@ -88,19 +84,23 @@ public enum Role implements Identifiable {
 
     public boolean isStakeHolder() {return this == STAKEHOLDER; }
 
-    public static List<Role> applicantProcessRoles() { return Arrays.asList(LEADAPPLICANT, COLLABORATOR); }
+    public static Set<Role> applicantProcessRoles() {
+        return EnumSet.of(LEADAPPLICANT, COLLABORATOR);
+    }
 
-    public static List<Role> asessorProcessRoles() { return Arrays.asList(ASSESSOR, INTERVIEW_ASSESSOR, PANEL_ASSESSOR); }
+    public static Set<Role> assessorProcessRoles() {
+        return EnumSet.of(ASSESSOR, INTERVIEW_ASSESSOR, PANEL_ASSESSOR);
+    }
 
     public static Set<Role> internalRoles(){
-        return new HashSet<>(asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
+        return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD);
     }
 
     public static Set<Role> externalApplicantRoles(){
-        return new HashSet<>(asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
+        return EnumSet.of(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER);
     }
 
     public static Set<Role> multiDashboardRoles() {
-        return new HashSet<>(asList(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER));
+        return EnumSet.of(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER);
     }
 }

@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 public interface UserRestService {
     RestResult<UserResource> retrieveUserResourceByUid(String uid);
 
-    RestResult<UserResource> retrieveUserById(Long id);
+    RestResult<UserResource> retrieveUserById(long id);
 
     RestResult<List<UserResource>> findAll();
 
@@ -22,25 +22,29 @@ public interface UserRestService {
 
     RestResult<List<UserResource>> findByUserRole(Role role);
 
-    RestResult<UserPageResource> getActiveInternalUsers(int pageNumber, int pageSize);
+    RestResult<UserPageResource> getActiveUsers(int pageNumber, int pageSize);
 
-    RestResult<UserPageResource> getInactiveInternalUsers(int pageNumber, int pageSize);
+    RestResult<UserPageResource> getInactiveUsers(int pageNumber, int pageSize);
 
-    RestResult<ProcessRoleResource> findProcessRole(Long userId, Long applicationId);
+    RestResult<UserPageResource> getActiveExternalUsers(int pageNumber, int pageSize);
 
-    RestResult<List<ProcessRoleResource>> findProcessRole(Long applicationId);
+    RestResult<UserPageResource> getInactiveExternalUsers(int pageNumber, int pageSize);
 
-    RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(Long userId);
+    RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId);
 
-    RestResult<List<UserResource>> findAssignableUsers(Long applicationId);
+    RestResult<List<ProcessRoleResource>> findProcessRole(long applicationId);
+
+    RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(long userId);
+
+    RestResult<List<UserResource>> findAssignableUsers(long applicationId);
 
     RestResult<UserResource> findUserByEmail(String email);
 
-    Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(Long applicationId);
+    Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(long applicationId);
 
-    RestResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId);
+    RestResult<Boolean> userHasApplicationForCompetition(long userId, long competitionId);
 
-    Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId);
+    Future<RestResult<ProcessRoleResource>> findProcessRoleById(long processRoleId);
 
     RestResult<Void> verifyEmail(String hash);
 
@@ -53,13 +57,13 @@ public interface UserRestService {
     RestResult<Void> resetPassword(String hash, String password);
 
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
-                                                                                 String phoneNumber, Long organisationId,
+                                                                                 String phoneNumber, long organisationId,
                                                                                  Long competitionId, Boolean allowMarketingEmails);
 
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                String phoneNumber, Long organisationId, Boolean allowMarketingEmails);
+                                                                String phoneNumber, long organisationId, Boolean allowMarketingEmails);
 
-    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails);
+    RestResult<UserResource> updateDetails(long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails);
 
     RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource);
 
@@ -67,8 +71,7 @@ public interface UserRestService {
 
     RestResult<Void> agreeNewSiteTermsAndConditions(long userId);
 
-    RestResult<Void> deactivateUser(Long userId);
-    RestResult<Void> reactivateUser(Long userId);
-    RestResult<Void> grantRole(Long userId, Role targetRole);
-
+    RestResult<Void> deactivateUser(long userId);
+    RestResult<Void> reactivateUser(long userId);
+    RestResult<Void> grantRole(long userId, Role targetRole);
 }

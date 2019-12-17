@@ -1,25 +1,23 @@
 package org.innovateuk.ifs.management.admin.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
-import org.innovateuk.ifs.management.admin.form.EditUserForm;
-import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
-import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
-import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
+import org.innovateuk.ifs.management.admin.form.EditUserForm;
+import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
+import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
+import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -60,35 +58,63 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestServiceMock.getActiveInternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getActiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(userRestServiceMock.getInactiveInternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
         when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(restSuccess(roleInvitePageResource));
     }
 
     @Test
     public void testViewActive() throws Exception {
+        when(userRestServiceMock.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+
         mockMvc.perform(get("/admin/users/active")
                 .param("page", "1")
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("active", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
-                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                        new Pagination(userPageResource, "active"), new Pagination(userPageResource, "inactive"), new Pagination(roleInvitePageResource, "pending"))));
+                .andExpect(model().attribute("model",
+                        new UserListViewModel(
+                                "active",
+                                userPageResource.getContent(),
+                                userPageResource.getContent(),
+                                roleInvitePageResource.getContent(),
+                                userPageResource.getTotalElements(),
+                                userPageResource.getTotalElements(),
+                                roleInvitePageResource.getTotalElements(),
+                                new Pagination(userPageResource, "active"),
+                                new Pagination(userPageResource, "inactive"),
+                                new Pagination(roleInvitePageResource, "pending"),
+                                false)
+                ));
     }
 
     @Test
     public void testViewInactive() throws Exception {
+        when(userRestServiceMock.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+
         mockMvc.perform(get("/admin/users/inactive")
                 .param("page", "1")
                 .param("size", "5"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model", new UserListViewModel("inactive", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
-                        userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                        new Pagination(userPageResource, "active"), new Pagination(userPageResource, "inactive"), new Pagination(roleInvitePageResource, "pending"))));
+                .andExpect(model().attribute("model",
+                        new UserListViewModel(
+                                "inactive",
+                                userPageResource.getContent(),
+                                userPageResource.getContent(),
+                                roleInvitePageResource.getContent(),
+                                userPageResource.getTotalElements(),
+                                userPageResource.getTotalElements(),
+                                roleInvitePageResource.getTotalElements(),
+                                new Pagination(userPageResource, "active"),
+                                new Pagination(userPageResource, "inactive"),
+                                new Pagination(roleInvitePageResource, "pending"),
+                                false)
+                ));
     }
 
     @Test
@@ -100,7 +126,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(view().name("admin/users"))
                 .andExpect(model().attribute("model", new UserListViewModel("pending", userPageResource.getContent(), userPageResource.getContent(), roleInvitePageResource.getContent(),
                         userPageResource.getTotalElements(), userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                        new Pagination(userPageResource, "active"), new Pagination(userPageResource, "inactive"), new Pagination(roleInvitePageResource, "pending"))));
+                        new Pagination(userPageResource, "active"), new Pagination(userPageResource, "inactive"), new Pagination(roleInvitePageResource, "pending"), true)));
     }
 
     @Test

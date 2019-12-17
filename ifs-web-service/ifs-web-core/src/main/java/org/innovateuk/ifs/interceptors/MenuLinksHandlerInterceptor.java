@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interceptors;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.navigation.PageHistoryService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
-
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
  * Have the menu links globally available for each controller.
@@ -83,12 +82,10 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private void addShowManageUsersAttribute(HttpServletRequest request, ModelAndView modelAndView) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasRole(IFS_ADMINISTRATOR));
+        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.SUPPORT));
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {
         modelAndView.addObject(USER_LOGOUT_LINK, logoutUrl);
     }
-
-
 }

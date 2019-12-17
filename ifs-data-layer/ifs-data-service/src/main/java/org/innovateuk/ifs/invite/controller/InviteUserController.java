@@ -49,7 +49,7 @@ public class InviteUserController {
 
     @GetMapping("/internal/pending")
     public RestResult<RoleInvitePageResource> findPendingInternalUserInvites(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                       @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
+                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
         return inviteUserService.findPendingInternalUserInvites(PageRequest.of(pageIndex, pageSize, DEFAULT_INVITE_SORT)).toGetResponse();
     }
 

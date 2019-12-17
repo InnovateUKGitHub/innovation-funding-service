@@ -2,9 +2,10 @@
     <h2 class="govuk-heading-m">Active</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">38</span>
-        <span class="govuk-heading-s">active internal users</span>
+        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s">active users</span>
+        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s">active external users</span>
     </p>
-    <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
+    <th:block th:insert="fragments/admin-users :: users-table(users=${users},active=true)" />
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 </th:block>
 
@@ -12,9 +13,10 @@
     <h2 class="govuk-heading-m">Inactive</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
-        <span class="govuk-heading-s">inactive internal users</span>
+        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s">inactive users</span>
+        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s">inactive external users</span>
     </p>
-    <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
+    <th:block th:insert="fragments/admin-users :: users-table(users=${users},active=false)" />
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 </th:block>
 
@@ -58,25 +60,21 @@
     </div>
 </th:block>
 
-<th:block th:fragment="users-table(users)" xmlns:th="http://www.w3.org/1999/html">
-    <div class="table-overflow">
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Name</th>
-                <th class="govuk-table__header" scope="col">Role profile</th>
-                <th class="govuk-table__header" scope="col">Email address</th>
-                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row" th:each="user : ${users}">
-                <td class="govuk-table__cell"><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}" class="govuk-link">Steve Smith</a></td>
-                <td class="govuk-table__cell" th:text="${user.getRolesString()}">IFS Admin</td>
-                <td class="govuk-table__cell ifs-table__email"><a th:href="${'mailto:' + user.email}" th:text="${user.email}" class="govuk-link">steve.smith@empire.com</a></td>
-                <td class="govuk-table__cell"><span class="govuk-hint"></span></td>
-            </tr>
-            </tbody>
-        </table>
+<th:block th:fragment="users-table(users,active)" xmlns:th="http://www.w3.org/1999/html">
+
+    <div class="user-profile" th:each="user : ${users}">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+        <div th:if="${active}" style="float: right"><a class="govuk-link" th:href="@{/admin/user/{userId}/edit(userId=${user.id})}">Edit</a></div>
+        <div th:unless="${active}" style="float: right"><a class="govuk-link" th:href="@{/admin/user/{userId}(userId=${user.id})}">Edit</a></div>
+
+        <p class="govuk-body govuk-!-margin-0">Full name: <b><span th:text="${user.name}" class="govuk-">Steve Smith</span></b></p>
+        <p class="govuk-body govuk-!-margin-0">Email address: <b><a th:href="|mailto:${user.email}|" th:text="${user.email}" class="govuk-link">steve.smith@empire.com</a></b></p>
+        <p class="govuk-body govuk-!-margin-0">Role profile: <b><span th:text="${user.roleDisplayNames}">Applicant, Monitoring Officer</span></b></p>
+        <p class="govuk-body govuk-!-margin-0"><small>Created by <span th:text="${user.createdBy}">IFS Web System User</span> on <span th:text="${#temporals.format(user.createdOn, 'd MMMM yyyy')}">30 July 2019</span></small></p>
+
     </div>
+
+     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
 </th:block>
