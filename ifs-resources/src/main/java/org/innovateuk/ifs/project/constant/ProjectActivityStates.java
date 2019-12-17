@@ -7,6 +7,7 @@ public enum  ProjectActivityStates {
     NOT_REQUIRED,
     NOT_STARTED,
     ACTION_REQUIRED,
+    LEAD_ACTION_REQUIRED,
     PENDING,
     COMPLETE,
     REJECTED,

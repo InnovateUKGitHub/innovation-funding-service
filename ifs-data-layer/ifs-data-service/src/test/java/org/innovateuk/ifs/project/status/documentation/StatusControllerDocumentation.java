@@ -92,7 +92,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withMonitoringOfficerStatus(PENDING, PENDING, COMPLETE).
                         withBankDetailsStatus(PENDING, NOT_REQUIRED, COMPLETE).
                         withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
-                        withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
+                        withSpendProfileStatus(PENDING, ACTION_REQUIRED, LEAD_ACTION_REQUIRED, COMPLETE).
                         withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
                         withProjectState(LIVE).
                         build(3);
