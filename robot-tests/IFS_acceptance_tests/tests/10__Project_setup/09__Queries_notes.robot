@@ -65,7 +65,7 @@ Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
     Given the user uploads the file       name = attachment  ${valid_pdf}
-    Then the user should see the element  jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
+    Then the user should see the element  jQuery = a:contains("${valid_pdf}")+ .button-clear:contains("Remove")
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
@@ -79,7 +79,7 @@ Project finance user can upload more than one file and remove it
     [Documentation]    INFUND-4840
     [Tags]
     Given the user uploads the file        name = attachment    ${valid_pdf}
-    Then the user clicks the button/link  jQuery = h3:contains("Supporting documentation") ~ ul:contains("${valid_pdf}") .button-clear:contains("Remove")
+    Then the user clicks the button/link  jQuery = a:contains("${valid_pdf}")+ .button-clear:contains("Remove")
 
 Post new query client and server side validations
     [Documentation]    INFUND-4840
@@ -301,7 +301,7 @@ Project finance can re-upload the file to notes
 Project finance can view the file in notes
     [Documentation]    INFUND-4845  IFS-2716
     [Tags]
-    Given the user should see the element  link = ${valid_pdf}
+    Given the user should see the element  link = ${valid_pdf} (opens in a new window)
     Then the user should see the element   jQuery = button:contains("Save note")
     And the user downloads the file        ${internal_finance_credentials["email"]}  ${server}/project-setup/project/${Queries_Application_Project}/finance-checks   ${DOWNLOAD_FOLDER}/${valid_pdf}
     [Teardown]  remove the file from the operating system    ${valid_pdf}
@@ -310,13 +310,13 @@ Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
     [Tags]
     Given the user uploads the file       name = attachment  ${valid_pdf}
-    Then the user should see the element  jQuery = form li:nth-of-type(2) > a:contains("${valid_pdf}")
+    Then the user should see the element  jQuery = form li:nth-of-type(2) a:contains("${valid_pdf}")
 
 Project finance can still view both files in notes
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user should see the element   jQuery = li:nth-of-type(1) > a:contains("${valid_pdf}")
-    And the user should see the element     jQuery = li:nth-of-type(2) > a:contains("${valid_pdf}")
+    Given the user should see the element   jQuery = li:nth-of-type(1) a:contains("${valid_pdf}")
+    And the user should see the element     jQuery = li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user clicks the button/link    css = button[name='removeAttachment']:nth-last-of-type(1)
 
 Create new note validations
@@ -387,7 +387,7 @@ Project finance can re-upload the file to note comments
 Project finance can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
-    Given the user should see the element    link = ${valid_pdf}
+    Given the user should see the element    link = ${valid_pdf} (opens in a new window)
     When the file has been scanned for viruses
     And the user should see the element      jQuery = button:contains("Save comment")
 
@@ -421,8 +421,8 @@ The query conversation can be resolved by
     the user clicks the button/link  jQuery = #accordion-queries-content-${section} a:contains("Mark as resolved")    #a viability query
     the user clicks the button/link  css = button[name="markAsResolved"]  # Submit
     the user should see the element  jQuery = #accordion-queries-heading-${section} .yes  # Resolved green check
-    the user should see the element  jQuery = .message-alert:contains("${user} on")
-    the user should see the element  jQuery = .message-alert:contains("${today}")
+    the user should see the element  jQuery = p:contains("${user}")
+    the user should see the element  jQuery = p:contains("${today}")
 
 the user should not be able to respond to resolved queries
     the user should not see the element  jQuery = h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
@@ -483,7 +483,7 @@ the user should see the response to query server side validation
 #    And the user should see a summary error            ${empty_field_warning_message}
     the user enters text to a text field          css = .editor  this is some response text
     the user uploads the file                     name = attachment  ${valid_pdf}
-    the user should see the element               jQuery = a:contains("${valid_pdf}") ++ button:contains("Remove")
+    the user should see the element               jQuery = a:contains("${valid_pdf}") + button:contains("Remove")
     the user should not see an error in the page
 
 the user should see the response to query client side validations
@@ -552,8 +552,8 @@ the user post created note details
     the user should see the element             jQuery = p:contains("Lee Bowman - Innovate UK (Finance team)")
 
 project finance can view both files in note comments
-    the user should see the element    jQuery = form li:nth-of-type(1) > a:contains("${valid_pdf}")
-    the user should see the element    jQuery = form li:nth-of-type(2) > a:contains("${valid_pdf}")
+    the user should see the element    jQuery = form li:nth-of-type(1) a:contains("${valid_pdf}")
+    the user should see the element    jQuery = form li:nth-of-type(2) a:contains("${valid_pdf}")
     the user should see the element    jQuery = button:contains("Save comment")
 
 the user should see the note comments server side validations
