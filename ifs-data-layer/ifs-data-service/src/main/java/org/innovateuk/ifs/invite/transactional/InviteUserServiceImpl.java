@@ -3,7 +3,6 @@ package org.innovateuk.ifs.invite.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -80,9 +79,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private AssessmentInviteMapper assessmentInviteMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;

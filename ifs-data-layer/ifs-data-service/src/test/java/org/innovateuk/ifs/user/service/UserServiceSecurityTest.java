@@ -108,8 +108,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
                         (getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
-//        verify(userRules, times(numberOfUsers))
-//                .supportUsersCanViewExternalUsers(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
