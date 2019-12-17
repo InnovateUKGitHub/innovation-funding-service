@@ -34,7 +34,7 @@ public class EditUserForm extends BaseBindingResultTarget {
     })
     private String lastName;
 
-    @NotBlank(message = "{validation.standard.email.required}")
+    @NotBlank(message = "{validation.standard.emailinternal.required}")
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String email;
