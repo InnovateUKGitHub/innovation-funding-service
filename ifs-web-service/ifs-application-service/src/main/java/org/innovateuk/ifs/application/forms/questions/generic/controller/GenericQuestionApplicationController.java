@@ -18,6 +18,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -300,7 +301,7 @@ public class GenericQuestionApplicationController {
         return formInputRestService.getByQuestionId(questionId)
                 .getSuccess()
                 .stream()
-                .filter(input -> input.getType().equals(type))
+                .filter(input -> input.getType().equals(type) && input.getScope().equals(FormInputScope.APPLICATION))
                 .findAny();
     }
 
