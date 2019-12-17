@@ -73,12 +73,12 @@
                                     <th:block th:if="${isError}">
                                         <span class="govuk-error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
                                     </th:block>
-                                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
+                                    <p class="govuk-body no-file-uploaded">No file currently uploaded.</p>
                                 </th:block>
                                 <th:block th:unless="${app.hasAttachment()}">
                                     <div class="upload-section">
                                         <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
-                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-0">+ Upload</label>
+                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-0">Upload</label>
                                         <button name="attachFeedbackApplicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${fieldName}" th:value="${app.applicationId}">Save</button>
                                     </div>
                                 </th:block>

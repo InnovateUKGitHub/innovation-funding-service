@@ -600,7 +600,7 @@ lead uploads the exploitation plan
     log in as a different user          ${leadApplicantEmail}   ${short_password}
     the user navigates to the page      ${server}/project-setup/project/${project_ids["PSC application 20"]}/document/all
     the user clicks the button/link     link = Exploitation plan
-    the user clicks the button/link     name = deleteDocument
+    the user can remove the uploaded file  deleteDocument  ${valid_pdf}
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm

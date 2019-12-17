@@ -14,7 +14,7 @@ Business opportunity Server-side validations setup questions
     Given The user clicks the button/link  link = Application
     And The user clicks the button/link    jQuery = a:contains("Business opportunity")
     When the user leaves all the question field empty
-    And The user clicks the button/link    css = button[type="submit"]
+    And The user clicks the button/link    jQuery = button:contains("Done")
     Then the user should see the element   jQuery = .govuk-label:contains("Question heading") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element    jQuery = .govuk-label:contains("Question title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element    jQuery = .govuk-label:contains("Question guidance title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
@@ -29,7 +29,7 @@ Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]
     Given the user leaves all the assessment questions empty
-    When the user clicks the button/link    css = button[type="submit"]
+    When the user clicks the button/link    jQuery = button:contains("Done")
     Then the user should see the element    jQuery = .govuk-label[for="guidanceRows[0].scoreFrom"] ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element     jQuery = .govuk-label[for="guidanceRows[0].scoreTo"] ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see the element     jQuery = .govuk-label[for="guidanceRows[0].justification"] ~ .govuk-error-message:contains("${empty_field_warning_message}")
@@ -54,7 +54,7 @@ Business opportunity: Client side validations
 Test Heading: Mark as done
     [Documentation]    INFUND-5629
     [Tags]
-    When The user clicks the button/link         css = button[type="submit"]
+    When The user clicks the button/link         jQuery = button:contains("Done")
     And the user clicks the button/link          jQuery = a:contains("Test Heading")
     Then the user should see the element         jQuery = h1:contains("Test Heading")
     And the user should see the element          jQuery = dt:contains("Question title") + dd:contains("Test title")
@@ -66,10 +66,10 @@ Scope: Sever-side validations assessment questions
     [Tags]
     Given the user clicks the button/link               link = Scope
     When the user clicks the button/link                jQuery = Button:contains("+Add guidance row")
-    And the user clicks the button/link                 css = button[type="submit"]
+    And the user clicks the button/link                 jQuery = button:contains("Done")
     Then the user should see a field and summary error  ${empty_field_warning_message}
     And The user clicks the button/link                 id = remove-guidance-row-2
-    And the user clicks the button/link                 css = button[type="submit"]
+    And the user clicks the button/link                 jQuery = button:contains("Done")
     And the user cannot see a validation error in the page
 
 *** Keywords ***
@@ -82,7 +82,7 @@ Custom Suite setup
 the user leaves all the question field empty
     Clear Element Text    css = .editor
     Press Key    css = .editor    \\8
-    Set Focus To Element      css = button[type="submit"]
+    Set Focus To Element      jQuery = button:contains("Done")
     The user enters text to a text field    id = question.shortTitle     ${EMPTY}
     The user enters text to a text field    id = question.title          ${EMPTY}
     The user enters text to a text field    id = question.guidanceTitle  ${EMPTY}
@@ -102,7 +102,7 @@ the validation error above the question should be visible
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    Set Focus To Element      css = button[type="submit"]
+    Set Focus To Element      jQuery = button:contains("Done")
     Wait Until Element Is Not Visible Without Screenshots    css = .govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 

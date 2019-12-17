@@ -26,7 +26,7 @@ The competition admin creates competition
     the user fills in the Public content and publishes  ${extraKeyword}
     the user clicks the button/link             link = Return to setup overview
     the user clicks the button/link             jQuery = a:contains("Complete")
-    the user clicks the button/link             css = button[type="submit"]
+    the user clicks the button/link             jQuery = button:contains('Done')
     the user navigates to the page              ${CA_UpcomingComp}
     the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
@@ -157,7 +157,7 @@ the user fills in the CS Documents in other projects
     the user clicks the button/link          jQuery = span:contains("PDF")
     the user clicks the button/link          jQuery = span:contains("Spreadsheet")
     the user enters text to a text field     css = .editor    Guidance test.
-    the user clicks the button/link          css = button[type = "submit"]
+    the user clicks the button/link          jQuery = button:contains('Done')
     the user should see the element          jQuery = span:contains("Test document type")
     the user clicks the button/link          link = Competition setup
 
@@ -244,7 +244,7 @@ the user marks the Application details section as complete
 the user marks each question as complete
     [Arguments]  ${question_link}
     the user clicks the button/link  jQuery = h4 a:contains("${question_link}")
-    the user clicks the button/link  css = button[type="submit"]
+    the user clicks the button/link  jQuery = button:contains('Done')
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
 
 the assessed questions are marked as complete(procurement)
@@ -261,9 +261,9 @@ the user marks each procurement question as complete
     the user clicks the button/link        jQuery = h4 a:contains("${question_link}")
     the user selects the radio button      question.templateDocument  1
     the user enters text to a text field   id = question.templateTitle   ${question_link}
-    then the user uploads the file         id = template-document-file   ${ods_file}
+    the user uploads the file              css = input[id="templateDocumentFile"]   ${ods_file}
     the user selects the checkbox          question.allowedTemplateResponseFileTypes1
-    the user clicks the button/link        css = button[type="submit"]
+    the user clicks the button/link        jQuery = button:contains('Done')
     the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
 
 the user fills in the Finances questions
@@ -274,7 +274,7 @@ the user fills in the Finances questions
     the user selects the radio button     includeYourOrganisationSection  ${organisation}
     the user selects the radio button     includeJesForm  ${jes}
     the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
-    the user clicks the button/link       css = button[type="submit"]
+    the user clicks the button/link       jQuery = button:contains('Done')
     the user clicks the button/link       link = Finances
     the user clicks the button/link       link = Application
     the user should see the element       jQuery = li:contains("Finances") .task-status-complete
@@ -396,7 +396,7 @@ the user is able to configure the new question
     the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
-    the user clicks the button/link       css = button[type = "submit"]
+    the user clicks the button/link       jQuery = button:contains('Done')
     the user should see the element       jQuery = li:contains("${questionTitle}") .task-status-complete
 
 the user should be able to see the read only view of question correctly
