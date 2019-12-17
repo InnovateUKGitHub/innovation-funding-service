@@ -28,7 +28,7 @@
                         <p th:if="${model.includeInternalUsers}" class="govuk-body"><a th:href="@{/admin/invite-user}" class="govuk-link">Invite a new internal user</a></p>
 
                         <div th:unless="${form.cleared}" class="clear-search-filter">
-                            <p class="govuk-body"><b th:text="${model.totalCount}">7</b> users matching the search <b th:text="${form.filter}">Brad.smith@example.com</b> <a href="?page=0" class="govuk-link">Clear filters</a></p>
+                            <p class="govuk-body"><b th:text="${model.totalCount}">7</b> users matching the search <b th:text="${form.filter}">Brad.smith@example.com</b> <a href="?page=1" class="govuk-link">Clear filters</a></p>
                         </div>
                     </div>
 
