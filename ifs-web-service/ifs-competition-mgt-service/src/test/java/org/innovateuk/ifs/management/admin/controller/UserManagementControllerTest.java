@@ -65,17 +65,17 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestService.getActiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveUsers(0, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(userRestService.getInactiveUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveUsers(0, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(inviteUserRestService.getPendingInternalUserInvites(1, 5)).thenReturn(restSuccess(roleInvitePageResource));
+        when(inviteUserRestService.getPendingInternalUserInvites(0, 5)).thenReturn(restSuccess(roleInvitePageResource));
     }
 
     @Test
     public void testViewActive() throws Exception {
-        when(userRestService.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/active")
                 .param("page", "1")
@@ -100,8 +100,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void testViewInactive() throws Exception {
-        when(userRestService.getActiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/inactive")
                 .param("page", "1")
