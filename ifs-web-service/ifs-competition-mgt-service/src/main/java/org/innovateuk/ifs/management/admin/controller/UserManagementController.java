@@ -17,9 +17,8 @@ import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.management.admin.viewmodel.ConfirmEmailViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
-import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -39,7 +38,6 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -56,7 +54,7 @@ import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 @RequestMapping("/admin")
 public class UserManagementController extends AsyncAdaptor {
 
-    private static final String DEFAULT_PAGE_NUMBER = "0";
+    private static final String DEFAULT_PAGE_NUMBER = "1";
     private static final String DEFAULT_PAGE_SIZE = "20";
     private static final String FORM_ATTR_NAME = "form";
     private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";
@@ -83,11 +81,10 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @GetMapping("/users/active")
     public String viewActive(Model model,
-                             HttpServletRequest request,
                              UserResource user,
                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", page, size, Objects.toString(request.getQueryString()), user.hasRole(IFS_ADMINISTRATOR));
+        return view(model, "active", page, size, user.hasRole(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -96,38 +93,35 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
-                               HttpServletRequest request,
                                UserResource user,
                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", page, size, Objects.toString(request.getQueryString()), user.hasRole(IFS_ADMINISTRATOR));
+        return view(model, "inactive", page, size, user.hasRole(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewPending() method",
             description = "IFS administrators can view pending user invites")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
-                              HttpServletRequest request,
-                              UserResource user,
                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                               @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "pending", page, size, Objects.toString(request.getQueryString(), ""), true);
+        return view(model, "pending", page, size,  true);
     }
 
-    private String view(Model model, String activeTab, int page, int size, String existingQueryString, boolean adminUser) {
+    private String view(Model model, String activeTab, int page, int size, boolean adminUser) {
         final CompletableFuture<UserPageResource> activeUsers;
         final CompletableFuture<UserPageResource> inactiveUsers;
         final CompletableFuture<RoleInvitePageResource> pendingUsers;
         if (adminUser) {
-            activeUsers = async(() -> userRestService.getActiveUsers(page, size).getSuccess());
-            inactiveUsers = async(() -> userRestService.getInactiveUsers(page, size).getSuccess());
-            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveUsers(page - 1, size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveUsers(page - 1, size).getSuccess());
+            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(page - 1, size).getSuccess());
         }
         else {
-            activeUsers = async(() -> userRestService.getActiveExternalUsers(page, size).getSuccess());
-            inactiveUsers = async(() -> userRestService.getInactiveExternalUsers(page, size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveExternalUsers(page - 1, size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveExternalUsers(page - 1, size).getSuccess());
             pendingUsers = async(() -> new RoleInvitePageResource());
         }
 
@@ -141,9 +135,9 @@ public class UserManagementController extends AsyncAdaptor {
                             activeInternalUsers.getTotalElements(),
                             inactiveInternalUsers.getTotalElements(),
                             pendingInternalUserInvites.getTotalElements(),
-                            new Pagination(activeInternalUsers, "active?" + existingQueryString),
-                            new Pagination(inactiveInternalUsers, "inactive?" + existingQueryString),
-                            new Pagination(pendingInternalUserInvites, "pending?" + existingQueryString),
+                            new PaginationViewModel(activeInternalUsers),
+                            new PaginationViewModel(inactiveInternalUsers),
+                            new PaginationViewModel(pendingInternalUserInvites),
                             adminUser
                     );
                     model.addAttribute("model", viewModel);

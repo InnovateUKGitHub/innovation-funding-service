@@ -6,7 +6,7 @@
         <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s">active external users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users},active=true)" />
-    <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
+    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
 </th:block>
 
 <th:block th:fragment="inactive(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
@@ -17,7 +17,7 @@
         <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s">inactive external users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users},active=false)" />
-    <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
+    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
 </th:block>
 
 <th:block th:fragment="pending(invites, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
@@ -27,7 +27,7 @@
         <span class="govuk-heading-s">pending internal users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: invites-table(invites=${invites})" />
-    <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
+    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
 </th:block>
 
 <th:block th:fragment="invites-table(invites)" xmlns:th="http://www.w3.org/1999/html">
