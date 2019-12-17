@@ -159,10 +159,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void findActiveExternal() {
-        when(classUnderTestMock.findActiveExternal(PageRequest.of(0, 5)))
+        when(classUnderTestMock.findActiveExternal("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findActiveExternal(new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findActiveExternal("", new PageRequest(0, 5)), () -> {
             verify(userRules).supportUsersCanViewExternalUsers(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -170,10 +170,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void findInactiveExternal() {
-        when(classUnderTestMock.findInactiveExternal(PageRequest.of(0, 5)))
+        when(classUnderTestMock.findInactiveExternal("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findInactiveExternal(new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findInactiveExternal("", new PageRequest(0, 5)), () -> {
             verify(userRules).supportUsersCanViewExternalUsers(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });

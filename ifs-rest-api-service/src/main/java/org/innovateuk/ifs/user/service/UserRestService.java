@@ -26,9 +26,9 @@ public interface UserRestService {
 
     RestResult<UserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize);
 
-    RestResult<UserPageResource> getActiveExternalUsers(int pageNumber, int pageSize);
+    RestResult<UserPageResource> getActiveExternalUsers(String filter, int pageNumber, int pageSize);
 
-    RestResult<UserPageResource> getInactiveExternalUsers(int pageNumber, int pageSize);
+    RestResult<UserPageResource> getInactiveExternalUsers(String filter, int pageNumber, int pageSize);
 
     RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId);
 

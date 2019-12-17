@@ -122,13 +122,13 @@ public class UserManagementController extends AsyncAdaptor {
         final CompletableFuture<UserPageResource> inactiveUsers;
         final CompletableFuture<RoleInvitePageResource> pendingUsers;
         if (adminUser) {
-            activeUsers = async(() -> userRestService.getActiveUsers(filter, page, size).getSuccess());
-            inactiveUsers = async(() -> userRestService.getInactiveUsers(filter, page, size).getSuccess());
-            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(filter, page, size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveUsers(filter, page - 1 , size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveUsers(filter, page - 1, size).getSuccess());
+            pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(filter, page - 1, size).getSuccess());
         }
         else {
-            activeUsers = async(() -> userRestService.getActiveExternalUsers(page - 1, size).getSuccess());
-            inactiveUsers = async(() -> userRestService.getInactiveExternalUsers(page - 1, size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveExternalUsers(filter, page - 1, size).getSuccess());
+            inactiveUsers = async(() -> userRestService.getInactiveExternalUsers(filter, page - 1, size).getSuccess());
             pendingUsers = async(() -> new RoleInvitePageResource());
         }
 

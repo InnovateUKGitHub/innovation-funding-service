@@ -3,14 +3,12 @@ package org.innovateuk.ifs.management.admin.controller;
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.admin.form.EditUserForm;
 import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
-import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.*;
@@ -74,8 +72,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void testViewActive() throws Exception {
-        when(userRestService.getActiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveExternalUsers("", 0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveExternalUsers("",0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/active")
                 .param("page", "1")
@@ -101,8 +99,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Test
     public void testViewInactive() throws Exception {
-        when(userRestService.getActiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers(0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getActiveExternalUsers("",0, 5)).thenReturn(restSuccess(userPageResource));
+        when(userRestService.getInactiveExternalUsers("",0, 5)).thenReturn(restSuccess(userPageResource));
 
         mockMvc.perform(get("/admin/users/inactive")
                 .param("page", "1")

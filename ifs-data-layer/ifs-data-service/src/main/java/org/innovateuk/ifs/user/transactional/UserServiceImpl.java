@@ -282,8 +282,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActiveExternal(Pageable pageable) {
-        return findUserPageResource(pageable, ACTIVE, externalApplicantRoles());
+    public ServiceResult<UserPageResource> findActiveExternal(String filter, Pageable pageable) {
+        return findUserPageResource(filter, pageable, ACTIVE, externalApplicantRoles());
     }
 
     @Override
@@ -294,12 +294,13 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactiveExternal(Pageable pageable) {
-        return findUserPageResource(pageable, INACTIVE, externalApplicantRoles());
+    public ServiceResult<UserPageResource> findInactiveExternal(String filter, Pageable pageable) {
+        return findUserPageResource(filter, pageable, INACTIVE, externalApplicantRoles());
     }
 
-    private ServiceResult<UserPageResource> findUserPageResource(Pageable pageable, UserStatus userStatus, Set<Role> roles) {
-        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(
+    private ServiceResult<UserPageResource> findUserPageResource(String filter, Pageable pageable, UserStatus userStatus, Set<Role> roles) {
+        Page<User> pagedResult = userRepository.findByEmailContainingAndStatusAndRolesIn(
+                filter,
                 userStatus,
                 externalApplicantRoles()
                         .stream()
