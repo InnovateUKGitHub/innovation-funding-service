@@ -2,10 +2,12 @@ package org.innovateuk.ifs.management.admin.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Role;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -14,23 +16,28 @@ import javax.validation.constraints.Size;
  */
 public class EditUserForm extends BaseBindingResultTarget {
 
-    @NotBlank(message = "{validation.standard.firstname.required}")
-    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
+    public interface InternalUserFieldsGroup {
+    }
+    @NotBlank(message = "{validation.standard.firstname.required}", groups = InternalUserFieldsGroup.class)
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}", groups = InternalUserFieldsGroup.class)
     @Size.List ({
-            @Size(min=2, message="{validation.standard.firstname.length.min}"),
-            @Size(max=70, message="{validation.standard.firstname.length.max}"),
+            @Size(min=2, message="{validation.standard.firstname.length.min}", groups = InternalUserFieldsGroup.class),
+            @Size(max=70, message="{validation.standard.firstname.length.max}", groups = InternalUserFieldsGroup.class),
     })
     private String firstName;
 
-    @NotBlank(message = "{validation.standard.lastname.required}")
-    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
+    @NotBlank(message = "{validation.standard.lastname.required}", groups = InternalUserFieldsGroup.class)
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}", groups = InternalUserFieldsGroup.class)
     @Size.List ({
-            @Size(min=2, message="{validation.standard.lastname.length.min}"),
-            @Size(max=70, message="{validation.standard.lastname.length.max}"),
+            @Size(min=2, message="{validation.standard.lastname.length.min}", groups = InternalUserFieldsGroup.class),
+            @Size(max=70, message="{validation.standard.lastname.length.max}", groups = InternalUserFieldsGroup.class),
     })
     private String lastName;
 
-    private String emailAddress;
+    @NotBlank(message = "{validation.standard.emailinternal.required}")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
+    @Size(max = 254, message = "{validation.standard.email.length.max}")
+    private String email;
 
     private Role role;
 
@@ -54,12 +61,12 @@ public class EditUserForm extends BaseBindingResultTarget {
         this.lastName = lastName;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Role getRole() {
@@ -81,7 +88,7 @@ public class EditUserForm extends BaseBindingResultTarget {
         return new EqualsBuilder()
                 .append(firstName, form.firstName)
                 .append(lastName, form.lastName)
-                .append(emailAddress, form.emailAddress)
+                .append(email, form.email)
                 .append(role, form.role)
                 .isEquals();
     }
@@ -91,7 +98,7 @@ public class EditUserForm extends BaseBindingResultTarget {
         return new HashCodeBuilder(17, 37)
                 .append(firstName)
                 .append(lastName)
-                .append(emailAddress)
+                .append(email)
                 .append(role)
                 .toHashCode();
     }

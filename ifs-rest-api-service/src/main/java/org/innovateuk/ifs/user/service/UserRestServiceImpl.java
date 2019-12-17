@@ -252,7 +252,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> grantRole(long userId, Role targetRole) {
-        String url = userRestURL + "/" + userId + "/grant/" + targetRole.name();
-        return postWithRestResult(url);
+        return postWithRestResult(userRestURL + "/" + userId + "/grant/" + targetRole.name());
+    }
+
+    @Override
+    public RestResult<Void> updateEmail(long userId, String email) {
+        return putWithRestResult(userRestURL + "/" + userId + "/update-email/" + email);
     }
 }

@@ -694,36 +694,43 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void updateEmail() {
+        String oldEmail = "old@gmail.com";
         String updateEmail = "new@gmail.com";
-        User user = newUser().withUid("uid").withEmailAddress(updateEmail).build();
+        User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress(oldEmail).build();
 
-        List<Invite> invite = singletonList(new RoleInvite("Mister", "mister@email.com", "", APPLICANT, OPENED));
+        List<Invite> invite = singletonList(new RoleInvite("Mister", oldEmail, "", APPLICANT, OPENED));
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(invite);
-        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
+        when(userRepositoryMock.save(user)).thenReturn(user);
+        when(userInviteRepositoryMock.findByEmail(oldEmail)).thenReturn(invite);
+        when(idpServiceMock.updateUserEmail(user.getUid(), updateEmail)).thenReturn(serviceSuccess(user.getUid()));
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isSuccess());
         assertEquals(updateEmail, user.getEmail());
+        verify(notificationServiceMock, times(2)).sendNotificationWithFlush(any(), eq(EMAIL));
     }
 
     @Test
     public void updateEmailForNoInviteUsers() {
 
-        User user = newUser().withUid("uid").build();
+        User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress("old@gmail.com").build();
         String updateEmail = "new@gmail.com";
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
         user.setEmail(updateEmail);
+        when(userRepositoryMock.save(user)).thenReturn(user);
         when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isSuccess());
         assertEquals(updateEmail, user.getEmail());
+        verify(notificationServiceMock, times(2)).sendNotificationWithFlush(any(), eq(EMAIL));
     }
 
     @Test

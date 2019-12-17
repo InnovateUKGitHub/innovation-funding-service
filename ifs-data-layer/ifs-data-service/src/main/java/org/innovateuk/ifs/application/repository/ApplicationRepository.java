@@ -217,6 +217,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            " LEFT JOIN ProjectUser pu " +
            "    ON pu.project.id = proj.id " +
            "        AND pu.user.id=:userId " +
+           "        AND type(pu) = ProjectUser " +
            " WHERE (proj.id IS NULL AND pr iS NOT NULL)" + // No project exists and user has applicant process role
            "    OR  pu.id IS NOT NULL") // Or project exists and user is a project user.
     List<Application> findApplicationsForDashboard(long userId);
