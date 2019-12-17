@@ -10,8 +10,11 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
+import org.innovateuk.ifs.management.admin.form.ConfirmEmailForm;
 import org.innovateuk.ifs.management.admin.form.EditUserForm;
+import org.innovateuk.ifs.management.admin.form.EditUserForm.InternalUserFieldsGroup;
 import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
+import org.innovateuk.ifs.management.admin.viewmodel.ConfirmEmailViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -21,15 +24,19 @@ import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.Validator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,8 +44,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -48,12 +57,10 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 public class UserManagementController extends AsyncAdaptor {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
-
     private static final String DEFAULT_PAGE_SIZE = "20";
-
     private static final String FORM_ATTR_NAME = "form";
-
     private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";
+    private static final String NEW_EMAIL_COOKIE = "NEW_EMAIL_COOKIE";
 
     @Autowired
     private UserRestService userRestService;
@@ -63,6 +70,12 @@ public class UserManagementController extends AsyncAdaptor {
 
     @Autowired
     private InternalUserService internalUserService;
+
+    @Autowired
+    private Validator validator;
+
+    @Autowired
+    private EncryptedCookieService cookieService;
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
@@ -74,7 +87,7 @@ public class UserManagementController extends AsyncAdaptor {
                              UserResource user,
                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "active", page, size, Objects.toString(request.getQueryString()), user.hasRole(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -87,7 +100,7 @@ public class UserManagementController extends AsyncAdaptor {
                                UserResource user,
                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", page, size, Objects.toString(request.getQueryString()), user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "inactive", page, size, Objects.toString(request.getQueryString()), user.hasRole(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -139,56 +152,128 @@ public class UserManagementController extends AsyncAdaptor {
         return "admin/users";
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId' ,'ACCESS_USER')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.viewUser() method",
+            description = "IFS admins and support users can view users.")
     @GetMapping("/user/{userId}")
-    public String viewUser(@PathVariable long userId, Model model) {
+    public String viewUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
-                    model.addAttribute("model", new EditUserViewModel(user));
+                    model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR)));
                     return "admin/user";
         }).getSuccess();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_USER')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.viewEditUser() method",
+            description = "IFS admins and support users can edit users.")
     @GetMapping("/user/{userId}/edit")
-    public String viewEditUser(@PathVariable long userId, Model model) {
-        return viewEditUser(model, userId, new EditUserForm());
+    public String viewEditUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
+        UserResource user = userRestService.retrieveUserById(userId).getSuccess();
+        model.addAttribute(FORM_ATTR_NAME, populateForm(user));
+        return viewEditUser(model, user, loggedInUser);
     }
 
-    private String viewEditUser(Model model, long userId, EditUserForm form) {
-        UserResource userResource = userRestService.retrieveUserById(userId).getSuccess();
-        form.setFirstName(userResource.getFirstName());
-        form.setLastName(userResource.getLastName());
+    private EditUserForm populateForm(UserResource user) {
+        EditUserForm form = new EditUserForm();
+        form.setFirstName(user.getFirstName());
+        form.setLastName(user.getLastName());
 
-        if (userResource.getRoles().contains(Role.IFS_ADMINISTRATOR)) {
-            form.setRole(Role.IFS_ADMINISTRATOR);
+        if (user.getRoles().contains(IFS_ADMINISTRATOR)) {
+            form.setRole(IFS_ADMINISTRATOR);
         } else {
-            form.setRole(userResource.getRoles().stream().findFirst().get());
+            form.setRole(user.getRoles().stream().findFirst().get());
         }
-        form.setEmailAddress(userResource.getEmail());
-        model.addAttribute(FORM_ATTR_NAME, form);
-        model.addAttribute("user", userResource);
+        form.setEmail(user.getEmail());
+        return form;
+    }
 
+    private String viewEditUser(Model model, UserResource user, UserResource loggedInUser) {
+        model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR)));
         return "admin/edit-user";
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_USER')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.updateUser() method",
+            description = "IFS admins and support users can edit users.")
     @PostMapping("/user/{userId}/edit")
     public String updateUser(@PathVariable long userId,
                              Model model,
+                             UserResource loggedInUser,
                              @Valid @ModelAttribute(FORM_ATTR_NAME) EditUserForm form,
-                             @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
+                             @SuppressWarnings("unused") BindingResult bindingResult,
+                             ValidationHandler validationHandler,
+                             HttpServletResponse response) {
+        UserResource user = userRestService.retrieveUserById(userId).getSuccess();
+        validateUser(form, user);
 
-        Supplier<String> failureView = () -> viewEditUser(model, userId, form);
+        Supplier<String> failureView = () -> viewEditUser(model, user, loggedInUser);
+        Supplier<String> noEmailChangeSuccess = () -> "redirect:/admin/users/active";
+        Supplier<String> emailChangeSuccess = () ->  {
+            cookieService.saveToCookie(response, NEW_EMAIL_COOKIE, form.getEmail());
+            return String.format("redirect:/admin/user/%d/edit/confirm", userId);
+        };
+        Supplier<String> successView = !user.getEmail().equals(form.getEmail()) ? emailChangeSuccess : noEmailChangeSuccess;
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            EditUserResource editUserResource = constructEditUserResource(form, userId);
-
-            ServiceResult<Void> saveResult = internalUserService.editInternalUser(editUserResource);
-
+            ServiceResult<Void> saveResult = serviceSuccess();
+            if (user.isInternalUser()) {
+                saveResult = internalUserService.editInternalUser(constructEditUserResource(form, userId));
+            }
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/active");
+                    failNowOrSucceedWith(failureView, successView);
+        });
+    }
 
+    private void validateUser(EditUserForm form, UserResource user) {
+        if (user.isInternalUser()) {
+            validator.validate(form, InternalUserFieldsGroup.class);
+        }
+    }
+
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.confirmEmailChange() method",
+            description = "IFS admins and support users can confirm email change.")
+    @GetMapping("/user/{userId}/edit/confirm")
+    public String confirmEmailChange(@PathVariable long userId,
+                                     Model model,
+                                     @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ConfirmEmailForm form,
+                                     @SuppressWarnings("unused") BindingResult bindingResult,
+                                     HttpServletRequest request) {
+        String email = cookieService.getCookieValue(request, NEW_EMAIL_COOKIE);
+        if (email.isEmpty()) {
+            return String.format("redirect:/admin/user/%d/edit", userId);
+        }
+        UserResource user = userRestService.retrieveUserById(userId).getSuccess();
+        model.addAttribute("model", new ConfirmEmailViewModel(user, email));
+        return "admin/confirm-email";
+    }
+
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.confirmEmailChange() method",
+            description = "IFS admins and support users can confirm email change.")
+    @PostMapping("/user/{userId}/edit/confirm")
+    public String confirmEmailChangePost(@PathVariable long userId,
+                                         Model model,
+                                         @Valid @ModelAttribute(value = FORM_ATTR_NAME) ConfirmEmailForm form,
+                                         @SuppressWarnings("unused") BindingResult bindingResult,
+                                         ValidationHandler validationHandler,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response,
+                                         RedirectAttributes redirectAttributes) {
+        Supplier<String> failureView = () -> confirmEmailChange(userId, model, form, bindingResult, request);
+        Supplier<String> successView = () -> {
+            cookieService.removeCookie(response, NEW_EMAIL_COOKIE);
+            redirectAttributes.addFlashAttribute("showEmailUpdateSuccess", true);
+            return "redirect:/admin/users/active";
+        };
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            String email = cookieService.getCookieValue(request, NEW_EMAIL_COOKIE);
+            if (email.isEmpty()) {
+                return String.format("redirect:/admin/user/%d/edit", userId);
+            }
+            validationHandler.addAnyErrors(userRestService.updateEmail(userId, email));
+            return validationHandler.failNowOrSucceedWith(failureView, successView);
         });
     }
 
@@ -196,14 +281,18 @@ public class UserManagementController extends AsyncAdaptor {
         return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_USER')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.deactivateUser() method",
+            description = "IFS admins and support users can deactivate users.")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
     public String deactivateUser(@PathVariable long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_USER')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @SecuredBySpring(value = "UserManagementController.reactivateUser() method",
+            description = "IFS admins and support users can reactivate users.")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
     public String reactivateUser(@PathVariable long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->

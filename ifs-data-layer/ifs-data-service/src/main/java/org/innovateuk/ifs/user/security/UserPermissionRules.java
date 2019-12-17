@@ -110,8 +110,18 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any user's email address")
-    public boolean systemMaintenanceUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "IFS admins can update all users email addresses")
+    public boolean ifsAdminCanUpdateAllEmailAddresses(UserResource userToUpdate, UserResource user) {
+        return user.hasRole(IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "Support users can update external users email addresses ")
+    public boolean supportCanUpdateExternalUsersEmailAddresses(UserResource userToUpdate, UserResource user) {
+        return userToUpdate.isExternalUser() && user.hasRole(SUPPORT);
+    }
+
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "System Maintenance update all users email addresses")
+    public boolean systemMaintenanceUserCanUpdateUsersEmailAddresses(UserResource userToUpdate, UserResource user) {
         return isSystemMaintenanceUser(user);
     }
 
@@ -242,7 +252,7 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "DEACTIVATE", description = "IFS Administrator can deactivate Users")
-    public boolean ifsAdminCanDeactivateUsers(UserResource userToCreate, UserResource user) {
+    public boolean ifsAdminCanDeactivateUsers(UserResource userToDeactivate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
@@ -252,12 +262,12 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "DEACTIVATE", description = "System Maintenance can deactivate Users")
-    public boolean systemMaintenanceUserCanDeactivateUsers(UserResource userToCreate, UserResource user) {
+    public boolean systemMaintenanceUserCanDeactivateUsers(UserResource userToDeactivate, UserResource user) {
         return isSystemMaintenanceUser(user);
     }
 
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
-    public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
+    public boolean ifsAdminCanReactivateUsers(UserResource userToReactivate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
