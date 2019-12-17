@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriUtils;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     private AbstractRestTemplateAdaptor adaptor;
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
              // encoded in the web-services.
@@ -66,6 +68,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
         LOG.debug("getOrganisationById " + id);
 

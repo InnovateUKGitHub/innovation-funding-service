@@ -11,6 +11,7 @@ import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -27,6 +28,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Service to get statistics related to Review Panels.
  */
 @Service
+@Transactional(readOnly = true)
 public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
 
     private ReviewInviteRepository reviewInviteRepository;

@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.events;
 
 import org.springframework.context.ApplicationEvent;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This event is for tracking the creation of the user in ldap so that
  * it can be rolled back in the event of a sil outage and the email
  * is unable to be sent.
  */
+@Transactional(readOnly = true)
 public class UserCreationEvent extends ApplicationEvent {
 
     private String uuid;

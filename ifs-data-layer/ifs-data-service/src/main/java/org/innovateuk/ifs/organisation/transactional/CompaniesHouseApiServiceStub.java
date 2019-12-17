@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
         return encodedSearchText.equals("innoavte") ?
                 serviceSuccess(emptyList()) :
@@ -35,6 +37,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
         return serviceSuccess(getDummyResultById(id));
     }

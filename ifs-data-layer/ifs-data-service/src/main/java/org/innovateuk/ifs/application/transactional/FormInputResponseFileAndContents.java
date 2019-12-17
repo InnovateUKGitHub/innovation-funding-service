@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.function.Supplier;
@@ -10,6 +11,7 @@ import java.util.function.Supplier;
 /**
  * An object containing Form Input Response file details as well as the standard FileEntry details
  */
+@Transactional(readOnly = true)
 public class FormInputResponseFileAndContents implements FileAndContents {
 
     private FormInputResponseFileEntryResource fileEntry;

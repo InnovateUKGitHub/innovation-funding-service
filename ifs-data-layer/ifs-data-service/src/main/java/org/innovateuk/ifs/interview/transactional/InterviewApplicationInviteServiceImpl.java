@@ -55,6 +55,7 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<ApplicantInterviewInviteResource> getEmailTemplate() {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
@@ -77,6 +78,7 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<InterviewApplicationSentInviteResource> getSentInvite(long applicationId) {
         InterviewAssignment assignment = interviewAssignmentRepository.findOneByTargetId(applicationId);
         return ofNullable(assignment.getMessage())

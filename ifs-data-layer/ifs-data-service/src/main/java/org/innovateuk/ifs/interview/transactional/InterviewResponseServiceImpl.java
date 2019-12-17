@@ -93,6 +93,7 @@ public class InterviewResponseServiceImpl implements InterviewResponseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<FileEntryResource> findResponse(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
                 ofNullable(interviewAssignment.getResponse())

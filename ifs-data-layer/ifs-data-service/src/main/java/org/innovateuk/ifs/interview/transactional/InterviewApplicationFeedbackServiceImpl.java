@@ -103,6 +103,7 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<FileEntryResource> findFeedback(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
                 ofNullable(interviewAssignment.getMessage())

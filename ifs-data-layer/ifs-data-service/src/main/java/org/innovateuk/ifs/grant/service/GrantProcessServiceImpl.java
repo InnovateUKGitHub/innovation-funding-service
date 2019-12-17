@@ -8,12 +8,14 @@ import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class GrantProcessServiceImpl implements GrantProcessService {
     @Autowired
     private GrantProcessRepository grantProcessRepository;
@@ -25,6 +27,7 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     private ApplicationRepository applicationRepository;
 
     @Override
+    @Transactional
     public void createGrantProcess(long applicationId) {
         Optional<Application> application = applicationRepository.findById(applicationId);
         application.ifPresent((a) -> {
@@ -45,12 +48,14 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     }
 
     @Override
+    @Transactional
     public void sendSucceeded(long applicationId) {
         GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
         grantProcessRepository.save(process.sendSucceeded(ZonedDateTime.now()));
     }
 
     @Override
+    @Transactional
     public void sendFailed(long applicationId, String message) {
         GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
         grantProcessRepository.save(process.sendFailed(ZonedDateTime.now(), message));
