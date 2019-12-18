@@ -9,7 +9,6 @@
 // ***********************************************
 //
 //
-
 import {HOME} from "./system_config";
 
 Cypress.Commands.add('logout', () => {
@@ -21,7 +20,51 @@ Cypress.Commands.add('login', (user) => {
   cy.contains('div', 'Email address').find('input').first().type(user);
   cy.contains('div', 'Password').find('input').first().type('Passw0rd');
   cy.get('form').contains('Sign in').click();
+
 });
+
+var pages = [{id: '/applicant/dashboard', url:'/applicant/dashboard'}]
+Cypress.Commands.add('crawl', () => {
+  var promise = vistPage(pages[0])
+  var i;
+  for (i = 0; i < 100; i++) {
+    (function () {
+      var x = i;
+      promise.then(function () {
+        if (pages[x]) {
+          return vistPage(pages[x])
+        }
+      });
+    }());
+  }
+});
+
+function vistPage(page) {
+  return cy.visit(HOME + page.url).then(
+    function () {
+      cy.get('a')
+        .each(function ($el, index, $list) {
+          const url = $el.attr('href')
+          if (url && url.startsWith('/') && url.indexOf('Logout') === -1  && url.indexOf('/print') === -1 && url.indexOf('/download') === -1 && url.indexOf('files/overheads') === -1) {
+            const id = url.replace(/[0-9]/g, '');
+            const matchingPages = pages.filter(function (value) {
+              return value.id === id
+            }).length;
+            if (!matchingPages) {
+              var page = {
+                id: id,
+                url: url
+              };
+              pages.push(page);
+            }
+          }
+      });
+    });
+}
+
+Cypress.Commands.add('getPages', (callback) => {
+  callback(pages);
+})
 
 //
 //
