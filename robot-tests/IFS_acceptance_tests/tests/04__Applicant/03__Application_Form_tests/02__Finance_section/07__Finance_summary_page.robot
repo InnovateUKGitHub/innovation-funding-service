@@ -430,7 +430,6 @@ the academic user marks finances as complete
     log in as a different user                 &{collaborator2_credentials}
     the user navigates to Your-finances page   ${OPEN_COMPETITION_APPLICATION_2_NAME}
     the user clicks the button/link            link = Your project costs
-    the user selects the checkbox              termsAgreed
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
     the user enters the project location
     the user clicks the button/link            link = Your funding

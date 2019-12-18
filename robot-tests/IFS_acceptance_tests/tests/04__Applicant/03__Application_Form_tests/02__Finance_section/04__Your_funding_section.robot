@@ -15,7 +15,6 @@ Other funding validation message
     [Documentation]  IFS-2659
     [Tags]
     Given the user clicks the button/link               link = Your funding
-    And the user selects the checkbox                   termsAgreed
     When The user clicks the button/link                jQuery = button:contains("Mark as complete")
     Then The user should see a field and summary error  Select if there has been any other public sector funding.
 
@@ -51,7 +50,6 @@ Other funding validations
     And the user enters text to a text field            css = [name*=source]  Lottery funding
     And the user enters text to a text field            css = [name*=fundingAmount]    20000
     Then the user cannot see a validation error in the page
-    And the user selects the checkbox                   termsAgreed
     And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
 
 If funding is complete. application details has a warning message
@@ -100,7 +98,6 @@ Adding more funding rows
 Mark other funding as complete
     [Documentation]  INFUND-6895
     [Tags]
-    Given the user selects the checkbox   termsAgreed
     When the user clicks the button/link  jQuery = button:contains("Mark as complete")
     Then the user should not see an error in the page
     And the user should see the element   css = .task-list li:nth-of-type(3) .task-status-complete
