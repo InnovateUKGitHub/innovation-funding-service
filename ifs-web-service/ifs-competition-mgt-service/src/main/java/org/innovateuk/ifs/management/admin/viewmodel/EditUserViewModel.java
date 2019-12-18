@@ -9,33 +9,44 @@ import org.innovateuk.ifs.user.resource.UserResource;
  */
 public class EditUserViewModel {
 
-    private UserResource user;
+    private final UserResource user;
+    private final boolean ifsAdmin;
 
-    public EditUserViewModel(UserResource user) {
+    public EditUserViewModel(UserResource user, boolean ifsAdmin) {
         this.user = user;
+        this.ifsAdmin = ifsAdmin;
     }
 
     public UserResource getUser() {
         return user;
     }
 
-    public void setUser(UserResource user) {
-        this.user = user;
+    public boolean isIfsAdmin() {
+        return ifsAdmin;
+    }
+
+    public boolean isReadOnly() {
+        return !ifsAdmin && !user.isExternalUser();
+    }
+
+    public boolean isCanEditUserDetails() {
+        return ifsAdmin && user.isInternalUser();
+    }
+
+    public boolean isInternal() {
+        return user.isInternalUser();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         EditUserViewModel that = (EditUserViewModel) o;
 
         return new EqualsBuilder()
+                .append(ifsAdmin, that.ifsAdmin)
                 .append(user, that.user)
                 .isEquals();
     }
@@ -44,6 +55,7 @@ public class EditUserViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(user)
+                .append(ifsAdmin)
                 .toHashCode();
     }
 }

@@ -20,7 +20,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
-import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -137,25 +136,45 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void findActiveByProcessRoles() {
-        when(classUnderTestMock.findActiveByRoles(internalRoles(), PageRequest.of(0, 5)))
+    public void findActive() {
+        when(classUnderTestMock.findActive("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findActiveByRoles(internalRoles(), new
-                PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findActive("", new PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
 
     @Test
-    public void findInactiveByProcessRoles() {
-        when(classUnderTestMock.findInactiveByRoles(internalRoles(), PageRequest.of(0, 5)))
+    public void findInactive() {
+        when(classUnderTestMock.findInactive("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findInactiveByRoles(internalRoles(), new
-                PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findInactive("", new PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(userRules);
+        });
+    }
+
+    @Test
+    public void findActiveExternal() {
+        when(classUnderTestMock.findActiveExternal("", PageRequest.of(0, 5)))
+                .thenReturn(serviceSuccess(new UserPageResource()));
+
+        assertAccessDenied(() -> classUnderTest.findActiveExternal("", new PageRequest(0, 5)), () -> {
+            verify(userRules).supportUsersCanViewExternalUsers(isA(UserPageResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(userRules);
+        });
+    }
+
+    @Test
+    public void findInactiveExternal() {
+        when(classUnderTestMock.findInactiveExternal("", PageRequest.of(0, 5)))
+                .thenReturn(serviceSuccess(new UserPageResource()));
+
+        assertAccessDenied(() -> classUnderTest.findInactiveExternal("", new PageRequest(0, 5)), () -> {
+            verify(userRules).supportUsersCanViewExternalUsers(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }

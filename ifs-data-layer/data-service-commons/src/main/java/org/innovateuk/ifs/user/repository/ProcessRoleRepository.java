@@ -6,6 +6,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -14,16 +15,16 @@ import java.util.List;
  */
 public interface ProcessRoleRepository extends PagingAndSortingRepository<ProcessRole, Long> {
     List<ProcessRole> findByUser(User user);
-    List<ProcessRole> findByUserId(Long userId);
+    List<ProcessRole> findByUserId(long userId);
     List<ProcessRole> findByUserAndApplicationId(User user, long applicationId);
-    ProcessRole findByUserIdAndRoleAndApplicationId(Long userId, Role role, long applicationId);
-    List<ProcessRole> findByUserIdAndRoleInAndApplicationId(Long userId, List<Role> role, long applicationId);
-    ProcessRole findOneByUserIdAndRoleInAndApplicationId(Long userId, List<Role> role, long applicationId);
+    ProcessRole findByUserIdAndRoleAndApplicationId(long userId, Role role, long applicationId);
+    List<ProcessRole> findByUserIdAndRoleInAndApplicationId(long userId, Set<Role> role, long applicationId);
+    ProcessRole findOneByUserIdAndRoleInAndApplicationId(long userId, Set<Role> role, long applicationId);
     List<ProcessRole> findByApplicationId(long applicationId);
     List<ProcessRole> findByApplicationIdAndRole(long applicationId, Role role);
     ProcessRole findOneByApplicationIdAndRole(long applicationId, Role role);
     List<ProcessRole> findByApplicationIdAndOrganisationId(long applicationId, long organisationId);
-    ProcessRole findByUserIdAndRoleAndApplicationIdAndOrganisationId(Long userId, Role role, long applicationId, long organisationId);
-    boolean existsByUserIdAndApplicationId(Long userId, long applicationId);
-    boolean existsByUserIdAndApplicationIdAndRole(Long id, long applicationId, Role role);
+    ProcessRole findByUserIdAndRoleAndApplicationIdAndOrganisationId(long userId, Role role, long applicationId, long organisationId);
+    boolean existsByUserIdAndApplicationId(long userId, long applicationId);
+    boolean existsByUserIdAndApplicationIdAndRole(long id, long applicationId, Role role);
 }

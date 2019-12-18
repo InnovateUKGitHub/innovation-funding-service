@@ -1,0 +1,7 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+We recently received a request to change your email address on the Innovation Funding Service.
+We have done this and have sent a confirmation to your new address at ${newEmail}.
+If you did not request this change, please contact the support desk now at support@innovateuk.ukri.org
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

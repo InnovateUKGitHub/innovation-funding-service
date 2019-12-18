@@ -33,7 +33,6 @@ public class InviteUserController {
 
     @PostMapping("/save-invite")
     public RestResult<Void> saveUserInvite(@RequestBody InviteUserResource inviteUserResource) {
-
         return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole()).toPostResponse();
     }
 
@@ -48,9 +47,10 @@ public class InviteUserController {
     }
 
     @GetMapping("/internal/pending")
-    public RestResult<RoleInvitePageResource> findPendingInternalUserInvites(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                       @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return inviteUserService.findPendingInternalUserInvites(PageRequest.of(pageIndex, pageSize, DEFAULT_INVITE_SORT)).toGetResponse();
+    public RestResult<RoleInvitePageResource> findPendingInternalUserInvites(@RequestParam(required = false) String filter,
+                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return inviteUserService.findPendingInternalUserInvites(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_INVITE_SORT)).toGetResponse();
     }
 
     @PutMapping("/internal/pending/{inviteId}/resend")
