@@ -654,7 +654,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m">Your application has timed out</h2>
-            <p class="govuk-body" id="timeout-warning-hint">You have been signed out as you were inactive for 8 hours.
+            <p class="govuk-body" id="session-timeout-warning-hint">You have been signed out as you were inactive for 8 hours.
                 We do this to keep your information secure. You need to sign back in to continue with your application.</p>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
@@ -670,12 +670,12 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m">Your application will time out soon</h2>
-            <p class="govuk-body" id="timeout-warning-hint">We will reset your application if you do not respond in 5
+            <p class="govuk-body" id="inactivity-timeout-warning-hint">We will reset your application if you do not respond in 5
                 minutes. We do this to keep your information secure.</p>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button data-stay-signed-in="" class="govuk-button js-close" aria-describedby="timeout-warning-hint">Stay signed in</button>
+            <button data-stay-signed-in="" class="govuk-button js-close" aria-describedby="inactivity-timeout-warning-hint">Stay signed in</button>
         </div>
     </div>
 </th:block>
