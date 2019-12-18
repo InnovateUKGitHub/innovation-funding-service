@@ -142,7 +142,6 @@ Complete the org size section
     the user selects the radio button                   organisationSize  ${LARGE_ORGANISATION_SIZE}
     the user enters text to a text field                css = #turnover    150
     the user enters text to a text field                css = #headCount    0
-    the user selects the checkbox                       stateAidAgreed
     Set Focus To Element                                jQuery = button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery = button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link = Your project finances

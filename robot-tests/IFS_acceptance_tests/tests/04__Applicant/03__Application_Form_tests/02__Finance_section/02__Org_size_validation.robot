@@ -132,7 +132,6 @@ The user marks their organisation as
     the user selects the radio button           organisationSize  ${org_size}
     the user enters text to a text field        css = #turnover    150
     the user enters text to a text field        css = #headCount    0
-    the user selects the checkbox               stateAidAgreed
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
     the user should not see the element         css = .govuk-error-message
     the user should see the element             jQuery = p:contains("Please complete your project finances.")

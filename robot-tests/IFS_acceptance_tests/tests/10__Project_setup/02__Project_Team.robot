@@ -536,7 +536,6 @@ the user completes your funding
 the user edits the org size
     the user clicks the button/link                         id = mark_as_incomplete
     the user selects the radio button                       organisationSize  SMALL
-    the user selects the checkbox                           stateAidAgreed
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 Custom suite setup
