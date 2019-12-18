@@ -822,13 +822,13 @@ Project finance user can view updated finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section   1   £177,784   30%     50,867    2,468     124,449
     #check breakdown for academic user
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
-    Then the Categories Are Verified For Finances Summary Section   2   £900   100%  0     2,468     0
+    Then the Categories Are Verified For Finances Summary Section   2   £900   100%  900     0     0
     #check breakdown for non lead partner
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
     Then the Categories Are Verified For Finances Summary Section   3   £177,784  30%     50,867    2,468     124,449
     #check total
     And the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1   £356,469   101,735    7,404     248,898
+    And The Total Calculation For Finances Summary Are Verified    1   £356,469   102,635    4,936     248,898
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
