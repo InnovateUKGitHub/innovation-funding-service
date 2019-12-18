@@ -33,8 +33,8 @@ ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 ${adminChangeEmailOld}    aaron.powell@example.com
 ${adminChangeEmailNew}    aaron.powell2@example.com
-${supportChangeEmailOld}  megan.rowland@example.com
-${supportChangeEmailOld}  megan.rowland2@example.com
+${supportChangeEmailOld}  megan.rowland@gmail.com
+${supportChangeEmailNew}  megan.rowland2@gmail.com
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -99,13 +99,13 @@ Admin can change email
 User cannot sign in with old email
     [Documentation]  IFS-6380
     [Setup]  Logout as user
-    Given the guest user inserts user email and password     ${adminChangeEmailOld}  ${correct_password}
+    Given the guest user inserts user email and password     ${adminChangeEmailOld}  ${short_password}
     When The guest user clicks the log-in button
     Then the user should see the element                     jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
 
 User can sign in with new email
     [Documentation]  IFS-6380
-    Given Logging in and Error Checking    ${adminChangeEmailNew}  ${correct_password}
+    Given Logging in and Error Checking    ${adminChangeEmailNew}  ${short_password}
     Then the user should see the element   link = Office Chair for Life
 
 Support can change email address
@@ -185,7 +185,7 @@ Account creation validation checks - Lowercase password
     Given the user enters text to a text field  id = password  PASSWORD123
     When The user clicks the button/link        jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
-    [Teardown]  the user enters text to a text field   css = #password  ${correct_password}
+    [Teardown]  the user enters text to a text field   css = #password  ${short_password}
 
 New user account is created and verified
     [Documentation]  IFS-643 IFS-983
@@ -243,7 +243,7 @@ Administrator can successfully edit internal user details
 The internal user can login with his new role and sees no competitions assigned
     [Documentation]  IFS-1305  IFS-1308
     [Tags]  InnovationLead
-    Given Log in as a different user               ${email}  ${correct_password}
+    Given Log in as a different user               ${email}  ${short_password}
     Then the user should see the element           jQuery = p:contains("There are no competitions assigned to you.")
     And the user clicks the button/link            css = #section-4 a  #Project setup tab
 
@@ -270,18 +270,18 @@ Deactivated external user cannot login
     When Logging in and Error Checking                          &{ifs_admin_user_credentials}
     Then the user navigates to the View internal user details   ${adminChangeEmailNew}  inactive
     And the IFS admin reactivate the user                       ${adminChangeEmailNew}
-    And Log in as a different user                              ${adminChangeEmailNew}   ${correct_password}
+    And Log in as a different user                              ${adminChangeEmailNew}   ${short_password}
     Then The user should see the element                        link = Office Chair for Life
 
 Deactivated user cannot login until he is activated
     [Documentation]  IFS-644
     [Tags]
     [Setup]  the user logs out if they are logged in
-    Given the user cannot login with their new details  ${email}  ${correct_password}
+    Given the user cannot login with their new details  ${email}  ${short_password}
     When Logging in and Error Checking                  &{ifs_admin_user_credentials}
     Then the user navigates to the View internal user details  ${email}  inactive
     And the IFS admin reactivate the user     ${email}
-    When log in as a different user           ${email}  ${correct_password}
+    When log in as a different user           ${email}  ${short_password}
     Then the user should not see an error in the page
 
 Administrator is able to mark as successful an unsuccessful application
@@ -369,11 +369,11 @@ the IFS admin mark user as Active/Inactive
 the internal user enters the details to create account
     the user enters text to a text field   css = #firstName  New
     the user enters text to a text field   css = #lastName  Administrator
-    the user enters text to a text field   css = #password  ${correct_password}
+    the user enters text to a text field   css = #password  ${short_password}
     the user should see the element        jQuery = h3:contains("Email") + p:contains("${email}")
 
 the new internal user logs in and checks user details
-    Logging in and Error Checking          ${email}  ${correct_password}
+    Logging in and Error Checking          ${email}  ${short_password}
     the user clicks the button/link        jQuery = a:contains("Manage users")
     the user enters text to a text field   id = filter  ${email}
     the user clicks the button/link        css = input[type="submit"]
