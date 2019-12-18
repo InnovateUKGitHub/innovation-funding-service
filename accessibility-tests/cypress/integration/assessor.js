@@ -1,7 +1,7 @@
 import {OPTIONS} from "../support/cypress_config";
 import {HOME} from "../support/system_config";
 
-describe('Accessibility test - Applicant', function () {
+describe('Accessibility test - Assessor', function () {
 
   beforeEach(function () {
     cy.login('paul.plum@gmail.com');
