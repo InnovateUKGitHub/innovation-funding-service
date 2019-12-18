@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -50,7 +49,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -226,9 +224,13 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     @Override
-    public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
-        Page<RoleInvite> pagedResult = roleInviteRepository.findByStatus(InviteStatus.SENT, pageable);
-        List<RoleInviteResource> roleInviteResources = simpleMap(pagedResult.getContent(), roleInvite -> roleInviteMapper.mapToResource(roleInvite));
+    public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(String filter, Pageable pageable) {
+        Page<RoleInvite> pagedResult = roleInviteRepository.findByEmailContainsAndStatus(filter, InviteStatus.SENT, pageable);
+
+        List<RoleInviteResource> roleInviteResources = pagedResult.getContent()
+                .stream()
+                .map(roleInviteMapper::mapToResource)
+                .collect(Collectors.toList());
         return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), roleInviteResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
