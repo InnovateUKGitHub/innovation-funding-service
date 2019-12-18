@@ -14,7 +14,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -33,6 +32,8 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -95,14 +96,13 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         FormInputResource formInput = newFormInputResource()
                 .withType(TEMPLATE_DOCUMENT)
-                .withScope(APPLICATION)
                 .build();
 
         FormInputResponseResource response = newFormInputResponseResource()
                 .withFileName(null)
                 .build();
 
-        when(formInputRestService.getByQuestionId(questionId)).thenReturn(restSuccess(singletonList(formInput)));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(formInputResponseRestService.getByFormInputIdAndApplication(formInput.getId(), applicationId)).thenReturn(restSuccess(singletonList(response)));
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
@@ -123,11 +123,11 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
     public void assignToLeadForReview() throws Exception {
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(COLLABORATOR)
                 .withUser(loggedInUser)
                 .build();
         ProcessRoleResource leadProcessRole = newProcessRoleResource()
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(LEADAPPLICANT)
                 .build();
 
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(leadProcessRole, userProcessRole)));
@@ -147,15 +147,14 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
     public void complete() throws Exception {
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(COLLABORATOR)
                 .withUser(loggedInUser)
                 .build();
         FormInputResource formInput = newFormInputResource()
                 .withType(TEXTAREA)
-                .withScope(APPLICATION)
                 .build();
 
-        when(formInputRestService.getByQuestionId(questionId)).thenReturn(restSuccess(singletonList(formInput)));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
         when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", false)).thenReturn(restSuccess(noErrors()));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess(emptyList()));
@@ -174,7 +173,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
     public void edit() throws Exception {
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(COLLABORATOR)
                 .withUser(loggedInUser)
                 .build();
 
@@ -198,16 +197,15 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(COLLABORATOR)
                 .withUser(loggedInUser)
                 .build();
 
         FormInputResource formInput = newFormInputResource()
                 .withType(TEMPLATE_DOCUMENT)
-                .withScope(APPLICATION)
                 .build();
 
-        when(formInputRestService.getByQuestionId(questionId)).thenReturn(restSuccess(singletonList(formInput)));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
 
         MockMultipartFile file = new MockMultipartFile("templateDocument", "testFile.pdf", "application/pdf", "My content!".getBytes());
@@ -239,16 +237,15 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(COLLABORATOR)
                 .withUser(loggedInUser)
                 .build();
 
         FormInputResource formInput = newFormInputResource()
                 .withType(TEMPLATE_DOCUMENT)
-                .withScope(APPLICATION)
                 .build();
 
-        when(formInputRestService.getByQuestionId(questionId)).thenReturn(restSuccess(singletonList(formInput)));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
 
         when(formInputResponseRestService.removeFileEntry(formInput.getId(),
@@ -274,16 +271,15 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(COLLABORATOR)
                 .withUser(loggedInUser)
                 .build();
 
         FormInputResource formInput = newFormInputResource()
                 .withType(FILEUPLOAD)
-                .withScope(APPLICATION)
                 .build();
 
-        when(formInputRestService.getByQuestionId(questionId)).thenReturn(restSuccess(singletonList(formInput)));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
 
         MockMultipartFile file = new MockMultipartFile("appendix", "testFile.pdf", "application/pdf", "My content!".getBytes());
@@ -315,16 +311,15 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(COLLABORATOR)
                 .withUser(loggedInUser)
                 .build();
 
         FormInputResource formInput = newFormInputResource()
                 .withType(FILEUPLOAD)
-                .withScope(APPLICATION)
                 .build();
 
-        when(formInputRestService.getByQuestionId(questionId)).thenReturn(restSuccess(singletonList(formInput)));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
 
         when(formInputResponseRestService.removeFileEntry(formInput.getId(),

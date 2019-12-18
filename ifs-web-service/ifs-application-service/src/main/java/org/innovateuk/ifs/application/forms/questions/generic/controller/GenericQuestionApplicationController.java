@@ -298,10 +298,10 @@ public class GenericQuestionApplicationController {
     }
 
     private Optional<FormInputResource> findByType(long questionId, FormInputType type) {
-        return formInputRestService.getByQuestionId(questionId)
+        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)
                 .getSuccess()
                 .stream()
-                .filter(input -> input.getType().equals(type) && input.getScope().equals(APPLICATION))
+                .filter(input -> input.getType().equals(type))
                 .findAny();
     }
 
