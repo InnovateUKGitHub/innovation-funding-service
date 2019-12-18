@@ -163,7 +163,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 return Optional.of(applicantLink(application.getId()));
             }
 
-            if (asessorProcessRoles().contains(currentUserRole.get().getRole())
+            if (assessorProcessRoles().contains(currentUserRole.get().getRole())
                     && DETAILED.equals(competition.getAssessorFinanceView())) {
                 return Optional.of(assessorLink(application, organisation));
             }
