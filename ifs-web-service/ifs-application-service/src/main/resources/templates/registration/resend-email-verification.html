@@ -20,7 +20,7 @@
         </p>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${resendEmailVerificationForm}" method="POST">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
-                    <label class="govuk-hint" for="email">
+                    <label class="govuk-hint" th:for="${#ids.next('email')}">
                         Enter Email Address
                     </label>
                     <th:block th:if="${#fields.hasErrors('email')}">

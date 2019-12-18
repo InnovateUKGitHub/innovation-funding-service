@@ -306,7 +306,7 @@
                                     class="govuk-table__row form-group-row-validated"
                                     th:classappend="((${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')})) ? 'govuk-form-group--error'">
                                     <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'govuk-form-group--error'">
-                                        <label class="govuk-label">Relation</label>
+                                        <label class="govuk-label" th:for="familyAffiliations[__${familyAffiliationStat.index}__].relation">Relation</label>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
                                             <span class="govuk-error-message"
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
@@ -321,7 +321,7 @@
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
                                     </td>
                                     <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'govuk-form-group--error'">
-                                        <label class="govuk-label">Organisation</label>
+                                        <label class="govuk-label" th:for="familyAffiliations[__${familyAffiliationStat.index}__].organisation">Organisation</label>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
                                             <span class="govuk-error-message"
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
@@ -336,7 +336,7 @@
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
                                     </td>
                                     <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'govuk-form-group--error'">
-                                        <label class="govuk-label">Position</label>
+                                        <label class="govuk-label" th:for="familyAffiliations[__${familyAffiliationStat.index}__].position">Position</label>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
                                             <span class="govuk-error-message"
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
@@ -397,7 +397,7 @@
 
                     <div class="govuk-form-group js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <label class="govuk-label">Please describe these interests
+                            <label class="govuk-label" th:for="${#ids.next('familyFinancialInterests)}">Please describe these interests
                                 <th:block th:if="${#fields.hasErrors('familyFinancialInterests')}">
                                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}"></span>
                                 </th:block>

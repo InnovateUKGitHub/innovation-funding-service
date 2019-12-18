@@ -33,7 +33,7 @@
               method="post">
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
-                <label class="govuk-label--s" for="organisationName">
+                <label class="govuk-label--s" th:for="${#ids.next('organisationName')}">
                     Organisation name
                 </label>
                 <th:block th:if="${#fields.hasErrors('organisationName')}">

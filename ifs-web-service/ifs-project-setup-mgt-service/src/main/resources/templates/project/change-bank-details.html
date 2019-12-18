@@ -46,7 +46,7 @@
 
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Company details</h2>
             <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="organisationName">
+                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" th:for="${ids.next('organisationName')}">
                     Company name
                 </label>
                 <th:block th:if="${#fields.hasErrors('organisationName')}">
@@ -62,7 +62,7 @@
                         th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="registrationNumber">
+                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" th:for="${ids.next('registrationNumber')}">
                     Companies house number
                 </label>
                 <p class="govuk-hint">For example: 15489657</p>
@@ -85,7 +85,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Account details</h2>
             <p class="govuk-hint">This is the bank account that the applicant will use for the duration of the project</p>
             <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="accountNumber">
+                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" th:for="${ids.next('accountNumbe')}r">
                     Account number
                 </label>
                 <p class="govuk-hint">For example: 15489657</p>
@@ -106,7 +106,7 @@
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-!-font-weight-bold" for="sortCode">
+                <label class="govuk-label govuk-!-font-weight-bold" th:for="${ids.next('sortCode')}">
                     Sort code
                 </label>
                 <p class="govuk-hint">For example: 311212</p>
@@ -134,7 +134,7 @@
                 <input type="hidden" name="addressForm.addressType" value="MANUAL_ENTRY"/>
                 <span class="govuk-hint">This is the billing address of the bank account. This is not the address of the bank.</span>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.manualAddress.addressLine1')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="addressForm.manualAddress.addressLine1">
+                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" th:for="${ids.next('addressForm.manualAddress.addressLine1')}">
                         Street
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.addressLine1')}">
@@ -148,8 +148,7 @@
                            th:field="*{addressForm.manualAddress.addressLine1}" />
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.manualAddress.addressLine2')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-visually-hidden"
-                           for="addressForm.manualAddress.addressLine2">
+                    <label class="govuk-label govuk-visually-hidden" th:for="${ids.next('addressForm.manualAddress.addressLine2')}">
                         Street line 2
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.addressLine2')}">
@@ -161,7 +160,7 @@
                            th:field="*{addressForm.manualAddress.addressLine2}"/>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.manualAddress.addressLine3')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-visually-hidden" for="addressForm.manualAddress.addressLine3">
+                    <label class="govuk-label govuk-visually-hidden" th:for="${ids.next('addressForm.manualAddress.addressLine3')}">
                         Street line 3
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.addressLine3')}">
@@ -173,8 +172,7 @@
                            th:field="*{addressForm.manualAddress.addressLine3}"/>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.manualAddress.town')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half"
-                           for="addressForm.manualAddress.town">
+                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" th:for="${ids.next('addressForm.manualAddress.town')}">
                         Town
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.town')}">
@@ -188,7 +186,7 @@
                            th:field="*{addressForm.manualAddress.town}"/>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.manualAddress.county')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="addressForm.manualAddress.county">
+                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" th:for="${ids.next('addressForm.manualAddress.county')}">
                         County
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.county')}">
@@ -201,7 +199,7 @@
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.manualAddress.postcode')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half"
-                           for="addressForm.manualAddress.postcode">
+                           th:for="${ids.next('addressForm.manualAddress.postcode')}">
                         Postcode
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.postcode')}">
