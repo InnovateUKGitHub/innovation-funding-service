@@ -96,6 +96,7 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<FileAndContents> downloadFeedback(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
             fileEntryService.findOne(interviewAssignment.getMessage().getFeedback().getId())
