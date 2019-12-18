@@ -31,6 +31,10 @@ Resource          ../../resources/defaultResources.robot
 ${localEmailInvtedUser}   ifs.innovationLead@innovateuk.ukri.test
 ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
+${adminChangeEmailOld}    aaron.powell@example.com
+${adminChangeEmailNew}    aaron.powell2@example.com
+${supportChangeEmailOld}  megan.rowland@example.com
+${supportChangeEmailOld}  megan.rowland2@example.com
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -62,7 +66,7 @@ Administrator can see the edit view of internal user profile
 
 Administrator view details of external user
     [Documentation]  IFS-6380
-    Given the user clicks the button/link    jQuery = .user-profile:contains("aaron.powell@example.com") a:contains("Edit")
+    Given the user clicks the button/link    jQuery = .user-profile:contains("${adminChangeEmailOld}") a:contains("Edit")
     Then the administrator sees the external user details
 
 Change email validation
@@ -87,30 +91,30 @@ Admin can cancel change email
 
 Admin can change email
     [Documentation]  IFS-6380
-    Given the user clicks the button/link     jQuery = .user-profile:contains("aaron.powell@example.com") a:contains("Edit")
-    When the user enters text to a text field  id = email  aaron.powell2@example.com
+    Given the user clicks the button/link       jQuery = .user-profile:contains("${adminChangeEmailOld}") a:contains("Edit")
+    When the user enters text to a text field   id = email  ${adminChangeEmailNew}
     And the user clicks the button/link         jQuery = button:contains("Save and return")
     Then the user confirms email change
 
 User cannot sign in with old email
     [Documentation]  IFS-6380
     [Setup]  Logout as user
-    Given the guest user inserts user email and password     aaron.powell@example.com  Passw0rd
+    Given the guest user inserts user email and password     ${adminChangeEmailOld}  ${correct_password}
     When The guest user clicks the log-in button
-    Then the user should see the element             jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
+    Then the user should see the element                     jQuery = .govuk-error-summary:contains("${unsuccessful_login_message}")
 
 User can sign in with new email
     [Documentation]  IFS-6380
-    Given Logging in and Error Checking    aaron.powell2@example.com  Passw0rd
+    Given Logging in and Error Checking    ${adminChangeEmailNew}  ${correct_password}
     Then the user should see the element   link = Office Chair for Life
 
 Support can change email address
     [Documentation]  IFS-6380  IFS-6928
     Given Log in as a different user           &{support_user_credentials}
-    When The user clicks the button/link       link = Manage users
+    And The user clicks the button/link        link = Manage users
     And the user clicks the button/link        jQuery = .pagination-links a:contains("6")
-    And the user clicks the button/link        jQuery = .user-profile:contains("megan.rowland@gmail.com") a:contains("Edit")
-    When the user enters text to a text field  id = email  megan.rowland2@example.com
+    When the user clicks the button/link       jQuery = .user-profile:contains("${supportChangeEmailOld}") a:contains("Edit")
+    And the user enters text to a text field   id = email  ${supportChangeEmailNew}
     And the user clicks the button/link        jQuery = button:contains("Save and return")
     Then the user confirms email change
 
@@ -120,15 +124,15 @@ Support cannot see internal users
     When the user clicks the button/link          css = input[type="submit"]
     Then the user should see the element          jQuery = p:contains("0"):contains("users matching the search")
     And the user clicks the button/link           link = Clear filters
-    And the user should not see the element      jQuery = p:contains("users matching the search")
+    And the user should not see the element       jQuery = p:contains("users matching the search")
 
 Server side validation for invite new internal user
     [Documentation]  IFS-27
     [Tags]
-    [Setup]  Log in as a different user                 &{ifs_admin_user_credentials}
-    Given the user navigates to the page                ${server}/management/admin/users/active
-    When the user clicks the button/link                link = Invite a new internal user
-    And the user clicks the button/link                 jQuery = button:contains("Send invite")
+    [Setup]  Log in as a different user                     &{ifs_admin_user_credentials}
+    Given the user navigates to the page                    ${server}/management/admin/users/active
+    When the user clicks the button/link                    link = Invite a new internal user
+    And the user clicks the button/link                     jQuery = button:contains("Send invite")
     Then the use should see the validation error summary    Please enter an email address.
 
 The user must use an Innovate UK email
@@ -168,11 +172,11 @@ Administrator can successfully finish the rest of the invitation
 Account creation validation checks - Blank
     [Documentation]  IFS-643  IFS-642
     [Tags]
-    Given the user reads his email and clicks the link  ${email}  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Create account")
+    Given the user reads his email and clicks the link    ${email}  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
     And the use should see the validation error summary   Password must be at least 8 characters
     When the internal user enters the details to create account
-    Set Focus To Element                                        css = #lastName
+    Set Focus To Element                                   css = #lastName
     Then the user cannot see a validation error in the page
 
 Account creation validation checks - Lowercase password
@@ -202,7 +206,7 @@ Inviting the same user for the different role again should also give an error
     [Documentation]  IFS-27
     [Tags]
     Given the IFS admin send invite to internal user   Project  Finance  Project Finance
-    Then the user should see a summary error          This email address is already in use.
+    Then the user should see a summary error           This email address is already in use.
 
 Administrator can navigate to edit page to edit the internal user details
     [Documentation]  IFS-18
@@ -254,20 +258,20 @@ Administrator is able to disable internal users
 
 Deactivate external user
     [Documentation]  IFS-6380
-    Given the user navigates to the View internal user details   aaron.powell2@example.com  active
+    Given the user navigates to the View internal user details   ${adminChangeEmailNew}  active
     And the IFS admin deactivate the user
     When the user navigates to the page   ${server}/management/admin/users/inactive
-    Then the user should see the element  jQuery = p:contains("aaron.powell2@example.com")
+    Then the user should see the element  jQuery = p:contains("${adminChangeEmailNew}")
     [Teardown]  Logout as user
 
 Deactivated external user cannot login
     [Documentation]  IFS-6380
-    Given the user cannot login with their new details    aaron.powell2@example.com  Passw0rd
-    When Logging in and Error Checking                  &{ifs_admin_user_credentials}
-    Then the user navigates to the View internal user details   aaron.powell2@example.com  inactive
-    And the IFS admin reactivate the user   aaron.powell2@example.com
-    And Log in as a different user       aaron.powell2@example.com   Passw0rd
-    Then The user should see the element      link = Office Chair for Life
+    Given the user cannot login with their new details          ${adminChangeEmailNew}  Passw0rd
+    When Logging in and Error Checking                          &{ifs_admin_user_credentials}
+    Then the user navigates to the View internal user details   ${adminChangeEmailNew}  inactive
+    And the IFS admin reactivate the user                       ${adminChangeEmailNew}
+    And Log in as a different user                              ${adminChangeEmailNew}   ${correct_password}
+    Then The user should see the element                        link = Office Chair for Life
 
 Deactivated user cannot login until he is activated
     [Documentation]  IFS-644
