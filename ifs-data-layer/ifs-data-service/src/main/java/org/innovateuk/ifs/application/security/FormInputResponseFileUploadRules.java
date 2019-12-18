@@ -15,9 +15,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
@@ -68,7 +69,7 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
     }
 
     private boolean userIsApplicantOnThisApplication(long applicationId, UserResource user) {
-        List<Role> allApplicantRoles = asList(Role.LEADAPPLICANT, Role.COLLABORATOR);
+        Set<Role> allApplicantRoles = EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR);
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, applicationId);
         return !applicantProcessRoles.isEmpty();
     }

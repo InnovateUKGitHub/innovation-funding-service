@@ -43,7 +43,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
@@ -58,8 +57,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -448,16 +446,16 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void testFindActiveByProcessRoles(){
+    public void testFindActive(){
         Set<Role> internalRoles = singleton(Role.PROJECT_FINANCE);
         Pageable pageable = PageRequest.of(0, 5);
         List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE).withRoles(internalRoles).build(6);
         Page<User> expectedPage = new PageImpl<>(activeUsers, pageable, 6L);
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, Role.internalRoles().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findByEmailContainingAndStatus("", UserStatus.ACTIVE, pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
-        ServiceResult<UserPageResource> result = service.findActiveByRoles(Role.internalRoles(), pageable);
+        ServiceResult<UserPageResource> result = service.findActive("", pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());
@@ -465,25 +463,23 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals(6, result.getSuccess().getContent().size());
     }
 
-
     @Test
-    public void testFindInactiveByProcessRoles(){
+    public void testFindInactive(){
         Set<Role> internalRoles = singleton(Role.COMP_ADMIN);
         Pageable pageable = PageRequest.of(0, 5);
         List<User> inactiveUsers = newUser().withStatus(UserStatus.INACTIVE).withRoles(internalRoles).build(4);
         Page<User> expectedPage = new PageImpl<>(inactiveUsers, pageable, 4L);
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, Role.internalRoles(), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findByEmailContainingAndStatus("", UserStatus.INACTIVE, pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
-        ServiceResult<UserPageResource> result = service.findInactiveByRoles(Role.internalRoles(), pageable);
+        ServiceResult<UserPageResource> result = service.findInactive("", pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());
         assertEquals(1, result.getSuccess().getTotalPages());
         assertEquals(4, result.getSuccess().getContent().size());
     }
-
 
     @Test
     public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsNull(){
@@ -698,36 +694,43 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void updateEmail() {
+        String oldEmail = "old@gmail.com";
         String updateEmail = "new@gmail.com";
-        User user = newUser().withUid("uid").withEmailAddress(updateEmail).build();
+        User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress(oldEmail).build();
 
-        List<Invite> invite = singletonList(new RoleInvite("Mister", "mister@email.com", "", APPLICANT, OPENED));
+        List<Invite> invite = singletonList(new RoleInvite("Mister", oldEmail, "", APPLICANT, OPENED));
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(invite);
-        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
+        when(userRepositoryMock.save(user)).thenReturn(user);
+        when(userInviteRepositoryMock.findByEmail(oldEmail)).thenReturn(invite);
+        when(idpServiceMock.updateUserEmail(user.getUid(), updateEmail)).thenReturn(serviceSuccess(user.getUid()));
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isSuccess());
         assertEquals(updateEmail, user.getEmail());
+        verify(notificationServiceMock, times(2)).sendNotificationWithFlush(any(), eq(EMAIL));
     }
 
     @Test
     public void updateEmailForNoInviteUsers() {
 
-        User user = newUser().withUid("uid").build();
+        User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress("old@gmail.com").build();
         String updateEmail = "new@gmail.com";
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
         user.setEmail(updateEmail);
+        when(userRepositoryMock.save(user)).thenReturn(user);
         when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isSuccess());
         assertEquals(updateEmail, user.getEmail());
+        verify(notificationServiceMock, times(2)).sendNotificationWithFlush(any(), eq(EMAIL));
     }
 
     @Test

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
