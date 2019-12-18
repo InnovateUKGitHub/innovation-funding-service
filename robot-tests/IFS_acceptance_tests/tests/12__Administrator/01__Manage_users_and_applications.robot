@@ -40,9 +40,10 @@ ${supportChangeEmailNew}  megan.rowland2@gmail.com
 Project finance user cannot navigate to manage users page
     [Documentation]  INFUND-604
     [Tags]  HappyPath
-    [Setup]  The user logs-in in new browser  &{ifs_admin_user_credentials}
-    Given User cannot see manage users page   &{Comp_admin1_credentials}
-    And User cannot see manage users page     &{internal_finance_credentials}
+    [Setup]  The user logs-in in new browser  &{Comp_admin1_credentials}
+    Given User cannot see manage users page
+    When Log in as a different user           &{internal_finance_credentials}
+    Then User cannot see manage users page
 
 Administrator can navigate to manage users page
     [Documentation]    INFUND-604  SIFS-6377
@@ -303,8 +304,6 @@ Custom suite setup
     set suite variable   ${email}
 
 User cannot see manage users page
-    [Arguments]  ${email}  ${password}
-    Log in as a different user  ${email}  ${password}
     the user should not see the element   link = Manage users
     the user navigates to the page and gets a custom error message  ${USER_MGMT_URL}  ${403_error_message}
 
