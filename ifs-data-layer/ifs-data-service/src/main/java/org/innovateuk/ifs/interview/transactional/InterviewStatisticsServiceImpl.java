@@ -14,7 +14,6 @@ import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -30,7 +29,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Service to get statistics related to Interview Panels.
  */
 @Service
-@Transactional(readOnly = true)
 public class InterviewStatisticsServiceImpl implements InterviewStatisticsService{
 
     private InterviewInviteRepository interviewInviteRepository;

@@ -64,7 +64,6 @@ public class InterviewResponseServiceImpl implements InterviewResponseService {
     private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @Override
-    @Transactional
     public ServiceResult<Void> uploadResponse(String contentType, String contentLength, String originalFilename, long applicationId, HttpServletRequest request) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
                 fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
@@ -78,7 +77,6 @@ public class InterviewResponseServiceImpl implements InterviewResponseService {
     }
 
     @Override
-    @Transactional
     public ServiceResult<Void> deleteResponse(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccessReturnVoid(interviewAssignment ->
             interviewAssignmentWorkflowHandler.withdrawResponse(interviewAssignment)
@@ -86,6 +84,7 @@ public class InterviewResponseServiceImpl implements InterviewResponseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<FileAndContents> downloadResponse(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
                 fileEntryService.findOne(interviewAssignment.getResponse().getFileResponse().getId())

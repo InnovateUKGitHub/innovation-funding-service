@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Service to get statistics related to Review Panels.
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
 
     private ReviewInviteRepository reviewInviteRepository;

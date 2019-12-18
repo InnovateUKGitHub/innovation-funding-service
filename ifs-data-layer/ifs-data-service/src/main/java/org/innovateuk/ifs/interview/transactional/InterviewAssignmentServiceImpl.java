@@ -54,7 +54,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     private OrganisationRepository organisationRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
             final Page<Application> pagedResult =
                     applicationRepository.findSubmittedApplicationsNotOnInterviewPanel(competitionId, pageable);
@@ -69,7 +68,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
         }
 
     @Override
-    @Transactional(readOnly = true)
     public ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable) {
         final Page<InterviewAssignment> pagedResult =
                 interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(
@@ -86,7 +84,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     }
 
     @Override
-    @Transactional(readOnly = true)
     public ServiceResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, Pageable pageable) {
 
         final Page<InterviewAssignment> pagedResult =
