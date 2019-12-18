@@ -367,7 +367,6 @@ the user fills in the funding information with bigger amount
     click element                             jQuery = label:contains("Yes")
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input  8000000
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input  test2
-    the user selects the checkbox             agree-terms-page
     the user clicks the button/link           jQuery = button:contains("Mark as complete")
 
 User verifies captial usage, subcontracting, travel and other costs for innovation lead
