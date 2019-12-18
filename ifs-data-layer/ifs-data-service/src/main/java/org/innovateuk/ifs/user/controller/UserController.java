@@ -78,16 +78,32 @@ public class UserController {
         return baseUserService.findByProcessRole(userRole).toGetResponse();
     }
 
-    @GetMapping("/internal/active")
-    public RestResult<UserPageResource> findActiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-        return userService.findActiveByRoles(Role.internalRoles(), PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+    @GetMapping("/active")
+    public RestResult<UserPageResource> findActiveUsers(@RequestParam(required = false) String filter,
+                                                        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return userService.findActive(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
-    @GetMapping("/internal/inactive")
-    public RestResult<UserPageResource> findInactiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+    @GetMapping("/inactive")
+    public RestResult<UserPageResource> findInactiveUsers(@RequestParam(required = false)  String filter,
+                                                          @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                          @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
+        return userService.findInactive(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+    }
+
+    @GetMapping("/external/active")
+    public RestResult<UserPageResource> findActiveExternalUsers(@RequestParam(required = false)  String filter,
+                                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return userService.findActiveExternal(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+    }
+
+    @GetMapping("/external/inactive")
+    public RestResult<UserPageResource> findInactiveExternalUsers(@RequestParam(required = false)  String filter,
+                                                                  @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return userService.findInactiveByRoles(Role.internalRoles(), PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
+        return userService.findInactiveExternal(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @PostMapping("/internal/create/{inviteHash}")
@@ -221,4 +237,4 @@ public class UserController {
                                            @PathVariable("role") final Role role) {
         return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
     }
- }
+}

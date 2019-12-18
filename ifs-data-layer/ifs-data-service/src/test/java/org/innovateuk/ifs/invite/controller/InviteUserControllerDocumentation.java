@@ -13,9 +13,9 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +24,8 @@ import static org.innovateuk.ifs.commons.service.BaseRestService.buildPagination
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -120,8 +122,10 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void findPendingInternalUserInvites() throws Exception {
         RoleInvitePageResource roleInvitePageResource = buildRoleInvitePageResource();
-        when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(roleInvitePageResource));
-        mockMvc.perform(get(buildPaginationUri("/invite-user/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()))
+        when(inviteUserServiceMock.findPendingInternalUserInvites(anyString(), any(PageRequest.class))).thenReturn(serviceSuccess(roleInvitePageResource));
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", "");
+        mockMvc.perform(get(buildPaginationUri("/invite-user/internal/pending", 0, 5, null, params))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("inviteUser/internal/pending/{method-name}",

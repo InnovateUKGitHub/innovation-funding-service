@@ -16,7 +16,7 @@ public interface InviteUserRestService {
     RestResult<Void> saveUserInvite(InviteUserResource inviteUserResource);
     RestResult<Boolean> checkExistingUser(String inviteHash);
     RestResult<RoleInviteResource> getInvite(String inviteHash);
-    RestResult<RoleInvitePageResource> getPendingInternalUserInvites(int pageNumber, int pageSize);
+    RestResult<RoleInvitePageResource> getPendingInternalUserInvites(String filter, int pageNumber, int pageSize);
     RestResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory);
     RestResult<Void> resendInternalUserInvite(long inviteId);
 }
