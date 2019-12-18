@@ -159,22 +159,17 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     public ServiceResult<AssessorInvitesToSendResource> getInviteToSend(long competitionId, long assessorId) {
         return getCompetition(competitionId).andOnSuccess(
                 competition ->
-                    getUser(assessorId).andOnSuccess(
-                            user ->
-                                    serviceSuccess(
-                                            new AssessorInvitesToSendResource(
-                                                singletonList(user.getName()),
-                                                competition.getId(),
-                                                competition.getName(),
-                                                getInvitePreviewContent(asMap(
-                                                        "name", user.getName(),
-                                                        "competitionName", competition.getName()
-                                                        )
-                                                )
-                                            )
-                                    )
-            )
-        );
+                        getUser(assessorId).andOnSuccess(
+                                user ->
+                                        serviceSuccess(
+                                                new AssessorInvitesToSendResource(
+                                                        singletonList(user.getName()),
+                                                        competition.getId(),
+                                                        competition.getName(),
+                                                        getInvitePreviewContent(asMap(
+                                                                "name", user.getName(),
+                                                                "competitionName", competition.getName()
+                                                        ))))));
     }
 
     @Override
