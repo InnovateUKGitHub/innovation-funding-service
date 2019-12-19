@@ -5,15 +5,15 @@ if test -f "$FILE"; then
 
     echo "Start copying secrets from parameter store"
 
-    touch ~/.aws/credentials
-    chmod 777 ~/.aws/credentials 
+    touch aws/credentials
+    #chmod 777 ~/.aws/credentials
 
     docker image rm ssm-access-image
     docker build --tag="ssm-access-image" docker/aws-cli
 
     mkdir -p ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
     echo "just created directory"
-    IFS_LDAP_ENCRYPTION_KEY=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v ~/.aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/LDAP/ENCRYPTION/KEY" --with-decryption | jq -r ".Parameter.Value")
+    IFS_LDAP_ENCRYPTION_KEY=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/LDAP/ENCRYPTION/KEY" --with-decryption | jq -r ".Parameter.Value")
     echo "just made call to aws"
     echo $IFS_LDAP_ENCRYPTION_KEY > ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key
     echo "just wrote to file"
