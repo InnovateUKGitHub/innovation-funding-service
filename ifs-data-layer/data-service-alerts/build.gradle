@@ -75,6 +75,7 @@ task stopAlerts(type: Exec) {
 createContainer.networkAliases = ["data-service-alerts"]
 
 test.finalizedBy asciidoctor
+ext['hibernate.version'] = '5.2.7.Final'
 
 dependencies {
     compile project(":ifs-commons")
