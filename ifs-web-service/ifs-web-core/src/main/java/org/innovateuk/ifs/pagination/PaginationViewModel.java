@@ -127,7 +127,7 @@ public class PaginationViewModel {
             uri = uri + "?" + query;
         }
         URIBuilder builder = new URIBuilder(uri);
-        builder.addParameter("page", String.valueOf(page));
+        builder.setParameter("page", String.valueOf(page));
         return builder.build().toString();
     }
 
