@@ -5,6 +5,9 @@ if test -f "$FILE"; then
 
     echo "Start copying secrets from parameter store"
 
+    touch ~/.aws/credentials
+    chmod 777 ~/.aws/credentials 
+
     docker image rm ssm-access-image
     docker build --tag="ssm-access-image" docker/aws-cli
 
