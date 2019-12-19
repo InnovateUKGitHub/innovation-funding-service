@@ -206,7 +206,6 @@ Timestamp approval verification for viability and eligibility
     When the user clicks the button/link                     css = table.table-progress a.eligibility-0
     And the user selects the checkbox                        project-eligible
     And the user selects the option from the drop-down menu  Green  id = rag-rating
-    And the user selects the checkbox                        creditReportConfirmed
     And the user clicks the button/link                      css = #confirm-button        #Page confirmation button
     And the user clicks the button/link                      name = confirm-eligibility   #Pop-up confirmation button
     Then the user should see the element                     jQuery = .success-alert p:contains(The partner's finance eligibility has been approved by Lee Bowman, ${today})
