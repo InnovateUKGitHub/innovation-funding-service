@@ -32,7 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.MONITORING_OFFICERS_CANNOT_BE_INTERNAL_USERS;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.MONITORING_OFFICER_INVITE_INVALID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;

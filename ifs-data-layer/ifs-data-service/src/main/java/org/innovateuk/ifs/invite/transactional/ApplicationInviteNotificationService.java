@@ -95,7 +95,7 @@ class ApplicationInviteNotificationService {
             }
             applicationInviteRepository.save(invite);
             return inviteCollaboratorToApplication(baseUrl, invite).
-                    andOnSuccessReturnVoid(() -> handleInviteSuccess(invite));
+                    andOnSuccessReturnVoid(() -> handleInviteSuccess(invite, isResend));
         }
     }
 
@@ -156,7 +156,12 @@ class ApplicationInviteNotificationService {
         return baseUrl + "/competition/" + invite.getTarget().getCompetition().getId() + "/overview";
     }
 
-    private void handleInviteSuccess(ApplicationInvite invite) {
-        applicationInviteRepository.save(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
+    private void handleInviteSuccess(ApplicationInvite invite, boolean isResend) {
+        if (isResend) {
+            invite.resend(loggedInUserSupplier.get(), ZonedDateTime.now());
+        } else {
+            invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+        }
+        applicationInviteRepository.save(invite);
     }
 }

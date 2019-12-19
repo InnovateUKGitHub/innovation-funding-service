@@ -3,7 +3,6 @@ package org.innovateuk.ifs.invite.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
-import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
@@ -12,8 +11,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.Collections;
 import java.util.List;
@@ -84,15 +81,15 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     }
 
-    @Test
-    public void findPendingInternalUserInvites() throws Exception {
-        when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(new RoleInvitePageResource()));
-
-        mockMvc.perform(get("/invite-user/internal/pending")).andExpect(status().isOk());
-
-        verify(inviteUserServiceMock).findPendingInternalUserInvites(Mockito.any(PageRequest.class));
-
-    }
+//    @Test
+//    public void findPendingInternalUserInvites() throws Exception {
+//        when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(new RoleInvitePageResource()));
+//
+//        mockMvc.perform(get("/invite-user/internal/pending")).andExpect(status().isOk());
+//
+//        verify(inviteUserServiceMock).findPendingInternalUserInvites(Mockito.any(PageRequest.class));
+//
+//    }
 
     @Test
     public void findExternalInvites() throws Exception {
