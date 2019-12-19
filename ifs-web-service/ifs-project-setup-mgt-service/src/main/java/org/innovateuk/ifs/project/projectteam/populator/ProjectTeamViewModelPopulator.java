@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.projectteam.viewmodel.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -36,9 +35,6 @@ public class ProjectTeamViewModelPopulator {
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
-    @Value("${ifs.project.team.change.enabled:false}")
-    private boolean pcrEnabled;
-
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
@@ -57,10 +53,10 @@ public class ProjectTeamViewModelPopulator {
 
         List<ProjectTeamOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
                 .map(org -> mapToProjectOrganisationViewModel(projectUsers,
-                                                              invitedUsers,
-                                                              org,
-                                                              org.equals(leadOrganisation),
-                                                              !isReadOnly))
+                        invitedUsers,
+                        org,
+                        org.equals(leadOrganisation),
+                        !isReadOnly))
                 .sorted()
                 .collect(toList());
 
@@ -97,15 +93,13 @@ public class ProjectTeamViewModelPopulator {
     }
 
     private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {
-        return pcrEnabled
-                && user.hasRole(PROJECT_FINANCE)
+        return user.hasRole(PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
     }
 
     private boolean userCanAddAndRemoveOrganisations(ProjectResource project, UserResource user) {
-        return pcrEnabled
-                && user.hasRole(PROJECT_FINANCE)
+        return user.hasRole(PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
     }
@@ -117,9 +111,9 @@ public class ProjectTeamViewModelPopulator {
 
     private ProjectTeamOrganisationViewModel mapToProjectOrganisationViewModel(List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, boolean isLead, boolean userCanAddAndResend) {
         List<ProjectUserResource> usersForOrganisation = simpleFilter(totalUsers,
-                                                                      user -> user.getOrganisation().equals(organisation.getId()));
+                user -> user.getOrganisation().equals(organisation.getId()));
         List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
-                                                                              invite -> invite.getOrganisation().equals(organisation.getId()));
+                invite -> invite.getOrganisation().equals(organisation.getId()));
         return new ProjectTeamOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation, userCanAddAndResend), organisation.getName(), organisation.getId(), isLead, userCanAddAndResend, null);
     }
 
@@ -136,7 +130,7 @@ public class ProjectTeamViewModelPopulator {
                 .collect(toList());
 
         Optional<ProjectUserResource> financeContact = simpleFindFirst(users,
-                                                                       ProjectUserResource::isFinanceContact);
+                ProjectUserResource::isFinanceContact);
 
         financeContact.ifPresent(fc -> partnerUsers.stream()
                 .filter(user -> user.getId() == fc.getUser())
@@ -145,7 +139,7 @@ public class ProjectTeamViewModelPopulator {
                 .setFinanceContact(true));
 
         Optional<ProjectUserResource> projectManager = simpleFindFirst(users,
-                                                                       ProjectUserResource::isProjectManager);
+                ProjectUserResource::isProjectManager);
 
         projectManager.ifPresent(pm -> partnerUsers.stream()
                 .filter(user -> user.getId() == pm.getUser())

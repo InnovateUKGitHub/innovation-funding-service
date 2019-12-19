@@ -28,6 +28,8 @@ public interface InviteRepository<T extends Invite> extends PagingAndSortingRepo
 
     Page<T> findByStatus(InviteStatus status, Pageable pageable);
 
+    Page<T> findByEmailContainsAndStatus(String email, InviteStatus status, Pageable pageable);
+
     List<T> findByStatusIn(Set<InviteStatus> status);
 
     List<T> findByNameLikeAndStatusIn(String name, Set<InviteStatus> status);

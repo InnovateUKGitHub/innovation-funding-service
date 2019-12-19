@@ -1,0 +1,90 @@
+.upload-section {
+  [aria-hidden="true"] {
+    display: none;
+  }
+
+  .file-list {
+    li {
+      margin-bottom: 0;
+
+      .file-row {
+        display:flex;
+        justify-content: space-between;
+        border-top: 1px solid $govuk-border-colour;
+        padding: 10px 10px 10px 50px;
+        background-color: govuk-colour("grey-4");
+        background-repeat: no-repeat;
+        background-position: 20px 50%;
+        background-size: 20px 20px;
+
+
+        p,
+        button {
+          margin: 0;
+          padding: 0;
+        }
+
+        @keyframes blink {
+          0% {
+            opacity: 0;
+          }
+
+          20% {
+            opacity: 1;
+          }
+
+          100% {
+            opacity: 0;
+          }
+        }
+
+        .saving {
+          font-weight: bold;
+
+          span {
+            animation-name: blink;
+            animation-duration: 1.4s;
+            animation-iteration-count: infinite;
+            animation-fill-mode: both;
+
+            &:nth-child(2) {
+              animation-delay: .2s;
+            }
+
+            &:nth-child(3) {
+              animation-delay: .4s;
+            }
+          }
+        }
+      }
+
+
+      &.pending {
+        .file-row {
+          border-left: 5px solid govuk-colour("yellow");
+        }
+      }
+
+      &.success {
+        .file-row {
+          background-image: url('../images/ifs-images/icons/icon-tick.png');
+          border-left: 5px solid $govuk-button-colour;
+        }
+      }
+
+      &.error {
+        .file-row {
+          background-image: url('../images/ifs-images/icons/icon-alert.png');
+          border-left: 5px solid $govuk-error-colour;
+        }
+      }
+
+      &:last-child {
+        .file-row {
+          border-bottom: 1px solid $govuk-border-colour;
+        }
+      }
+
+    }
+  }
+}

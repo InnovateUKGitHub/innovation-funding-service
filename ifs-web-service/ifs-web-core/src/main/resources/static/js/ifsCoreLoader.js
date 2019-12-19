@@ -50,9 +50,6 @@ IFS.core.loadOrder = {
   'finance': {
     init: function () {
       IFS.core.repeatableFinanceRows.init()
-    },
-    finalize: function () {
-      IFS.core.financeSpecifics.init()
     }
   },
   'finance-row-form': {
