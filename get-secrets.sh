@@ -24,7 +24,10 @@ if test -f "$FILE"; then
     echo -e $IFS_IDP_PROXY_KEY > ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_key.pem
     IFS_IDP_PROXY_CERT=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/IDP/PROXY/CERT" --with-decryption | jq ".Parameter.Value" | tr -d \")
     echo -e $IFS_IDP_PROXY_CERT > ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_certificate.pem
-    IFS_IDP_PROXY_CACERT=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameters-by-path --path "/CI/IFS/IDP/PROXY/CACERT" --with-decryption | jq ".Parameters|sort_by(.Name)[].Value" | tr -d \")
+    IFS_IDP_PROXY_CACERT_1=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/IDP/PROXY/CACERT/1" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_IDP_PROXY_CACERT_2=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/IDP/PROXY/CACERT/2" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_IDP_PROXY_CACERT_3=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/IDP/PROXY/CACERT/3" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_IDP_PROXY_CACERT="$IFS_IDP_PROXY_CERT_1\n$IFS_IDP_PROXY_CERT_2\n$IFS_IDP_PROXY_CERT_3"
     echo -e $IFS_IDP_PROXY_CACERT > ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem
 
     IFS_IDP_SIGNING_KEY=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/IDP/SIGNING/KEY" --with-decryption | jq ".Parameter.Value" | tr -d \")
@@ -37,14 +40,20 @@ if test -f "$FILE"; then
     echo -e $IFS_SP_PROXY_KEY > ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_key.pem
     IFS_SP_PROXY_CERT=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SP/PROXY/CERT" --with-decryption | jq ".Parameter.Value" | tr -d \")
     echo -e $IFS_SP_PROXY_CERT > ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_certificate.pem
-    IFS_SP_PROXY_CACERT=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameters-by-path --path "/CI/IFS/SP/PROXY/CACERT" --with-decryption | jq ".Parameters|sort_by(.Name)[].Value" | tr -d \")
+    IFS_SP_PROXY_CACERT_1=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SP/PROXY/CACERT/1" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_SP_PROXY_CACERT_2=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SP/PROXY/CACERT/2" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_SP_PROXY_CACERT_3=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SP/PROXY/CACERT/3" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_SP_PROXY_CACERT="$IFS_SP_PROXY_CACERT_1\n$IFS_SP_PROXY_CACERT_2\n$IFS_SP_PROXY_CACERT_3"
     echo -e $IFS_SP_PROXY_CACERT > ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_cacertificate.pem
 
     IFS_SIGNED_CERT=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SIGNED/CERT" --with-decryption | jq ".Parameter.Value" | tr -d \")
     echo -e $IFS_SIGNED_CERT > server.crt
     IFS_SIGNED_KEY=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SIGNED/KEY" --with-decryption | jq ".Parameter.Value" | tr -d \")
     echo -e $IFS_SIGNED_KEY > server.key
-    IFS_SIGNED_CACERT=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameters-by-path --path "/CI/IFS/SIGNED/CACERT" --with-decryption | jq ".Parameters|sort_by(.Name)[].Value" | tr -d \")
+    IFS_SIGNED_CACERT_1=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SIGNED/CACERT/1" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_SIGNED_CACERT_2=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SIGNED/CACERT/2" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_SIGNED_CACERT_3=$(env AWS_PROFILE=iukorg docker run --rm -e AWS_PROFILE -v $PWD/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/SIGNED/CACERT/3" --with-decryption | jq ".Parameter.Value" | tr -d \")
+    IFS_SIGNED_CACERT="$IFS_SIGNED_CACERT_1\n$IFS_SIGNED_CACERT_2\n$IFS_SIGNED_CACERT_3"
     echo -e $IFS_SIGNED_CACERT > ca.crt
 
     echo "Finished copying secrets from parameter store"
