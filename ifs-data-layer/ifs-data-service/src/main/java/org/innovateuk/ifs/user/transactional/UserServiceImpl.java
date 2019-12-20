@@ -37,17 +37,18 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_EMAIL_UPDATE_EMAIL_ALREADY_EXISTS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -64,7 +65,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     public enum Notifications {
         VERIFY_EMAIL_ADDRESS,
-        RESET_PASSWORD
+        RESET_PASSWORD,
+        EMAIL_CHANGE_OLD,
+        EMAIL_CHANGE_NEW
     }
 
     @Value("${ifs.web.baseURL}")
@@ -122,7 +125,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<Set<UserResource>> findAssignableUsers(final Long applicationId) {
+    public ServiceResult<Set<UserResource>> findAssignableUsers(final long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<UserResource> assignables = roles.stream()
@@ -135,7 +138,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<Set<UserResource>> findRelatedUsers(final Long applicationId) {
+    public ServiceResult<Set<UserResource>> findRelatedUsers(final long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
 
@@ -194,11 +197,28 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     private ServiceResult<User> updateUserEmail(User existingUser, String emailToUpdate) {
         userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
+        String oldEmail = existingUser.getEmail();
         existingUser.setEmail(emailToUpdate);
         User user = userRepository.save(existingUser);
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
                 .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate))
+                .andOnSuccess(() -> notifyEmailChange(oldEmail, emailToUpdate, user))
                 .andOnSuccessReturn(() -> user);
+    }
+
+    private ServiceResult<Void> notifyEmailChange(String oldEmail, String newEmail, User user) {
+        NotificationSource from = systemNotificationSource;
+        NotificationTarget oldEmailTarget = new UserNotificationTarget(user.getName(), oldEmail);
+        NotificationTarget newEmailTarget = new UserNotificationTarget(user.getName(), newEmail);
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("newEmail", newEmail);
+
+        Notification oldNotification = new Notification(from, singletonList(oldEmailTarget), Notifications.EMAIL_CHANGE_OLD, notificationArguments);
+        Notification newNotification = new Notification(from, singletonList(newEmailTarget), Notifications.EMAIL_CHANGE_NEW, notificationArguments);
+        ServiceResult<Void> oldResult = notificationService.sendNotificationWithFlush(oldNotification, EMAIL);
+        ServiceResult<Void> newResult = notificationService.sendNotificationWithFlush(newNotification, EMAIL);
+        return aggregate(oldResult, newResult).andOnSuccessReturnVoid();
     }
 
     private void logEmailChange(String oldEmail, String newEmail){
@@ -255,17 +275,47 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActiveByRoles(Set<Role> roleTypes, Pageable pageable) {
-        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
-        List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
+    public ServiceResult<UserPageResource> findActive(String filter, Pageable pageable) {
+        Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.ACTIVE, pageable);
+        List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable) {
-        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
-        List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
+    public ServiceResult<UserPageResource> findActiveExternal(String filter, Pageable pageable) {
+        return findUserPageResource(filter, pageable, ACTIVE, externalApplicantRoles());
+    }
+
+    @Override
+    public ServiceResult<UserPageResource> findInactive(String filter, Pageable pageable) {
+        Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.INACTIVE, pageable);
+        List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<UserPageResource> findInactiveExternal(String filter, Pageable pageable) {
+        return findUserPageResource(filter, pageable, INACTIVE, externalApplicantRoles());
+    }
+
+    private ServiceResult<UserPageResource> findUserPageResource(String filter, Pageable pageable, UserStatus userStatus, Set<Role> roles) {
+        Page<User> pagedResult = userRepository.findByEmailContainingAndStatusAndRolesIn(
+                filter,
+                userStatus,
+                externalApplicantRoles()
+                        .stream()
+                        .map(r -> Role.getByName(r.getName()))
+                        .collect(toSet()),
+                pageable
+        );
+        List<UserResource> userResources = simpleMap(pagedResult.getContent(), userMapper::mapToResource);
+        return serviceSuccess(new UserPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                userResources,
+                pagedResult.getNumber(),
+                pagedResult.getSize())
+        );
     }
 
     @Override
@@ -320,10 +370,18 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @UserUpdate
     public ServiceResult<UserResource> updateEmail(long userId, String email) {
         return find(userRepository.findById(userId), notFoundError(User.class, userId))
+                .andOnSuccess(user -> validateEmailDoesntAlreadyExist(user, email))
                 .andOnSuccess(user -> updateUserEmail(user, email))
                 .andOnSuccessReturn(userMapper::mapToResource);
     }
 
+    private ServiceResult<User> validateEmailDoesntAlreadyExist(User user, String email) {
+        Optional<User> existingUserWithSameEmail = userRepository.findByEmail(email);
+        if (existingUserWithSameEmail.isPresent()) {
+            return serviceFailure(USER_EMAIL_UPDATE_EMAIL_ALREADY_EXISTS);
+        }
+        return serviceSuccess(user);
+    }
     private ServiceResult<Void> validateSearchString(String searchString) {
 
         searchString = StringUtils.trim(searchString);

@@ -59,7 +59,6 @@ IFS.core.upload = (function () {
       var pendingRow = IFS.core.upload.addMessage(wrapper, IFS.core.template.replaceInTemplate(s.pendingRow, {text: file.name}))
 
       var formData = new window.FormData(wrapper.closest('form').get(0))
-      formData.append(fileInput.attr('name'), file)
       formData.append(submitButton.attr('name'), submitButton.attr('value') || '')
 
       if (wrapper.get(0).hasAttribute(s.oneAtATime)) {
@@ -178,8 +177,8 @@ IFS.core.upload = (function () {
     removeFile: function (removeButton) {
       var row = removeButton.closest('li')
       var wrapper = row.closest(s.wrapper)
-      removeButton.replaceWith('<p class="saving">Removing<span>.</span><span>.</span><span>.</span></p>')
       if (row.hasClass('success')) {
+        removeButton.replaceWith('<p class="saving">Removing<span>.</span><span>.</span><span>.</span></p>')
         var removeName = removeButton.attr('name')
         var removeValue = removeButton.attr('value')
         var formData = new window.FormData(wrapper.closest('form').get(0))
