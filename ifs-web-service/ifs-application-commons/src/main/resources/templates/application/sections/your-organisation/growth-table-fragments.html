@@ -4,8 +4,6 @@
     <th:block
         th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
 
-        <th:block th:insert="this::state-aid-warning"/>
-
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
             <p class="govuk-body">The organisation size is used to calculate your funding level. Changing this selection will reset your funding level.</p>
@@ -34,12 +32,14 @@
                             readOnly=${readOnly},
                             )" />
         </th:block>
+
+
+        <th:block th:insert="this::state-aid-warning"/>
     </th:block>
 
     <th:block
         th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
 
-        <th:block th:insert="this::state-aid-warning"/>
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
@@ -128,6 +128,9 @@
                     readOnly=${readOnly},
                 )" />
         </th:block>
+
+
+        <th:block th:insert="this::state-aid-warning"/>
     </th:block>
 
     <th:block th:fragment="growth-table-row(label, id, value, readOnly)">
@@ -158,6 +161,7 @@
             </td>
         </tr>
 
+
     </th:block>
 
 
@@ -183,7 +187,7 @@
 
     <th:block th:fragment="state-aid-warning">
         <th:block th:if="${!readOnly && showStateAidAgreement}">
-            <div class="message-alert govuk-!-margin-bottom-6">
+            <div class="govuk-!-margin-bottom-6">
                 <p class="govuk-body">
                     If we decide to award you funding you must be eligible to receive State aid at the point of the award.
                     If you are found to be ineligible, we will withdraw our offer.
