@@ -127,7 +127,9 @@
                                                 th:insert="fragments/modals :: modal-application-team-remove-organisation (${organisation}, ${row})"/>
                                             <a th:attr="data-js-modal=${'modal-application-team-remove-organisation-' + organisation.id}"
                                                href="/"
-                                               class="govuk-link">Remove organisation</a>
+                                               class="govuk-link">Remove organisation
+                                               <span class="visuallyhidden" th:text="${organisation.name}"></span>
+                                            </a>
                                         </th:block>
                                     </th:block>
                                     <th:block th:if="${row.lead}">Lead applicant</th:block>
