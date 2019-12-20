@@ -93,8 +93,9 @@ User still sees warning that the funding section will be reset
 Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
     [Tags]  HappyPath
-    When the user clicks the button/link        jQuery = button:contains("Edit")
-    And the user marks their organisation as    ${LARGE_ORGANISATION_SIZE}
+    Given the user clicks the button/link       jQuery = button:contains("Edit")
+    And the user should see the element         jQuery = p:contains("If we decide to award you funding you must be eligible to receive State aid at the point of the award.")
+    Then the user marks their organisation as   ${LARGE_ORGANISATION_SIZE}
 
 Funding section shows as incomplete again
     [Documentation]    INFUND-6394

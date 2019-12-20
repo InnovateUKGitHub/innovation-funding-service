@@ -156,7 +156,7 @@ the lead invites already registered user
 
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
-    the user should not see the element  link = eligible for state aid
+    the user should not see the element  jQuery = p:contains("If we decide to award you funding you must be eligible to receive State aid at the point of the award.)
     the user clicks the button/link      link = Your project finances
 
 Custom suite teardown
