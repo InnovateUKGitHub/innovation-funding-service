@@ -186,8 +186,7 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
         OrganisationFinancesWithoutGrowthTableResource finances = new OrganisationFinancesWithoutGrowthTableResource(
                 form.getOrganisationSize(),
                 form.getTurnover(),
-                form.getHeadCount(),
-                form.getStateAidAgreed());
+                form.getHeadCount());
 
         yourOrganisationRestService.updateOrganisationFinancesWithoutGrowthTable(applicationId, organisationId, finances).
                 getSuccess();

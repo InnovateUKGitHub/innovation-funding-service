@@ -12,7 +12,6 @@ public class YourOrganisationWithGrowthTableFormPopulator {
     public YourOrganisationWithGrowthTableForm populate(OrganisationFinancesWithGrowthTableResource finances) {
         return new YourOrganisationWithGrowthTableForm(
                 finances.getOrganisationSize(),
-                finances.getStateAidAgreed(),
                 finances.getFinancialYearEnd(),
                 finances.getHeadCountAtLastFinancialYear(),
                 finances.getAnnualTurnoverAtLastFinancialYear(),
