@@ -292,3 +292,14 @@ hr,
     vertical-align: baseline;
   }
 }
+
+/* Remove after framework upgrade to > 3.0 . */
+.govuk-link:focus,
+.govuk-footer__link:focus {
+  outline: 3px solid transparent;
+  color: $govuk-text-colour;
+  background-color: #fd0;
+  -webkit-box-shadow: 0 -2px #fd0, 0 4px $govuk-text-colour;
+  box-shadow: 0 -2px #fd0, 0 4px $govuk-text-colour;
+  text-decoration: none
+}
