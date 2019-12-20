@@ -39,7 +39,7 @@ dependencies {
     compile "org.thymeleaf.extras:thymeleaf-extras-java8time"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.plugin:spring-plugin-core"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1"
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "com.google.guava:guava:27.1-jre"
 
