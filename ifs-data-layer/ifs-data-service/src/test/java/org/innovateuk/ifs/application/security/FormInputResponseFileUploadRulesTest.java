@@ -17,10 +17,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.List;
+import java.util.EnumSet;
 import java.util.Optional;
+import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -69,7 +69,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        List<Role> expectedRoles = asList(LEADAPPLICANT, COLLABORATOR);
+        Set<Role> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(singletonList(applicantProcessRole));
@@ -86,7 +86,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
 
-        List<Role> expectedRoles = asList(LEADAPPLICANT, COLLABORATOR);
+        Set<Role> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
         when(processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(emptyList());
 

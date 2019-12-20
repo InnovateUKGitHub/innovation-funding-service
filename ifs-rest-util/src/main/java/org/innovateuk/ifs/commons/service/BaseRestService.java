@@ -120,6 +120,10 @@ public abstract class BaseRestService {
         return adaptor.putWithRestResult(getServiceUrl() + path, returnType);
     }
 
+    protected RestResult<Void> putWithRestResult(String path) {
+        return putWithRestResult(path, Void.class);
+    }
+
     protected <R> RestResult<R> putWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
         return adaptor.putWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }
