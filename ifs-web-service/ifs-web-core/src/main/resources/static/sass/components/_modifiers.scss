@@ -295,7 +295,8 @@ hr,
 
 /* Remove after framework upgrade to > 3.0 . */
 .govuk-link:focus,
-.govuk-footer__link:focus {
+.govuk-footer__link:focus,
+.govuk-back-link:focus {
   outline: 3px solid transparent;
   color: $govuk-text-colour;
   background-color: #fd0;
