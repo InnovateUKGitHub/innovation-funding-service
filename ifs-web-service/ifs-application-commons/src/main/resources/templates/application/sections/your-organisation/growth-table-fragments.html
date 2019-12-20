@@ -31,10 +31,7 @@
                             required=true,
                             readOnly=${readOnly},
                             )" />
-        </th:block>
-
-
-        <th:block th:insert="this::state-aid-warning"/>
+        <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
     </th:block>
 
     <th:block
@@ -127,10 +124,8 @@
                     required=true,
                     readOnly=${readOnly},
                 )" />
-        </th:block>
 
-
-        <th:block th:insert="this::state-aid-warning"/>
+        <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
     </th:block>
 
     <th:block th:fragment="growth-table-row(label, id, value, readOnly)">
@@ -160,8 +155,6 @@
                        required="required" />
             </td>
         </tr>
-
-
     </th:block>
 
 
@@ -185,7 +178,7 @@
                         )" />
     </th:block>
 
-    <th:block th:fragment="state-aid-warning">
+    <th:block th:fragment="state-aid-warning(readOnly, howStateAidAgreement)">
         <th:block th:if="${!readOnly && showStateAidAgreement}">
             <div class="govuk-!-margin-bottom-6">
                 <p class="govuk-body">
