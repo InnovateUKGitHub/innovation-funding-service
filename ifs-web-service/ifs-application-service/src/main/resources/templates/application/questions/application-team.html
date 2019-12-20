@@ -113,7 +113,9 @@
                                                     th:insert="fragments/modals :: modal-application-team-remove-user (${row})"/>
                                                 <a th:attr="data-js-modal=${'modal-application-team-remove-' + row.id}"
                                                    href="/"
-                                                   class="govuk-link">Remove</a>
+                                                   class="govuk-link">Remove
+                                                   <span class="visuallyhidden" th:text="${row.name}"></span>
+                                                </a>
                                             </th:block>
                                             <th:block th:if="${row.invite}">
                                                 <button class="button-clear govuk-!-margin-left-1" type="submit"
