@@ -1,5 +1,30 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.*;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.AuthenticationHelper;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.util.Optional;
+
+import static java.time.Month.JANUARY;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
@@ -17,83 +42,28 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-
-
-import java.math.BigDecimal;
-import java.time.Month;
-import java.time.YearMonth;
-import java.util.Optional;
-import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.application.transactional.FormInputResponseService;
-import org.innovateuk.ifs.application.transactional.SectionStatusService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
-import org.innovateuk.ifs.finance.resource.GrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.transactional.FormInputService;
-import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.form.transactional.SectionService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.transactional.UsersRolesService;
-import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.junit.Test;
-import org.mockito.Mock;
 
 public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUnitTest<ApplicationOrganisationFinanceServiceImpl> {
 
     @Mock
-    private CompetitionService competitionService;
-    @Mock
-    private QuestionService questionService;
-    @Mock
-    private FormInputService formInputService;
-    @Mock
-    private FormInputResponseService formInputResponseService;
-    @Mock
     private ApplicationService applicationService;
-    @Mock
-    private ApplicationRepository applicationRepository;
     @Mock
     private ApplicationFinanceService financeService;
     @Mock
-    private ApplicationFinanceRowService financeRowCostsService;
+    private QuestionService questionService;
     @Mock
-    private OrganisationService organisationService;
+    private FormInputResponseService formInputResponseService;
+    @Mock
+    private ApplicationRepository applicationRepository;
     @Mock
     private AuthenticationHelper authenticationHelper;
-    @Mock
-    private GrantClaimMaximumService grantClaimMaximumService;
-    @Mock
-    private SectionService sectionService;
-    @Mock
-    private UsersRolesService usersRolesService;
-    @Mock
-    private SectionStatusService sectionStatusService;
 
     @Test
     public void getOrganisationWithGrowthTable() {
         long competitionId = 5;
-        boolean stateAidAgreed = false;
-        YearMonth financialYearEnd = YearMonth.of(2019, Month.JANUARY);
+        YearMonth financialYearEnd = YearMonth.of(2019, JANUARY);
         OrganisationSize organisationSize = MEDIUM;
 
         BigDecimal annualTurnover = BigDecimal.valueOf(123);
@@ -105,7 +75,6 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
         Application application = newApplication().build();
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionId)
-                .withStateAidAgreed(stateAidAgreed)
                 .build();
         Organisation organisation = newOrganisation().build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
@@ -128,9 +97,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
 
         OrganisationFinancesWithGrowthTableResource expectedOrganisationFinances = new OrganisationFinancesWithGrowthTableResource();
         expectedOrganisationFinances.setOrganisationSize(organisationSize);
-        expectedOrganisationFinances.setStateAidAgreed(stateAidAgreed);
         expectedOrganisationFinances.setFinancialYearEnd(financialYearEnd);
-
         expectedOrganisationFinances.setAnnualTurnoverAtLastFinancialYear(annualTurnover);
         expectedOrganisationFinances.setAnnualProfitsAtLastFinancialYear(annualProfits);
         expectedOrganisationFinances.setAnnualExportAtLastFinancialYear(annualExports);
@@ -168,7 +135,6 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
 
         OrganisationFinancesWithGrowthTableResource expected = new OrganisationFinancesWithGrowthTableResource();
         expected.setFinancialYearEnd(null);
-        expected.setStateAidAgreed(false);
 
         ServiceResult<OrganisationFinancesWithGrowthTableResource> result = service.getOrganisationWithGrowthTable(application.getId(), organisation.getId());
 
@@ -181,12 +147,10 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
         OrganisationSize organisationSize = OrganisationSize.LARGE;
         BigDecimal turnover = BigDecimal.valueOf(123);
         long headcount = 13;
-        boolean stateAidAgreed = false;
         Application application = newApplication().build();
         Organisation organisation = newOrganisation().build();
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionId)
-                .withStateAidAgreed(stateAidAgreed)
                 .build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
                 .withOrganisationSize(organisationSize)
@@ -198,7 +162,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
         when(financeService.financeDetails(application.getId(), organisation.getId())).thenReturn(serviceSuccess(applicationFinanceResource));
 
-        OrganisationFinancesWithoutGrowthTableResource expectedOrganisationFinances = new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover, headcount, stateAidAgreed);
+        OrganisationFinancesWithoutGrowthTableResource expectedOrganisationFinances = new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover, headcount);
 
         ServiceResult<OrganisationFinancesWithoutGrowthTableResource> result = service.getOrganisationWithoutGrowthTable(application.getId(), organisation.getId());
 

@@ -537,7 +537,6 @@ the user completes your organisation
     the user enters text to a text field                    css = #annualExportAtLastFinancialYear    4000
     the user enters text to a text field                    css = #researchAndDevelopmentSpendAtLastFinancialYear    5660
     the user enters text to a text field                    css = #headCountAtLastFinancialYear    0
-    the user selects the checkbox                           stateAidAgreed
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 The new partner can complete Your organisation
