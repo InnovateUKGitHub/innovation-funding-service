@@ -1,29 +1,5 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.junit.Test;
-import org.mockito.Mock;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.AcademicCostBuilder.newAcademicCost;
@@ -33,7 +9,10 @@ import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLa
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
-import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.*;
+import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.DIRECTLY_INCURRED_OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF;
+import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.INDIRECT_COSTS_OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
@@ -44,6 +23,30 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.junit.Test;
+import org.mockito.Mock;
 
 public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategorySummaryStrategy> {
 
@@ -57,7 +60,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
     private OrganisationService organisationServiceMock;
 
     @Mock
-    private ProjectFinanceRowService projectFinanceRowServiceMock;
+    private ProjectFinanceService projectFinanceService;
 
     @Mock
     private CompetitionService competitionServiceMock;
@@ -109,7 +112,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
-        when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceService.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
@@ -189,7 +192,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
-        when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceService.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 

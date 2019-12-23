@@ -237,10 +237,9 @@ the academic fills in the project costs
     The user enters text to a text field  css = [name$="exceptionsStaff"]  123
     The user enters text to a text field  css = [name$="exceptionsOtherCosts"]  7890
     The user enters text to a text field  css = input[name$="tsbReference"]  L33t
-    Textfield Value Should Be             id = total  £32,698
+    the user should see the element       jQuery = [data-mirror^="#total"]:contains("£32,698")
     the user uploads the file             css = .inputfile  ${5mb_pdf}
-    the user should see the element       link = ${5mb_pdf}
-    the user selects the checkbox         termsAgreed
+    the user should see the element       jQuery = a:contains(${5mb_pdf} (opens in a new window))
     the user clicks the button/link       css = #mark-all-as-complete[type="submit"]
 
 the user enters the project location
@@ -260,7 +259,6 @@ the user fills the organisation details with Project growth table
     the user enters text to a text field                    css = #annualExportAtLastFinancialYear    4000
     the user enters text to a text field                    css = #researchAndDevelopmentSpendAtLastFinancialYear    5660
     the user enters text to a text field                    css = #headCountAtLastFinancialYear    0
-    the user selects the checkbox                           stateAidAgreed
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 the user fills in the organisation information
@@ -272,7 +270,6 @@ the user fills in the organisation information
     the user selects the radio button       organisationSize  ${org_size}
     the user enters text to a text field    css = #turnover    150
     the user enters text to a text field    css = #headCount   3
-    the user selects the checkbox           stateAidAgreed
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user clicks the button/link         link = Your organisation
     the user should see the element         jQuery = button:contains("Edit")
@@ -284,6 +281,23 @@ the user checks Your Funding section
     ${Research_category_selected} =   run keyword and return status without screenshots    Element Should Not Be Visible   jQuery = a:contains("research category")
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
+
+the user checks for funding level guidance at application level
+    the user clicks the button/link     link = Your funding
+    the user clicks the button/link     jQuery = button:contains("Edit your funding")
+    the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
+    the user clicks the button/link     link = competition's rules (opens in a new window)
+    the user closes the last opened tab
+    the user clicks the button/link     jQuery = button:contains("Mark as complete")
+    the user clicks the button/link     link = Back to application overview
+
+the user checks for funding level guidance at PS level
+    the user clicks the button/link     link = Your funding
+    the user selects the radio button   requestingFunding   true
+    the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
+    the user clicks the button/link     link = competition's rules (opens in a new window)
+    the user closes the last opened tab
+    the user clicks the button/link     link = Back to join project
 
 the user selects research area
     [Arguments]  ${Application}
@@ -446,7 +460,6 @@ the user marks your funding section as complete
     the user selects the radio button     requestingFunding   true
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
     the user selects the radio button     otherFunding  false
-    the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
 
 the user selects medium organisation size
@@ -454,11 +467,12 @@ the user selects medium organisation size
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
 
 the user accept the competition terms and conditions
+    [Arguments]  ${retrunLink}
     the user clicks the button/link    link = Award terms and conditions
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
-    the user clicks the button/link    link = Return to application overview
+    the user clicks the button/link    link = ${retrunLink}
 
 the user accept the procurement terms and conditions
     the user clicks the button/link    link = Award terms and conditions

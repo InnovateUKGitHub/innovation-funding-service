@@ -97,4 +97,17 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
         setupGetWithRestResultExpectations(format("%s/get-by-competition-id-visible-for-assessment/%s", sectionRestUrl, competitionId), sectionResourceListType(), expected);
         assertSame(expected, service.getByCompetitionIdVisibleForAssessment(competitionId).getSuccess());
     }
+
+    @Test
+    public void getChildSectionsByParentId() {
+        long parentId = 12L;
+        String expectedUrl = sectionRestUrl + "/get-child-sections/" + parentId;
+        SectionResource parentSectionResource = newSectionResource().withId(parentId).build();
+        List<SectionResource> childSectionResources = newSectionResource().withParentSection(parentSectionResource.getId()).build(4);
+        setupGetWithRestResultExpectations(expectedUrl, sectionResourceListType(), childSectionResources);
+
+        RestResult<List<SectionResource>> result = service.getChildSectionsByParentId(parentId);
+
+        assertEquals(childSectionResources, result.getSuccess());
+    }
 }

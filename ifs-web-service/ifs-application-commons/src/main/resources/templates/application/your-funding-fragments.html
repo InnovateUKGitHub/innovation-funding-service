@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel)">
+    <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+    <input type="hidden" id="cacheTest" value=""/>
+    <th:block th:unless="${readOnly}">
+        <div th:if="${form.fundingPercentage}" class="govuk-form-group"
+             th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    Are you requesting funding?
+                </legend>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('requestingFunding')}"
+                      th:text="${err}"></span>
+                <div id="requestingFunding" class="govuk-radios">
+                    <div class="govuk-radios__item" data-target="request-funding">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               id="request-funding-yes"
+                               value="true"
+                               th:field="*{requestingFunding}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
+                        <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
+                    </div>
+                    <th:block th:insert="application/your-funding-fragments :: requesting_funding(
+                            guidanceFragment=${guidanceFragment},
+                            maximumFundingLevel=${maximumFundingLevel}
+                        )"/>
+                    <div class="govuk-radios__item">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               id="request-funding-no"
+                               name="request-funding"
+                               value="false"
+                               th:field="*{requestingFunding}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
+                        <label for="request-funding-no" class="govuk-label govuk-radios__label">No</label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div th:if="${form.fundingAmount}"
+             class="govuk-form-group govuk-!-margin-bottom-9"
+             th:classappend="${#fields.hasErrors('amount')} ? 'govuk-form-group--error'">
+            <input type="hidden" name="requestingFunding" value="true"/>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h1 class="govuk-fieldset__heading">How much funding is required?</h1>
+                </legend>
+                <span class="govuk-hint">The amount you apply for must reflect the funding amount available for this competition.</span>
+                <label class="govuk-label govuk-!-font-weight-bold" for="amount">
+                    Funding sought (&pound;)
+                </label>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('amount')}" th:text="${err}"/>
+                <input id="amount"
+                       type="number"
+                       class="govuk-input govuk-input--width-10"
+                       required="required" YourFundingFormValidator
+                       min="1"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{amount}"
+                       th:attr="data-required-errormessage=#{validation.finance.funding.sought.required},data-min-errormessage=#{validation.finance.funding.sought.min}"/>
+            </fieldset>
+        </div>
+
+        <div class="govuk-form-group govuk-!-margin-bottom-9"
+             th:classappend="${#fields.hasErrors('otherFunding')} ? 'govuk-form-group--error'">
+            <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h1 class="govuk-fieldset__heading">Other funding</h1>
+                </legend>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
+                      th:text="${err}"></span>
+                <span class="govuk-hint">Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.</span>
+                <div id="otherFunding" class="govuk-radios">
+                    <div class="govuk-radios__item" data-target="other-funding-table">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               id="other-funding-yes"
+                               value="true"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
+                               th:field="*{otherFunding}"/>
+                        <label for="other-funding-yes"
+                               class="govuk-label govuk-radios__label">
+                            Yes
+                        </label>
+                    </div>
+                    <th:block th:insert="application/your-funding-fragments :: other_funding_table"/>
+                    <div class="govuk-radios__item">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               id="other-funding-no"
+                               value="false"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
+                               th:field="*{otherFunding}"/>
+                        <label for="other-funding-no"
+                               class="govuk-label govuk-radios__label">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </th:block>
+    <th:block th:if="${readOnly}">
+        <dl class="govuk-list readonly-data" th:if="${form.fundingPercentage}">
+            <dt>Funding level</dt>
+            <dd th:text="${form.grantClaimPercentage == null ? 0 : form.grantClaimPercentage +'%'}">50%</dd>
+        </dl>
+        <dl class="govuk-list readonly-data" th:if="${form.fundingAmount}">
+            <dt>Funding sought</dt>
+            <dd th:text="|£${form.amount == null ? 0 : form.amount}|">10</dd>
+        </dl>
+        <h2 class="govuk-heading-m">Other funding for this project</h2>
+        <th:block th:unless="${form.otherFunding}">
+            <p class="govuk-body">No other funding</p>
+        </th:block>
+        <th:block th:if="${form.otherFunding}">
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
+                        <th id="other-funding-date" class="width-150 govuk-table__header" scope="col">Date secured</th>
+                        <th id="other-funding-amount" class="width-150 govuk-table__header" scope="col">Funding amount
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="entry : ${form.otherFundingRows}"
+                        th:unless="${entry.value.blank}">
+                        <th class="govuk-table__header" scope="row" th:text="${entry.value.source}">National rail</th>
+                        <td class="govuk-table__cell" th:text="${entry.value.date}">17 April 2016</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="'£' + ${entry.value.fundingAmount != null ? #numbers.formatInteger(entry.value.fundingAmount,0,'DEFAULT') : '0'}"></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="'£' + ${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </th:block>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="requesting_funding(guidanceFragment, maximumFundingLevel)">
+    <div class="govuk-radios__conditional" id="request-funding">
+        <div th:class="govuk-form-group"
+             th:classappend="${#fields.hasErrors('grantClaimPercentage')} ? 'govuk-form-group--error'">
+            <label class="govuk-label" for="grantClaimPercentage">
+                Select a funding level
+                <span class="govuk-hint">
+                    <th:block th:insert="application/your-funding-fragments :: ${guidanceFragment}"/>
+                </span>
+            </label>
+            <span class="govuk-error-message" th:each="err : ${#fields.errors('grantClaimPercentage')}"
+                  th:text="${err}"/>
+            <input id="grantClaimPercentage"
+                   type="number"
+                   class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
+                   min="1"
+                   th:max="${maximumFundingLevel}"
+                   required="required"
+                   th:errorclass="govuk-input--error"
+                   th:field="*{grantClaimPercentage}"
+                   placeholder="0"
+                   th:attr="data-max-errormessage=#{validation.finance.grant.claim.percentage.max('%max%')},
+                                data-min-errormessage=#{validation.finance.grant.claim.percentage.min}"/>
+            <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="other_funding_table">
+    <div class="govuk-checkboxes__conditional" id="other-funding-table">
+        <div class="govuk-form-group form-in-table">
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" id="other-funding-source">Source of funding</th>
+                        <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
+                        <th scope="col" id="other-funding-amount"
+                            class="govuk-table__header govuk-table__header--numeric width-200">Funding amount (&pound;)
+                        </th>
+                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <th:block th:each="entry : *{otherFundingRows}">
+                        <th:block
+                            th:insert="application/your-funding-fragments :: other_funding_row (${entry.key}, ${entry.value})"/>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <p class="alignright">
+                <button type="submit"
+                        name="add_cost"
+                        class="button-clear"
+                        data-repeatable-rowcontainer="#other-funding-table tbody"
+                >Add another source of funding
+                </button>
+            </p>
+        </div>
+        <div class="govuk-form-group alignright inline">
+            <label class="govuk-label"
+                   for="other-funding-total">Total other funding</label>
+            <input class="govuk-input govuk-input--width-10 alignright"
+                   data-calculation-fields="[id*=fundingAmount]"
+                   data-calculation-operations="+"
+                   id="other-funding-total"
+                   th:attr="data-calculation-rawvalue=${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"
+                   readonly="readonly"
+                   type="text" th:value="'£' + ${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"/>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="ajax_other_funding_row">
+    <th:block th:object="${form}">
+        <th:block th:insert="application/your-funding-fragments :: other_funding_row (${id}, ${row})"/>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="other_funding_row (id, row)">
+    <tr class="govuk-table__row" th:with="path=${'otherFundingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+        <input type="hidden"
+               th:field="*{__${path}__.costId}"/>
+        <td class="govuk-table__cell govuk-form-group"
+            th:classappend="${#fields.hasErrors('__${path}__.source')} ? 'govuk-form-group--error'">
+            <label th:for="__${path}__.source" class="govuk-visually-hidden">
+                Source of funding
+            </label>
+            <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.source')}" th:text="${err}"/>
+            <input type="text"
+                   th:field="*{__${path}__.source}"
+                   class="govuk-input"
+                   th:id="__${path}__.source"
+                   th:errorclass="govuk-input--error"
+                   required="required"
+                   maxlength="255"
+                   th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}"/>
+        </td>
+        <td class="govuk-table__cell govuk-form-group"
+            th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
+            <label th:for="__${path}__.date" class="govuk-visually-hidden">
+                Date secured
+            </label>
+            <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.date')}" th:text="${err}"/>
+            <input type="text"
+                   th:field="*{__${path}__.date}"
+                   class="govuk-input"
+                   th:id="__${path}__.date"
+                   placeholder="MM-YYYY"
+                   pattern="(0[1-9]|1[012])-[0-9]{4}"
+                   th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
+                   maxlength="7"
+                   th:errorclass="govuk-input--error"
+                   required="required"/>
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
+            th:classappend="${#fields.hasErrors('__${path}__.fundingAmount')} ? 'govuk-form-group--error'">
+            <label th:for="__${path}__.fundingAmount" class="govuk-visually-hidden">
+                Funding amount (&pound;)
+            </label>
+            <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.fundingAmount')}"
+                  th:text="${err}"/>
+            <input class="govuk-input govuk-input--width-10"
+                   type="number"
+                   th:field="*{__${path}__.fundingAmount}"
+                   th:id="__${path}__.fundingAmount"
+                   th:errorclass="govuk-input--error"
+                   required="required"
+                   placeholder="0"
+                   min="1"
+                   max="9999999999999999999"
+                   step="1"
+                   th:attr="data-max-errormessage=#{validation.finance.funding.amount.invalid},
+                                data-required-errormessage=#{validation.finance.funding.amount}"/>
+        </td>
+        <td class="govuk-table__cell">
+            <button type="submit"
+                    name="remove_cost"
+                    class="button-clear js-remove-row"
+                    th:value="${id}">Remove <span class="govuk-visually-hidden">item</span>
+            </button>
+        </td>
+    </tr>
+</th:block>
+
+<th:block th:fragment="applicant-business">
+    <th:block th:if="${model.overridingFundingRules}">
+        The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
+        based on this <a class="govuk-link" target="_blank"
+                        th:href="@{/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">competition's rules (opens in a new window)</a>.
+    </th:block>
+    <th:block th:unless="${model.overridingFundingRules}">
+        The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%, based on
+        your organisation size and project research category. The amount you apply for must
+        reflect other funding received and be within the participation levels listed on the
+        <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicationId})}">finances overview</a>.
+    </th:block>
+</th:block>
+<th:block th:fragment="applicant-non-business">
+    The amount you apply for must reflect other funding received and be within the participation
+    levels listed on the
+    <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicationId})}">finances overview</a>.
+</th:block>
+
+<th:block th:fragment="project-business">
+    <th:block th:if="${model.overridingFundingRules}">
+        The maximum you can enter is <span th:text="${model.maximumFundingLevel}">22</span>%,
+        based on this <a class="govuk-link" target="_blank"
+                        th:href="@{~/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">competition's rules (opens in a new window)</a>.
+    </th:block>
+    <th:block th:unless="${model.overridingFundingRules}">
+        The maximum you can enter is <span th:text="${model.maximumFundingLevel}">33</span>%, based on your organisation size and project research category.
+    </th:block>
+</th:block>
+<th:block th:fragment="project-non-business">
+    The amount you apply for must reflect other funding received and be within the participation
+    levels listed.
+</th:block>
+</html>

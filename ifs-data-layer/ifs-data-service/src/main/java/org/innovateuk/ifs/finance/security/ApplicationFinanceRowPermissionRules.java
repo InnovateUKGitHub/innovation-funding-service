@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaValueResource;
@@ -30,23 +31,23 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
     private ApplicationFinanceRowRepository financeRowRepository;
 
     @PermissionRule(value = "UPDATE", description = "The consortium can update the cost for their application and organisation")
-    public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
+    public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final ApplicationFinanceRow cost, final UserResource user) {
         return isCollaborator(cost, user);
     }
 
     @PermissionRule(value = "DELETE", description = "The consortium can update the cost for their application and organisation")
-    public boolean consortiumCanDeleteACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
+    public boolean consortiumCanDeleteACostForTheirApplicationAndOrganisation(final ApplicationFinanceRow cost, final UserResource user) {
         return isCollaborator(cost, user);
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
-    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
+    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final ApplicationFinanceRow cost, final UserResource user) {
         return isCollaborator(cost, user);
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can read the cost for an application they are assigned to")
-    public boolean monitoringOfficerCanReadACostForTheApplication(final FinanceRow cost, final UserResource user) {
-        final ApplicationFinance applicationFinance = (ApplicationFinance) cost.getTarget();
+    public boolean monitoringOfficerCanReadACostForTheApplication(final ApplicationFinanceRow cost, final UserResource user) {
+        final ApplicationFinance applicationFinance = cost.getTarget();
         return monitoringOfficerCanViewApplication(applicationFinance.getApplication().getId(), user.getId());
     }
 

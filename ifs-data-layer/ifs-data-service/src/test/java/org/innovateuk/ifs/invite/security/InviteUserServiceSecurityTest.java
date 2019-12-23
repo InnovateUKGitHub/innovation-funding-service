@@ -43,11 +43,11 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     public void testFindPendingInternalUserInvites() {
         Pageable pageable = PageRequest.of(0, 5);
 
-        when(classUnderTestMock.findPendingInternalUserInvites(pageable))
+        when(classUnderTestMock.findPendingInternalUserInvites("", pageable))
                 .thenReturn(serviceSuccess(new RoleInvitePageResource()));
 
         assertAccessDenied(
-                () -> classUnderTest.findPendingInternalUserInvites(pageable),
+                () -> classUnderTest.findPendingInternalUserInvites("", pageable),
                 () -> {
                     verify(inviteUserPermissionRules)
                             .internalUsersCanViewPendingInternalUserInvites(any(RoleInvitePageResource.class), any

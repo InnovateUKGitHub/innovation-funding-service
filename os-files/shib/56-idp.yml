@@ -30,7 +30,7 @@ items:
               scheme: HTTPS
             initialDelaySeconds: 60
             periodSeconds: 30
-            timeoutSeconds: 5
+            timeoutSeconds: 25
             failureThreshold: 3
           readinessProbe:
             httpGet:
@@ -39,7 +39,7 @@ items:
               scheme: HTTPS
             initialDelaySeconds: 60
             periodSeconds: 5
-            timeoutSeconds: 5
+            timeoutSeconds: 25
             failureThreshold: 1
           imagePullPolicy: Always
           env:
@@ -51,14 +51,6 @@ items:
             value: "${NEW_RELIC_LICENCE_KEY}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
-          - name: IDP_PROXY_CERTIFICATE
-            value: "<<SSLCERT>>"
-          - name: IDP_PROXY_CACERTIFICATE
-            value: "<<SSLCACERT>>"
-          - name: IDP_PROXY_KEY
-            value: "<<SSLKEY>>"
-          - name: SP_PROXY_CERTIFICATE
-            value: "<<SSLCERT>>"
           - name: SP_DOMAIN
             value: ${SHIB_ADDRESS}
           - name: IDP_DOMAIN
@@ -93,6 +85,8 @@ items:
             value: "${LDAP_AUTHENTICATOR}"
           - name: GOOGLEANALYTICS_TRACKINGID
             value: "${GA_TRACKING_ID}"
+          - name: RESOURCE_DOMAIN
+            value: "${RESOURCE_DOMAIN}"
           ports:
           - containerPort: 9443
           - containerPort: 9080

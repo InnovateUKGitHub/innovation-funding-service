@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.project.financechecks.security;
 
 
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+
+
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -9,9 +13,6 @@ import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 /**
  * Defines the permissions for interaction with project finances.
@@ -82,6 +83,12 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project partners can update the project finances of their own project")
+    public boolean projectPartnerCanUpdateProjectFinance(final ProjectFinanceResource financeResource,
+                                                 final UserResource user) {
+        return isPartner(financeResource.getProject(), user.getId());
+    }
+
     @PermissionRule(value = "ADD_EMPTY_PROJECT_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
     public boolean partnersCanAddEmptyRowWhenReadingProjectCosts(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
         return isPartner(projectFinanceResource.getProject(), user.getId()) && isProjectActive(projectFinanceResource.getProject());
@@ -111,5 +118,4 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     public boolean partnersCanSeeTheProjectFinanceOverviewsForTheirProject(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return isPartner(projectCompositeId.id(), user.getId());
     }
-
 }

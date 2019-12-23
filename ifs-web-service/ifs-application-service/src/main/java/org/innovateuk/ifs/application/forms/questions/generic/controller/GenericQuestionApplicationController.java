@@ -44,6 +44,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
@@ -297,7 +298,7 @@ public class GenericQuestionApplicationController {
     }
 
     private Optional<FormInputResource> findByType(long questionId, FormInputType type) {
-        return formInputRestService.getByQuestionId(questionId)
+        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)
                 .getSuccess()
                 .stream()
                 .filter(input -> input.getType().equals(type))

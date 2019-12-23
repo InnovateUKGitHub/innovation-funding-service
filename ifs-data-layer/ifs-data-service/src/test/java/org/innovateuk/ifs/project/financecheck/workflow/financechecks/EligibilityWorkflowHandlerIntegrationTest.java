@@ -68,6 +68,16 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
+    public void EligibilityReset() {
+
+        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation,
+            internalUser)),
+
+            // current State, destination State and expected Event to be fired
+            EligibilityState.APPROVED, EligibilityState.REVIEW, EligibilityEvent.ELIGIBILITY_RESET);
+    }
+
+    @Test
     public void testNotRequestingFunding() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, internalUser)),

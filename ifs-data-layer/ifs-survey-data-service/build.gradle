@@ -31,7 +31,7 @@ if (enabled) {
     deploy.mustRunAfter ":docker:ifs-mysql:ifs-survey-database:deploy"
 }
 
-createContainer.networkAliases=["ifs-survey-data-service"]
+createContainer.networkAliases = ["ifs-survey-data-service"]
 
 afterEvaluate {
     ext {
@@ -68,7 +68,7 @@ prepareDockerBaseInput {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile 'mysql:mysql-connector-java'
+    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
@@ -79,11 +79,11 @@ dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile 'com.h2database:h2'
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
     testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }
@@ -104,6 +104,6 @@ test {
 flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 
-ext.serverPort=8080
-ext.ifsFlywayLocations="db/migration"
+ext.serverPort = 8080
+ext.ifsFlywayLocations = "db/migration"
 

@@ -65,11 +65,6 @@ public class ProcurementOverhead extends AbstractFinanceRowItem {
     }
 
     @Override
-    public int getMinRows() {
-        return 0;
-    }
-
-    @Override
     public Long getId() {
         return id;
     }

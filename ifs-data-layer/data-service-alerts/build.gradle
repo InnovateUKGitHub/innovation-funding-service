@@ -83,21 +83,20 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.apache.httpcomponents:httpasyncclient"
-    compile "mysql:mysql-connector-java"
-
+    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
-    testCompile "com.h2database:h2:1.4.196"
+    testCompile "com.h2database:h2:1.4.200"
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.opencsv:opencsv:4.3.2"
 
 }
 
 ext.serverPort = 8080
-ext.ifsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs"
-ext.ifsDatasourceUsername="root"
-ext.ifsDatasourcePassword="password"
+ext.ifsDatasourceUrl = "jdbc:mysql://ifs-database:3306/ifs"
+ext.ifsDatasourceUsername = "root"
+ext.ifsDatasourcePassword = "password"

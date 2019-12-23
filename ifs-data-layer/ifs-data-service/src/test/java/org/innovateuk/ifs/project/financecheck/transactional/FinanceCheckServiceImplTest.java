@@ -5,16 +5,16 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -69,7 +69,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
+import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
@@ -105,61 +105,61 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private Long projectId = 789L;
 
     @Mock
-    private FinanceCheckRepository financeCheckRepositoryMock;
+    private FinanceCheckRepository financeCheckRepository;
 
     @Mock
-    private ProjectRepository projectRepositoryMock;
+    private ProjectRepository projectRepository;
 
     @Mock
-    private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
+    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Mock
-    private SpendProfileRepository spendProfileRepositoryMock;
+    private SpendProfileRepository spendProfileRepository;
+    
+    @Mock
+    private ProjectFinanceService projectFinanceService;
 
     @Mock
-    private ProjectFinanceRowService projectFinanceRowServiceMock;
+    private StatusService statusService;
 
     @Mock
-    private StatusService statusServiceMock;
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Mock
-    private EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
 
     @Mock
-    private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
+    private ProjectFinanceRepository projectFinanceRepository;
 
     @Mock
-    private ProjectFinanceRepository projectFinanceRepositoryMock;
+    private FinanceCheckQueriesService financeCheckQueriesService;
 
     @Mock
-    private FinanceCheckQueriesService financeCheckQueriesServiceMock;
+    private ApplicationFinanceService financeService;
 
     @Mock
-    private ApplicationFinanceService financeServiceMock;
+    private OrganisationRepository organisationRepository;
 
     @Mock
-    private OrganisationRepository organisationRepositoryMock;
+    private FormInputRepository formInputRepository;
 
     @Mock
-    private CompetitionSetupTransactionalService competitionSetupTransactionalServiceMock;
+    private ApplicationRepository applicationRepository;
 
     @Mock
-    private FormInputRepository formInputRepositoryMock;
+    private FormInputResponseRepository formInputResponseRepository;
 
     @Mock
-    private ApplicationRepository applicationRepositoryMock;
+    private UserRepository userRepository;
 
     @Mock
-    private FormInputResponseRepository formInputResponseRepositoryMock;
-
-    @Mock
-    private UserRepository userRepositoryMock;
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Test
     public void testGetByProjectAndOrganisationNotFound() {
         // Set up
         ProjectOrganisationCompositeId compositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        when(financeCheckRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
+        when(financeCheckRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
         // Method under test
         ServiceResult<FinanceCheckResource> result = service.getByProjectAndOrganisation(compositeId);
         // Assertions
@@ -185,7 +185,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                         build()).
                 build();
         // Method under test
-        when(financeCheckRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(financeCheck);
+        when(financeCheckRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(financeCheck);
         ServiceResult<FinanceCheckResource> result = service.getByProjectAndOrganisation(compositeId);
         // Assertions - basically testing the deserialisation into resource objects
         assertTrue(result.isSuccess());
@@ -219,45 +219,45 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().withGrantClaimPercentage(20).build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
-        when(projectFinanceRowServiceMock.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
-        when(statusServiceMock.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(partnerOrganisationRepository.findByProjectId(projectId)).thenReturn(partnerOrganisations);
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
+        when(projectFinanceService.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations[0].getId())).thenReturn(partnerOrganisations.get(0));
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations[1].getId())).thenReturn(partnerOrganisations.get(1));
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations[2].getId())).thenReturn(partnerOrganisations.get(2));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisations[0].getId())).thenReturn(partnerOrganisations.get(0));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisations[1].getId())).thenReturn(partnerOrganisations.get(1));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisations[2].getId())).thenReturn(partnerOrganisations.get(2));
 
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(0))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(0), EligibilityState.APPROVED));
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(1))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(1), EligibilityState.REVIEW));
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(2))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(2), EligibilityState.REVIEW));
+        when(eligibilityWorkflowHandler.getProcess(partnerOrganisations.get(0))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(0), EligibilityState.APPROVED));
+        when(eligibilityWorkflowHandler.getProcess(partnerOrganisations.get(1))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(1), EligibilityState.REVIEW));
+        when(eligibilityWorkflowHandler.getProcess(partnerOrganisations.get(2))).thenReturn(new EligibilityProcess(projectFinanceUser, partnerOrganisations.get(2), EligibilityState.REVIEW));
 
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(0))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(0), ViabilityState.APPROVED));
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(1))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(1), ViabilityState.NOT_APPLICABLE));
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisations.get(2))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(2), ViabilityState.REVIEW));
+        when(viabilityWorkflowHandler.getProcess(partnerOrganisations.get(0))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(0), ViabilityState.APPROVED));
+        when(viabilityWorkflowHandler.getProcess(partnerOrganisations.get(1))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(1), ViabilityState.NOT_APPLICABLE));
+        when(viabilityWorkflowHandler.getProcess(partnerOrganisations.get(2))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(2), ViabilityState.REVIEW));
 
         ProjectFinance projectFinanceInDB1 = new ProjectFinance();
         projectFinanceInDB1.setViabilityStatus(ViabilityRagStatus.AMBER);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(projectFinanceInDB1);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(projectFinanceInDB1);
         ProjectFinance projectFinanceInDB2 = new ProjectFinance();
         projectFinanceInDB2.setViabilityStatus(ViabilityRagStatus.UNSET);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(projectFinanceInDB2);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(projectFinanceInDB2);
         ProjectFinance projectFinanceInDB3 = new ProjectFinance();
         projectFinanceInDB3.setViabilityStatus(ViabilityRagStatus.UNSET);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(projectFinanceInDB3);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(projectFinanceInDB3);
 
         ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[1].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[1]));
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[2].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[2]));
+        when(projectFinanceService.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
+        when(projectFinanceService.financeChecksDetails(projectId, organisations[1].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[1]));
+        when(projectFinanceService.financeChecksDetails(projectId, organisations[2].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[2]));
 
         QueryResource queryResource1 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , true, ZonedDateTime.now(), null, null);
         QueryResource queryResource2 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , false, ZonedDateTime.now(), null, null);
-        when(financeCheckQueriesServiceMock.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
-        when(financeCheckQueriesServiceMock.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
-        when(financeCheckQueriesServiceMock.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
-        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeCheckQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
+        when(financeCheckQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
+        when(financeCheckQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -308,10 +308,10 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 build();
 
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(applicationFinanceRepository.existsByApplicationIdAndOrganisationId(application.getId(), organisationId)).thenReturn(false);
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isSuccess());
 
@@ -323,6 +323,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());
         assertEquals(projectFinanceResource.getTotalOtherFunding(), eligibility.getOtherPublicSectorFunding());
         assertEquals(projectFinanceResource.getTotalContribution(), eligibility.getContributionToProject());
+        assertFalse(eligibility.isHasApplicationFinances());
     }
 
     @Test
@@ -334,9 +335,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isFailure());
@@ -356,8 +357,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", true, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
-        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
+        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -377,8 +378,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
-        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
+        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -398,8 +399,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -417,8 +418,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         List<QueryResource> queries = Collections.emptyList();
 
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -436,8 +437,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceFailure(internalServerErrorError()));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -455,8 +456,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
-        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(financeCheckQueriesServiceMock.findAll(resource.getId())).thenReturn(serviceSuccess(null));
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(financeCheckQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(null));
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
@@ -512,9 +513,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 build(2);
 
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -579,9 +580,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 build(2);
 
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -646,9 +647,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 build(2);
 
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -684,7 +685,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                 withQuantity(1).
                                 build(1)).
                         build(),
-                FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+                FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
                                 withGrantClaimPercentage(30).
                                 build(1)).
@@ -706,7 +707,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Application app = new Application();
         app.setId(applicationId);
         app.setCompetition(comp);
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(app));
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(app));
 
         ProcessRole updatedBy = newProcessRole().withApplication(app).withOrganisationId(organisationId).build();
         FormInputResponse headcount = newFormInputResponse().withValue("1").withUpdatedBy(updatedBy).build();
@@ -714,19 +715,19 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(staffCountFormInputId).build();
         FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(noInput ? emptyList() : asList(organisationTurnoverFormInput));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(staffCountFormInput));
-        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
-        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
+        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(noInput ? emptyList() : asList(organisationTurnoverFormInput));
+        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(staffCountFormInput));
+        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
+        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
 
         FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withId(turnoverFormInputId).build();
         List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
         FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withId(staffCountFormInputId).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(noInput ? emptyList() : asList(financialYearEnd));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(financialCount));
-        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
-        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
+        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(noInput ? emptyList() : asList(financialYearEnd));
+        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(financialCount));
+        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
+        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
     }
 
     @Test
@@ -745,8 +746,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.getFailure().is(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
 
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
-        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
+        verify(projectFinanceRepository, never()).save(projectFinanceInDB);
+        verify(viabilityWorkflowHandler, never()).viabilityApproved(partnerOrganisationInDB, user);
 
     }
 
@@ -766,8 +767,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.getFailure().is(VIABILITY_RAG_STATUS_MUST_BE_SET));
 
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
-        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
+        verify(projectFinanceRepository, never()).save(projectFinanceInDB);
+        verify(viabilityWorkflowHandler, never()).viabilityApproved(partnerOrganisationInDB, user);
 
     }
 
@@ -786,8 +787,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertTrue(result.isSuccess());
 
         assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.UNSET);
-
-        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
+        verify(viabilityWorkflowHandler, never()).viabilityApproved(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -806,7 +806,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.AMBER);
 
-        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
+        verify(viabilityWorkflowHandler, never()).viabilityApproved(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -826,23 +826,24 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.AMBER);
 
         // Ensure the workflow is called with the correct target and participant
-        verify(viabilityWorkflowHandlerMock).viabilityApproved(partnerOrganisationInDB, user);
+        verify(viabilityWorkflowHandler).viabilityApproved(partnerOrganisationInDB, user);
 
     }
 
     private ProjectFinance setUpSaveViabilityMocking(User user, PartnerOrganisation partnerOrganisationInDB, ViabilityState viabilityStateInDB) {
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ViabilityProcess viabilityProcess = new ViabilityProcess(user, partnerOrganisationInDB, viabilityStateInDB);
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+        when(viabilityWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+        when(viabilityWorkflowHandler.getState(partnerOrganisationInDB)).thenReturn(viabilityStateInDB);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         return projectFinanceInDB;
 
@@ -852,7 +853,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertEquals(expectedViabilityRagStatus, projectFinanceInDB.getViabilityStatus());
 
-        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+        verify(projectFinanceRepository).save(projectFinanceInDB);
     }
 
     @Test
@@ -861,12 +862,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long userId = 7L;
         User user = newUser().withId(userId).build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.APPROVED);
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.AMBER);
@@ -875,8 +876,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.getFailure().is(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
 
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
-        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
+        verify(projectFinanceRepository, never()).save(projectFinanceInDB);
+        verify(eligibilityWorkflowHandler, never()).eligibilityApproved(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -885,12 +886,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long userId = 7L;
         User user = newUser().withId(userId).build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET);
@@ -899,8 +900,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.getFailure().is(ELIGIBILITY_RAG_STATUS_MUST_BE_SET));
 
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
-        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
+        verify(projectFinanceRepository, never()).save(projectFinanceInDB);
+        verify(eligibilityWorkflowHandler, never()).eligibilityApproved(partnerOrganisationInDB, user);
 
     }
 
@@ -911,12 +912,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         User user = newUser().withId(userId).build();
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
@@ -924,8 +925,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertTrue(result.isSuccess());
 
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.UNSET);
-
-        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
+        verify(eligibilityWorkflowHandler, never()).eligibilityApproved(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -935,12 +935,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         User user = newUser().withId(userId).build();
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.REVIEW, EligibilityRagStatus.AMBER);
@@ -949,7 +949,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.AMBER);
 
-        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
+        verify(eligibilityWorkflowHandler, never()).eligibilityApproved(partnerOrganisationInDB, user);
 
     }
 
@@ -960,12 +960,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         User user = newUser().withId(userId).build();
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
@@ -975,18 +975,19 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.GREEN);
 
         // Ensure the workflow is called with the correct target and participant
-        verify(eligibilityWorkflowHandlerMock).eligibilityApproved(partnerOrganisationInDB, user);
+        verify(eligibilityWorkflowHandler).eligibilityApproved(partnerOrganisationInDB, user);
     }
 
     private ProjectFinance setUpSaveEligibilityMocking(PartnerOrganisation partnerOrganisationInDB, User user, EligibilityState eligibilityStateInDB) {
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         EligibilityProcess eligibilityProcess = new EligibilityProcess(user, partnerOrganisationInDB, eligibilityStateInDB);
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(eligibilityProcess);
+        when(eligibilityWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(eligibilityProcess);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisationInDB)).thenReturn(eligibilityStateInDB);
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         return projectFinanceInDB;
     }
@@ -995,7 +996,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertEquals(expectedEligibilityRagStatus, projectFinanceInDB.getEligibilityStatus());
 
-        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+        verify(projectFinanceRepository).save(projectFinanceInDB);
     }
 
     @Test
@@ -1003,33 +1004,33 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setCreditReportConfirmed(true);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
         ServiceResult<Boolean> result = service.getCreditReport(projectId, organisationId);
 
         assertTrue(result.isSuccess());
         assertEquals(true, result.getSuccess());
 
-        verify(projectFinanceRepositoryMock).findByProjectIdAndOrganisationId(projectId, organisationId);
+        verify(projectFinanceRepository).findByProjectIdAndOrganisationId(projectId, organisationId);
     }
 
     @Test
     public void testSaveCreditSuccess() {
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ViabilityProcess viabilityProcess = new ViabilityProcess((User) null, partnerOrganisationInDB, ViabilityState.REVIEW);
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+        when(viabilityWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ServiceResult<Void> result = service.saveCreditReport(projectId, organisationId, true);
 
         assertTrue(result.isSuccess());
 
         assertEquals(true, projectFinanceInDB.getCreditReportConfirmed());
-        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+        verify(projectFinanceRepository).save(projectFinanceInDB);
 
     }
 
@@ -1037,10 +1038,10 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     public void testSaveCreditFailsBecauseViabilityIsAlreadyApproved() {
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ViabilityProcess viabilityProcess = new ViabilityProcess((User) null, partnerOrganisationInDB, ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+        when(viabilityWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
 
         ServiceResult<Void> result = service.saveCreditReport(projectId, organisationId, true);
 
@@ -1051,7 +1052,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void testGetViabilityWhenPartnerOrganisationDoesNotExist() {
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -1122,18 +1123,18 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                           User viabilityApprovalUser, LocalDate viabilityApprovalDate) {
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ViabilityProcess viabilityProcess = new ViabilityProcess(viabilityApprovalUser, partnerOrganisationInDB, viabilityStateInDB);
         if (viabilityApprovalDate != null) {
             viabilityProcess.setLastModified(viabilityApprovalDate.atStartOfDay(ZoneId.systemDefault()));
         }
 
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+        when(viabilityWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setViabilityStatus(viabilityRagStatusInDB);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
     }
 
@@ -1154,7 +1155,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void testGetEligibilityWhenPartnerOrganisationDoesNotExist() {
 
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -1228,19 +1229,19 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                           User eligibilityApprovalUser, LocalDate eligibilityApprovalDate) {
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         EligibilityProcess eligibilityProcess = new EligibilityProcess(eligibilityApprovalUser, partnerOrganisationInDB, eligibilityStateInDB);
         if (eligibilityApprovalDate != null) {
             eligibilityProcess.setLastModified(eligibilityApprovalDate.atStartOfDay(ZoneId.systemDefault()));
         }
 
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(eligibilityProcess);
+        when(eligibilityWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(eligibilityProcess);
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setEligibilityStatus(eligibilityRagStatusInDB);
 
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
     }
 

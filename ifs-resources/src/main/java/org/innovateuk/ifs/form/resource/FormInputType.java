@@ -55,9 +55,8 @@ public enum FormInputType implements IdentifiableEnum {
     }
 
     public boolean isDisplayableQuestionType() {
-        return !combineLists(FINANCE_TYPES, FINANCIAL_SUMMARY_TYPES).contains(this);
+        return !combineLists(FINANCE_TYPES, FINANCIAL_SUMMARY_TYPES, TEMPLATE_DOCUMENT).contains(this);
     }
-
 
     public static FormInputType findByName(String name) {
         return stream(values())

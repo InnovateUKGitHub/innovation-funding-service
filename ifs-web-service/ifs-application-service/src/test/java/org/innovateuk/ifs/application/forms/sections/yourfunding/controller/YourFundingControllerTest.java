@@ -92,7 +92,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
     @Test
     public void saveYourFunding() throws Exception {
-        when(saver.save(eq(APPLICATION_ID), any(YourFundingPercentageForm.class), eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
+        when(saver.save(eq(APPLICATION_ID), eq(ORGANISATION_ID), any(YourFundingPercentageForm.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -122,7 +122,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
     @Test
     public void complete() throws Exception {
-        when(saver.save(eq(APPLICATION_ID), any(YourFundingPercentageForm.class),  eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
+        when(saver.save(eq(APPLICATION_ID), eq(ORGANISATION_ID), any(YourFundingPercentageForm.class))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(noErrors()));
@@ -134,7 +134,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
 
-        verify(saver).save(eq(APPLICATION_ID), any(YourFundingPercentageForm.class),  eq(ORGANISATION_ID));
+        verify(saver).save(eq(APPLICATION_ID),  eq(ORGANISATION_ID), any(YourFundingPercentageForm.class));
         verify(sectionStatusRestService).markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
     }
 
@@ -165,7 +165,8 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("add_cost", "true"))
+                .param("add_cost", "true")
+                .param("grantClaimPercentage", "100"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
@@ -180,7 +181,8 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("remove_cost", rowToRemove))
+                .param("remove_cost", rowToRemove)
+                .param("grantClaimPercentage", "100"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());

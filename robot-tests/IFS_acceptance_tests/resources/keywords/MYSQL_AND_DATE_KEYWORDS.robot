@@ -185,8 +185,8 @@ get application id by name
 
 get application id by name and set as suite variable
     [Arguments]  ${name}
-    ${academic_applicaton_id} =   get table id by name  application  ${name}
-    Set Suite Variable  ${academic_applicaton_id}
+    ${application_id} =   get table id by name  application  ${name}
+    Set Suite Variable  ${application_id}
 
 get project id by name
     [Arguments]  ${name}

@@ -31,7 +31,6 @@ import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepositor
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -66,7 +65,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -92,41 +92,39 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
     private Long projectId = 123L;
     private Long organisationId = 456L;
+
     @Mock
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
     @Mock
-    private NotificationService notificationServiceMock;
+    private NotificationService notificationService;
     @Mock
     private SpendProfileValidationUtil validationUtil;
     @Mock
     private Error mockedError;
     @Mock
-    private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
     @Mock
-    private EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
     @Mock
-    private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
+    private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
     @Mock
-    private SpendProfileRepository spendProfileRepositoryMock;
+    private SpendProfileRepository spendProfileRepository;
     @Mock
-    private ProjectUsersHelper projectUsersHelperMock;
+    private ProjectUsersHelper projectUsersHelper;
     @Mock
-    private PartnerOrganisationService partnerOrganisationServiceMock;
+    private PartnerOrganisationService partnerOrganisationService;
     @Mock
-    private ProjectRepository projectRepositoryMock;
+    private ProjectRepository projectRepository;
     @Mock
-    private OrganisationRepository organisationRepositoryMock;
+    private OrganisationRepository organisationRepository;
     @Mock
-    private CostCategoryRepository costCategoryRepositoryMock;
+    private CostCategoryRepository costCategoryRepository;
     @Mock
-    private CostCategoryTypeRepository costCategoryTypeRepositoryMock;
+    private CostCategoryTypeRepository costCategoryTypeRepository;
     @Mock
-    private UserRepository userRepositoryMock;
-    @Mock
-    private GrantOfferLetterService grantOfferLetterServiceMock;
+    private UserRepository userRepository;
     @Mock
     private SystemNotificationSource systemNotificationSource;
-
 
     @Test
     public void generateSpendProfile() {
@@ -146,16 +144,17 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(false);
-        when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(true);
+        when(spendProfileWorkflowHandler.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation1.getId())).thenReturn(Optional.empty());
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation2.getId())).thenReturn(Optional.empty());
 
         User generatedBy = generateSpendProfileData.getUser();
@@ -188,15 +187,15 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         SpendProfile expectedOrganisation2Profile = new SpendProfile(organisation2, project, costCategoryType2,
                 expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, generatedBy, generatedDate, false);
 
-        when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
-        when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
+        when(spendProfileRepository.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
+        when(spendProfileRepository.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
 
         User financeContactUser1 = newUser().withEmailAddress("z@abc.com").withFirstName("A").withLastName("Z").build();
         ProjectUser financeContact1 = newProjectUser().withUser(financeContactUser1).build();
         User financeContactUser2 = newUser().withEmailAddress("a@abc.com").withFirstName("A").withLastName("A").build();
         ProjectUser financeContact2 = newProjectUser().withUser(financeContactUser2).build();
-        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
-        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
+        when(projectUsersHelper.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
+        when(projectUsersHelper.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard",
@@ -210,17 +209,17 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
         Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
 
-        verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
-        verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
+        verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation1Profile));
+        verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation2Profile));
 
-        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
-        verify(notificationServiceMock).sendNotificationWithFlush(notification2, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification2, EMAIL);
     }
 
     @Test
@@ -236,15 +235,44 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.REVIEW);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.REVIEW);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED));
 
-        verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
-        verifyNoMoreInteractions(spendProfileRepositoryMock);
+        verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepository);
+    }
+
+    @Test
+    public void generateSpendProfileButWithPendingPartner() {
+
+        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+
+        Organisation organisation1 = generateSpendProfileData.getOrganisation1();
+        Organisation organisation2 = generateSpendProfileData.getOrganisation2();
+        PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
+        PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
+
+        setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
+
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(false);
+
+        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
+        assertTrue(generateResult.isFailure());
+        assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_PARTNERS_ARE_NO_LONGER_PENDING));
+
+        verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepository);
     }
 
     @Test
@@ -260,17 +288,17 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.REVIEW);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.REVIEW);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED));
 
-        verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
-        verifyNoMoreInteractions(spendProfileRepositoryMock);
+        verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepository);
     }
 
     @Test
@@ -286,23 +314,23 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(true);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(true);
 
         SpendProfile spendProfileForOrganisation1 = new SpendProfile();
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation1.getId())).thenReturn(Optional.of(spendProfileForOrganisation1));
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation2.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED));
 
-        verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
+        verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
     }
 
     @Test
@@ -317,16 +345,17 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(false);
-        when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(true);
+        when(spendProfileWorkflowHandler.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation1.getId())).thenReturn(Optional.empty());
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation2.getId())).thenReturn(Optional.empty());
 
 
@@ -334,8 +363,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ProjectUser financeContact1 = newProjectUser().withUser(financeContactUser1).build();
         User financeContactUser2 = newUser().withEmailAddress("a@abc.com").withFirstName("A").withLastName("A").build();
         ProjectUser financeContact2 = newProjectUser().withUser(financeContactUser2).build();
-        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
-        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
+        when(projectUsersHelper.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
+        when(projectUsersHelper.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard",
@@ -349,17 +378,17 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
         Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
+        when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
-        verify(spendProfileRepositoryMock, times(2)).save(isA(SpendProfile.class));
+        verify(spendProfileRepository, times(2)).save(isA(SpendProfile.class));
 
-        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
-        verify(notificationServiceMock).sendNotificationWithFlush(notification2, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification2, EMAIL);
     }
 
     @Test
@@ -375,27 +404,28 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(false);
-        when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(true);
+        when(spendProfileWorkflowHandler.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation1.getId())).thenReturn(Optional.empty());
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation2.getId())).thenReturn(Optional.empty());
 
         ProjectUser financeContact2 = newProjectUser().withUser((User[]) null).build();
-        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.empty());
-        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
+        when(projectUsersHelper.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.empty());
+        when(projectUsersHelper.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT, CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT));
 
-        verify(spendProfileRepositoryMock, times(2)).save(isA(SpendProfile.class));
+        verify(spendProfileRepository, times(2)).save(isA(SpendProfile.class));
     }
 
     @Test
@@ -411,11 +441,11 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(true);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(true);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
@@ -431,7 +461,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         List<PartnerOrganisationResource> partnerOrganisationResources =
                 newPartnerOrganisationResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
-        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
+        when(partnerOrganisationService.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
@@ -463,7 +493,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 .withId(projectId)
                 .withDuration(3L)
                 .withPartnerOrganisations(newPartnerOrganisation()
-                .build(2))
+                        .build(2))
                 .withApplication(application)
                 .build();
 
@@ -482,11 +512,11 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                                         .build())
                         .build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
-        when(costCategoryRepositoryMock.findById(costCategoryLabour.getId())).thenReturn(Optional.of(costCategoryLabour));
-        when(costCategoryRepositoryMock.findById(costCategoryMaterials.getId())).thenReturn(Optional.of(costCategoryMaterials));
-        when(costCategoryTypeRepositoryMock.findById(costCategoryType1.getId())).thenReturn(Optional.of(costCategoryType1));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+        when(costCategoryRepository.findById(costCategoryLabour.getId())).thenReturn(Optional.of(costCategoryLabour));
+        when(costCategoryRepository.findById(costCategoryMaterials.getId())).thenReturn(Optional.of(costCategoryMaterials));
+        when(costCategoryTypeRepository.findById(costCategoryType1.getId())).thenReturn(Optional.of(costCategoryType1));
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
                 new SpendProfileCostCategorySummaries(
                         asList(
@@ -508,19 +538,19 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         Long userId = 7L;
         User generatedBy = newUser().build();
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(generatedBy));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(generatedBy));
 
         Calendar generatedDate = Calendar.getInstance();
 
         SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
                 expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false);
 
-        when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
+        when(spendProfileRepository.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
 
 
         User financeContactUser1 = newUser().withEmailAddress("z@abc.com").withFirstName("A").withLastName("Z").build();
         ProjectUser financeContact1 = newProjectUser().withUser(financeContactUser1).build();
-        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
+        when(projectUsersHelper.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard",
@@ -532,14 +562,14 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> generateResult = service.generateSpendProfileForPartnerOrganisation(projectId, organisation1.getId(), userId);
         assertTrue(generateResult.isSuccess());
 
-        verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
-        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
-        verifyNoMoreInteractions(spendProfileRepositoryMock);
+        verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation1Profile));
+        verify(notificationService).sendNotificationWithFlush(notification1, EMAIL);
+        verifyNoMoreInteractions(spendProfileRepository);
     }
 
     @Test
@@ -566,10 +596,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
-        when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
-        when(costCategoryRepositoryMock.findById(anyLong())).thenReturn(Optional.of(testCostCategory));
+        when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+        when(costCategoryRepository.findById(anyLong())).thenReturn(Optional.of(testCostCategory));
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
@@ -603,25 +633,25 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
-        when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
-        when(costCategoryRepositoryMock.findById(anyLong())).thenReturn(Optional.of(testCostCategory));
+        when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+        when(costCategoryRepository.findById(anyLong())).thenReturn(Optional.of(testCostCategory));
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
 
         assertTrue(serviceResult.getSuccess().getFileName().startsWith("TEST_Spend_Profile_" + dateFormat.format(date)));
         assertFalse(serviceResult.getSuccess().getCsvData().contains("Group Name"));
-        assertEquals(Arrays.asList(serviceResult.getSuccess().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
+        assertEquals(Arrays.stream(serviceResult.getSuccess().getCsvData().split("\n")).filter(s -> s.contains("Group Name")
                 && !s.contains("Month") && !s.contains("TOTAL")).count(), 0);
     }
 
     @Test
     public void getSpendProfileStatusByProjectIdApproved() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileWorkflowHandlerMock.getApproval(project)).thenReturn(ApprovalType.APPROVED);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileWorkflowHandler.getApproval(project)).thenReturn(ApprovalType.APPROVED);
 
         ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
@@ -631,8 +661,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Test
     public void getSpendProfileStatusByProjectIdRejected() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileWorkflowHandlerMock.getApproval(project)).thenReturn(ApprovalType.REJECTED);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileWorkflowHandler.getApproval(project)).thenReturn(ApprovalType.REJECTED);
 
         ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
@@ -642,7 +672,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Test
     public void getSpendProfileStatusByProjectIdUnset() {
         List<SpendProfile> spendProfileList = newSpendProfile().build(3);
-        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
+        when(spendProfileRepository.findByProjectId(projectId)).thenReturn(spendProfileList);
 
         ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
@@ -654,22 +684,21 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(true);
 
         Long userId = 1234L;
         User user = newUser().withId(userId).build();
         UserResource loggedInUser = newUserResource().withId(user.getId()).build();
         setLoggedInUser(loggedInUser);
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
-        when(spendProfileWorkflowHandlerMock.spendProfileApproved(project, user)).thenReturn(true);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(spendProfileWorkflowHandler.spendProfileApproved(project, user)).thenReturn(true);
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
         assertTrue(result.isSuccess());
-;
-        verify(spendProfileRepositoryMock).saveAll(spendProfileList);
-        verify(spendProfileWorkflowHandlerMock).spendProfileApproved(project, user);
+        verify(spendProfileRepository).saveAll(spendProfileList);
+        verify(spendProfileWorkflowHandler).spendProfileApproved(project, user);
     }
 
     @Test
@@ -678,24 +707,24 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
 
-        when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
+        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(true);
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 
         Long userId = 1234L;
         UserResource loggedInUser = newUserResource().withId(userId).build();
         User user = newUser().withId(loggedInUser.getId()).build();
         setLoggedInUser(loggedInUser);
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
-        when(spendProfileWorkflowHandlerMock.spendProfileRejected(project, user)).thenReturn(true);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(spendProfileWorkflowHandler.spendProfileRejected(project, user)).thenReturn(true);
 
         ServiceResult<Void> resultNew = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
         assertTrue(resultNew.isSuccess());
-        assertTrue(project.getSpendProfileSubmittedDate() == null);
+        assertNull(project.getSpendProfileSubmittedDate());
 
-        verify(spendProfileRepositoryMock).saveAll(spendProfileList);
-        verify(spendProfileWorkflowHandlerMock).spendProfileRejected(project, user);
+        verify(spendProfileRepository).saveAll(spendProfileList);
+        verify(spendProfileWorkflowHandler).spendProfileRejected(project, user);
     }
 
     @Test
@@ -703,30 +732,30 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(true);
         Long userId = 1234L;
         User user = newUser().withId(userId).build();
         UserResource loggedInUser = newUserResource().withId(user.getId()).build();
         setLoggedInUser(loggedInUser);
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
-        when(spendProfileWorkflowHandlerMock.spendProfileApproved(project, user)).thenReturn(false);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(spendProfileWorkflowHandler.spendProfileApproved(project, user)).thenReturn(false);
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
         assertFalse(result.isSuccess());
         assertEquals(SPEND_PROFILE_CANNOT_BE_APPROVED.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(spendProfileRepositoryMock).saveAll(spendProfileList);
-        verify(spendProfileWorkflowHandlerMock).spendProfileApproved(project,user);
+        verify(spendProfileRepository).saveAll(spendProfileList);
+        verify(spendProfileWorkflowHandler).spendProfileApproved(project, user);
     }
 
     @Test
     public void rejectSpendProfileNotReadyToApprove() {
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(false);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(false);
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
@@ -738,8 +767,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     public void approveSpendProfileInvalidApprovalType() {
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(true);
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.UNSET);
 
@@ -751,8 +780,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     public void approveSpendProfileNotReadyToApprove() {
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-        when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(false);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(false);
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
@@ -765,16 +794,16 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Long projectId = 4234L;
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
 
-        when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
+        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(true);
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 
         Long userId = 1234L;
         UserResource loggedInUser = newUserResource().withId(userId).build();
         User user = newUser().withId(loggedInUser.getId()).build();
         setLoggedInUser(loggedInUser);
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
-        when(spendProfileWorkflowHandlerMock.spendProfileRejected(project, user)).thenReturn(false);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(spendProfileWorkflowHandler.spendProfileRejected(project, user)).thenReturn(false);
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
@@ -784,7 +813,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
     @Test
     public void approveSpendProfileNoProject() {
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
+        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
@@ -834,7 +863,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         SpendProfile spendProfileInDB = new SpendProfile(null, newProject().build(), null, Collections.emptyList(), spendProfileFigures, generatedBy, generatedDate, false);
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
         when(validationUtil.validateSpendProfileTableResource(eq(table))).thenReturn(Optional.empty());
 
 
@@ -864,7 +893,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         assertCostForCategoryForGivenMonth(spendProfileInDB, 175L, 1, new BigDecimal("5"));
         assertCostForCategoryForGivenMonth(spendProfileInDB, 175L, 2, new BigDecimal("0"));
 
-        verify(spendProfileRepositoryMock).save(spendProfileInDB);
+        verify(spendProfileRepository).save(spendProfileInDB);
     }
 
     @Test
@@ -896,10 +925,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
-        when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
+        when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDB));
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
         ServiceResult<Void> result = service.markSpendProfileIncomplete(projectOrganisationCompositeId);
 
@@ -933,10 +962,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
-        when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
+        when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDB));
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
         ServiceResult<Void> result = service.markSpendProfileComplete(projectOrganisationCompositeId);
 
@@ -971,10 +1000,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
-        when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
+        when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDB));
 
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
         ServiceResult<Void> result = service.markSpendProfileComplete(projectOrganisationCompositeId);
 
@@ -987,10 +1016,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
         spendProfileInDb.setMarkedAsComplete(true);
-        projectInDb.setSpendProfiles(asList(spendProfileInDb));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDb));
+        projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
         assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
-        when(spendProfileWorkflowHandlerMock.submit(projectInDb)).thenReturn(true);
+        when(spendProfileWorkflowHandler.submit(projectInDb)).thenReturn(true);
 
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
 
@@ -1004,8 +1033,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
         spendProfileInDb.setMarkedAsComplete(false);
-        projectInDb.setSpendProfiles(asList(spendProfileInDb));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDb));
+        projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
         assertThat(projectInDb.getSpendProfileSubmittedDate(), nullValue());
 
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
@@ -1019,8 +1048,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         projectInDb.setSpendProfileSubmittedDate(ZonedDateTime.now());
         SpendProfile spendProfileInDb = new SpendProfile();
         spendProfileInDb.setMarkedAsComplete(true);
-        projectInDb.setSpendProfiles(asList(spendProfileInDb));
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDb));
+        projectInDb.setSpendProfiles(singletonList(spendProfileInDb));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectInDb));
 
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
 
@@ -1037,34 +1066,28 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         User generatedBy = newUser().build();
         Calendar generatedDate = Calendar.getInstance();
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, true);
-
-        return spendProfileInDB;
+        return new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, true);
     }
 
     private CostCategoryType createCostCategoryType() {
 
         CostCategoryGroup costCategoryGroup = createCostCategoryGroup();
 
-        CostCategoryType costCategoryType = new CostCategoryType("Cost Category Type for Categories Labour, Materials, Other costs", costCategoryGroup);
-
-        return costCategoryType;
+        return new CostCategoryType("Cost Category Type for Categories Labour, Materials, Other costs", costCategoryGroup);
     }
 
     private CostCategoryGroup createCostCategoryGroup() {
 
         List<CostCategory> costCategories = createCostCategories(Arrays.asList(1L, 2L, 3L));
 
-        CostCategoryGroup costCategoryGroup = new CostCategoryGroup("Cost Category Group for Categories Labour, Materials, Other costs", costCategories);
-
-        return costCategoryGroup;
+        return new CostCategoryGroup("Cost Category Group for Categories Labour, Materials, Other costs", costCategories);
     }
 
     private List<CostCategory> createCostCategories(List<Long> categories) {
 
         List<CostCategory> costCategories = new ArrayList<>();
 
-        categories.stream().forEach(category -> {
+        categories.forEach(category -> {
             CostCategory costCategory = new CostCategory();
             costCategory.setId(category);
             costCategories.add(costCategory);
@@ -1077,11 +1100,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         List<Cost> eligibleCostForAllCategories = new ArrayList<>();
 
-        categoryCost.forEach((category, value) -> {
-
-            eligibleCostForAllCategories.add(createEligibleCost(category, value, costCategoryGroup));
-
-        });
+        categoryCost.forEach((category, value) ->
+                eligibleCostForAllCategories.add(createEligibleCost(category, value, costCategoryGroup)));
 
         return eligibleCostForAllCategories;
     }
@@ -1214,7 +1234,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
     private List<SpendProfile> getSpendProfilesAndSetWhenSpendProfileRepositoryMock(Long projectId) {
         List<SpendProfile> spendProfileList = newSpendProfile().build(2);
-        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
+        when(spendProfileRepository.findByProjectId(projectId)).thenReturn(spendProfileList);
 
         return spendProfileList;
     }
@@ -1267,7 +1287,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
             UserResource loggedInUser = newUserResource().build();
             user = newUser().withId(loggedInUser.getId()).build();
             setLoggedInUser(loggedInUser);
-            when(userRepositoryMock.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
+            when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
 
             organisation1 = newOrganisation().withOrganisationType(BUSINESS).build();
             organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.RTO).build();
@@ -1305,26 +1325,26 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                     .build();
 
             // Second cost category type and everything that goes with it.
-            type2Cat1 = newCostCategory().withName(ACADEMIC.getName()).build();
+            type2Cat1 = newCostCategory().build();
 
             costCategoryType2 = newCostCategoryType()
                     .withName("Type 2")
                     .withCostCategoryGroup(
                             newCostCategoryGroup()
                                     .withDescription("Group 2")
-                                    .withCostCategories(asList(type2Cat1))
+                                    .withCostCategories(singletonList(type2Cat1))
                                     .build())
                     .build();
 
             // set basic repository lookup expectations
-            when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
-            when(organisationRepositoryMock.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
-            when(organisationRepositoryMock.findById(organisation2.getId())).thenReturn(Optional.of(organisation2));
-            when(costCategoryRepositoryMock.findById(type1Cat1.getId())).thenReturn(Optional.of(type1Cat1));
-            when(costCategoryRepositoryMock.findById(type1Cat2.getId())).thenReturn(Optional.of(type1Cat2));
-            when(costCategoryRepositoryMock.findById(type2Cat1.getId())).thenReturn(Optional.of(type2Cat1));
-            when(costCategoryTypeRepositoryMock.findById(costCategoryType1.getId())).thenReturn(Optional.of(costCategoryType1));
-            when(costCategoryTypeRepositoryMock.findById(costCategoryType2.getId())).thenReturn(Optional.of(costCategoryType2));
+            when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+            when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
+            when(organisationRepository.findById(organisation2.getId())).thenReturn(Optional.of(organisation2));
+            when(costCategoryRepository.findById(type1Cat1.getId())).thenReturn(Optional.of(type1Cat1));
+            when(costCategoryRepository.findById(type1Cat2.getId())).thenReturn(Optional.of(type1Cat2));
+            when(costCategoryRepository.findById(type2Cat1.getId())).thenReturn(Optional.of(type2Cat1));
+            when(costCategoryTypeRepository.findById(costCategoryType1.getId())).thenReturn(Optional.of(costCategoryType1));
+            when(costCategoryTypeRepository.findById(costCategoryType2.getId())).thenReturn(Optional.of(costCategoryType2));
             return this;
         }
     }

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.security;
 
-import org.codehaus.groovy.runtime.InvokerHelper;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -8,8 +7,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -20,15 +17,14 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.List;
+import java.util.EnumSet;
 import java.util.Optional;
+import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -55,10 +51,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
     private FormInputResponseFileUploadRules fileUploadRules;
 
     @Mock
-    private ApplicationRepository applicationRepositoryMock;
-
-    @Mock
-    private StakeholderRepository stakeholderRepositoryMock;
+    private ApplicationRepository applicationRepository;
 
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;
@@ -76,14 +69,14 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        List<Role> expectedRoles = asList(LEADAPPLICANT, COLLABORATOR);
+        Set<Role> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
-        when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(singletonList(applicantProcessRole));
-        
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(singletonList(applicantProcessRole));
+
         assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, userResource));
 
-        verify(processRoleRepositoryMock).findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId);
+        verify(processRoleRepository).findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId);
     }
 
     @Test
@@ -93,13 +86,13 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
 
-        List<Role> expectedRoles = asList(LEADAPPLICANT, COLLABORATOR);
+        Set<Role> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
-        when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(emptyList());
+        when(processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(emptyList());
 
         assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
 
-        verify(processRoleRepositoryMock).findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId);
+        verify(processRoleRepository).findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId);
     }
 
     @Test
@@ -132,15 +125,9 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
         UserResource stakeholderUserResource = newUserResource()
                 .withRoleGlobal(STAKEHOLDER)
                 .build();
-        User stakeholderUser = newUser()
-                .withId(stakeholderUserResource.getId())
-                .build();
-        Stakeholder stakeholder = newStakeholder()
-                .withUser(stakeholderUser)
-                .build();
 
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(InvokerHelper.asList(stakeholder));
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResource.getId())).thenReturn(true);
 
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
         fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, application.getId(), 2L));
@@ -151,8 +138,8 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
     @Test
     public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
         Project project = newProject().build();
-        when(projectRepositoryMock.findOneByApplicationId(anyLong())).thenReturn(project);
-        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
 
         long applicationId = 3L;
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();

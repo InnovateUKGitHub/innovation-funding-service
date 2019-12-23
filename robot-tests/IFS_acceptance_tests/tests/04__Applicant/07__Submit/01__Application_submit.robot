@@ -59,7 +59,7 @@ RTO lead has read only view after submission
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css = .govuk-details__summary[aria-expanded="false"]
     And the user puts zero project costs
     When the user clicks the button/link                   link = Return to application overview
-    And the user accept the competition terms and conditions
+    And the user accept the competition terms and conditions    Return to application overview
     And the user clicks the button/link                    link = Review and submit
     And the user should not see the element                css = input
 
@@ -146,10 +146,6 @@ The user can check that the sections are read only
 
 the submit button should be disabled
     Element Should Be Disabled    jQuery = button:contains("Submit application")
-
-the applicant accepts the terms and conditions
-    the user selects the checkbox    agree-terms-page
-    the user selects the checkbox    stateAidAgreed
 
 the applicant marks the first section as complete
     the user navigates to the page    ${APPLICANT_DASHBOARD_URL}

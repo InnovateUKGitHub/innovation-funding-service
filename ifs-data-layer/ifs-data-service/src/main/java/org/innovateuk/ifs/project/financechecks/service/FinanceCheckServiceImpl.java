@@ -2,16 +2,13 @@ package org.innovateuk.ifs.project.financechecks.service;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -63,9 +60,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
-    private ProjectFinanceRowService projectFinanceRowService;
-
-    @Autowired
     private StatusService statusService;
 
     @Autowired
@@ -78,24 +72,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FinanceCheckQueriesService financeCheckQueriesService;
 
     @Autowired
-    private FormInputRepository formInputRepository;
-
-    @Autowired
-    private FormInputResponseRepository formInputResponseRepository;
-
-    @Autowired
-    private CompetitionSetupTransactionalService competitionSetupTransactionalService;
-
-    @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    private ApplicationFinanceService financeService;
+    private ProjectFinanceService projectFinanceService;
 
-    private BigDecimal percentDivisor = new BigDecimal("100");
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -132,14 +118,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
 
-        List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceRowService.financeChecksTotals(projectId).getSuccess();
+        List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceService.financeChecksTotals(projectId).getSuccess();
 
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
         BigDecimal totalFundingSought = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalFundingSought);
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
-        ServiceResult<Double> researchParticipationPercentage = financeService.getResearchParticipationPercentageFromProject(project.getId());
+        ServiceResult<Double> researchParticipationPercentage = projectFinanceService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
@@ -153,7 +139,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
 
-        return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
+        return projectFinanceService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
                         new FinanceCheckEligibilityResource(project.getId(),
                                 organisationId,
                                 application.getDurationInMonths(),
@@ -161,8 +147,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                                 BigDecimal.valueOf(projectFinance.getGrantClaimPercentage()),
                                 projectFinance.getTotalFundingSought(),
                                 projectFinance.getTotalOtherFunding(),
-                                projectFinance.getTotalContribution())
+                                projectFinance.getTotalContribution(),
+                                hasAnyApplicationFinances(application, projectFinance))
         );
+    }
+
+    private boolean hasAnyApplicationFinances(Application application, ProjectFinanceResource projectFinance) {
+        return applicationFinanceRepository.existsByApplicationIdAndOrganisationId(application.getId(), projectFinance.getOrganisation());
     }
 
     private boolean getBankDetailsApprovalStatus(Long projectId) {
@@ -190,7 +181,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
         boolean actionRequired = false;
 
-        ServiceResult<ProjectFinanceResource> resource = projectFinanceRowService.financeChecksDetails(projectId, organisationId);
+        ServiceResult<ProjectFinanceResource> resource = projectFinanceService.financeChecksDetails(projectId, organisationId);
         if(resource.isSuccess()) {
                 ServiceResult<List<QueryResource>> queries = financeCheckQueriesService.findAll(resource.getSuccess().getId());
                 if(queries.isSuccess()) {
@@ -295,7 +286,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
-        return projectFinanceRowService.financeChecksTotals(projectId);
+        return projectFinanceService.financeChecksTotals(projectId);
     }
 
     @Override
@@ -484,7 +475,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
         projectFinance.setViabilityStatus(viabilityRagStatus);
-
         projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();
@@ -514,7 +504,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
 
         projectFinance.setEligibilityStatus(eligibilityRagStatus);
-
         projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();

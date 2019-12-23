@@ -9,7 +9,6 @@ import org.innovateuk.ifs.user.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -17,6 +16,7 @@ import java.util.concurrent.Future;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
+import static org.springframework.util.StringUtils.isEmpty;
 
 
 /**
@@ -34,7 +34,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
-        if(StringUtils.isEmpty(uid))
+        if(isEmpty(uid))
             return restFailure(CommonErrors.notFoundError(UserResource.class, uid));
 
         return getWithRestResultAnonymous(userRestURL + "/uid/" + uid, UserResource.class);
@@ -48,7 +48,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<Void> checkPasswordResetHash(String hash) {
 
-        if(StringUtils.isEmpty(hash))
+        if(isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
         return getWithRestResultAnonymous(userRestURL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
@@ -58,7 +58,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<Void> resetPassword(String hash, String password) {
 
 
-        if(StringUtils.isEmpty(hash))
+        if(isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
         return postWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, URL_PASSWORD_RESET, hash), password,  Void.class);
@@ -66,7 +66,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> findUserByEmail(String email) {
-        if(StringUtils.isEmpty(email)) {
+        if (isEmpty(email)) {
             return restFailure(CommonErrors.notFoundError(UserResource.class, email));
         }
 
@@ -74,8 +74,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserResource> retrieveUserById(Long id) {
-        if(id == null || id.equals(0L)) {
+    public RestResult<UserResource> retrieveUserById(long id) {
+        if (id == 0) {
             return restFailure(CommonErrors.notFoundError(UserResource.class, id));
         }
 
@@ -98,51 +98,69 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserPageResource> getActiveInternalUsers(int pageNumber, int pageSize) {
+    public RestResult<UserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(userRestURL + "/internal/active", pageNumber, pageSize, null, params);
+        params.add("filter", filter);
+        String uriWithParams = buildPaginationUri(userRestURL + "/active", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
     @Override
-    public RestResult<UserPageResource> getInactiveInternalUsers(int pageNumber, int pageSize) {
+    public RestResult<UserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(userRestURL + "/internal/inactive", pageNumber, pageSize, null, params);
+        params.add("filter", filter);
+        String uriWithParams = buildPaginationUri(userRestURL + "/inactive", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
     @Override
-    public RestResult<ProcessRoleResource> findProcessRole(Long userId, Long applicationId) {
+    public RestResult<UserPageResource> getActiveExternalUsers(String filter, int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", filter);
+        String uriWithParams = buildPaginationUri(userRestURL + "/external/active", pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, UserPageResource.class);
+    }
+
+    @Override
+    public RestResult<UserPageResource> getInactiveExternalUsers(String filter, int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", filter);
+        String uriWithParams = buildPaginationUri(userRestURL + "/external/inactive", pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, UserPageResource.class);
+    }
+
+    @Override
+    public RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId) {
         return getWithRestResult(processRoleRestURL + "/find-by-user-application/" + userId + "/" + applicationId, ProcessRoleResource.class);
     }
 
     @Override
-    public Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId) {
+    public Future<RestResult<ProcessRoleResource>> findProcessRoleById(long processRoleId) {
         return getWithRestResultAsync(processRoleRestURL + "/" + processRoleId, ProcessRoleResource.class);
     }
 
     @Override
-    public RestResult<List<ProcessRoleResource>> findProcessRole(Long applicationId) {
+    public RestResult<List<ProcessRoleResource>> findProcessRole(long applicationId) {
         return getWithRestResult(processRoleRestURL + "/find-by-application-id/" + applicationId, processRoleResourceListType());
     }
 
     @Override
-    public RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(Long userId) {
+    public RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(long userId) {
         return getWithRestResult(processRoleRestURL + "/find-by-user-id/" + userId, processRoleResourceListType());
     }
 
     @Override
-    public RestResult<List<UserResource>> findAssignableUsers(Long applicationId){
+    public RestResult<List<UserResource>> findAssignableUsers(long applicationId){
         return getWithRestResult(userRestURL + "/find-assignable-users/" + applicationId, userListType());
     }
 
     @Override
-    public Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(Long applicationId){
+    public Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(long applicationId){
         return getWithRestResultAsync(processRoleRestURL + "/find-assignable/" + applicationId, ProcessRoleResource[].class);
     }
 
     @Override
-    public RestResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
+    public RestResult<Boolean> userHasApplicationForCompetition(long userId, long competitionId) {
         return getWithRestResult(processRoleRestURL + "/user-has-application-for-competition/" + userId + "/" + competitionId, Boolean.class);
     }
 
@@ -158,23 +176,23 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
-                                                                                        String phoneNumber, Long organisationId, Long competitionId, Boolean allowMarketingEmails) {
+                                                                                        String phoneNumber, long organisationId, Long competitionId, Boolean allowMarketingEmails) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setPassword(password);
         user.setEmail(email);
-        if(!StringUtils.isEmpty(title)) {
+        if(!isEmpty(title)) {
             user.setTitle(Title.valueOf(title));
         }
         user.setPhoneNumber(phoneNumber);
         user.setAllowMarketingEmails(allowMarketingEmails);
 
         String url;
-        if(competitionId != null){
+        if (competitionId != null) {
             url = userRestURL + "/create-lead-applicant-for-organisation/" + organisationId +"/"+competitionId;
-        }else{
+        } else{
             url = userRestURL + "/create-lead-applicant-for-organisation/" + organisationId;
         }
 
@@ -183,12 +201,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                       String phoneNumber, Long organisationId, Boolean allowMarketingEmails) {
+                                                                       String phoneNumber, long organisationId, Boolean allowMarketingEmails) {
         return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, null, allowMarketingEmails);
     }
 
     @Override
-    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title,
+    public RestResult<UserResource> updateDetails(long id, String email, String firstName, String lastName, String title,
                                                   String phoneNumber, boolean allowMarketingEmails) {
         UserResource user = new UserResource();
         user.setId(id);
@@ -196,7 +214,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setAllowMarketingEmails(allowMarketingEmails);
-        if(!StringUtils.isEmpty(title)) {
+        if(!isEmpty(title)) {
             user.setTitle(Title.valueOf(title));
         }
         user.setPhoneNumber(phoneNumber);
@@ -223,20 +241,24 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<Void> deactivateUser(Long userId) {
+    public RestResult<Void> deactivateUser(long userId) {
         String url = userRestURL + "/id/" + userId + "/deactivate";
         return postWithRestResult(url, Void.class);
     }
 
     @Override
-    public RestResult<Void> reactivateUser(Long userId) {
+    public RestResult<Void> reactivateUser(long userId) {
         String url = userRestURL + "/id/" + userId + "/reactivate";
         return postWithRestResult(url, Void.class);
     }
 
     @Override
-    public RestResult<Void> grantRole(Long userId, Role targetRole) {
-        String url = userRestURL + "/" + userId + "/grant/" + targetRole.name();
-        return postWithRestResult(url);
+    public RestResult<Void> grantRole(long userId, Role targetRole) {
+        return postWithRestResult(userRestURL + "/" + userId + "/grant/" + targetRole.name());
+    }
+
+    @Override
+    public RestResult<Void> updateEmail(long userId, String email) {
+        return putWithRestResult(userRestURL + "/" + userId + "/update-email/" + email);
     }
 }

@@ -26,6 +26,4 @@ public interface ProjectRepository extends RefreshableCrudRepository<Project, Lo
 
     @Query(PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID)
     List<Project> searchByCompetitionIdAndApplicationIdLike(long competitionId, String applicationSearchString);
-
-
 }

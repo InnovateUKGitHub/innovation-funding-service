@@ -160,7 +160,6 @@ Organisation server side validation when no
     [Setup]    log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to Your-finances page        ${applicationWithoutGrowth}
     Then the user clicks the button/link                  link = Your organisation
-    And the user selects the checkbox                     stateAidAgreed
     When the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error    Enter your organisation size.
     And the user should see a field and summary error     ${empty_field_warning_message}
@@ -191,7 +190,6 @@ Mark Organisation as complete when no
     And the user enters text to a text field      css = #headCount    42
     And the user enters text to a text field      css = #turnover    17506
     And the user selects medium organisation size
-    And the user selects the checkbox             stateAidAgreed
     When the user clicks the button/link          jQuery = button:contains("Mark as complete")
     Then the user should see the element          jQuery = li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link          link = Your organisation
@@ -219,7 +217,6 @@ Organisation server side validation when yes
     [Tags]
     [Setup]  the user navigates to the growth table finances
     Given the user clicks the button/link  link = Your organisation
-    And the user selects the checkbox      stateAidAgreed
     When the user clicks the button/link   jQuery = button:contains("Mark as complete")
     And the user should see the element    jQuery = .govuk-error-summary__list li:contains("${empty_field_warning_message}")
     And the user should see the element    jQuery = .govuk-error-message:contains("${empty_field_warning_message}")
@@ -261,7 +258,6 @@ Mark Organisation as complete when yes
     And the user clicks the button/link          jQuery = button:contains("Save and return to finances")
     And the user clicks the button/link          link = Your organisation
     Then the user should see the element         jQuery = #researchAndDevelopmentSpendAtLastFinancialYear[value = "15000"]
-    And the user selects the checkbox            stateAidAgreed
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")
     Then the user should see the element         jQuery = li:contains("Your organisation") > .task-status-complete
 
@@ -296,7 +292,6 @@ Applicant can view and edit project growth table
     Then the user should view the project growth table
     And the user can edit the project growth table
     And the user populates the project growth table
-    And the user selects the checkbox                   stateAidAgreed
     And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
 
 The Lead Applicant fills in the Application Details for App with Growth
@@ -324,7 +319,6 @@ Newly created collaborator can view and edit project Growth table
     Then the user enters text to a text field       css = #financialYearEndMonthValue    12
     And the user enters text to a text field        css = #financialYearEndYearValue    2016
     And the user populates the project growth table
-    And the user selects the checkbox                stateAidAgreed
     And the user clicks the button/link             jQuery = button:contains("Mark as complete")
     And the user should not see an error in the page
 
@@ -348,7 +342,6 @@ Non-lead can mark Organisation as complete
     And the user enters text to a text field        css = #financialYearEndYearValue    2016
     Then the user populates the project growth table
     And the user enters text to a text field        css = #headCountAtLastFinancialYear    42
-    And the user selects the checkbox               stateAidAgreed
     When the user clicks the button/link            jQuery = button:contains("Mark as complete")
     Then the user should see the element            jQuery = li:contains("Your organisation") > .task-status-complete
 
@@ -361,7 +354,7 @@ Non-lead can mark terms and conditions as complete
     [Documentation]  IFS-5920
     [Setup]  the user clicks the button/link      link = Your project finances
     Given the user clicks the button/link         link = Back to application overview
-    When the user accept the competition terms and conditions
+    When the user accept the competition terms and conditions     Return to application overview
     Then the user should see the element          jQuery = li:contains("Award terms and conditions") > .task-status-complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
@@ -382,7 +375,7 @@ The lead applicant checks for terms and conditions partners status
     [Documentation]  IFS-5920
     [Tags]
     [Setup]  the user navigate to competition
-    Given the user accept the competition terms and conditions
+    Given the user accept the competition terms and conditions    Return to application overview
     And the user clicks the button/link             link = Award terms and conditions
     When the user clicks the button/link            link = View partners' acceptance
     Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Accepted")
@@ -460,7 +453,6 @@ the user can edit resubmit and read only of the organisation
     the user clicks the button/link         link = Your organisation
     the user clicks the button/link         jQuery = button:contains("Edit")
     the user enters text to a text field    css = #${headcount_field_id}    2
-    the user selects the checkbox           stateAidAgreed
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user should not see an error in the page
     the user should see the element         jQuery = li:contains("Your organisation") > .task-status-complete

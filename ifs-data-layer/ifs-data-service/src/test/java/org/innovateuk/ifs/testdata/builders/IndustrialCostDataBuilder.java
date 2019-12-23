@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
 import org.innovateuk.ifs.finance.resource.GrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
@@ -22,12 +23,10 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Generates Indisutrial Finances for an Organisation on an Application
@@ -45,17 +44,21 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     public IndustrialCostDataBuilder withWorkingDaysPerYear(Integer workingDays) {
-        return updateCostItem(LabourCost.class, FinanceRowType.LABOUR, item -> LabourCostCategory.WORKING_DAYS_PER_YEAR.equals(item.getRole()), existingCost -> {
-            existingCost.setLabourDays(workingDays);
-            financeRowCostsService.update(existingCost.getId(), existingCost);
-        });
+        return updateCostCategory(LabourCostCategory.class, FinanceRowType.LABOUR,
+                labourCostCategory -> {
+                    LabourCost workingDaysCost = labourCostCategory.getWorkingDaysPerYearCostItem();
+                    workingDaysCost.setLabourDays(workingDays);
+                    financeRowCostsService.update(workingDaysCost.getId(), workingDaysCost);
+                });
     }
 
     public IndustrialCostDataBuilder withOtherFunding(String fundingSource, LocalDate dateSecured, BigDecimal fundingAmount) {
-        return updateCostItem(OtherFunding.class, FinanceRowType.OTHER_FUNDING, row -> OtherFundingCostCategory.OTHER_FUNDING.equals(row.getFundingSource()), existingCost -> {
-            existingCost.setOtherPublicFunding("Yes");
-            financeRowCostsService.update(existingCost.getId(), existingCost);
-        }).addCostItem("Other funding", (finance) -> {
+        return updateCostCategory(OtherFundingCostCategory.class, FinanceRowType.OTHER_FUNDING,
+                otherFundingCostCategory -> {
+                    OtherFunding otherFunding = otherFundingCostCategory.getOtherFunding();
+                    otherFunding.setOtherPublicFunding("Yes");
+                    financeRowCostsService.update(otherFunding.getId(), otherFunding);
+                }).addCostItem("Other funding", (finance) -> {
             OtherFunding otherFunding = new OtherFunding(finance.getId());
             otherFunding.setFundingAmount(fundingAmount);
             otherFunding.setFundingSource(fundingSource);
@@ -74,13 +77,13 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     public IndustrialCostDataBuilder withLabourEntry(String role, Integer annualSalary, Integer daysToBeSpent) {
         return addCostItem("Labour", (finance) ->
                 newLabourCost().withId().
-                    withName().
-                    withRole(role).
+                        withName().
+                        withRole(role).
                         withGrossEmployeeCost(bd(annualSalary)).
-                    withLabourDays(daysToBeSpent).
-                    withDescription().
-                    withTargetId(finance.getId()).
-                    build());
+                        withLabourDays(daysToBeSpent).
+                        withDescription().
+                        withTargetId(finance.getId()).
+                        build());
     }
 
     public IndustrialCostDataBuilder withMaterials(String item, BigDecimal cost, Integer quantity) {
@@ -128,6 +131,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
+
     public IndustrialCostDataBuilder withProjectGrowthTable(YearMonth financialYearEnd,
                                                             long headCountAtLastFinancialYear,
                                                             BigDecimal annualTurnoverAtLastFinancialYear,
@@ -211,6 +215,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             financeRowCostsService.update(existingCost.getId(), existingCost);
         });
     }
+
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
         return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate, existingCost.getTargetId());
@@ -219,13 +224,16 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn) {
-        return updateCostItem(clazz, financeRowType, c -> true, updateFn);
+        return with(data -> {
+            List<FinanceRowItem> rows = data.getApplicationFinance().getFinanceOrganisationDetails().get(financeRowType).getCosts();
+            rows.forEach(item -> updateFn.accept((T) item));
+        });
     }
 
-    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Predicate<T> filterFn, Consumer<T> updateFn) {
+    private <C extends FinanceRowCostCategory> IndustrialCostDataBuilder updateCostCategory(Class<C> clazz, FinanceRowType financeRowType, Consumer<C> updateFn) {
         return with(data -> {
-            List<FinanceRowItem> existingItems = financeRowCostsService.getCostItems(data.getApplicationFinance().getId(), financeRowType).getSuccess();
-            simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
+            C category = (C) data.getApplicationFinance().getFinanceOrganisationDetails().get(financeRowType);
+            updateFn.accept(category);
         });
     }
 
@@ -266,6 +274,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     private BigDecimal bd(Integer value) {
         return BigDecimal.valueOf(value);
     }
+
     @Override
     protected void postProcess(int index, IndustrialCostData instance) {
         super.postProcess(index, instance);

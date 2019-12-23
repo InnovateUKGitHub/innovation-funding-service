@@ -1,4 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 
 buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
@@ -18,15 +17,6 @@ version project.version
 
 apply plugin: 'idea'
 
-def String spCertsVolume = 'src/main/docker/certs'
-
-def String spProxyKeyFile = "${spCertsVolume}/sp_proxy_key.pem"
-def String spProxyCertificateFile = "${spCertsVolume}/sp_proxy_certificate.pem"
-def String spProxyCacertificateFile = "${spCertsVolume}/sp_proxy_cacertificate.pem"
-
-def String idpSigningCertificateFile = "${spCertsVolume}/idp-signing.crt"
-def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
-
 buildscript {
     repositories { jcenter() }
 }
@@ -36,24 +26,12 @@ task prepareDockerFile {
 
     def inputDir = project.file("$project.buildDir/docker")
 
-
     doFirst {
-        def String spProxyKey = file(spProxyKeyFile).text.trim().replace('\n', '\\n')
-        def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
-        def String spProxyCacertificate = file(spProxyCacertificateFile).text.trim().replace('\n', '\\n')
-
-        def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
-        def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
         copy {
             from 'src/main/docker/'
             into 'src/main/docker/'
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [auth_sp_proxy_key              : spProxyKey,
-                                           auth_sp_proxy_certificate      : spProxyCertificate,
-                                           auth_sp_proxy_cacertificate    : spProxyCacertificate,
-                                           auth_idp_signing_certificate   : idpSigningCertificate,
-                                           auth_idp_encryption_certificate: idpEncryptionCertificate])
         }
         copy {
             from file('src/main/docker/Dockerfile')

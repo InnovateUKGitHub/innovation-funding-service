@@ -81,11 +81,6 @@ public class Overhead extends AbstractFinanceRowItem {
         return false;
     }
 
-    @Override
-    public int getMinRows() {
-        return 0;
-    }
-
     public void setRate(Integer rate) {
         this.rate = rate;
     }

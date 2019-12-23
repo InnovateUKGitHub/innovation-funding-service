@@ -35,7 +35,6 @@ Applicant applies to newly created APC competition
     Then logged in user applies to competition              ${apcCompetitionTitle}  1
     And the applicant cannot add a collaborator to a single comp
     And the applicant sees single comp finance summary
-    And the applicant sees state aid information
 
 Applicant submits his application
     [Documentation]  IFS-2286  IFS-5920
@@ -45,7 +44,7 @@ Applicant submits his application
     Then the lead applicant fills all the questions and marks as complete(APC)
     When the user navigates to Your-finances page       ${apcApplicationTitle}
     And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
-    And the user accept the competition terms and conditions
+    And the user accept the competition terms and conditions    Return to application overview
     Then the applicant submits the application
 
 The internal user checks accepted terms and conditions for submitted application
@@ -84,12 +83,6 @@ the applicant sees single comp finance summary
     the user should not see the element  jQuery = .finance-summary th[scope = "row"]:contains("Total")
     the user clicks the button/link      link = Application overview
 
-the applicant sees state aid information
-    the user clicks the button/link      link = Your project finances
-    the user clicks the button/link      link = Your organisation
-    the user should see the element      link = eligible for state aid
-    the user clicks the button/link      link = Your project finances
-    the user clicks the button/link      link = Back to application overview
 
 Custom suite teardown
     Close browser and delete emails

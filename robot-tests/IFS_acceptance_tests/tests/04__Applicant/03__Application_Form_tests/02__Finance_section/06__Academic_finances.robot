@@ -32,7 +32,6 @@ Academic finance validations
     When the user navigates to Your-finances page    Academic robot test application
     And the user clicks the button/link              link = Your project costs
     And the applicant enters invalid inputs
-    And the user selects the checkbox                agree-terms-page
     And Mark academic finances as complete
     And the user should see the element              css = .govuk-error-summary__list
 
@@ -45,17 +44,15 @@ Academic finance calculations
 
 Large pdf upload not allowed
     [Documentation]    INFUND-2720
-    [Tags]
-    Given the user clicks the button/link         jQuery = .button-clear:contains("Edit your project costs")
-    Then the user clicks the button/link          css = button[name="remove_jes"]
-    When the academic partner uploads a file      ${too_large_pdf}
-    Then the user should see a field and summary error   ${too_large_10MB_validation_error}
+    [Setup]  the user clicks the button/link         jQuery = .button-clear:contains("Edit your project costs")
+    Given the user can remove the uploaded file      remove_jes  ${5mb_pdf}
+    When the academic partner uploads a file         ${too_large_pdf}
+    Then the user should see a field error           ${too_large_10MB_validation_error}
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-2720
-    [Tags]
-    When the academic partner uploads a file               ${text_file}
-    Then the user should see a field and summary error     ${wrong_filetype_validation_error}
+    When the academic partner uploads a file        ${text_file}
+    Then the user should see a field error          ${wrong_filetype_validation_error}
 
 Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
@@ -73,8 +70,8 @@ Academics upload
     And the user clicks the button/link                link = Your project costs
     When the academic partner uploads a file           ${5mb_pdf}
     Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
-    And the user should see the element                link = ${5mb_pdf}
-    And open pdf link                                  ${5mb_pdf}
+    And the user should see the element                jQuery = a:contains(${5mb_pdf} (opens in a new window))
+    And open pdf link                                  jQuery = a:contains(${5mb_pdf} (opens in a new window))
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
@@ -106,10 +103,9 @@ Mark all as complete
     Given log in as a different user               ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     And the user navigates to Your-finances page   Academic robot test application
     And the user clicks the button/link            link = Your project costs
-    And the user should see the element            link = ${5mb_pdf}
+    And the user should see the element            jQuery = a:contains(${5mb_pdf} (opens in a new window))
     When the user enters text to a text field      css = input[name="tsbReference"]  123123
     Then textfield value should be                 css = input[name="tsbReference"]  123123
-    And the user selects the checkbox              termsAgreed
     When the user clicks the button/link           jQuery = button:contains("Mark as complete")
     And the user enters the project location
     And the user clicks the button/link            link = Your funding
@@ -149,12 +145,14 @@ Custom Suite Setup
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the subtotals should be correctly updated
-    Textfield Value Should Be  id = subtotal-directly-allocated  £3,047
-    Textfield Value Should Be  id = subtotal-exceptions  £8,013
+    the user should see the element  jQuery = [data-mirror="#subtotal-directly-allocated"]:contains("£3,047")
+    the user should see the element  jQuery = [data-mirror="#subtotal-exceptions"]:contains("£8,013")
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
-    Choose File    css = .upload-section input    ${UPLOAD_FOLDER}/${file_name}
+    the user uploads the file    css = .upload-section input    ${file_name}
+    Wait Until Page Does Not Contain Without Screenshots    Uploading
+    the user should see the element   css = .remove-file
 
 the finance table should be correct
     Wait Until Element Contains Without Screenshots  css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)  £32,698
@@ -185,6 +183,7 @@ the user can see JeS details
     the user should see the element  css = a[href*="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system"]
 
 the applicant enters invalid inputs
+    the user clicks the button/link       jQuery = button:contains("Open all")
     The user enters text to a text field  css = [name="incurredStaff"]  ${EMPTY}
     The user enters text to a text field  css = [name="incurredTravel"]  ${EMPTY}
     The user enters text to a text field  css = [name="incurredOtherCosts"]  ${EMPTY}
@@ -197,7 +196,6 @@ the applicant enters invalid inputs
     The user enters text to a text field  css = [name="tsbReference"]  ${EMPTY}
 
 Mark academic finances as complete
-    the user selects the checkbox    termsAgreed
     the user clicks the button/link  id = mark-all-as-complete
     the user should see a field and summary error  This field cannot be left blank.
 

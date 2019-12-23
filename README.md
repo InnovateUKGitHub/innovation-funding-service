@@ -27,6 +27,11 @@ Create docker network
 Copy the properties from the starter.properties file into ~/.gradle/gradle.properties - your local gradle properties
 file.
 
+Before you can build the project for the first time, you need to generate the certificates to be used by IDP, SP and LDAP services.
+Once generated these certificates can be found in the appropriate services under src/main/docker/certs
+
+    ./gradlew generateCertificates -x test
+
 Build and deploy
 
     ./gradlew clean build deploy wait syncShib -Pinitialise=true -x test

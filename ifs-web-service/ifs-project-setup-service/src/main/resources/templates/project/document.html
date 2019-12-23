@@ -14,6 +14,15 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to document overview',linkUrl=@{/project/{projectId}/document/all/(projectId=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <div class="govuk-error-summary__body">
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+        </div>
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div th:if="${model.status.name() == 'APPROVED'}" class="success-alert">
@@ -22,6 +31,17 @@
 
         <div th:if="${model.status.name() == 'REJECTED'}" class="warning-alert">
             <h2 class="govuk-heading-s govuk-!-margin-0">We will contact you to discuss this document.</h2>
+        </div>
+
+        <div th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}" class="message-alert">
+            <h2 th:if="${model.projectManager}" class="govuk-body govuk-!-margin-0">
+                We have marked this document as incomplete because you have made a change to your project team.
+                If you need to update the document you must remove it and upload a new version.
+            </h2>
+            <h2 th:unless="${model.projectManager}" class="govuk-body govuk-!-margin-0">
+                We have marked this document as incomplete because a change has been made to your project team.
+                If you need to update the document you must contact your project manager.
+            </h2>
         </div>
 
         <div th:if="${model.status.name() == 'SUBMITTED'}" class="message-alert">
@@ -87,19 +107,16 @@
             </th:block>
         </div>
 
-        <th:block th:if="${model.isShowSubmitDocumentsButton()}">
+        <th:block th:if="${model.editable}">
             <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" method="post">
               <div>
-                <button data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submitDocumentButton" aria-label="Submit collaboration agreement">Submit</button>
+                <button th:disabled="${model.showDisabledSubmitDocumentsButton}" data-js-enabled-on-file-upload=""
+                    data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submitDocumentButton" aria-label="Submit collaboration agreement">Submit</button>
               </div>
             </form>
         </th:block>
 
-         <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
-             <button disabled="disabled" class="govuk-button govuk-!-margin-top-6" aria-label="Submit collaboration agreement">Submit</button>
-         </th:block>
-
-         <th:block th:if="${!model.isShowSubmitDocumentsButton() && !model.isShowDisabledSubmitDocumentsButton()}">
+         <th:block th:unless="${model.editable}">
             <div class="govuk-!-margin-top-6">
                 <a th:href="@{/project/{projectId}/document/all/(projectId=${model.projectId})}" class="button-secondary">Return to documents</a>
             </div>

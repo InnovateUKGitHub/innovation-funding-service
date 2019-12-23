@@ -35,6 +35,11 @@ public class GrantProcess {
         this.pending = false;
     }
 
+    public GrantProcess(long applicationId, boolean pending) {
+        this.applicationId = applicationId;
+        this.pending = pending;
+    }
+
     public long getApplicationId() {
         return applicationId;
     }

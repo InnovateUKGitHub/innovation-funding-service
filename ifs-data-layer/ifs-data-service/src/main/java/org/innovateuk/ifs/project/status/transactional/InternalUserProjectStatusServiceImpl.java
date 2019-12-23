@@ -4,7 +4,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
@@ -34,6 +36,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -65,7 +68,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     private LoggedInUserSupplier loggedInUserSupplier;
 
     @Autowired
-    private ApplicationFinanceService financeService;
+    private ProjectFinanceService projectFinanceService;
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
@@ -101,7 +104,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         return projectSupplier.get().stream()
                 .map(this::getProjectStatusResourceByProject)
                 .sorted(comparing(ProjectStatusResource::getApplicationNumber))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
@@ -177,7 +180,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         boolean incomplete = false;
         boolean started = false;
         for (Organisation organisation : project.getOrganisations()) {
-            if (isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
+            if (isOrganisationSeekingFunding(project.getId(), organisation.getId())) {
                 Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
                 ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
                 ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
@@ -202,9 +205,11 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         }
     }
 
-    private boolean isOrganisationSeekingFunding(long projectId, long applicationId, long organisationId) {
-        Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
-        return result.orElse(false);
+    private boolean isOrganisationSeekingFunding(long projectId, long organisationId) {
+        return projectFinanceService.financeChecksDetails(projectId, organisationId)
+                .andOnSuccessReturn(ProjectFinanceResource::isRequestingFunding)
+                .getOptionalSuccessObject()
+                .orElse(false);
     }
 
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
@@ -262,17 +267,15 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                                                              final boolean allRequiredDetailsComplete,
                                                              final ProjectState projectState) {
 
-        if (allRequiredDetailsComplete) {
-            if (monitoringOfficerExists) {
-                return COMPLETE;
+        if (monitoringOfficerExists) {
+            return COMPLETE;
+        } else if (allRequiredDetailsComplete) {
+            User user = loggedInUserSupplier.get();
+            if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
+                return notStartedIfProjectActive(projectState);
             } else {
-                User user = loggedInUserSupplier.get();
-                if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
-                    return notStartedIfProjectActive(projectState);
-                } else {
-                    return projectState.isActive() ?
-                    ACTION_REQUIRED : PENDING;
-                }
+                return projectState.isActive() ?
+                ACTION_REQUIRED : PENDING;
             }
         } else {
             return notStartedIfProjectActive(projectState);
@@ -282,19 +285,13 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     private ProjectActivityStates getDocumentsStatus(Project project) {
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
         List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
-
         if (!project.isCollaborativeProject()) {
-
-            List<String> documentNames = expectedDocuments.stream()
-                    .map(DocumentConfig::getTitle)
-                    .collect(Collectors.toList());
-
-            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
-                return getDocumentsState(projectDocuments,
-                                         projectDocuments.size(),
-                                         expectedDocuments.size() - 1,
-                                         project.getProjectState());
-            }
+            projectDocuments = projectDocuments.stream()
+                .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getCompetitionDocument().getTitle()))
+                .collect(toList());
+            expectedDocuments = expectedDocuments.stream()
+                    .filter(doc -> !COLLABORATION_AGREEMENT_TITLE.equals(doc.getTitle()))
+                    .collect(toList());
         }
 
         return getDocumentsState(projectDocuments,

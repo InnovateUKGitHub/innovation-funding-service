@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -47,7 +46,6 @@ public class ProjectFinance extends Finance {
         this.project = project;
     }
 
-    @JsonIgnore
     public Project getProject() {
         return project;
     }
@@ -89,7 +87,7 @@ public class ProjectFinance extends Finance {
     }
 
     @Override
-    public Competition getCompetition() {
-        return getProject().getApplication().getCompetition();
+    public Application getApplication() {
+        return getProject().getApplication();
     }
 }

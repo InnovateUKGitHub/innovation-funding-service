@@ -44,9 +44,5 @@ public interface FinanceRowItem {
     FinanceRowType getCostType();
     String getName();
     boolean isEmpty();
-    default boolean excludeInRowCount(){
-        return isEmpty();
-    }
-    int getMinRows();
     BigDecimal totalDiff(FinanceRowItem other);
 }

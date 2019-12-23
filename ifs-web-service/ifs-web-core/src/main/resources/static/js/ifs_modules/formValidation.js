@@ -962,15 +962,21 @@ IFS.core.formValidation = (function () {
     setSectionValid: function (section) {
       section = jQuery(section)
       section.removeClass('error')
+      section.closest('.govuk-form-group--error').removeClass('govuk-form-group--error')
       var inputs = section.find('.govuk-input--error')
+      var summaryList = jQuery('.govuk-error-summary')
 
       //  remove error messages from section + error summary
       section.find('.govuk-error-message').each(function () {
         var errorMessage = jQuery(this)
         var content = errorMessage.text()
-        jQuery('.govuk-error-summary__list li:contains(' + content + ')').first().remove()
+        summaryList.find('li:contains(' + content + ')').first().remove()
         errorMessage.remove()
       })
+
+      if (!summaryList.find('li').length) {
+        summaryList.hide()
+      }
 
       jQuery.each(inputs, function () {
         jQuery(this).removeClass('govuk-input--error').val('')

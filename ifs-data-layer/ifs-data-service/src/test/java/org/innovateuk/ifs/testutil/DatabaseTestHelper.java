@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.testutil;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,8 @@ public class DatabaseTestHelper {
 
     @Value("${spring.flyway.password}")
     private String databasePassword;
+
+    private static final Log LOG = LogFactory.getLog(DatabaseTestHelper.class);
 
     /**
      * Assert that no database changes occur during the running of the given action
@@ -58,7 +62,6 @@ public class DatabaseTestHelper {
     }
 
     private String getDatabaseContents() throws SQLException {
-
         Connection connection = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
         DatabaseMetaData schemaMetadata = connection.getMetaData();
         ResultSet schemaResults = schemaMetadata.getTables(null, null, "%", null);
@@ -68,8 +71,8 @@ public class DatabaseTestHelper {
         while (schemaResults.next()) {
 
             String tableName = schemaResults.getString(3);
-            CallableStatement tableResultsQuery = connection.prepareCall("SELECT * FROM " + tableName);
-            ResultSet tableResults = tableResultsQuery.executeQuery();
+            PreparedStatement preparedStatement  = connection.prepareStatement("SELECT * FROM " + tableName);
+            ResultSet tableResults = preparedStatement.executeQuery();
 
             String tableAsString = "";
 

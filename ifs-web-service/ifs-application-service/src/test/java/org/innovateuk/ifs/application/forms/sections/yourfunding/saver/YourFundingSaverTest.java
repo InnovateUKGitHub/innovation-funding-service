@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.for
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
+import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -58,7 +58,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
                 .build();
         ApplicationFinanceResource finance = newApplicationFinanceResource()
                 .withFinanceOrganisationDetails(asMap(
-                FinanceRowType.FINANCE,  newGrantClaimCostCategory()
+                FinanceRowType.FINANCE,  newExcludedCostCategory()
                     .withCosts(newGrantClaimPercentage().build(1))
                     .build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory()
@@ -85,7 +85,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
                 "20", existingRow
                 ));
 
-        service.save(APPLICATION_ID, form, ORGANISATION_ID);
+        service.save(APPLICATION_ID, ORGANISATION_ID, form);
 
         verify(financeRowRestService).update(finance.getGrantClaim());
 

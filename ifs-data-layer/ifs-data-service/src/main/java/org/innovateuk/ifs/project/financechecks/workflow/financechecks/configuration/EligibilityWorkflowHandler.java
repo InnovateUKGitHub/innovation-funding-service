@@ -55,6 +55,10 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ELIGIBILITY_APPROVED), partnerOrganisation);
     }
 
+    public boolean eligibilityReset(PartnerOrganisation partnerOrganisation, User internalUser) {
+        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ELIGIBILITY_RESET), partnerOrganisation);
+    }
+
     public EligibilityProcess getProcess(PartnerOrganisation partnerOrganisation) {
         return getCurrentProcess(partnerOrganisation);
     }

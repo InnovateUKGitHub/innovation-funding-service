@@ -5,9 +5,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
@@ -17,24 +15,20 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class ApplicationFinanceServiceImplTest extends BaseServiceUnitTest<ApplicationFinanceServiceImpl> {
@@ -112,41 +106,6 @@ public class ApplicationFinanceServiceImplTest extends BaseServiceUnitTest<Appli
         assertTrue(result.isSuccess());
 
         assertEquals(singletonList(expectedFinance), result.getSuccess());
-    }
-
-    @Test
-    public void organisationSeeksFunding() {
-        Long competitionId = 1L;
-        Long applicationId = 1L;
-        Long organisationId = 1L;
-        Long projectId = 1L;
-
-        Competition competition = newCompetition().withId(competitionId).build();
-
-        Application application = newApplication().withId(applicationId).withCompetition(competition).build();
-
-        Organisation organisation = newOrganisation().withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
-        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
-
-        ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).build();
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(applicationFinance);
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withOrganisation(organisationId)
-                .withGrantClaimPercentage(20).build();
-        when(applicationFinanceMapperMock.mapToResource(applicationFinance)).thenReturn(applicationFinanceResource);
-
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competitionId, organisation.getOrganisationType().getId())).thenReturn(organisationFinanceDefaultHandlerMock);
-
-        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(applicationFinanceResource.getFinanceOrganisationDetails());
-
-        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, "", "", "", 20, BigDecimal.ZERO, applicationFinance, null)));
-
-        ServiceResult<Boolean> result = service.organisationSeeksFunding(projectId, applicationId, organisationId);
-
-        assertTrue(result.isSuccess());
-
-        assertTrue(result.getSuccess());
     }
 
     @Test

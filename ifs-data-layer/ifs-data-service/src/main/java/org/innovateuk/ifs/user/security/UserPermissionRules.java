@@ -32,13 +32,8 @@ import static java.util.Collections.disjoint;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isCompAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemMaintenanceUser;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * Permission rules that determines who can perform CRUD operations based around Users.
@@ -115,14 +110,29 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any user's email address")
-    public boolean systemMaintenanceUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "IFS admins can update all users email addresses")
+    public boolean ifsAdminCanUpdateAllEmailAddresses(UserResource userToUpdate, UserResource user) {
+        return user.hasRole(IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "Support users can update external users email addresses ")
+    public boolean supportCanUpdateExternalUsersEmailAddresses(UserResource userToUpdate, UserResource user) {
+        return userToUpdate.isExternalUser() && user.hasRole(SUPPORT);
+    }
+
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "System Maintenance update all users email addresses")
+    public boolean systemMaintenanceUserCanUpdateUsersEmailAddresses(UserResource userToUpdate, UserResource user) {
         return isSystemMaintenanceUser(user);
     }
 
-    @PermissionRule(value = "READ", description = "Internal users can view everyone")
+    @PermissionRule(value = "READ_INTERNAL", description = "Administrators can view internal users")
     public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+        return user.hasAnyRoles(IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "READ", description = "Support users and administrators can view external users")
+    public boolean supportUsersCanViewExternalUsers(UserPageResource userToView, UserResource user) {
+        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
     }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
@@ -242,18 +252,28 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "DEACTIVATE", description = "IFS Administrator can deactivate Users")
-    public boolean ifsAdminCanDeactivateUsers(UserResource userToCreate, UserResource user) {
+    public boolean ifsAdminCanDeactivateUsers(UserResource userToDeactivate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
+    @PermissionRule(value = "DEACTIVATE", description = "A Support user can deactivate external Users")
+    public boolean supportUserCanDeactivateExternalUsers(UserResource userToDeactivate, UserResource user) {
+        return userToDeactivate.isExternalUser() && user.hasRole(SUPPORT);
+    }
+
     @PermissionRule(value = "DEACTIVATE", description = "System Maintenance can deactivate Users")
-    public boolean systemMaintenanceUserCanDeactivateUsers(UserResource userToCreate, UserResource user) {
+    public boolean systemMaintenanceUserCanDeactivateUsers(UserResource userToDeactivate, UserResource user) {
         return isSystemMaintenanceUser(user);
     }
 
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
-    public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
+    public boolean ifsAdminCanReactivateUsers(UserResource userToReactivate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
+    }
+
+    @PermissionRule(value = "ACTIVATE", description = "A Support user can reactivate external Users")
+    public boolean supportUserCanReactivateExternalUsers(UserResource userToActivate, UserResource user) {
+        return userToActivate.isExternalUser() && user.hasRole(SUPPORT);
     }
 
     @PermissionRule(value = "AGREE_TERMS", description = "A user can accept the site terms and conditions")
