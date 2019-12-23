@@ -15,7 +15,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back',linkUrl='/', dynamicBackLink=${true})" />
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${ineligibleForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${ineligibleForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to mark this application as ineligible.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(ineligibleForm)" />
         </div>

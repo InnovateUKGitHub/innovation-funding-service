@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to create your account.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -64,7 +64,7 @@
 
             <h3 class="govuk-heading-s">Email</h3>
             <p class="govuk-body" th:text="${model.email}">name@domain.com</p>
-            
+
             <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
 
             <button class="govuk-button govuk-!-margin-top-6">Create account</button>

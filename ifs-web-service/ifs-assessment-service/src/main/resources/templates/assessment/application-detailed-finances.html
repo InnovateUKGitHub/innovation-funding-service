@@ -48,7 +48,7 @@
 
                 <th:block th:unless="${model.academic}" th:with="model=${costsViewModel}" th:object="${form}">
                     <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Detailed finances</h2>
-                    <div class="govuk-accordion" data-module="accordion" id="accordion-finances">
+                    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
                         <th:block th:insert="application/your-project-costs-fragments :: labour" />
                         <th:block th:insert="application/your-project-costs-fragments :: overheads" />
                         <th:block th:insert="application/your-project-costs-fragments :: materials" />

@@ -16,7 +16,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main"
           th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId})}">
         <div th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" class="govuk-error-summary"
-             role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+             role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem saving your
                 response.</h2>
             <div class="govuk-error-summary__body">
@@ -88,7 +88,7 @@
 
             <h2 class="govuk-heading-m">Queries</h2>
 
-            <div class="govuk-accordion" data-module="accordion" id="accordion-queries">
+            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-queries">
                 <div class="govuk-accordion__section"
                      th:classappend="${model.isSingleQuery() ? 'govuk-accordion__section--expanded' : ''}"
                      th:each="query, iteration : ${model.getPendingQueries()}"

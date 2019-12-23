@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                <div class="govuk-error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <div class="govuk-error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
                     <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem saving your comment.</h2>
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">

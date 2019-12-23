@@ -19,7 +19,7 @@
              aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
-             data-module="error-summary">
+             data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
@@ -47,7 +47,7 @@
                 organisation can access and edit your project finances. We recommend assigning completion of your project finances
                 to one member of your team.</p>
 
-            <div class="govuk-accordion" data-module="accordion" id="accordion-finances">
+            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
                 <th:block th:insert="application/your-project-costs-fragments :: labour"/>
                 <th:block th:insert="application/your-project-costs-fragments :: overheads"/>
                 <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads"/>
@@ -89,7 +89,7 @@
                                 </span>
                         </th:block>
 
-                        <div class="govuk-radios" data-module="radios">
+                        <div class="govuk-radios">
                             <div class="govuk-radios__item" data-target="vatRegistered-totals"
                                  data-target-clear-validation="true" data-target-clear-form="true">
                                 <input class="govuk-radios__input"
