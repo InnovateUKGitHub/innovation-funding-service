@@ -316,14 +316,6 @@ public class Application implements ProcessActivity {
         this.completion = completion;
     }
 
-    public Boolean getStateAidAgreed() {
-        return stateAidAgreed;
-    }
-
-    public void setStateAidAgreed(Boolean stateAidAgreed) {
-        this.stateAidAgreed = stateAidAgreed;
-    }
-
     public ResearchCategory getResearchCategory() {
         if(researchCategory!=null) {
             return researchCategory.getCategory();

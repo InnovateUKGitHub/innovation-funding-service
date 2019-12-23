@@ -1,5 +1,24 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.finance.resource.*;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.AuthenticationHelper;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.math.BigDecimal;
+import java.time.YearMonth;
+
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -9,55 +28,22 @@ import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithGrowthT
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-
-import java.math.BigDecimal;
-import java.time.YearMonth;
-import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
-import org.innovateuk.ifs.finance.resource.GrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
 
 public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<AbstractOrganisationFinanceService> {
 
     @Mock
     BaseFinanceResource finance;
-
     @Mock
     OrganisationService organisationService;
-
     @Mock
     CompetitionService competitionService;
-
     @Mock
     GrantClaimMaximumService grantClaimMaximumService;
-
     @Mock
     AuthenticationHelper authenticationHelper;
-
     @Mock
     GrantClaim grantClaim;
 
@@ -65,14 +51,12 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     private static final long targetId = 2L;
     private static final long competitionId = 3L;
     private OrganisationResource organisation;
-    private OrganisationType organisationType;
     private CompetitionResource competition;
     private FinanceRowItem financeRowItem;
     private OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource;
     private OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource;
     private EmployeesAndTurnoverResource employeesAndTurnoverResource;
     private GrowthTableResource growthTableResource;
-    private UserResource userResource;
 
     @Before
     public void setup() {
@@ -91,13 +75,11 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
             .withOrganisationSize(OrganisationSize.SMALL)
             .withTurnover(BigDecimal.valueOf(4))
             .withHeadCount(5L)
-            .withStateAidAgreed(true)
             .build();
         organisationFinancesWithGrowthTableResource = newOrganisationFinancesWithGrowthTableResource()
             .withOrganisationSize(OrganisationSize.SMALL)
             .withTurnover(BigDecimal.valueOf(6))
             .withHeadCount(7L)
-            .withStateAidAgreed(true)
             .withAnnualExport(BigDecimal.valueOf(8))
             .withAnnualProfits(BigDecimal.valueOf(9))
             .withFinancialYearEnd(YearMonth.now())
@@ -140,11 +122,6 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
             @Override
             protected void resetYourFundingSection(BaseFinanceResource baseFinanceResource, long competitionId,
                                                    long userId) {
-            }
-
-            @Override
-            protected ServiceResult<Void> updateStateAidAgreed(long targetId) {
-                return serviceSuccess();
             }
         };
     }

@@ -66,14 +66,4 @@ public class ApplicationOrganisationFinanceServiceImpl extends AbstractOrganisat
                         ));
 
     }
-
-    @Override
-    protected ServiceResult<Void> updateStateAidAgreed(long targetId) {
-        return applicationService.getApplicationById(targetId).
-            andOnSuccess(application -> {
-                application.setStateAidAgreed(true);
-                return applicationService.saveApplicationDetails(targetId, application);
-            }).
-            andOnSuccessReturnVoid();
-    }
 }
