@@ -59,7 +59,6 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
     private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @Override
-    @Transactional
     public ServiceResult<Void> uploadFeedback(String contentType, String contentLength, String originalFilename, long applicationId, HttpServletRequest request) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment ->
 
@@ -79,7 +78,6 @@ public class InterviewApplicationFeedbackServiceImpl implements InterviewApplica
     }
 
     @Override
-    @Transactional
     public ServiceResult<Void> deleteFeedback(long applicationId) {
         return findAssignmentByApplicationId(applicationId).andOnSuccess(interviewAssignment -> {
             long fileId = interviewAssignment.getMessage().getFeedback().getId();

@@ -45,7 +45,7 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  * Service for allocating applications to assessors in interview panels
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class InterviewAllocationServiceImpl implements InterviewAllocationService {
 
     @Autowired
@@ -173,12 +173,14 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> unallocateApplication(long assessorId, long applicationId) {
         interviewRepository.deleteOneByParticipantUserIdAndTargetId(assessorId, applicationId);
         return serviceSuccess();
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> notifyAllocation(InterviewNotifyAllocationResource interviewNotifyAllocationResource) {
         return getInterviewParticipant(interviewNotifyAllocationResource.getAssessorId(), interviewNotifyAllocationResource.getCompetitionId())
                 .andOnSuccess(assessor -> createInterviews(interviewNotifyAllocationResource, assessor))

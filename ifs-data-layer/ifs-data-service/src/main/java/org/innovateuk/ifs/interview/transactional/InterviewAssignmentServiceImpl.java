@@ -8,7 +8,6 @@ import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentMessageOutcomeRepository;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
-import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -29,8 +28,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.INTERVIEW_PANEL_INVITE_ALREADY_CREATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
-import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -54,6 +52,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     private OrganisationRepository organisationRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
             final Page<Application> pagedResult =
                     applicationRepository.findSubmittedApplicationsNotOnInterviewPanel(competitionId, pageable);
@@ -68,10 +67,11 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
         }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable) {
         final Page<InterviewAssignment> pagedResult =
                 interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(
-                        competitionId, InterviewAssignmentState.CREATED, pageable);
+                        competitionId, CREATED, pageable);
 
         return serviceSuccess(new InterviewAssignmentStagedApplicationPageResource(
                 pagedResult.getTotalElements(),
@@ -84,11 +84,12 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, Pageable pageable) {
 
         final Page<InterviewAssignment> pagedResult =
                 interviewAssignmentRepository
-                        .findByTargetCompetitionIdAndActivityStateNot(competitionId, InterviewAssignmentState.CREATED, pageable);
+                        .findByTargetCompetitionIdAndActivityStateNot(competitionId, CREATED, pageable);
 
         return serviceSuccess(new InterviewAssignmentApplicationPageResource(
                 pagedResult.getTotalElements(),
@@ -123,17 +124,18 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     @Override
     public ServiceResult<Void> unstageApplication(long applicationId) {
-        interviewAssignmentRepository.deleteByTargetIdAndActivityState(applicationId, InterviewAssignmentState.CREATED);
+        interviewAssignmentRepository.deleteByTargetIdAndActivityState(applicationId, CREATED);
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<Void> unstageApplications(long competitionId) {
-        interviewAssignmentRepository.deleteByTargetCompetitionIdAndActivityState(competitionId, InterviewAssignmentState.CREATED);
+        interviewAssignmentRepository.deleteByTargetCompetitionIdAndActivityState(competitionId, CREATED);
         return serviceSuccess();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<Boolean> isApplicationAssigned(long applicationId) {
         return serviceSuccess(interviewAssignmentRepository.existsByTargetIdAndActivityStateIn(applicationId,
                 asList(AWAITING_FEEDBACK_RESPONSE,
@@ -192,7 +194,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     }
 
     private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {
-        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateIn(application.getId(), singletonList(InterviewAssignmentState.CREATED))) {
+        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateIn(application.getId(), singletonList(CREATED))) {
             final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
             final InterviewAssignment panel = new InterviewAssignment(application, pr);
 

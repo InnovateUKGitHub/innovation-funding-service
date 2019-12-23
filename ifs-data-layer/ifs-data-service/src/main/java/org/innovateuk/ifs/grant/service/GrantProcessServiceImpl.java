@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class GrantProcessServiceImpl implements GrantProcessService {
     @Autowired
     private GrantProcessRepository grantProcessRepository;
@@ -27,7 +27,6 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     private ApplicationRepository applicationRepository;
 
     @Override
-    @Transactional
     public void createGrantProcess(long applicationId) {
         Optional<Application> application = applicationRepository.findById(applicationId);
         application.ifPresent((a) -> {
@@ -38,24 +37,24 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GrantProcess> findReadyToSend() {
         return grantProcessRepository.findByPendingIsTrue();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<GrantProcess> findOneReadyToSend() {
         return grantProcessRepository.findFirstByPendingIsTrue();
     }
 
     @Override
-    @Transactional
     public void sendSucceeded(long applicationId) {
         GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
         grantProcessRepository.save(process.sendSucceeded(ZonedDateTime.now()));
     }
 
     @Override
-    @Transactional
     public void sendFailed(long applicationId, String message) {
         GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
         grantProcessRepository.save(process.sendFailed(ZonedDateTime.now(), message));
