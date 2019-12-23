@@ -28,7 +28,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     private UserResource systemMaintenanceUser;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         systemMaintenanceUser = newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_MAINTAINER)).build();
         clearUniqueIds();
     }
@@ -40,7 +40,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void findAllVisible() throws Exception {
+    public void findAllVisible()  {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -69,7 +69,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void findAllVisibleByType() throws Exception {
+    public void findAllVisibleByType()  {
         // save new alerts with date ranges that should make them visible now
         ZonedDateTime now = now();
         ZonedDateTime oneSecondAgo = now.minusSeconds(1);
@@ -100,7 +100,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
 
     @Test
-    public void create() throws Exception {
+    public void create()  {
         setLoggedInUser(systemMaintenanceUser);
 
         AlertResource alertResource = AlertResourceBuilder.newAlertResource()
@@ -118,7 +118,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void delete() throws Exception {
+    public void delete()  {
         setLoggedInUser(systemMaintenanceUser);
 
         // save a new alert
@@ -141,7 +141,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     }
 
     @Test
-    public void deleteAllByType() throws Exception {
+    public void deleteAllByType()  {
         setLoggedInUser(systemMaintenanceUser);
 
         controller.deleteAllByType(AlertType.MAINTENANCE);
