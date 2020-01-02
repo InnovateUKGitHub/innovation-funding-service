@@ -69,9 +69,6 @@ public class InterviewAllocationServiceImpl implements InterviewAllocationServic
     @Autowired
     private InterviewMapper interviewMapper;
 
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
-
     enum Notifications {
         NOTIFY_ASSESSOR_OF_INTERVIEW_ALLOCATIONS
     }
