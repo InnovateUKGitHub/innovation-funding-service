@@ -13,11 +13,15 @@ getParameter () {
 #1 = paramValue 2 = writePath
 writeParameter () {
   echo -e $1 > $2
+  echo $1
+  echo $2
 }
 
 #1 = paramValue 2 = writePath
 appendParameter () {
   echo -e $1 >> $2
+  echo $1
+  echo $2
 }
 
 mkdir -p ifs-auth-service/ifs-ldap-service/src/main/docker/certs
@@ -26,7 +30,7 @@ mkdir -p ifs-auth-service/ifs-ldap-service/src/main/docker/certs
 writeParameter "$(getParameter "/CI/IFS/$ENV/LDAP/ENCRYPTION/KEY")" "ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key"
 #IFS_LDAP_ENCRYPTION_KEY=$(docker run --rm -e AWS_PROFILE=iukorg -v $PWD/ifs-auth-service/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/$ENV/LDAP/ENCRYPTION/KEY" --with-decryption | jq ".Parameter.Value" | tr -d \")
 #echo -e $IFS_LDAP_ENCRYPTION_KEY > ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key
-writeParameter "$(getParameter "/CI/IFS/$ENV/LDAP/ENCRYPTION/CERT")" "ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key"
+writeParameter "$(getParameter "/CI/IFS/$ENV/LDAP/ENCRYPTION/CERT")" "ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt"
 #IFS_LDAP_ENCRYPTION_CERT=$(docker run --rm -e AWS_PROFILE=iukorg -v $PWD/ifs-auth-service/aws:/root/.aws ssm-access-image aws ssm get-parameter --name "/CI/IFS/$ENV/LDAP/ENCRYPTION/CERT" --with-decryption | jq ".Parameter.Value" | tr -d \")
 #echo -e $IFS_LDAP_ENCRYPTION_CERT > ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt
 
