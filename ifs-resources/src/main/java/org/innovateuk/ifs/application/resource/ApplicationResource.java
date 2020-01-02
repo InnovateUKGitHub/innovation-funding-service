@@ -89,7 +89,7 @@ public class ApplicationResource {
     }
 
     @JsonIgnore
-    public String getApplicationStateDisplayName(){
+    public String getApplicationStateDisplayName() {
         return applicationState.getDisplayName();
     }
 
@@ -109,27 +109,33 @@ public class ApplicationResource {
         return resubmission;
     }
 
-    public void setResubmission(Boolean resubmission) { this.resubmission = resubmission; }
+    public void setResubmission(Boolean resubmission) {
+        this.resubmission = resubmission;
+    }
 
     public String getPreviousApplicationNumber() {
         return previousApplicationNumber;
     }
 
-    public void setPreviousApplicationNumber(String previousApplicationNumber) { this.previousApplicationNumber = previousApplicationNumber; }
+    public void setPreviousApplicationNumber(String previousApplicationNumber) {
+        this.previousApplicationNumber = previousApplicationNumber;
+    }
 
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
     }
 
-    public void setPreviousApplicationTitle(String previousApplicationTitle) { this.previousApplicationTitle = previousApplicationTitle; }
+    public void setPreviousApplicationTitle(String previousApplicationTitle) {
+        this.previousApplicationTitle = previousApplicationTitle;
+    }
 
     @JsonIgnore
-    public boolean isOpen(){
+    public boolean isOpen() {
         return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED;
     }
 
     @JsonIgnore
-    public boolean isApproved(){
+    public boolean isApproved() {
         return applicationState == ApplicationState.APPROVED;
     }
 
