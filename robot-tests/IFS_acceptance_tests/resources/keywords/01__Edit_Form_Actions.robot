@@ -5,8 +5,7 @@ Resource          ../defaultResources.robot
 #Checkbox
 the user selects the checkbox
     [Arguments]    ${checkbox}
-    ${status} =   Run Keyword and return status without screenshots   Checkbox Should Not Be Selected     css=[id="${checkbox}"], [name="${checkbox}"]
-    Run Keyword If    '${status}' == 'True'     Select checkbox     css=[id="${checkbox}"], [name="${checkbox}"]
+    Select checkbox     css=[id="${checkbox}"], [name="${checkbox}"]
     #Error checking
     the user should not see an error in the page
 
