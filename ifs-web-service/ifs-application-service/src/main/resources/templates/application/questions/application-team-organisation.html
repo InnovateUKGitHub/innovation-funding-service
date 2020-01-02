@@ -33,13 +33,14 @@
               method="post">
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
-                <label class="govuk-label--s" th:for="${#ids.next('organisationName')}">
+                <label class="govuk-label--s" for="organisationName">
                     Organisation name
                 </label>
                 <th:block th:if="${#fields.hasErrors('organisationName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
                 </th:block>
-                <input type="text"
+                <input id="organisationName"
+                       type="text"
                        class="govuk-input"
                        th:field="*{organisationName}"
                        required="required"

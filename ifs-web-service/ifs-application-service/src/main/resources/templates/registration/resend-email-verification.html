@@ -20,13 +20,14 @@
         </p>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${resendEmailVerificationForm}" method="POST">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
-                    <label class="govuk-hint" th:for="${#ids.next('email')}">
+                    <label class="govuk-hint" for="email">
                         Enter Email Address
                     </label>
                     <th:block th:if="${#fields.hasErrors('email')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input form-control-3-4"
+                    <input id="email"
+                           class="govuk-input form-control-3-4"
                            th:errorclass="govuk-input--error"
                            type="email"
                            th:field="*{email}"

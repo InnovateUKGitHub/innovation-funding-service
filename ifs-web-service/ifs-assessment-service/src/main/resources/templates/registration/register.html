@@ -28,13 +28,14 @@
                 <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
                     <h2 class="govuk-heading-m">Your details</h2>
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label govuk-label--s" th:for="${ids.next('firstName')}">
+                        <label class="govuk-label govuk-label--s" for="firstName">
                             First name
                         </label>
                         <th:block th:if="${#fields.hasErrors('firstName')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                         </th:block>
-                        <input class="govuk-input govuk-!-width-one-half"
+                        <input id="firstName"
+                               class="govuk-input govuk-!-width-one-half"
                                th:errorclass="govuk-input--error"
                                type="text"
                                th:field="*{firstName}"
@@ -74,14 +75,15 @@
                     <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
                     <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label govuk-label--s" th:for="${ids.next('phoneNumber')}">
+                        <label class="govuk-label govuk-label--s" for="phoneNumber">
                             Phone number
                         </label>
                         <span class="govuk-hint">We may use this to contact you about the application.</span>
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                         </th:block>
-                        <input class="govuk-input govuk-!-width-one-half"
+                        <input id="phoneNumber"
+                               class="govuk-input govuk-!-width-one-half"
                                th:errorclass="govuk-input--error"
                                type="tel"
                                th:field="*{phoneNumber}"
