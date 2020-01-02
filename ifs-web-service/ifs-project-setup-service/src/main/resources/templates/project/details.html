@@ -33,17 +33,13 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                    <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}" class="govuk-link">Target start date</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.spendProfileGenerated}">Target start date</th:block>
+                    <a class="govuk-link">Target start date</a>
                 </td>
                 <td class="govuk-table__cell" id="start-date">
                     <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
                     <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
                 </td>
-                <td class="govuk-table__cell alignright">
-                    <strong th:if="${model.project.targetStartDate == null}" id="start-date-status" class="incomplete-status">Incomplete</strong>
-                    <strong th:unless="${model.project.targetStartDate == null}" id="start-date-status" class="complete-status">Complete</strong>
-                </td>
+                <td class="govuk-table__cell alignright"></td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">

@@ -2,15 +2,11 @@
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
 
 /**
  * A service for dealing with Project Details Resources via the appropriate Rest services
@@ -37,11 +33,6 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     @Override
     public ServiceResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postcode) {
         return projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postcode).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-        return projectDetailsRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
     }
 
     @Override
