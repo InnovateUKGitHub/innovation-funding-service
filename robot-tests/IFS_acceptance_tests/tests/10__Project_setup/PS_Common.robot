@@ -289,12 +289,12 @@ project manager submits both documents
     log in as a different user          ${email}  ${password}
     the user navigates to the page      ${server}/project-setup/project/${project}/document/all
     the user clicks the button/link     link = Collaboration agreement
-    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user uploads the file           css = .inputfile    ${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
     the user clicks the button/link     link = Exploitation plan
-    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user uploads the file           css = .inputfile    ${upload_folder}/${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
 
@@ -399,8 +399,8 @@ the user enter the Correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
 
 the user uploads to the collaboration agreement/exploitation plan
-    [Arguments]  ${file_name}
-    choose file  name = document  ${upload_folder}/${file_name}
+    [Arguments]   ${file_name}
+    the user uploads the file  css = .inputfile  ${file_name}
 
 the user goes to documents page
     [Arguments]  ${link1}  ${link2}
@@ -537,7 +537,6 @@ the user completes your organisation
     the user enters text to a text field                    css = #annualExportAtLastFinancialYear    4000
     the user enters text to a text field                    css = #researchAndDevelopmentSpendAtLastFinancialYear    5660
     the user enters text to a text field                    css = #headCountAtLastFinancialYear    0
-    the user selects the checkbox                           stateAidAgreed
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 The new partner can complete Your organisation

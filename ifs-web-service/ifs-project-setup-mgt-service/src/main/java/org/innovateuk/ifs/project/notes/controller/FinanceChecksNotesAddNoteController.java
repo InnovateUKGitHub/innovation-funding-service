@@ -21,13 +21,14 @@ import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.EncodedCookieService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -155,7 +156,6 @@ public class FinanceChecksNotesAddNoteController {
                                         UserResource loggedInUser,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
-
         if (postParametersMatchOrigin(request, projectId, organisationId, loggedInUser.getId())) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
             Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId));

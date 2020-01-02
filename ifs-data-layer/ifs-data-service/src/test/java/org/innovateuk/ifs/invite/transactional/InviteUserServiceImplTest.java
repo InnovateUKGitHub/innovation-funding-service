@@ -4,7 +4,10 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.builder.RoleInviteBuilder;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
+import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.mapper.RoleInviteMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
@@ -341,10 +344,10 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         roleInviteResource.setEmail("Arden.Pimenta@innovateuk.test");
         roleInviteResource.setRoleName("ifs_administrator");
 
-        when(roleInviteRepositoryMock.findByStatus(SENT, pageable)).thenReturn(page);
+        when(roleInviteRepositoryMock.findByEmailContainsAndStatus("", SENT, pageable)).thenReturn(page);
         when(roleInviteMapperMock.mapToResource(Mockito.any(RoleInvite.class))).thenReturn(roleInviteResource);
 
-        ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites(pageable);
+        ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites("", pageable);
         assertTrue(result.isSuccess());
 
         RoleInvitePageResource resultObject = result.getSuccess();

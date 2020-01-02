@@ -8,6 +8,14 @@ IFS.competitionManagement.repeater = (function () {
       jQuery(document).on('click', '[data-remove-row]', function () {
         IFS.competitionManagement.repeater.handleRemoveRow(this)
       })
+      if (jQuery('.contentGroup').length) {
+        IFS.core.upload.registerSuccessHandler(function (html, wrapper) {
+          var contentGroup = wrapper.closest('.contentGroup')
+          var index = jQuery('.contentGroup').index(contentGroup)
+          var id = html.find('.contentGroup:eq(' + index + ') input:hidden[id*="id"]').val()
+          contentGroup.find('input:hidden[id*="id"]').val(id)
+        })
+      }
     },
     // Add row
     handleAddRow: function (el) {
@@ -108,24 +116,26 @@ IFS.competitionManagement.repeater = (function () {
       }
       var headerRequiredErrorMessage = 'Please enter a heading.'
       var contentRequiredErrorMessage = 'Please enter content.'
-
       var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
-                    '<div class="govuk-form-group">' +
-                      '<label class="govuk-label" for="contentGroups[' + idCount + '].heading">Heading</label>' +
-                      '<input class="govuk-input" id="contentGroups[' + idCount + '].heading" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
-                    '</div>' +
-                    '<div class="govuk-form-group textarea-wrapped">' +
-                      '<label class="govuk-label" for="contentGroups[' + idCount + '].content">Content</label>' +
-                          '<textarea id="contentGroups[' + idCount + '].content" cols="30" rows="10" class="govuk-textarea" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
-                      '</div>' +
-                    '<div class="govuk-form-group upload-section">' +
-                        '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
-                        '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>' +
-                        '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
-                        '<p class="govuk-body uploaded-file">No file currently uploaded</p>' +
-                    '</div>' +
-                    '<button type="button" class="button-clear govuk-!-margin-0" data-remove-row="contentGroup">Remove section</button>' +
-                  '</div>'
+        '<input type="hidden" id="contentGroups' + idCount + '.id" name="contentGroups[' + count + '].id" value="" />' +
+        '<div class="govuk-form-group">' +
+        '<label class="govuk-label" for="contentGroups[' + idCount + '].heading">Heading</label>' +
+        '<input class="govuk-input" id="contentGroups[' + idCount + '].heading" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
+        '</div>' +
+        '<div class="govuk-form-group textarea-wrapped">' +
+        '<label class="govuk-label" for="contentGroups[' + idCount + '].content">Content</label>' +
+        '<textarea id="contentGroups[' + idCount + '].content" cols="30" rows="10" class="govuk-textarea" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
+        '</div>' +
+        '<div class="govuk-form-group upload-section">' +
+            '<div class="ajax-upload" data-js-number-of-files="1" data-js-upload-button-name="uploadFile" data-js-upload-file-input="contentGroups[' + count + '].attachment">' +
+              '<p class="govuk-body no-file-uploaded">No file currently uploaded</p>' +
+              '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
+              '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary govuk-!-margin-top-6">Upload</label>' +
+              '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
+            '</div>' +
+          '</div>' +
+          '<button type="button" class="button-clear govuk-!-margin-0" data-remove-row="contentGroup">Remove section</button>' +
+        '</div>'
       if (rows.length) {
         rows.last().after(html)
       } else {

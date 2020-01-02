@@ -2,8 +2,9 @@ package org.innovateuk.ifs.management.admin.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -27,15 +28,26 @@ public class UserListViewModel {
 
     private long pendingCount;
 
-    private Pagination activeUsersPagination;
+    private PaginationViewModel activeUsersPagination;
 
-    private Pagination inactiveUsersPagination;
+    private PaginationViewModel inactiveUsersPagination;
 
-    private Pagination pendingInvitesPagination;
+    private PaginationViewModel pendingInvitesPagination;
 
-    public UserListViewModel(String tab, List<UserResource> activeUsers, List<UserResource> inactiveUsers, List<RoleInviteResource> pendingInvites,
-                             long activeCount, long inactiveCount, long pendingCount,
-                             Pagination activeUsersPagination, Pagination inactiveUsersPagination, Pagination pendingInvitesPagination) {
+    private boolean includeInternalUsers;
+
+    public UserListViewModel(String tab,
+                             String filter,
+                             List<UserResource> activeUsers,
+                             List<UserResource> inactiveUsers,
+                             List<RoleInviteResource> pendingInvites,
+                             long activeCount,
+                             long inactiveCount,
+                             long pendingCount,
+                             PaginationViewModel activeUsersPagination,
+                             PaginationViewModel inactiveUsersPagination,
+                             PaginationViewModel pendingInvitesPagination,
+                             boolean includeInternalUsers) {
         this.tab = tab;
         this.activeUsers = activeUsers;
         this.inactiveUsers = inactiveUsers;
@@ -46,6 +58,7 @@ public class UserListViewModel {
         this.activeUsersPagination = activeUsersPagination;
         this.inactiveUsersPagination = inactiveUsersPagination;
         this.pendingInvitesPagination = pendingInvitesPagination;
+        this.includeInternalUsers = includeInternalUsers;
     }
 
     public long getActiveCount() {
@@ -72,20 +85,28 @@ public class UserListViewModel {
         return pendingInvites;
     }
 
-    public Pagination getActiveUsersPagination() {
+    public PaginationViewModel getActiveUsersPagination() {
         return activeUsersPagination;
     }
 
-    public Pagination getInactiveUsersPagination() {
+    public PaginationViewModel getInactiveUsersPagination() {
         return inactiveUsersPagination;
     }
 
-    public Pagination getPendingInvitesPagination() {
+    public PaginationViewModel getPendingInvitesPagination() {
         return pendingInvitesPagination;
     }
 
     public String getTab() {
         return tab;
+    }
+
+    public boolean isIncludeInternalUsers() {
+        return includeInternalUsers;
+    }
+
+    public long getTotalCount() {
+        return getActiveCount() + getInactiveCount() + getPendingCount();
     }
 
     @Override
@@ -107,6 +128,7 @@ public class UserListViewModel {
                 .append(activeUsersPagination, that.activeUsersPagination)
                 .append(inactiveUsersPagination, that.inactiveUsersPagination)
                 .append(pendingInvitesPagination, that.pendingInvitesPagination)
+                .append(includeInternalUsers, that.includeInternalUsers)
                 .isEquals();
     }
 
@@ -123,6 +145,24 @@ public class UserListViewModel {
                 .append(activeUsersPagination)
                 .append(inactiveUsersPagination)
                 .append(pendingInvitesPagination)
+                .append(includeInternalUsers)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("tab", tab)
+                .append("activeUsers", activeUsers)
+                .append("inactiveUsers", inactiveUsers)
+                .append("pendingInvites", pendingInvites)
+                .append("activeCount", activeCount)
+                .append("inactiveCount", inactiveCount)
+                .append("pendingCount", pendingCount)
+                .append("activeUsersPagination", activeUsersPagination)
+                .append("inactiveUsersPagination", inactiveUsersPagination)
+                .append("pendingInvitesPagination", pendingInvitesPagination)
+                .append("includeInternalUsers", includeInternalUsers)
+                .toString();
     }
 }
