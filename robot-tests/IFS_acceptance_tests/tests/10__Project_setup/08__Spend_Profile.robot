@@ -204,7 +204,7 @@ Non-lead partner can view spend profile page
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
-    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January 2020")
+    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January 2021")
     And the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
 
 Industrial partner can choose cancel on the dialogue
@@ -245,7 +245,7 @@ Academic partner can view spend profile page
 Academic partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
-    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January 2020")
+    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January 2021")
     And the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
 
 Academic partner can see the alternative academic view of the spend profile
@@ -645,7 +645,7 @@ the lead partner can view the generated spend profile
     the user should see the element              jQUery = p:contains("This overview shows the spend profile status of each organisation in your project.")
 
 the lead partner can see correct project start date and duration
-    the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January 2020")
+    the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January 2021")
     the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
 
 the lead partner can see calculations in the spend profile table
