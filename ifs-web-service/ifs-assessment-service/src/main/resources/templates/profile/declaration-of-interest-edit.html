@@ -47,31 +47,31 @@
                     <h3 class="govuk-heading-m govuk-!-margin-0">Principal employer and role</h3>
 
                     <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label govuk-label--s" th:for="${#ids.next('principalEmployer')}">
+                        <label class="govuk-label govuk-label--s" for="principalEmployer">
                             Principal employer
                             <th:block th:if="${#fields.hasErrors('principalEmployer')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="govuk-input" type="text" th:field="*{principalEmployer}"
+                        <input id="principalEmployer" class="govuk-input" type="text" th:field="*{principalEmployer}"
                                th:errorclass="fgovuk-input--error" required="required"
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.principalEmployer.required}" />
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('role')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label govuk-label--s" th:for="${#ids.next('role')}">
+                        <label class="govuk-label govuk-label--s" for="role">
                             Role
                             <th:block th:if="${#fields.hasErrors('role')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="govuk-input" type="text" th:field="*{role}"
+                        <input id="role" class="govuk-input" type="text" th:field="*{role}"
                                th:errorclass="govuk-input--error" required="required"
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.role.required}" />
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label govuk-label--s"  th:for="${#ids.next('professionalAffiliations')}">
+                        <label class="govuk-label govuk-label--s"  th:for="professionalAffiliations">
                             List any bodies you are currently a member of as part of your profession.
                             <th:block th:if="${#fields.hasErrors('professionalAffiliations')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('professionalAffiliations')}" th:text="${err}"></span>
@@ -79,6 +79,7 @@
                         </label>
                         <div class="textarea-wrapped word-count">
                             <textarea
+                                id="professionalAffiliations"
                                 class="govuk-textarea"
                                 cols="30"
                                 rows="3"
@@ -397,13 +398,14 @@
 
                     <div class="govuk-form-group js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <label class="govuk-label" th:for="${#ids.next('familyFinancialInterests)}">Please describe these interests
+                            <label class="govuk-label" for="familyFinancialInterests">Please describe these interests
                                 <th:block th:if="${#fields.hasErrors('familyFinancialInterests')}">
                                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}"></span>
                                 </th:block>
                             </label>
                             <div class="textarea-wrapped word-count">
                                 <textarea
+                                    id="familyFinancialInterests"
                                     class="govuk-textarea"
                                     cols="30"
                                     rows="3"
