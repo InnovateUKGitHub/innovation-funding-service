@@ -13,12 +13,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-1">
                     Labour
-                    <span class="finance-total" data-mirror="#section-total-labour"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-labour"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-labour"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-labour"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-1" class="govuk-accordion__section-content"
@@ -297,12 +297,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-2">
                     Overhead costs
-                    <span class="finance-total" data-mirror="#section-total-overhead"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-overhead"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-overhead"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-overhead"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-2" class="govuk-accordion__section-content"
@@ -548,22 +548,20 @@
             PROCUREMENT OVERHEADS
 
 *********************************/-->
-
 <th:block th:fragment="procurement-overheads"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
-
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
             <div class="govuk-accordion__section-header">
                 <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-10">
                 Overhead costs
+                </span>
                 <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
                       th:text="${#ifsUtil.calculatePercentage(form.totalProcurementOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
-                </span>
                 </h3>
             </div>
             <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
@@ -806,12 +804,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-3">
                     Materials
-                    <span class="finance-total" data-mirror="#section-total-material"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-material"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalMaterialCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-material"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-material"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalMaterialCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-3" class="govuk-accordion__section-content"
@@ -1058,12 +1056,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-4">
                     Capital usage
-                    <span class="finance-total" data-mirror="#section-total-capital-usage"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-capital-usage"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-capital-usage"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-capital-usage"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-4" class="govuk-accordion__section-content"
@@ -1370,12 +1368,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-5">
                     Subcontracting costs
-                    <span class="finance-total" data-mirror="#section-total-subcontracting"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-subcontracting"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalSubcontractingCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-subcontracting"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-subcontracting"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalSubcontractingCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-5" class="govuk-accordion__section-content"
@@ -1590,12 +1588,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-6">
                     Travel and subsistence
-                    <span class="finance-total" data-mirror="#section-total-travel"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-travel"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-travel"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-travel"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-6" class="govuk-accordion__section-content"
@@ -1829,12 +1827,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-7">
                     Other costs
-                    <span class="finance-total" data-mirror="#section-total-other"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-other"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalOtherCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-other"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-other"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalOtherCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-7" class="govuk-accordion__section-content"

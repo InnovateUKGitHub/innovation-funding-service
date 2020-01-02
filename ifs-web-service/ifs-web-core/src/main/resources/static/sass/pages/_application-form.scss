@@ -211,11 +211,16 @@ table {
   margin-bottom: 30px;
 }
 
-
 .finance-total {
-  text-align: right;
-  float: right;
-  padding-left: 20px;
+  @extend .govuk-accordion__section-button;
+}
+
+.govuk-accordion {
+  .finance-total {
+    text-align: right;
+    float: right;
+    padding-left: 20px;
+  }
 }
 
 
