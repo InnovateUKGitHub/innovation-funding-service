@@ -114,7 +114,7 @@
                                                 <a th:attr="data-js-modal=${'modal-application-team-remove-' + row.id}"
                                                    href="/"
                                                    class="govuk-link">Remove
-                                                   <span class="visuallyhidden" th:text="${row.name}"></span>
+                                                   <span class="govuk-visually-hidden" th:text="${row.name}"></span>
                                                 </a>
                                             </th:block>
                                             <th:block th:if="${row.invite}">
@@ -130,7 +130,7 @@
                                             <a th:attr="data-js-modal=${'modal-application-team-remove-organisation-' + organisation.id}"
                                                href="/"
                                                class="govuk-link">Remove organisation
-                                               <span class="visuallyhidden" th:text="${organisation.name}"></span>
+                                               <span class="govuk-visually-hidden" th:text="${organisation.name}"></span>
                                             </a>
                                         </th:block>
                                     </th:block>

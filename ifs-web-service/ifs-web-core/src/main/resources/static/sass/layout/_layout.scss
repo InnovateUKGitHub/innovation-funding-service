@@ -79,14 +79,3 @@ body {
     margin:0;
   }
 }
-/* Hide only visually, but have it available for screen readers */
-.visuallyhidden{
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect (0,0,0,0);
-  border: 0;
-}
