@@ -34,6 +34,10 @@
   .prev,
   .next {
 
+    &:focus {
+          background-color: pink//$govuk-focus-colour;
+     }
+
     a {
 
       &::before {
@@ -88,7 +92,7 @@
     }
 
     &:focus {
-      background-color: $govuk-focus-colour;
+      background-color: pink//$govuk-focus-colour;
     }
   }
 
