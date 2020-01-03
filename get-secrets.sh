@@ -4,6 +4,11 @@ AWS_PROFILE=$2
 KEY_ID=$3
 KEY=$4
 
+echo $1 |cut -c1-5
+echo $2 |cut -c1-5
+echo $3 |cut -c1-5
+echo $4 |cut -c1-5
+
 mkdir ifs-auth-service/aws/
 touch ifs-auth-service/aws/credentials
 mkdir -p ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
