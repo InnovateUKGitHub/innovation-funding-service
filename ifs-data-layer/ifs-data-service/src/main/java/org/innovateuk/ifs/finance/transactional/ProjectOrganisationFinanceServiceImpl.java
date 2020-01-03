@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-
-
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -62,11 +59,5 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
     protected void resetYourFundingSection(ProjectFinanceResource projectFinanceResource, long competitionId, long userId) {
         pendingPartnerProgressService.markYourFundingIncomplete(ProjectOrganisationCompositeId.id(projectFinanceResource.getProject(),
                 projectFinanceResource.getOrganisation())).getSuccess();
-    }
-
-    @Override
-    protected ServiceResult<Void> updateStateAidAgreed(long targetId) {
-        // nowhere to save this in Project Setup.
-        return serviceSuccess();
     }
 }

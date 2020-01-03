@@ -196,7 +196,6 @@ the user edits the organisation size
     the user clicks the button/link     link = Your organisation
     the user clicks the button/link     jQuery = button:contains("Edit")
     the user selects the radio button   organisationSize  ${org_size}
-    the user selects the checkbox       stateAidAgreed
     the user clicks the button/link     jQuery = button:contains("Mark")
     the user clicks the button/link     link = Your funding
 
@@ -219,7 +218,6 @@ the academic user marks your project costs as complete
     the user clicks the button/link        link = Your project costs
     the user enters text to a text field   css = input[name$="tsbReference"]  academic costs
     the user uploads the file              css = .upload-section input  ${5mb_pdf}
-    the user selects the checkbox          agree-terms-page
     wait for autosave
     the user clicks the button/link        jQuery = button:contains("Mark")
 
