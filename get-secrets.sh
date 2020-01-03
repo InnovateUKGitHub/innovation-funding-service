@@ -22,7 +22,7 @@ docker run -id --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/ro
 
 #1 = paramName
 getParameter () {
-  docker exec -it ssm-access-container aws ssm get-parameter --name $1 --with-decryption | jq ".Parameter.Value" | tr -d \"
+  docker exec ssm-access-container aws ssm get-parameter --name $1 --with-decryption | jq ".Parameter.Value" | tr -d \"
 }
 
 #1 = paramValue, 2 = writePath
