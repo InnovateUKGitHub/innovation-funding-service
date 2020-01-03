@@ -4,6 +4,12 @@ AWS_PROFILE=$2
 KEY_ID=$3
 KEY=$4
 
+mkdir ifs-auth-service/aws
+touch ifs-auth-service/aws/credentials
+mkdir -p ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
+mkdir -p ifs-auth-service/ifs-idp-service/src/main/docker/certs/
+mkdir -p ifs-auth-service/ifs-sp-service/src/main/docker/certs/
+
 echo -e "[$AWS_PROFILE]
 aws_access_key_id = $KEY_ID
 aws_secret_access_key = $KEY" > ifs-auth-service/aws/credentials
