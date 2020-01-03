@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.finance.builder;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-
+import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
-import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
+
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class OrganisationFinancesWithoutGrowthTableResourceBuilder
         extends BaseBuilder<OrganisationFinancesWithoutGrowthTableResource, OrganisationFinancesWithoutGrowthTableResourceBuilder> {
@@ -48,11 +48,6 @@ public class OrganisationFinancesWithoutGrowthTableResourceBuilder
 
     public OrganisationFinancesWithoutGrowthTableResourceBuilder withTurnover(BigDecimal turnover) {
         return with(organisationFinancesWithoutGrowthTableResource -> setField("turnover", turnover,
-            organisationFinancesWithoutGrowthTableResource));
-    }
-
-    public OrganisationFinancesWithoutGrowthTableResourceBuilder withStateAidAgreed(boolean stateAidAgreed) {
-        return with(organisationFinancesWithoutGrowthTableResource -> setField("stateAidAgreed", stateAidAgreed,
             organisationFinancesWithoutGrowthTableResource));
     }
 }
