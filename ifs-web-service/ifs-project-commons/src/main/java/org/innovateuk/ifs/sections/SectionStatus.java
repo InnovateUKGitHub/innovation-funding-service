@@ -8,6 +8,7 @@ public enum SectionStatus {
     EMPTY(""),
     HOURGLASS("waiting"),
     FLAG("require-action"),
+    LEAD_ACTION_FLAG("lead-action-required"),
     TICK("complete"),
     CROSS("rejected");
 
