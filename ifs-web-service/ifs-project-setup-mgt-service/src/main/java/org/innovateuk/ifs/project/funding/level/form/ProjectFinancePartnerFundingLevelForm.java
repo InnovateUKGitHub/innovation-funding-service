@@ -1,27 +1,23 @@
 package org.innovateuk.ifs.project.funding.level.form;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ProjectFinancePartnerFundingLevelForm {
 
-    @NotNull(message = "{validation.finance.funding.sought.required}")
-    @DecimalMin(value = "1", message = "{validation.finance.funding.sought.min}")
-    private BigDecimal funding;
+    private BigDecimal fundingLevel;
 
     public ProjectFinancePartnerFundingLevelForm() {
     }
 
-    public ProjectFinancePartnerFundingLevelForm(BigDecimal funding) {
-        this.funding = funding;
+    public ProjectFinancePartnerFundingLevelForm(BigDecimal fundingLevel) {
+        this.fundingLevel = fundingLevel;
     }
 
-    public BigDecimal getFunding() {
-        return funding;
+    public BigDecimal getFundingLevel() {
+        return fundingLevel;
     }
 
-    public void setFunding(BigDecimal funding) {
-        this.funding = funding;
+    public void setFundingLevel(BigDecimal fundingLevel) {
+        this.fundingLevel = fundingLevel;
     }
 }

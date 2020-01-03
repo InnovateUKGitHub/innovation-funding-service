@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -30,7 +31,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
 
 @Controller
-@RequestMapping("/project/{projectId}/funding-sought")
+@RequestMapping("/project/{projectId}/funding-level")
 @SecuredBySpring(value = "PROJECT_FINANCE_FUNDING", description = "Project finance team can amend funding levels in project setup.")
 @PreAuthorize("hasAuthority('project_finance')")
 public class ProjectFinanceFundingLevelController {
@@ -51,7 +52,7 @@ public class ProjectFinanceFundingLevelController {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         form.setPartners(finances.stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation,
-                        pf -> new ProjectFinancePartnerFundingLevelForm(pf.getTotalFundingSought()))));
+                        pf -> new ProjectFinancePartnerFundingLevelForm(new BigDecimal(pf.getGrantClaimPercentage())))));
         return viewFunding(projectId, finances, model);
     }
 
@@ -90,7 +91,7 @@ public class ProjectFinanceFundingLevelController {
         form.getPartners().entrySet().stream().forEach(entry -> {
             ProjectFinanceResource finance = finances.get(entry.getKey());
             GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
-            grantClaim.setAmount(entry.getValue().getFunding());
+//            grantClaim.setAmount(entry.getValue().getFunding());
             validationMessages.addAll(financeRowRestService.update(grantClaim).getSuccess());
         });
 
