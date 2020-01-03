@@ -4,7 +4,7 @@ AWS_PROFILE=$2
 KEY_ID=$3
 KEY=$4
 
-mkdir ifs-auth-service/aws
+mkdir ifs-auth-service/aws/
 touch ifs-auth-service/aws/credentials
 mkdir -p ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
 mkdir -p ifs-auth-service/ifs-idp-service/src/main/docker/certs/
@@ -18,7 +18,7 @@ echo "Start copying secrets from parameter store"
 
 docker image rm ssm-access-image
 docker build --tag="ssm-access-image" docker/aws-cli
-docker run -itd --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
+docker run -id --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 
 #1 = paramName
 getParameter () {
