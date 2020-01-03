@@ -4,7 +4,7 @@ AWS_PROFILE=$2
 KEY_ID=$3
 KEY=$4
 
-echo "[$AWS_PROFILE]
+echo -e "[$AWS_PROFILE]
 aws_access_key_id = $KEY_ID
 aws_secret_access_key = $KEY" > ifs-auth-service/aws/credentials
 
