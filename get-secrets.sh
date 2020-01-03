@@ -1,11 +1,12 @@
 #!/bin/bash
 ENV=$1
-KEY_ID=$2
-KEY=$3
+AWS_PROFILE=$2
+KEY_ID=$3
+KEY=$4
 
 #mkdir ifs-auth-service/aws
 #touch ifs-auth-service/aws/credentials
-echo "[iukorg]
+echo "$AWS_PROFILE
 aws_access_key_id = $KEY_ID
 aws_secret_access_key = $KEY" > ifs-auth-service/aws/credentials
 
@@ -26,6 +27,7 @@ writeParameter () {
   echo $2
 }
 
+#SSM Parameter store can store up to 4k characters, therefore longer secrets are split when stored and reassembled here
 #1 = paramValue 2 = writePath
 appendParameter () {
   echo -e $1 >> $2
@@ -45,7 +47,6 @@ writeParameter "$(getParameter "/CI/IFS/$ENV/IDP/PROXY/KEY")" "ifs-auth-service/
 
 writeParameter "$(getParameter "/CI/IFS/$ENV/IDP/PROXY/CERT")" "ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_certificate.pem"
 
-#SSM Parameter store can store up to 4k characters, therefore longer secrets must split when stored and reassembled here
 writeParameter "$(getParameter "/CI/IFS/$ENV/IDP/PROXY/CACERT/1")" "ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem"
 appendParameter "$(getParameter "/CI/IFS/$ENV/IDP/PROXY/CACERT/2")" "ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem"
 appendParameter "$(getParameter "/CI/IFS/$ENV/IDP/PROXY/CACERT/3")" "ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem"
