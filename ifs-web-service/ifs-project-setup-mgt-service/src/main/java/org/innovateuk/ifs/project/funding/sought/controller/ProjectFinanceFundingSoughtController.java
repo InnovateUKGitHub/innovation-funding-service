@@ -75,7 +75,7 @@ public class ProjectFinanceFundingSoughtController {
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         model.addAttribute("model", new ProjectFinanceFundingSoughtViewModel(project, finances));
-        return "project/financecheck/funding";
+        return "project/financecheck/funding-sought";
     }
 
 
