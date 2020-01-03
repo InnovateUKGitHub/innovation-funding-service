@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.funding.controller;
+package org.innovateuk.ifs.project.funding.level.controller;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -7,9 +7,9 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.funding.form.ProjectFinanceFundingForm;
-import org.innovateuk.ifs.project.funding.form.ProjectFinancePartnerFundingForm;
-import org.innovateuk.ifs.project.funding.viewmodel.ProjectFinanceFundingViewModel;
+import org.innovateuk.ifs.project.funding.level.form.ProjectFinanceFundingLevelForm;
+import org.innovateuk.ifs.project.funding.level.form.ProjectFinancePartnerFundingLevelForm;
+import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinanceFundingLevelViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
 
 @Controller
-@RequestMapping("/project/{projectId}/funding-level")
+@RequestMapping("/project/{projectId}/funding-sought")
 @SecuredBySpring(value = "PROJECT_FINANCE_FUNDING", description = "Project finance team can amend funding levels in project setup.")
 @PreAuthorize("hasAuthority('project_finance')")
 public class ProjectFinanceFundingLevelController {
@@ -45,18 +45,18 @@ public class ProjectFinanceFundingLevelController {
     private ProjectFinanceRowRestService financeRowRestService;
 
     @GetMapping
-    public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingForm form,
+    public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingLevelForm form,
                                     @PathVariable long projectId,
                                     Model model) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         form.setPartners(finances.stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation,
-                        pf -> new ProjectFinancePartnerFundingForm(pf.getTotalFundingSought()))));
+                        pf -> new ProjectFinancePartnerFundingLevelForm(pf.getTotalFundingSought()))));
         return viewFunding(projectId, finances, model);
     }
 
     @PostMapping
-    public String saveFundingLevels(@Valid @ModelAttribute("form") ProjectFinanceFundingForm form,
+    public String saveFundingLevels(@Valid @ModelAttribute("form") ProjectFinanceFundingLevelForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable long projectId,
@@ -76,12 +76,12 @@ public class ProjectFinanceFundingLevelController {
 
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        model.addAttribute("model", new ProjectFinanceFundingViewModel(project, finances));
-        return "project/financecheck/funding";
+        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances));
+        return "project/financecheck/funding-level";
     }
 
 
-    private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> financeList, ProjectFinanceFundingForm form) {
+    private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> financeList, ProjectFinanceFundingLevelForm form) {
         Map<Long, ProjectFinanceResource> finances = financeList
                 .stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation, Function.identity()));
