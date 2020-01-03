@@ -47,9 +47,9 @@
                             <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${model.competitionId})}"
                                class="govuk-tabs__tab">Add</a>
                         </li>
-                        <li class="govuk-tabs__list-item">
+                        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
                             <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/overview(competitionId=${model.competitionId})}"
-                               class="govuk-tabs__tab govuk-tabs__tab--selected">Added to competition (<th:block th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></th:block>)</a>
+                               class="govuk-tabs__tab">Added to competition (<th:block th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></th:block>)</a>
                         </li>
                     </ul>
                     <section class="govuk-tabs__panel">
