@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.funding.viewmodel;
+package org.innovateuk.ifs.project.funding.sought.viewmodel;
 
 import java.math.BigDecimal;
 

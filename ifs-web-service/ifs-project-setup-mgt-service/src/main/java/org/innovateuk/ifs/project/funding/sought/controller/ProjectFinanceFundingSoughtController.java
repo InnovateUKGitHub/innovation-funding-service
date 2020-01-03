@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.funding.controller;
+package org.innovateuk.ifs.project.funding.sought.controller;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -7,9 +7,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.funding.form.ProjectFinanceFundingSoughtForm;
-import org.innovateuk.ifs.project.funding.form.ProjectFinancePartnerFundingSoughtForm;
-import org.innovateuk.ifs.project.funding.viewmodel.ProjectFinanceFundingSoughtViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.innovateuk.ifs.project.funding.sought.form.*;
+import org.innovateuk.ifs.project.funding.sought.viewmodel.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;

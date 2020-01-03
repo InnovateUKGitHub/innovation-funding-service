@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.funding.form;
+package org.innovateuk.ifs.project.funding.sought.form;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
