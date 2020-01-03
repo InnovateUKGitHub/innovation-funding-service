@@ -6,19 +6,19 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProjectFinanceFundingViewModel {
+public class ProjectFinanceFundingSoughtViewModel {
 
     private final long projectId;
     private final long applicationId;
     private final String projectName;
-    private final List<ProjectFinancePartnerViewModel> partners;
+    private final List<ProjectFinancePartnerFundingSoughtViewModel> partners;
 
-    public ProjectFinanceFundingViewModel(ProjectResource project, List<ProjectFinanceResource> finances) {
+    public ProjectFinanceFundingSoughtViewModel(ProjectResource project, List<ProjectFinanceResource> finances) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
         this.partners =  finances.stream()
-                .map(pf -> new ProjectFinancePartnerViewModel(pf.getOrganisation(), pf.getOrganisationName(), pf.getTotalFundingSought()))
+                .map(pf -> new ProjectFinancePartnerFundingSoughtViewModel(pf.getOrganisation(), pf.getOrganisationName(), pf.getTotalFundingSought()))
                 .collect(Collectors.toList());
     }
 
@@ -34,7 +34,7 @@ public class ProjectFinanceFundingViewModel {
         return projectName;
     }
 
-    public List<ProjectFinancePartnerViewModel> getPartners() {
+    public List<ProjectFinancePartnerFundingSoughtViewModel> getPartners() {
         return partners;
     }
 }

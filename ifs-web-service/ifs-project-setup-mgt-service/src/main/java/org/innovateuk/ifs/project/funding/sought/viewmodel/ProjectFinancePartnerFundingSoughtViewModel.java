@@ -2,12 +2,12 @@ package org.innovateuk.ifs.project.funding.viewmodel;
 
 import java.math.BigDecimal;
 
-public class ProjectFinancePartnerViewModel {
+public class ProjectFinancePartnerFundingSoughtViewModel {
     private final long id;
     private final String name;
     private final BigDecimal currentFunding;
 
-    public ProjectFinancePartnerViewModel(long id, String name, BigDecimal currentFunding) {
+    public ProjectFinancePartnerFundingSoughtViewModel(long id, String name, BigDecimal currentFunding) {
         this.id = id;
         this.name = name;
         this.currentFunding = currentFunding;
