@@ -3,7 +3,6 @@ ENV=$1
 AWS_PROFILE=$2
 KEY_ID=$3
 KEY=$4
-echo $AWS_PROFILE
 
 echo "[$AWS_PROFILE]
 aws_access_key_id = $KEY_ID
@@ -64,6 +63,5 @@ if [ "$ENV" == "NON-PROD" ]; then
 fi
 
 docker stop ssm-access-container
-docker rm ssm-access-container
 
 echo "Finished copying secrets from parameter store"
