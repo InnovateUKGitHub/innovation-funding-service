@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
@@ -135,7 +135,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
     public boolean applicantCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
-        List<Role> allApplicantRoles = asList(Role.LEADAPPLICANT, Role.COLLABORATOR);
+        Set<Role> allApplicantRoles = EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR);
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, application.getId());
         return !applicantProcessRoles.isEmpty();
     }

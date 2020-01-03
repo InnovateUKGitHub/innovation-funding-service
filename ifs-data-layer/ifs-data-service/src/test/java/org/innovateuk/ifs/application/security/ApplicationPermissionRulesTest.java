@@ -22,10 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -71,7 +68,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource panelAssessor;
     private UserResource interviewAssessor;
 
-    private List<Role> applicantRoles = new ArrayList<>();
+    private static final Set<Role> applicantRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
     @Mock
     private ApplicationRepository applicationRepository;
@@ -111,9 +108,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         Application application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
         processRole1 = newProcessRole().withRole(LEADAPPLICANT).withApplication(application1).build();
         processRole2 = newProcessRole().withRole(APPLICANT).withApplication(application2).build();
-
-        applicantRoles.add(LEADAPPLICANT);
-        applicantRoles.add(COLLABORATOR);
 
         when(applicationRepository.existsById(applicationResource1.getId())).thenReturn(true);
         when(applicationRepository.existsById(applicationResource2.getId())).thenReturn(true);

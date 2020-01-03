@@ -59,6 +59,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         assertAccessDenied(() -> classUnderTest.activateUser(123L), () -> {
             verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
             verify(rules).ifsAdminCanReactivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).supportUserCanReactivateExternalUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -73,6 +74,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         assertAccessDenied(() -> classUnderTest.activateUser(123L), () -> {
             verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
             verify(rules).ifsAdminCanReactivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).supportUserCanReactivateExternalUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -87,6 +89,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         assertAccessDenied(() -> classUnderTest.deactivateUser(123L), () -> {
             verify(rules).ifsAdminCanDeactivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).supportUserCanDeactivateExternalUsers(userToActivate, getLoggedInUser());
             verify(rules).systemMaintenanceUserCanDeactivateUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
