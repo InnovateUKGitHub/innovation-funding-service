@@ -87,7 +87,7 @@
                         </div>
                         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'govuk-form-group--error'">
                             <label class="govuk-label govuk-visually-hidden" for="addressLine2">Street line 2</label>
-                            <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine2'})}">
+                            <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine2}')}">
                                   <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.addressLine2')}" th:text="${err}"></span>
                             </th:block>
                             <input class="govuk-input govuk-!-width-one-half"
@@ -95,7 +95,7 @@
                                    th:field="*{addressForm.addressLine2}"
                                    th:errorclass="govuk-input--error" type="text" />
                         </div>
-                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine3')}}')} ? 'govuk-form-group--error'">
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'govuk-form-group--error'">
                             <label class="govuk-label govuk-visually-hidden" for="addressLine3">Street line 3</label>
                             <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine3}')}">
                                   <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.addressLine3')}" th:text="${err}"></span>
