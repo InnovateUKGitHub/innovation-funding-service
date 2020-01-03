@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <th:block
-        th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly, checkboxText)">
+        th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
@@ -31,30 +31,12 @@
                             required=true,
                             readOnly=${readOnly},
                             )" />
-
-        <th:block th:if="${!readOnly && showStateAidAgreement}">
-
-            <div class="agree-to-terms-container">
-                <th:block th:insert="fragments/form-elements/checkbox ::
-                    checkbox(
-                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
-                        label=${checkboxText},
-                        id='stateAidAgreed',
-                        value='true',
-                        checked=${form.stateAidAgreed},
-                        switchesButtonStatus='#mark_as_complete'
-                    )" />
-            </div>
-
-            <div class="message-alert">
-                <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
-            </div>
-
-        </th:block>
+        <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
     </th:block>
 
     <th:block
-        th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly, checkboxText)">
+        th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
+
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
@@ -143,28 +125,7 @@
                     readOnly=${readOnly},
                 )" />
 
-        <th:block th:if="${!readOnly && showStateAidAgreement}">
-
-            <div class="agree-to-terms-container">
-
-                <th:block
-                    th:insert="fragments/form-elements/checkbox ::
-                    checkbox(
-                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
-                        label=${checkboxText},
-                        id='stateAidAgreed',
-                        value='true',
-                        checked=${form.stateAidAgreed},
-                        switchesButtonStatus='#mark_as_complete'
-                    )" />
-            </div>
-
-            <div class="message-alert">
-                <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
-            </div>
-
-        </th:block>
-
+        <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
     </th:block>
 
     <th:block th:fragment="growth-table-row(label, id, value, readOnly)">
@@ -194,7 +155,6 @@
                        required="required" />
             </td>
         </tr>
-
     </th:block>
 
 
@@ -218,4 +178,14 @@
                         )" />
     </th:block>
 
+    <th:block th:fragment="state-aid-warning(readOnly, howStateAidAgreement)">
+        <th:block th:if="${!readOnly && showStateAidAgreement}">
+            <div class="govuk-!-margin-bottom-6">
+                <p class="govuk-body">
+                    If we decide to award you funding you must be eligible to receive State aid at the point of the award.
+                    If you are found to be ineligible, we will withdraw our offer.
+                </p>
+            </div>
+        </th:block>
+    </th:block>
 </html>
