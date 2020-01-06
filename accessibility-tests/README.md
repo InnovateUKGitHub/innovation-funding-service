@@ -20,9 +20,8 @@ To  Run against a named environment  see below
 
 ## Applicant crawl
 
-`crawl.js` crawls the system as `steve.smith@empire.com`  and checks for accessibility issues. 
+`applicant-crawl.js` crawls the system as `steve.smith@empire.com`  and checks for accessibility issues. 
 
-Other tests are simple examples and shouldnt be relied upon.
 
 
 

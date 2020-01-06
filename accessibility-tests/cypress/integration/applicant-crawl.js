@@ -4,7 +4,7 @@ describe('Accessibility test - Applicant crawl', function () {
 
   before(function() {
     cy.login('steve.smith@empire.com');
-    cy.crawl();
+    cy.crawl({id: '/applicant/dashboard', url: '/applicant/dashboard'});
   });
 
   after(function () {
@@ -16,7 +16,7 @@ describe('Accessibility test - Applicant crawl', function () {
     (function () {
       let x = i;
       it('Page ' + x, function () {
-        cy.testForAccessibility(pages => {
+        cy.testForAccessibility((pages) => {
           var page = pages[x];
           if (page) {
             cy.visit(`/${page.url}`);

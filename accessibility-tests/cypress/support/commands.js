@@ -49,8 +49,10 @@ const findPage = page => cy.visit(page.url).then(
 const testable = url => url && url.startsWith('/') && url.indexOf('Logout') === -1 && url.indexOf('/print') === -1 && url.indexOf('/download') === -1 && url.indexOf('files/overheads') === -1;
 
 
-let pages = [{id: '/applicant/dashboard', url: '/applicant/dashboard'}];
-Cypress.Commands.add('crawl', () => {
+let pages = [];
+Cypress.Commands.add('crawl', (startPage) => {
+  pages = [];
+  pages.push(startPage);
   const promise = findPage(pages[0]);
   let i;
   for (i = 0; i < 100; i++) {
@@ -67,4 +69,4 @@ Cypress.Commands.add('crawl', () => {
 
 Cypress.Commands.add('testForAccessibility', (callback) => {
   callback(pages);
-});
+}, );
