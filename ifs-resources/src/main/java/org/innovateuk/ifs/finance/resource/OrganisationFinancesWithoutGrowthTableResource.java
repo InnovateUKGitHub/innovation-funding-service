@@ -13,18 +13,14 @@ public class OrganisationFinancesWithoutGrowthTableResource {
     private BigDecimal turnover;
     private Long headCount;
 
-    private Boolean stateAidAgreed;
-
     public OrganisationFinancesWithoutGrowthTableResource(
             OrganisationSize organisationSize,
             BigDecimal turnover,
-            Long headCount,
-            Boolean stateAidAgreed) {
+            Long headCount) {
 
         this.organisationSize = organisationSize;
         this.turnover = turnover;
         this.headCount = headCount;
-        this.stateAidAgreed = stateAidAgreed;
     }
 
     public OrganisationFinancesWithoutGrowthTableResource() {
@@ -54,14 +50,6 @@ public class OrganisationFinancesWithoutGrowthTableResource {
         this.headCount = headCount;
     }
 
-    public Boolean getStateAidAgreed() {
-        return stateAidAgreed;
-    }
-
-    public void setStateAidAgreed(Boolean stateAidAgreed) {
-        this.stateAidAgreed = stateAidAgreed;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,7 +62,6 @@ public class OrganisationFinancesWithoutGrowthTableResource {
                 .append(organisationSize, that.organisationSize)
                 .append(turnover, that.turnover)
                 .append(headCount, that.headCount)
-                .append(stateAidAgreed, that.stateAidAgreed)
                 .isEquals();
     }
 
@@ -84,7 +71,6 @@ public class OrganisationFinancesWithoutGrowthTableResource {
                 .append(organisationSize)
                 .append(turnover)
                 .append(headCount)
-                .append(stateAidAgreed)
                 .toHashCode();
     }
 }

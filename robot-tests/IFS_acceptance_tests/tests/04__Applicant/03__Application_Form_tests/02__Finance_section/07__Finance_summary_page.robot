@@ -79,7 +79,7 @@ Your Finance includes Finance summary table for collaborator
     [Tags]
     [Setup]  log in as a different user            &{collaborator2_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your project Finances has correct values for collaborator  £990  0%  0  2,468  0
+    Then the finance summary table in Your project Finances has correct values for collaborator  £990  0%  990  0  0
     And The user clicks the button/link            link = Return to application overview
 
 Red warning should show when the finances are incomplete
@@ -217,7 +217,7 @@ Innovation lead can see read only summary for collaborator
     And the user expands the section                Finances summary
     When the user clicks the button/link            jQuery = .project-cost-breakdown tbody tr:contains("EGGS") th a
     And the user should see the element             jQuery = p:contains("Please complete your project finances.")
-    Then the finance summary table in Your project Finances has correct values for collaborator  £990  100  0  2,468  0
+    Then the finance summary table in Your project Finances has correct values for collaborator  £990  100  990  0  0
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
@@ -278,8 +278,8 @@ Custom suite setup
 
 the finance summary calculations should be correct
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£328,571")
-    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("57,803")
-    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("504,936")
+    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("58,793")
+    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("502,468")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("140,632")
 
 the finance Funding breakdown calculations should be correct
@@ -367,7 +367,6 @@ the user fills in the funding information with bigger amount
     click element                             jQuery = label:contains("Yes")
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input  8000000
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input  test2
-    the user selects the checkbox             agree-terms-page
     the user clicks the button/link           jQuery = button:contains("Mark as complete")
 
 User verifies captial usage, subcontracting, travel and other costs for innovation lead
@@ -431,7 +430,6 @@ the academic user marks finances as complete
     log in as a different user                 &{collaborator2_credentials}
     the user navigates to Your-finances page   ${OPEN_COMPETITION_APPLICATION_2_NAME}
     the user clicks the button/link            link = Your project costs
-    the user selects the checkbox              termsAgreed
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
     the user enters the project location
     the user clicks the button/link            link = Your funding

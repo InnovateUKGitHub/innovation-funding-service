@@ -147,10 +147,6 @@ The user can check that the sections are read only
 the submit button should be disabled
     Element Should Be Disabled    jQuery = button:contains("Submit application")
 
-the applicant accepts the terms and conditions
-    the user selects the checkbox    agree-terms-page
-    the user selects the checkbox    stateAidAgreed
-
 the applicant marks the first section as complete
     the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link    link = ${application_name}
