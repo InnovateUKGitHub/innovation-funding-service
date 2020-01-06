@@ -22,4 +22,4 @@ import 'cypress-axe'
 
 Cypress.Cookies.defaults({
   whitelist: /_shibsession.*/
-})
+});

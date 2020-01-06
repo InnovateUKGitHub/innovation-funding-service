@@ -44,7 +44,7 @@ const vistPage = page => cy.visit(HOME + page.url).then(
       });
   });
 
-var pages = [{id: '/applicant/dashboard', url:'/applicant/dashboard'}];
+var pages = [{id: '/applicant/dashboard', url: '/applicant/dashboard'}];
 Cypress.Commands.add('crawl', () => {
   const promise = vistPage(pages[0]);
   let i;
@@ -59,7 +59,6 @@ Cypress.Commands.add('crawl', () => {
     }());
   }
 });
-
 
 
 Cypress.Commands.add('getPages', (callback) => {

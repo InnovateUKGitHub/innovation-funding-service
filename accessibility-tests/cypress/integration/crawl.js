@@ -19,7 +19,7 @@ describe('Accessibility test - Applicant crawl', function () {
       var x = i;
       it('Page ' + x, function () {
         cy.getPages(function(pages) {
-          var page = pages[x]
+          var page = pages[x];
           if (page) {
             cy.visit(HOME + page.url);
             cy.injectAxe();
