@@ -27,6 +27,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,6 +59,14 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
 
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         assertTrue(rules.leadPartnersCanUpdateTheBasicProjectDetails(project, user));
+    }
+
+    @Test
+    public void ifsAdministratorCanUpdateStartDate() {
+        UserResource user = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        assertTrue(rules.ifsAdministratorCanUpdateStartDate(project, user));
     }
 
     @Test

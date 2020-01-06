@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDate;
+
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertTrue;
@@ -61,6 +63,19 @@ public class ProjectDetailsServiceImplTest {
 
         verify(projectDetailsRestService).updateProjectManager(1L, 2L);
         verifyNoMoreInteractions(projectDetailsRestService);
+    }
+
+    @Test
+    public void updateProjectStartDate() {
+        LocalDate date = LocalDate.now();
+
+        when(projectDetailsRestService.updateProjectStartDate(1L, date)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.updateProjectStartDate(1L, date);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectDetailsRestService).updateProjectStartDate(1L, date);
     }
 
     @Test

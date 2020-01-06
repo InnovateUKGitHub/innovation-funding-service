@@ -37,6 +37,11 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
         return projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postcode).toServiceResult();
     }
 
+     @Override
+     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+         return projectDetailsRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
+     }
+
     @Override
     public ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
         return projectDetailsRestService.updateProjectDuration(projectId, durationInMonths).toServiceResult();
@@ -45,10 +50,5 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     @Override
     public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address) {
         return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, address).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-        return projectDetailsRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
     }
 }
