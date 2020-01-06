@@ -108,6 +108,7 @@ public class ProjectDetailsController {
     }
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "VIEW_START_DATE", description = "Only the IFS Administrator can view the page to edit the project start date")
     @GetMapping("/{projectId}/details/start-date")
     public String viewStartDate(@PathVariable("projectId") final Long projectId, Model model,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
@@ -120,6 +121,7 @@ public class ProjectDetailsController {
     }
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "UPDATE_START_DATE", description = "Only the IFS Administrator can update the project start date")
     @PostMapping("/{projectId}/details/start-date")
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
