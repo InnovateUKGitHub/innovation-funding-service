@@ -22,18 +22,14 @@ public class YourOrganisationWithoutGrowthTableForm {
     @Max(value = Integer.MAX_VALUE, message = "{validation.standard.integer.max.value.format}")
     private Long headCount;
 
-    private Boolean stateAidAgreed;
-
     YourOrganisationWithoutGrowthTableForm(
             OrganisationSize organisationSize,
             BigDecimal turnover,
-            Long headCount,
-            Boolean stateAidAgreed) {
+            Long headCount) {
 
         this.organisationSize = organisationSize;
         this.turnover = turnover;
         this.headCount = headCount;
-        this.stateAidAgreed = stateAidAgreed;
     }
 
     public YourOrganisationWithoutGrowthTableForm() {
@@ -61,13 +57,5 @@ public class YourOrganisationWithoutGrowthTableForm {
 
     public void setHeadCount(Long headCount) {
         this.headCount = headCount;
-    }
-
-    public Boolean getStateAidAgreed() {
-        return stateAidAgreed;
-    }
-
-    public void setStateAidAgreed(Boolean stateAidAgreed) {
-        this.stateAidAgreed = stateAidAgreed;
     }
 }

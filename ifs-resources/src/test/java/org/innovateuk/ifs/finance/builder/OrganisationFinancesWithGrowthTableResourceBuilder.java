@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.finance.builder;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-
+import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.function.BiConsumer;
-import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
+
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class OrganisationFinancesWithGrowthTableResourceBuilder extends BaseBuilder<OrganisationFinancesWithGrowthTableResource, OrganisationFinancesWithGrowthTableResourceBuilder> {
 
@@ -44,11 +44,6 @@ public class OrganisationFinancesWithGrowthTableResourceBuilder extends BaseBuil
 
     public OrganisationFinancesWithGrowthTableResourceBuilder withHeadCount(Long headCountAtLastFinancialYear) {
         return with(organisationFinancesWithGrowthTableResource -> setField("headCountAtLastFinancialYear", headCountAtLastFinancialYear,
-            organisationFinancesWithGrowthTableResource));
-    }
-
-    public OrganisationFinancesWithGrowthTableResourceBuilder withStateAidAgreed(boolean stateAidAgreed) {
-        return with(organisationFinancesWithGrowthTableResource -> setField("stateAidAgreed", stateAidAgreed,
             organisationFinancesWithGrowthTableResource));
     }
 
