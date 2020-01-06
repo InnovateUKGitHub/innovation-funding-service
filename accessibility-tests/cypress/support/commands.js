@@ -23,28 +23,35 @@ Cypress.Commands.add('login', (user) => {
 
 });
 
+const add = url => {
+  const id = url.replace(/[0-9]/g, '');
+  const alreadyExist = pages.filter(value => value.id === id).length;
+  if (!alreadyExist) {
+    const page = {
+      id: id,
+      url: url
+    };
+    pages.push(page);
+  }
+};
+
+
 const vistPage = page => cy.visit(HOME + page.url).then(
   () => {
     cy.get('a')
-      .each(function ($el, index, $list) {
+      .each(($el, index, $list) => {
         const url = $el.attr('href');
-        if (url && url.startsWith('/') && url.indexOf('Logout') === -1 && url.indexOf('/print') === -1 && url.indexOf('/download') === -1 && url.indexOf('files/overheads') === -1) {
-          const id = url.replace(/[0-9]/g, '');
-          const matchingPages = pages.filter(function (value) {
-            return value.id === id
-          }).length;
-          if (!matchingPages) {
-            const page = {
-              id: id,
-              url: url
-            };
-            pages.push(page);
-          }
+        if (testable(url)) {
+          add(url);
         }
       });
   });
 
-var pages = [{id: '/applicant/dashboard', url: '/applicant/dashboard'}];
+const testable = url => url && url.startsWith('/') && url.indexOf('Logout') === -1 && url.indexOf('/print') === -1 && url.indexOf('/download') === -1 && url.indexOf('files/overheads') === -1;
+
+
+
+let pages = [{id: '/applicant/dashboard', url: '/applicant/dashboard'}];
 Cypress.Commands.add('crawl', () => {
   const promise = vistPage(pages[0]);
   let i;
@@ -60,20 +67,6 @@ Cypress.Commands.add('crawl', () => {
   }
 });
 
-
-Cypress.Commands.add('getPages', (callback) => {
+Cypress.Commands.add('testForAccessibility', (callback) => {
   callback(pages);
 });
-
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })

@@ -13,12 +13,12 @@ describe('Accessibility test - Applicant crawl', function () {
     cy.logout();
   });
 
-  var i;
+  let i;
   for (i = 0; i < 50; i++) {
     (function () {
-      var x = i;
+      let x = i;
       it('Page ' + x, function () {
-        cy.getPages(function(pages) {
+        cy.testForAccessibility(pages => {
           var page = pages[x];
           if (page) {
             cy.visit(HOME + page.url);
