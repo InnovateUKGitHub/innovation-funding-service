@@ -27,14 +27,12 @@
             </div>
         </th:block>
 
-        <th:block>
-            <p class="govuk-body" th:unless="${model.isMarkAsComplete()}">
-                This overview shows the spend profile status of each organisation in your project.</p>
-            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.isMarkAsComplete()}">
-                <p class="govuk-body" >
-                    All spend profiles have been completed. You must now review the spend profile for each organisation.</p>
-            </div>
-        </th:block>
+        <p class="govuk-body" th:unless="${model.isMarkAsComplete()}">
+            This overview shows the spend profile status of each organisation in your project.</p>
+        <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.isMarkAsComplete()}">
+            <p class="govuk-body" >
+                All spend profiles have been completed. You must now review the spend profile for each organisation.</p>
+        </div>
 
         <th:block th:if="${model.submitted}">
             <h2 class="govuk-heading-m">Spend profile</h2>
