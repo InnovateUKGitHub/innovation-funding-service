@@ -300,14 +300,14 @@
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<th:block th:fragment="form-mark-as-complete-buttons (model, pageType)">
+<th:block th:fragment="form-mark-as-complete-buttons (model, pageType)" th:with="ariaLabelEdit=${ariaLabelEdit} ?: 'Edit'">
     <th:block th:unless="${model.closed}">
         <button th:if="${model.complete and !model.summary}"
                 type="submit"
                 name="mark_as_incomplete"
                 th:value="${model.questionId}"
                 class="govuk-button button-clear"
-                aria-label="Edit">Edit <span class="govuk-visually-hidden" th:text="${pageType}"></span>
+                th:aria-label="${ariaLabelEdit}">Edit <span class="govuk-visually-hidden" th:text="${pageType}"></span>
         </button>
         <button th:if="${!model.complete and model.canMarkAsComplete}"
             id="application-question-complete"
