@@ -38,6 +38,10 @@ public class ProjectFinancePartnerFundingLevelViewModel {
         return costs;
     }
 
+    public int getMaximumFundingLevel() {
+        return maximumFundingLevel;
+    }
+
     public BigDecimal getFundingLevel() {
         return fundingLevel;
     }
@@ -69,7 +73,7 @@ public class ProjectFinancePartnerFundingLevelViewModel {
     public BigDecimal calculatePercentageTotalGrant(BigDecimal calcFundingLevel) {
         return calculateFundingSought(calcFundingLevel)
                 .multiply(new BigDecimal(100))
-                .divide(totalGrant, RoundingMode.HALF_UP);
+                .divide(totalGrant, 10, RoundingMode.HALF_UP);
     }
 
     public String getSubtitle() {

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.funding.level.form.ProjectFinanceFundingLevelForm;
@@ -23,8 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -65,11 +63,12 @@ public class ProjectFinanceFundingLevelController {
                                     RedirectAttributes redirectAttributes) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         Supplier<String> failureView = () -> viewFunding(projectId, finances, model);
+        validateMaximumFundingLevels(bindingResult, finances, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saveFundingLevels(finances, form));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                redirectAttributes.addFlashAttribute("showFundingAmountMessage", true);
+                redirectAttributes.addFlashAttribute("showFundingLevelMessage", true);
                 return format("redirect:/project/%d/finance-check-overview", projectId);
             });
         });
@@ -81,20 +80,26 @@ public class ProjectFinanceFundingLevelController {
         return "project/financecheck/funding-level";
     }
 
-
-    private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> financeList, ProjectFinanceFundingLevelForm form) {
-        Map<Long, ProjectFinanceResource> finances = financeList
-                .stream()
-                .collect(toMap(ProjectFinanceResource::getOrganisation, Function.identity()));
-
-        ValidationMessages validationMessages = new ValidationMessages();
-        form.getPartners().entrySet().stream().forEach(entry -> {
-            ProjectFinanceResource finance = finances.get(entry.getKey());
-            GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
-//            grantClaim.setAmount(entry.getValue().getFunding());
-            validationMessages.addAll(financeRowRestService.update(grantClaim).getSuccess());
+    private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
+        ValidationMessages messages = new ValidationMessages();
+        finances.forEach(finance -> {
+            BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
+            GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
+            grantClaim.setPercentage(fundingLevel.intValue());
+            messages.addAll(financeRowRestService.update(grantClaim).getSuccess());
         });
+        return messages;
+    }
 
-        return validationMessages;
+    private void validateMaximumFundingLevels(BindingResult bindingResult, List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
+        finances.forEach(finance -> {
+            BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
+            if (finance.getMaximumFundingLevel() < fundingLevel.intValue()) {
+                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
+                "validation.finance.grant.claim.percentage.max",
+                new String[] {String.valueOf(finance.getMaximumFundingLevel())},
+                "");
+            }
+        });
     }
 }
