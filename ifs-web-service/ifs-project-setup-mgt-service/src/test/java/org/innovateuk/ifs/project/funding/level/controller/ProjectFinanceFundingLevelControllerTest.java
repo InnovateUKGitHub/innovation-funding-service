@@ -1,0 +1,148 @@
+package org.innovateuk.ifs.project.funding.level.controller;
+
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinanceFundingLevelViewModel;
+import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinancePartnerFundingLevelViewModel;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMockMVCTest<ProjectFinanceFundingLevelController> {
+
+    private static final long projectId = 1L;
+    private static final long industrialOrganisation = 2L;
+    private static final long academicOrganisation = 3L;
+    private static final ProjectFinanceResource industrialFinances = newProjectFinanceResource()
+            .withOrganisation(industrialOrganisation)
+            .withIndustrialCosts()
+            .withGrantClaimPercentage(50)
+            .withMaximumFundingLevel(60)
+            .withOrganisationSize(OrganisationSize.SMALL)
+            .build();
+    private static final ProjectFinanceResource academicFinances = newProjectFinanceResource()
+            .withOrganisation(academicOrganisation)
+            .withAcademicCosts()
+            .withGrantClaimPercentage(100)
+            .withMaximumFundingLevel(100)
+            .build();
+    private static final ProjectResource project = newProjectResource()
+            .withId(projectId)
+            .withName("Project")
+            .withApplication(5L)
+            .build();
+
+    static {
+        industrialFinances.getFinanceOrganisationDetails().values().forEach(FinanceRowCostCategory::calculateTotal);
+        academicFinances.getFinanceOrganisationDetails().values().forEach(FinanceRowCostCategory::calculateTotal);
+    }
+
+    @Mock
+    private ProjectRestService projectRestService;
+
+    @Mock
+    private ProjectFinanceRestService projectFinanceRestService;
+
+    @Mock
+    private ProjectFinanceRowRestService financeRowRestService;
+
+    @Override
+    protected ProjectFinanceFundingLevelController supplyControllerUnderTest() {
+        return new ProjectFinanceFundingLevelController();
+    }
+
+    @Test
+    public void viewFundingLevels() throws Exception {
+        when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/funding-level", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/financecheck/funding-level"))
+                .andReturn();
+
+        ProjectFinanceFundingLevelViewModel viewModel = (ProjectFinanceFundingLevelViewModel) result.getModelAndView().getModel().get("model");
+
+        BigDecimal totalGrant = industrialFinances.getTotalFundingSought().add(academicFinances.getTotalFundingSought());
+        assertEquals("Project", viewModel.getProjectName());
+        assertEquals(5L, viewModel.getApplicationId());
+        assertEquals(projectId, viewModel.getProjectId());
+        assertEquals(totalGrant, viewModel.getTotalFundingSought());
+        assertEquals(industrialFinances.getTotal().add(academicFinances.getTotal()), viewModel.getTotalCosts());
+        assertEquals(2, viewModel.getPartners().size());
+
+        ProjectFinancePartnerFundingLevelViewModel industrialViewModel = viewModel.getPartners().get(0);
+        assertEquals(industrialOrganisation, industrialViewModel.getId());
+        assertEquals(60, industrialViewModel.getMaximumFundingLevel());
+        assertEquals(industrialFinances.getTotal(), industrialViewModel.getCosts());
+        assertEquals(industrialFinances.getTotalFundingSought(), industrialViewModel.getFundingSought());
+        assertEquals(new BigDecimal("85.86"), industrialViewModel.getPercentageOfTotalGrant().setScale(2, RoundingMode.HALF_UP));
+        assertEquals(BigDecimal.ZERO, industrialViewModel.getOtherFunding());
+        assertEquals(totalGrant, industrialViewModel.getTotalGrant());
+
+        ProjectFinancePartnerFundingLevelViewModel academicViewModel = viewModel.getPartners().get(1);
+        assertEquals(academicOrganisation, academicViewModel.getId());
+        assertEquals(100, academicViewModel.getMaximumFundingLevel());
+        assertEquals(academicFinances.getTotal(), academicViewModel.getCosts());
+        assertEquals(academicFinances.getTotalFundingSought(), academicViewModel.getFundingSought());
+        assertEquals(new BigDecimal("14.14"), academicViewModel.getPercentageOfTotalGrant().setScale(2, RoundingMode.HALF_UP));
+        assertEquals(BigDecimal.ZERO, academicViewModel.getOtherFunding());
+        assertEquals(totalGrant, academicViewModel.getTotalGrant());
+    }
+
+    @Test
+    public void saveFundingLevels_success() throws Exception {
+        when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
+        when(financeRowRestService.update(any())).thenReturn(restSuccess(ValidationMessages.noErrors()));
+
+        MvcResult result = mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
+                .param(String.format("partners[%d].fundingLevel", industrialOrganisation), "60")
+                .param(String.format("partners[%d].fundingLevel", academicOrganisation), "60"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/project/%d/finance-check-overview", projectId)))
+                .andReturn();
+
+        verify(financeRowRestService).update(academicFinances.getGrantClaim());
+        verify(financeRowRestService).update(industrialFinances.getGrantClaim());
+
+        assertEquals(60, academicFinances.getGrantClaimPercentage());
+        assertEquals(60, industrialFinances.getGrantClaimPercentage());
+    }
+
+    @Test
+    public void saveFundingLevels_invalid() throws Exception {
+        when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+
+        mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
+                .param(String.format("partners[%d].fundingLevel", industrialOrganisation), "100")
+                .param(String.format("partners[%d].fundingLevel", academicOrganisation), "100"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("project/financecheck/funding-level"))
+                .andExpect(model().attributeHasFieldErrorCode("form", String.format("partners[%d].fundingLevel", industrialOrganisation),"validation.finance.grant.claim.percentage.max"))
+                .andReturn();
+
+        verifyZeroInteractions(financeRowRestService);
+    }
+}
