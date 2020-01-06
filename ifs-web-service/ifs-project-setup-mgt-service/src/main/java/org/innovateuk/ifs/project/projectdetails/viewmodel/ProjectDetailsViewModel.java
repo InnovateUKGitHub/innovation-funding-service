@@ -20,29 +20,37 @@ public class ProjectDetailsViewModel {
     private Long competitionId;
     private String competitionName;
     private boolean projectFinance;
+    private boolean ifsAdministrator;
     private String leadOrganisation;
     private boolean locationPerPartnerRequired;
     private List<PartnerOrganisationResource> partnerOrganisations;
     private String financeReviewerName;
     private String financeReviewerEmail;
+    private boolean spendProfileGenerated;
 
-    public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
+
+    public ProjectDetailsViewModel(ProjectResource project,
+                                   Long competitionId,
                                    String competitionName,
                                    boolean projectFinance,
+                                   boolean ifsAdministrator,
                                    String leadOrganisation,
                                    boolean locationPerPartnerRequired,
                                    List<PartnerOrganisationResource> partnerOrganisations,
                                    String financeReviewerName,
-                                   String financeReviewerEmail) {
+                                   String financeReviewerEmail,
+                                   boolean spendProfileGenerated) {
         this.project = project;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.projectFinance = projectFinance;
+        this.ifsAdministrator = ifsAdministrator;
         this.leadOrganisation = leadOrganisation;
         this.locationPerPartnerRequired = locationPerPartnerRequired;
         this.partnerOrganisations = partnerOrganisations;
         this.financeReviewerName = financeReviewerName;
         this.financeReviewerEmail = financeReviewerEmail;
+        this.spendProfileGenerated = spendProfileGenerated;
     }
 
     public static ProjectDetailsViewModel editDurationViewModel(ProjectResource project) {
@@ -50,11 +58,13 @@ public class ProjectDetailsViewModel {
                 project.getCompetition(),
                 project.getCompetitionName(),
                 false,
+                false,
                 null,
                 false,
                 Collections.emptyList(),
                 null,
-                null);
+                null,
+                project.isSpendProfileGenerated());
     }
 
     public ProjectResource getProject() {
@@ -115,6 +125,14 @@ public class ProjectDetailsViewModel {
 
     public boolean isFinanceReviewerAssigned() {
         return financeReviewerEmail != null;
+    }
+
+    public boolean isSpendProfileGenerated() {
+        return spendProfileGenerated;
+    }
+
+    public boolean isIfsAdministrator() {
+        return ifsAdministrator;
     }
 
     @Override

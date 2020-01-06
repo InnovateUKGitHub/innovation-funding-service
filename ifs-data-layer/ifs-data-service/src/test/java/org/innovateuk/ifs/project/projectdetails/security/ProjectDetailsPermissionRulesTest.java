@@ -132,7 +132,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testPartnersCanUpdateProjectLocationForTheirOwnOrganisationSuccess() {
+    public void partnersCanUpdateProjectLocationForTheirOwnOrganisationSuccess() {
 
         long projectId = 1L;
         long organisationId = 2L;

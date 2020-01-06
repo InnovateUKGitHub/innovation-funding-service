@@ -4,6 +4,8 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 
+import java.time.LocalDate;
+
 /**
  * A service for dealing with Project Details Resources via the appropriate Rest services
  */
@@ -19,4 +21,5 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address);
 
+    ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 }

@@ -47,7 +47,8 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        Target start date
+                        <a th:if="${model.ifsAdministrator and !model.spendProfileGenerated}" th:href="@{/competition/{competitionId}/project/{id}/details/start-date(competitionId=${model.project.getCompetition()},id=${model.project.getId()})}" class="govuk-link">Target start date</a>
+                        <th:block th:unless="${model.ifsAdministrator and !model.spendProfileGenerated}">Target start date</th:block>
                     </td>
                     <td class="govuk-table__cell" id="start-date">
                         <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
