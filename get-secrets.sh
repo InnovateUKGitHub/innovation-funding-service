@@ -28,16 +28,12 @@ getParameter () {
 #1 = paramValue, 2 = writePath
 writeParameter () {
   echo -e $1 > $2
-  echo $1
-  echo $2
 }
 
 #SSM Parameter store can store up to 4k characters, therefore longer secrets are split when stored and reassembled here
 #1 = paramValue 2 = writePath
 appendParameter () {
   echo -e $1 >> $2
-  echo $1
-  echo $2
 }
 
 writeParameter "$(getParameter "/CI/IFS/$ENV/LDAP/ENCRYPTION/KEY")" "ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key"
