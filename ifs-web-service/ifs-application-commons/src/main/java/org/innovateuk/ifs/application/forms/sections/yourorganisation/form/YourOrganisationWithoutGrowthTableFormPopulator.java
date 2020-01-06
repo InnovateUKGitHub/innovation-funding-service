@@ -13,7 +13,6 @@ public class YourOrganisationWithoutGrowthTableFormPopulator {
         return new YourOrganisationWithoutGrowthTableForm(
                 finances.getOrganisationSize(),
                 finances.getTurnover(),
-                finances.getHeadCount(),
-                finances.getStateAidAgreed());
+                finances.getHeadCount());
     }
 }
