@@ -4,11 +4,6 @@ AWS_PROFILE=$2
 KEY_ID=$3
 KEY=$4
 
-echo $1 |cut -c1-5
-echo $2 |cut -c1-5
-echo $3 |cut -c1-5
-echo $4 |cut -c1-5
-
 mkdir ifs-auth-service/aws/
 touch ifs-auth-service/aws/credentials
 mkdir -p ifs-auth-service/ifs-ldap-service/src/main/docker/certs/
@@ -65,12 +60,6 @@ if [ "$ENV" == "NON-PROD" ]; then
 
   appendParameter "$(getParameter "/CI/IFS/$ENV/SP/PROXY/CACERT/2")" "ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_cacertificate.pem"
   appendParameter "$(getParameter "/CI/IFS/$ENV/SP/PROXY/CACERT/3")" "ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_cacertificate.pem"
-
-  writeParameter "$(getParameter "/CI/IFS/$ENV/SIGNED/CERT")" "server.crt"
-  writeParameter "$(getParameter "/CI/IFS/$ENV/SIGNED/KEY")" "server.key"
-  writeParameter "$(getParameter "/CI/IFS/$ENV/SIGNED/CACERT/1")" "ca.crt"
-  appendParameter "$(getParameter "/CI/IFS/$ENV/SIGNED/CACERT/2")" "ca.crt"
-  appendParameter "$(getParameter "/CI/IFS/$ENV/SIGNED/CACERT/3")" "ca.crt"
 fi
 
 docker stop ssm-access-container
