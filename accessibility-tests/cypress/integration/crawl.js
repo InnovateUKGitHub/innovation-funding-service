@@ -1,6 +1,4 @@
 import {OPTIONS} from "../support/cypress_config";
-import {HOME} from "../support/system_config";
-
 
 describe('Accessibility test - Applicant crawl', function () {
 
@@ -21,7 +19,7 @@ describe('Accessibility test - Applicant crawl', function () {
         cy.testForAccessibility(pages => {
           var page = pages[x];
           if (page) {
-            cy.visit(HOME + page.url);
+            cy.visit(`/${page.url}`);
             cy.injectAxe();
             cy.checkA11y(OPTIONS);
           }

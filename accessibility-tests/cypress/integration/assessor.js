@@ -1,5 +1,4 @@
 import {OPTIONS} from "../support/cypress_config";
-import {HOME} from "../support/system_config";
 
 describe('Accessibility test - Assessor', function () {
 
@@ -13,7 +12,7 @@ describe('Accessibility test - Assessor', function () {
 
   it('assessor reject', function () {
     //Finds  IFS-6566
-    cy.visit(`${HOME}/assessment/232`);
+    cy.visit(`/assessment/232`);
     cy.contains("Unable to assess this application?").click();
     cy.injectAxe();
     cy.checkA11y(OPTIONS);
