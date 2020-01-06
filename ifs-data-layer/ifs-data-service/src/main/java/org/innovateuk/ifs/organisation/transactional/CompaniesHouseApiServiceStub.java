@@ -14,7 +14,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
-
 /**
  * This class stubs out the Companies House API.
  * Necessary to remove this dependency from developer and tester machines
