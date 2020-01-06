@@ -46,8 +46,18 @@ const findPage = page => cy.visit(page.url).then(
       });
   });
 
-const testable = url => url && url.startsWith('/') && url.indexOf('Logout') === -1 && url.indexOf('/print') === -1 && url.indexOf('/download') === -1 && url.indexOf('files/overheads') === -1;
+const testable = url => url && url.startsWith('/') &&
+  url.indexOf('Logout') === -1 &&
+  url.indexOf('/print') === -1 &&
+  url.indexOf('/download') === -1 &&
+  url.indexOf('files/overheads') === -1 &&
+  url.indexOf('profile/view') === -1 &&  // temp change to work around the issue described in IFS-6968, remove once complete
+  url.indexOf('/bank-details/export') === -1 &&
+  !isFile(url);
 
+function isFile(url) {
+  return url.includes(".pdf");
+}
 
 let pages = [];
 Cypress.Commands.add('crawl', (startPage) => {

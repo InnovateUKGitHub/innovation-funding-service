@@ -1,10 +1,10 @@
 import {OPTIONS} from "../support/cypress_config";
 
-describe('Accessibility test - Applicant crawl', function () {
+describe('Accessibility test - Assessor crawl', function () {
 
   before(() => {
-    cy.login('steve.smith@empire.com');
-    cy.crawl({id: '/applicant/dashboard', url: '/applicant/dashboard'});
+    cy.login('paul.plum@gmail.com');
+    cy.crawl({id: 'assessment/assessor/dashboard', url: 'assessment/assessor/dashboard'});
   });
 
   after(() => {
