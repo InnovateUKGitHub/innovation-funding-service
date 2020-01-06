@@ -6,6 +6,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.funding.level.form.ProjectFinanceFundingLevelForm;
 import org.innovateuk.ifs.project.funding.level.form.ProjectFinancePartnerFundingLevelForm;
@@ -76,7 +77,8 @@ public class ProjectFinanceFundingLevelController {
 
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances));
+        OrganisationResource lead = projectRestService.getLeadOrganisationByProject(projectId).getSuccess();
+        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead));
         return "project/financecheck/funding-level";
     }
 

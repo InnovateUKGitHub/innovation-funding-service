@@ -8,6 +8,7 @@ import java.math.RoundingMode;
 public class ProjectFinancePartnerFundingLevelViewModel {
     private final long id;
     private final String name;
+    private final boolean lead;
     private final int maximumFundingLevel;
     private final OrganisationSize organisationSize;
     private final BigDecimal costs;
@@ -15,9 +16,10 @@ public class ProjectFinancePartnerFundingLevelViewModel {
     private final BigDecimal otherFunding;
     private final BigDecimal totalGrant;
 
-    public ProjectFinancePartnerFundingLevelViewModel(long id, String name, int maximumFundingLevel, OrganisationSize organisationSize, BigDecimal costs, BigDecimal fundingLevel, BigDecimal otherFunding, BigDecimal totalGrant) {
+    public ProjectFinancePartnerFundingLevelViewModel(long id, String name, boolean lead, int maximumFundingLevel, OrganisationSize organisationSize, BigDecimal costs, BigDecimal fundingLevel, BigDecimal otherFunding, BigDecimal totalGrant) {
         this.id = id;
         this.name = name;
+        this.lead = lead;
         this.maximumFundingLevel = maximumFundingLevel;
         this.organisationSize = organisationSize;
         this.costs = costs;
@@ -78,6 +80,10 @@ public class ProjectFinancePartnerFundingLevelViewModel {
 
     public String getSubtitle() {
         String part = organisationSize != null ? organisationSize.getDescription() : "Academic";
-        return String.format("%s, %d%%", part, maximumFundingLevel);
+        String text = String.format("%s, %d%%", part, maximumFundingLevel);
+        if (lead) {
+            text = "Lead, " + text.toLowerCase();
+        }
+        return text;
     }
 }

@@ -47,18 +47,19 @@
                     </thead>
                     <tbody class="govuk-table__body">
                     <th:block th:each="partner : ${model.partners}">
-                        <tr class="govuk-table__row" th:with="path=${'partners[__${partner.id}__]'}">
-                            <th class="govuk-table__header" scope="col">
-                                <p><strong th:text="${partner.name}">Organisation Name</strong></p>
-                                <p class="hint" th:text="${partner.subtitle}">Lead, large, 30%</p>
-                            </th>
+                        <tr class="govuk-table__row form-group-row-validated" th:with="path=${'partners[__${partner.id}__]'}"
+                            th:classappend="${#fields.hasErrors('{__${path}__.fundingLevel}')} ? 'govuk-form-group--error'">
+                            <td class="govuk-table__cell" scope="col">
+                                <strong th:text="${partner.name}">Organisation Name</strong>
+                                <small th:text="${partner.subtitle}">Lead, large, 30%</small>
+                            </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(partner.costs,1,'DEFAULT')}" /></td>
 
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-left-cell"><th:block th:text="${#numbers.formatInteger(partner.fundingLevel,1,'DEFAULT')}" />%</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell">&pound;<th:block th:text="${#numbers.formatInteger(partner.fundingSought,1,'DEFAULT')}" /></td>
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-right-cell"><th:block th:text="${#numbers.formatDecimal(partner.percentageOfTotalGrant,1,'DEFAULT',2,'DEFAULT')}" />%</td>
 
-                            <td class="govuk-table__cell govuk-table__cell--numeric form-group">
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
                                 <label th:for="__${path}__.funding">
                                     <span class="govuk-visually-hidden">New funding level</span>
                                 </label>
@@ -81,7 +82,7 @@
                                     <input th:id="__${path}__.fundingSought"
                                            type="hidden"
                                            class="funding-sought"
-                                           data-calculation-operations="*,/,-"
+                                           data-calculation-operations="*,/,-,negativeRoundUp"
                                            th:attr="data-calculation-fields=|${partner.costs},[id='__${path}__.fundingLevel'],100,${partner.otherFunding}|,
                                                     data-calculation-rawValue=${partner.calculateFundingSought(fundingLevel)}"
                                            th:value="'£' + ${#numbers.formatInteger(partner.calculateFundingSought(fundingLevel), 0,'DEFAULT')}"/>
@@ -91,7 +92,7 @@
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
                                     <input th:id="__${path}__.percentageOfTotalGrant"
                                            type="hidden"
-                                           data-calculation-operations="*,/"
+                                           data-calculation-operations="*,/,negativeRoundUp"
                                            data-calculation-format="decimal-percentage"
                                            th:attr="data-calculation-fields=|100,[id='__${path}__.fundingSought'],#total-funding-sought|,
                                                     data-calculation-rawValue=${partner.calculatePercentageTotalGrant(fundingLevel)}"

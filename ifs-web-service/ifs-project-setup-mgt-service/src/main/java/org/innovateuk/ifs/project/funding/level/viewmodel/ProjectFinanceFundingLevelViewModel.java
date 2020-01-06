@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.funding.level.viewmodel;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.funding.level.form.ProjectFinanceFundingLevelForm;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
@@ -18,14 +19,14 @@ public class ProjectFinanceFundingLevelViewModel {
     private final List<ProjectFinancePartnerFundingLevelViewModel> partners;
     private final boolean collaborativeProject;
 
-    public ProjectFinanceFundingLevelViewModel(ProjectResource project, List<ProjectFinanceResource> finances) {
+    public ProjectFinanceFundingLevelViewModel(ProjectResource project, List<ProjectFinanceResource> finances, OrganisationResource lead) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
         BigDecimal totalGrant = finances.stream().map(BaseFinanceResource::getTotalFundingSought)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         this.partners =  finances.stream()
-                .map(pf -> new ProjectFinancePartnerFundingLevelViewModel(pf.getOrganisation(), pf.getOrganisationName(),
+                .map(pf -> new ProjectFinancePartnerFundingLevelViewModel(pf.getOrganisation(), pf.getOrganisationName(), pf.getOrganisation().equals(lead.getId()),
                         pf.getMaximumFundingLevel(), pf.getOrganisationSize(), pf.getTotal(), new BigDecimal(pf.getGrantClaimPercentage()),
                         pf.getTotalOtherFunding(), totalGrant))
                 .collect(Collectors.toList());
