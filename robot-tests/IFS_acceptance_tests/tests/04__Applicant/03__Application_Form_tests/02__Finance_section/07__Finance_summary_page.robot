@@ -367,7 +367,6 @@ the user fills in the funding information with bigger amount
     click element                             jQuery = label:contains("Yes")
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input  8000000
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input  test2
-    the user selects the checkbox             agree-terms-page
     the user clicks the button/link           jQuery = button:contains("Mark as complete")
 
 User verifies captial usage, subcontracting, travel and other costs for innovation lead
@@ -431,7 +430,6 @@ the academic user marks finances as complete
     log in as a different user                 &{collaborator2_credentials}
     the user navigates to Your-finances page   ${OPEN_COMPETITION_APPLICATION_2_NAME}
     the user clicks the button/link            link = Your project costs
-    the user selects the checkbox              termsAgreed
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
     the user enters the project location
     the user clicks the button/link            link = Your funding

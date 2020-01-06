@@ -127,7 +127,6 @@ the user checks the override value is applied
     the user clicks the button/link     link = Your funding
     the user clicks the button/link     jQuery = button:contains("Edit your funding")
     the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
-    the user selects the checkbox       agree-terms-page
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Back to application overview
 
@@ -157,7 +156,7 @@ the lead invites already registered user
 
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
-    the user should not see the element  link = eligible for state aid
+    the user should not see the element  jQuery = p:contains("If we decide to award you funding you must be eligible to receive State aid at the point of the award.)
     the user clicks the button/link      link = Your project finances
 
 Custom suite teardown

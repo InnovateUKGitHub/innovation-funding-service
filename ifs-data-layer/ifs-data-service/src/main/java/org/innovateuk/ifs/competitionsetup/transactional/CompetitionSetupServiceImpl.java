@@ -118,7 +118,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         } else if (openingSameMonth.isEmpty()) {
             unusedCode = datePart + "-1";
         } else {
-            List<String> codes = openingSameMonth.stream().map(Competition::getCode).sorted().peek(c -> LOG.info("Codes : " + c)).collect(Collectors.toList());
+            List<String> codes = openingSameMonth.stream().map(Competition::getCode).sorted().collect(Collectors.toList());
             for (int i = 1; i < 10000; i++) {
                 unusedCode = datePart + "-" + i;
                 if (!codes.contains(unusedCode)) {
