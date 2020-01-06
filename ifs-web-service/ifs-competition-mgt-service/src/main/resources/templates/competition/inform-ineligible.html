@@ -34,7 +34,7 @@
 
         <form th:action="@{/competition/application/{applicationId}/ineligible/send(applicationId=${model.applicationId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" th:for="${#ids.next('subject')}">
+                <label class="govuk-label" for="subject">
                     Subject
                 </label>
                 <th:block th:if="${#fields.hasErrors('subject')}">
@@ -59,7 +59,7 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{message}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" th:for="${#ids.next('message')}">
+                <label class="govuk-label" for="message">
                     Body text
                 </label>
                 <th:block th:if="${#fields.hasErrors('message')}">

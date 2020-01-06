@@ -114,9 +114,9 @@ public class PartnerOrganisationServiceImpl implements PartnerOrganisationServic
     }
 
     private void removePartnerOrg(long projectId, long organisationId) {
+        projectUserRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         projectUserInviteRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         projectPartnerInviteRepository.deleteByProjectIdAndInviteOrganisationOrganisationId(projectId, organisationId);
-        projectUserRepository.deleteAllByProjectIdAndOrganisationId(projectId, organisationId);
         partnerOrganisationRepository.deleteOneByProjectIdAndOrganisationId(projectId, organisationId);
         Optional<PendingPartnerProgress> pendingPartnerProgress = pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(organisationId, projectId);
         if (pendingPartnerProgress.isPresent()) {

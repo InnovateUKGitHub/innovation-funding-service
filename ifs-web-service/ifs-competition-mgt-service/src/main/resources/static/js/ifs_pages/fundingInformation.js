@@ -25,6 +25,7 @@ IFS.competitionManagement.fundingInformation = (function () {
             IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
             field.val(data.message)
             jQuery('body').trigger('updateSerializedFormState')
+            jQuery('#competitionCode').focus()
           } else {
             IFS.core.formValidation.setInvalid(field, data.message)
           }
