@@ -96,8 +96,9 @@ User still sees warning that the funding section will be reset
 Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
     [Tags]  HappyPath
-    When the user clicks the button/link        jQuery = button:contains("Edit")
-    And the user marks their organisation as    ${LARGE_ORGANISATION_SIZE}
+    Given the user clicks the button/link       jQuery = button:contains("Edit")
+    And the user should see the element         jQuery = p:contains("If we decide to award you funding you must be eligible to receive State aid at the point of the award.")
+    Then the user marks their organisation as   ${LARGE_ORGANISATION_SIZE}
 
 Funding section shows as incomplete again
     [Documentation]    INFUND-6394
@@ -133,7 +134,6 @@ The user marks their organisation as
     the user selects the radio button           organisationSize  ${org_size}
     the user enters text to a text field        css = #turnover    150
     the user enters text to a text field        css = #headCount    0
-    the user selects the checkbox               stateAidAgreed
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
     the user should not see the element         css = .govuk-error-message
     the user should see the element             jQuery = p:contains("Please complete your project finances.")
@@ -146,7 +146,6 @@ the user completes the funding section with funding level
     the user enters text to a text field    css = [name*=source]           Lottery funding
     the user enters text to a text field    css = [name*=date]             12-2008
     the user enters text to a text field    css = [name*=fundingAmount]    20000
-    the user selects the checkbox           termsAgreed
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
 
 the funding section has been reset including funding level

@@ -97,13 +97,14 @@
                             <p class="govuk-body">If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
                             <form th:action="@{/{assessmentId}/reject(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" th:for="${#ids.next('rejectReason')}">
+                                    <label class="govuk-label" th:for="rejectReasonValid">
                                         Please select a reason for rejecting the competition
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('rejectReason')}">
                                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                                     </th:block>
-                                    <select class="govuk-select"
+                                    <select id="rejectReasonValid"
+                                            class="govuk-select"
                                             th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
                                             th:errorclass="govuk-select--error"
                                             required="required"

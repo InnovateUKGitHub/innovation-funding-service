@@ -13,6 +13,11 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title"  id="error-summary-title">We are unable to post a note.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+                </div>
+
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
                 <h2 class="govuk-heading-m">Review notes</h2>
@@ -67,28 +72,35 @@
                         </div>
                     </div>
                     <div class="upload-section govuk-!-width-one-half">
-                        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
+                        <div class="ajax-upload"
+                             data-js-upload-button-name="uploadAttachment"
+                             data-js-upload-file-input="attachment"
+                             data-js-number-of-files="10"
+                             data-js-upload-one-at-a-time="">
                             <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
-                            <ul class="govuk-list">
-                                <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}"
-                                       th:text="${model.newAttachmentLinks.get(attachmentId)}"
-                                       class="govuk-link"
-                                       target="_blank"
-                                       aria-describedby="supporting-documentation-hint">filename</a>
-                                    <span id="supporting-documentation-hint" class="govuk-body"> (opens in a new window)</span>
-                                    <button name="removeAttachment" class="button-clear govuk-!-padding-top-0 govuk-!-margin-left-6" th:value="${attachmentId}">Remove</button>
+                            <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No file currently uploaded.</p>
+                            <ul class="govuk-list file-list">
+                                <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
+                                    class="success">
+                                    <div class="file-row">
+                                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}"
+                                           th:text="|${model.newAttachmentLinks.get(attachmentId)} (opens in a new window)|"
+                                           target="_blank"
+                                           class="govuk-link"
+                                           aria-describedby="file-hint">File</a>
+                                        <button name="removeAttachment" th:value="${attachmentId}" class="button-clear remove-file" aria-label="Remove uploaded document">Remove</button>
+                                    </div>
                                 </li>
                             </ul>
-                        </th:block>
-                        <h2 class="govuk-heading-s">Upload supporting documentation in pdf format</h2>
-                        <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
-                            <th:block th:if="${#fields.hasErrors('attachment')}">
-                                <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
-                            </th:block>
-                            <input type="file" id="attachment" class="inputfile" name="attachment">
-                            <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                            <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                            <h2 class="govuk-heading-s">Upload supporting documentation in pdf format</h2>
+                            <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
+                                <th:block th:if="${#fields.hasErrors('attachment')}">
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                </th:block>
+                                <input type="file" id="attachment" class="inputfile" name="attachment">
+                                <label for="attachment" class="button-secondary govuk-!-margin-top-6">Upload</label>
+                                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                            </div>
                         </div>
                     </div>
                     <input type="hidden" id="action" value="postNote">

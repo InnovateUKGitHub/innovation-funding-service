@@ -50,6 +50,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-6054 Display completed projects in the previous tab
 ...
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
+...
+...               IFS-6731 Enable new partners to enter their location when joining a project & MO has been assigned
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -57,6 +59,11 @@ Resource          PS_Common.robot
 
 
 *** Test Cases ***
+Applicant able to update project location until GOL not generated
+    [Documentation]  IFS-6731
+    Given log in as a different user    ${Elbow_Grease_Lead_PM_Email}   ${short_password}
+    Then the user updates the project location in project setup    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details
+
 External user cannot view the GOL section before spend profiles have been approved
     [Documentation]    INFUND-6741
     [Tags]  HappyPath
@@ -127,7 +134,7 @@ Comp Admin cannot upload big or non-pdf grant offer letter
     [Setup]  log in as a different user                 &{Comp_admin1_credentials}
     Given the user navigates to the page                ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     When the user uploads a file                        grantOfferLetter  ${too_large_pdf}
-    Then The user should see a field and summary error  ${too_large_10MB_validation_error}
+    Then the user should see a field error              ${too_large_10MB_validation_error}
     And the user uploads a file                         grantOfferLetter  ${text_file}
     Then the user should see a field error              ${wrong_filetype_validation_error}
 
@@ -166,7 +173,7 @@ PM can view the grant offer letter page
     Then the user should see the element             css = li.require-action:last-of-type
     When the user clicks the button/link             link = Grant offer letter
     Then the user should see the element             jQuery = p:contains("The grant offer letter has been provided by Innovate UK.")
-    And the user should see the element              jQuery = label:contains(+ Upload)
+    And the user should see the element              jQuery = label:contains(Upload)
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
     Then the user should see the element             jQuery = h1:contains("Project team status")
@@ -178,7 +185,7 @@ Partners should not be able to send the Grant Offer
     [Setup]    log in as a different user       ${Elbow_Grease_Partner_Email}    ${short_password}
     Given the user clicks the button/link       link = ${Elbow_Grease_Title}
     And the user clicks the button/link         link = Grant offer letter
-    Then the user should not see the element    jQuery = label:contains(+ Upload)
+    Then the user should not see the element    jQuery = label:contains(Upload)
     And the user should not see the element     css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -199,7 +206,7 @@ PM should not be able to upload big Grant Offer files
     Given the user clicks the button/link               link = ${Elbow_Grease_Title}
     And the user clicks the button/link                 link = Grant offer letter
     When the user uploads a file                        signedGrantOfferLetter    ${too_large_pdf}
-    Then the user should see a field and summary error  ${too_large_10MB_validation_error}
+    Then the user should see the element                jQuery = .file-list .govuk-error-message:contains("${too_large_10MB_validation_error}")
 
 PM should be able upload a file and then access the Send button
     [Documentation]    INFUND-4851, INFUND-4972, INFUND-6829
@@ -216,6 +223,15 @@ PM should be able upload a file and then access the Send button
     When the user clicks the button/link             link = View the status of partners
     Then the user should see the element             jQuery = h1:contains("Project team status")
     And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(8)
+
+Applicant not able to update project location after GOL generated
+    [Documentation]  IFS-6731
+    Given the user navigates to the page                   ${server}/project-setup/project/${Elbow_Grease_Project_Id}/details
+    And the user clicks the button/link                    link = Edit
+    When the user enters text to a text field              css = #postcode  AB2 1AB
+    And the user clicks the button/link                    css = button[type = "submit"]
+    Then the user should see a field and summary error     You cannot edit the organisation's project location because we have already generated the grant offer letter.
+    And the user clicks the button/link                    link = Project details
 
 Project finance cannot access the GOL before it is sent by PM
     [Documentation]    INFUND-7361
@@ -291,7 +307,7 @@ PM can view the uploaded Annex file
     [Tags]  HappyPath
     [Setup]    log in as a different user        ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user navigates to the page         ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then open pdf link                           ${valid_pdf}
+    Then open pdf link                           jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 PM can download the annex
     [Documentation]    INFUND-5998
@@ -305,6 +321,7 @@ PM can remove the signed grant offer letter
     [Tags]  HappyPath
     When the user clicks the button/link              name = removeSignedGrantOfferLetterClicked
     Then the user should not see the element          jQuery = button:contains("Remove")
+    And the user should see the element               jQuery = label:contains("Upload")
     And the user should not see the element           jQuery = .upload-section a:contains("${valid_pdf}")
 
 PM can upload new signed grant offer letter
@@ -492,7 +509,8 @@ Project is automatically sent to ACC if set up for the competition
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}
-    choose file    name = ${name}    ${upload_folder}/${file}
+    the user uploads the file    name = ${name}    ${file}
+    Wait Until Page Does Not Contain Without Screenshots    Uploading
 
 the user is able to see the Grant Offer letter page
     Select Window                          title = Print version with CSS
@@ -500,6 +518,7 @@ the user is able to see the Grant Offer letter page
 
 the user removes existing and uploads new grant offer letter
     the user clicks the button/link  css = button[name = "removeSignedGrantOfferLetterClicked"]
+    the user should see the element  jQuery = label:contains("Upload")
     the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link  css = .govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     the user clicks the button/link  id = submit-gol-for-review

@@ -15,6 +15,10 @@
               th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}, dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Finance checks',subTitle=|${model.financeCheckSummaryResource.applicationId}: ${model.financeCheckSummaryResource.projectName}|,size='govuk-heading-xl'" />
         <div th:if="${model.showSpendProfilesGeneratedMessage}" class="success-alert">
@@ -140,7 +144,7 @@
         </div>
 
         <form method="POST"
-              th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.financeCheckSummaryResource.projectId})}"
+              th:action="@{/project/{projectId}/finance-check(projectId=${model.financeCheckSummaryResource.projectId})}"
               th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
             <h3 class="govuk-heading-m">Generate spend profile</h3>
             <p class="govuk-body">To generate your spend profile, the viability and eligibility sections must be approved

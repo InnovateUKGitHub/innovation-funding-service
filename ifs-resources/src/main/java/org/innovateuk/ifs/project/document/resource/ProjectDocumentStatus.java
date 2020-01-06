@@ -3,6 +3,10 @@ package org.innovateuk.ifs.project.document.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.EnumSet;
+
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.*;
+
 /*
  * This class is for getting the status of project document.
  */
@@ -42,14 +46,20 @@ public class ProjectDocumentStatus {
     }
 
     public boolean isNotSubmitted() {
-        return status == DocumentStatus.UNSET || status == DocumentStatus.UPLOADED;
+        return EnumSet.of(UNSET, UPLOADED).contains(status);
     }
 
-    public boolean isAwaitingReview() { return status == DocumentStatus.SUBMITTED; }
+    public boolean isAwaitingReview() {
+        return status == SUBMITTED;
+    }
 
-    public boolean isApproved() { return status == DocumentStatus.APPROVED; }
+    public boolean isApproved() {
+        return status == APPROVED;
+    }
 
-    public boolean isRejected() { return status == DocumentStatus.REJECTED; }
+    public boolean isRejected() {
+        return EnumSet.of(REJECTED, REJECTED_DUE_TO_TEAM_CHANGE).contains(status);
+    }
 
     public void setStatus(DocumentStatus status) {
         this.status = status;

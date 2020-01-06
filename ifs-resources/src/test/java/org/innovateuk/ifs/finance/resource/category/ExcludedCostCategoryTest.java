@@ -10,7 +10,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
+import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -26,7 +26,7 @@ public class ExcludedCostCategoryTest {
 
         costs.add(grantClaim);
 
-        grantClaimCategory = newGrantClaimCostCategory().withCosts(asList(grantClaim)).build();
+        grantClaimCategory = newExcludedCostCategory().withCosts(asList(grantClaim)).build();
     }
 
     @Test

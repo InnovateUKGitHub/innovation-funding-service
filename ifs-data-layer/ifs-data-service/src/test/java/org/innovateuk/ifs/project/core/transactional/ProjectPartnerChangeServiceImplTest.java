@@ -1,16 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -20,7 +9,6 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -31,6 +19,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -101,11 +96,10 @@ public class ProjectPartnerChangeServiceImplTest extends BaseServiceUnitTest<Pro
     public void updateProjectWhenPartnersChange_submittedDocumentIsRejected() {
         List<ProjectDocument> documents = Collections.singletonList(projectDocument);
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(documents);
-        when(projectDocument.getStatus()).thenReturn(DocumentStatus.APPROVED);
 
         service.updateProjectWhenPartnersChange(1L);
 
-        verify(projectDocument).setStatus(DocumentStatus.REJECTED);
+        verify(projectDocument).setStatus(DocumentStatus.REJECTED_DUE_TO_TEAM_CHANGE);
     }
 
     @Test
@@ -122,7 +116,6 @@ public class ProjectPartnerChangeServiceImplTest extends BaseServiceUnitTest<Pro
     public void updateProjectWhenPartnersChange_thereAreOnlyRejectedDocuments() {
         List<ProjectDocument> documents = Collections.singletonList(projectDocument);
         when(projectDocumentRepository.findAllByProjectId(1L)).thenReturn(documents);
-        when(projectDocument.getStatus()).thenReturn(DocumentStatus.REJECTED);
 
         service.updateProjectWhenPartnersChange(1L);
 

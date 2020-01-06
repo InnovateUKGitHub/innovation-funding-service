@@ -1,5 +1,6 @@
 *** Settings ***
 Resource    ../../resources/defaultResources.robot
+Resource    ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 
@@ -288,12 +289,12 @@ project manager submits both documents
     log in as a different user          ${email}  ${password}
     the user navigates to the page      ${server}/project-setup/project/${project}/document/all
     the user clicks the button/link     link = Collaboration agreement
-    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user uploads the file           css = .inputfile    ${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
     the user clicks the button/link     link = Exploitation plan
-    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user uploads the file           css = .inputfile    ${upload_folder}/${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
 
@@ -398,8 +399,8 @@ the user enter the Correspondence address
     the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
 
 the user uploads to the collaboration agreement/exploitation plan
-    [Arguments]  ${file_name}
-    choose file  name = document  ${upload_folder}/${file_name}
+    [Arguments]   ${file_name}
+    the user uploads the file  css = .inputfile  ${file_name}
 
 the user goes to documents page
     [Arguments]  ${link1}  ${link2}
@@ -471,3 +472,79 @@ Project finance is able to approve the bank details
     the user clicks the button/link    jQuery = button:contains("Approve bank account details")
     the user clicks the button/link    jQuery = button:contains("Approve account")
     the user should see the element    jQuery = h2:contains("The bank details provided have been approved.")
+
+the user updates the project location in project setup
+    [Arguments]  ${link}
+    the user navigates to the page        ${link}
+    the user clicks the button/link       link = Edit
+    the user enters text to a text field  css = #postcode  ${Postcode}
+    the user clicks the button/link       css = button[type = "submit"]
+    the user clicks the button/link       link = Set up your project
+
+the user adds a new partner organisation
+    [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
+    the user enters text to a text field  id = organisationName  ${partnerOrgName}
+    the user enters text to a text field  id = userName  ${persFullName}
+    the user enters text to a text field  id = email  ${email}
+    the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
+    the user should see the element       jQuery = h2:contains(${partnerOrgName})
+
+The user accepts invitation and selects organisation type
+    [Arguments]   ${orgId}  ${orgName}
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
+    the user selects the radio button                     organisationType    1
+    the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House  ${orgId}  ${orgName}
+
+The user fills in account details
+    [Arguments]  ${firstName}  ${lastName}
+    the user enters text to a text field   id = firstName     ${firstName}
+    the user enters text to a text field   id = lastName      ${lastName}
+    the user enters text to a text field   id = phoneNumber   07123456789
+    the user enters text to a text field   id = password      ${short_password}
+    the user selects the checkbox          termsAndConditions
+
+The user verifies their account
+    [Arguments]  ${email}
+    the user should see the element                jQuery = h1:contains("Please verify your email address")
+    the user reads his email and clicks the link   ${email}  Please verify your email address  You have recently set up an account with the Innovation Funding Service.  1
+    the user should see the element                jQuery = h1:contains("Account verified")
+
+A new organisation logs in and sees the project
+    [Arguments]  ${email}
+    the user clicks the button/link   link = Sign in
+    Logging in and Error Checking     ${email}  ${short_password}
+
+a new organisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}  ${applicationID}  ${appTitle}
+    logout as user
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}
+    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
+    the user fills in account details                             ${fname}  ${sname}
+    the user clicks the button/link                               jQuery = button:contains("Create account")
+    the user verifies their account                               ${email}
+    a new organisation logs in and sees the project               ${email}
+    the user should see the element                               jQuery = ul:contains("${appTitle}") .status:contains("Ready to join project")
+    the user clicks the button/link                               link = ${appTitle}
+    the user should see the element                               jQuery = h1:contains("Join project")
+
+the user completes your organisation
+    the user enters text to a text field                    css = #financialYearEndMonthValue    12
+    the user enters text to a text field                    css = #financialYearEndYearValue    2016
+    the user selects the radio button                       organisationSize  MEDIUM
+    the user enters text to a text field                    css = #annualTurnoverAtLastFinancialYear   5600
+    the user enters text to a text field                    css = #annualProfitsAtLastFinancialYear    3000
+    the user enters text to a text field                    css = #annualExportAtLastFinancialYear    4000
+    the user enters text to a text field                    css = #researchAndDevelopmentSpendAtLastFinancialYear    5660
+    the user enters text to a text field                    css = #headCountAtLastFinancialYear    0
+    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
+
+The new partner can complete Your organisation
+    the user clicks the button/link    link = Your organisation
+    the user completes your organisation
+    the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
+
+the user is able to remove a pending partner organisation
+    [Arguments]  ${orgName}
+    the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
+    the user should not see the element         jQuery = h2:contains(${orgName})

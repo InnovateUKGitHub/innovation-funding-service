@@ -33,7 +33,25 @@ public class YourFundingViewModel {
 
     private final String financesUrl;
 
-    public YourFundingViewModel(long applicationId, long sectionId, long organisationId, long competitionId, boolean complete, boolean open, boolean leadApplicant, boolean business, String applicationName, boolean fundingSectionLocked, boolean researchCategoryRequired, boolean yourOrganisationRequired, Long researchCategoryQuestionId, long yourOrganisationSectionId, Integer maximumFundingLevel, String financesUrl) {
+    private final boolean overridingFundingRules;
+
+    public YourFundingViewModel(long applicationId,
+                                long sectionId,
+                                long organisationId,
+                                long competitionId,
+                                boolean complete,
+                                boolean open,
+                                boolean leadApplicant,
+                                boolean business,
+                                String applicationName,
+                                boolean fundingSectionLocked,
+                                boolean researchCategoryRequired,
+                                boolean yourOrganisationRequired,
+                                Long researchCategoryQuestionId,
+                                long yourOrganisationSectionId,
+                                Integer maximumFundingLevel,
+                                String financesUrl,
+                                boolean overridingFundingRules) {
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.organisationId = organisationId;
@@ -50,6 +68,7 @@ public class YourFundingViewModel {
         this.yourOrganisationSectionId = yourOrganisationSectionId;
         this.maximumFundingLevel = maximumFundingLevel;
         this.financesUrl = financesUrl;
+        this.overridingFundingRules = overridingFundingRules;
     }
 
     public long getApplicationId() {
@@ -114,6 +133,10 @@ public class YourFundingViewModel {
 
     public String getFinancesUrl() {
         return financesUrl;
+    }
+
+    public boolean isOverridingFundingRules() {
+        return overridingFundingRules;
     }
 
     /* view logic */

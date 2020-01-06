@@ -103,7 +103,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 .withProject(project)
                 .build(1);
 
-        when(projectMonitoringOfficerRepositoryMock.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.hasRole(MONITORING_OFFICER)) {
@@ -115,7 +115,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     }
 
     @Test
-    public void projectFinanceUserCanUpdateAllOrganisations(){
+    public void projectFinanceUserCanUpdateAllOrganisations() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(projectFinanceUser())) {
                 assertTrue(rules.projectFinanceUserCanUpdateAnyOrganisation(newOrganisationResource().build(), user));
@@ -190,8 +190,8 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ProcessRole processRole = newProcessRole().withApplication(application).withOrganisationId(organisation.getId()).build();
         UserResource user = newUserResource().build();
 
-        when(processRoleRepositoryMock.findByUserId(user.getId())).thenReturn(singletonList(processRole));
-        when(processRoleRepositoryMock.findByApplicationId(application.getId())).thenReturn(singletonList(processRole));
+        when(processRoleRepository.findByUserId(user.getId())).thenReturn(singletonList(processRole));
+        when(processRoleRepository.findByApplicationId(application.getId())).thenReturn(singletonList(processRole));
 
         OrganisationResource organisationResource =
                 newOrganisationResource().withId(organisation.getId()).withProcessRoles(singletonList(processRole.getId())).build();
@@ -240,17 +240,15 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     @Test
     public void systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToApplication() {
         OrganisationResource organisation = newOrganisationResource().withProcessRoles(singletonList(123L)).build();
-        allGlobalRoleUsers.forEach(user -> {
-            assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user));
-        });
+        allGlobalRoleUsers.forEach(user ->
+                assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user)));
     }
 
     @Test
     public void systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToUsers() {
         OrganisationResource organisation = newOrganisationResource().withUsers(singletonList(123L)).build();
-        allGlobalRoleUsers.forEach(user -> {
-            assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user));
-        });
+        allGlobalRoleUsers.forEach(user ->
+                assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user)));
     }
 
     @Test
@@ -298,7 +296,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         List<ProjectUser> allProjectUserEntries =
                 combineLists(thisUsersProjectUserEntriesWithoutLinkedOrganisation, thisUsersProjectUserEntriesIncludingLinkedOrganisation);
 
-        when(projectUserRepositoryMock.findByUserIdAndRole(user.getId(), PROJECT_PARTNER)).thenReturn(allProjectUserEntries);
+        when(projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_PARTNER)).thenReturn(allProjectUserEntries);
 
         OrganisationResource linkedOrganisationToCheck = newOrganisationResource().
                 withId(organisationBeingChecked.getId()).
@@ -306,7 +304,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
         assertTrue(rules.projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(linkedOrganisationToCheck, user));
 
-        verify(projectUserRepositoryMock).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+        verify(projectUserRepository).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
     }
 
     @Test
@@ -343,7 +341,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         List<ProjectUser> allProjectUserEntries =
                 combineLists(thisUsersProjectUserEntriesWithoutLinkedOrganisation, thisUsersProjectUserEntriesIncludingLinkedOrganisation);
 
-        when(projectUserRepositoryMock.findByUserIdAndRole(user.getId(), PROJECT_PARTNER)).thenReturn(allProjectUserEntries);
+        when(projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_PARTNER)).thenReturn(allProjectUserEntries);
 
         OrganisationResource linkedOrganisationToCheck = newOrganisationResource().
                 withId(organisationBeingChecked.getId()).
@@ -351,7 +349,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
         assertFalse(rules.projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(linkedOrganisationToCheck, user));
 
-        verify(projectUserRepositoryMock).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+        verify(projectUserRepository).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
     }
 
     @Test

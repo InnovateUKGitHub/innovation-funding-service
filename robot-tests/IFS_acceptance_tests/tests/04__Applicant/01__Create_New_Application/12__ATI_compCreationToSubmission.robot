@@ -7,6 +7,7 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-3421  As a Lead applicant I am unable submit an ineligible application to a Collaborative competition
 ...
+...               IFS-6725  Guidance Improvement to 'Funding level' in 'Your Funding' in application
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -34,7 +35,7 @@ Applicant applies to newly created ATI competition
     Then logged in user applies to competition               ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
-    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920
+    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -43,6 +44,8 @@ Single applicant cannot submit his application to a collaborative comp
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user does not see state aid information
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
+    And the user clicks the button/link                 link = Your project finances
+    And the user checks for funding level guidance at application level
     And the user accept the competition terms and conditions     Return to application overview
     And the user checks the override value is applied
     And the user selects research category              Feasibility studies
@@ -63,10 +66,24 @@ Moving ATI Competition to Project Setup
     And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
     And moving competition to Project Setup            ${competitionId}
 
+Internal user add new partner orgnisation
+    [Documentation]  IFS-6725
+    [Setup]  Requesting Project ID of this Project
+    ${applicationId} =  get application id by name  ${ATIapplicationTitle}
+    Given the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team/partner
+    When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  test1@test.nom
+    Then a new organisation is able to accept project invite   Name  Surname  test1@test.nom  innovate  INNOVATE LTD  ${applicationId}  ${ATIapplicationTitle}
+
+New partner orgination checks for funding level guidance
+    [Documentation]  IFS-6725
+    Given log in as a different user      test1@test.nom    ${short_password}
+    When the user clicks the button/link   link = ${ATIapplicationTitle}
+    And The new partner can complete Your organisation
+    Then the user checks for funding level guidance at PS level
+
 Applicant completes Project Details
     [Documentation]  IFS-2332
     [Tags]
-    [Setup]  Requesting Project ID of this Project
     When log in as a different user              &{lead_applicant_credentials}
     Then project lead submits project address    ${ProjectID}
 
@@ -110,7 +127,6 @@ the user checks the override value is applied
     the user clicks the button/link     link = Your funding
     the user clicks the button/link     jQuery = button:contains("Edit your funding")
     the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
-    the user selects the checkbox       agree-terms-page
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Back to application overview
 
@@ -140,7 +156,7 @@ the lead invites already registered user
 
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
-    the user should not see the element  link = eligible for state aid
+    the user should not see the element  jQuery = p:contains("If we decide to award you funding you must be eligible to receive State aid at the point of the award.)
     the user clicks the button/link      link = Your project finances
 
 Custom suite teardown

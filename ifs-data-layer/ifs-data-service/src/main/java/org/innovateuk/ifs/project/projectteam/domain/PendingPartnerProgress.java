@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.projectteam.domain;
 
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 
 import javax.persistence.*;
@@ -24,7 +26,7 @@ public class PendingPartnerProgress {
     private ZonedDateTime termsAndConditionsCompletedOn;
     private ZonedDateTime completedOn;
 
-    private PendingPartnerProgress() {}
+    public PendingPartnerProgress() {}
 
     public PendingPartnerProgress(PartnerOrganisation partnerOrganisation) {
         this.partnerOrganisation = partnerOrganisation;
@@ -94,10 +96,18 @@ public class PendingPartnerProgress {
         return termsAndConditionsCompletedOn != null;
     }
 
+    public boolean isYourOrganisationRequired() {
+        PartnerOrganisation partnerOrganisation = getPartnerOrganisation();
+        Competition competition = partnerOrganisation.getProject().getApplication().getCompetition();
+        Organisation organisation =  partnerOrganisation.getOrganisation();
+        return competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
+    }
+
     public boolean isReadyToJoinProject() {
-        return isYourOrganisationComplete() &&
+        return (isYourOrganisationComplete() || isYourOrganisationRequired()) &&
                 isYourFundingComplete() &&
-                isTermsAndConditionsComplete();
+                isTermsAndConditionsComplete() &&
+                !isComplete();
     }
 
     public boolean isComplete() {

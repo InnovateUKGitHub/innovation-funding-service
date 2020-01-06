@@ -35,15 +35,17 @@
                 <p class="govuk-heading-s govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
             </div>
 
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}">
+                <p class="govuk-body govuk-!-margin-top-0">This document is now marked as incomplete.</p>
+            </div>
+
             <th:block th:unless="${model.fileDetails == null}">
                 <h2 class="govuk-heading-m">File uploaded</h2>
                 <p class="govuk-body uploaded-file">
                     <a th:href="@{/project/{projectId}/document/config/{documentConfigId}/download(projectId=${model.projectId}, documentConfigId=${model.documentConfigId})}"
                        class="govuk-link"
-                       th:text="${model.fileDetails.filename}"
                        target="_blank"
-                       aria-describedby="file-uploaded-hint">The-uploaded-file-example.pdf</a>
-                    <span id="file-uploaded-hint">(opens in a new window)</span>.
+                       th:text="|${model.fileDetails.filename} (opens in a new window)|">The-uploaded-file-example.pdf</a>
                 </p>
             </th:block>
 
