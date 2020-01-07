@@ -66,7 +66,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     public ProjectDataBuilder withStartDate(LocalDate startDate) {
-        return with(data -> doAs(data.getLeadApplicant(), () ->
+        return with(data -> doAs(ifsAdmin(), () ->
                 projectDetailsService.updateProjectStartDate(data.getProject().getId(), startDate).getSuccess()
         ));
     }
