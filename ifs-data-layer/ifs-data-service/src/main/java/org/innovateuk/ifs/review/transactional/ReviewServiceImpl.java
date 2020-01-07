@@ -124,6 +124,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<List<ReviewResource>> getReviews(long userId, long competitionId) {
         List<Review> reviews = reviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
         return serviceSuccess(simpleMap(reviews, reviewMapper::mapToResource));
@@ -143,6 +144,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<ReviewResource> getReview(long assessmentReviewId) {
         return find(reviewRepository.findById(assessmentReviewId), notFoundError(ReviewResource.class, assessmentReviewId))
                 .andOnSuccessReturn(reviewMapper::mapToResource);
