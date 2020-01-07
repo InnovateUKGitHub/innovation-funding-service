@@ -28,25 +28,25 @@ getParameter () {
 
 # $1 = paramValue, $2 = writePath
 writeParameter () {
-  echo -e $1 > $2
+  echo -e "$1" > "$2"
 }
 
 #SSM Parameter store can store up to 4k characters, therefore longer secrets are split when stored and reassembled here
 # $1 = paramValue $2 = writePath
 appendParameter () {
-  echo -e $1 >> $2
+  echo -e "$1" >> "$2"
 }
 
 #aggregate function $1 = paramValue, $2 = writePath
 getThenWriteParameter () {
-  param= getParameter $1
-  writeParameter $param $2
+  param= getParameter "$1"
+  writeParameter $param "$2"
 }
 
 #aggregate function $1 = paramValue, $2 = writePath
 getThenAppendParameter () {
-  param= getParameter $1
-  appendParameter $param $2
+  param= getParameter "$1"
+  appendParameter "$param" "$2"
 }
 
 mkdir ifs-auth-service/aws/
