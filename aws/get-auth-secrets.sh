@@ -58,7 +58,7 @@ aws_access_key_id = $KEY_ID
 aws_secret_access_key = $KEY" > ifs-auth-service/aws/credentials
 
 docker image rm ssm-access-image
-docker build --tag="ssm-access-image" docker/aws-cli
+docker build --tag="ssm-access-image" $PWD/docker/aws-cli
 docker run -id --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 
 getThenWriteParameter "/CI/IFS/$ENV/LDAP/ENCRYPTION/KEY" "ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key"
