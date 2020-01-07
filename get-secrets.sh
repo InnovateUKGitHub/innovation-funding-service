@@ -5,6 +5,8 @@ if [[ $# != 4 ]] ; then
   exit 0
 fi
 
+echo $1 
+
 #Must be either PROD (for running on production environment), or NON-PROD (for running on any other named environment)
 if [[ $1 == production ]] ; then
   $ENV="PROD"
