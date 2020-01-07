@@ -5,14 +5,14 @@ if [[ $# != 4 ]] ; then
   exit 0
 fi
 
-echo "Environment: $1"
-
 #Must be either PROD (for running on production environment), or NON-PROD (for running on any other named environment)
-if [[ "$1" == "production" ]] ; then
+if [[ "$1" == "ifs-prod" ]] ; then
   $ENV="PROD"
 else
   $ENV="NON-PROD"
 fi
+
+echo "Environment: $ENV"
 
 #Name of aws profile that identifies credentials and config
 AWS_PROFILE=$2
@@ -77,7 +77,6 @@ getThenWriteParameter "/CI/IFS/$ENV/SP/PROXY/CERT" "ifs-auth-service/ifs-sp-serv
 getThenWriteParameter "/CI/IFS/$ENV/SP/PROXY/CACERT/1" "ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_cacertificate.pem"
 
 if [ "$ENV" == "NON-PROD" ]; then
-  echo "env is non prod"
   getThenAppendParameter "/CI/IFS/$ENV/IDP/PROXY/CACERT/2" "ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem"
   getThenAppendParameter "/CI/IFS/$ENV/IDP/PROXY/CACERT/3" "ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem"
   getThenAppendParameter "/CI/IFS/$ENV/SP/PROXY/CACERT/2" "ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_cacertificate.pem"
