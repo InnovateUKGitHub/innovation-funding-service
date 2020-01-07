@@ -2,7 +2,6 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
@@ -11,22 +10,26 @@ import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Service to get statistics related to Review Panels.
  */
 @Service
+@Transactional(readOnly = true)
 public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
 
     private ReviewInviteRepository reviewInviteRepository;
@@ -51,8 +54,8 @@ public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
         List<Long> assessmentPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
         reviewKeyStatisticsResource.setApplicationsInPanel(getApplicationPanelAssignedCountStatistic(competitionId));
-        reviewKeyStatisticsResource.setAssessorsAccepted(getReviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
-        reviewKeyStatisticsResource.setAssessorsPending(reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, Collections.singleton(InviteStatus.SENT)));
+        reviewKeyStatisticsResource.setAssessorsAccepted(getReviewParticipantCountStatistic(competitionId, ACCEPTED, assessmentPanelInviteIds));
+        reviewKeyStatisticsResource.setAssessorsPending(reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, singleton(SENT)));
 
         return serviceSuccess(reviewKeyStatisticsResource);
     }
@@ -67,8 +70,8 @@ public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
         List<Long> reviewPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
         int totalAssessorsInvited = reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
-        int assessorsAccepted = getReviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, reviewPanelInviteIds);
-        int assessorsDeclined = getReviewParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, reviewPanelInviteIds);
+        int assessorsAccepted = getReviewParticipantCountStatistic(competitionId, ACCEPTED, reviewPanelInviteIds);
+        int assessorsDeclined = getReviewParticipantCountStatistic(competitionId, REJECTED, reviewPanelInviteIds);
 
         return serviceSuccess(
                 new ReviewInviteStatisticsResource(totalAssessorsInvited, assessorsAccepted, assessorsDeclined)
