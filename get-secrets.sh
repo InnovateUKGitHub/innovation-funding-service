@@ -1,12 +1,17 @@
 #!/bin/bash
 
 if [[ $# != 4 ]] ; then
-    echo 'Called with wrong arguments. Script rgequires ENV, AWS_PROFILE, KEY_ID, KEY'
-    exit 0
+  echo 'Called with wrong arguments. Script requires ENV, AWS_PROFILE, KEY_ID, KEY'
+  exit 0
 fi
 
 #Must be either PROD (for running on production environment), or NON-PROD (for running on any other named environment)
-ENV=$1
+if [[ $1 == production ]] ; then
+  $ENV="PROD"
+else
+  $ENV="NON-PROD"
+fi
+
 #Name of aws profile that identifies credentials and config
 AWS_PROFILE=$2
 #Secret id that allows access to AWS parameter store
