@@ -10,12 +10,14 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
     private Long projectId;
     private String projectName;
     private long projectDurationInMonths;
+    private Long competitionId;
 
     public ProjectDetailsStartDateViewModel(ProjectResource project) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.projectDurationInMonths = project.getDurationInMonths();
         this.applicationId = project.getApplication();
+        this.competitionId = project.getCompetition();
     }
 
     public String getProjectName() {
@@ -32,5 +34,9 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
 
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
     }
 }

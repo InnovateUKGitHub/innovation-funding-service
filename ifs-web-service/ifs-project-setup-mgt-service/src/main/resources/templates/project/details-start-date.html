@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=${model.projectName + ' - Target start date'},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+              th:with="pageTitle=${'Target start date - ' + model.projectName},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
 <body class="govuk-template__body project-details start-date">
@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Project details',linkUrl=@{/project/{id}/details(id=${model.projectId})}"/>
+              th:with="linkTitle='Project details',linkUrl=@{/competition/{competitionId}/project/{projectId}/details(competitionId=${model.competitionId},projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
