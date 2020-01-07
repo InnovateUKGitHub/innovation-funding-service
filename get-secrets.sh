@@ -6,7 +6,7 @@ if [[ $# != 4 ]] ; then
 fi
 
 #Must be either PROD (for running on production environment), or NON-PROD (for running on any other named environment)
-if [[ "$1" == "ifs-prod" ]] ; then
+if [[ $1 == "ifs-prod" ]] ; then
   ENV="PROD"
 else
   ENV="NON-PROD"
@@ -28,24 +28,24 @@ getParameter () {
 
 # $1 = paramValue, $2 = writePath
 writeParameter () {
-  echo -e "$1" > "$2"
+  echo -e $1 > $2
 }
 
 #SSM Parameter store can store up to 4k characters, therefore longer secrets are split when stored and reassembled here
 # $1 = paramValue $2 = writePath
 appendParameter () {
-  echo -e "$1" >> "$2"
+  echo -e $1 >> $2
 }
 
 #aggregate function $1 = paramValue, $2 = writePath
 getThenWriteParameter () {
-  param= getParameter "$1"
-  writeParameter $param "$2"
+  param=$(getParameter $1)
+  writeParameter "$param" "$2"
 }
 
 #aggregate function $1 = paramValue, $2 = writePath
 getThenAppendParameter () {
-  param= getParameter "$1"
+  param=$(getParameter $1)
   appendParameter "$param" "$2"
 }
 
