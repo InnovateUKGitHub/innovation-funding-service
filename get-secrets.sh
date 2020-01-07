@@ -7,9 +7,9 @@ fi
 
 #Must be either PROD (for running on production environment), or NON-PROD (for running on any other named environment)
 if [[ "$1" == "ifs-prod" ]] ; then
-  $ENV="PROD"
+  ENV="PROD"
 else
-  $ENV="NON-PROD"
+  ENV="NON-PROD"
 fi
 
 echo "Environment: $ENV"
