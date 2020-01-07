@@ -12,8 +12,6 @@ else
   ENV="NON-PROD"
 fi
 
-echo "Environment: $ENV"
-
 #Name of aws profile that identifies credentials and config
 AWS_PROFILE=$2
 #Secret id that allows access to AWS parameter store
