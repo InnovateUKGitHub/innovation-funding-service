@@ -36,20 +36,20 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testUpdateProjectStartDate() {
+    public void updateProjectStartDate() {
 
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.updateProjectStartDate(123L, LocalDate.now()), () -> {
-            verify(projectDetailsPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verify(projectDetailsPermissionRules).ifsAdministratorCanUpdateStartDate(project, getLoggedInUser());
             verifyNoMoreInteractions(projectDetailsPermissionRules);
         });
     }
 
     @Test
-    public void testUpdateProjectAddress() {
+    public void updateProjectAddress() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -62,7 +62,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testUpdateFinanceContact() {
+    public void updateFinanceContact() {
 
         ProjectResource project = newProjectResource().build();
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
@@ -76,7 +76,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testUpdatePartnerProjectLocation() {
+    public void updatePartnerProjectLocation() {
 
         Long projectId = 1L;
         Long organisationId = 2L;
@@ -89,7 +89,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testGetProjectManager() {
+    public void getProjectManager() {
         ProjectResource project = newProjectResource().build();
 
         when(classUnderTestMock.getProjectManager(123L))
@@ -119,7 +119,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testSetProjectManager() {
+    public void setProjectManager() {
 
         ProjectResource project = newProjectResource().build();
 
