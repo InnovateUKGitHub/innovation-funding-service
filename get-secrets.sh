@@ -5,7 +5,7 @@ if [[ $# != 4 ]] ; then
   exit 0
 fi
 
-echo $1
+echo "Environment: $1"
 
 #Must be either PROD (for running on production environment), or NON-PROD (for running on any other named environment)
 if [[ "$1" == "production" ]] ; then
@@ -63,8 +63,6 @@ docker image rm ssm-access-image
 docker build --tag="ssm-access-image" docker/aws-cli
 docker run -id --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 
-echo "Start copying secrets from parameter store"
-
 getThenWriteParameter "/CI/IFS/$ENV/LDAP/ENCRYPTION/KEY" "ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key"
 getThenWriteParameter "/CI/IFS/$ENV/LDAP/ENCRYPTION/CERT" "ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt"
 getThenWriteParameter "/CI/IFS/$ENV/IDP/ENCRYPTION/KEY" "ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.key"
@@ -87,5 +85,3 @@ if [ "$ENV" == "NON-PROD" ]; then
 fi
 
 docker stop ssm-access-container
-
-echo "Finished copying secrets from parameter store"
