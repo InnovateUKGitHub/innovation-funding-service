@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $# < 4 ]] ; then
-    echo 'Called with 0 arguments. Script rgequires ENV, AWS_PROFILE, KEY_ID, KEY'
+if [[ $# != 4 ]] ; then
+    echo 'Called with wrong arguments. Script rgequires ENV, AWS_PROFILE, KEY_ID, KEY'
     exit 0
 fi
 
