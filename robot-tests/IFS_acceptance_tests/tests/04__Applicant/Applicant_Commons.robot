@@ -240,7 +240,6 @@ the academic fills in the project costs
     the user should see the element       jQuery = [data-mirror^="#total"]:contains("£32,698")
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       jQuery = a:contains(${5mb_pdf} (opens in a new window))
-    the user selects the checkbox         termsAgreed
     the user clicks the button/link       css = #mark-all-as-complete[type="submit"]
 
 the user enters the project location
@@ -260,7 +259,6 @@ the user fills the organisation details with Project growth table
     the user enters text to a text field                    css = #annualExportAtLastFinancialYear    4000
     the user enters text to a text field                    css = #researchAndDevelopmentSpendAtLastFinancialYear    5660
     the user enters text to a text field                    css = #headCountAtLastFinancialYear    0
-    the user selects the checkbox                           stateAidAgreed
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 the user fills in the organisation information
@@ -272,7 +270,6 @@ the user fills in the organisation information
     the user selects the radio button       organisationSize  ${org_size}
     the user enters text to a text field    css = #turnover    150
     the user enters text to a text field    css = #headCount   3
-    the user selects the checkbox           stateAidAgreed
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user clicks the button/link         link = Your organisation
     the user should see the element         jQuery = button:contains("Edit")
@@ -463,7 +460,6 @@ the user marks your funding section as complete
     the user selects the radio button     requestingFunding   true
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
     the user selects the radio button     otherFunding  false
-    the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
 
 the user selects medium organisation size
