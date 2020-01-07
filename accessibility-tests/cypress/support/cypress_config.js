@@ -1,6 +1,6 @@
 export const OPTIONS = {
   runOnly: {
     type: "tag",
-    values: ["wcag2a","wcag2aa"]
+    values: ["wcag21a","wcag21aa","wcag2a","wcag2aa"]
   }
 };
