@@ -79,10 +79,9 @@
                                  data-prevent-input-regex="[^0-9]"
                                  maxlength="2"
                                  minlength="1"
-                                 aria-labelledby="day"
                                  class="govuk-input govuk-input--width-4"
-                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
-                                           data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
+                                 th:attr="aria-labelledby=|day milestone-${milestoneEntry.key}|,
+                                 data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|"
                                  th:value="${milestoneEntry.value.day}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
                                  th:readonly="${milestoneEntry.value.readonly}" />
@@ -97,9 +96,9 @@
                                 data-prevent-input-regex="[^0-9]"
                                 maxlength="2"
                                 minlength="1"
-                                aria-labelledby="month"
                                 class="govuk-input govuk-input--width-4"
-                                th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
+                                th:attr="aria-labelledby=|day milestone-${milestoneEntry.key}|,
+                                data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
                                 th:readonly="${milestoneEntry.value.readonly}"/>
@@ -111,9 +110,8 @@
                                  data-prevent-input-regex="[^0-9]"
                                  maxlength="4"
                                  minlength="4"
-                                 aria-labelledby="year"
-                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
-                                 data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year},
+                                 th:attr="aria-labelledby=|year milestone-${milestoneEntry.key}|,
+                                 data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|,
                                  min=${#dates.format(#dates.createNow(), 'yyyy')}"
                                  required="required"
                                  class="govuk-input govuk-input--width-4"
