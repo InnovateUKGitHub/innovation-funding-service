@@ -39,14 +39,14 @@ appendParameter () {
 
 #aggregate function $1 = paramValue, $2 = writePath
 getThenWriteParameter () {
-  param = getParameter $1
-  writeParameter param $2
+  param= getParameter $1
+  writeParameter $param $2
 }
 
 #aggregate function $1 = paramValue, $2 = writePath
 getThenAppendParameter () {
-  param = getParameter $1
-  appendParameter param $2
+  param= getParameter $1
+  appendParameter $param $2
 }
 
 mkdir ifs-auth-service/aws/
