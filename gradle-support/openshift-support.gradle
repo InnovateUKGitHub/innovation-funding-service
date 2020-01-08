@@ -80,6 +80,11 @@ task osDeployProduction(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "ifs-prod", project.version]
 }
 
+task osDeployProductionConfig(type: Exec, dependsOn: prepareDeployment) {
+    executable = 'setup-files/scripts/openshift/os-deploy-config.sh'
+    args = [openshiftEnv, "ifs-prod", project.version]
+}
+
 task osUpgradeProduction(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "ifs-prod", project.version]
@@ -105,6 +110,11 @@ task financeDataSyncProduction(type: Exec, dependsOn: [setDatabaseDefaults, setF
 
 task osDeployUat(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "ifs-uat", project.version]
+}
+
+task osDeployUatConfig(type: Exec, dependsOn: prepareDeployment) {
+    executable = 'setup-files/scripts/openshift/os-deploy-config.sh'
     args = [openshiftEnv, "ifs-uat", project.version]
 }
 
@@ -146,6 +156,11 @@ task osDeployDemo(type: Exec, dependsOn: prepareDeployment) {
     args = [openshiftEnv, "ifs-demo", project.version]
 }
 
+task osDeployDemoConfig(type: Exec, dependsOn: prepareDeployment) {
+    executable = 'setup-files/scripts/openshift/os-deploy-config.sh'
+    args = [openshiftEnv, "ifs-demo", project.version]
+}
+
 task osUpgradeDemo(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "ifs-demo", project.version]
@@ -166,6 +181,11 @@ task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinance
 
 task osDeploySysint(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "ifs-sysint", project.version]
+}
+
+task osDeploySysintConfig(type: Exec, dependsOn: prepareDeployment) {
+    executable = 'setup-files/scripts/openshift/os-deploy-config.sh'
     args = [openshiftEnv, "ifs-sysint", project.version]
 }
 
@@ -195,6 +215,11 @@ task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinan
 
 task osDeployPerf(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "ifs-perf", project.version]
+}
+
+task osDeployPerfConfig(type: Exec, dependsOn: prepareDeployment) {
+    executable = 'setup-files/scripts/openshift/os-deploy-config.sh'
     args = [openshiftEnv, "ifs-perf", project.version]
 }
 
@@ -232,6 +257,11 @@ task osDeployLocal(type: Exec, dependsOn: prepareDeployment) {
 
 task osUpgradeLocal(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task osDeployLocalConfig(type: Exec, dependsOn: prepareDeployment) {
+    executable = 'setup-files/scripts/openshift/os-deploy-config.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
@@ -345,6 +375,11 @@ task createProject(dependsOn: deleteProject) {
 
 task osDeployRemote(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task osDeployRemoteConfig(type: Exec, dependsOn: prepareDeployment) {
+    executable = 'setup-files/scripts/openshift/os-deploy-config.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
