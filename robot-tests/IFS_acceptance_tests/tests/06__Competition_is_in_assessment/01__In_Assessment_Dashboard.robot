@@ -11,8 +11,8 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 *** Test Cases ***
 In Assessment dashboard page
     [Documentation]    INFUND-7363
-    Given The user clicks the button/link             link = Val is awesome
-    Then the user should see the competition details  Val is awesome  In assessment  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition  Programme
+    Given The user clicks the button/link             link = Val is awesome 2
+    Then the user should see the competition details  Val is awesome 2  In assessment  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition  Programme
     And the user should see the element               link = View and update competition setup
 
 Milestones for In Assessment competitions

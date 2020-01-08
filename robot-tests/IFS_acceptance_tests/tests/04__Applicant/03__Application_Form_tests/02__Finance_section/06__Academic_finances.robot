@@ -38,6 +38,7 @@ Academic finance validations
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
     [Tags]  HappyPath
+    Given the user can remove the uploaded file   remove_jes  jes-form150.pdf (opens in new window)
     When the academic fills in the project costs
     And the user clicks the button/link  link = Your project costs
     Then the subtotals should be correctly updated
