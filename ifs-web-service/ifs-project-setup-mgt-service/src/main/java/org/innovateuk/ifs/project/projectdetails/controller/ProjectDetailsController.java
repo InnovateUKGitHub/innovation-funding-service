@@ -123,7 +123,8 @@ public class ProjectDetailsController {
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "UPDATE_START_DATE", description = "Only the IFS Administrator can update the project start date")
     @PostMapping("/{projectId}/details/start-date")
-    public String updateStartDate(@PathVariable("projectId") final Long projectId,
+    public String updateStartDate(@PathVariable("competitionId") final Long competitionId,
+                                  @PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                   Model model,
@@ -135,7 +136,7 @@ public class ProjectDetailsController {
             ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
 
             return validationHandler.addAnyErrors(updateResult, toField("projectStartDate")).
-                    failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
+                    failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId, competitionId));
         });
     }
 
@@ -209,7 +210,7 @@ public class ProjectDetailsController {
         }
     }
 
-    private String redirectToProjectDetails(long projectId) {
-        return "redirect:/competition/{competitionId}/project/" + projectId + "/details";
+    private String redirectToProjectDetails(long projectId, long competitionId) {
+        return "redirect:/competition/" + competitionId + "/project/" + projectId + "/details";
     }
 }
