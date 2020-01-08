@@ -33,8 +33,8 @@ ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 ${adminChangeEmailOld}    aaron.powell@example.com
 ${adminChangeEmailNew}    aaron.powell2@example.com
-${supportChangeEmailOld}  megan.rowland@gmail.com
-${supportChangeEmailNew}  megan.rowland2@gmail.com
+${supportChangeEmailOld}  michael.henderson@gmail.com
+${supportChangeEmailNew}  michael.henderson2@gmail.com
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
