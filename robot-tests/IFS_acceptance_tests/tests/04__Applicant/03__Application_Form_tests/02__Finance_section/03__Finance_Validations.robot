@@ -36,7 +36,6 @@ Other funding server side
     [Documentation]    INFUND-2214
     [Tags]
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
-    And the user selects the checkbox                    agree-terms-page
     And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   Enter a funding source.
     And the user should see a field and summary error    Enter date secured.
@@ -47,7 +46,6 @@ Select NO Other Funding and mark as complete should be possible
     [Tags]
     Given the user selects the radio button     requestingFunding   false
     When the user selects the radio button      otherFunding  false
-    And the user selects the checkbox           agree-terms-page
     Then the user clicks the button/link        jQuery = button:contains("Mark as complete")
     And the user should not see an error in the page
 
@@ -93,12 +91,11 @@ Overhead cost client side
     Given the user clicks the button/link    jQuery = button:contains("Overhead costs")
     When the user selects the radio button   overhead.rateType  overhead-rate-type-total
     And the user uploads the file            id = overhead.file  ${text_file}
-    Then the user should see a field and summary error    Please upload a file in .xls, .xlsx or .ods format only.
+    Then the user should see a field error    Please upload a file in .xls, .xlsx or .ods format only.
     #TODO Add validaions for text feild once IFS-2555 done
 
 Overhead cost server side
     [Documentation]    INFUND-844
-    Given the user selects the checkbox        agree-terms-page
     When the user clicks the button/link       jQuery = button:contains("Mark as complete")
     Then The user should see a summary error   You should upload a completed overheads spreadsheet.
 
@@ -249,7 +246,6 @@ Funding level server side
     And the user clicks the button/link          jQuery = button:contains("Edit your funding")
     And the user selects the radio button        requestingFunding   true
     When the user enters text to a text field    css = [name^="grantClaimPercentage"]  71
-    And the user selects the checkbox            agree-terms-page
     And the user clicks the button/link          jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   Funding level must be 70% or lower.
     And the user selects the radio button        requestingFunding   true

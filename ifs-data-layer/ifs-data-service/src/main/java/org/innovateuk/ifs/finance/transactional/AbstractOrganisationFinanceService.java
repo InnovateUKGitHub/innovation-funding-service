@@ -1,22 +1,9 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import static java.lang.Boolean.TRUE;
-import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-
-
-import java.math.BigDecimal;
-import java.time.YearMonth;
-import java.util.Optional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
-import org.innovateuk.ifs.finance.resource.GrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -26,6 +13,14 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.util.Optional;
+
+import static java.lang.Boolean.TRUE;
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 public abstract class AbstractOrganisationFinanceService<Finance extends BaseFinanceResource> extends BaseTransactionalService implements OrganisationFinanceService {
 
@@ -43,7 +38,6 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     protected abstract ServiceResult<FinanceRowItem> saveGrantClaim(GrantClaim grantClaim);
     protected abstract ServiceResult<CompetitionResource> getCompetitionFromTargetId(long targetId);
     protected abstract void resetYourFundingSection(Finance finance, long competitionId, long userId);
-    protected abstract ServiceResult<Void> updateStateAidAgreed(long targetId);
 
     @Override
     public ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationWithGrowthTable(long targetId, long organisationId) {
@@ -71,7 +65,6 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
 
         return serviceSuccess(new OrganisationFinancesWithGrowthTableResource(
                 organisationSize,
-                false,
                 financialYearEnd,
                 headCountAtLastFinancialYear,
                 annualTurnoverAtEndOfFinancialYear,
@@ -94,15 +87,13 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
         Long headCount = employeesAndTurnover.map(EmployeesAndTurnoverResource::getEmployees).orElse(null);
 
         return serviceSuccess(new OrganisationFinancesWithoutGrowthTableResource(organisationSize, turnover,
-            headCount, false));
+            headCount));
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> updateOrganisationWithGrowthTable(long targetId, long organisationId, OrganisationFinancesWithGrowthTableResource finances) {
         long competitionId = getCompetitionId(targetId);
-
-        boolean stateAidIncluded = isShowStateAidAgreement(targetId, organisationId).getSuccess();
 
         // finance
         Finance finance = getFinance(targetId, organisationId).getSuccess();
@@ -117,10 +108,6 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
 
         updateFinance(finance).getSuccess();
 
-        if (stateAidIncluded && finances.getStateAidAgreed()) {
-            updateStateAidAgreed(targetId).getSuccess();
-        }
-
         return serviceSuccess();
     }
 
@@ -128,7 +115,6 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     @Transactional
     public ServiceResult<Void> updateOrganisationWithoutGrowthTable(long targetId, long organisationId, OrganisationFinancesWithoutGrowthTableResource finances) {
         long competitionId = getCompetitionId(targetId);
-        boolean stateAidIncluded = isShowStateAidAgreement(targetId, organisationId).getSuccess();
 
         //finance
         Finance finance = getFinance(targetId, organisationId).getSuccess();
@@ -138,10 +124,6 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
         employeesAndTurnover.setEmployees(finances.getHeadCount());
 
         updateFinance(finance).getSuccess();
-
-        if (stateAidIncluded && finances.getStateAidAgreed()) {
-            updateStateAidAgreed(targetId).getSuccess();
-        }
 
         return serviceSuccess();
     }

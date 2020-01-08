@@ -80,6 +80,11 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               IFS-1904 Only 1 row is saved on adding multiple new rows in eligibility > finances as internal user
 ...
 ...               IFS-2313 Project Setup: Ability to edit project duration
+...
+...               IFS-6706 Enable Project Finance to adjust academic finances in the Eligibility section
+...
+...               IFS-6893 Academic users can't see their finances in PS
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -150,8 +155,8 @@ Project Finance user can view academic Jes form
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     Given the user navigates to the page             ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link             css = a.eligibility-1
-    Then the user should see the element             jQuery = h3:contains("Download Je-S form:")
-    When The user clicks the button/link             link = jes-form104.pdf
+    Then the user should see the element             jQuery = h3:contains("Download Je-S form")
+    When The user clicks the button/link             link = jes-form104.pdf (opens in a new window)
     And the user closes the last opened tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
@@ -201,7 +206,6 @@ Timestamp approval verification for viability and eligibility
     When the user clicks the button/link                     css = table.table-progress a.eligibility-0
     And the user selects the checkbox                        project-eligible
     And the user selects the option from the drop-down menu  Green  id = rag-rating
-    And the user selects the checkbox                        creditReportConfirmed
     And the user clicks the button/link                      css = #confirm-button        #Page confirmation button
     And the user clicks the button/link                      name = confirm-eligibility   #Pop-up confirmation button
     Then the user should see the element                     jQuery = .success-alert p:contains(The partner's finance eligibility has been approved by Lee Bowman, ${today})
@@ -227,7 +231,7 @@ Project finance user can view finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    115,606    7,404    29%
+    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    116,596    4,936    29%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -239,13 +243,13 @@ Project finance user can view finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section    1    200,903    30%    57,803    2,468    140,632
     #Check finances summary for academic user
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
-    Then the Categories Are Verified For Finances Summary Section    2    990    100%    0    2,468   0
+    Then the Categories Are Verified For Finances Summary Section    2    990    100%    990    0   0
     #Check finances summary for non lead partner
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
     Then the Categories Are Verified For Finances Summary Section    3    200,903    30%    57,803    2,468    140,632
     #Check total
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1    402,797    115,606    7,404    281,265
+    And The Total Calculation For Finances Summary Are Verified    1    402,797    116,596    4,936    281,265
 
 Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -585,15 +589,6 @@ Checking the approve eligibility checkbox enables RAG selection but not Approve 
     Then the user should see the element    id = rag-rating
     And the user should see the element     jQuery = .disabled:contains("Approve eligible costs")
 
-RAG choices update on the finance checks page for eligibility
-    [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]
-    When the rag rating updates on the finance check page for lead for eligibility   Green
-    And the rag rating updates on the finance check page for lead for eligibility    Amber
-    And the rag rating updates on the finance check page for lead for eligibility    Red
-    When the user selects the option from the drop-down menu    --    id = rag-rating
-    Then the user should see the element    jQuery = .disabled:contains("Approve eligible costs")
-
 Clicking cancel on the eligibility modal
     [Documentation]    INFUND-4839
     [Tags]
@@ -637,7 +632,7 @@ Project finance user can see updated finance overview after lead changes to elig
     [Tags]
     When the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    css = .standard-definition-list dd:nth-child(2)    £379,678  # Total project cost
-    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(4)    108,670   # Grant applied for
+    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(4)    109,660   # Grant applied for
     And the user should see the text in the element     css = .standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
 
 Project finance user can see the Eligibility check page for the partner
@@ -736,15 +731,6 @@ Checking the approve eligibility checkbox enables RAG selection but not confirm 
     Then the user should see the element   id = rag-rating
     And the user should see the element    jQuery = .disabled:contains("Approve eligible costs")
 
-RAG choices update on the finance checks page for eligibility for partner
-    [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]
-    When the rag rating updates on the finance check page for partner for eligibility   Green
-    And the rag rating updates on the finance check page for partner for eligibility    Amber
-    And the rag rating updates on the finance check page for partner for eligibility    Red
-    When the user selects the option from the drop-down menu    --    id = rag-rating
-    Then the user should see the element    jQuery = .disabled:contains("Approve eligible costs")
-
 Clicking cancel on the eligibility modal for partner
     [Documentation]    INFUND-4839
     [Tags]
@@ -779,7 +765,7 @@ Project finance user can see updated finance overview after partner changes to e
     Given log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     Then the user should see the text in the element   css = .standard-definition-list dd:nth-child(2)    £356,559  #Total project cost
-    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(4)    101,735   #Grant applied for
+    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(4)    102,725   #Grant applied for
     And the user should see the text in the element    css = .standard-definition-list dd:nth-child(8)    29%       #Total percentage grant
 
 Project finance can see updated finance breakdown for different categories
@@ -800,12 +786,15 @@ Project finance can see updated finance breakdown for different categories
     And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£356,559
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
+Project finance can edit academic finances
+    [Documentation]  IFS-6706
+    Given the user clicks the button/link            jQuery = table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    When project finance edits academic finances
+    Then the user should see the element             jQuery = [data-mirror^="#total"]:contains("£900")
+
 Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
-    [Tags]
-    When the user clicks the button/link            jQuery = table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
-    Then the user should see the element            jQuery = h2:contains("Je-S Form overview")
-    When the user selects the checkbox              project-eligible
+    Given the user selects the checkbox              project-eligible
     And the user selects the option from the drop-down menu    Green    id = rag-rating
     And the user clicks the button/link             jQuery = .govuk-button:contains("Approve eligible costs")
     And the user clicks the button/link             name = confirm-eligibility    # Clicking the confirm button on the modal
@@ -820,7 +809,7 @@ Project finance user can view Updated finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,559   101,735    7,404     29%
+    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,469   102,635    4,936     29%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -832,13 +821,13 @@ Project finance user can view updated finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section   1   £177,784   30%     50,867    2,468     124,449
     #check breakdown for academic user
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
-    Then the Categories Are Verified For Finances Summary Section   2   £990   100%  0     2,468     0
+    Then the Categories Are Verified For Finances Summary Section   2   £900   100%  900     0     0
     #check breakdown for non lead partner
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
     Then the Categories Are Verified For Finances Summary Section   3   £177,784  30%     50,867    2,468     124,449
     #check total
     And the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1   £356,559   101,735    7,404     248,898
+    And The Total Calculation For Finances Summary Are Verified    1   £356,469   102,635    4,936     248,898
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
@@ -1070,8 +1059,12 @@ Academic user can view Finance checks page
     And the user should see the element     jQuery = ul li.complete:nth-of-type(6):contains("Completed")
     When the user clicks the button/link    link = Finance checks
     Then the user should see the element    jQuery = .success-alert:contains("The checks have been completed and your project finances approved.")
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${organisationEggsId}/finance-checks/eligibility    ${404_error_message}
-    Then the user clicks the button/link    link = your dashboard
+
+Academic user can view Review your Finances page
+    [Documentation]  IFS-6893
+    Given the user clicks the button/link             jQuery = a:contains("finances")
+    Then the user should not see an error in the page
+    And the user should see the element               jQuery = h1:contains("Eligibility check for")
 
 Non Lead Partner can view finance checks page
     [Documentation]     INFUND-8787
@@ -1114,6 +1107,22 @@ Project finance user adds, modifies and removes labour rows
     And the user should not see the element        jQuery = #accordion-finances-content-1 tr:nth-of-type(5) td:contains("£976")  # This is the row which was removed
 
 *** Keywords ***
+project finance edits academic finances
+    the user clicks the button/link          jQuery = a:contains("Edit")
+    the user clicks the button/link          link = Return to finance checks     #checking not gettign ISE IFS-6891
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    the user clicks the button/link          jQuery = a:contains("Edit")
+    the user enters text to a text field     css = [name$="incurredStaff"]  100
+    the user enters text to a text field     css = [name$="incurredTravel"]  100
+    the user enters text to a text field     css = [name$="incurredOtherCosts"]  100
+    the user enters text to a text field     css = [name$="allocatedInvestigators"]  100
+    the user enters text to a text field     css = [name$="allocatedEstateCosts"]  100
+    the user enters text to a text field     css = [name$="allocatedOtherCosts"]  100
+    the user enters text to a text field     css = [name$="indirectCosts"]  100
+    the user enters text to a text field     css = [name$="exceptionsStaff"]  100
+    the user enters text to a text field     css = [name$="exceptionsOtherCosts"]  100
+    the user clicks the button/link          id = save-academic-costs
+
 Custom suite setup
     ${today}  get today
     set suite variable  ${today}
@@ -1121,8 +1130,8 @@ Custom suite setup
 
 the table row has expected values
     the user sees the text in the element    css = .standard-definition-list dd:nth-child(2)    £402,797   # Total project cost
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(4)    115,606   # Grant applied for
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(6)    7,404     # Other public sector funding
+    the user sees the text in the element    css = .standard-definition-list dd:nth-child(4)    116,596   # Grant applied for
+    the user sees the text in the element    css = .standard-definition-list dd:nth-child(6)    4,936     # Other public sector funding
     the user sees the text in the element    css = .standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
 
 the user fills in project costs
@@ -1165,22 +1174,6 @@ the rag rating updates on the finance check page for partner for viability
    Then the user should see the text in the element    css = table.table-progress tr:nth-child(3) td:nth-child(3)    ${rag_rating}
    And the user clicks the button/link    jQuery = table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
    And the user should see the element    jQuery = .govuk-button:contains("Confirm viability"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
-
-the rag rating updates on the finance check page for lead for eligibility
-   [Arguments]    ${rag_rating}
-   When the user selects the option from the drop-down menu    ${rag_rating}    id = rag-rating
-   And the user clicks the button/link    jQuery = .button-secondary:contains("Return to finance checks")
-   Then the user should see the text in the element    css = table.table-progress tr:nth-child(1) td:nth-child(5)    ${rag_rating}
-   And the user clicks the button/link    jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
-   And the user should see the element    jQuery = .govuk-button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
-
-the rag rating updates on the finance check page for partner for eligibility
-   [Arguments]    ${rag_rating}
-   When the user selects the option from the drop-down menu    ${rag_rating}    id = rag-rating
-   And the user clicks the button/link    jQuery = .button-secondary:contains("Return to finance checks")
-   Then the user should see the text in the element    css = table.table-progress tr:nth-child(3) td:nth-child(5)    ${rag_rating}
-   And the user clicks the button/link    jQuery = table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
-   And the user should see the element    jQuery = .govuk-button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 verify total costs of project
     [Arguments]    ${total_costs}

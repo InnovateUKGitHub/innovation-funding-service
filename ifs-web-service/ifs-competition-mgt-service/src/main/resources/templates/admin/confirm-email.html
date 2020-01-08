@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm changes to email address',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/edit(userId=${model.user.id})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">You are unable to change this email address.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm changes to email address',size='govuk-heading-xl'" />
+        <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+            <dl class="govuk-list">
+                <dl class="govuk-list">
+                    <dt>First name</dt>
+                    <dd th:text="${model.user.firstName}">Steve</dd>
+                    <dt>Last name</dt>
+                    <dd th:text="${model.user.lastName}">Smith</dd>
+                    <th:block th:if="${model.user.phoneNumber != null}">
+                        <dt>Phone number</dt>
+                        <dd th:text="${model.user.phoneNumber}">999</dd>
+                    </th:block>
+                    <dt>Old email address</dt>
+                    <dd th:text="${model.user.email}">email@email.com</dd>
+                    <dt>New email address</dt>
+                    <dd th:text="${model.email}">email@email.com</dd>
+                    <dt>Role profile</dt>
+                    <dd th:text="${model.user.roleDisplayNames}">Applicant</dd>
+                    <dt>Status</dt>
+                    <dd th:text="${model.user.statusDisplay}">Active</dd>
+                </dl>
+            </dl>
+
+            <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+                <th:block th:unless="${model.doesUserNeedCrmUpdate()}">
+                    <hr/>
+                    <th:block th:insert="fragments/admin-users :: confirm-checkbox" />
+                </th:block>
+                <th:block th:if="${model.doesUserNeedCrmUpdate()}">
+                    <div class="message-alert govuk-!-margin-bottom-6">
+                        <p class="govuk-body">Once you confirm the change of email address, it is your responsibility to make sure these changes
+                            are reflected in the service across pre-award and post-award.</p>
+                    </div>
+                    <th:block th:insert="fragments/admin-users :: confirm-checkbox" />
+                </th:block>
+
+                <div class="govuk-form-group govuk-!-margin-top-6">
+                    <button id="confirm-email-change" class="govuk-button">Confirm email address</button>
+                    <a class="button-clear" th:href="@{/admin/user/{userId}/edit(userId=${model.user.id})}">Cancel</a>
+                </div>
+
+                <a th:href="@{/admin/user/{userId}/edit(userId=${model.user.id})}"
+                    class="button-secondary">Return to view user details</a>
+            </form>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>
+
+

@@ -36,25 +36,17 @@
                 <h2 class="govuk-heading-m">Upload your grant agreement</h2>
                 <p class="govuk-body">Upload a PDF copy of your Horizon 2020 grant agreement letter. This was issued to you as confirmation of funding after your initial application.</p>
                 <p class="govuk-body">Your EU reconciliation report will need approval from the EU. Once you have received this you will be asked to upload it as part of your project setup, which will be the second stage of this application process.</p>
-                <div th:unless="${model.uploaded}">
-                    <th:block th:if="${#fields.hasErrors('grantAgreement')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('grantAgreement')}" th:text="${err}" />
-                    </th:block>
-                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
-                    <input type="file" id="grant-agreement" name="grantAgreement" class="inputfile">
-                    <label for="grant-agreement" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                    <button th:unless="${model.readonly}" name="uploadGrantAgreement" class="button-secondary" data-for-file-upload="grant-agreement"></button>
-                </div>
-                <div th:if="${model.uploaded}">
-                    <p class="govuk-body uploaded-file">
-                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=${model.questionId})}"
-                           th:text="${model.filename}"
-                           target="_blank"
-                           class="govuk-link"
-                           aria-describedby="file-hint">File</a>
-                        <span id="file-hint">(opens in a new window)</span>.</p>
-                    <button th:unless="${model.readonly}" name="removeGrantAgreement" class="button-secondary">Remove</button>
-                </div>
+                <p class="govuk-body">The document must be less than 35 MB.</p>
+
+                <th:block th:with="maxSize='35 MB'"
+                    th:insert="question-type/types :: fileupload-fragment(${model.readonly ? 'readonly' : 'edit'},
+                                            @{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=${model.questionId})},
+                                            ${model.filename},
+                                            grantAgreement,
+                                            grantAgreement,
+                                            true,
+                                            removeGrantAgreement,
+                                            uploadGrantAgreement)"/>
             </div>
 
             <div th:if="${model.open}" class="form-footer">

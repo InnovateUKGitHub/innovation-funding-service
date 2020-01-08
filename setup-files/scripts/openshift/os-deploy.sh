@@ -20,22 +20,7 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 echo "Deploying the $PROJECT Openshift project"
 
-function applyConfigMaps {
-    oc apply -f $(getBuildLocation)/config-maps/acc-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/cache-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/data-service-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/db-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/finance-db-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/flyway-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/grant-db-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/ldap-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/performance-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/survey-db-config.yml ${SVC_ACCOUNT_CLAUSE}
-}
-
 function deploy() {
-
-    applyConfigMaps
 
     if $(isNamedEnvironment ${TARGET}); then
         oc create -f $(getBuildLocation)/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}

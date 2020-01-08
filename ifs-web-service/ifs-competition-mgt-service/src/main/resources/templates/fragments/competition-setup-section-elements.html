@@ -408,23 +408,15 @@
                             Accepted file types (.ods, odt)
                             </span>
                         </label>
-                        <div class="upload-section" id="templateDocumentFile">
-                            <th:block th:unless="${model.templateFileUploaded}">
-                                <th:block th:if="${#fields.hasErrors('templateDocumentFile')}">
-                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('templateDocumentFile')}" th:text="${err}" />
-                                </th:block>
-                                <p class="govuk-body uploaded-file">No file currently uploaded.</p>
-                                <input type="file" id="template-document-file" name="templateDocumentFile" class="inputfile">
-                                <label for="template-document-file" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                                <button name="uploadTemplateDocumentFile" class="button-secondary" data-for-file-upload="template-document-file"></button>
-                            </th:block>
-                            <th:block th:if="${model.templateFileUploaded}">
-                                <p class="govuk-body uploaded-file">
-                                    <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/download-template-file(competitionId=${model.general.competition.id},questionId=${question.questionId})}"
-                                       th:text="${model.templateFilename}"
-                                       class="govuk-link">File</a></p>
-                                <button name="removeTemplateDocumentFile" class="button-secondary">Remove</button>
-                            </th:block>
+                        <div class="upload-section" id="templateDocument">
+                            <th:block th:insert="question-type/types :: fileupload-fragment(edit,
+                                @{/competition/setup/{competitionId}/section/application/question/{questionId}/download-template-file(competitionId=${model.general.competition.id},questionId=${question.questionId})},
+                                ${model.templateFilename},
+                                templateDocumentFile,
+                                templateDocumentFile,
+                                true,
+                                removeTemplateDocumentFile,
+                                uploadTemplateDocumentFile)"/>
                         </div>
                     </div>
                     <div class="govuk-form-group"

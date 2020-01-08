@@ -8,12 +8,14 @@ import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class GrantProcessServiceImpl implements GrantProcessService {
     @Autowired
     private GrantProcessRepository grantProcessRepository;
@@ -35,11 +37,13 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GrantProcess> findReadyToSend() {
         return grantProcessRepository.findByPendingIsTrue();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<GrantProcess> findOneReadyToSend() {
         return grantProcessRepository.findFirstByPendingIsTrue();
     }

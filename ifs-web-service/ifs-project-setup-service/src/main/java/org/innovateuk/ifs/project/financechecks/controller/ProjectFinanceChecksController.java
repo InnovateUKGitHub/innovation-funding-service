@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
+import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibility
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
@@ -136,6 +138,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ProjectFinanceChangesViewModelPopulator projectFinanceChangesViewModelPopulator;
+
+    @Autowired
+    private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -461,8 +466,13 @@ public class ProjectFinanceChecksController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
-        model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
+        boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
+        if (!isUsingJesFinances) {
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
+            model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
+        } else {
+            model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
+        }
 
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, eligibilityOverview,
                 organisation.getName(),
@@ -474,8 +484,8 @@ public class ProjectFinanceChecksController {
                 eligibility.getEligibilityApprovalUserLastName(),
                 eligibility.getEligibilityApprovalDate(),
                 true,
-                false,
-                null));
+                isUsingJesFinances,
+                false));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

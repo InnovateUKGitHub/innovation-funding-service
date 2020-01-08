@@ -100,7 +100,8 @@
                                validationField=${inputField},
                                mayRemove=${model.showRemoveOfferLetterButton},
                                removeName='removeGrantOfferLetterClicked',
-                               saveName='uploadGrantOfferLetterClicked'">
+                               saveName='uploadGrantOfferLetterClicked',
+                               wrapperId='grant-letter-upload'">
                     <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
             </form>
@@ -141,36 +142,39 @@
                 </th:block>
             </form>
         </div>
-        <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null and model.projectIsActive}">
-            <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post"
-                  th:object="${form}" novalidate="novalidate" class="govuk-!-margin-top-9">
-                <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmation')} ? 'govuk-form-group--error'">
-                    <legend class="govuk-visually-hidden">Confirmation</legend>
-                    <th:block th:if="${#fields.hasErrors('confirmation')}">
-                        <span class="govuk-error-message"
-                              th:each="err : ${#fields.errors('confirmation')}"
-                              th:text="${err}"></span>
-                    </th:block>
-                    <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input"
-                                   id="confirmation"
-                                   th:field="*{confirmation}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.project.grant.offer.letter.confirmation}"
-                                   type="checkbox">
-                            <label class="govuk-label govuk-checkboxes__label" for="confirmation">
-                                I confirm the grant offer letter has been thoroughly checked and approved by another
-                                member of my team. Once sent to the project team and signed, it becomes a legally binding document.
-                            </label>
+        <th:block th:if="${!model.isSentToProjectTeam() and model.projectIsActive}">
+            <div data-js-toggle-on-file-upload="grant-letter-upload"
+                th:attr="aria-hidden=${model.grantOfferLetterFile == null}">
+                <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post"
+                      th:object="${form}" novalidate="novalidate" class="govuk-!-margin-top-9">
+                    <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('confirmation')} ? 'govuk-form-group--error'">
+                        <legend class="govuk-visually-hidden">Confirmation</legend>
+                        <th:block th:if="${#fields.hasErrors('confirmation')}">
+                            <span class="govuk-error-message"
+                                  th:each="err : ${#fields.errors('confirmation')}"
+                                  th:text="${err}"></span>
+                        </th:block>
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input"
+                                       id="confirmation"
+                                       th:field="*{confirmation}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.project.grant.offer.letter.confirmation}"
+                                       type="checkbox">
+                                <label class="govuk-label govuk-checkboxes__label" for="confirmation">
+                                    I confirm the grant offer letter has been thoroughly checked and approved by another
+                                    member of my team. Once sent to the project team and signed, it becomes a legally binding document.
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
-            <button data-js-modal="modal-accept-send-gol" id="send-gol" class="govuk-button">
-                Send to project team
-            </button>
+                </form>
+                <button data-js-modal="modal-accept-send-gol" id="send-gol" class="govuk-button">
+                    Send to project team
+                </button>
+            </div>
         </th:block>
 
         <th:block th:if="${model.isSentToProjectTeam()}">

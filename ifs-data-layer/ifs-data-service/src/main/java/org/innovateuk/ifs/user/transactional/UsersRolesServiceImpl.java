@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
@@ -31,8 +32,11 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
     @Autowired
     private ProcessRoleMapper processRoleMapper;
 
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
+
     @Override
-    public ServiceResult<ProcessRoleResource> getProcessRoleById(Long id) {
+    public ServiceResult<ProcessRoleResource> getProcessRoleById(long id) {
         return super.getProcessRole(id).andOnSuccessReturn(processRoleMapper::mapToResource);
     }
 
@@ -43,23 +47,23 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
     }
 
     @Override
-    public ServiceResult<List<ProcessRoleResource>> getProcessRolesByApplicationId(Long applicationId) {
+    public ServiceResult<List<ProcessRoleResource>> getProcessRolesByApplicationId(long applicationId) {
         return serviceSuccess(processRolesToResources(processRoleRepository.findByApplicationId(applicationId)));
     }
 
     @Override
-    public ServiceResult<ProcessRoleResource> getProcessRoleByUserIdAndApplicationId(Long userId, Long applicationId) {
+    public ServiceResult<ProcessRoleResource> getProcessRoleByUserIdAndApplicationId(long userId, long applicationId) {
         return find(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId))
                 .andOnSuccessReturn(processRoleMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<List<ProcessRoleResource>> getProcessRolesByUserId(Long userId) {
+    public ServiceResult<List<ProcessRoleResource>> getProcessRolesByUserId(long userId) {
         return serviceSuccess(processRolesToResources(processRoleRepository.findByUserId(userId)));
     }
 
     @Override
-    public ServiceResult<List<ProcessRoleResource>> getAssignableProcessRolesByApplicationId(Long applicationId) {
+    public ServiceResult<List<ProcessRoleResource>> getAssignableProcessRolesByApplicationId(long applicationId) {
         List<ProcessRole> processRoles = processRoleRepository.findByApplicationId(applicationId);
 
         Set<ProcessRoleResource> assignableProcessRoleResources = processRoles.stream()
@@ -72,8 +76,8 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
     }
 
     @Override
-    public ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
-        return serviceSuccess(applicationRepository.countByProcessRolesUserIdAndCompetitionId(userId, competitionId) > 0);
+    public ServiceResult<Boolean> userHasApplicationForCompetition(long userId, long competitionId) {
+        return serviceSuccess(applicationRepository.existsByProcessRolesUserIdAndCompetitionId(userId, competitionId));
     }
 
     private List<ProcessRoleResource> processRolesToResources(final List<ProcessRole> processRoles) {

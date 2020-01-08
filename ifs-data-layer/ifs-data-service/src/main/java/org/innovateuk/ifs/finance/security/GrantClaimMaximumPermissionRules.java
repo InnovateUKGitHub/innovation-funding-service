@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.finance.security;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
-
-
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -12,6 +9,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 /**
  * Permission rules for {@link GrantClaimMaximum} for permissioning

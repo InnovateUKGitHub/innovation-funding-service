@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -40,25 +41,28 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected T rules = supplyPermissionRulesUnderTest();
 
     @Mock
-    protected ProjectUserRepository projectUserRepositoryMock;
+    protected ProjectUserRepository projectUserRepository;
 
     @Mock
-    protected MonitoringOfficerRepository projectMonitoringOfficerRepositoryMock;
+    protected MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Mock
-    protected ProjectRepository projectRepositoryMock;
+    protected ProjectRepository projectRepository;
 
     @Mock
-    protected ProcessRoleRepository processRoleRepositoryMock;
+    protected ProcessRoleRepository processRoleRepository;
 
     @Mock
-    protected OrganisationRepository organisationRepositoryMock;
+    protected OrganisationRepository organisationRepository;
+
+    @Mock
+    protected StakeholderRepository stakeholderRepository;
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), PROJECT_MANAGER ))
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), PROJECT_MANAGER))
                 .thenReturn(projectManagerUser);
     }
 
@@ -114,18 +118,18 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, OrganisationResource organisation, boolean userIsPartner) {
         ProjectUser partnerProjectUser = newProjectUser().build();
 
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
     }
 
     protected void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
-        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId()))
-            .thenReturn(userIsMonitoringOfficer);
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId()))
+                .thenReturn(userIsMonitoringOfficer);
     }
 
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
@@ -144,12 +148,12 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
-        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(projectEntity));
-        when(processRoleRepositoryMock.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(), Role.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(projectEntity));
+        when(processRoleRepository.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(), Role.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
-        when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
-        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
+        when(organisationRepository.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }
 

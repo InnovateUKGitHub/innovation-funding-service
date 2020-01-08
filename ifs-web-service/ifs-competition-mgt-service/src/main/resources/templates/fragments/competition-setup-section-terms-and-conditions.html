@@ -24,33 +24,31 @@
         <div th:if="${model.general.editable}" id="section-3-edit">
 
             <div class="govuk-radios">
-                <div class="govuk-radios__item" th:each="item : ${model.termsAndConditionsList}" th:attr="data-target=${item.procurement ? 'procurement-upload' : null}">
-                    <input type="radio"
-                           class="govuk-radios__input"
-                           th:field="*{termsAndConditionsId}"
-                           required="required"
-                           th:value="${item.id}"
-                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"/>
-                    <label th:for="${#ids.prev('termsAndConditionsId')}" class="govuk-label govuk-radios__label">
-                        [[${item.name}]]
-                    </label>
-                </div>
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-visually-hidden">Select the terms and conditions applicants must accept for this competition.</legend>
+                    <div class="govuk-radios__item" th:each="item : ${model.termsAndConditionsList}" th:attr="data-target=${item.procurement ? 'procurement-upload' : null}">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               th:field="*{termsAndConditionsId}"
+                               required="required"
+                               th:value="${item.id}"
+                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"/>
+                        <label th:for="${#ids.prev('termsAndConditionsId')}" class="govuk-label govuk-radios__label">
+                            [[${item.name}]]
+                        </label>
+                    </div>
+                </fieldset>
             </div>
 
             <div id="procurement-upload" class="upload-section">
-                <div th:unless="${model.termsAndConditionsDocUploaded}">
-                    <th:block th:if="${#fields.hasErrors('termsAndConditionsDoc')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('termsAndConditionsDoc')}" th:text="${err}" />
-                    </th:block>
-                    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
-                    <input type="file" id="terms-and-conditions-doc" name="termsAndConditionsDoc" class="inputfile">
-                    <label for="terms-and-conditions-doc" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                    <button name="uploadTermsAndConditionsDoc" class="button-secondary" data-for-file-upload="terms-and-conditions-doc"></button>
-                </div>
-                <div th:if="${model.termsAndConditionsDocUploaded}">
-                    <p class="govuk-body"><a target="_blank" th:text="${model.general.competition.competitionTerms.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})}">FileName.pdf</a> (opens in a new window).</p>
-                    <button name="deleteTermsAndConditionsDoc" class="button-secondary" type="submit">Remove</button>
-                </div>
+                <th:block th:insert="question-type/types :: fileupload-fragment(edit,
+                                @{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})},
+                                ${model.general.competition.competitionTerms?.name},
+                                termsAndConditionsDoc,
+                                termsAndConditionsDoc,
+                                true,
+                                deleteTermsAndConditionsDoc,
+                                uploadTermsAndConditionsDoc)"/>
             </div>
 
             <button class="govuk-button govuk-!-margin-top-5">Done</button>

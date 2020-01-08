@@ -287,7 +287,37 @@ hr,
 
 .vertical-align-baseline {
   vertical-align: baseline;
+
   &.button-clear {
     vertical-align: baseline;
   }
+}
+
+/* Remove after framework upgrade to > 3.0 . */
+@mixin focus-style {
+
+  &:focus {
+    outline: 3px solid transparent;
+    color: $govuk-text-colour;
+    background-color: #fd0;
+    -webkit-box-shadow: 0 -2px #fd0, 0 4px $govuk-text-colour;
+    box-shadow: 0 -2px #fd0, 0 4px $govuk-text-colour;
+    text-decoration: none;
+
+    &:visited {
+      color: $govuk-text-colour;
+    }
+  }
+}
+
+.govuk-link {
+  @include focus-style;
+}
+
+.govuk-footer__link {
+  @include focus-style;
+}
+
+.govuk-back-link {
+  @include focus-style;
 }

@@ -89,12 +89,12 @@ items:
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: IFS_DATA_SERVICE_REDIS_HOST
+                      key: IFS_DATA_SERVICE_REDIS_STANDALONE_HOST
                 - name: SPRING_REDIS_PORT
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: IFS_DATA_SERVICE_REDIS_PORT
+                      key: IFS_DATA_SERVICE_REDIS_STANDALONE_PORT
                 - name: SPRING_CACHE_REDIS_KEY_PREFIX
                   valueFrom:
                     configMapKeyRef:
@@ -110,11 +110,21 @@ items:
                     configMapKeyRef:
                       name: cache-config
                       key: IFS_DATA_SERVICE_REDIS_PASSWORD
-                - name: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
+                - name: SPRING_REDIS_CLUSTER_NODES
                   valueFrom:
                     configMapKeyRef:
                       name: cache-config
-                      key: IFS_DATA_SERVICE_CACHE_TTL_SECONDS
+                      key: IFS_DATA_SERVICE_REDIS_CLUSTER_NODES
+                - name: SPRING_CACHE_REDIS_TIME_TO_LIVE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_CACHE_TTL
+                - name: SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: cache-config
+                      key: IFS_DATA_SERVICE_REDIS_MAX_ACTIVE
                 - name: IFS_WEB_BASEURL
                   value: 'https://${SHIB_ADDRESS}'
                 - name: IDP_REST_BASEURL
