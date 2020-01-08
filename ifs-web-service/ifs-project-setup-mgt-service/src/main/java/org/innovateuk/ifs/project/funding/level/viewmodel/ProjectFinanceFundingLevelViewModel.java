@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.funding.level.viewmodel;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -18,8 +19,11 @@ public class ProjectFinanceFundingLevelViewModel {
     private final String projectName;
     private final List<ProjectFinancePartnerFundingLevelViewModel> partners;
     private final boolean collaborativeProject;
+    private final boolean loanCompetition;
+    private final Integer maximumResearchParticipation;
+    private final Double researchParticipationPercentage;
 
-    public ProjectFinanceFundingLevelViewModel(ProjectResource project, List<ProjectFinanceResource> finances, OrganisationResource lead) {
+    public ProjectFinanceFundingLevelViewModel(ProjectResource project, List<ProjectFinanceResource> finances, OrganisationResource lead, CompetitionResource competition, Double researchParticipationPercentage) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
@@ -31,6 +35,9 @@ public class ProjectFinanceFundingLevelViewModel {
                         pf.getTotalOtherFunding(), totalGrant))
                 .collect(Collectors.toList());
         this.collaborativeProject = project.isCollaborativeProject();
+        this.loanCompetition = competition.isLoan();
+        this.maximumResearchParticipation = competition.getMaxResearchRatio();
+        this.researchParticipationPercentage = researchParticipationPercentage;
     }
 
     public long getProjectId() {
@@ -51,6 +58,18 @@ public class ProjectFinanceFundingLevelViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public boolean isLoanCompetition() {
+        return loanCompetition;
+    }
+
+    public Integer getMaximumResearchParticipation() {
+        return maximumResearchParticipation;
+    }
+
+    public Double getResearchParticipationPercentage() {
+        return researchParticipationPercentage;
     }
 
     /* View logic. */

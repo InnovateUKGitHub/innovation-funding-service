@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.funding.level.controller;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
@@ -44,6 +46,9 @@ public class ProjectFinanceFundingLevelController {
     @Autowired
     private ProjectFinanceRowRestService financeRowRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @GetMapping
     public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingLevelForm form,
                                     @PathVariable long projectId,
@@ -78,7 +83,9 @@ public class ProjectFinanceFundingLevelController {
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource lead = projectRestService.getLeadOrganisationByProject(projectId).getSuccess();
-        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead));
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        Double researchParticipation = projectFinanceRestService.getResearchParticipationPercentageFromProject(projectId).getSuccess();
+        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead, competition, researchParticipation));
         return "project/financecheck/funding-level";
     }
 

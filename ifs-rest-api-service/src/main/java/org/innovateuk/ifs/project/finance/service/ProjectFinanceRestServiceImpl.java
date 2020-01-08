@@ -25,6 +25,11 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
+    public RestResult<Double> getResearchParticipationPercentageFromProject(long projectId) {
+        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/research-participation", Double.class);
+    }
+
+    @Override
     public RestResult<ProjectFinanceResource> getProjectFinance(Long projectId, Long organisationId) {
         return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/organisation/" + organisationId + "/finance-details", ProjectFinanceResource.class);
     }

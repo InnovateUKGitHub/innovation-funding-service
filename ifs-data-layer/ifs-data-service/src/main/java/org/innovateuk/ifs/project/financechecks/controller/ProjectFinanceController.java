@@ -32,6 +32,11 @@ public class ProjectFinanceController {
         return financeCheckService.getProjectFinances(projectId).toGetResponse();
     }
 
+    @GetMapping("/{projectId}/research-participation")
+    public RestResult<Double> getResearchParticipationPercentageFromProject(@PathVariable("projectId") final Long projectId) {
+        return projectFinanceService.getResearchParticipationPercentageFromProject(projectId).toGetResponse();
+    }
+
     @GetMapping("/{projectId}/partner-organisation/{organisationId}/viability")
     public RestResult<ViabilityResource> getViability(@PathVariable("projectId") final Long projectId,
                                                       @PathVariable("organisationId") final Long organisationId) {
