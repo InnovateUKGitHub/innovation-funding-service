@@ -239,7 +239,6 @@ the academic fills in the project costs
     The user enters text to a text field  css = [name$="exceptionsOtherCosts"]  7890
     The user enters text to a text field  css = input[name$="tsbReference"]  L33t
     The user should see the element       jQuery = [data-mirror^="#total"]:contains("£32,698")
-    the user clicks the button/link       jQuery = button:contains("Remove")
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       jQuery = a:contains(${5mb_pdf} (opens in a new window))
     the user clicks the button/link       css = #mark-all-as-complete[type="submit"]
