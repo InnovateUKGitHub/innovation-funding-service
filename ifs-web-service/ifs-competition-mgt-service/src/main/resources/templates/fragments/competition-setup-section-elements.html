@@ -408,7 +408,7 @@
                             Accepted file types (.ods, odt)
                             </span>
                         </label>
-                        <div class="upload-section" id="templateDocumentFile">
+                        <div class="upload-section" id="templateDocument">
                             <th:block th:insert="question-type/types :: fileupload-fragment(edit,
                                 @{/competition/setup/{competitionId}/section/application/question/{questionId}/download-template-file(competitionId=${model.general.competition.id},questionId=${question.questionId})},
                                 ${model.templateFilename},
