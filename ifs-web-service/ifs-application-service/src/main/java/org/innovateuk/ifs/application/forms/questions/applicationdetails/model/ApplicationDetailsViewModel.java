@@ -14,8 +14,8 @@ import static java.lang.Boolean.TRUE;
  */
 public class ApplicationDetailsViewModel {
 
-    protected ApplicantQuestionResource applicantResource;
-    protected NavigationViewModel navigationViewModel;
+    private ApplicantQuestionResource applicantResource;
+    private NavigationViewModel navigationViewModel;
     private ApplicationDetailsInputViewModel formInputViewModel;
     private boolean allReadOnly;
 
@@ -68,7 +68,9 @@ public class ApplicationDetailsViewModel {
         return applicantResource.getApplication();
     }
 
-    public CompetitionResource getCompetition() { return applicantResource.getCompetition(); }
+    public CompetitionResource getCompetition() {
+        return applicantResource.getCompetition();
+    }
 
     public ApplicantQuestionResource getApplicantResource() {
         return applicantResource;
@@ -86,6 +88,7 @@ public class ApplicationDetailsViewModel {
         return applicantResource.getCurrentApplicant().isLead();
     }
 
-    public ApplicantResource getCurrentApplicant() { return applicantResource.getCurrentApplicant(); }
-
+    public ApplicantResource getCurrentApplicant() {
+        return applicantResource.getCurrentApplicant();
+    }
 }
