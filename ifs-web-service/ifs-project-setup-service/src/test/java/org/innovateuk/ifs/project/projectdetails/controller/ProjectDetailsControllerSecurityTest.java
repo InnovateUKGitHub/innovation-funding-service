@@ -34,10 +34,4 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
         assertSecured(() -> classUnderTest.viewProjectDetails(projectCompositeId.id(), null, null),
                 permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(projectCompositeId), isA(UserResource.class)));
     }
-
-    @Test
-    public void viewStartDate() {
-        assertSecured(() -> classUnderTest.viewStartDate(projectCompositeId.id(), null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
 }
