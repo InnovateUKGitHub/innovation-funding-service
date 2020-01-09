@@ -32,7 +32,6 @@ Academic finance validations
     When the user navigates to Your-finances page    Academic robot test application
     And the user clicks the button/link              link = Your project costs
     And the applicant enters invalid inputs
-    And the user selects the checkbox                agree-terms-page
     And Mark academic finances as complete
     And the user should see the element              css = .govuk-error-summary__list
 
@@ -107,7 +106,6 @@ Mark all as complete
     And the user should see the element            jQuery = a:contains(${5mb_pdf} (opens in a new window))
     When the user enters text to a text field      css = input[name="tsbReference"]  123123
     Then textfield value should be                 css = input[name="tsbReference"]  123123
-    And the user selects the checkbox              termsAgreed
     When the user clicks the button/link           jQuery = button:contains("Mark as complete")
     And the user enters the project location
     And the user clicks the button/link            link = Your funding
@@ -198,7 +196,6 @@ the applicant enters invalid inputs
     The user enters text to a text field  css = [name="tsbReference"]  ${EMPTY}
 
 Mark academic finances as complete
-    the user selects the checkbox    termsAgreed
     the user clicks the button/link  id = mark-all-as-complete
     the user should see a field and summary error  This field cannot be left blank.
 
