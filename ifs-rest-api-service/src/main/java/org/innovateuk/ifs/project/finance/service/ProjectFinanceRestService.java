@@ -13,8 +13,6 @@ public interface ProjectFinanceRestService {
 
     RestResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
 
-    RestResult<Double> getResearchParticipationPercentageFromProject(long projectId);
-
     RestResult<ProjectFinanceResource> getProjectFinance(Long projectId, Long organisationId);
 
     RestResult<ViabilityResource> getViability(Long projectId, Long organisationId);

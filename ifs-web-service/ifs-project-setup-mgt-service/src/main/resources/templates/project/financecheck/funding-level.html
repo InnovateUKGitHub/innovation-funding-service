@@ -127,11 +127,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <div class="govuk-!-margin-top-6" th:unless="${model.loanCompetition}">
-                <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.researchParticipationPercentage},maxResearchPercentage=${model.maximumResearchParticipation})"/>
-            </div>
-
             <button class="govuk-button">Save and return to finances</button>
         </form>
 
