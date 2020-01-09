@@ -42,8 +42,6 @@
                 You may view these profiles.</p>
         </th:block>
 
-        <h2 class="govuk-heading-m">Partner progress</h2>
-
         <ul class="task-list">
             <li th:unless="${#lists.isEmpty(model.editablePartners)}"
                 th:each="partner : ${model.editablePartners}">
