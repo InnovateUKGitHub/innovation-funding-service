@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.PartnerProjectLocationViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -26,6 +27,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -189,6 +191,36 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertFalse(model.isSpendProfileGenerated());
         assertTrue(model.isReadOnly());
         assertTrue(model.isGrantOfferLetterGenerated());
+    }
+
+    @Test
+    public void viewStartDate() throws Exception {
+        long projectId = 20L;
+        LocalDate targetStartDate = LocalDate.now();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withCompetition(competitionResource.getId())
+                .withDuration(23L)
+                .withTargetStartDate(targetStartDate)
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/details/start-date", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/details-start-date"))
+                .andReturn();
+
+        ProjectDetailsStartDateViewModel model = (ProjectDetailsStartDateViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(project.getName(), model.getProjectName());
+        assertEquals(project.getTargetStartDate(), model.getTargetStartDate());
+
+        verify(projectService).getById(project.getId());
+        verifyNoMoreInteractions(projectService);
     }
 
     @Test

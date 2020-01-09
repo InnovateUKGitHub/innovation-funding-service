@@ -8,6 +8,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.PartnerProjectLocationViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -118,6 +119,16 @@ public class ProjectDetailsController {
         return "project/details";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @GetMapping("/{projectId}/details/start-date")
+    public String viewStartDate(@PathVariable("projectId") final Long projectId, Model model,
+                                UserResource loggedInUser) {
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        return "project/details-start-date";
+    }
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PARTNER_PROJECT_LOCATION_PAGE')")
     @GetMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
     public String viewPartnerProjectLocation(@PathVariable("projectId") final long projectId,
@@ -129,7 +140,6 @@ public class ProjectDetailsController {
         PartnerProjectLocationForm form = new PartnerProjectLocationForm(partnerOrganisation.getPostcode());
 
         return doViewPartnerProjectLocation(projectId, organisationId, loggedInUser, model, form);
-
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PARTNER_PROJECT_LOCATION_PAGE')")

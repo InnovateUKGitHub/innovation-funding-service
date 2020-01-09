@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project details - ' + ${model.project.name + ' '}"/>
 </head>
 <body class="govuk-template__body project-detail">
 
@@ -33,7 +33,8 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                    <a class="govuk-link">Target start date</a>
+                    <a th:if="${model.userLeadPartner}" th:href="@{/project/{id}/details/start-date(id=${model.project.id})}" class="govuk-link">Target start date</a>
+                    <th:block th:unless="${model.userLeadPartner}">Target start date</th:block>
                 </td>
                 <td class="govuk-table__cell" id="start-date">
                     <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
