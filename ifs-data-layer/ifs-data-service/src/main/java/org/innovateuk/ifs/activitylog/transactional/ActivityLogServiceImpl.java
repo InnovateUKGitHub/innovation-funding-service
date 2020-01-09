@@ -118,6 +118,7 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 });
     }
 
+    @Transactional(readOnly = true)
     public ServiceResult<List<ActivityLogResource>> findByApplicationId(long applicationId) {
         return serviceSuccess(activityLogRepository.findByApplicationIdOrderByCreatedOnDesc(applicationId)
                 .stream()

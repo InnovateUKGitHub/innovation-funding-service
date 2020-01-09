@@ -11,8 +11,8 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.2'
     compile "com.google.guava:guava:27.1-jre"
     compile "com.fasterxml.jackson.core:jackson-databind:2.9.10"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.11"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.11"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.1"
 }
 
 configurations {

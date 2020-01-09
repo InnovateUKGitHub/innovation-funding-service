@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team - ' + ${applicationName + ' '}" />
+    </th:block>
 </head>
 <body class="govuk-template__body team">
 <th:block th:insert="fragments/modals :: modal-overlay"/>
@@ -113,7 +115,9 @@
                                                     th:insert="fragments/modals :: modal-application-team-remove-user (${row})"/>
                                                 <a th:attr="data-js-modal=${'modal-application-team-remove-' + row.id}"
                                                    href="/"
-                                                   class="govuk-link">Remove</a>
+                                                   class="govuk-link">Remove
+                                                   <span class="govuk-visually-hidden" th:text="${row.name}"></span>
+                                                </a>
                                             </th:block>
                                             <th:block th:if="${row.invite}">
                                                 <button class="button-clear govuk-!-margin-left-1" type="submit"
@@ -127,7 +131,9 @@
                                                 th:insert="fragments/modals :: modal-application-team-remove-organisation (${organisation}, ${row})"/>
                                             <a th:attr="data-js-modal=${'modal-application-team-remove-organisation-' + organisation.id}"
                                                href="/"
-                                               class="govuk-link">Remove organisation</a>
+                                               class="govuk-link">Remove organisation
+                                               <span class="govuk-visually-hidden" th:text="${organisation.name}"></span>
+                                            </a>
                                         </th:block>
                                     </th:block>
                                     <th:block th:if="${row.lead}">Lead applicant</th:block>

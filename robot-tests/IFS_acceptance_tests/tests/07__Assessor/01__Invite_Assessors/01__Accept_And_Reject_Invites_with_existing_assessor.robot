@@ -199,7 +199,7 @@ Close the competition in assessment
     The user clicks the button/link  jQuery = .govuk-button:contains("Close assessment")
 
 The user should get a competition brief window
-    Select Window    title = Competition Overview - Innovation Funding Service
+    Select Window       title = Competition overview - Home and industrial efficiency programme - Innovation Funding Service
 
 The user closes the competition brief
     Close Window
