@@ -73,7 +73,7 @@
                             <p class="govuk-body">You will still have the option to reject after accepting and viewing the full application.</p>
                         </div>
 
-                        <label class="govuk-radios__item" data-target="reject-application">
+                        <label class="govuk-radios__item" data-target="reject-application" for="rejectReview">
                             <input id="rejectReview"
                                    class="govuk-radios__input"
                                    value="false"
@@ -86,13 +86,14 @@
                     </div>
                     <div class="panel js-hidden" id="reject-application">
                         <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label" th:for="${#ids.next('rejectComment')}">
+                            <label class="govuk-label" for="rejectComment">
                                 Use this space to tell us why.
                             </label>
                             <th:block th:if="${#fields.hasErrors('rejectComment')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
                             </th:block>
-                            <textarea class="govuk-textarea"
+                            <textarea id="rejectComment"
+                                      class="govuk-textarea"
                                       maxlength="5000"
                                       data-max_words="100"
                                       data-maxwordslength="100"
