@@ -75,18 +75,30 @@ items:
                     configMapKeyRef:
                       name: finance-db-config
                       key: FINANCE_DB_PASS
+                - name: NEW_RELIC_LICENSE_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LICENSE_KEY
+                - name: NEW_RELIC_LOG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LOG
+                - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+                - name: IFS_FINANCE-TOTALS_AUTHSECRETKEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_FINANCE-TOTALS_AUTHSECRETKEY
                 - name: JAVA_OPTS
                   value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
                   value: "ifs-finance-data-service (${openshiftEnv})"
-                - name: NEW_RELIC_LICENSE_KEY
-                  value: "${NEW_RELIC_LICENCE_KEY}"
-                - name: NEW_RELIC_LOG
-                  value: "STDOUT"
-                - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
-                  value: "100"
-                - name: IFS_FINANCE-TOTALS_AUTHSECRETKEY
-                  value: "${AUTH_KEY}"
               ports:
                 - containerPort: 8080
               resources:
