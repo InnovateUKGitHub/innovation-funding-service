@@ -1,24 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import static java.lang.String.format;
-import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithGrowthTableResourceBuilder.newOrganisationFinancesWithGrowthTableResource;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-
-import java.math.BigDecimal;
-import java.time.YearMonth;
-import java.util.concurrent.Future;
 import javafx.util.Pair;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
@@ -39,6 +20,26 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.util.concurrent.Future;
+
+import static java.lang.String.format;
+import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithGrowthTableResourceBuilder.newOrganisationFinancesWithGrowthTableResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseControllerMockMVCTest<ProjectYourOrganisationWithGrowthTableController> {
@@ -68,7 +69,6 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     private static final long organisationId = 5L;
     private OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource;
     private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/pending-partner-progress/your-organisation-with-growth-table";
-    private YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm;
 
     @Override
     protected ProjectYourOrganisationWithGrowthTableController supplyControllerUnderTest() {
@@ -78,7 +78,6 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     public void setupResource() {
         organisationFinancesWithGrowthTableResource = newOrganisationFinancesWithGrowthTableResource()
             .withOrganisationSize(OrganisationSize.SMALL)
-            .withStateAidAgreed(true)
             .withFinancialYearEnd(YearMonth.now().minusMonths(1))
             .withHeadCount(1L)
             .withTurnover(BigDecimal.valueOf(2))
@@ -92,7 +91,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     public void viewPage() throws Exception {
         setupResource();
         setupAsyncExpectations(asyncFuturesGenerator);
-        yourOrganisationWithGrowthTableForm = new YourOrganisationWithGrowthTableForm();
+        YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm = new YourOrganisationWithGrowthTableForm();
         when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
         when(withGrowthTableFormPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
@@ -103,16 +102,17 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
             .andReturn();
 
         Future<YourOrganisationViewModel> viewModelRequest = (Future<YourOrganisationViewModel>) result.getModelAndView().getModel().get("model");
-        assertTrue(viewModelRequest.get().equals(yourOrganisationViewModel));
+        assertEquals(viewModelRequest.get(), yourOrganisationViewModel);
 
         Future<YourOrganisationWithGrowthTableForm> formRequest = (Future<YourOrganisationWithGrowthTableForm>) result.getModelAndView().getModel().get("form");
-        assertTrue(formRequest.get().equals(yourOrganisationWithGrowthTableForm));
+        assertEquals(formRequest.get(), yourOrganisationWithGrowthTableForm);
     }
 
     @Test
     public void updateGrowthTable() throws Exception {
         returnSuccessForUpdateGrowthTable();
-        MvcResult result = mockMvc.perform(postAllFormParameters(new Pair("ignoredParameter","")))
+
+        mockMvc.perform(postAllFormParameters(new Pair("ignoredParameter","")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
@@ -125,7 +125,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
         returnSuccessForUpdateGrowthTable();
         when(pendingPartnerProgressRestService.markYourOrganisationComplete(projectId, organisationId)).thenReturn(restSuccess());
 
-        MvcResult result = mockMvc.perform(postAllFormParameters(new Pair("mark-as-complete", "")))
+        mockMvc.perform(postAllFormParameters(new Pair("mark-as-complete", "")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
@@ -137,6 +137,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     @Test
     public void markAsCompleteWithGrowthTable_failure() throws Exception {
         when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+
         MvcResult result = mockMvc.perform(post(viewPageUrl())
             .param("mark-as-complete", ""))
             .andExpect(status().isOk())
@@ -144,7 +145,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
             .andReturn();
 
         YourOrganisationViewModel viewModelRequest = (YourOrganisationViewModel) result.getModelAndView().getModel().get("model");
-        assertTrue(viewModelRequest.equals(yourOrganisationViewModel));
+        assertEquals(viewModelRequest, yourOrganisationViewModel);
 
         YourOrganisationWithGrowthTableForm formRequest = (YourOrganisationWithGrowthTableForm) result.getModelAndView().getModel().get("form");
         assertTrue(formIsEmpty(formRequest));
@@ -154,7 +155,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     public void markAsIncomplete() throws Exception {
         when(pendingPartnerProgressRestService.markYourOrganisationIncomplete(projectId, organisationId)).thenReturn(restSuccess());
 
-        MvcResult result = mockMvc.perform(post(viewPageUrl())
+        mockMvc.perform(post(viewPageUrl())
             .param("mark-as-incomplete", ""))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name("redirect:" + viewPageUrl()))
@@ -172,7 +173,6 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
         setupResource();
         return post(viewPageUrl())
             .param("organisationSize", organisationFinancesWithGrowthTableResource.getOrganisationSize().toString())
-            .param("stateAidAgreed", organisationFinancesWithGrowthTableResource.getStateAidAgreed().toString())
             .param("financialYearEnd", "financialYearEnd")
             .param("financialYearEndMonthValue",
                 String.valueOf(organisationFinancesWithGrowthTableResource.getFinancialYearEnd().getMonth().getValue()))
@@ -204,8 +204,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
         form.getAnnualTurnoverAtLastFinancialYear() == null &&
         form.getHeadCountAtLastFinancialYear() == null &&
         form.getOrganisationSize() == null &&
-        form.getResearchAndDevelopmentSpendAtLastFinancialYear() == null &&
-        form.getStateAidAgreed() == null;
+        form.getResearchAndDevelopmentSpendAtLastFinancialYear() == null;
     }
 
     private String viewPageUrl() {

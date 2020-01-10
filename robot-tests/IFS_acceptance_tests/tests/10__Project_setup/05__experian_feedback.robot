@@ -94,7 +94,7 @@ The user is unable to approve the bank details again
 The user is unable to change bank details once they have been approved
     the user goes back to the previous page
     the user goes back to the previous page
-    the user enters text to a text field       css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 3
+    the user enters text to a text field       css = [id = "addressLine1"]    Montrose House 3
     the user clicks the button/link             id = modal-change-bank-details
     the user clicks the button/link             id = submit-change-bank-details
     the user should see a summary error        Bank details have already been approved and cannot be changed
@@ -110,12 +110,12 @@ The user is able to approve bank details
     the user should see the element       jQuery = .success-alert:contains("The bank details provided have been approved.")
 
 The user updates bank account details
-    the user enters text to a text field       css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 2
+    the user enters text to a text field       css = [id = "addressLine1"]    Montrose House 2
     the user clicks the button/link            id = modal-change-bank-details
     the user clicks the button/link            id = submit-change-bank-details
     the user should see the element            jQuery = h2:contains("${Gabtype_Name} - Account details")
     the user clicks the button/link            link = Change bank account details
-    the user sees the text in the text field   css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 2
+    the user sees the text in the text field   css = [id = "addressLine1"]    Montrose House 2
     the user clicks the button/link            id = modal-change-bank-details
     the user clicks the button/link            id = submit-change-bank-details
 
@@ -124,8 +124,8 @@ The user is able to cancel bank details changes
     the user should be redirected to the correct page   ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
     the user clicks the button/link                     link = Change bank account details
     The user should see the enabled element             id = organisationName
-    Set Focus To Element                                css = [id = "addressForm.manualAddress.addressLine1"]
-    the user sees the text in the text field            css = [id = "addressForm.manualAddress.addressLine1"]  290 Parkside Circle
+    Set Focus To Element                                css = [id = "addressLine1"]
+    the user sees the text in the text field            css = [id = "addressLine1"]  290 Parkside Circle
     the user clicks the button/link                     id = modal-change-bank-details
     the user clicks the button/link                     jQuery = .button-clear:contains("Cancel")
     The user should see the enabled element             id = organisationName
