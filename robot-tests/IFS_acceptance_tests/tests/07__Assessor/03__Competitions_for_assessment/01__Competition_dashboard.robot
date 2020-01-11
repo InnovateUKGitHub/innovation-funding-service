@@ -106,7 +106,7 @@ The order of the applications should be correct according to the status
     element should contain    css = .progress-list li:nth-child(5) .msg-progress    Accepted
 
 The user should get a competition brief window
-    Select Window   title = Competition Overview - Innovation Funding Service
+    Select Window       title = Competition overview - ${IN_ASSESSMENT_COMPETITION_NAME} - Innovation Funding Service
     the user should not see an error in the page
     the user should see the element                  jQuery = h1:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     the user should see the element                  jQuery = .govuk-list li:contains("Competition opens")
