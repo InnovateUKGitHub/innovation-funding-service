@@ -14,7 +14,7 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
     private String projectName;
     private LocalDate targetStartDate;
     private long projectDurationInMonths;
-    private Long competitionId;
+    private long competitionId;
     private List<Long> projectUsers;
 
     public ProjectDetailsStartDateViewModel(ProjectResource project) {
@@ -47,7 +47,7 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
         return projectDurationInMonths;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 

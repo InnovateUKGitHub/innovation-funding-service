@@ -121,7 +121,7 @@ public class ProjectDetailsController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details/start-date")
-    public String viewStartDate(@PathVariable("projectId") final Long projectId, Model model,
+    public String viewStartDate(@PathVariable("projectId") final long projectId, Model model,
                                 UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
 

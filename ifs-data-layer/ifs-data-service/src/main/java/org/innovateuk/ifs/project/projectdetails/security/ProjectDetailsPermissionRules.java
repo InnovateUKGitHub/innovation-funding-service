@@ -8,8 +8,6 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isIFSAdmin;
-
 /**
  * Permissions for access to Project Details section
  */
@@ -22,12 +20,6 @@ public class ProjectDetailsPermissionRules extends BasePermissionRules {
             description = "The lead partners can update the basic project details, address, Project Manager")
     public boolean leadPartnersCanUpdateTheBasicProjectDetails(ProjectResource project, UserResource user) {
         return isLeadPartner(project.getId(), user.getId()) && isProjectActive(project.getId());
-    }
-
-    @PermissionRule(
-            value = "UPDATE_START_DATE", description = "The IFS Administrator can update the start date")
-    public boolean ifsAdministratorCanUpdateStartDate(ProjectResource project, UserResource user) {
-        return isIFSAdmin(user);
     }
 
     @PermissionRule(

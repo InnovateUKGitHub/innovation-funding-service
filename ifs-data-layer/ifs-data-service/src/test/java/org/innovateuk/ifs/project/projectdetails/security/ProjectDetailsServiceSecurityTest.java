@@ -11,8 +11,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
-
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -33,19 +31,6 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         projectPermissionRules = getMockPermissionRulesBean(ProjectPermissionRules.class);
         projectDetailsPermissionRules = getMockPermissionRulesBean(ProjectDetailsPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
-    }
-
-    @Test
-    public void updateProjectStartDate() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.updateProjectStartDate(123L, LocalDate.now()), () -> {
-            verify(projectDetailsPermissionRules).ifsAdministratorCanUpdateStartDate(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectDetailsPermissionRules);
-        });
     }
 
     @Test
