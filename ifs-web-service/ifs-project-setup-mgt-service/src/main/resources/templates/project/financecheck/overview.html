@@ -23,6 +23,10 @@
             <h2 class="govuk-heading-s govuk-!-margin-top-0">The funding amount has changed</h2>
         </div>
 
+        <div th:if="${showFundingLevelMessage}" class="success-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-top-0">The funding levels have been changed</h2>
+        </div>
+
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
@@ -35,8 +39,8 @@
 
         <p class="govuk-body govuk-!-margin-bottom-6">
             <a class="govuk-link"
-               th:if="${model.canChangeFunding}"
-               th:href="@{/project/{projectId}/funding(projectId=${model.overview.projectId})}">Change funding sought</a>
+               th:if="${model.canChangeFundingSought}"
+               th:href="@{/project/{projectId}/funding-sought(projectId=${model.overview.projectId})}">Change funding sought</a>
         </p>
 
         <div class="govuk-!-margin-top-6">

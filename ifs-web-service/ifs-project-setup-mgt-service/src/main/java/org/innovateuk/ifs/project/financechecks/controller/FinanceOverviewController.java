@@ -72,10 +72,10 @@ public class FinanceOverviewController {
         ProjectResource project = projectService.getById(projectId);
         long applicationId = project.getApplication();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        boolean canChangeFunding = competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT)
+        boolean canChangeFundingSought = competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT)
                 && !financeCheckSummary.isSpendProfilesGenerated();
         return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(project, sortedOrganisations, competition),
-                getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition), applicationId, canChangeFunding, competition.isLoan());
+                getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition), applicationId, canChangeFundingSought, competition.isLoan());
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {

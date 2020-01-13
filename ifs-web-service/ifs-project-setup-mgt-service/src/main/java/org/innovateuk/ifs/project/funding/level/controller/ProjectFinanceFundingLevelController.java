@@ -1,24 +1,16 @@
-package org.innovateuk.ifs.project.funding.controller;
+package org.innovateuk.ifs.project.funding.level.controller;
 
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toMap;
-
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import javax.validation.Valid;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.funding.form.ProjectFinanceFundingForm;
-import org.innovateuk.ifs.project.funding.form.ProjectFinancePartnerFundingForm;
-import org.innovateuk.ifs.project.funding.viewmodel.ProjectFinanceFundingViewModel;
+import org.innovateuk.ifs.project.funding.level.form.ProjectFinanceFundingLevelForm;
+import org.innovateuk.ifs.project.funding.level.form.ProjectFinancePartnerFundingLevelForm;
+import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinanceFundingLevelViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +18,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.function.Supplier;
+
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toMap;
+
 @Controller
-@RequestMapping("/project/{projectId}/funding")
+@RequestMapping("/project/{projectId}/funding-level")
 @SecuredBySpring(value = "PROJECT_FINANCE_FUNDING", description = "Project finance team can amend funding levels in project setup.")
 @PreAuthorize("hasAuthority('project_finance')")
-public class ProjectFinanceFundingController {
+public class ProjectFinanceFundingLevelController {
 
     @Autowired
     private ProjectRestService projectRestService;
@@ -49,18 +45,18 @@ public class ProjectFinanceFundingController {
     private ProjectFinanceRowRestService financeRowRestService;
 
     @GetMapping
-    public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingForm form,
+    public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingLevelForm form,
                                     @PathVariable long projectId,
                                     Model model) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         form.setPartners(finances.stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation,
-                        pf -> new ProjectFinancePartnerFundingForm(pf.getTotalFundingSought()))));
+                        pf -> new ProjectFinancePartnerFundingLevelForm(new BigDecimal(pf.getGrantClaimPercentage())))));
         return viewFunding(projectId, finances, model);
     }
 
     @PostMapping
-    public String saveFundingLevels(@Valid @ModelAttribute("form") ProjectFinanceFundingForm form,
+    public String saveFundingLevels(@Valid @ModelAttribute("form") ProjectFinanceFundingLevelForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable long projectId,
@@ -68,11 +64,12 @@ public class ProjectFinanceFundingController {
                                     RedirectAttributes redirectAttributes) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         Supplier<String> failureView = () -> viewFunding(projectId, finances, model);
+        validateMaximumFundingLevels(bindingResult, finances, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saveFundingLevels(finances, form));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                redirectAttributes.addFlashAttribute("showFundingAmountMessage", true);
+                redirectAttributes.addFlashAttribute("showFundingLevelMessage", true);
                 return format("redirect:/project/%d/finance-check-overview", projectId);
             });
         });
@@ -80,24 +77,30 @@ public class ProjectFinanceFundingController {
 
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        model.addAttribute("model", new ProjectFinanceFundingViewModel(project, finances));
-        return "project/financecheck/funding";
+        OrganisationResource lead = projectRestService.getLeadOrganisationByProject(projectId).getSuccess();
+        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead));
+        return "project/financecheck/funding-level";
     }
 
-
-    private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> financeList, ProjectFinanceFundingForm form) {
-        Map<Long, ProjectFinanceResource> finances = financeList
-                .stream()
-                .collect(toMap(ProjectFinanceResource::getOrganisation, Function.identity()));
-
-        ValidationMessages validationMessages = new ValidationMessages();
-        form.getPartners().entrySet().stream().forEach(entry -> {
-            ProjectFinanceResource finance = finances.get(entry.getKey());
-            GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
-            grantClaim.setAmount(entry.getValue().getFunding());
-            validationMessages.addAll(financeRowRestService.update(grantClaim).getSuccess());
+    private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
+        ValidationMessages messages = new ValidationMessages();
+        finances.forEach(finance -> {
+            BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
+            GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
+            grantClaim.setPercentage(fundingLevel.intValue());
+            messages.addAll(financeRowRestService.update(grantClaim).getSuccess());
         });
+        return messages;
+    }
 
-        return validationMessages;
+    private void validateMaximumFundingLevels(BindingResult bindingResult, List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
+        finances.forEach(finance -> {
+            BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
+            if (finance.getMaximumFundingLevel() < fundingLevel.intValue()) {
+                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
+                "validation.finance.grant.claim.percentage.level",
+                "");
+            }
+        });
     }
 }
