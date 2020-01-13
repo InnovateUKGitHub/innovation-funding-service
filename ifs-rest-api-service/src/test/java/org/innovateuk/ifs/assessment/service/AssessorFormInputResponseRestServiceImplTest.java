@@ -94,7 +94,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         long applicationId = 7;
         Map<Long, BigDecimal> expectedScores = new HashMap<>();
         expectedScores.put(17L, new BigDecimal(20));
-        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(true, 13, 11, expectedScores, 17);
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(true, 13, 11, expectedScores, BigDecimal.valueOf(17));
 
         setupGetWithRestResultExpectations(format("%s/application/%s/scores", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentAggregateResource.class, expected, OK);
         ApplicationAssessmentAggregateResource response = service.getApplicationAssessmentAggregate(applicationId).getSuccess();
