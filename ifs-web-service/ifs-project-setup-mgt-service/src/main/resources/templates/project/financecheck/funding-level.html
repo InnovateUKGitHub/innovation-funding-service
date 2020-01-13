@@ -128,6 +128,9 @@
                 </table>
             </div>
             <button class="govuk-button">Save and return to finances</button>
+            <p class="govuk-body">
+                <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.projectId})}" class="button-clear">Cancel and return to finance overview</a>
+            </p>
         </form>
 
 
