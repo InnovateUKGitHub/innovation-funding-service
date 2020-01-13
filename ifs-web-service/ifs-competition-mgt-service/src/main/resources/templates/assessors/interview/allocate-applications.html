@@ -59,7 +59,7 @@
             <fieldset class="govuk-fieldset govuk-!-margin-top-6">
                 <legend class="govuk-visually-hidden">Email assessor</legend>
                 <div class="govuk-form-group govuk-!-margin-bottom-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="${#ids.next('subject')}">
+                    <label class="govuk-label" for="subject">
                         Email subject
                     </label>
                     <th:block th:if="${#fields.hasErrors('subject')}">
