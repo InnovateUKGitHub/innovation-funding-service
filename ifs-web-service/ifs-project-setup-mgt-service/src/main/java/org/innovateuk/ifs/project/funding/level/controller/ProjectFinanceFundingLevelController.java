@@ -98,8 +98,7 @@ public class ProjectFinanceFundingLevelController {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
             if (finance.getMaximumFundingLevel() < fundingLevel.intValue()) {
                 bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
-                "validation.finance.grant.claim.percentage.max",
-                new String[] {String.valueOf(finance.getMaximumFundingLevel())},
+                "validation.finance.grant.claim.percentage.level",
                 "");
             }
         });
