@@ -120,7 +120,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                     .filter(response -> response.getValue() != null)
                     .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
                     .average()
-                    .orElse(0.0)).setScale(1);
+                    .orElse(0.0)).setScale(1, BigDecimal.ROUND_HALF_UP);
     }
 
     private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {
