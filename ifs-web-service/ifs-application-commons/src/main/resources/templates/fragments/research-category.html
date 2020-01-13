@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="research_category(model)">
     <form
@@ -81,7 +81,7 @@
 
             <div class="form-footer govuk-!-margin-top-6" th:if="${model.canMarkAsComplete}">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
-                <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model}, pageType='research category')"/>
+                <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model}, pageType='research category', ariaLabelEdit='Edit research category')"/>
             </div>
 
             <input type="hidden" id="cacheTest" value=""/>
@@ -112,7 +112,7 @@
         <div th:unless="${model.closed}"
              th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) or (model.canMarkAsComplete) ? 'form-footer govuk-!-margin-top-6' : ''}">
             <!--/* 'Mark as complete' / 'Edit' links */-->
-            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},pageType='research category')"/>
+            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},pageType='research category', ariaLabelEdit='Edit research category')"/>
             <!--/* 'Return and edit' link */-->
             <th:block th:if="${model.canMarkAsComplete}"
                       th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
