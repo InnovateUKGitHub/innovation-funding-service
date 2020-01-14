@@ -32,7 +32,7 @@
     <th:block th:switch="${status.name()}">
         <td th:case="'COMPLETE'" class="govuk-table__cell status ok">Complete</td>
         <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">Incomplete</td>
-        <td th:case="'LEAD_ACTION_REQUIRED'" class="govuk-table__cell status ok">Complete</td>
+        <td th:case="'LEAD_ACTION_REQUIRED'" class="govuk-table__cell status action">Incomplete</td>
         <td th:case="'NOT_STARTED'" class="govuk-table__cell status"><span class="govuk-visually-hidden">Stage is not yet available</span></td>
         <td th:case="'NOT_REQUIRED'" class="govuk-table__cell status na"><span class="govuk-visually-hidden">Not required for this partner</span></td>
         <td th:case="'PENDING'" class="govuk-table__cell status waiting">Pending</td>
