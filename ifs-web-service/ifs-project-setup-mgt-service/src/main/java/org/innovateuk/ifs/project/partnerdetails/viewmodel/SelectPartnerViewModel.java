@@ -1,39 +1,30 @@
 package org.innovateuk.ifs.project.partnerdetails.viewmodel;
 
 import java.util.List;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 
 public class SelectPartnerViewModel {
 
-    private final List<OrganisationResource> partnerOrganisations;
+    private final List<PartnerOrganisationResource> partnerOrganisations;
+    private final long projectId;
+    private final String projectName;
 
-//    private final long projectId;
-//    private final String projectName;
-//    private final boolean loanCompetition;
-
-    public SelectPartnerViewModel(List<OrganisationResource> partnerOrganisations,
-                                   long projectId,
-                                   String projectName,
-                                   boolean loanCompetition) {
+    public SelectPartnerViewModel(List<PartnerOrganisationResource> partnerOrganisations,
+                                   long projectId, String projectName) {
         this.partnerOrganisations = partnerOrganisations;
-//        this.projectId = projectId;
-//        this.projectName = projectName;
-//        this.loanCompetition = loanCompetition;
+        this.projectId = projectId;
+        this.projectName = projectName;
     }
 
-    public List<OrganisationResource> getPartnerOrganisations() {
+    public List<PartnerOrganisationResource> getPartnerOrganisations() {
         return partnerOrganisations;
     }
 
-//    public long getProjectId() {
-//        return projectId;
-//    }
-//
-//    public String getProjectName() {
-//        return projectName;
-//    }
-//
-//    public boolean isLoanCompetition() {
-//        return loanCompetition;
-//    }
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
 }

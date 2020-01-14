@@ -1,6 +1,24 @@
 package org.innovateuk.ifs.project.notes.controller;
 
+import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+
+
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -14,7 +32,7 @@ import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddCommentForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
@@ -32,21 +50,14 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.function.Supplier;
-
-import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
-import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
  * This Controller handles finance check notes activity for the finance team members
@@ -66,7 +77,7 @@ public class FinanceChecksNotesController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private ProjectRestService projectRestService;
+    private PartnerOrganisationRestService partnerOrganisationRestService;
     @Autowired
     private EncryptedCookieService cookieUtil;
     @Autowired
@@ -81,7 +92,7 @@ public class FinanceChecksNotesController {
     public String showPage(@P("projectId")@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            Model model) {
-        projectRestService.getPartnerOrganisation(projectId, organisationId);
+        partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, null, null);
         model.addAttribute("model", viewModel);
         return NOTES_VIEW;
@@ -97,7 +108,7 @@ public class FinanceChecksNotesController {
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
 
-        projectRestService.getPartnerOrganisation(projectId, organisationId);
+        partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
@@ -111,7 +122,7 @@ public class FinanceChecksNotesController {
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
 
-        projectRestService.getPartnerOrganisation(projectId, organisationId);
+        partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         saveOriginCookie(response, projectId, organisationId, noteId, loggedInUser.getId());
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
         populateNoteViewModel(projectId, organisationId, noteId, model, attachments);
@@ -233,7 +244,7 @@ public class FinanceChecksNotesController {
                                                                  @PathVariable Long attachmentId,
                                                                  UserResource loggedInUser,
                                                                  HttpServletRequest request) {
-        projectRestService.getPartnerOrganisation(projectId, organisationId);
+        partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
         if (attachments.contains(attachmentId)) {
             return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
@@ -279,7 +290,7 @@ public class FinanceChecksNotesController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        projectRestService.getPartnerOrganisation(projectId, organisationId);
+        partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
         attachments.forEach((id -> financeCheckService.deleteFile(id)));
         deleteCookies(response, projectId, organisationId, noteId);
