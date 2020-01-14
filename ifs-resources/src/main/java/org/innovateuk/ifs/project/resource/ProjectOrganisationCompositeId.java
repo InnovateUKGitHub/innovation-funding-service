@@ -32,14 +32,6 @@ public class ProjectOrganisationCompositeId implements Serializable {
         return organisationId;
     }
 
-//    public void setProjectId(long projectId) {
-//        this.projectId = projectId;
-//    }
-//
-//    public void setOrganisationId(long organisationId) {
-//        this.organisationId = organisationId;
-//    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

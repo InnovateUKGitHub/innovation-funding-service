@@ -61,7 +61,7 @@ public interface FinanceCheckService {
     ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default Optional<ActivityType> eligibilityActivtiyType(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    default Optional<ActivityType> eligibilityActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
         return eligibility == EligibilityState.APPROVED ? Optional.of(ActivityType.ELIGIBILITY_APPROVED) : Optional.empty();
     }
 

@@ -118,8 +118,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
     @Test
     public void testSaveEligibility() {
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        long projectId = 1;
+        long organisationId = 1;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -133,8 +133,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
     @Test
     public void testGetCreditReport() {
-        when(projectLookupStrategies.getProjectCompositeId(1l)).thenReturn(ProjectCompositeId.id(1L));
-        assertAccessDenied(() -> classUnderTest.getCreditReport(1L, 2L),
+        when(projectLookupStrategies.getProjectCompositeId(1L)).thenReturn(ProjectCompositeId.id(1L));
+        assertAccessDenied(() -> classUnderTest.getCreditReport(1, 2L),
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanViewCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
