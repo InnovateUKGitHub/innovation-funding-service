@@ -143,7 +143,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
                 .param(String.format("partners[%d].fundingLevel", academicOrganisation), "100"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("project/financecheck/funding-level"))
-                .andExpect(model().attributeHasFieldErrorCode("form", String.format("partners[%d].fundingLevel", industrialOrganisation),"validation.finance.grant.claim.percentage.level"))
+                .andExpect(model().attributeHasFieldErrorCode("form", String.format("partners[%d].fundingLevel", industrialOrganisation),"validation.finance.grant.claim.percentage.max"))
                 .andReturn();
 
         verifyZeroInteractions(financeRowRestService);
