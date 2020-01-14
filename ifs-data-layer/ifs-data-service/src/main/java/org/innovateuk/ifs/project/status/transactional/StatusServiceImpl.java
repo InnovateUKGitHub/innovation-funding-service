@@ -271,7 +271,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectState state = projectWorkflowHandler.getState(project);
         if (LIVE.equals(state) || UNSUCCESSFUL.equals(state)) {
             return COMPLETE;
-        } else if (spendProfileStatus.equals(COMPLETE) || spendProfileStatus.equals(LEAD_ACTION_REQUIRED)) {
+        } else if (spendProfileStatus.equals(COMPLETE)) {
             return PENDING;
         }
         return NOT_STARTED;
