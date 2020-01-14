@@ -27,19 +27,19 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheckSummaryResource.class, description = "Project finance users have the ability to view a summary of finance checks status for all partners" )
-    ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
+    ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
-    ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
+    ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(long projectId);
 
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
-    ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId);
+    ServiceResult<Boolean> isQueryActionRequired(long projectId, long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_ELIGIBILITY')")
-    ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
+    ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(long projectId, long organisationId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
-    ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
+    ServiceResult<List<ProjectFinanceResource>> getProjectFinances(long projectId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_VIABILITY')")
     ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
@@ -57,17 +57,17 @@ public interface FinanceCheckService {
     ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_ELIGIBILITY')")
-    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "eligibilityActivtyType")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "eligibilityActivityType")
     ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default Optional<ActivityType> eligibilityActivtyType(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    default Optional<ActivityType> eligibilityActivtiyType(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
         return eligibility == EligibilityState.APPROVED ? Optional.of(ActivityType.ELIGIBILITY_APPROVED) : Optional.empty();
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'SAVE_CREDIT_REPORT')")
-    ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent);
+    ServiceResult<Void> saveCreditReport(long projectId, long organisationId, boolean reportPresent);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'VIEW_CREDIT_REPORT')")
-    ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId);
+    ServiceResult<Boolean> getCreditReport(long projectId, long organisationId);
 }

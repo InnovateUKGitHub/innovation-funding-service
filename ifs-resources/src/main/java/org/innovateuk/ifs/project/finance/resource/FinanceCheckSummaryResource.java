@@ -198,6 +198,13 @@ public class FinanceCheckSummaryResource {
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getEligibility()));
     }
 
+    public boolean isAllEligibilityAndViabilityInReview() {
+        return partnerStatusResources
+                .stream()
+                .allMatch(partner ->
+                        partner.getViability() != Viability.APPROVED && partner.getEligibility() != EligibilityState.APPROVED);
+    }
+
     public void setSpendProfileGeneratedBy(String spendProfileGeneratedBy) {
         this.spendProfileGeneratedBy = spendProfileGeneratedBy;
     }

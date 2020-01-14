@@ -74,7 +74,7 @@ public class ProjectFinanceChecksOverviewController {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs, competition),
-                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan());
+                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), false);
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {

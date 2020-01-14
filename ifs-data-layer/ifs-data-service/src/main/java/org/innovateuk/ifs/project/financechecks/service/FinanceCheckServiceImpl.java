@@ -92,7 +92,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
+    public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(long projectId) {
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
@@ -113,7 +113,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
+    public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(long projectId) {
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
@@ -135,7 +135,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
+    public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(long projectId, long organisationId) {
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
 
@@ -178,7 +178,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
+    public ServiceResult<Boolean> isQueryActionRequired(long projectId, long organisationId) {
         boolean actionRequired = false;
 
         ServiceResult<ProjectFinanceResource> resource = projectFinanceService.financeChecksDetails(projectId, organisationId);
@@ -280,12 +280,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
+    public ServiceResult<Boolean> getCreditReport(long projectId, long organisationId) {
         return getProjectFinance(projectId, organisationId).andOnSuccessReturn(ProjectFinance::getCreditReportConfirmed);
     }
 
     @Override
-    public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
+    public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(long projectId) {
         return projectFinanceService.financeChecksTotals(projectId);
     }
 
@@ -318,8 +318,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
-        Long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
@@ -336,8 +336,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Transactional
     public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
@@ -349,7 +349,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
+    public ServiceResult<Void> saveCreditReport(long projectId, long organisationId, boolean reportPresent) {
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::validateCreditReport)
