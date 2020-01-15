@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
@@ -138,7 +139,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
     @Test
     public void getApplicationAggregateScores() throws Exception {
         long applicationId = 7;
-        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(true, 5, 3, Collections.emptyMap(), 20L);
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(true, 5, 3, Collections.emptyMap(), BigDecimal.valueOf(20));
 
         when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(expected));
 
