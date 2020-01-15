@@ -479,10 +479,10 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         assertEquals(1, scores.getInScope());
         assertEquals(2, scores.getScores().keySet().size());
         assertTrue(scores.getScores().containsKey(1L));
-        assertTrue(new BigDecimal("2").equals(scores.getScores().get(1L)));
+        assertTrue(new BigDecimal("2.0").equals(scores.getScores().get(1L)));
         assertTrue(scores.getScores().containsKey(2L));
-        assertTrue(new BigDecimal("6").equals(scores.getScores().get(2L)));
-        assertEquals(48L, scores.getAveragePercentage());
+        assertTrue(new BigDecimal("5.7").equals(scores.getScores().get(2L)));
+        assertEquals(new BigDecimal("48.3"), scores.getAveragePercentage());
     }
 
     @Test
@@ -509,10 +509,10 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         assertEquals(0, scores.getInScope());
         assertEquals(2, scores.getScores().keySet().size());
         assertTrue(scores.getScores().containsKey(1L));
-        assertTrue(new BigDecimal("2").equals(scores.getScores().get(1L)));
+        assertTrue(new BigDecimal("2.0").equals(scores.getScores().get(1L)));
         assertTrue(scores.getScores().containsKey(2L));
-        assertTrue(new BigDecimal("6").equals(scores.getScores().get(2L)));
-        assertEquals(48L, scores.getAveragePercentage());
+        assertTrue(new BigDecimal("5.7").equals(scores.getScores().get(2L)));
+        assertEquals(new BigDecimal("48.3"), scores.getAveragePercentage());
     }
 
     @Test
@@ -541,7 +541,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         AssessmentFeedbackAggregateResource feedback = assessorFormInputResponseService.getAssessmentAggregateFeedback(applicationId, questionId).getSuccess();
 
-        assertEquals(new BigDecimal("3"), feedback.getAvgScore());
+        assertEquals(new BigDecimal("3.0"), feedback.getAvgScore());
         assertEquals(2, feedback.getFeedback().size());
         assertEquals("Feedback 1", feedback.getFeedback().get(0));
         assertEquals("Feedback 2", feedback.getFeedback().get(1));
