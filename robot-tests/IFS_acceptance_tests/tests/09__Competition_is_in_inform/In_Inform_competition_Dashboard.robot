@@ -181,7 +181,7 @@ the application question scores are correct
     the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project team") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
     the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Funding") + div .govuk-grid-column-one-third:contains("Average score 3.3 / 10")
     the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Adding value") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
-    the user should see the element    jQuery = p:contains("Average overall: 53%")
+    the user should see the element    jQuery = p:contains("Average overall: 53.3%")
 
 the application details are correct
     the user should see the element    jQuery = p:contains("High Performance Gasoline Stratified")
