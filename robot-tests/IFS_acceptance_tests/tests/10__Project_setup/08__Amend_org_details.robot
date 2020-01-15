@@ -15,7 +15,8 @@ ${applId}         ${application_ids["${projectName}"]}
 *** Test Cases ***
 User can view funding level change page
     [Documentation]  IFS-6695
-    Given the user navigates to the page   ${server}/project-setup-management/project/${projectId}/funding-level
+    Given the user navigates to the page   ${server}/project-setup-management/project/${projectId}/finance-check-overview
+    And The user clicks the button/link    link = Change funding level percentages
     When the user should see the element   jQuery = h1:contains("Change funding level")
     Then the user should see the element   jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£57,803") ~ td:contains("49.58%")
     And the user should see the element    jQuery = th:contains("Total grant value") ~ td:contains("£402,797") ~ td:contains("£116,596") ~ td:contains("£116,596")
@@ -36,9 +37,9 @@ Values are updated dynamically as new percentages are added
 New funding percentage is canceled if you select cancel
     [Documentation]  IFS-6695
     Given the user clicks the button/link           link = Cancel and return to finance overview
-    When the user navigates to the page             ${server}/project-setup-management/project/${projectId}/funding-level
+    When the user clicks the button/link            link = Change funding level percentages
     Then the user should see the element            jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£57,803") ~ td:contains("49.58%")
-    And the user should not see the element          jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£37,713") ~ td:contains("39.08%")
+    And the user should not see the element         jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£37,713") ~ td:contains("39.08%")
 
 New funding percentage is applied on finance overview
     [Documentation]  IFS-6695
@@ -51,6 +52,14 @@ New funding percentage is applied on finance checks
     [Documentation]  IFS-6695
     Given the user clicks the button/link    link = Finance checks
     Then the user should see the element     jQuery = dt:contains("Total percentage grant") ~ dd:contains("24%")
+
+Approving any eligibility removes the link
+    [Documentation]  IFS-6712
+    Given the user clicks the button/link     css = a.eligibility-2
+    And the user approves project costs
+    When the user clicks the button/link      link = Finance checks
+    And the user clicks the button/link       link = View finances
+    Then the user should not see the element  link = Change funding level percentages
 
 New funding percentage does not show in the application
     [Documentation]  IFS-6695
