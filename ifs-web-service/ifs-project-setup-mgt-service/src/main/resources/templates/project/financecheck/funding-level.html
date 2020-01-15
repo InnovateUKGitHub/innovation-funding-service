@@ -34,15 +34,15 @@
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Partner</span></th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Partners costs (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Partner's costs (&pound;)</th>
 
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell border-left-cell">Current funding level (%)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell">Funding sought (&pound;)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell border-right-cell">% of total grant value (%)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell">Current funding sought (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell border-right-cell">Current % of total grant value (%)</th>
 
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric">Revised funding level (%)</th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric">Revised funding sought (&pound;)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">% of total grant value (%)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Revised % of total grant value (%)</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -105,12 +105,12 @@
                     </th:block>
                     <tr class="govuk-table__row" th:if="${model.collaborativeProject}">
                         <th class="govuk-table__header" scope="col">Total grant value</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="|£${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                           <Strong th:text="|£${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|"></Strong></td>
                         <td class="govuk-table__cell shaded-cell border-left-cell"></td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell"
-                            th:text="|£${#numbers.formatInteger(model.totalFundingSought,1,'DEFAULT')}|"></td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric  shaded-cell border-right-cell">100</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell">
+                        <Strong th:text="|£${#numbers.formatInteger(model.totalFundingSought,1,'DEFAULT')}|"></Strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric  shaded-cell border-right-cell"><Strong>100</Strong></td>
                         <td class="govuk-table__cell"></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <input th:id="total-funding-sought"
@@ -119,10 +119,10 @@
                                    th:attr="data-calculation-fields=.funding-sought,
                                             data-calculation-rawValue=${model.calculateFormFundingSought(form)}"
                                    th:value="|£${#numbers.formatInteger(model.calculateFormFundingSought(form), 0,'DEFAULT')}|"/>
-                            <span th:text="|£${#numbers.formatInteger(model.calculateFormFundingSought(form),1,'DEFAULT')}|"
-                                  data-mirror="#total-funding-sought"></span>
+                            <Strong th:text="|£${#numbers.formatInteger(model.calculateFormFundingSought(form),1,'DEFAULT')}|"
+                                  data-mirror="#total-funding-sought"></Strong>
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">100</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><Strong>100</Strong></td>
                     </tr>
                     </tbody>
                 </table>
@@ -132,7 +132,6 @@
                 <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.projectId})}" class="button-clear">Cancel and return to finance overview</a>
             </p>
         </form>
-
 
     </main>
 </div>

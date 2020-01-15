@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -94,10 +95,10 @@ public class ProjectFinanceFundingSoughtControllerTest extends BaseControllerMoc
         when(financeRowRestService.update(any())).thenReturn(restSuccess(ValidationMessages.noErrors()));
 
         mockMvc.perform(post("/project/{projectId}/funding-sought", projectId)
-                .param(String.format("partners[%d].funding", industrialOrganisation), "1000")
-                .param(String.format("partners[%d].funding", academicOrganisation), "2000"))
+                .param(format("partners[%d].funding", industrialOrganisation), "1000")
+                .param(format("partners[%d].funding", academicOrganisation), "2000"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/project/%d/finance-check-overview", projectId)))
+                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview", projectId)))
                 .andReturn();
 
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
