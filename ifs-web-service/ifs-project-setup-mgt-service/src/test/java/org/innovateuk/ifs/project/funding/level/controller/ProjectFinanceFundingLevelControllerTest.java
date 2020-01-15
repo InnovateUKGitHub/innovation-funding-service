@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -119,10 +120,10 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         when(financeRowRestService.update(any())).thenReturn(restSuccess(ValidationMessages.noErrors()));
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
-                .param(String.format("partners[%d].fundingLevel", industrialOrganisation), "60")
-                .param(String.format("partners[%d].fundingLevel", academicOrganisation), "60"))
+                .param(format("partners[%d].fundingLevel", industrialOrganisation), "60")
+                .param(format("partners[%d].fundingLevel", academicOrganisation), "60"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/project/%d/finance-check-overview", projectId)))
+                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview", projectId)))
                 .andReturn();
 
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
@@ -139,11 +140,11 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
 
         mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
-                .param(String.format("partners[%d].fundingLevel", industrialOrganisation), "100")
-                .param(String.format("partners[%d].fundingLevel", academicOrganisation), "100"))
+                .param(format("partners[%d].fundingLevel", industrialOrganisation), "100")
+                .param(format("partners[%d].fundingLevel", academicOrganisation), "100"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("project/financecheck/funding-level"))
-                .andExpect(model().attributeHasFieldErrorCode("form", String.format("partners[%d].fundingLevel", industrialOrganisation),"validation.finance.grant.claim.percentage.max"))
+                .andExpect(model().attributeHasFieldErrorCode("form", format("partners[%d].fundingLevel", industrialOrganisation),"validation.finance.grant.claim.percentage.max"))
                 .andReturn();
 
         verifyZeroInteractions(financeRowRestService);

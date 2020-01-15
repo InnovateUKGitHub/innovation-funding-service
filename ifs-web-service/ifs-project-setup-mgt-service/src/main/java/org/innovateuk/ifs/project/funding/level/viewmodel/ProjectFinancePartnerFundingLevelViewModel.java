@@ -16,7 +16,15 @@ public class ProjectFinancePartnerFundingLevelViewModel {
     private final BigDecimal otherFunding;
     private final BigDecimal totalGrant;
 
-    public ProjectFinancePartnerFundingLevelViewModel(long id, String name, boolean lead, int maximumFundingLevel, OrganisationSize organisationSize, BigDecimal costs, BigDecimal fundingLevel, BigDecimal otherFunding, BigDecimal totalGrant) {
+    public ProjectFinancePartnerFundingLevelViewModel(long id,
+                                                      String name,
+                                                      boolean lead,
+                                                      int maximumFundingLevel,
+                                                      OrganisationSize organisationSize,
+                                                      BigDecimal costs,
+                                                      BigDecimal fundingLevel,
+                                                      BigDecimal otherFunding,
+                                                      BigDecimal totalGrant) {
         this.id = id;
         this.name = name;
         this.lead = lead;
