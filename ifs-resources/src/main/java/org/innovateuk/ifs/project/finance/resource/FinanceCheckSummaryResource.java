@@ -202,7 +202,7 @@ public class FinanceCheckSummaryResource {
         return partnerStatusResources
                 .stream()
                 .allMatch(partner ->
-                        partner.getViability() != ViabilityState.APPROVED && partner.getEligibility() != EligibilityState.APPROVED);
+                        partner.getViability().isInReviewOrNotApplicable() && partner.getEligibility().isInReviewOrNotApplicable());
     }
 
     public void setSpendProfileGeneratedBy(String spendProfileGeneratedBy) {
