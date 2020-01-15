@@ -33,7 +33,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public ServiceResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityRagStatus viabilityRagRating) {
+    public ServiceResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagRating) {
         return projectFinanceRestService.saveViability(projectId, organisationId, viability, viabilityRagRating).toServiceResult();
     }
 

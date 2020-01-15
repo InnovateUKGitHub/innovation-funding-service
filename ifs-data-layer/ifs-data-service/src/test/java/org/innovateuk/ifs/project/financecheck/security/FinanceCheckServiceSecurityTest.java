@@ -91,7 +91,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.RED),
+        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.RED),
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());

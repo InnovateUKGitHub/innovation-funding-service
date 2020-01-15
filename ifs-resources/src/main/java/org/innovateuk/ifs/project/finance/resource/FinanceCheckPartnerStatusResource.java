@@ -8,7 +8,7 @@ public class FinanceCheckPartnerStatusResource {
     private String name;
 
     private boolean isLead;
-    private Viability viability;
+    private ViabilityState viability;
     private ViabilityRagStatus viabilityRagStatus;
     private EligibilityState eligibility;
     private EligibilityRagStatus eligibilityRagStatus;
@@ -18,7 +18,7 @@ public class FinanceCheckPartnerStatusResource {
     public FinanceCheckPartnerStatusResource() {
     }
 
-    public FinanceCheckPartnerStatusResource(Long id, String name, boolean isLead, Viability viability,
+    public FinanceCheckPartnerStatusResource(Long id, String name, boolean isLead, ViabilityState viability,
                                              ViabilityRagStatus viabilityRagStatus, EligibilityState eligibility,
                                              EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse,
                                              boolean financeContactProvided) {
@@ -71,11 +71,11 @@ public class FinanceCheckPartnerStatusResource {
         this.eligibilityRagStatus = eligibilityRagStatus;
     }
 
-    public Viability getViability() {
+    public ViabilityState getViability() {
         return viability;
     }
 
-    public void setViability(Viability viability) {
+    public void setViability(ViabilityState viability) {
         this.viability = viability;
     }
 
