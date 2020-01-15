@@ -1,4 +1,4 @@
---IFS-3093 Add site terms and conditions entry for the current version of the site terms and conditions
+-- IFS-3093 Add site terms and conditions entry for the current version of the site terms and conditions
 
 SET @system_maintenance_user_id = (SELECT id
                                    FROM user
