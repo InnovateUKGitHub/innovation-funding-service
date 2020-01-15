@@ -35,8 +35,8 @@
 
         <p class="govuk-body govuk-!-margin-bottom-6">
             <a class="govuk-link"
-               th:if="${model.canChangeFunding}"
-               th:href="@{/project/{projectId}/funding(projectId=${model.overview.projectId})}">Change funding sought</a>
+               th:if="${model.canChangeFundingSought}"
+               th:href="@{/project/{projectId}/funding-sought(projectId=${model.overview.projectId})}">Change funding sought</a>
         </p>
 
         <div class="govuk-!-margin-top-6">
