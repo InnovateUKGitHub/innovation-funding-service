@@ -85,8 +85,8 @@
                                            data-calculation-operations="*,/,-,negativeRoundUp"
                                            th:attr="data-calculation-fields=|${partner.costs},[id='__${path}__.fundingLevel'],100,${partner.otherFunding}|,
                                                     data-calculation-rawValue=${partner.calculateFundingSought(fundingLevel)}"
-                                           th:value="'£' + ${#numbers.formatInteger(partner.calculateFundingSought(fundingLevel), 0,'DEFAULT')}"/>
-                                    <span th:text="|£${#numbers.formatInteger(partner.calculateFundingSought(fundingLevel),1,'DEFAULT')}|"
+                                           th:value="'&pound;' + ${#numbers.formatInteger(partner.calculateFundingSought(fundingLevel), 0,'DEFAULT')}"/>
+                                    <span th:text="|&pound;${#numbers.formatInteger(partner.calculateFundingSought(fundingLevel),1,'DEFAULT')}|"
                                           th:attr="data-mirror=|[id='__${path}__.fundingSought']|"></span>
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
@@ -106,10 +106,10 @@
                     <tr class="govuk-table__row" th:if="${model.collaborativeProject}">
                         <th class="govuk-table__header" scope="col">Total grant value</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
-                           <Strong th:text="|£${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|"></Strong></td>
+                           <Strong th:text="|&pound;${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|"></Strong></td>
                         <td class="govuk-table__cell shaded-cell border-left-cell"></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell">
-                        <Strong th:text="|£${#numbers.formatInteger(model.totalFundingSought,1,'DEFAULT')}|"></Strong></td>
+                        <Strong th:text="|&pound;${#numbers.formatInteger(model.totalFundingSought,1,'DEFAULT')}|"></Strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric  shaded-cell border-right-cell"><Strong>100</Strong></td>
                         <td class="govuk-table__cell"></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
@@ -118,8 +118,8 @@
                                    data-calculation-operations="+"
                                    th:attr="data-calculation-fields=.funding-sought,
                                             data-calculation-rawValue=${model.calculateFormFundingSought(form)}"
-                                   th:value="|£${#numbers.formatInteger(model.calculateFormFundingSought(form), 0,'DEFAULT')}|"/>
-                            <Strong th:text="|£${#numbers.formatInteger(model.calculateFormFundingSought(form),1,'DEFAULT')}|"
+                                   th:value="|&pound;${#numbers.formatInteger(model.calculateFormFundingSought(form), 0,'DEFAULT')}|"/>
+                            <Strong th:text="|&pound;${#numbers.formatInteger(model.calculateFormFundingSought(form),1,'DEFAULT')}|"
                                   data-mirror="#total-funding-sought"></Strong>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><Strong>100</Strong></td>
