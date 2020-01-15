@@ -1,19 +1,19 @@
-package org.innovateuk.ifs.project.funding.form;
+package org.innovateuk.ifs.project.funding.sought.form;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class ProjectFinancePartnerFundingForm {
+public class ProjectFinancePartnerFundingSoughtForm {
 
     @NotNull(message = "{validation.finance.funding.sought.required}")
     @DecimalMin(value = "1", message = "{validation.finance.funding.sought.min}")
     private BigDecimal funding;
 
-    public ProjectFinancePartnerFundingForm() {
+    public ProjectFinancePartnerFundingSoughtForm() {
     }
 
-    public ProjectFinancePartnerFundingForm(BigDecimal funding) {
+    public ProjectFinancePartnerFundingSoughtForm(BigDecimal funding) {
         this.funding = funding;
     }
 
