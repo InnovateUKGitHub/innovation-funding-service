@@ -269,17 +269,17 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 simpleMap(summary.getPartnerStatusResources(), FinanceCheckPartnerStatusResource::getName)));
 
         FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
-        assertEquals(Viability.NOT_APPLICABLE, organisation1Results.getViability());
+        assertEquals(ViabilityState.NOT_APPLICABLE, organisation1Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation1Results.getViabilityRagStatus());
         assertFalse(organisation1Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
-        assertEquals(Viability.APPROVED, organisation2Results.getViability());
+        assertEquals(ViabilityState.APPROVED, organisation2Results.getViability());
         assertEquals(ViabilityRagStatus.AMBER, organisation2Results.getViabilityRagStatus());
         assertTrue(organisation2Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
-        assertEquals(Viability.REVIEW, organisation3Results.getViability());
+        assertEquals(ViabilityState.REVIEW, organisation3Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation3Results.getViabilityRagStatus());
         assertFalse(organisation3Results.isAwaitingResponse());
     }
@@ -740,7 +740,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.APPROVED);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isFailure());
 
@@ -761,7 +761,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.UNSET);
 
         assertTrue(result.isFailure());
 
@@ -782,7 +782,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityRagStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
@@ -800,7 +800,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.REVIEW, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
@@ -819,7 +819,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
@@ -1075,7 +1075,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ViabilityResource returnedViabilityResource = result.getSuccess();
 
-        assertGetViabilityResults(returnedViabilityResource, Viability.REVIEW, ViabilityRagStatus.RED,
+        assertGetViabilityResults(returnedViabilityResource, ViabilityState.REVIEW, ViabilityRagStatus.RED,
                 null, null, null);
     }
 
@@ -1091,7 +1091,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ViabilityResource returnedViabilityResource = result.getSuccess();
 
-        assertGetViabilityResults(returnedViabilityResource, Viability.NOT_APPLICABLE, ViabilityRagStatus.AMBER,
+        assertGetViabilityResults(returnedViabilityResource, ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER,
                 null, null, null);
     }
 
@@ -1115,7 +1115,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ViabilityResource returnedViabilityResource = result.getSuccess();
 
-        assertGetViabilityResults(returnedViabilityResource, Viability.APPROVED, ViabilityRagStatus.GREEN,
+        assertGetViabilityResults(returnedViabilityResource, ViabilityState.APPROVED, ViabilityRagStatus.GREEN,
                 "Lee", "Bowman", LocalDate.now());
     }
 
@@ -1138,7 +1138,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     }
 
-    private void assertGetViabilityResults(ViabilityResource returnedViabilityResource, Viability expectedViability, ViabilityRagStatus expectedViabilityRagStatus,
+    private void assertGetViabilityResults(ViabilityResource returnedViabilityResource, ViabilityState expectedViability, ViabilityRagStatus expectedViabilityRagStatus,
                                            String expectedViabilityApprovalUserFirstName, String expectedViabilityApprovalUserLastName,
                                            LocalDate expectedViabilityApprovalDate) {
 

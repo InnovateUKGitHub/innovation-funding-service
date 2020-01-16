@@ -40,7 +40,7 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testGetViability() {
 
-        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
+        ViabilityResource viability = new ViabilityResource(ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
 
         when(projectFinanceRestService.getViability(123L, 456L)).thenReturn(restSuccess(viability));
 
@@ -51,11 +51,11 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testSaveViability() {
 
-        when(projectFinanceRestService.saveViability(123L, 456L, Viability.APPROVED, ViabilityRagStatus.GREEN)).thenReturn(restSuccess());
+        when(projectFinanceRestService.saveViability(123L, 456L, ViabilityState.APPROVED, ViabilityRagStatus.GREEN)).thenReturn(restSuccess());
 
-        service.saveViability(123L, 456L, Viability.APPROVED, ViabilityRagStatus.GREEN);
+        service.saveViability(123L, 456L, ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
 
-        verify(projectFinanceRestService).saveViability(123L, 456L, Viability.APPROVED, ViabilityRagStatus.GREEN);
+        verify(projectFinanceRestService).saveViability(123L, 456L, ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
     }
 
     @Test

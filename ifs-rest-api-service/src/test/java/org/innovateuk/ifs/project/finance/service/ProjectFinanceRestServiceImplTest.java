@@ -40,13 +40,13 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void testGetViability() {
 
-        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
+        ViabilityResource viability = new ViabilityResource(ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
 
         setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/viability", ViabilityResource.class, viability);
 
         RestResult<ViabilityResource> results = service.getViability(123L, 456L);
 
-        assertEquals(Viability.APPROVED, results.getSuccess().getViability());
+        assertEquals(ViabilityState.APPROVED, results.getSuccess().getViability());
         assertEquals(ViabilityRagStatus.GREEN, results.getSuccess().getViabilityRagStatus());
     }
 
@@ -54,11 +54,11 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     public void testSaveViability() {
 
         String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/viability/" +
-                Viability.APPROVED.name() + "/" + ViabilityRagStatus.RED.name();
+                ViabilityState.APPROVED.name() + "/" + ViabilityRagStatus.RED.name();
 
         setupPostWithRestResultExpectations(postUrl, OK);
 
-        RestResult<Void> result = service.saveViability(123L, 456L, Viability.APPROVED, ViabilityRagStatus.RED);
+        RestResult<Void> result = service.saveViability(123L, 456L, ViabilityState.APPROVED, ViabilityRagStatus.RED);
 
         assertTrue(result.isSuccess());
 

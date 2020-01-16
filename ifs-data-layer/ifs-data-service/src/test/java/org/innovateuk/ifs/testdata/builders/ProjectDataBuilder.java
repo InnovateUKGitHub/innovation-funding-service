@@ -13,7 +13,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.monitoringofficer.resource.LegacyMonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -146,7 +146,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
     private void updateFinanceChecks(Long projectId, Long organisationId) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        financeCheckService.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.GREEN).getSuccess();
+        financeCheckService.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.GREEN).getSuccess();
         financeCheckService.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN).getSuccess();
     }
 

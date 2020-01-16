@@ -71,7 +71,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
+        ViabilityResource expectedViabilityResource = new ViabilityResource(ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
         expectedViabilityResource.setViabilityApprovalDate(LocalDate.now());
         expectedViabilityResource.setViabilityApprovalUserFirstName("Lee");
         expectedViabilityResource.setViabilityApprovalUserLastName("Bowman");
@@ -96,7 +96,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         Long projectId = 1L;
         Long organisationId = 2L;
-        Viability viability = Viability.APPROVED;
+        ViabilityState viability = ViabilityState.APPROVED;
         ViabilityRagStatus viabilityRagStatus = ViabilityRagStatus.GREEN;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);

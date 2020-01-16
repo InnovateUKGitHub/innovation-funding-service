@@ -182,9 +182,9 @@ public class FinanceCheckSummaryResource {
 
     private boolean isViabilityAllApprovedOrNotRequired() {
 
-        List<Viability> relevantStatuses = asList(
-                Viability.APPROVED,
-                Viability.NOT_APPLICABLE);
+        List<ViabilityState> relevantStatuses = asList(
+                ViabilityState.APPROVED,
+                ViabilityState.NOT_APPLICABLE);
 
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
     }
@@ -202,7 +202,7 @@ public class FinanceCheckSummaryResource {
         return partnerStatusResources
                 .stream()
                 .allMatch(partner ->
-                        partner.getViability() != Viability.APPROVED && partner.getEligibility() != EligibilityState.APPROVED);
+                        partner.getViability().isInReviewOrNotApplicable() && partner.getEligibility().isInReviewOrNotApplicable());
     }
 
     public void setSpendProfileGeneratedBy(String spendProfileGeneratedBy) {
