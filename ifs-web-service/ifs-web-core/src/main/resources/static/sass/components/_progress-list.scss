@@ -198,6 +198,11 @@
     color: $govuk-text-colour;
   }
 
+  .status-lead-action-required {
+        text-align: center;
+        color: $govuk-text-colour;
+  }
+
   .status-warning {
     @extend %icon-incomplete;
     background-size: 17px;

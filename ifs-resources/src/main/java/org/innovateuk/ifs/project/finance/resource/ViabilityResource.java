@@ -7,7 +7,7 @@ import java.time.LocalDate;
  */
 public class ViabilityResource {
 
-    private Viability viability;
+    private ViabilityState viability;
     private ViabilityRagStatus viabilityRagStatus;
 
     private String viabilityApprovalUserFirstName;
@@ -18,16 +18,16 @@ public class ViabilityResource {
     ViabilityResource() {
     }
 
-    public ViabilityResource(Viability viability, ViabilityRagStatus viabilityRagStatus) {
+    public ViabilityResource(ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
         this.viability = viability;
         this.viabilityRagStatus = viabilityRagStatus;
     }
 
-    public Viability getViability() {
+    public ViabilityState getViability() {
         return viability;
     }
 
-    public void setViability(Viability viability) {
+    public void setViability(ViabilityState viability) {
         this.viability = viability;
     }
 

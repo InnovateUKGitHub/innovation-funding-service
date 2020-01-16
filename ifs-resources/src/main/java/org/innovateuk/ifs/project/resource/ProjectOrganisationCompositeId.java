@@ -8,36 +8,28 @@ import java.io.Serializable;
 
 public class ProjectOrganisationCompositeId implements Serializable {
 
-    private Long projectId;
+    private long projectId;
 
-    private Long organisationId;
+    private long organisationId;
 
-    public static ProjectOrganisationCompositeId id(Long projectId, Long organisationId){
+    public static ProjectOrganisationCompositeId id(long projectId, long organisationId){
         return new ProjectOrganisationCompositeId(projectId, organisationId);
     }
 
     public ProjectOrganisationCompositeId() {}
 
-    public ProjectOrganisationCompositeId(Long projectId, Long organisationId) {
+    public ProjectOrganisationCompositeId(long projectId, long organisationId) {
 
         this.projectId = projectId;
         this.organisationId = organisationId;
     }
 
-    public Long getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
-    public Long getOrganisationId() {
+    public long getOrganisationId() {
         return organisationId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public void setOrganisationId(Long organisationId) {
-        this.organisationId = organisationId;
     }
 
     @Override

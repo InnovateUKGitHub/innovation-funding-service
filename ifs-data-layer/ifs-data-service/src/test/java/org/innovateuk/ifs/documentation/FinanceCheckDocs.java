@@ -26,7 +26,8 @@ public class FinanceCheckDocs {
             fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition"),
             fieldWithPath("applicationId").description("Id of application that lead to project that the status is from"),
             fieldWithPath("h2020").description("Whether the project is a horizon 2020 grant transfer"),
-            fieldWithPath("fundingType").description("Funding type of the competition that the project is from")
+            fieldWithPath("fundingType").description("Funding type of the competition that the project is from"),
+            fieldWithPath("allEligibilityAndViabilityInReview").description("True if all partner finances are in review, or not applicable"),
     };
 
     public static final FieldDescriptor[] financeCheckOverviewResourceFields = {
