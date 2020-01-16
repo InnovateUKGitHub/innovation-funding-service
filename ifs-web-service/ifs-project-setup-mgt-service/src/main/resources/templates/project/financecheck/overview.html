@@ -23,6 +23,10 @@
             <h2 class="govuk-heading-s govuk-!-margin-top-0">The funding amount has changed</h2>
         </div>
 
+        <div th:if="${showFundingLevelMessage}" class="success-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-top-0">The funding levels have been changed</h2>
+        </div>
+
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
