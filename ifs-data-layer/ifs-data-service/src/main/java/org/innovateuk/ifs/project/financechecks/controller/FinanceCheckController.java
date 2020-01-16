@@ -22,24 +22,25 @@ public class FinanceCheckController {
     private FinanceCheckService financeCheckService;
 
     @GetMapping("/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH)
-    public RestResult<FinanceCheckResource> getFinanceCheck(@PathVariable("projectId") final Long projectId,
-                                                            @PathVariable("organisationId") final Long organisationId) {
+    public RestResult<FinanceCheckResource> getFinanceCheck(@PathVariable long projectId,
+                                                            @PathVariable long organisationId) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return financeCheckService.getByProjectAndOrganisation(projectOrganisationCompositeId).toGetResponse();
     }
 
     @GetMapping("/{projectId}" + FinanceCheckURIs.PATH)
-    public RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(@PathVariable("projectId") Long projectId){
+    public RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(@PathVariable long projectId){
         return financeCheckService.getFinanceCheckSummary(projectId).toGetResponse();
     }
 
     @GetMapping("/{projectId}" + FinanceCheckURIs.PATH + "/overview")
-    public RestResult<FinanceCheckOverviewResource> getFinanceCheckOverview(@PathVariable("projectId") Long projectId){
+    public RestResult<FinanceCheckOverviewResource> getFinanceCheckOverview(@PathVariable long projectId){
         return financeCheckService.getFinanceCheckOverview(projectId).toGetResponse();
     }
 
     @GetMapping("/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility")
-    public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId){
+    public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(@PathVariable long projectId,
+                                                                                         @PathVariable long organisationId){
         return financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId).toGetResponse();
     }
 }

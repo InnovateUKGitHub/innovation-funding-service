@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
@@ -25,9 +26,9 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
     private FinanceCheckService financeCheckServiceMock;
 
     @Test
-    public void testGetFinanceCheck() throws Exception {
-        Long projectId = 123L;
-        Long organisationId = 456L;
+    public void getFinanceCheck() throws Exception {
+        long projectId = 123L;
+        long organisationId = 456L;
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         FinanceCheckResource expected = newFinanceCheckResource().build();
         when(financeCheckServiceMock.getByProjectAndOrganisation(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expected));
@@ -38,9 +39,9 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
     }
 
     @Test
-    public void testGetFinanceCheckSummary() throws Exception {
-        Long projectId = 123L;
-        FinanceCheckSummaryResource expected = newFinanceCheckSummaryResource().build();
+    public void getFinanceCheckSummary() throws Exception {
+        long projectId = 123L;
+        FinanceCheckSummaryResource expected = newFinanceCheckSummaryResource().withPartnerStatusResources(emptyList()).build();
         when(financeCheckServiceMock.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(expected));
         mockMvc.perform(get(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.PATH, projectId))
                 .andExpect(status().isOk())
@@ -49,9 +50,9 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
     }
 
     @Test
-    public void testGetFinanceCheckEligibility() throws Exception {
-        Long projectId = 123L;
-        Long organisationId = 234L;
+    public void getFinanceCheckEligibility() throws Exception {
+        long projectId = 123L;
+        long organisationId = 234L;
         FinanceCheckEligibilityResource expected = newFinanceCheckEligibilityResource().build();
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(projectId, organisationId)).thenReturn(serviceSuccess(expected));
         mockMvc.perform(get(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility", projectId, organisationId))
@@ -61,8 +62,8 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
     }
 
     @Test
-    public void testGetFinanceCheckOverview() throws Exception {
-        Long projectId = 123L;
+    public void getFinanceCheckOverview() throws Exception {
+        long projectId = 123L;
         when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(new FinanceCheckOverviewResource()));
 
         mockMvc.perform(get(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.PATH + "/overview", projectId)).andExpect(status().isOk());
