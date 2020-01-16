@@ -47,8 +47,8 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        <a th:if="${model.ifsAdministrator and !model.spendProfileGenerated}" th:href="@{/competition/{competitionId}/project/{id}/details/start-date(competitionId=${model.project.getCompetition()},id=${model.project.getId()})}" class="govuk-link">Target start date</a>
-                        <th:block th:unless="${model.ifsAdministrator and !model.spendProfileGenerated}">Target start date</th:block>
+                        <a th:if="${model.modifyStartDate()}" th:href="@{/competition/{competitionId}/project/{id}/details/start-date(competitionId=${model.project.getCompetition()},id=${model.project.getId()})}" class="govuk-link">Target start date</a>
+                        <th:block th:unless="${model.modifyStartDate()}">Target start date</th:block>
                     </td>
                     <td class="govuk-table__cell" id="start-date">
                         <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
@@ -119,7 +119,7 @@
                     <th:block th:if="${model.financeReviewerAssigned}" th:text="${model.financeReviewerEmail}"></th:block>
                 </td>
                 <td class="govuk-table__cell alignright">
-                    <a th:if="${model.projectFinance and model.project.projectState.active}"
+                    <a th:if="${model.modifyTheFinanceReviewer()}"
                        th:href="@{/competition/{competitionId}/project/{projectId}/finance-reviewer(competitionId=${model.competitionId},projectId=${model.project.id})}">
                         Edit <span class="govuk-visually-hidden">finance reviewer</span></a>
                 </td>

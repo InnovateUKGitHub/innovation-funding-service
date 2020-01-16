@@ -38,8 +38,6 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -78,7 +76,8 @@ public class ProjectDetailsController {
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
-                                     UserResource loggedInUser) {
+                                     UserResource loggedInUser,
+                                     boolean isSpendProfileGenerated) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
@@ -93,8 +92,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                loggedInUser.hasRole(PROJECT_FINANCE),
-                loggedInUser.hasRole(IFS_ADMINISTRATOR),
+                loggedInUser,
                 leadOrganisationResource.getName(),
                 locationPerPartnerRequired,
                 locationPerPartnerRequired?
@@ -102,7 +100,7 @@ public class ProjectDetailsController {
                         : Collections.emptyList(),
                 financeReviewer.map(SimpleUserResource::getName).orElse(null),
                 financeReviewer.map(SimpleUserResource::getEmail).orElse(null),
-                projectResource.isSpendProfileGenerated()));
+                isSpendProfileGenerated));
 
         return "project/detail";
     }
@@ -145,7 +143,6 @@ public class ProjectDetailsController {
         model.addAttribute(FORM_ATTR_NAME, form);
         return "project/details-start-date";
     }
-
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")

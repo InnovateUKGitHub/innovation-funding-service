@@ -10,7 +10,7 @@
 
  import java.time.LocalDate;
 
- /**
+/**
  * A service for dealing with Project Details Resources via the appropriate Rest services
  */
 @Service
@@ -38,7 +38,7 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
      @Override
-     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+     public ServiceResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate) {
          return projectDetailsRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
      }
 
