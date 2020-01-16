@@ -29,13 +29,12 @@
 
         <p class="govuk-body" th:unless="${model.isMarkAsComplete()}">
             This overview shows the spend profile status of each organisation in your project.</p>
-        <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.isMarkAsComplete()}">
+        <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.isMarkAsComplete() and !model.submitted}">
             <p class="govuk-body" >
                 All spend profiles have been completed. You must now review the spend profile for each organisation.</p>
         </div>
 
         <th:block th:if="${model.submitted}">
-            <h2 class="govuk-heading-m">Spend profile</h2>
             <p class="govuk-body" th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
                You may view these profiles.</p>
             <p class="govuk-body" th:if="${model.approved}">All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
