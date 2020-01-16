@@ -1,14 +1,5 @@
-package org.innovateuk.ifs.project.funding.controller;
+package org.innovateuk.ifs.project.funding.sought.controller;
 
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toMap;
-
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import javax.validation.Valid;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -16,9 +7,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.funding.form.ProjectFinanceFundingForm;
-import org.innovateuk.ifs.project.funding.form.ProjectFinancePartnerFundingForm;
-import org.innovateuk.ifs.project.funding.viewmodel.ProjectFinanceFundingViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +14,24 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.innovateuk.ifs.project.funding.sought.form.*;
+import org.innovateuk.ifs.project.funding.sought.viewmodel.*;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toMap;
 
 @Controller
-@RequestMapping("/project/{projectId}/funding")
+@RequestMapping("/project/{projectId}/funding-sought")
 @SecuredBySpring(value = "PROJECT_FINANCE_FUNDING", description = "Project finance team can amend funding levels in project setup.")
 @PreAuthorize("hasAuthority('project_finance')")
-public class ProjectFinanceFundingController {
+public class ProjectFinanceFundingSoughtController {
 
     @Autowired
     private ProjectRestService projectRestService;
@@ -49,18 +43,18 @@ public class ProjectFinanceFundingController {
     private ProjectFinanceRowRestService financeRowRestService;
 
     @GetMapping
-    public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingForm form,
+    public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingSoughtForm form,
                                     @PathVariable long projectId,
                                     Model model) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         form.setPartners(finances.stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation,
-                        pf -> new ProjectFinancePartnerFundingForm(pf.getTotalFundingSought()))));
+                        pf -> new ProjectFinancePartnerFundingSoughtForm(pf.getTotalFundingSought()))));
         return viewFunding(projectId, finances, model);
     }
 
     @PostMapping
-    public String saveFundingLevels(@Valid @ModelAttribute("form") ProjectFinanceFundingForm form,
+    public String saveFundingLevels(@Valid @ModelAttribute("form") ProjectFinanceFundingSoughtForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable long projectId,
@@ -80,12 +74,12 @@ public class ProjectFinanceFundingController {
 
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        model.addAttribute("model", new ProjectFinanceFundingViewModel(project, finances));
-        return "project/financecheck/funding";
+        model.addAttribute("model", new ProjectFinanceFundingSoughtViewModel(project, finances));
+        return "project/financecheck/funding-sought";
     }
 
 
-    private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> financeList, ProjectFinanceFundingForm form) {
+    private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> financeList, ProjectFinanceFundingSoughtForm form) {
         Map<Long, ProjectFinanceResource> finances = financeList
                 .stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation, Function.identity()));

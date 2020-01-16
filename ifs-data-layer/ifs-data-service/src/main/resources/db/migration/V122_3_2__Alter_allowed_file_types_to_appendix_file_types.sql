@@ -1,4 +1,4 @@
---IFS-2959 Convert allowed_file_types values to rows in the appendix_file_types table
+-- IFS-2959 Convert allowed_file_types values to rows in the appendix_file_types table
 
 INSERT IGNORE INTO appendix_file_types(form_input_id, type)
     SELECT f.id, 'PDF'
