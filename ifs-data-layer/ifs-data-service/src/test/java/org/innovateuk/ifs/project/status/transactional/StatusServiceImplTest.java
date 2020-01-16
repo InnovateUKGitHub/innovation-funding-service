@@ -809,7 +809,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(projectUsers.get(0).getId()));
 
-        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && LEAD_ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
     @Test
@@ -834,7 +834,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(projectUsers.get(0).getId()));
 
-        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && LEAD_ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
     @Test
@@ -881,7 +881,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(projectUsers.get(0).getId()));
 
-        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && LEAD_ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
         assertNull(project.getSpendProfileSubmittedDate());
     }
 }

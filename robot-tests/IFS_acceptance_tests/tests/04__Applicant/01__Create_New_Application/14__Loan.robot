@@ -220,10 +220,11 @@ the user should not see the financial year table on SP
     the user should not see the element   jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
     the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
     the user clicks the button/link       link = Spend profile overview
-    the user clicks the button/link       link = Review and send total project spend profile
+    the user clicks the button/link       jQuery = a:contains("Review and submit project spend profile")
+    the user should see the element       jQuery = h2:contains("Project - Spend profile")
     the user should not see the element   jQuery = h2:contains("Project costs for financial year")
     the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       link = Send project spend profile
+    the user clicks the button/link       jQuery = a:contains("Submit project spend profile")
     the user clicks the button/link       id = submit-send-all-spend-profiles
 
 the user selects to change funding sought
