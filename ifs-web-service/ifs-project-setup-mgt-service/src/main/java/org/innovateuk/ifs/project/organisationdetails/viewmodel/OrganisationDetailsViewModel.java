@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.project.partnerdetails.viewmodel;
+package org.innovateuk.ifs.project.organisationdetails.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
-public class PartnerDetailsViewModel {
+public class OrganisationDetailsViewModel {
 
     private final long projectId;
     private final String projectName;
@@ -17,19 +18,23 @@ public class PartnerDetailsViewModel {
     private final String county;
     private final String postcode;
 
-    public PartnerDetailsViewModel(long projectId, String projectName, OrganisationResource partnerOrganisation) {
+    private final YourOrganisationViewModel yourOrganisationViewModel;
+
+    public OrganisationDetailsViewModel(long projectId, String projectName, OrganisationResource organisation, YourOrganisationViewModel yourOrganisationViewModel) {
         this.projectId = projectId;
-        this.organisationType = partnerOrganisation.getOrganisationTypeName();
+        this.organisationType = organisation.getOrganisationTypeName();
         this.projectName = projectName;
-        this.organisationName = partnerOrganisation.getName();
-        this.registrationNumber = partnerOrganisation.getCompaniesHouseNumber();
-        AddressResource address = partnerOrganisation.getAddresses().get(0).getAddress();
+        this.organisationName = organisation.getName();
+        this.registrationNumber = organisation.getCompaniesHouseNumber();
+        AddressResource address = organisation.getAddresses().get(0).getAddress();
         this.addressLine1 = address.getAddressLine1();
         this.addressLine2 = address.getAddressLine2();
         this.addressLine3 = address.getAddressLine3();
         this.town = address.getTown();
         this.county = address.getTown();
         this.postcode = address.getPostcode();
+
+        this.yourOrganisationViewModel = yourOrganisationViewModel;
     }
 
     public long getProjectId() {
@@ -76,4 +81,11 @@ public class PartnerDetailsViewModel {
         return postcode;
     }
 
+    public boolean getReadOnly() {
+        return true;
+    }
+
+    public YourOrganisationViewModel getYourOrganisationViewModel() {
+        return yourOrganisationViewModel;
+    }
 }

@@ -1,16 +1,16 @@
-package org.innovateuk.ifs.project.partnerdetails.viewmodel;
+package org.innovateuk.ifs.project.organisationdetails.viewmodel;
 
 import java.util.List;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 
-public class SelectPartnerViewModel {
+public class SelectOrganisationViewModel {
 
     private final List<PartnerOrganisationResource> partnerOrganisations;
     private final long projectId;
     private final String projectName;
 
-    public SelectPartnerViewModel(List<PartnerOrganisationResource> partnerOrganisations,
-                                   long projectId, String projectName) {
+    public SelectOrganisationViewModel(List<PartnerOrganisationResource> partnerOrganisations,
+                                       long projectId, String projectName) {
         this.partnerOrganisations = partnerOrganisations;
         this.projectId = projectId;
         this.projectName = projectName;

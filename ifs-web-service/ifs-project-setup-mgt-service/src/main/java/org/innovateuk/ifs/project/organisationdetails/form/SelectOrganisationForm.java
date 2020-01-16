@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.project.partnerdetails.form;
+package org.innovateuk.ifs.project.organisationdetails.form;
 
-public class SelectPartnerForm {
+public class SelectOrganisationForm {
 
     long organisationId;
 

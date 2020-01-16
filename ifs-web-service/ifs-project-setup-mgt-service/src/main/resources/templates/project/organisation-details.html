@@ -3,7 +3,7 @@
 
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${model.projectId}: ${model.projectName} - model.organisationName|" />
+              th:with="pageTitle=|${model.projectId}: ${model.projectName} - ${model.organisationName}|" />
 </head>
 <body class="govuk-template__body">
 
@@ -16,7 +16,8 @@
               th:with="linkTitle='Back to project details',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle=|${model.projectId}: ${model.projectName} - ${model.organisationName}|" />
 
         <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden" th:text="${model.organisationName} + ''">? Organisation</legend>
@@ -27,6 +28,7 @@
 
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Registered name</h3>
                 <p class="govuk-body" th:text="${model.organisationName}"></p>
+                <a class="govuk-link" href="">Edit registered name</a>
 
 
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Registration number</h3>
@@ -46,15 +48,17 @@
         </fieldset>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                    without-growth-table(
-                                           form=${form},
-                                           organisationSizeOptions=${model.organisationSizeOptions},
-                                           isH2020=${commonFinancesModel.h2020},
-                                           showOrganisationSizeAlert=${model.showOrganisationSizeAlert},
-                                           showStateAidAgreement=${model.showStateAidAgreement},
-                                           readOnly=${commonFinancesModel.readOnly},
+                                    with-growth-table(
+                                           form=${orgSizeForm},
+                                           organisationSizeOptions=${model.yourOrganisationViewModel.organisationSizeOptions},
+                                           isH2020=${model.yourOrganisationViewModel.h2020},
+                                           showOrganisationSizeAlert=${model.yourOrganisationViewModel.showOrganisationSizeAlert},
+                                           showStateAidAgreement=${model.yourOrganisationViewModel.showStateAidAgreement},
+                                           readOnly=model.readOnly,
                                            checkboxText='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot; aria-describedby=&quot;state-aid-hint&quot;>eligible for State aid</a> <span id=&quot;state-aid-hint&quot;>(opens in a new window)</span> within 90 days of any offer being made.'
                                     )" />
+
+        <button id="edit_organisation_details" type="submit" name="edit-organisation-details" class="button-clear" value="true">Edit</button>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
 
