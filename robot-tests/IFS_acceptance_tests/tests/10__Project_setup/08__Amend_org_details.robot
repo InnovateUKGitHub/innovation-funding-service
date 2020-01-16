@@ -55,8 +55,8 @@ New funding percentage is applied on finance checks
 
 Approving any eligibility removes the link
     [Documentation]  IFS-6712
-    Given the user clicks the button/link     css = a.eligibility-2
-    And the user approves project costs
+    [Setup]  the user clicks the button/link     css = a.eligibility-2
+    Given the user approves project costs
     When the user clicks the button/link      link = Finance checks
     And the user clicks the button/link       link = View finances
     Then the user should not see the element  link = Change funding level percentages
