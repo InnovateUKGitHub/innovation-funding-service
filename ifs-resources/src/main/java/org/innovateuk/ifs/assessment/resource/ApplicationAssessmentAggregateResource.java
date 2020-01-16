@@ -15,12 +15,12 @@ public class ApplicationAssessmentAggregateResource {
     private int totalScope;
     private int inScope;
     private Map<Long, BigDecimal> scores;
-    private long averagePercentage;
+    private BigDecimal averagePercentage;
 
     public ApplicationAssessmentAggregateResource() {
     }
 
-    public ApplicationAssessmentAggregateResource(boolean scopeAssessed, int totalScope, int inScope, Map<Long, BigDecimal> scores, long averagePercentage) {
+    public ApplicationAssessmentAggregateResource(boolean scopeAssessed, int totalScope, int inScope, Map<Long, BigDecimal> scores, BigDecimal averagePercentage) {
         this.scopeAssessed = scopeAssessed;
         this.totalScope = totalScope;
         this.inScope = inScope;
@@ -44,7 +44,7 @@ public class ApplicationAssessmentAggregateResource {
         return scores;
     }
 
-    public long getAveragePercentage() {
+    public BigDecimal getAveragePercentage() {
         return averagePercentage;
     }
 
