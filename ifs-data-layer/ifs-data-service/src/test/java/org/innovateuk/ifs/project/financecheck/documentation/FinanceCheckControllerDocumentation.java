@@ -82,7 +82,11 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         Long projectId = 123L;
         Long competitionId = 456L;
 
-        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L).withName("Organisation A", "Organisation B", "Organisation C").withEligibility(EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityState.APPROVED).build(3);
+        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L)
+                .withName("Organisation A", "Organisation B", "Organisation C")
+                .withEligibility(EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityState.APPROVED)
+                .withViability(ViabilityState.REVIEW, ViabilityState.APPROVED, ViabilityState.APPROVED)
+                .build(3);
 
         FinanceCheckSummaryResource expected = newFinanceCheckSummaryResource().
                 withProjectId(projectId).

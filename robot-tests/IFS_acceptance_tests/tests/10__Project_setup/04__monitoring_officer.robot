@@ -252,7 +252,6 @@ The user is able to see Monitoring officer section
 
 The user is able to see Spend profile section
     the user clicks the button/link   link = Spend profile
-    the user should see the element   jQuery = h2:contains("Partner progress")
     the user clicks the button/link   jQuery = a:contains("Set up your project")
 
 Standard verification for email address follows

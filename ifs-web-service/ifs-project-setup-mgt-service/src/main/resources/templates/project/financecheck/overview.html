@@ -23,6 +23,10 @@
             <h2 class="govuk-heading-s govuk-!-margin-top-0">The funding amount has changed</h2>
         </div>
 
+        <div th:if="${showFundingLevelMessage}" class="success-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-top-0">The funding levels have been changed</h2>
+        </div>
+
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
@@ -32,6 +36,10 @@
             <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
         </th:block>
 
+
+        <div th:if="${model.canChangeFundingLevelPercentages}" class="govuk-!-margin-top-0">
+            <p class="govuk-body"><a class="govuk-link" th:href="@{/project/{projectId}/funding-level(projectId=${model.overview.projectId})}">Change funding level percentages</a></p>
+        </div>
 
         <p class="govuk-body govuk-!-margin-bottom-6">
             <a class="govuk-link"
@@ -44,7 +52,7 @@
         </div>
 
         <h3 class="govuk-heading-m">Project cost breakdown</h3>
-        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})">
+        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})"/>
     </main>
 </div>
 <th:block th:insert="fragments/layout :: footer" />
