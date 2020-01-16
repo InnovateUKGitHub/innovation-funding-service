@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
-<p class="govuk-width-container">
+<div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Back to project details',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"/>
@@ -63,8 +63,9 @@
 
             <button class="govuk-button" type="submit">View partner details</button>
 
-            <p><a class="govuk-link" href="">Cancel and return to project details</a></p>
-            <button id="cancel_return_project_details" type="submit" name="cancel-return-project-details" class="button-clear" value="true">Cancel and return to project details</button>
+            <div>
+                <button id="cancel_return_project_details" type="submit" name="cancel-return-project-details" class="button-clear" value="true">Cancel and return to project details</button>
+            </div>
 
         </form>
 

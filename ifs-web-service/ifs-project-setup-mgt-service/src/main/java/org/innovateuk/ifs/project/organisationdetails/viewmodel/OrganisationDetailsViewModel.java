@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.organisationdetails.viewmodel;
 
+import java.math.BigDecimal;
+import java.time.YearMonth;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 public class OrganisationDetailsViewModel {
 
+    // Details
     private final long projectId;
     private final String projectName;
     private final String organisationType;
@@ -18,23 +21,79 @@ public class OrganisationDetailsViewModel {
     private final String county;
     private final String postcode;
 
-    private final YourOrganisationViewModel yourOrganisationViewModel;
+    // Shared
+    private final String organisationSize;
+    private final BigDecimal annualTurnover;
+    private final long employees;
 
-    public OrganisationDetailsViewModel(long projectId, String projectName, OrganisationResource organisation, YourOrganisationViewModel yourOrganisationViewModel) {
+    // If includes Growth table
+    private YearMonth endOfLastFinancialYear;
+    private final boolean includeGrowthTable;
+    private BigDecimal annualProfit;
+    private BigDecimal annualExport;
+    private BigDecimal researchAndDevelopmentSpend;
+
+    public OrganisationDetailsViewModel(long projectId,
+                                        String projectName,
+                                        OrganisationResource organisation,
+                                        boolean includeGrowthTable,
+                                        OrganisationFinancesWithGrowthTableResource finances,
+                                        AddressResource addressResource) {
         this.projectId = projectId;
         this.organisationType = organisation.getOrganisationTypeName();
         this.projectName = projectName;
         this.organisationName = organisation.getName();
         this.registrationNumber = organisation.getCompaniesHouseNumber();
-        AddressResource address = organisation.getAddresses().get(0).getAddress();
-        this.addressLine1 = address.getAddressLine1();
-        this.addressLine2 = address.getAddressLine2();
-        this.addressLine3 = address.getAddressLine3();
-        this.town = address.getTown();
-        this.county = address.getTown();
-        this.postcode = address.getPostcode();
+        this.addressLine1 = addressResource.getAddressLine1() == null ? "" : addressResource.getAddressLine1();
+        this.addressLine2 = addressResource.getAddressLine2() == null ? "" : addressResource.getAddressLine2();
+        this.addressLine3 = addressResource.getAddressLine3() == null ? "" : addressResource.getAddressLine3();
+        this.town = addressResource.getTown();
+        this.county = addressResource.getTown();
+        this.postcode = addressResource.getPostcode();
 
-        this.yourOrganisationViewModel = yourOrganisationViewModel;
+        this.organisationSize = finances.getOrganisationSize().getDescription();
+        this.annualTurnover = finances.getAnnualTurnoverAtLastFinancialYear();
+        this.employees = finances.getHeadCountAtLastFinancialYear();
+
+        this.includeGrowthTable = includeGrowthTable;
+        if(includeGrowthTable) {
+            this.endOfLastFinancialYear = finances.getFinancialYearEnd();
+            this.annualProfit = finances.getAnnualProfitsAtLastFinancialYear();
+            this.annualExport = finances.getAnnualExportAtLastFinancialYear();
+            this.researchAndDevelopmentSpend = finances.getResearchAndDevelopmentSpendAtLastFinancialYear();
+        }
+    }
+
+    public BigDecimal getAnnualProfit() {
+        return annualProfit;
+    }
+
+    public BigDecimal getAnnualExport() {
+        return annualExport;
+    }
+
+    public BigDecimal getAnnualTurnover() {
+        return annualTurnover;
+    }
+
+    public long getEmployees() {
+        return employees;
+    }
+
+    public BigDecimal getResearchAndDevelopmentSpend() {
+        return researchAndDevelopmentSpend;
+    }
+
+    public boolean isIncludeGrowthTable() {
+        return includeGrowthTable;
+    }
+
+    public String getOrganisationSize() {
+        return organisationSize;
+    }
+
+    public YearMonth getEndOfLastFinancialYear() {
+        return endOfLastFinancialYear;
     }
 
     public long getProjectId() {
@@ -83,9 +142,5 @@ public class OrganisationDetailsViewModel {
 
     public boolean getReadOnly() {
         return true;
-    }
-
-    public YourOrganisationViewModel getYourOrganisationViewModel() {
-        return yourOrganisationViewModel;
     }
 }

@@ -7,10 +7,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
@@ -92,11 +92,9 @@ public class OrganisationDetailsController {
                                           Model model) {
 
         OrganisationDetailsViewModel viewModel = getViewModel(projectId, organisationId, competitionId);
-        YourOrganisationWithGrowthTableForm orgSizeForm = getForm(projectId, organisationId);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
-        model.addAttribute("orgSizeForm", orgSizeForm);
 
         return "project/organisation-details";
     }
@@ -104,17 +102,23 @@ public class OrganisationDetailsController {
     private OrganisationDetailsViewModel getViewModel(long projectId, long organisationId, long competitionId) {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-
+        OrganisationFinancesWithGrowthTableResource  organisationFinancesWithGrowthTableResource
+            = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
         String projectName = project.getName();
+        OrganisationAddressResource addressResource = organisation.getAddresses().get(0);
 
-        YourOrganisationViewModel yourOrganisationViewModel = new YourOrganisationViewModel(true, true, true);
+        boolean isIncludingGrowthTable = isIncludingGrowthTable(competitionId);
 
-        return new OrganisationDetailsViewModel(projectId, projectName, organisation, yourOrganisationViewModel);
+        return new OrganisationDetailsViewModel(projectId,
+            projectName,
+            organisation,
+            isIncludingGrowthTable,
+            organisationFinancesWithGrowthTableResource,
+            addressResource.getAddress()
+            );
     }
 
-    private YourOrganisationWithGrowthTableForm getForm(long projectId, long organisationId) {
-        return withGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess());
-    }
+    // add a populator that fills model with either growthtable data or not
 
     private boolean isIncludingGrowthTable(long competitionId) {
         return competitionRestService.getCompetitionById(competitionId).

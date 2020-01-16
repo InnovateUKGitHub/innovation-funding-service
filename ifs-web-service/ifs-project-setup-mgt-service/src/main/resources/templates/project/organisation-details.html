@@ -17,18 +17,20 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=|${model.projectId}: ${model.projectName} - ${model.organisationName}|" />
+                  th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
         <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden" th:text="${model.organisationName} + ''">? Organisation</legend>
             <div class="govuk-form-group">
+
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Organisation details</h2>
 
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Organisation type</h3>
                 <p class="govuk-body" th:text="${model.organisationType}">Business</p>
 
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Registered name</h3>
                 <p class="govuk-body" th:text="${model.organisationName}"></p>
-                <a class="govuk-link" href="">Edit registered name</a>
+                <!--<a class="button-clear" th:href="">Edit registered name</a>-->
 
 
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Registration number</h3>
@@ -47,18 +49,65 @@
             </div>
         </fieldset>
 
-        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                    with-growth-table(
-                                           form=${orgSizeForm},
-                                           organisationSizeOptions=${model.yourOrganisationViewModel.organisationSizeOptions},
-                                           isH2020=${model.yourOrganisationViewModel.h2020},
-                                           showOrganisationSizeAlert=${model.yourOrganisationViewModel.showOrganisationSizeAlert},
-                                           showStateAidAgreement=${model.yourOrganisationViewModel.showStateAidAgreement},
-                                           readOnly=model.readOnly,
-                                           checkboxText='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot; aria-describedby=&quot;state-aid-hint&quot;>eligible for State aid</a> <span id=&quot;state-aid-hint&quot;>(opens in a new window)</span> within 90 days of any offer being made.'
-                                    )" />
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-visually-hidden">Organisation size</legend>
+            <div class="govuk-form-group">
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Organisation size</h2>
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Size</h3>
+                <p class="govuk-body" th:text="${model.organisationSize}">size</p>
 
-        <button id="edit_organisation_details" type="submit" name="edit-organisation-details" class="button-clear" value="true">Edit</button>
+                <th:block th:if="${model.includeGrowthTable}">
+
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">End of last financial year</h3>
+                    <p class="govuk-body" th:text="${model.endOfLastFinancialYear}"></p>
+
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Financial overview</h3>
+
+                    <table class="govuk-table finances-include-growth-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header width-150" scope="col">Section</th>
+                            <th class="govuk-table__header width-100" scope="col">Last financial year (£)</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Annual turnover</td>
+                            <td class="govuk-table__cell" th:text="${model.annualTurnover}">Annual turnover</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Annual profit</td>
+                            <td class="govuk-table__cell" th:text="${model.annualProfit}">Annual profit</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Annual export</td>
+                            <td class="govuk-table__cell" th:text="${model.annualExport}">Annual export</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Research and development spend</td>
+                            <td class="govuk-table__cell" th:text="${model.researchAndDevelopmentSpend}">Research and development spend</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </th:block>
+
+                <th:block th:unless="${model.includeGrowthTable}">
+
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Turnover (£)</h3>
+                    <p class="govuk-body" th:text="${model.annualTurnover}"></p>
+
+                </th:block>
+
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Full time employees</h3>
+                <p class="govuk-body" th:text="${model.employees}"></p>
+
+                <!--<a class="button-clear" th:href="">Edit organisation size</a>-->
+
+
+            </div>
+
+        </fieldset>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
 
