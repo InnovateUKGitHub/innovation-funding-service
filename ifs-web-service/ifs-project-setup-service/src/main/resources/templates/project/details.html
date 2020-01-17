@@ -33,8 +33,8 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                    <a th:if="${model.userLeadPartner and !isProjectLive()}" th:href="@{/project/{id}/details/start-date(id=${model.project.id})}" class="govuk-link">Target start date</a>
-                    <th:block th:unless="${model.userLeadPartner and !isProjectLive()}">Target start date</th:block>
+                    <a th:if="${model.userLeadPartner and !model.isProjectLive()}" th:href="@{/project/{id}/details/start-date(id=${model.project.id})}" class="govuk-link">Target start date</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.isProjectLive()}">Target start date</th:block>
                 </td>
                 <td class="govuk-table__cell" id="start-date">
                     <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
