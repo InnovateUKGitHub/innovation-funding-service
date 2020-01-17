@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.controller;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
+import org.innovateuk.ifs.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
+package org.innovateuk.ifs.yourorganisation.service;
 
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;

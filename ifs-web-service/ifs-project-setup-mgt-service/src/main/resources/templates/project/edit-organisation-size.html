@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.projectId}: ${model.projectName} - ${model.organisationName}|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.project.getId()}: ${model.project.getName()} - ${model.organisationName}|" />
 </head>
 
 <body class="govuk-template__body">
@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Back to' ${model.organisationName},
-              linkUrl=@{/competition/{competitionId}/project/{projectId}/organisation/select (competitionId=${model.competitionId}, projectId=${model.projectId})}, dynamicBackLink=${true}" />
+              linkUrl=@{/competition/{competitionId}/project/{projectId}/organisation/select (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()})}, dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
@@ -30,7 +30,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=${model.organisationName},subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+                  th:with="pageTitle=${model.organisationName},subTitle=|${model.project.getId()}: ${model.project.getName()}|,size='govuk-heading-xl'"/>
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -45,7 +45,7 @@
             <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                     without-growth-table(
                                            form=${form},
-                                           organisationSizeOptions=${model.organisationSizes},
+                                           organisationSizeOptions=${model.organisationSizeOptions},
                                            isH2020=${commonFinancesModel.h2020},
                                            showOrganisationSizeAlert=${model.showOrganisationSizeAlert},
                                            showStateAidAgreement=${model.showStateAidAgreement},
@@ -65,7 +65,6 @@
                 </button>
             </div>
         </form>
-
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

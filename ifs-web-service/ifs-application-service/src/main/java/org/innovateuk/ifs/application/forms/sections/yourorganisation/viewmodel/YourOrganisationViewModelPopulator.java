@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
+import org.innovateuk.ifs.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
