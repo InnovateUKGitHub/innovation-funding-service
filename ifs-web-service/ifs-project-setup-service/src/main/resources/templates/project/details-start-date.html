@@ -13,7 +13,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to project details',linkUrl=@{/project/{id}/details(id=${model.projectId})}"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkUrl=@{/project/{id}/details(id=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target Start Date',subTitle=${model.projectName},size='govuk-heading-xl'" />
