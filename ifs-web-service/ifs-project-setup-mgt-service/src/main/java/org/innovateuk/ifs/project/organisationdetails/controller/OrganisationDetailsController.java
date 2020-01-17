@@ -1,14 +1,17 @@
 package org.innovateuk.ifs.project.organisationdetails.controller;
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 
 import java.util.List;
+import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -32,6 +35,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -63,17 +67,33 @@ public class OrganisationDetailsController {
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
     @GetMapping("/select")
-    public String selectOrganisation(@ModelAttribute(value = "form", binding = false)
-                                    SelectOrganisationForm form,
+    public String selectOrganisation(@ModelAttribute("form") SelectOrganisationForm form,
                                 BindingResult bindingResult,
                                 @PathVariable long projectId,
                                 @PathVariable long competitionId,
                                 Model model) {
         List<PartnerOrganisationResource> sortedOrganisations = sortedOrganisations(projectId);
         ProjectResource projectResource = projectService.getById(projectId);
-        model.addAttribute("model", new SelectOrganisationViewModel(sortedOrganisations, projectId, projectResource.getName()));
-        model.addAttribute("form", form);
+        model.addAttribute("model", new SelectOrganisationViewModel(sortedOrganisations, projectId, competitionId, projectResource.getName()));
         return "project/select-organisation";
+    }
+
+    @PostMapping("/select")
+    public String redirectToSelectedOrganisation(@ModelAttribute("form") @Valid SelectOrganisationForm form,
+                                                 BindingResult bindingResult,
+                                                 ValidationHandler validationHandler,
+                                                 @PathVariable long projectId,
+                                                 @PathVariable long competitionId,
+                                                 Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return selectOrganisation(form, bindingResult, projectId, competitionId, model);
+        }
+
+        return format("redirect:/competition/%d/project/%d/organisation/%d/details",
+            competitionId,
+            projectId,
+            form.getOrganisationId());
     }
 
     private List<PartnerOrganisationResource> sortedOrganisations(long projectId) {
@@ -99,6 +119,10 @@ public class OrganisationDetailsController {
         return "project/organisation-details";
     }
 
+    private boolean hasPartners(Long projectId) {
+        return partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().size() > 1;
+    }
+
     private OrganisationDetailsViewModel getViewModel(long projectId, long organisationId, long competitionId) {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -109,16 +133,18 @@ public class OrganisationDetailsController {
 
         boolean isIncludingGrowthTable = isIncludingGrowthTable(competitionId);
 
+
+
         return new OrganisationDetailsViewModel(projectId,
+            competitionId,
             projectName,
             organisation,
             isIncludingGrowthTable,
+            hasPartners(projectId),
             organisationFinancesWithGrowthTableResource,
             addressResource.getAddress()
             );
     }
-
-    // add a populator that fills model with either growthtable data or not
 
     private boolean isIncludingGrowthTable(long competitionId) {
         return competitionRestService.getCompetitionById(competitionId).

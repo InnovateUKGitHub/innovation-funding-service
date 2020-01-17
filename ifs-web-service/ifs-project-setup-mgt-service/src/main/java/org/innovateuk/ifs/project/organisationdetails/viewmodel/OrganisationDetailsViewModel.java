@@ -10,6 +10,7 @@ public class OrganisationDetailsViewModel {
 
     // Details
     private final long projectId;
+    private final long competitionId;
     private final String projectName;
     private final String organisationType;
     private final String organisationName;
@@ -33,13 +34,21 @@ public class OrganisationDetailsViewModel {
     private BigDecimal annualExport;
     private BigDecimal researchAndDevelopmentSpend;
 
+    private final String previousPage;
+    private String backLink;
+    private final String projectDetailsLink;
+    private final String selectProjectPartnerLink;
+
     public OrganisationDetailsViewModel(long projectId,
+                                        long competitionId,
                                         String projectName,
                                         OrganisationResource organisation,
                                         boolean includeGrowthTable,
+                                        boolean hasPartners,
                                         OrganisationFinancesWithGrowthTableResource finances,
                                         AddressResource addressResource) {
         this.projectId = projectId;
+        this.competitionId = competitionId;
         this.organisationType = organisation.getOrganisationTypeName();
         this.projectName = projectName;
         this.organisationName = organisation.getName();
@@ -62,6 +71,24 @@ public class OrganisationDetailsViewModel {
             this.annualExport = finances.getAnnualExportAtLastFinancialYear();
             this.researchAndDevelopmentSpend = finances.getResearchAndDevelopmentSpendAtLastFinancialYear();
         }
+
+        projectDetailsLink = String.format("/competition/%d/project/%d/details", competitionId, projectId);
+        selectProjectPartnerLink = String.format("/competition/%d/project/%d/details/organisation/select", competitionId, projectId);
+
+        this.previousPage = hasPartners == true ? "partner details" : "project details";
+        this.backLink = hasPartners == true ?  projectDetailsLink : selectProjectPartnerLink;
+    }
+
+    public String getBackLink() {
+        return backLink;
+    }
+
+    public String getPreviousPage() {
+        return previousPage;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     public BigDecimal getAnnualProfit() {
