@@ -245,7 +245,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertOrganisationDetails(academicOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6868), viewModel.getTotalCosts());
-        assertEquals(Integer.valueOf(100), viewModel.getPercentageGrant());
+        assertEquals(BigDecimal.valueOf(100), viewModel.getPercentageGrant());
         assertEquals(Integer.valueOf(5868), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(0), viewModel.getContributionToProject());
@@ -254,11 +254,11 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
 
         assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());
-        assertEquals(true, form.isCreditReportConfirmed());
-        assertEquals(false, form.isConfirmViabilityChecked());
+        assertTrue(form.isCreditReportConfirmed());
+        assertFalse(form.isConfirmViabilityChecked());
 
-        assertEquals(null, viewModel.getTurnover());
-        assertEquals(null, viewModel.getHeadCount());
+        assertNull(viewModel.getTurnover());
+        assertNull(viewModel.getHeadCount());
     }
 
     @Test
