@@ -11,8 +11,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to ${model.organisationName}',
+    <th:block th:insert="fragments/layout :: header-org"
+              th:with="linkTitle=|Back to ${model.organisationName}|,
               linkUrl=@{/competition/{competitionId}/project/{projectId}/organisation/select (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()})}, dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -51,15 +51,17 @@
                                            showStateAidAgreement=${model.showStateAidAgreement},
                                            readOnly=${model.readOnly})" />
             <div>
-                <a th:href="${model.}"
-                   th:if="${model.readOnly}"
-                   class="govuk-!-margin-top-6 button-secondary">Return to organisation
-                </a>
                 <button type="submit"
                         class="govuk-!-margin-top-6 govuk-button"
-                th:text="'Save and return to ${model.organisationName}'">
-                    Save and return to organisation
-                </button>
+                th:text="|Save and return to ${model.organisationName}|">Save and return to organisation</button>
+            </div>
+            <div>
+                <button id="cancel_return_organisation_details"
+                        type="submit"
+                        name="cancel-return-organisation-details"
+                        class="button-clear"
+                        value="true"
+                th:text="|Cancel and return to ${model.organisationName}|">Cancel and return to organisation details</button>
             </div>
         </form>
 
