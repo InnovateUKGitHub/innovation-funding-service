@@ -73,7 +73,9 @@
                                        required="required"
                                        min="1"
                                        step=".01"
+                                       data-prevent-input-non-decimal
                                        th:attr="data-required-errormessage=#{validation.finance.funding.level.required},
+                                                data-pattern-errormessage=#{validation.finance.funding.level.decimal},
                                                 data-min-errormessage=#{validation.finance.funding.level.min},
                                                 data-max-errormessage=#{validation.finance.grant.claim.percentage.max(${partner.maximumFundingLevel})},
                                                 max=${partner.maximumFundingLevel}">

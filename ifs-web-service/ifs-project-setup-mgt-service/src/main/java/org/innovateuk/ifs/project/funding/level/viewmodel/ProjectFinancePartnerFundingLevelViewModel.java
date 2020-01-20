@@ -74,6 +74,10 @@ public class ProjectFinancePartnerFundingLevelViewModel {
     }
 
     public BigDecimal calculateFundingSought(BigDecimal calcFundingLevel) {
+        if (calcFundingLevel == null) {
+            return BigDecimal.valueOf(0);
+        }
+
         return costs.multiply(calcFundingLevel)
                 .divide(new BigDecimal(100), RoundingMode.HALF_UP)
                 .subtract(otherFunding)

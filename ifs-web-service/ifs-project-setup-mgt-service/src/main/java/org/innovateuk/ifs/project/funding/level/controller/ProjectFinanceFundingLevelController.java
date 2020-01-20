@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.stream.Collectors.toMap;
 
 @Controller
@@ -65,6 +64,11 @@ public class ProjectFinanceFundingLevelController {
                                     RedirectAttributes redirectAttributes) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         Supplier<String> failureView = () -> viewFunding(projectId, finances, model);
+
+        if (bindingResult.hasErrors()) {
+            return failureView.get();
+        }
+
         validateMaximumFundingLevels(bindingResult, finances, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -88,19 +92,20 @@ public class ProjectFinanceFundingLevelController {
         finances.forEach(finance -> {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
             GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-            grantClaim.setPercentage(fundingLevel.setScale(2, HALF_EVEN));
+            grantClaim.setPercentage(fundingLevel);
             messages.addAll(financeRowRestService.update(grantClaim).getSuccess());
         });
         return messages;
     }
 
     private void validateMaximumFundingLevels(BindingResult bindingResult, List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
+
         finances.forEach(finance -> {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
             if (finance.getMaximumFundingLevel() < fundingLevel.intValue()) {
                 bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
                         "validation.finance.grant.claim.percentage.max",
-                        new String[] {String.valueOf(finance.getMaximumFundingLevel())},
+                        new String[]{String.valueOf(finance.getMaximumFundingLevel())},
                         "");
             }
         });
