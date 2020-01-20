@@ -232,7 +232,7 @@
        th:text="${linkTitle}">Back</a>
 </th:block>
 
-<!-- =========================== Element : subheader =========================== -->
+<!-- =========================== Element : subheader-with-organisation-name =========================== -->
 <th:block th:fragment="header-org">
     <div class="sub-header">
 
@@ -254,12 +254,6 @@
             days left to submit
         </div>
     </div>
-</th:block>
-<th:block th:fragment="back-link">
-    <a th:if="${linkTitle != null and linkUrl != null}"
-       class="govuk-back-link"
-       th:href="${linkUrl}"
-       th:text="${linkTitle}">Back</a>
 </th:block>
 
 </html>
