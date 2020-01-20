@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
@@ -35,7 +36,7 @@ public class GrantClaimValidatorTest {
 	
 	@Before
 	public void setUp() {
-        claim = new GrantClaimPercentage(CLAIM_ID, 100, 1L);
+        claim = new GrantClaimPercentage(CLAIM_ID, BigDecimal.valueOf(100), 1L);
         bindingResult = ValidatorTestUtil.getBindingResult(claim);
     }
 
@@ -50,7 +51,7 @@ public class GrantClaimValidatorTest {
 
 	@Test
 	public void testMinimumError() {
-		claim.setPercentage(-1);
+		claim.setPercentage(BigDecimal.valueOf(-1));
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
 		when(applicationFinance.getMaximumFundingLevel()).thenReturn(100);
@@ -63,7 +64,7 @@ public class GrantClaimValidatorTest {
 
 	@Test
 	public void testMaximumError() {
-		claim.setPercentage(50);
+		claim.setPercentage(BigDecimal.valueOf(50));
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
 		when(applicationFinance.getMaximumFundingLevel()).thenReturn(30);
@@ -75,7 +76,7 @@ public class GrantClaimValidatorTest {
 
 	@Test
 	public void testSuccess() {
-		claim.setPercentage(100);
+		claim.setPercentage(BigDecimal.valueOf(100));
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
 		when(applicationFinance.getMaximumFundingLevel()).thenReturn(100);

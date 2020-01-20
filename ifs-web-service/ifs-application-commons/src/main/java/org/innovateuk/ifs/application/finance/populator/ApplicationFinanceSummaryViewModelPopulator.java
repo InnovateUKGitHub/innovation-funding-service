@@ -130,7 +130,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 organisation.getName(),
                 organisationText(application, lead),
                 finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
-                finance.map(ApplicationFinanceResource::getGrantClaimPercentage).orElse(0),
+                finance.map(ApplicationFinanceResource::getGrantClaimPercentage).orElse(BigDecimal.ZERO),
                 finance.map(ApplicationFinanceResource::getTotalFundingSought).orElse(BigDecimal.ZERO),
                 finance.map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO),
                 finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO),

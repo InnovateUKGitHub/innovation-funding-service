@@ -68,14 +68,13 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
     }
 
     @Override
-    public int calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
+    public BigDecimal calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
         if (amount == null || total.equals(BigDecimal.ZERO)) {
-            return 0;
+            return BigDecimal.ZERO;
         }
         return amount.add(totalOtherFunding)
                 .multiply(new BigDecimal(100))
-                .divide(total, RoundingMode.HALF_UP)
-                .intValue();
+                .divide(total, 10, RoundingMode.HALF_UP);
     }
 
     @Override

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.math.BigDecimal;
+
 import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 
 /**
@@ -48,9 +50,9 @@ public class GrantClaimPercentageValidator implements Validator {
             return;
         }
 
-        if (response.getPercentage() > max) {
+        if (BigDecimal.valueOf(max).compareTo(response.getPercentage()) < 0) {
             rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
-        } else if(response.getPercentage() < 0) {
+        } else if(BigDecimal.valueOf(max).compareTo(response.getPercentage()) > 1) {
             rejectValue(errors, "percentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }

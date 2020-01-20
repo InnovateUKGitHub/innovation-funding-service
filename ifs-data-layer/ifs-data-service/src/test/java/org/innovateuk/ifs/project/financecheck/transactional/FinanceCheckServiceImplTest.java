@@ -216,7 +216,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
         Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
-        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().withGrantClaimPercentage(20).build(3);
+        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
@@ -319,7 +319,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertEquals((long) eligibility.getDurationInMonths(), 5L);
         assertEquals(projectFinanceResource.getTotal(), eligibility.getTotalCost());
-        assertEquals(BigDecimal.valueOf(projectFinanceResource.getGrantClaimPercentage()), eligibility.getPercentageGrant());
+        assertEquals(projectFinanceResource.getGrantClaimPercentage(), eligibility.getPercentageGrant());
         assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());
         assertEquals(projectFinanceResource.getTotalOtherFunding(), eligibility.getOtherPublicSectorFunding());
         assertEquals(projectFinanceResource.getTotalContribution(), eligibility.getContributionToProject());
@@ -687,7 +687,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                         build(),
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(30).
+                                withGrantClaimPercentage(BigDecimal.valueOf(30)).
                                 build(1)).
                         build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(

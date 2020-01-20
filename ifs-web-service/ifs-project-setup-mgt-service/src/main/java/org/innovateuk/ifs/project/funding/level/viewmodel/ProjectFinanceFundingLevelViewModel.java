@@ -27,7 +27,7 @@ public class ProjectFinanceFundingLevelViewModel {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         this.partners =  finances.stream()
                 .map(pf -> new ProjectFinancePartnerFundingLevelViewModel(pf.getOrganisation(), pf.getOrganisationName(), pf.getOrganisation().equals(lead.getId()),
-                        pf.getMaximumFundingLevel(), pf.getOrganisationSize(), pf.getTotal(), new BigDecimal(pf.getGrantClaimPercentage()),
+                        pf.getMaximumFundingLevel(), pf.getOrganisationSize(), pf.getTotal(), pf.getGrantClaimPercentage(),
                         pf.getTotalOtherFunding(), totalGrant))
                 .collect(Collectors.toList());
         this.collaborativeProject = project.isCollaborativeProject();

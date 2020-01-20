@@ -17,7 +17,7 @@ public class YourProjectFinancesViewModel {
     private final boolean fullyFunded;
 
     private final BigDecimal costs;
-    private final Integer claimPercentage;
+    private final BigDecimal claimPercentage;
     private final BigDecimal fundingSought;
     private final BigDecimal otherFunding;
     private final BigDecimal contribution;
@@ -32,7 +32,7 @@ public class YourProjectFinancesViewModel {
         this.collaborativeProject = !CollaborationLevel.SINGLE.equals(competition.getCollaborationLevel());
         this.fullyFunded = competition.isFullyFunded();
         this.costs = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO);
-        this.claimPercentage = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getGrantClaimPercentage).orElse(0);
+        this.claimPercentage = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getGrantClaimPercentage).orElse(BigDecimal.ZERO);
         this.fundingSought = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalFundingSought).orElse(BigDecimal.ZERO);
         this.otherFunding = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO);
         this.contribution = Optional.ofNullable(organisationFinance).map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
@@ -64,7 +64,7 @@ public class YourProjectFinancesViewModel {
         return costs;
     }
 
-    public Integer getClaimPercentage() {
+    public BigDecimal getClaimPercentage() {
         return claimPercentage;
     }
 

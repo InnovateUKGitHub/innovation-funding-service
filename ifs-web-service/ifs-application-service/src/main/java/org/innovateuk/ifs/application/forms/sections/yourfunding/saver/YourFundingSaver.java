@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -61,7 +62,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         try {
             if (field.equals("grantClaimPercentage")) {
                 GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-                grantClaim.setPercentage(Integer.valueOf(value));
+                grantClaim.setPercentage(new BigDecimal(value).setScale(2, RoundingMode.HALF_EVEN));
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("amount")) {
                 GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
@@ -83,14 +84,18 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
                     cost = (OtherFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
                 }
 
-                if (rowField.equals("source")) {
-                    cost.setFundingSource(value);
-                } else if (rowField.equals("date")) {
-                    cost.setSecuredDate(value);
-                } else if (rowField.equals("fundingAmount")) {
-                    cost.setFundingAmount(new BigDecimal(value));
-                } else {
-                    throw new IFSRuntimeException(String.format("Auto save other funding field not handled %s", rowField), Collections.emptyList());
+                switch (rowField) {
+                    case "source":
+                        cost.setFundingSource(value);
+                        break;
+                    case "date":
+                        cost.setSecuredDate(value);
+                        break;
+                    case "fundingAmount":
+                        cost.setFundingAmount(new BigDecimal(value));
+                        break;
+                    default:
+                        throw new IFSRuntimeException(String.format("Auto save other funding field not handled %s", rowField), Collections.emptyList());
                 }
                 getFinanceRowService().update(cost);
                 return Optional.of(cost.getId());

@@ -144,7 +144,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                                 organisationId,
                                 application.getDurationInMonths(),
                                 projectFinance.getTotal(),
-                                BigDecimal.valueOf(projectFinance.getGrantClaimPercentage()),
+                                projectFinance.getGrantClaimPercentage(),
                                 projectFinance.getTotalFundingSought(),
                                 projectFinance.getTotalOtherFunding(),
                                 projectFinance.getTotalContribution(),

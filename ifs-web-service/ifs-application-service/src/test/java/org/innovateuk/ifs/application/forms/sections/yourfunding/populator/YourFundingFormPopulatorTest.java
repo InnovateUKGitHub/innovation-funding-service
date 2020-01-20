@@ -25,13 +25,13 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.apache.commons.collections.ListUtils.union;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -79,11 +79,11 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         super.setup();
 
         grantClaim = newGrantClaimPercentage()
-                .withGrantClaimPercentage(100)
+                .withGrantClaimPercentage(BigDecimal.valueOf(100))
                 .build();
 
         grantClaimCategory = newExcludedCostCategory()
-                .withCosts(asList(grantClaim))
+                .withCosts(singletonList(grantClaim))
                 .build();
 
         otherFunding = new OtherFunding(1L);
@@ -98,7 +98,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
 
 
         otherFundingCategory = newOtherFundingCostCategory()
-                .withCosts(union(asList(otherFunding), otherFundingRows))
+                .withCosts(union(singletonList(otherFunding), otherFundingRows))
                 .build();
 
         finance = newApplicationFinanceResource()
@@ -122,7 +122,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertEquals(form.getRequestingFunding(), true);
-        assertEquals(form.getGrantClaimPercentage(), (Integer) 100);
+        assertEquals(form.getGrantClaimPercentage(), 100);
 
         assertEquals(form.getOtherFunding(), true);
         assertEquals(form.getOtherFundingRows().size(), 2);
@@ -152,7 +152,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         assertNull(form.getRequestingFunding());
         assertNull(form.getOtherFunding());
     }
-
 
     @Test
     public void populate_withOrgId() {

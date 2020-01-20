@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.stream.Collectors.toMap;
 
 @Controller
@@ -51,7 +52,7 @@ public class ProjectFinanceFundingLevelController {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         form.setPartners(finances.stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation,
-                        pf -> new ProjectFinancePartnerFundingLevelForm(new BigDecimal(pf.getGrantClaimPercentage())))));
+                        pf -> new ProjectFinancePartnerFundingLevelForm(pf.getGrantClaimPercentage()))));
         return viewFunding(projectId, finances, model);
     }
 
@@ -87,7 +88,7 @@ public class ProjectFinanceFundingLevelController {
         finances.forEach(finance -> {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
             GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-            grantClaim.setPercentage(fundingLevel.intValue());
+            grantClaim.setPercentage(fundingLevel.setScale(2, HALF_EVEN));
             messages.addAll(financeRowRestService.update(grantClaim).getSuccess());
         });
         return messages;

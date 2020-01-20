@@ -24,12 +24,9 @@ public final class NumberUtils {
             return defaultValue != null ? new BigDecimal(defaultValue) : BigDecimal.ZERO;
 
         NumberFormat nf = getNumberFormat();
-
         try {
             return new BigDecimal(nf.parse(value).toString());
-        } catch (NumberFormatException nfe) {
-            throw new BigDecimalNumberFormatException(value);
-        } catch (ParseException e) {
+        } catch (NumberFormatException | ParseException nfe) {
             throw new BigDecimalNumberFormatException(value);
         }
     }

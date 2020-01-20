@@ -55,9 +55,9 @@
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(partner.costs,1,'DEFAULT')}" /></td>
 
-                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-left-cell"><th:block th:text="${#numbers.formatInteger(partner.fundingLevel,1,'DEFAULT')}" />%</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-left-cell"><th:block th:text="${#numbers.formatDecimal(partner.fundingLevel,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell">&pound;<th:block th:text="${#numbers.formatInteger(partner.fundingSought,1,'DEFAULT')}" /></td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-right-cell"><th:block th:text="${#numbers.formatDecimal(partner.percentageOfTotalGrant,1,'DEFAULT',2,'DEFAULT')}" />%</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-right-cell"><th:block th:text="${#numbers.formatDecimal(partner.percentageOfTotalGrant,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</td>
 
                             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
                                 <label th:for="__${path}__.funding">

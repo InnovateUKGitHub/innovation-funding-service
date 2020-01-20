@@ -95,11 +95,11 @@ public class AbstractYourFundingFormValidator {
         if (TRUE.equals(form.getRequestingFunding())) {
             ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
             if (form.getGrantClaimPercentage() != null) {
-                if (form.getGrantClaimPercentage() <= 0) {
+                if (form.getGrantClaimPercentage().compareTo(BigDecimal.ZERO) <= 0) {
                     errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min");
                 } else {
                     BaseFinanceResource finance = financeSupplier.get();
-                    if (form.getGrantClaimPercentage() > finance.getMaximumFundingLevel()) {
+                    if (form.getGrantClaimPercentage().compareTo(BigDecimal.valueOf(finance.getMaximumFundingLevel())) > 0) {
                         errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max", new String[]{String.valueOf(finance.getMaximumFundingLevel())}, "");
                     }
                 }

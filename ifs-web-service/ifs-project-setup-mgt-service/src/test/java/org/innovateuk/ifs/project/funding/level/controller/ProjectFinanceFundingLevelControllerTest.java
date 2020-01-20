@@ -39,14 +39,14 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
     private static final ProjectFinanceResource industrialFinances = newProjectFinanceResource()
             .withOrganisation(industrialOrganisation)
             .withIndustrialCosts()
-            .withGrantClaimPercentage(50)
+            .withGrantClaimPercentage(BigDecimal.valueOf(50))
             .withMaximumFundingLevel(60)
             .withOrganisationSize(OrganisationSize.SMALL)
             .build();
     private static final ProjectFinanceResource academicFinances = newProjectFinanceResource()
             .withOrganisation(academicOrganisation)
             .withAcademicCosts()
-            .withGrantClaimPercentage(100)
+            .withGrantClaimPercentage(BigDecimal.valueOf(100))
             .withMaximumFundingLevel(100)
             .build();
     private static final ProjectResource project = newProjectResource()

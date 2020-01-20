@@ -2,12 +2,14 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.form;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+import java.math.BigDecimal;
+
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 
 public class YourFundingPercentageForm extends AbstractYourFundingForm {
 
     private Boolean requestingFunding;
-    private Integer grantClaimPercentage;
+    private BigDecimal grantClaimPercentage;
 
     public Boolean getRequestingFunding() {
         return requestingFunding;
@@ -17,11 +19,11 @@ public class YourFundingPercentageForm extends AbstractYourFundingForm {
         this.requestingFunding = requestingFunding;
     }
 
-    public Integer getGrantClaimPercentage() {
+    public BigDecimal getGrantClaimPercentage() {
         return grantClaimPercentage;
     }
 
-    public void setGrantClaimPercentage(Integer grantClaimPercentage) {
+    public void setGrantClaimPercentage(BigDecimal grantClaimPercentage) {
         this.grantClaimPercentage = grantClaimPercentage;
     }
 
