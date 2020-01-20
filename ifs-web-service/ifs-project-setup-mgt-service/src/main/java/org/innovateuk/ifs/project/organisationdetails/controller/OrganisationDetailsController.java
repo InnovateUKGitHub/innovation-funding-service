@@ -6,9 +6,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -97,7 +99,10 @@ public class OrganisationDetailsController {
     }
 
     private List<PartnerOrganisationResource> sortedOrganisations(long projectId) {
-        List<PartnerOrganisationResource> beforeOrdered = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
+
+        List<PartnerOrganisationResource> beforeOrdered = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().stream()
+            .filter(po -> po.getCompletedSetup() == null)
+            .collect(Collectors.toList());
         return new PrioritySorting<>(beforeOrdered, simpleFindFirst(beforeOrdered,
             PartnerOrganisationResource::isLeadOrganisation).get(), po -> po.getOrganisationName()).unwrap();
     }
@@ -123,17 +128,27 @@ public class OrganisationDetailsController {
         return partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().size() > 1;
     }
 
+    private AddressResource getOrganisationAddress(OrganisationResource organisation) {
+        AddressResource emptyAddress = new AddressResource("", "", "", "", "", "");
+
+        List<OrganisationAddressResource> organisationAddressResources = organisation.getAddresses();
+        if(organisationAddressResources.isEmpty()) {
+            return emptyAddress;
+        }
+
+        return organisationAddressResources.get(0).getAddress();
+    }
+
     private OrganisationDetailsViewModel getViewModel(long projectId, long organisationId, long competitionId) {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationFinancesWithGrowthTableResource  organisationFinancesWithGrowthTableResource
             = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
         String projectName = project.getName();
-        OrganisationAddressResource addressResource = organisation.getAddresses().get(0);
+
+        AddressResource address = getOrganisationAddress(organisation);
 
         boolean isIncludingGrowthTable = isIncludingGrowthTable(competitionId);
-
-
 
         return new OrganisationDetailsViewModel(projectId,
             competitionId,
@@ -142,7 +157,7 @@ public class OrganisationDetailsController {
             isIncludingGrowthTable,
             hasPartners(projectId),
             organisationFinancesWithGrowthTableResource,
-            addressResource.getAddress()
+            address
             );
     }
 

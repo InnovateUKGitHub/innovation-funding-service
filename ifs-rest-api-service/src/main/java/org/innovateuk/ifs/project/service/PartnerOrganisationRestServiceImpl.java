@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.project.service;
 
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.partnerOrganisationResourceList;
+
+
+import java.util.List;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.partnerOrganisationResourceList;
 
 @Service
 public class PartnerOrganisationRestServiceImpl extends BaseRestService implements PartnerOrganisationRestService {
@@ -15,6 +15,10 @@ public class PartnerOrganisationRestServiceImpl extends BaseRestService implemen
 
     public RestResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/partner-organisation", partnerOrganisationResourceList());
+    }
+
+    public RestResult<List<PartnerOrganisationResource>> getActiveProjectPartnerOrganisations(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/active-partner-organisation", partnerOrganisationResourceList());
     }
 
     @Override

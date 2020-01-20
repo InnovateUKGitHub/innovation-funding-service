@@ -55,7 +55,7 @@
                             />
                           <label class="govuk-label govuk-radios__label selection-button-radio"
                                        th:for="|organisation-radio-${partnerOrganisation.organisation}|"
-                                       th:text="${partnerOrganisation.leadOrganisation} ? ${partnerOrganisation.organisationName} ' (Lead)' : ${partnerOrganisation.organisationName}"></label>
+                                       th:text="(${partnerOrganisation.leadOrganisation} ? ${partnerOrganisation.organisationName} + ' (Lead)' : ${partnerOrganisation.organisationName})"></label>
                         </div>
                     </div>
                 </div>
