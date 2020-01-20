@@ -28,4 +28,6 @@ public interface ProjectYourOrganisationRestService {
             OrganisationFinancesWithoutGrowthTableResource finances);
 
     ServiceResult<Boolean> isShowStateAidAgreement(long projectId, long organisationId);
+
+    ServiceResult<Boolean> isIncludingGrowthTable(long projectId);
 }

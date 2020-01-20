@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.organisationsize.controller;
 
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -21,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/with-growth-table")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectOrganisationSizeWithGrowthTableController.class)
-public class ProjectOrganisationSizeWithGrowthTableController {
+public class ProjectOrganisationSizeWithGrowthTableController extends AsyncAdaptor {
 
     @Autowired
     private ProjectRestService projectRestService;
