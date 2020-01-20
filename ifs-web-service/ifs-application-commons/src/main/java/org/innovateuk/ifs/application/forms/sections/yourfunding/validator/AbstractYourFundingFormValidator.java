@@ -101,6 +101,10 @@ public class AbstractYourFundingFormValidator {
                     BaseFinanceResource finance = financeSupplier.get();
                     if (form.getGrantClaimPercentage().compareTo(BigDecimal.valueOf(finance.getMaximumFundingLevel())) > 0) {
                         errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max", new String[]{String.valueOf(finance.getMaximumFundingLevel())}, "");
+                    } else {
+                        if (form.getGrantClaimPercentage().scale() > 2) {
+                            errors.rejectValue("grantClaimPercentage", "validation.finance.percentage");
+                        }
                     }
                 }
             }

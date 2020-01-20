@@ -9,6 +9,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 public class YourFundingPercentageForm extends AbstractYourFundingForm {
 
     private Boolean requestingFunding;
+
     private BigDecimal grantClaimPercentage;
 
     public Boolean getRequestingFunding() {
