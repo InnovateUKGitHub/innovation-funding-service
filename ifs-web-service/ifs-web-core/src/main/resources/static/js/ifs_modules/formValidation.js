@@ -4,7 +4,7 @@ IFS.core.formValidation = (function () {
   return {
     settings: {
       number: {
-        fields: '[type="number"]:not([data-date],[readonly])',
+        fields: '[type="number"]:not([data-date],[readonly],[step=".01"])',
         messageInvalid: 'This field can only accept whole numbers.'
       },
       min: {

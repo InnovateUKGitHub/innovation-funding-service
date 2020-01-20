@@ -175,6 +175,7 @@
                    th:errorclass="govuk-input--error"
                    th:field="*{grantClaimPercentage}"
                    placeholder="0"
+                   step=".01"
                    th:attr="data-max-errormessage=#{validation.finance.grant.claim.percentage.max('%max%')},
                                 data-min-errormessage=#{validation.finance.grant.claim.percentage.min}"/>
             <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>

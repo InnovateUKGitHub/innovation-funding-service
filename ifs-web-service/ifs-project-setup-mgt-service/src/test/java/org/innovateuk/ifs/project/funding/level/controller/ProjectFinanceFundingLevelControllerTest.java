@@ -129,7 +129,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
         verify(financeRowRestService).update(industrialFinances.getGrantClaim());
 
-        assertEquals(60, academicFinances.getGrantClaimPercentage());
+        assertEquals(BigDecimal.valueOf(60), academicFinances.getGrantClaimPercentage());
         assertEquals(60, industrialFinances.getGrantClaimPercentage());
     }
 
