@@ -11,8 +11,8 @@ import static org.junit.Assert.assertEquals;
 public class ApplicationFinanceResourceBuilderTest {
 
     @Test
-    public void testSetGrantClaimPercentage() {
+    public void setGrantClaimPercentage() {
         ApplicationFinanceResource finance = newApplicationFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(25)).build();
-        assertEquals(25, finance.getGrantClaimPercentage());
+        assertEquals(BigDecimal.valueOf(25), finance.getGrantClaimPercentage());
     }
 }
