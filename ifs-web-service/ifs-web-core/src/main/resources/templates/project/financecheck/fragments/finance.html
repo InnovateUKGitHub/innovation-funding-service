@@ -65,7 +65,7 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
-                        <td th:text="|${overview.totalPercentageGrantIntValue}%|" class="govuk-table__cell govuk-table__cell--numeric" />
+                        <td th:text="|${#numbers.formatDecimal(overview.totalPercentageGrantIntValue,1,'DEFAULT',2,'DEFAULT')}%|" class="govuk-table__cell govuk-table__cell--numeric" />
                     </tr>
                 </tbody>
             </table>

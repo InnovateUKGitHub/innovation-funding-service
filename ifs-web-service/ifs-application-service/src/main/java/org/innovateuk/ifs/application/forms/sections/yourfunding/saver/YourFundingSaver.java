@@ -62,7 +62,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         try {
             if (field.equals("grantClaimPercentage")) {
                 GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-                grantClaim.setPercentage(new BigDecimal(value).setScale(2, RoundingMode.HALF_EVEN));
+                grantClaim.setPercentage(new BigDecimal(value).setScale(2, RoundingMode.HALF_UP));
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("amount")) {
                 GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();

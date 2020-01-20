@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
+import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -96,7 +97,7 @@ public class ApplicationAjaxController {
     private void handleAutoSaveException(List<String> errors, Exception e, AutoSaveElementException ex) {
         List<Object> args = new ArrayList<>();
         args.add(ex.getErrorMessage());
-        if (e.getClass().equals(IntegerNumberFormatException.class)) {
+        if (e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)) {
             errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         } else {
             LOG.debug("Got an exception on autosave : " + e.getMessage());
