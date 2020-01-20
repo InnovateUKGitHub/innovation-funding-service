@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.organisationsize.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.yourorganisation.service.YourOrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -13,11 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/project/{projectId}/organisation/{organisationId}")
 public class ProjectOrganisationSizeController {
 
-    private ProjectYourOrganisationRestService projectYourOrganisationRestService;
+    private YourOrganisationRestService yourOrganisationRestService;
 
     @Autowired
-    ProjectOrganisationSizeController(ProjectYourOrganisationRestService projectYourOrganisationRestService) {
-        this.projectYourOrganisationRestService = projectYourOrganisationRestService;
+    private ProjectRestService projectRestService;
+
+    @Autowired
+    ProjectOrganisationSizeController(YourOrganisationRestService yourOrganisationRestService) {
+        this.yourOrganisationRestService = yourOrganisationRestService;
     }
 
     public ProjectOrganisationSizeController() {
@@ -29,8 +34,8 @@ public class ProjectOrganisationSizeController {
     public String viewPage(
             @PathVariable long projectId,
             @PathVariable long organisationId) {
-
-        boolean includeGrowthTable = projectYourOrganisationRestService.isIncludingGrowthTable(projectId).getSuccess();
+        long competitionId = projectRestService.getProjectById(projectId).getSuccess().getCompetition();
+        boolean includeGrowthTable = yourOrganisationRestService.isIncludingGrowthTable(competitionId).getSuccess();
 
         return redirectToViewPage(projectId, organisationId, includeGrowthTable);
     }

@@ -2,13 +2,10 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.stereotype.Service;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 
 /**
@@ -18,9 +15,6 @@ import static java.lang.String.format;
 public class ProjectYourOrganisationRestServiceImpl extends BaseRestService implements ProjectYourOrganisationRestService {
 
     private String baseUrl = "/project/%d/organisation/%d/finance";
-
-    private CompetitionRestService competitionRestService;
-    private ProjectRestService projectRestService;
 
     @Override
     public ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationFinancesWithGrowthTable(
@@ -67,13 +61,5 @@ public class ProjectYourOrganisationRestServiceImpl extends BaseRestService impl
     public ServiceResult<Boolean> isShowStateAidAgreement(long projectId, long organisationId) {
         String url = format(baseUrl + "/show-state-aid", projectId, organisationId);
         return getWithRestResult(url, Boolean.class).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Boolean> isIncludingGrowthTable(long projectId) {
-        long competitionId = projectRestService.getProjectById(projectId).getSuccess().getCompetition();
-        return competitionRestService.getCompetitionById(competitionId).
-                andOnSuccessReturn(competition -> TRUE.equals(competition.getIncludeProjectGrowthTable())).
-                toServiceResult();
     }
 }
