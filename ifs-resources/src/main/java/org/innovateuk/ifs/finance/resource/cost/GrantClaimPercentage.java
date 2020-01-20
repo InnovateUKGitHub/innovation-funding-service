@@ -3,14 +3,16 @@ package org.innovateuk.ifs.finance.resource.cost;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.validation.constraints.DecimalPercentage;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 public class GrantClaimPercentage extends AbstractFinanceRowItem implements GrantClaim {
     private Long id;
 
-    @DecimalPercentage
+    @DecimalMin(value = "1", message = "{validation.finance.funding.level.min}")
+    @Digits(integer = MAX_DECIMAL, fraction = 2, message ="{validation.finance.percentage}")
     private BigDecimal percentage;
 
     private GrantClaimPercentage() {
