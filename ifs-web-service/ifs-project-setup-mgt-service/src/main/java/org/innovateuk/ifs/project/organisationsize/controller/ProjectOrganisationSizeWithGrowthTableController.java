@@ -2,12 +2,10 @@ package org.innovateuk.ifs.project.organisationsize.controller;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
-import org.innovateuk.ifs.project.organisationsize.populator.ProjectOrganisationSizeWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.project.organisationsize.viewmodel.ProjectOrganisationSizeViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -34,13 +32,7 @@ public class ProjectOrganisationSizeWithGrowthTableController {
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
 
     @Autowired
-    private ApplicationYourOrganisationViewModelPopulator viewModelPopulator;
-
-    @Autowired
     private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
-
-    @Autowired
-    private ProjectOrganisationSizeWithGrowthTableFormPopulator projectOrganisationSizeWithGrowthTableFormPopulator;
 
     @GetMapping("/edit")
     public String editOrganisationSize(
