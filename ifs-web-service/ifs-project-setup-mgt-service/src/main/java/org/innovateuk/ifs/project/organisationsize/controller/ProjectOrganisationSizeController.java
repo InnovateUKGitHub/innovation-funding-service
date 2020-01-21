@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.project.organisationsize.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.yourorganisation.service.YourOrganisationRestService;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.restservice.YourOrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
