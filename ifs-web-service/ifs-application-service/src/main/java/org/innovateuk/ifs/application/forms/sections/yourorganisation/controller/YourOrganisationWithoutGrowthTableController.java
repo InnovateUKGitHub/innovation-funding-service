@@ -6,9 +6,9 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.restservice.YourOrganisationRestService;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
