@@ -719,7 +719,7 @@
                 <tr>
                     <td>Rate of grant (%)</td>
                     <td style="text-align:right;">
-                        <th:block th:text="${#numbers.formatInteger(model.summaryFinanceTable.totalGrantPercentage, 0, 'DEFAULT')}" />&percnt;</td>
+                        <th:block th:text="${#numbers.formatDecimal(model.summaryFinanceTable.totalGrantPercentage,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</td>
                 </tr>
                 <th:block th:if="${model.summaryFinanceTable.showOtherFundingRow()}">
                     <tr>
