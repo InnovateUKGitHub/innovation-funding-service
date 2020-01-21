@@ -9,5 +9,4 @@ public interface PartnerOrganisationRestService {
     RestResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId);
     RestResult<PartnerOrganisationResource> getPartnerOrganisation(long projectId, long organisationId);
     RestResult<Void> removePartnerOrganisation(long projectId, long organisationId);
-    RestResult<List<PartnerOrganisationResource>> getActiveProjectPartnerOrganisations(Long projectId);
 }

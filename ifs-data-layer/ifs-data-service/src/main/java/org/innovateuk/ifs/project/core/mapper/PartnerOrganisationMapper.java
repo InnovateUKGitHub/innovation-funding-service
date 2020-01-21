@@ -34,11 +34,4 @@ public abstract class PartnerOrganisationMapper extends BaseMapper<PartnerOrgani
         }
         return object.getId();
     }
-
-//    public Boolean mapPartnerOrganisationPendingPartnerProgressCompletedOnToCompletedSetup(PartnerOrganisation object) {
-//        if (object.getPendingPartnerProgress().getCompletedOn() != null) {
-//            return true;
-//        }
-//        return false;
-//    }
 }

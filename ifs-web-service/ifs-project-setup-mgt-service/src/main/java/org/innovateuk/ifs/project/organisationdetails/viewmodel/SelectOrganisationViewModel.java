@@ -10,8 +10,8 @@ public class SelectOrganisationViewModel {
     private final String projectName;
     private final long competitionId;
 
-    public SelectOrganisationViewModel(List<PartnerOrganisationResource> partnerOrganisations,
-                                       long projectId, long competitionId, String projectName) {
+    public SelectOrganisationViewModel(long projectId, String projectName, long competitionId,
+                                       List<PartnerOrganisationResource> partnerOrganisations) {
         this.partnerOrganisations = partnerOrganisations;
         this.projectId = projectId;
         this.competitionId = competitionId;
