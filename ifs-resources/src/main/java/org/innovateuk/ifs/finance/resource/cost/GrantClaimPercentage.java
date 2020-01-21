@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 public class GrantClaimPercentage extends AbstractFinanceRowItem implements GrantClaim {
     private Long id;
 
-    @Digits(integer = MAX_DECIMAL, fraction = 2, message ="{validation.finance.percentage}")
     private BigDecimal percentage;
 
     private GrantClaimPercentage() {

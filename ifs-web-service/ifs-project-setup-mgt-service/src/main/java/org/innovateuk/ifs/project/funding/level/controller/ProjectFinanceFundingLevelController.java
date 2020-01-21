@@ -99,9 +99,14 @@ public class ProjectFinanceFundingLevelController {
     }
 
     private void validateMaximumFundingLevels(BindingResult bindingResult, List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
-
         finances.forEach(finance -> {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
+
+            if (fundingLevel.scale() > 2) {
+                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
+                        "validation.finance.percentage");
+            }
+
             if (finance.getMaximumFundingLevel() < fundingLevel.intValue()) {
                 bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
                         "validation.finance.grant.claim.percentage.max",

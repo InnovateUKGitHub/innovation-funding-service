@@ -86,7 +86,7 @@ public class AbstractYourFundingFormValidator {
     private void validateYourFundingAmountForm(YourFundingAmountForm form, Errors errors) {
         ValidationUtils.rejectIfEmpty(errors, "amount", "validation.finance.funding.sought.required");
         if (form.getAmount() != null && form.getAmount().compareTo(BigDecimal.ONE) < 0) {
-            errors.rejectValue( "amount", "validation.finance.funding.sought.min");
+            errors.rejectValue("amount", "validation.finance.funding.sought.min");
         }
     }
 
@@ -95,16 +95,16 @@ public class AbstractYourFundingFormValidator {
         if (TRUE.equals(form.getRequestingFunding())) {
             ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
             if (form.getGrantClaimPercentage() != null) {
+                if (form.getGrantClaimPercentage().scale() > 2) {
+                    errors.rejectValue("grantClaimPercentage", "validation.finance.percentage");
+                }
+
                 if (form.getGrantClaimPercentage().compareTo(BigDecimal.ZERO) <= 0) {
                     errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.min");
                 } else {
                     BaseFinanceResource finance = financeSupplier.get();
                     if (form.getGrantClaimPercentage().compareTo(BigDecimal.valueOf(finance.getMaximumFundingLevel())) > 0) {
                         errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max", new String[]{String.valueOf(finance.getMaximumFundingLevel())}, "");
-                    } else {
-                        if (form.getGrantClaimPercentage().scale() > 2) {
-                            errors.rejectValue("grantClaimPercentage", "validation.finance.percentage");
-                        }
                     }
                 }
             }

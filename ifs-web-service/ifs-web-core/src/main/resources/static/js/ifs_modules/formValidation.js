@@ -306,7 +306,7 @@ IFS.core.formValidation = (function () {
         }
         var containsExponential = value.indexOf('e') !== -1
         var containsDecimal = domField.value.includes('.')
-        var validDecimal = /^\d{1,2}(\.\d{1,2})?$/.test(domField.value)
+        var validDecimal = /^\d*(\.\d{1,2})?$/.test(domField.value)
         var checkDecimal = domField.step != null && containsDecimal && !Number.isInteger(domField.step)
         if (checkDecimal) {
           if (validDecimal) {

@@ -119,7 +119,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
         when(financeRowRestService.update(any())).thenReturn(restSuccess(ValidationMessages.noErrors()));
 
-        MvcResult result = mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
+        mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
                 .param(format("partners[%d].fundingLevel", industrialOrganisation), "60")
                 .param(format("partners[%d].fundingLevel", academicOrganisation), "60"))
                 .andExpect(status().is3xxRedirection())
@@ -130,7 +130,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         verify(financeRowRestService).update(industrialFinances.getGrantClaim());
 
         assertEquals(BigDecimal.valueOf(60), academicFinances.getGrantClaimPercentage());
-        assertEquals(60, industrialFinances.getGrantClaimPercentage());
+        assertEquals(BigDecimal.valueOf(60), industrialFinances.getGrantClaimPercentage());
     }
 
     @Test

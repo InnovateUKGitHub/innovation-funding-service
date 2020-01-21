@@ -40,6 +40,11 @@ public class GrantClaimPercentageValidator implements Validator {
             return;
         }
 
+        if (response.getPercentage().scale() > 2) {
+            rejectValue(errors, "percentage", "validation.finance.percentage");
+            return;
+        }
+
         Finance finance = applicationFinanceRowRepository.findById(response.getId())
                 .map(ApplicationFinanceRow::getTarget)
                 .map(Finance.class::cast)
