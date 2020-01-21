@@ -247,7 +247,7 @@ task dbAnonymisedDumpLocal(type: Exec, dependsOn: [setDatabaseDefaults, prepareD
 task deleteProjectLocal(type: Exec) {
     doFirst {
         executable 'oc'
-        args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServerLocal}", "--insecure-skip-tls-verify=true"
     }
 
     ignoreExitValue true
@@ -260,7 +260,7 @@ task deleteProjectLocal(type: Exec) {
 task createProjectLocal(type: Exec, dependsOn: deleteProjectLocal) {
     doFirst {
         executable 'oc'
-        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServerLocal}", "--insecure-skip-tls-verify=true"
     }
 }
 
