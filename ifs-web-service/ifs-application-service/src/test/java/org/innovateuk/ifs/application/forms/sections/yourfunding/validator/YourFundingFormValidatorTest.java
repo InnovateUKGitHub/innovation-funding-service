@@ -38,7 +38,7 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         String unsavedId = generateUnsavedRowId();
         YourFundingPercentageForm form =  new YourFundingPercentageForm();
         form.setRequestingFunding(true);
-        form.setGrantClaimPercentage(0);
+        form.setGrantClaimPercentage(BigDecimal.valueOf(0));
 
         form.setOtherFunding(true);
         OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "Valid", "01-2019", new BigDecimal(123), 1L));
