@@ -74,7 +74,7 @@ public class ProjectFinancePartnerFundingLevelViewModel {
     }
 
     public BigDecimal calculateFundingSought(BigDecimal calcFundingLevel) {
-        if (fundingLevel == null) {
+        if (calcFundingLevel == null) {
             return BigDecimal.valueOf(0);
         }
 
