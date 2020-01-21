@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.restservice.YourOrganisationRestService;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.YourOrganisationViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -42,7 +42,7 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "application/sections/your-organisation/your-organisation-without-growth-table";
 
     private CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator;
-    private YourOrganisationViewModelPopulator viewModelPopulator;
+    private ApplicationYourOrganisationViewModelPopulator viewModelPopulator;
     private YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator;
     private SectionService sectionService;
     private UserRestService userRestService;
@@ -51,7 +51,7 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     @Autowired
     YourOrganisationWithoutGrowthTableController(
             CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator,
-            YourOrganisationViewModelPopulator viewModelPopulator,
+            ApplicationYourOrganisationViewModelPopulator viewModelPopulator,
             YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator,
             SectionService sectionService,
             UserRestService userRestService,
