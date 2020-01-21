@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.project.organisationsize.viewmodel;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+
+
+import java.math.BigDecimal;
+import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public class ProjectOrganisationSizeViewModel {
 
@@ -23,13 +23,16 @@ public class ProjectOrganisationSizeViewModel {
     private boolean h2020;
     private boolean readOnly;
 
-
-    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName, OrganisationSize organisationSize, BigDecimal turnover, Long employees) {
+    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName, OrganisationSize organisationSize, BigDecimal turnover, Long employees, boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, boolean readOnly) {
         this.project = project;
         this.organisationName = organisationName;
         this.organisationSize = organisationSize;
         this.turnover = turnover;
         this.employees = employees;
+        this.showStateAidAgreement = showStateAidAgreement;
+        this.fundingSectionComplete = fundingSectionComplete;
+        this.h2020 = h2020;
+        this.readOnly = readOnly;
     }
 
     public List<FormOption> getOrganisationSizeOptions() {

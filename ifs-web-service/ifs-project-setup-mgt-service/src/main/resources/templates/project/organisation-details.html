@@ -3,7 +3,7 @@
 
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${model.projectId}: ${model.projectName} - ${model.organisationName}|" />
+              th:with="pageTitle=|${model.projectId}: ${orgDetails.projectName} - ${orgDetails.organisationName}|" />
 </head>
 <body class="govuk-template__body">
 
@@ -13,14 +13,14 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle=|Back to ${model.previousPage}|, dynamicBackLink=${true}"/>
+              th:with="linkTitle=|Back to ${orgDetails.previousPage}|, dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=${model.organisationName},subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+                  th:with="pageTitle=${model.organisationName},subTitle=|${orgDetails.projectId}: ${orgDetails.projectName}|,size='govuk-heading-xl'"/>
 
         <fieldset class="govuk-fieldset">
-            <legend class="govuk-visually-hidden" th:text="${model.organisationName} + ''">? Organisation</legend>
+            <legend class="govuk-visually-hidden" th:text="${orgDetails.organisationName} + ''">? Organisation</legend>
             <h2 class="govuk-heading-m">Organisation details</h2>
 
             <div class="govuk-form-group">
@@ -38,18 +38,26 @@
 
                 <div>
                     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Registered address</h3>
-                    <div class="govuk-body govuk-!-margin-0" th:text="${model.addressLine1}"></div>
-                    <div class="govuk-body govuk-!-margin-0" th:text="${model.addressLine2}"></div>
-                    <div class="govuk-body govuk-!-margin-0" th:text="${model.addressLine3}"></div>
-                    <div class="govuk-body govuk-!-margin-0" th:text="${model.town}"></div>
-                    <div class="govuk-body govuk-!-margin-0" th:text="${model.county}"></div>
-                    <div class="govuk-body" th:text="${model.postcode}"></div>
+                    <div class="govuk-body govuk-!-margin-0" th:text="${orgDetails.addressLine1}"></div>
+                    <div class="govuk-body govuk-!-margin-0" th:text="${orgDetails.addressLine2}"></div>
+                    <div class="govuk-body govuk-!-margin-0" th:text="${orgDetails.addressLine3}"></div>
+                    <div class="govuk-body govuk-!-margin-0" th:text="${orgDetails.town}"></div>
+                    <div class="govuk-body govuk-!-margin-0" th:text="${orgDetails.county}"></div>
+                    <div class="govuk-body" th:text="${orgDetails.postcode}"></div>
                 </div>
 
             </div>
         </fieldset>
 
-        <th:block th:insert="project/organisation-size-fragments :: organisation-size-view(finances=${model.finances})"/>
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        with-growth-table(
+                                               form=${form},
+                                               organisationSizeOptions=${orgSize.organisationSizeOptions},
+                                               isH2020=${orgSize.h2020},
+                                               readOnly=${orgSize.readOnly},
+                                               showOrganisationSizeAlert=${orgSize.showOrganisationSizeAlert},
+                                               showStateAidAgreement=${orgSize.showStateAidAgreement}
+                                        )" />
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
 

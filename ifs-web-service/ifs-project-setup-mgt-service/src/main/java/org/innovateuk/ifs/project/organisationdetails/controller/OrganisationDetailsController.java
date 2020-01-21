@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.form.OrganisationDetailsForm;
 import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsFinancesViewModel;
-import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
+import org.innovateuk.ifs.project.organisationsize.viewmodel.OrganisationDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -93,7 +93,6 @@ public class OrganisationDetailsController {
         return new OrganisationDetailsViewModel(project,
             competitionId,
             organisation,
-            financesViewModel,
             address,
             hasPartners(projectId)
         );
@@ -103,4 +102,6 @@ public class OrganisationDetailsController {
         return competitionRestService.getCompetitionById(competitionId).
             andOnSuccessReturn(competition -> TRUE.equals(competition.getIncludeProjectGrowthTable())).getSuccess();
     }
+
+
 }

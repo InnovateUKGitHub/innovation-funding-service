@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationdetails.viewmodel;
+package org.innovateuk.ifs.project.organisationsize.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -22,12 +22,9 @@ public class OrganisationDetailsViewModel {
 
     private final String previousPage;
 
-    private final OrganisationDetailsFinancesViewModel finances;
-
     public OrganisationDetailsViewModel(ProjectResource project,
                                         long competitionId,
                                         OrganisationResource organisation,
-                                        OrganisationDetailsFinancesViewModel financesViewModel,
                                         AddressResource address,
                                         boolean hasPartners) {
         this.projectId = project.getId();
@@ -36,8 +33,6 @@ public class OrganisationDetailsViewModel {
         this.organisationName = organisation.getName();
         this.organisationType = organisation.getOrganisationTypeName();
         this.registrationNumber = organisation.getCompaniesHouseNumber();
-
-        this.finances = financesViewModel;
 
         this.addressLine1 = address.getAddressLine1();
         this.addressLine2 = address.getAddressLine2();
@@ -98,6 +93,4 @@ public class OrganisationDetailsViewModel {
     }
 
     public String getPreviousPage() { return previousPage; }
-
-    public OrganisationDetailsFinancesViewModel getFinances() { return finances; }
 }
