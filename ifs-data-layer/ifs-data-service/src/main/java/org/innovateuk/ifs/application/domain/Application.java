@@ -235,7 +235,7 @@ public class Application implements ProcessActivity {
 
     public List<ProcessRole> getApplicantProcessRoles() {
         return this.processRoles.stream()
-                .filter(pr -> pr.getOrganisationId() != null)
+                .filter(ProcessRole::isLeadApplicantOrCollaborator)
                 .collect(toList());
     }
 
