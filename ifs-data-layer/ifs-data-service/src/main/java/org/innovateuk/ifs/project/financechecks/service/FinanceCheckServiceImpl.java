@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
@@ -45,6 +46,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -123,7 +125,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
         BigDecimal totalFundingSought = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalFundingSought);
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
-        BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
+        BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought).setScale(MAX_DECIMAL_PLACES, ROUND_HALF_UP);
 
         ServiceResult<Double> researchParticipationPercentage = projectFinanceService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
@@ -268,7 +270,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             return ZERO;
         }
 
-        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, 0, HALF_EVEN);
+        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, MAX_DECIMAL_PLACES, HALF_EVEN);
     }
 
     private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
