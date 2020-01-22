@@ -57,13 +57,13 @@ Loan application Your funding
     Given the user enters empty funding amount
     When the user enters text to a text field  id = amount   57,803
     And the user clicks the button/link        id = mark-all-as-complete
-    Then the user should see the element       jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30%") ~ td:contains("2,468") ~ td:contains("140,632")
+    Then the user should see the element       jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application finance overview
     [Documentation]  IFS-6208
     Given the user clicks the button/link  link = Back to application overview
     When the user clicks the button/link   link = Finances overview
-    Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30%") ~ td:contains("2,468") ~ td:contains("140,632")
+    Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
     [Documentation]  IFS-6237  IFS-6238

@@ -65,7 +65,7 @@ New funding percentage does not show in the application
     [Documentation]  IFS-6695
     Given the user navigates to the page    ${server}/management/competition/${compId}/application/${applId}
     When the user clicks the button/link    jQuery = button:contains("Finances summary")
-    Then the user should see the element    jQuery = th:contains("Ward") ~ td:contains("30%")
+    Then the user should see the element    jQuery = th:contains("Ward") ~ td:contains("30.00%")
 
 *** Keywords ***
 Custom suite setup

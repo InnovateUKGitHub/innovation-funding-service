@@ -212,7 +212,7 @@ the user clicks previous and goes to the page
 
 the finance summary total should be correct
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(3)    30%
+    Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(3)    30.00%
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
@@ -251,7 +251,7 @@ The project costs are correct in the overview
 The academic finances are correct
     The user should see the element       jQuery = .table-overview td:contains("3 months")
     The user should see the element       jQuery = .table-overview td:contains("£990")
-    The user should see the element       jQuery = .table-overview td:contains("100%")
+    The user should see the element       jQuery = .table-overview td:contains("100.00%")
     The user should see the element       jQuery = .table-overview td:contains("990")
 
 Custom suite setup

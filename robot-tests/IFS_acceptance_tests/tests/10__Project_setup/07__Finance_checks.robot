@@ -240,13 +240,13 @@ Project finance user can view finances summary for the consortium
     #Check finances summary for lead partner
     Then the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${EMPIRE_LTD_NAME}
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the Categories Are Verified For Finances Summary Section    1    200,903    30%    57,803    2,468    140,632
+    And the Categories Are Verified For Finances Summary Section    1    200,903    30.00%    57,803    2,468    140,632
     #Check finances summary for academic user
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
-    Then the Categories Are Verified For Finances Summary Section    2    990    100%    990    0   0
+    Then the Categories Are Verified For Finances Summary Section    2    990    100.00%    990    0   0
     #Check finances summary for non lead partner
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
-    Then the Categories Are Verified For Finances Summary Section    3    200,903    30%    57,803    2,468    140,632
+    Then the Categories Are Verified For Finances Summary Section    3    200,903    30.00%    57,803    2,468    140,632
     #Check total
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
     And The Total Calculation For Finances Summary Are Verified    1    402,797    116,596    4,936    281,265
@@ -277,7 +277,7 @@ IFS Admin user can review Lead partner's finance changes page before the revisio
     When the user clicks the button/link               css = a.eligibility-0
     And the user clicks the button/link                link = Review all changes to project finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    Then the categories are verified for Project finances section    1    £200,903    30%    57,803    2,468    140,632
+    Then the categories are verified for Project finances section    1    £200,903    30.00%    57,803    2,468    140,632
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   0     0      0    0      0       0        0
     And the user should see the text in the element    css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
@@ -291,7 +291,7 @@ IFS Admin user can review partner's finances before the revisions made
     When the user clicks the button/link               css = a.eligibility-2
     Then the user clicks the button/link               link = Review all changes to project finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the categories are verified for Project finances section   1   £200,903   30%     57,803    2,468    140,632
+    And the categories are verified for Project finances section   1   £200,903   30.00%     57,803    2,468    140,632
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   0     0      0    0      0       0        0
     And the user should see the text in the element    css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
@@ -349,7 +349,7 @@ Project finance user can see the lead partner's information
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(1)    £200,903  # Total costs
-    When the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(2)    30%       # Grant %
+    When the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(2)    30.00%       # Grant %
     When the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(3)    140,632   # Total project cost
     When the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(4)    57,803    # Grant applied for (£)
     When the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(5)    2,468     # Other public sector funding (£)
@@ -490,7 +490,7 @@ Project finance user can see the lead partner's information about eligibility
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months  # Project duration
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903  # Total costs
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30%       # Grant %
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30.00%       # Grant %
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(4)    57,803   # Funding sought (£)
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468     # Other public sector funding (£)
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(6)    140,632   # Contribution to project (£)
@@ -658,7 +658,7 @@ Project finance user can see the partner's information about eligibility
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months   # Project duration
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903   # Total costs
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30%        # Grant %
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30.00%        # Grant %
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(4)    57,803     # Funding sought (£)
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468      # Other public sector funding (£)
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(6)    140,632    # Contribution to project (£)
@@ -818,13 +818,13 @@ Project finance user can view updated finances summary for the consortium
     #check summary for lead partner
     Then the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${EMPIRE_LTD_NAME}
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the Categories Are Verified For Finances Summary Section   1   £177,784   30%     50,867    2,468     124,449
+    And the Categories Are Verified For Finances Summary Section   1   £177,784   30.00%     50,867    2,468     124,449
     #check breakdown for academic user
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
     Then the Categories Are Verified For Finances Summary Section   2   £900   100%  900     0     0
     #check breakdown for non lead partner
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
-    Then the Categories Are Verified For Finances Summary Section   3   £177,784  30%     50,867    2,468     124,449
+    Then the Categories Are Verified For Finances Summary Section   3   £177,784  30.00%     50,867    2,468     124,449
     #check total
     And the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
     And The Total Calculation For Finances Summary Are Verified    1   £356,469   102,635    4,936     248,898
@@ -836,7 +836,7 @@ Project finance user can view Lead Partner's changes to finances
     When the user clicks the button/link       css = a.eligibility-0
     And the user clicks the button/link        link = View changes to finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    Then the categories are verified for Project finances section   1   £177,784   30%     50,867    2,468     124,449
+    Then the categories are verified for Project finances section   1   £177,784   30.00%     50,867    2,468     124,449
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   56,349     1,954      -20,200    4,498      -79,400       4,030        9,650
 
@@ -915,7 +915,7 @@ Project finance user can view Partner's changes to finances
     Given the user clicks the button/link       link = Finance checks
     When the user clicks the button/link        css = a.eligibility-2
     And the user clicks the button/link        link = View changes to finances
-    When the categories are verified for Project finances section       1   £177,784    30%     50,867    2,468     124,449
+    When the categories are verified for Project finances section       1   £177,784    30.00%     50,867    2,468     124,449
     Then the categories are verified for Section changes                1   56,349     1,954     -20,200   4,498     -79,400     4,030    9,650
 
 #1.materials section

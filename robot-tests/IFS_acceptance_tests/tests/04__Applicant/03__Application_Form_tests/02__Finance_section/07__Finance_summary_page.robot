@@ -163,7 +163,7 @@ Support User can see the read only finance summary
     Given the user navigates to the finances of the application
     When the user should see the element      jQuery = .project-cost-breakdown tbody tr:nth-of-type(1) th:contains("View finances")
     And The user clicks the button/link       link = View finances
-    Then The finance summary table in Your project Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
+    Then The finance summary table in Your project Finances has correct values for lead  £200,903  30.00%  57,803  2,468  140,632
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
@@ -188,7 +188,7 @@ Support User can see the read only view of Your funding
     And the user expands the section      Finances summary
     Then the user clicks the button/link  link = View finances
     When the user clicks the button/link  jQuery = a:contains("Your funding")
-    Then the user should see the element  jQuery = dt:contains("Funding level") + dd:contains("30%")
+    Then the user should see the element  jQuery = dt:contains("Funding level") + dd:contains("30.00%")
     And the user should see the element   jQuery = th:contains("Lottery") ~ td:contains("£2,468")
 
 Innovation lead can see read only summary link for each partner
@@ -207,7 +207,7 @@ Innovation lead can see read only summary for lead
     [Tags]  InnovationLead  HappyPath
     [Setup]  The user clicks the button/link          css = .project-cost-breakdown tbody tr:nth-of-type(1) th a
     When the user should see the element              jQuery = p:contains("Please complete your project finances.")
-    Then the finance summary table in Your project Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
+    Then the finance summary table in Your project Finances has correct values for lead  £200,903  30.00%  57,803  2,468  140,632
 
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
@@ -253,7 +253,7 @@ Innovation lead can see read only view of Your funding
     When the user clicks the button/link           jQuery = a:contains("Your project finances")
     Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link           jQuery = a:contains("Your funding")
-    Then the user should see the element           jQuery = dt:contains("Funding level") + dd:contains("30%")
+    Then the user should see the element           jQuery = dt:contains("Funding level") + dd:contains("30.00%")
     And the user should see the element            jQuery = th:contains("Lottery") ~ td:contains("£2,468")
 
 IFS Admin views the finance summary
@@ -262,7 +262,7 @@ IFS Admin views the finance summary
     [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the finances of the application
     When the user clicks the button/link    link = View finances
-    Then the finance summary table in Your project Finances has correct values for lead    £200,903  30%  57,803  2,468  140,632
+    Then the finance summary table in Your project Finances has correct values for lead    £200,903  30.00%  57,803  2,468  140,632
 
 A user other than an CSS or IFS Admin cannot view the finances of an application that has not yet been submitted
     [Documentation]  IFS-3609
