@@ -22,8 +22,8 @@ items:
       spec:
         volumes:
           - name: idp-keys-volume
-            configMap:
-              name: idp-keys-volume
+            secret:
+              secretName: idp-keys-volume
         containers:
         - image: innovateuk/idp-service:${idpVersion}
           name: idp
