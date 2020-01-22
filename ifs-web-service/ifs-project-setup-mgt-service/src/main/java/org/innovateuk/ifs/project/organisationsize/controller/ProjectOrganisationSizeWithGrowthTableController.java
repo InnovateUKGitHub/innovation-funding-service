@@ -68,7 +68,16 @@ public class ProjectOrganisationSizeWithGrowthTableController {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationFinancesWithGrowthTableResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
-        return new ProjectOrganisationSizeViewModel(project, organisation.getName(), organisationId, financesWithGrowthTable.getOrganisationSize(), financesWithGrowthTable.getAnnualTurnoverAtLastFinancialYear(), financesWithGrowthTable.getHeadCountAtLastFinancialYear());
+        return new ProjectOrganisationSizeViewModel(project,
+                organisation.getName(),
+                organisationId,
+                financesWithGrowthTable.getOrganisationSize(),
+                financesWithGrowthTable.getAnnualTurnoverAtLastFinancialYear(),
+                financesWithGrowthTable.getHeadCountAtLastFinancialYear(),
+                false,
+                false,
+                false,
+                false);
     }
 
     private YourOrganisationWithGrowthTableForm formRequest(long projectId, long organisationId) {

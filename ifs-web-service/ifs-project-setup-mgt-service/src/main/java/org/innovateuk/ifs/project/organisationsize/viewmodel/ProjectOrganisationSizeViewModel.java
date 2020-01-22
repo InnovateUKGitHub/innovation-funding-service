@@ -24,14 +24,25 @@ public class ProjectOrganisationSizeViewModel {
     private boolean h2020;
     private boolean readOnly;
 
-
-    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName, long organisationId, OrganisationSize organisationSize, BigDecimal turnover, Long employees) {
+    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName,
+                                            long organisationId,
+                                            OrganisationSize organisationSize,
+                                            BigDecimal turnover,
+                                            Long employees,
+                                            boolean showStateAidAgreement,
+                                            boolean fundingSectionComplete,
+                                            boolean h2020,
+                                            boolean readOnly) {
         this.project = project;
         this.organisationName = organisationName;
         this.organisationId = organisationId;
         this.organisationSize = organisationSize;
         this.turnover = turnover;
         this.employees = employees;
+        this.showStateAidAgreement = showStateAidAgreement;
+        this.fundingSectionComplete = fundingSectionComplete;
+        this.h2020 = h2020;
+        this.readOnly = readOnly;
     }
 
     public List<FormOption> getOrganisationSizeOptions() {

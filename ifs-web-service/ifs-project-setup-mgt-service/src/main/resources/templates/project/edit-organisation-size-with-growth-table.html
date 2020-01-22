@@ -12,8 +12,8 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-org"
-              th:with="linkTitle='Back to ${model.organisationName}',
-              linkUrl=@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId})}, dynamicBackLink=${true}" />
+              th:with="linkTitle=|Back to ${model.organisationName}|,
+              linkUrl=@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
@@ -38,9 +38,6 @@
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
-
-            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
-            <input type="hidden" id="cacheTest" value=""/>
 
             <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                     with-growth-table-project-setup(
