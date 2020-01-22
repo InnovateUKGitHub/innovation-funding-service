@@ -21,6 +21,7 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.for
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 public abstract class AbstractYourFundingSaver {
 
@@ -80,7 +81,7 @@ public abstract class AbstractYourFundingSaver {
     private void saveGrantClaimPercentage(BaseFinanceResource finance, YourFundingPercentageForm form, ValidationMessages messages) {
         GrantClaimPercentage claim = (GrantClaimPercentage) finance.getGrantClaim();
         if (form.getRequestingFunding()) {
-            claim.setPercentage(form.getGrantClaimPercentage().setScale(2, HALF_UP));
+            claim.setPercentage(form.getGrantClaimPercentage().setScale(MAX_DECIMAL_PLACES, HALF_UP));
         } else {
             claim.setPercentage(BigDecimal.ZERO);
         }

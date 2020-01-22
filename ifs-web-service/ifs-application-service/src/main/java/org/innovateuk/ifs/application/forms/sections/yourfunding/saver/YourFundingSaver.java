@@ -22,11 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Optional;
 
+import static java.math.RoundingMode.HALF_UP;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 @Component
 public class YourFundingSaver extends AbstractYourFundingSaver {
@@ -62,7 +63,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         try {
             if (field.equals("grantClaimPercentage")) {
                 GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-                grantClaim.setPercentage(new BigDecimal(value).setScale(2, RoundingMode.HALF_UP));
+                grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("amount")) {
                 GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
