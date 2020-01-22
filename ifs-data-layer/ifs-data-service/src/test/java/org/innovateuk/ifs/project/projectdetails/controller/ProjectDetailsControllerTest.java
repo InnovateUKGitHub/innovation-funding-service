@@ -14,8 +14,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
 
     @Mock
-    private ProjectDetailsService projectDetailsServiceMock;
+    private ProjectDetailsService projectDetailsService;
 
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
@@ -33,36 +32,43 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testGetProjectManager() throws Exception {
+    public void getProjectManager() throws Exception {
         Long project1Id = 1L;
 
         ProjectUserResource projectManager = newProjectUserResource().withId(project1Id).build();
 
-        when(projectDetailsServiceMock.getProjectManager(project1Id)).thenReturn(serviceSuccess(projectManager));
+        when(projectDetailsService.getProjectManager(project1Id)).thenReturn(serviceSuccess(projectManager));
 
         mockMvc.perform(get("/project/{id}/project-manager", project1Id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(projectManager)));
+
+        verify(projectDetailsService).getProjectManager(project1Id);
+        verifyNoMoreInteractions(projectDetailsService);
     }
 
     @Test
-    public void testGetProjectManagerNotFound() throws Exception {
+    public void getProjectManagerNotFound() throws Exception {
         Long project1Id = -1L;
 
-        when(projectDetailsServiceMock.getProjectManager(project1Id)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(projectDetailsService.getProjectManager(project1Id)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
         mockMvc.perform(get("/project/{id}/project-manager", project1Id))
                 .andExpect(status().isNotFound());
+
+        verify(projectDetailsService).getProjectManager(project1Id);
+        verifyNoMoreInteractions(projectDetailsService);
     }
 
     @Test
     public void setProjectManager() throws Exception {
-        when(projectDetailsServiceMock.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
+        when(projectDetailsService.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/3/project-manager/5").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(projectDetailsServiceMock).setProjectManager(3L, 5L);
+        verify(projectDetailsService).setProjectManager(3L, 5L);
+        verifyNoMoreInteractions(projectDetailsService);
     }
 
     @Test
@@ -71,25 +77,31 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         long projectId = 3L;
         long durationInMonths = 18L;
 
-        when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
+        when(projectDetailsService.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/" + projectId + "/duration/" + durationInMonths)
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(projectDetailsServiceMock).updateProjectDuration(projectId, durationInMonths);
+        verify(projectDetailsService).updateProjectDuration(projectId, durationInMonths);
+        verifyNoMoreInteractions(projectDetailsService);
     }
 
     @Test
     public void updateFinanceContact() throws Exception {
 
-        when(projectDetailsServiceMock.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 456L), 789L)).thenReturn(serviceSuccess());
+        long projectId = 123L;
+        long organisationId = 456L;
+        long financeContactUserId = 789L;
+
+        when(projectDetailsService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactUserId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isOk());
 
-        verify(projectDetailsServiceMock).updateFinanceContact(new ProjectOrganisationCompositeId(123L, 456L), 789L);
+        verify(projectDetailsService).updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactUserId);
+        verifyNoMoreInteractions(projectDetailsService);
     }
 
     @Test
@@ -98,27 +110,34 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         long projectId = 1L;
         long organisationId = 2L;
         String postcode = "TW14 9QG";
-        when(projectDetailsServiceMock.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode)).thenReturn(serviceSuccess());
+
+        when(projectDetailsService.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postcode={postcode}", projectId, organisationId, postcode))
                 .andExpect(status().isOk());
 
-        verify(projectDetailsServiceMock).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode);
+        verify(projectDetailsService).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode);
+        verifyNoMoreInteractions(projectDetailsService);
     }
 
     @Test
     public void updateProjectAddress() throws Exception {
+
+        long leadOrganisationId = 123L;
+        long projectId = 456L;
+
         AddressResource addressResource = newAddressResource().withId(1L).build();
 
-        when(projectDetailsServiceMock.updateProjectAddress(123L, 456L, addressResource)).thenReturn(serviceSuccess());
+        when(projectDetailsService.updateProjectAddress(leadOrganisationId, projectId, addressResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/address", 456L)
+        mockMvc.perform(post("/project/{projectId}/address", projectId)
                 .param("leadOrganisationId", "123")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(addressResource)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        verify(projectDetailsServiceMock).updateProjectAddress(123L, 456L, addressResource);
+        verify(projectDetailsService).updateProjectAddress(leadOrganisationId, projectId, addressResource);
+        verifyNoMoreInteractions(projectDetailsService);
     }
 }
