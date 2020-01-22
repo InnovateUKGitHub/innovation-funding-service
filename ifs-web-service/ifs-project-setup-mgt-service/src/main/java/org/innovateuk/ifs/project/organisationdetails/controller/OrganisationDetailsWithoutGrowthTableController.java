@@ -8,7 +8,6 @@ import org.innovateuk.ifs.project.organisationdetails.populator.OrganisationDeta
 import org.innovateuk.ifs.project.organisationsize.model.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,17 +16,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ *  This controller will allow the user to view organisation details without a growth table.
+ */
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/without-growth-table")
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationDetailsWithoutGrowthTableController.class)
+@SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
+    securedType = OrganisationDetailsWithoutGrowthTableController.class)
 public class OrganisationDetailsWithoutGrowthTableController {
 
     @Autowired
     private ProjectRestService projectRestService;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.organisationdetails.form.SelectOrganisationForm;
@@ -35,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation")
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+@SecuredBySpring(value = "Controller", description = "Internal users can select an organisation to view details",
+    securedType = OrganisationDetailsWithGrowthTableController.class)
 public class SelectOrganisationController {
 
     @Autowired
