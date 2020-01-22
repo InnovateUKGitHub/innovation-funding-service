@@ -1,15 +1,17 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -31,10 +33,13 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -72,13 +77,15 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @SuppressWarnings("unused")
     private NavigationUtils navigationUtils;
 
+    private static final String FORM_ATTR_NAME = "form";
+
     @Test
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
 
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
+        CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)
                 .withName("Comp 1")
                 .withLocationPerPartner(true)
@@ -153,13 +160,73 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
+    public void viewStartDate() throws Exception {
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        ProjectResource project = newProjectResource().
+                withApplication(applicationResource).
+                with(name("My Project")).
+                withDuration(4L).
+                withTargetStartDate(LocalDate.now().withDayOfMonth(5)).
+                withDuration(4L).
+                build();
+
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRole(PARTNER).
+                build(1);
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/project/{projectId}/details/start-date", project.getCompetition(), project.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/details-start-date"))
+                .andReturn();
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+        ProjectDetailsStartDateViewModel viewModel = (ProjectDetailsStartDateViewModel) model.get("model");
+
+        assertEquals(project.getId(), viewModel.getProjectId());
+        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
+        assertEquals(project.getName(), viewModel.getProjectName());
+        assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
+
+        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(FORM_ATTR_NAME);
+        assertEquals(project.getTargetStartDate().withDayOfMonth(1), form.getProjectStartDate());
+    }
+
+    @Test
+    public void updateStartDate() throws Exception {
+        ApplicationResource applicationResource = newApplicationResource().build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).withCompetition(competitionResource.getId()).build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectDetailsService.updateProjectStartDate(project.getId(), LocalDate.of(2017, 6, 3))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/details/start-date", project.getCompetition(), project.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("projectStartDate", "projectStartDate").
+                param("projectStartDate.dayOfMonth", "3").
+                param("projectStartDate.monthValue", "6").
+                param("projectStartDate.year", "2017"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/" + project.getCompetition() + "/project/" + project.getId() + "/details"))
+                .andReturn();
+    }
+
+    @Test
     public void viewEditProjectDuration() throws Exception {
 
         long competitionId = 1L;
         String competitionName = "Comp 1";
         long projectId = 11L;
 
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
+        CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)
                 .withName(competitionName)
                 .build();
@@ -203,7 +270,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectResource project = newProjectResource().build();
 
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
@@ -247,7 +314,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectResource project = newProjectResource().build();
 
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
@@ -260,6 +327,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andReturn();
 
         verify(projectDetailsService).updateProjectDuration(projectId, 18L);
+        verify(projectService).getById(projectId);
     }
 
     @Test

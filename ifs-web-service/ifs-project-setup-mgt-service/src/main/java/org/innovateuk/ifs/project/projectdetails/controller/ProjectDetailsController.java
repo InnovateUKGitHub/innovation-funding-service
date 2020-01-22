@@ -12,7 +12,9 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.financereviewer.service.FinanceReviewerRestService;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
@@ -28,6 +30,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -35,7 +38,6 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -74,7 +76,8 @@ public class ProjectDetailsController {
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
-                                     UserResource loggedInUser) {
+                                     UserResource loggedInUser,
+                                     boolean isSpendProfileGenerated) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
@@ -89,16 +92,56 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
-                loggedInUser.hasRole(PROJECT_FINANCE),
+                loggedInUser,
                 leadOrganisationResource.getName(),
                 locationPerPartnerRequired,
                 locationPerPartnerRequired?
                         partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
                         : Collections.emptyList(),
                 financeReviewer.map(SimpleUserResource::getName).orElse(null),
-                financeReviewer.map(SimpleUserResource::getEmail).orElse(null)));
+                financeReviewer.map(SimpleUserResource::getEmail).orElse(null),
+                isSpendProfileGenerated));
 
         return "project/detail";
+    }
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "VIEW_START_DATE", description = "Only the IFS Administrator can view the page to edit the project start date")
+    @GetMapping("/{projectId}/details/start-date")
+    public String viewStartDate(@PathVariable("projectId") final long projectId, Model model,
+                                @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
+                                UserResource loggedInUser) {
+
+        ProjectResource projectResource = projectService.getById(projectId);
+        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
+        form.setProjectStartDate(defaultStartDate);
+        return doViewProjectStartDate(model, projectResource, form);
+    }
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "UPDATE_START_DATE", description = "Only the IFS Administrator can update the project start date")
+    @PostMapping("/{projectId}/details/start-date")
+    public String updateStartDate(@PathVariable("competitionId") final long competitionId,
+                                  @PathVariable("projectId") final long projectId,
+                                  @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
+                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                  Model model,
+                                  UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
+
+            return validationHandler.addAnyErrors(updateResult, toField("projectStartDate")).
+                    failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId, competitionId));
+        });
+    }
+
+    private String doViewProjectStartDate(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        model.addAttribute(FORM_ATTR_NAME, form);
+        return "project/details-start-date";
     }
 
     @PreAuthorize("hasAuthority('project_finance')")
@@ -162,5 +205,9 @@ public class ProjectDetailsController {
         if (Long.parseLong(durationInMonths) < 1) {
             validationHandler.addAnyErrors(serviceFailure(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH), toField("durationInMonths"));
         }
+    }
+
+    private String redirectToProjectDetails(long projectId, long competitionId) {
+        return "redirect:/competition/" + competitionId + "/project/" + projectId + "/details";
     }
 }

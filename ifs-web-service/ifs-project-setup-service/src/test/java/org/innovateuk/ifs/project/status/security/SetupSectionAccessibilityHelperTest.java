@@ -13,13 +13,13 @@ import java.util.function.BiFunction;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     @Mock
-    private SetupProgressChecker setupProgressCheckerMock;
+    private SetupProgressChecker setupProgressChecker;
 
     @InjectMocks
     private SetupSectionAccessibilityHelper helper;
@@ -27,171 +27,151 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
     private OrganisationResource organisation = newOrganisationResource().build();
 
     @Test
-    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsNotComplete() {
-        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
+    public void leadCanAccessProjectManagerPageWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete(SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndNotLead() {
-        whenCompaniesHouseDetailsCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
+    public void leadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndNotLead() {
+        whenCompaniesHouseDetailsCompleteAndNotLead(SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated() {
-        whenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
+    public void leadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated(SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated() {
-        whenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
+    public void leadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated(SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsNotComplete() {
-        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
+    public void leadCanAccessProjectAddressPageWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete(SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndNotLead() {
-        whenCompaniesHouseDetailsCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
+    public void leadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndNotLead() {
+        whenCompaniesHouseDetailsCompleteAndNotLead(SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileGenerated() {
-        whenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileGenerated((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
+    public void leadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated(SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileNotGenerated() {
-        whenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileNotGenerated((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
+    public void leadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated(SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsNotComplete() {
-        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
+    public void canAccessFinanceContactPageWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete(SetupSectionAccessibilityHelper::canAccessFinanceContactPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndNotLead() {
-        whenCompaniesHouseDetailsCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
+    public void canAccessFinanceContactPageWhenCompaniesHouseDetailsCompleteAndGOLGenerated() {
+        whenCompaniesHouseDetailsCompleteAndGolGenerated(SetupSectionAccessibilityHelper::canAccessFinanceContactPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated() {
-        whenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
+    public void canAccessFinanceContactPageWhenCompaniesHouseDetailsCompleteAndGOLNotGenerated() {
+        whenCompaniesHouseDetailsCompleteAndGolNotGenerated(SetupSectionAccessibilityHelper::canAccessFinanceContactPage);
     }
 
     @Test
-    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated() {
-        whenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
+    public void canAccessSpendProfileSectionWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete(SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @Test
-    public void testCanAccessFinanceContactPageWhenCompaniesHouseDetailsNotComplete() {
-        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceContactPage(organisation));
+    public void canAccessSpendProfileSectionWhenProjectDetailsNotSubmitted() {
+        whenProjectDetailsNotSubmitted(SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @Test
-    public void testCanAccessFinanceContactPageWhenCompaniesHouseDetailsCompleteAndGOLGenerated() {
-        whenCompaniesHouseDetailsCompleteAndGolGenerated((helper, organisation) -> helper.canAccessFinanceContactPage(organisation));
+    public void canAccessSpendProfileSectionWhenBankDetailsNotApproved() {
+        whenBankDetailsNotApproved(SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @Test
-    public void testCanAccessFinanceContactPageWhenCompaniesHouseDetailsCompleteAndGOLNotGenerated() {
-        whenCompaniesHouseDetailsCompleteAndGolNotGenerated((helper, organisation) -> helper.canAccessFinanceContactPage(organisation));
+    public void canAccessSpendProfileSectionWhenSpendProfileNotGenerated() {
+        whenSpendProfileNotGenerated(SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @Test
-    public void testCanAccessSpendProfileSectionWhenCompaniesHouseDetailsNotComplete() {
-        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
+    public void canAccessSpendProfileSectionWhenSpendProfileGenerated() {
+        whenSpendProfileGeneratedAndAccessible(SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @Test
-    public void testCanAccessSpendProfileSectionWhenProjectDetailsNotSubmitted() {
-        whenProjectDetailsNotSubmitted((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
-    }
-
-    @Test
-    public void testCanAccessSpendProfileSectionWhenBankDetailsNotApproved() {
-        whenBankDetailsNotApproved((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
-    }
-
-    @Test
-    public void testCanAccessSpendProfileSectionWhenSpendProfileNotGenerated() {
-        whenSpendProfileNotGenerated((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
-    }
-
-    @Test
-    public void testCanAccessSpendProfileSectionWhenSpendProfileGenerated() {
-        whenSpendProfileGeneratedAndAccessible((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
-    }
-
-    @Test
-    public void testCanEditSpendProfileSectionWhenCompaniesHouseDetailsNotComplete() {
+    public void canEditSpendProfileSectionWhenCompaniesHouseDetailsNotComplete() {
         whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
     }
 
     @Test
-    public void testCanEditSpendProfileSectionWhenProjectDetailsNotSubmitted() {
+    public void canEditSpendProfileSectionWhenProjectDetailsNotSubmitted() {
         whenProjectDetailsNotSubmitted((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
     }
 
     @Test
-    public void testCanEditSpendProfileSectionWhenBankDetailsNotApproved() {
+    public void canEditSpendProfileSectionWhenBankDetailsNotApproved() {
         whenBankDetailsNotApproved((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
     }
 
     @Test
-    public void testCanEditSpendProfileSectionWhenSpendProfileNotGenerated() {
+    public void canEditSpendProfileSectionWhenSpendProfileNotGenerated() {
         whenSpendProfileNotGenerated((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
     }
 
     @Test
-    public void testCanEditSpendProfileSectionWhenUserNotFromCurrentOrganisation() {
+    public void canEditSpendProfileSectionWhenUserNotFromCurrentOrganisation() {
         whenSpendProfileGeneratedAndNotAccessible((helper, organisation) -> helper.canEditSpendProfileSection(organisation, 22L));
     }
 
     @Test
-    public void testCanEditSpendProfileSectionWhenUserFromCurrentOrganisation() {
+    public void canEditSpendProfileSectionWhenUserFromCurrentOrganisation() {
         whenSpendProfileGeneratedAndAccessible((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
     }
 
     @Test
-    public void testCanAccessFinanceChecksSectionWhenCompaniesHouseDetailsNotComplete() {
-        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    public void canAccessFinanceChecksSectionWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete(SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
 
     @Test
-    public void testCanAccessFinanceChecksSectionWhenFinanceContactNotYetSubmitted() {
-        whenFinanceContactNotSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    public void canAccessFinanceChecksSectionWhenFinanceContactNotYetSubmitted() {
+        whenFinanceContactNotSubmitted(SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
 
     @Test
-    public void testCanAccessFinanceChecksSectionWhenFinanceContactSubmitted() {
-        whenFinanceContactSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+    public void canAccessFinanceChecksSectionWhenFinanceContactSubmitted() {
+        whenFinanceContactSubmitted(SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
 
     @Test
     public void canAccessDocumentsSectionWhenLead() {
-        doTest((helper, organisation) -> helper.canAccessDocumentsSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessDocumentsSection,
                 false, false, true, ACCESSIBLE);
     }
 
     @Test
     public void canAccessDocumentsSectionWhenNotLeadAndCompaniesHouseSectionRequiredButNotComplete() {
-        doTest((helper, organisation) -> helper.canAccessDocumentsSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessDocumentsSection,
                 true, false, false, NOT_ACCESSIBLE);
     }
 
     @Test
     public void canAccessDocumentsSectionWhenNotLeadAndCompaniesHouseSectionNotRequired() {
-        doTest((helper, organisation) -> helper.canAccessDocumentsSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessDocumentsSection,
                 false, false, false, ACCESSIBLE);
     }
 
     @Test
     public void canAccessDocumentsSectionWhenNotLeadAndCompaniesHouseSectionRequiredAndComplete() {
-        doTest((helper, organisation) -> helper.canAccessDocumentsSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessDocumentsSection,
                 true, true, false, ACCESSIBLE);
     }
 
@@ -199,48 +179,48 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
                         boolean companiesHouseSectionRequired, boolean companiesHouseDetailsComplete, boolean lead,
                         SectionAccess expectedAccess) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(companiesHouseSectionRequired);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(companiesHouseDetailsComplete);
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(lead);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(companiesHouseSectionRequired);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(companiesHouseDetailsComplete);
+        when(setupProgressChecker.isLeadPartnerOrganisation(organisation)).thenReturn(lead);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(expectedAccess == access);
+        assertEquals(expectedAccess, access);
 
     }
 
     @Test
     public void canAccessGrantOfferLetterSectionWhenDocsApproved() {
-        doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 true, true, true, true,true, ACCESSIBLE);
     }
 
     @Test
     public void canNotAccessGrantOfferLetterSectionWhenDocsNotApproved() {
-        doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 true, false, true, true, true, NOT_ACCESSIBLE);
     }
 
     @Test
     public void canAccessGrantOfferLetterSectionWhenSpendProfileNotApproved() {
-        doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 false, true, true, true, true, NOT_ACCESSIBLE);
     }
 
     @Test
     public void canAccessGrantOfferLetterSectionWhenBankDetailsNotApproved() {
-        doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                true, true, false, true, true, NOT_ACCESSIBLE);
     }
 
     @Test
     public void canAccessGrantOfferLetterSectionWhenGOLNotAvailable() {
-        doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 true, true, true,false, true, NOT_ACCESSIBLE);
     }
 
     @Test
     public void canAccessGrantOfferLetterSectionWhenGOLNotSent() {
-        doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),
+        doTest(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 true, true, true, true, false, NOT_ACCESSIBLE);
     }
 
@@ -248,152 +228,128 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
                         boolean spendProfileApproved, boolean docsApproved, boolean bankDetailsApproved, boolean golAvailable, boolean golSent,
                         SectionAccess expectedAccess) {
 
-        when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(spendProfileApproved);
-        when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(docsApproved);
-        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(bankDetailsApproved);
-        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(golAvailable);
-        when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(golSent);
+        when(setupProgressChecker.isSpendProfileApproved()).thenReturn(spendProfileApproved);
+        when(setupProgressChecker.isDocumentsApproved()).thenReturn(docsApproved);
+        when(setupProgressChecker.isBankDetailsApproved(organisation)).thenReturn(bankDetailsApproved);
+        when(setupProgressChecker.isGrantOfferLetterAvailable()).thenReturn(golAvailable);
+        when(setupProgressChecker.isGrantOfferLetterSent()).thenReturn(golSent);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(expectedAccess == access);
+        assertEquals(expectedAccess, access);
 
     }
 
     private void whenCompaniesHouseDetailsNotComplete(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
     private void whenCompaniesHouseDetailsCompleteAndNotLead(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isLeadPartnerOrganisation(organisation)).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
-
-    }
-
-    private void whenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
-
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
-
-        SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
-
-    }
-
-    private void whenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
-
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(false);
-
-        SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
     private void whenCompaniesHouseDetailsCompleteAndGolGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
 
-        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
+        when(setupProgressChecker.isGrantOfferLetterAvailable()).thenReturn(true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
     private void whenCompaniesHouseDetailsCompleteAndGolNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
 
-        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(false);
+        when(setupProgressChecker.isGrantOfferLetterAvailable()).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(ACCESSIBLE == access);
+        assertEquals(ACCESSIBLE, access);
 
     }
 
     private void whenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(setupProgressChecker.isGrantOfferLetterAvailable()).thenReturn(true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
     private void whenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(false);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(setupProgressChecker.isGrantOfferLetterAvailable()).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(ACCESSIBLE == access);
+        assertEquals(ACCESSIBLE, access);
 
     }
 
     private void whenProjectDetailsNotSubmitted(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isProjectDetailsSubmitted()).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
     private void whenFinanceContactNotSubmitted(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isFinanceContactSubmitted(organisation)).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
     private void whenFinanceContactSubmitted(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isFinanceContactSubmitted(organisation)).thenReturn(true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(ACCESSIBLE == access);
+        assertEquals(ACCESSIBLE, access);
 
     }
 
     private void whenBankDetailsNotApproved(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isProjectDetailsSubmitted()).thenReturn(true);
+        when(setupProgressChecker.isBankDetailsApproved(organisation)).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
@@ -402,7 +358,7 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
         setUpMocking(true, true, true, true, true, false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
@@ -411,7 +367,7 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
         setUpMocking(true, true, true, true,true, true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+        assertEquals(SectionAccess.NOT_ACCESSIBLE, access);
 
     }
 
@@ -420,7 +376,7 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
         setUpMocking(true, true, true, true,true, true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
-        assertTrue(ACCESSIBLE == access);
+        assertEquals(ACCESSIBLE, access);
 
     }
 
@@ -428,11 +384,11 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
                               boolean projectDetailsSubmitted, boolean projectTeamSectionComplete,
                               boolean bankDetailsApproved, boolean spendProfileGenerated) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(companiesHouseSectionRequired);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(companiesHouseDetailsComplete);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(projectDetailsSubmitted);
-        when(setupProgressCheckerMock.isProjectTeamCompleted()).thenReturn(projectTeamSectionComplete);
-        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(bankDetailsApproved);
-        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(spendProfileGenerated);
+        when(setupProgressChecker.isCompaniesHouseSectionRequired(organisation)).thenReturn(companiesHouseSectionRequired);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(companiesHouseDetailsComplete);
+        when(setupProgressChecker.isProjectDetailsSubmitted()).thenReturn(projectDetailsSubmitted);
+        when(setupProgressChecker.isProjectTeamCompleted()).thenReturn(projectTeamSectionComplete);
+        when(setupProgressChecker.isBankDetailsApproved(organisation)).thenReturn(bankDetailsApproved);
+        when(setupProgressChecker.isSpendProfileGenerated()).thenReturn(spendProfileGenerated);
     }
 }
