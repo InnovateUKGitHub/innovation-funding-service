@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-org"
               th:with="linkTitle='Back to ${model.organisationName}',
-              linkUrl=@{/competition/{competitionId}/project/{projectId}/organisation/select (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()})}, dynamicBackLink=${true}" />
+              linkUrl=@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId})}, dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
@@ -53,15 +53,18 @@
             <div>
                 <button type="submit"
                         class="govuk-!-margin-top-6 govuk-button"
+                        id="save-and-return"
+                        name="save-and-return"
+                        th:href="@{/competition/{competitionId}/project/{projectId}/partner/{partnerId}/details (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, partnerId=${model.organisationId})}"
                         th:text="|Save and return to ${model.organisationName}|">Save and return to organisation</button>
             </div>
             <div>
-                <button id="cancel_return_organisation_details"
-                        type="submit"
-                        name="cancel-return-organisation-details"
-                        class="button-clear"
-                        value="true"
-                        th:text="|Cancel and return to ${model.organisationName}|">Cancel and return to organisation details</button>
+                <a th:href="@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId})}"
+                   th:text="|Cancel and return to ${model.organisationName}|"
+                   id="cancel-return-organisation-details"
+                   class="button-clear">Cancel and return to organisation details
+                </a>
+
             </div>
         </form>
 

@@ -15,6 +15,7 @@ public class ProjectOrganisationSizeViewModel {
 
     private final ProjectResource project;
     private final String organisationName;
+    private final long organisationId;
     private final OrganisationSize organisationSize;
     private final BigDecimal turnover;
     private final Long employees;
@@ -24,9 +25,10 @@ public class ProjectOrganisationSizeViewModel {
     private boolean readOnly;
 
 
-    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName, OrganisationSize organisationSize, BigDecimal turnover, Long employees) {
+    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName, long organisationId, OrganisationSize organisationSize, BigDecimal turnover, Long employees) {
         this.project = project;
         this.organisationName = organisationName;
+        this.organisationId = organisationId;
         this.organisationSize = organisationSize;
         this.turnover = turnover;
         this.employees = employees;
@@ -42,6 +44,10 @@ public class ProjectOrganisationSizeViewModel {
 
     public String getOrganisationName() {
         return organisationName;
+    }
+
+    public long getOrganisationId() {
+        return organisationId;
     }
 
     public OrganisationSize getOrganisationSize() {
@@ -83,6 +89,7 @@ public class ProjectOrganisationSizeViewModel {
         return new EqualsBuilder()
                 .append(project, that.project)
                 .append(organisationName, that.organisationName)
+                .append(organisationId, that.organisationId)
                 .append(organisationSize, that.organisationSize)
                 .append(turnover, that.turnover)
                 .append(employees, that.employees)
@@ -97,6 +104,7 @@ public class ProjectOrganisationSizeViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(project)
                 .append(organisationName)
+                .append(organisationId)
                 .append(organisationSize)
                 .append(turnover)
                 .append(employees)

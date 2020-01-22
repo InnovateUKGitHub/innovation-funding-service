@@ -36,7 +36,7 @@ public class ProjectOrganisationSizeWithoutGrowthTableController {
     @Autowired
     private YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator;
 
-    @GetMapping("/edit")
+    @GetMapping
     public String editOrganisationSize(
             @PathVariable long projectId,
             @PathVariable long organisationId,
@@ -52,7 +52,7 @@ public class ProjectOrganisationSizeWithoutGrowthTableController {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationFinancesWithGrowthTableResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
-        return new ProjectOrganisationSizeViewModel(project, organisation.getName(), financesWithGrowthTable.getOrganisationSize(), financesWithGrowthTable.getAnnualTurnoverAtLastFinancialYear(), financesWithGrowthTable.getHeadCountAtLastFinancialYear());
+        return new ProjectOrganisationSizeViewModel(project, organisation.getName(), organisationId, financesWithGrowthTable.getOrganisationSize(), financesWithGrowthTable.getAnnualTurnoverAtLastFinancialYear(), financesWithGrowthTable.getHeadCountAtLastFinancialYear());
     }
 
     private YourOrganisationWithoutGrowthTableForm formRequest(long projectId, long organisationId) {
