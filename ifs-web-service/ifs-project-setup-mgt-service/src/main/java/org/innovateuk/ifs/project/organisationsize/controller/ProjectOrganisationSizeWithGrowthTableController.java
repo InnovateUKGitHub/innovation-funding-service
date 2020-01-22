@@ -17,8 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/with-growth-table")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectOrganisationSizeWithGrowthTableController.class)
@@ -40,7 +38,7 @@ public class ProjectOrganisationSizeWithGrowthTableController {
     private EncryptedCookieService cookieUtil;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     public String editOrganisationSize(
                                        @PathVariable long projectId,
                                        @PathVariable long organisationId,
@@ -53,7 +51,7 @@ public class ProjectOrganisationSizeWithGrowthTableController {
     }
 
     @PostMapping(params = "save-and-return")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @SecuredBySpring(value = "UPDATE_ORGANISATION_FUNDING_DETAILS", description = "Internal users can update organisation funding details")
     public String saveWithGrowthTable(
             @PathVariable long projectId,

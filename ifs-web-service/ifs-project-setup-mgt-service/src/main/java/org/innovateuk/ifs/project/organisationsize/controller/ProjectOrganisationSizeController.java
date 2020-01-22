@@ -13,7 +13,7 @@ import static java.lang.Boolean.TRUE;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
 public class ProjectOrganisationSizeController {
 
     @Autowired

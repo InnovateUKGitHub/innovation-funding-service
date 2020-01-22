@@ -54,6 +54,7 @@
                         name="save-and-return"
                         th:href="@{/competition/{competitionId}/project/{projectId}/partner/{partnerId}/details (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, partnerId=${model.organisationId})}"
                         th:text="|Save and return to ${model.organisationName}|">Save and return to organisation</button>
+                <th:block th:insert="fragments/modals :: modal-edit-organisation-size (${model})" />
             </div>
             <div>
                 <a th:href="@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId})}"
