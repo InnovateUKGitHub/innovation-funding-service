@@ -232,28 +232,4 @@
        th:text="${linkTitle}">Back</a>
 </th:block>
 
-<!-- =========================== Element : subheader-with-organisation-name =========================== -->
-<th:block th:fragment="header-org">
-    <div class="sub-header">
-
-        <th:block th:unless="${dynamicBackLink}"
-                  th:insert="fragments/layout :: back-link"/>
-
-        <th:block th:if="${dynamicBackLink}">
-            <a th:if="${cookieBackLinkUrl}"
-               class="govuk-back-link"
-               th:href="${cookieBackLinkUrl}"
-               th:text="${cookieBackLinkText == null ? 'Back' : 'Back to ' + cookieBackLinkText}">Back</a>
-            <th:block th:unless="${cookieBackLinkUrl}"
-                      th:insert="fragments/layout :: back-link" />
-        </th:block>
-
-        <div class="deadline"
-             th:if="${currentCompetition != null && currentCompetition.open}">
-            <th:block th:text="${currentCompetition.getDaysLeft()}" />
-            days left to submit
-        </div>
-    </div>
-</th:block>
-
 </html>

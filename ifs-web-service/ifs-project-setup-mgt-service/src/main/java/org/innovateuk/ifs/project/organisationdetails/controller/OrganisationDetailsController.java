@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}")
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-public class ProjectOrganisationSizeController {
+public class OrganisationDetailsController {
 
     @Autowired
     private YourOrganisationRestService yourOrganisationRestService;

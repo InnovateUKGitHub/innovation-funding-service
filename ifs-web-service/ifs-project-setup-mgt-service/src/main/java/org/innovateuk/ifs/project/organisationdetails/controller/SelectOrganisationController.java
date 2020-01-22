@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation")
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-public class OrganisationSelectController {
+public class SelectOrganisationController {
 
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
