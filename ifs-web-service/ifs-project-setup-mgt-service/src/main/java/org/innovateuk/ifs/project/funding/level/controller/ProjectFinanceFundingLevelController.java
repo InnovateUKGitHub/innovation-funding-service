@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 @Controller
 @RequestMapping("/project/{projectId}/funding-level")
@@ -102,7 +103,7 @@ public class ProjectFinanceFundingLevelController {
         finances.forEach(finance -> {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
 
-            if (fundingLevel.scale() > 2) {
+            if (fundingLevel.scale() > MAX_DECIMAL_PLACES) {
                 bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
                         "validation.finance.percentage");
             }

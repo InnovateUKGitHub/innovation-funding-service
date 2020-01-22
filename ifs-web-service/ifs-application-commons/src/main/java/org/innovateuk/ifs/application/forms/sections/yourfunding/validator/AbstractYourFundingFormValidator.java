@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 public class AbstractYourFundingFormValidator {
 
@@ -95,7 +96,7 @@ public class AbstractYourFundingFormValidator {
         if (TRUE.equals(form.getRequestingFunding())) {
             ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
             if (form.getGrantClaimPercentage() != null) {
-                if (form.getGrantClaimPercentage().scale() > 2) {
+                if (form.getGrantClaimPercentage().scale() > MAX_DECIMAL_PLACES) {
                     errors.rejectValue("grantClaimPercentage", "validation.finance.percentage");
                 }
 

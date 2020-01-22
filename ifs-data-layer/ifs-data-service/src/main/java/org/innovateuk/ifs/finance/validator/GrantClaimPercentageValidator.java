@@ -13,6 +13,7 @@ import org.springframework.validation.Validator;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 /**
  * This class validates the GrantClaim.
@@ -40,7 +41,7 @@ public class GrantClaimPercentageValidator implements Validator {
             return;
         }
 
-        if (response.getPercentage().scale() > 2) {
+        if (response.getPercentage().scale() > MAX_DECIMAL_PLACES) {
             rejectValue(errors, "percentage", "validation.finance.percentage");
             return;
         }

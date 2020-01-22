@@ -122,7 +122,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         YourFundingPercentageForm form = (YourFundingPercentageForm) service.populateForm(APPLICATION_ID, organisation.getId());
 
         assertEquals(form.getRequestingFunding(), true);
-        assertEquals(form.getGrantClaimPercentage(), 100);
+        assertEquals(form.getGrantClaimPercentage(), BigDecimal.valueOf(100));
 
         assertEquals(form.getOtherFunding(), true);
         assertEquals(form.getOtherFundingRows().size(), 2);
