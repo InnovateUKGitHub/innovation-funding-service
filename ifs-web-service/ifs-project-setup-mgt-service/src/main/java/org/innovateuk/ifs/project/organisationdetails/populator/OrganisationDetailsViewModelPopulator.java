@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.project.organisationsize.populator;
+package org.innovateuk.ifs.project.organisationdetails.populator;
 
 import java.util.List;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.organisationsize.viewmodel.OrganisationDetailsViewModel;
+import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;

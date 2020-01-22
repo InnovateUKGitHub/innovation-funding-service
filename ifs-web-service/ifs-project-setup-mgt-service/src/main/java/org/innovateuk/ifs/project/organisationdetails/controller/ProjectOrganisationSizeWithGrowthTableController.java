@@ -1,26 +1,30 @@
-package org.innovateuk.ifs.project.organisationsize.controller;
+package org.innovateuk.ifs.project.organisationdetails.controller;
 
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
-import org.innovateuk.ifs.project.organisationsize.form.ProjectOrganisationSizeWithGrowthTableForm;
-import org.innovateuk.ifs.project.organisationsize.populator.OrganisationDetailsViewModelPopulator;
-import org.innovateuk.ifs.project.organisationsize.viewmodel.ProjectOrganisationSizeViewModel;
+import org.innovateuk.ifs.project.organisationdetails.populator.OrganisationDetailsViewModelPopulator;
+import org.innovateuk.ifs.project.organisationdetails.viewmodel.ProjectOrganisationSizeViewModel;
+import org.innovateuk.ifs.project.organisationsize.model.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/with-growth-table")
+@SecuredBySpring(value = "Controller", description = "Internal users can view organisation details", securedType = ProjectOrganisationSizeWithGrowthTableController.class)
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 public class ProjectOrganisationSizeWithGrowthTableController extends AsyncAdaptor {
 
     @Autowired
@@ -35,10 +39,11 @@ public class ProjectOrganisationSizeWithGrowthTableController extends AsyncAdapt
     @Autowired
     private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
 
+    @Autowired
+    private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
+
     @GetMapping()
-    public String viewOrganisationSize(@ModelAttribute(value = "form", binding = false) ProjectOrganisationSizeWithGrowthTableForm form,
-                                       BindingResult bindingResult,
-                                       @PathVariable long competitionId,
+    public String viewOrganisationSize(@PathVariable long competitionId,
                                        @PathVariable long projectId,
                                        @PathVariable long organisationId,
                                        Model model) {
@@ -47,40 +52,50 @@ public class ProjectOrganisationSizeWithGrowthTableController extends AsyncAdapt
         OrganisationFinancesWithGrowthTableResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
 
         model.addAttribute("orgDetails", organisationDetailsViewModelPopulator.populate(competitionId, projectId, organisationId));
-        model.addAttribute("orgSize", new ProjectOrganisationSizeViewModel(project,
-            organisation.getName(),
-            financesWithGrowthTable.getOrganisationSize(),
-            financesWithGrowthTable.getAnnualTurnoverAtLastFinancialYear(),
-            financesWithGrowthTable.getHeadCountAtLastFinancialYear(),
+        model.addAttribute("orgSize", new ProjectYourOrganisationViewModel(false,
             false,
+            false,
+            project.getId(),
+            project.getName(),
+            organisationId,
             true,
-            false,
-            true));
+            false));
 
-        return "project/organisation-details";
+        model.addAttribute("form", formRequest(projectId, organisationId));
+
+        return "project/organisation-details-with-growth-table";
     }
 
     @GetMapping("/edit")
-    public String editOrganisationSize(@ModelAttribute(value = "form", binding = false) ProjectOrganisationSizeWithGrowthTableForm form,
-                                       BindingResult bindingResult,
-                                       @PathVariable long projectId,
-                                       @PathVariable long organisationId,
-                                       Model model) {
+    public String editOrganisationSize(
+        @PathVariable long projectId,
+        @PathVariable long organisationId,
+        Model model) {
+
+        model.addAttribute("model", getViewModel(projectId, organisationId));
+        model.addAttribute("form", formRequest(projectId, organisationId));
+
+        return "project/edit-organisation-size-with-growth-table";
+    }
+
+    private ProjectOrganisationSizeViewModel getViewModel(long projectId, long organisationId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationFinancesWithGrowthTableResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
-
-        model.addAttribute("model", new ProjectOrganisationSizeViewModel(project,
+        return new ProjectOrganisationSizeViewModel(project,
             organisation.getName(),
             financesWithGrowthTable.getOrganisationSize(),
             financesWithGrowthTable.getAnnualTurnoverAtLastFinancialYear(),
             financesWithGrowthTable.getHeadCountAtLastFinancialYear(),
-            true,
-            true,
-            true,
-            false));
-        model.addAttribute("form", form);
+            false,
+            false,
+            false,
+            false,
+            false);
+    }
 
-        return "project/edit-organisation-size-with-growth-table";
+    private YourOrganisationWithGrowthTableForm formRequest(long projectId, long organisationId) {
+        OrganisationFinancesWithGrowthTableResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
+        return withGrowthTableFormPopulator.populate(financesWithGrowthTable);
     }
 }

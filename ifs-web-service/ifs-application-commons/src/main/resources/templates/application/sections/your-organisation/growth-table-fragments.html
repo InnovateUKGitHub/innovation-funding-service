@@ -35,7 +35,7 @@
     </th:block>
 
     <th:block
-        th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
+        th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly, showHints)">
 
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
@@ -54,6 +54,7 @@
                     id='financialYearEnd',
                     monthValue=${form.financialYearEnd != null ? form.financialYearEnd.monthValue : ''},
                     yearValue=${form.financialYearEnd != null ? form.financialYearEnd.year : ''},
+                    showHints=${showHints},
                     required=true,
                     readOnly=${readOnly},
                     pastDate=true,
@@ -63,7 +64,7 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
                 <h2 class="govuk-fieldset__heading">Financial overview</h2>
             </legend>
-            <span class="govuk-hint">Details relating to your organisation over the last financial year.</span><br>
+            <span th:if="${showHints}" class="govuk-hint">Details relating to your organisation over the last financial year.</span><br>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                     <table class="govuk-table govuk-!-margin-bottom-6">

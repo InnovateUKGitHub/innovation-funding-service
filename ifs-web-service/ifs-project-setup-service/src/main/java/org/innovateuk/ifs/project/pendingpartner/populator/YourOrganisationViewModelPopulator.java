@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.pendingpartner.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
-import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.project.organisationsize.model.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -39,7 +39,7 @@ public class YourOrganisationViewModelPopulator {
         PendingPartnerProgressResource pendingPartner =  pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
         return new ProjectYourOrganisationViewModel(showStateAidAgreement, pendingPartner.isYourFundingComplete(), competition.isH2020(),
-                    projectId, project.getName(), organisationId, pendingPartner.isYourOrganisationComplete()
+                    projectId, project.getName(), organisationId, pendingPartner.isYourOrganisationComplete(), true
                 );
     }
 }

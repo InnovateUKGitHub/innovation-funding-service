@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationsize.viewmodel;
+package org.innovateuk.ifs.project.organisationdetails.viewmodel;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -18,12 +18,13 @@ public class ProjectOrganisationSizeViewModel {
     private final OrganisationSize organisationSize;
     private final BigDecimal turnover;
     private final Long employees;
-    private boolean showStateAidAgreement;
-    private boolean fundingSectionComplete;
-    private boolean h2020;
-    private boolean readOnly;
+    private final boolean showStateAidAgreement;
+    private final boolean fundingSectionComplete;
+    private final boolean h2020;
+    private final boolean readOnly;
+    private final boolean showHints;
 
-    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName, OrganisationSize organisationSize, BigDecimal turnover, Long employees, boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, boolean readOnly) {
+    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName, OrganisationSize organisationSize, BigDecimal turnover, Long employees, boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, boolean readOnly, boolean showHints) {
         this.project = project;
         this.organisationName = organisationName;
         this.organisationSize = organisationSize;
@@ -33,6 +34,7 @@ public class ProjectOrganisationSizeViewModel {
         this.fundingSectionComplete = fundingSectionComplete;
         this.h2020 = h2020;
         this.readOnly = readOnly;
+        this.showHints = showHints;
     }
 
     public List<FormOption> getOrganisationSizeOptions() {
@@ -73,6 +75,10 @@ public class ProjectOrganisationSizeViewModel {
 
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public boolean isShowHints() {
+        return showHints;
     }
 
     @Override

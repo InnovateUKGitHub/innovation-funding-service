@@ -15,13 +15,13 @@ import java.util.List;
  * A populator to build a YourOrganisationViewModel for the "Your organisation" pages.
  */
 @Component
-public class YourOrganisationViewModelPopulator {
+public class ApplicationYourOrganisationViewModelPopulator {
 
     private YourOrganisationRestService yourOrganisationRestService;
     private SectionService sectionService;
     private CompetitionRestService competitionRestService;
 
-    public YourOrganisationViewModelPopulator(
+    public ApplicationYourOrganisationViewModelPopulator(
             YourOrganisationRestService yourOrganisationRestService,
             SectionService sectionService,
             CompetitionRestService competitionRestService) {

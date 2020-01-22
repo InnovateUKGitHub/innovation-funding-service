@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationsize.controller;
+package org.innovateuk.ifs.project.organisationdetails.controller;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.organisationdetails.form.SelectOrganisationForm;
-import org.innovateuk.ifs.project.organisationsize.viewmodel.SelectOrganisationViewModel;
+import org.innovateuk.ifs.project.organisationdetails.viewmodel.SelectOrganisationViewModel;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
