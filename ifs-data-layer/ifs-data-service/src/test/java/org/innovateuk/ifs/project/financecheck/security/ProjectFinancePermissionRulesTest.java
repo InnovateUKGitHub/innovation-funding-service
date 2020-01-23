@@ -232,6 +232,19 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
+    public void internalUsersCanUpdateProjectFinance() {
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isInternal(user)) {
+                assertTrue(rules.internalUsersCanUpdateProjectFinance(projectFinanceResource, user));
+            } else {
+                assertFalse(rules.internalUsersCanUpdateProjectFinance(projectFinanceResource, user));
+            }
+        });
+    }
+
+    @Test
     public void partnersCanAddEmptyRowWhenReadingProjectCosts() {
 
         UserResource user = newUserResource().build();

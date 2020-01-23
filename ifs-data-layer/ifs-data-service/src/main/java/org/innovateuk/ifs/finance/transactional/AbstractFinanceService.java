@@ -6,8 +6,10 @@ import org.innovateuk.ifs.finance.domain.GrowthTable;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
 import org.innovateuk.ifs.finance.resource.GrowthTableResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 public abstract class AbstractFinanceService<D extends Finance, F extends BaseFinanceResource> extends BaseTransactionalService {
@@ -15,6 +17,10 @@ public abstract class AbstractFinanceService<D extends Finance, F extends BaseFi
     protected void updateFinanceDetails(D dbFinance, F financeResource) {
         if (financeResource.getOrganisationSize() != null) {
             dbFinance.setOrganisationSize(financeResource.getOrganisationSize());
+        }
+        if (FALSE.equals(dbFinance.getOrganisationSize().equals(financeResource.getOrganisationSize()))) {
+            OrganisationSize organisationSize = financeResource.getOrganisationSize();
+            dbFinance.setOrganisationSize(organisationSize);
         }
         if (TRUE.equals(dbFinance.getCompetition().getIncludeProjectGrowthTable())) {
             updateGrowthTable(financeResource, dbFinance);

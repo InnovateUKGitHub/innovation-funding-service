@@ -82,7 +82,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE_COST", description = "The consortium can update a cost to the application finances of their own organisation or if lead applicant")
     public boolean consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);
+        return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user) || isProjectFinanceUser(user) || isIFSAdmin(user);
     }
 
     @PermissionRule(value = "READ_FILE_ENTRY", description = "The consortium can get file entry resource for finance section of a collaborator")

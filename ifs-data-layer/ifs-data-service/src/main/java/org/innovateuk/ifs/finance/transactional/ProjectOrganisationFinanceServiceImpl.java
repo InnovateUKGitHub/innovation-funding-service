@@ -13,6 +13,8 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId.id;
+
 @Service
 public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationFinanceService<ProjectFinanceResource> implements ProjectOrganisationFinanceService {
 
@@ -57,7 +59,12 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
 
     @Override
     protected void resetYourFundingSection(ProjectFinanceResource projectFinanceResource, long competitionId, long userId) {
-        pendingPartnerProgressService.markYourFundingIncomplete(ProjectOrganisationCompositeId.id(projectFinanceResource.getProject(),
-                projectFinanceResource.getOrganisation())).getSuccess();
+        if (pendingPartnerProgressService.getPendingPartnerProgress(id(projectFinanceResource.getProject(),
+                projectFinanceResource.getOrganisation())).isFailure()) {
+            projectFinanceService.updateProjectFinance(projectFinanceResource);
+        } else {
+            pendingPartnerProgressService.markYourFundingIncomplete(ProjectOrganisationCompositeId.id(projectFinanceResource.getProject(),
+                    projectFinanceResource.getOrganisation())).getSuccess();
+        }
     }
 }

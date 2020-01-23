@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 /**
  * Permission rules for {@link GrantClaimMaximum} for permissioning
@@ -26,7 +27,7 @@ public class GrantClaimMaximumPermissionRules extends BasePermissionRules {
             description = "A user can see the grant claim maximums if they are an internal admin user")
     public boolean internalAdminCanCheckMaxFundingLevelOverridden
             (CompetitionResource competition, UserResource user) {
-        return isInternalAdmin(user);
+        return isInternalAdmin(user) || isProjectFinanceUser(user);
     }
 
     @PermissionRule(value = "MAX_FUNDING_LEVEL_OVERRIDDEN",

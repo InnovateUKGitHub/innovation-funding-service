@@ -84,7 +84,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project partners can update the project finances of their own project")
     public boolean projectPartnerCanUpdateProjectFinance(final ProjectFinanceResource financeResource,
                                                  final UserResource user) {
-        return isPartner(financeResource.getProject(), user.getId()) || isProjectFinanceUser(user) || isIFSAdmin(user);
+        return isPartner(financeResource.getProject(), user.getId());
+    }
+
+    @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Internal users can update the project finances of a project")
+    public boolean internalUsersCanUpdateProjectFinance(final ProjectFinanceResource financeResource,
+                                                         final UserResource user) {
+        return isProjectFinanceUser(user) || isIFSAdmin(user);
     }
 
     @PermissionRule(value = "ADD_EMPTY_PROJECT_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
