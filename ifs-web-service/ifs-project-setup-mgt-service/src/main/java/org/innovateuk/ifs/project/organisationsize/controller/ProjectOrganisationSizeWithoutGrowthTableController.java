@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/without-growth-table")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectOrganisationSizeWithoutGrowthTableController.class)
@@ -47,7 +48,7 @@ public class ProjectOrganisationSizeWithoutGrowthTableController {
         return "project/edit-organisation-size-without-growth-table";
     }
 
-    @PostMapping(params = "save-and-return")
+    @PostMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @SecuredBySpring(value = "UPDATE_ORGANISATION_FUNDING_DETAILS", description = "Internal users can update organisation funding details")
     public String saveWithGrowthTable(

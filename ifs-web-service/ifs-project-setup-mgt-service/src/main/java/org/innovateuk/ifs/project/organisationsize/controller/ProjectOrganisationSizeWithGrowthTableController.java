@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationsize.viewmodel.ProjectOrganisationSizeViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -16,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/with-growth-table")
@@ -52,7 +51,7 @@ public class ProjectOrganisationSizeWithGrowthTableController {
         return "project/edit-organisation-size-with-growth-table";
     }
 
-    @PostMapping()
+    @PostMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @SecuredBySpring(value = "UPDATE_ORGANISATION_FUNDING_DETAILS", description = "Internal users can update organisation funding details")
     public String saveWithGrowthTable(
