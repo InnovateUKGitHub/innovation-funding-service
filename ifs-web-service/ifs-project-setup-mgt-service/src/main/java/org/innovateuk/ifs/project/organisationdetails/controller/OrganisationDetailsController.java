@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.organisationdetails.controller;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.restservice.YourOrganisationRestService;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;

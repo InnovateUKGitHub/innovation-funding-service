@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.populator.OrganisationDetailsViewModelPopulator;
-import org.innovateuk.ifs.project.organisationsize.model.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.project.organisationsize.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;

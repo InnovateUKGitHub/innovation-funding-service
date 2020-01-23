@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationsize.model;
+package org.innovateuk.ifs.project.organisationsize.viewmodel;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 

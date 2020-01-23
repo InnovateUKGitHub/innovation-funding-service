@@ -5,6 +5,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.commons.logging.Log;
@@ -48,7 +49,7 @@ public class SelectOrganisationController {
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
-    @GetMapping("/select")
+    @GetMapping("/sel")
     public String selectOrganisation(@ModelAttribute("form") SelectOrganisationForm form,
                                 BindingResult bindingResult,
                                 @PathVariable long projectId,
@@ -69,10 +70,10 @@ public class SelectOrganisationController {
                                                  @PathVariable long projectId,
                                                  @PathVariable long competitionId,
                                                  Model model) {
-        if (bindingResult.hasErrors()) {
-            return selectOrganisation(form, bindingResult, projectId, competitionId, model);
-        }
-        return redirectToSelectedOrganisationPage(competitionId, projectId, form.getOrganisationId());
+
+        Supplier<String> failureView = () -> selectOrganisation(form, bindingResult, projectId, competitionId, model);
+        Supplier<String> successView = () -> redirectToSelectedOrganisationPage(competitionId, projectId, form.getOrganisationId());
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
     private String redirectToSelectedOrganisationPage(long competitionId, long projectId, long organisationId) {
