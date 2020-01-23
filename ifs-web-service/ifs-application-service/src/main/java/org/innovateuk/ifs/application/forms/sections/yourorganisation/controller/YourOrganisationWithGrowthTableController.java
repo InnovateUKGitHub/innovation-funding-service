@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.YourOrganisationViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -41,7 +41,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "application/sections/your-organisation/your-organisation-with-growth-table";
 
     private CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator;
-    private YourOrganisationViewModelPopulator viewModelPopulator;
+    private ApplicationYourOrganisationViewModelPopulator viewModelPopulator;
     private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
     private SectionService sectionService;
     private UserRestService userRestService;
@@ -50,7 +50,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     @Autowired
     YourOrganisationWithGrowthTableController(
             CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator,
-            YourOrganisationViewModelPopulator viewModelPopulator,
+            ApplicationYourOrganisationViewModelPopulator viewModelPopulator,
             YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator,
             SectionService sectionService,
             UserRestService userRestService,

@@ -31,7 +31,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class YourOrganisationViewModelPopulatorTest extends BaseUnitTest {
+public class ApplicationYourOrganisationViewModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private ProjectYourOrganisationRestService yourOrganisationRestService;

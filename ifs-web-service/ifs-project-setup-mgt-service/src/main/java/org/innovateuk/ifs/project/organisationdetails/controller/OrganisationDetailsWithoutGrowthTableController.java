@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
-import org.innovateuk.ifs.project.organisationsize.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -44,7 +44,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
-    @GetMapping()
+    @GetMapping
     public String viewOrganisationSize(@PathVariable long competitionId,
                                        @PathVariable long projectId,
                                        @PathVariable long organisationId,
