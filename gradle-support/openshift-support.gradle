@@ -332,12 +332,17 @@ task createProject(dependsOn: deleteProject) {
     }
 }
 
-task osDeployRemote(type: Exec, dependsOn: prepareDeployment) {
+task osApplySecrets(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task osDeployRemote(type: Exec, dependsOn: prepareDeployment) { // TODO dependsOn osCreateSecrets
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task osUpgradeRemote(type: Exec, dependsOn: prepareDeployment) {
+task osUpgradeRemote(type: Exec, dependsOn: prepareDeployment) { // TODO dependsOn osCreateSecrets
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "remote", project.version]
 }

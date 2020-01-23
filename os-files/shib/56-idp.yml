@@ -23,7 +23,7 @@ items:
         volumes:
           - name: idp-keys-volume
             secret:
-              secretName: idp-keys-volume
+              secretName: idp-keys-secrets
         containers:
         - image: innovateuk/idp-service:${idpVersion}
           name: idp
