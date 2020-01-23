@@ -6,6 +6,8 @@
 </head>
 
 <body class="govuk-template__body">
+<th:block th:insert="fragments/modals :: modal-overlay" />
+
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -46,12 +48,14 @@
                                            isH2020=${model.h2020},
                                            showOrganisationSizeAlert=${model.showOrganisationSizeAlert},
                                            showStateAidAgreement=${model.showStateAidAgreement},
-                                           readOnly=${model.readOnly})" />
+                                           readOnly=${model.readOnly})"
+                      data-switches-button-status="#save-and-return" />
             <div>
                 <button type="submit"
                         class="govuk-!-margin-top-6 govuk-button"
                         id="save-and-return"
                         name="save-and-return"
+                        data-js-modal="modal-edit-organisation-size"
                         th:href="@{/competition/{competitionId}/project/{projectId}/partner/{partnerId}/details (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, partnerId=${model.organisationId})}"
                         th:text="|Save and return to ${model.organisationName}|">Save and return to organisation</button>
                 <th:block th:insert="fragments/modals :: modal-edit-organisation-size (${model})" />
