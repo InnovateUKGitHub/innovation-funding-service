@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
 
-import static java.lang.Boolean.TRUE;
-import static java.lang.String.format;
-
-
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.springframework.stereotype.Service;
+
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 
 /**
  * A rest service to support the Your organisation pages.
