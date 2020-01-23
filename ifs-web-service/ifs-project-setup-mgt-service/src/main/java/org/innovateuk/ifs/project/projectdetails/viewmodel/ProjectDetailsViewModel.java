@@ -4,12 +4,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_OFFLINE;
 import static org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
  * View model backing the Project Details page for Project Setup
@@ -19,42 +22,48 @@ public class ProjectDetailsViewModel {
     private ProjectResource project;
     private Long competitionId;
     private String competitionName;
-    private boolean projectFinance;
+    private UserResource userResource;
     private String leadOrganisation;
     private boolean locationPerPartnerRequired;
     private List<PartnerOrganisationResource> partnerOrganisations;
     private String financeReviewerName;
     private String financeReviewerEmail;
+    private boolean spendProfileGenerated;
 
-    public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
+
+    public ProjectDetailsViewModel(ProjectResource project,
+                                   Long competitionId,
                                    String competitionName,
-                                   boolean projectFinance,
+                                   UserResource userResource,
                                    String leadOrganisation,
                                    boolean locationPerPartnerRequired,
                                    List<PartnerOrganisationResource> partnerOrganisations,
                                    String financeReviewerName,
-                                   String financeReviewerEmail) {
+                                   String financeReviewerEmail,
+                                   boolean spendProfileGenerated) {
         this.project = project;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-        this.projectFinance = projectFinance;
+        this.userResource = userResource;
         this.leadOrganisation = leadOrganisation;
         this.locationPerPartnerRequired = locationPerPartnerRequired;
         this.partnerOrganisations = partnerOrganisations;
         this.financeReviewerName = financeReviewerName;
         this.financeReviewerEmail = financeReviewerEmail;
+        this.spendProfileGenerated = spendProfileGenerated;
     }
 
     public static ProjectDetailsViewModel editDurationViewModel(ProjectResource project) {
         return new ProjectDetailsViewModel(project,
                 project.getCompetition(),
                 project.getCompetitionName(),
-                false,
+                null,
                 null,
                 false,
                 Collections.emptyList(),
                 null,
-                null);
+                null,
+                project.isSpendProfileGenerated());
     }
 
     public ProjectResource getProject() {
@@ -77,14 +86,6 @@ public class ProjectDetailsViewModel {
         return competitionName;
     }
 
-    public boolean isAbleToManageProjectState() {
-        return projectFinance;
-    }
-
-    public boolean isProjectFinance() {
-        return projectFinance;
-    }
-
     public String getLeadOrganisation() {
         return leadOrganisation;
     }
@@ -96,6 +97,8 @@ public class ProjectDetailsViewModel {
     public String getFinanceReviewerEmail() {
         return financeReviewerEmail;
     }
+
+
 
     public boolean isLocationPerPartnerRequired() {
         return locationPerPartnerRequired;
@@ -117,6 +120,30 @@ public class ProjectDetailsViewModel {
         return financeReviewerEmail != null;
     }
 
+    public boolean isSpendProfileGenerated() {
+        return spendProfileGenerated;
+    }
+
+    public boolean isAbleToManageProjectState() {
+        return userResource.hasRole(PROJECT_FINANCE);
+    }
+
+    public boolean isProjectFinance() {
+        return userResource.hasRole(PROJECT_FINANCE);
+    }
+
+    /*
+    * View model logic.
+    * */
+
+    public boolean modifyTheFinanceReviewer() {
+        return userResource.hasRole(PROJECT_FINANCE) && project.getProjectState().isActive();
+    }
+
+    public boolean modifyStartDate() {
+        return userResource.hasRole(IFS_ADMINISTRATOR) && !project.isSpendProfileGenerated();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -126,7 +153,7 @@ public class ProjectDetailsViewModel {
         ProjectDetailsViewModel that = (ProjectDetailsViewModel) o;
 
         return new EqualsBuilder()
-                .append(projectFinance, that.projectFinance)
+                .append(userResource, that.userResource)
                 .append(locationPerPartnerRequired, that.locationPerPartnerRequired)
                 .append(project, that.project)
                 .append(competitionId, that.competitionId)
@@ -144,7 +171,7 @@ public class ProjectDetailsViewModel {
                 .append(project)
                 .append(competitionId)
                 .append(competitionName)
-                .append(projectFinance)
+                .append(userResource)
                 .append(leadOrganisation)
                 .append(locationPerPartnerRequired)
                 .append(partnerOrganisations)

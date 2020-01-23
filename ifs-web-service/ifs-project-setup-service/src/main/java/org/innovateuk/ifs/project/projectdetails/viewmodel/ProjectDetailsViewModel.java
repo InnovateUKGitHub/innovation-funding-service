@@ -94,4 +94,12 @@ public class ProjectDetailsViewModel {
     public boolean isCollaborativeProject() {
         return collaborativeProject;
     }
+
+    /*
+     * View model logic.
+     * */
+
+    public boolean isProjectLive() {
+        return project.getProjectState().isLive();
+    }
 }
