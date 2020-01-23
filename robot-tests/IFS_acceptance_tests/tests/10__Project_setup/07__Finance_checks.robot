@@ -231,7 +231,7 @@ Project finance user can view finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    116,596    4,936    29%
+    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    116,596    4,936    28.95%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -633,7 +633,7 @@ Project finance user can see updated finance overview after lead changes to elig
     When the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    css = .standard-definition-list dd:nth-child(2)    £379,678  # Total project cost
     And the user should see the text in the element     css = .standard-definition-list dd:nth-child(4)    109,660   # Grant applied for
-    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
+    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(8)    28.95%       # Total percentage grant
 
 Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
@@ -766,7 +766,7 @@ Project finance user can see updated finance overview after partner changes to e
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     Then the user should see the text in the element   css = .standard-definition-list dd:nth-child(2)    £356,559  #Total project cost
     And the user should see the text in the element    css = .standard-definition-list dd:nth-child(4)    102,725   #Grant applied for
-    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(8)    29%       #Total percentage grant
+    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(8)    28.95%       #Total percentage grant
 
 Project finance can see updated finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -809,7 +809,7 @@ Project finance user can view Updated finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,469   102,635    4,936     29%
+    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,469   102,635    4,936     28.95%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -1132,7 +1132,7 @@ the table row has expected values
     the user sees the text in the element    css = .standard-definition-list dd:nth-child(2)    £402,797   # Total project cost
     the user sees the text in the element    css = .standard-definition-list dd:nth-child(4)    116,596   # Grant applied for
     the user sees the text in the element    css = .standard-definition-list dd:nth-child(6)    4,936     # Other public sector funding
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
+    the user sees the text in the element    css = .standard-definition-list dd:nth-child(8)    28.95%       # Total percentage grant
 
 the user fills in project costs
     Input Text    name = costs[0].value    £8,000
