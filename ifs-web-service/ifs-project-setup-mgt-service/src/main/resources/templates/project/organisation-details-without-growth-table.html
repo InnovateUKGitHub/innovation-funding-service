@@ -19,7 +19,7 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle=${orgDetails.organisationName},subTitle=|${orgDetails.projectId}: ${orgDetails.projectName}|,size='govuk-heading-xl'"/>
 
-        <th:block th:insert="project/organisation-details-fragment :: organisation-details-view (orgDetails=${orgDetails})"/>
+        <th:block th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (orgDetails=${orgDetails})"/>
 
         <h2 class="govuk-heading-m">Organisation size</h2>
 

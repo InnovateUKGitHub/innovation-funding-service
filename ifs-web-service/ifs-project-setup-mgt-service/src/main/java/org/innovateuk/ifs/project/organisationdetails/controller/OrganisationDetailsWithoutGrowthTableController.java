@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *  This controller will allow the user to view organisation details without a growth table.
  */
 @Controller
-@RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/without-growth-table")
+@RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/without-growth-table")
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
     securedType = OrganisationDetailsWithoutGrowthTableController.class)
@@ -49,7 +49,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
         model.addAttribute("orgSize", new ProjectYourOrganisationViewModel(false,
             false,
             false,
-            project.getId(),
+            projectId,
             project.getName(),
             organisationId,
             true,

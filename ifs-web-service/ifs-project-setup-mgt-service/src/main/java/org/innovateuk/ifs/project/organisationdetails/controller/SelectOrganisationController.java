@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.organisationdetails.controller;
 
-import static java.lang.String.format;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 
@@ -10,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
@@ -47,6 +47,9 @@ public class SelectOrganisationController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private YourOrganisationRestService yourOrganisationRestService;
+
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
     @GetMapping("/select")
@@ -77,10 +80,13 @@ public class SelectOrganisationController {
     }
 
     private String redirectToSelectedOrganisationPage(long competitionId, long projectId, long organisationId) {
-        return format("redirect:/competition/%d/project/%d/organisation/%d/details",
-            competitionId,
-            projectId,
-            organisationId);
+        boolean includeGrowthTable = yourOrganisationRestService.isIncludingGrowthTable(competitionId).getSuccess();
+        return "redirect:" +
+            String.format("/competition/%d/project/%d/organisation/%d/details/%s",
+                competitionId,
+                projectId,
+                organisationId,
+                includeGrowthTable ? "with-growth-table" : "without-growth-table");
     }
 
     private List<PartnerOrganisationResource> getSortedOrganisations(long projectId) {

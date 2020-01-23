@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * This controller will allow the user to view organisation details with a growth table.
  */
 @Controller
-@RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/with-growth-table")
+@RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/with-growth-table")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
     securedType = OrganisationDetailsWithGrowthTableController.class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
@@ -50,7 +50,7 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
         model.addAttribute("orgSize", new ProjectYourOrganisationViewModel(false,
             false,
             false,
-            project.getId(),
+            projectId,
             project.getName(),
             organisationId,
             true,
