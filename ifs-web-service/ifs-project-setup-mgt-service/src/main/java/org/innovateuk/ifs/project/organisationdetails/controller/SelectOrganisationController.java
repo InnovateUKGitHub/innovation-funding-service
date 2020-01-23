@@ -49,7 +49,7 @@ public class SelectOrganisationController {
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
-    @GetMapping("/sel")
+    @GetMapping("/select")
     public String selectOrganisation(@ModelAttribute("form") SelectOrganisationForm form,
                                 BindingResult bindingResult,
                                 @PathVariable long projectId,
