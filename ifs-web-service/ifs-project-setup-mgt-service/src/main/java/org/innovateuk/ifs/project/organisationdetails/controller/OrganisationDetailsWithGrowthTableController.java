@@ -4,11 +4,14 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
-import org.innovateuk.ifs.project.organisationdetails.populator.OrganisationDetailsViewModelPopulator;
+import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
 import org.innovateuk.ifs.project.organisationsize.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,7 +37,10 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
 
     @Autowired
-    private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
     private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
@@ -45,8 +51,14 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                                        @PathVariable long organisationId,
                                        Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
-        model.addAttribute("orgDetails", organisationDetailsViewModelPopulator.populate(competitionId, projectId, organisationId));
+        model.addAttribute("orgDetails", new OrganisationDetailsViewModel(project,
+            competitionId,
+            organisation,
+            organisation.getAddresses().get(0).getAddress(),
+            partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().size() > 1));
+
         model.addAttribute("orgSize", new ProjectYourOrganisationViewModel(false,
             false,
             false,
