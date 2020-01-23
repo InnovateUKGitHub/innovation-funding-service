@@ -60,6 +60,9 @@ function getKeyValue() {
 
 # If we have a named environment we need to get the secrets from or aws store.
 if $(isNamedEnvironment ${TARGET}); then
+    if [[ -z $AWS_PROFILE || -z AWS_ACCESS_KEY ]]; then
+        echo "AWS_PROFILE and AWS_ACCESS_KEY must be specified on named environments"
+    fi
     # Create a file with AWS credentials which mounted to the aws-cli docker image.
     mkdir -p ifs-auth-service/aws/
     echo $AWS_ACCESS_KEY > ifs-auth-service/aws/credentials
