@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -51,7 +52,7 @@ public class ProjectOrganisationSizeWithGrowthTableController {
         return "project/edit-organisation-size-with-growth-table";
     }
 
-    @PostMapping(params = "save-and-return")
+    @PostMapping()
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @SecuredBySpring(value = "UPDATE_ORGANISATION_FUNDING_DETAILS", description = "Internal users can update organisation funding details")
     public String saveWithGrowthTable(
