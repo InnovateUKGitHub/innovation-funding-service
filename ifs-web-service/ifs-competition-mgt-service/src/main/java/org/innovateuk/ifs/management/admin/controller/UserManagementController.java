@@ -27,6 +27,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -76,6 +77,9 @@ public class UserManagementController extends AsyncAdaptor {
 
     @Autowired
     private EncryptedCookieService cookieService;
+
+    @Value("${ifs.assessor.profile.feature.toggle}")
+    private boolean profileFeatureToggle;
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
@@ -160,7 +164,7 @@ public class UserManagementController extends AsyncAdaptor {
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
-                    model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR)));
+                    model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR), profileFeatureToggle));
                     return "admin/user";
         }).getSuccess();
     }
@@ -190,7 +194,7 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     private String viewEditUser(Model model, UserResource user, UserResource loggedInUser) {
-        model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR)));
+        model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR), profileFeatureToggle));
         return "admin/edit-user";
     }
 

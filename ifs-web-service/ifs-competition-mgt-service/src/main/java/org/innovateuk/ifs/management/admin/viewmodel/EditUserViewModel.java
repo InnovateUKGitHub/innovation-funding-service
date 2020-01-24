@@ -11,10 +11,12 @@ public class EditUserViewModel {
 
     private final UserResource user;
     private final boolean ifsAdmin;
+    private final boolean displayRoleProfileLink;
 
-    public EditUserViewModel(UserResource user, boolean ifsAdmin) {
+    public EditUserViewModel(UserResource user, boolean ifsAdmin, boolean displayRoleProfileLink) {
         this.user = user;
         this.ifsAdmin = ifsAdmin;
+        this.displayRoleProfileLink = displayRoleProfileLink;
     }
 
     public UserResource getUser() {
@@ -25,6 +27,11 @@ public class EditUserViewModel {
         return ifsAdmin;
     }
 
+    public boolean isDisplayRoleProfileLink() {
+        return displayRoleProfileLink;
+    }
+
+    /* view logic */
     public boolean isReadOnly() {
         return !ifsAdmin && !user.isExternalUser();
     }
@@ -47,6 +54,7 @@ public class EditUserViewModel {
 
         return new EqualsBuilder()
                 .append(ifsAdmin, that.ifsAdmin)
+                .append(displayRoleProfileLink, that.displayRoleProfileLink)
                 .append(user, that.user)
                 .isEquals();
     }
@@ -56,6 +64,7 @@ public class EditUserViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(user)
                 .append(ifsAdmin)
+                .append(displayRoleProfileLink)
                 .toHashCode();
     }
 }

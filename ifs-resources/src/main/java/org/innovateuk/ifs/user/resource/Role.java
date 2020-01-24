@@ -84,6 +84,8 @@ public enum Role implements Identifiable {
 
     public boolean isStakeHolder() {return this == STAKEHOLDER; }
 
+    public boolean isAssessor() {return this == ASSESSOR; }
+
     public static Set<Role> applicantProcessRoles() {
         return EnumSet.of(LEADAPPLICANT, COLLABORATOR);
     }
