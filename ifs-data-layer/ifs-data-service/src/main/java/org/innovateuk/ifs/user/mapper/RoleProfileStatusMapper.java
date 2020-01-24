@@ -9,9 +9,18 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(
-        config = GlobalMapperConfig.class
+        config = GlobalMapperConfig.class,
+        uses = {
+                UserMapper.class
+        }
 )
 public abstract class RoleProfileStatusMapper extends BaseMapper<RoleProfileStatus, RoleProfileStatusResource, Long> {
+
+
+    @Mappings({
+            @Mapping(source = "user.id", target = "userId"),
+    })
+    public abstract RoleProfileStatusResource mapToResource(RoleProfileStatus domain);
 
     @Override
     public abstract RoleProfileStatus mapToDomain(RoleProfileStatusResource resource);

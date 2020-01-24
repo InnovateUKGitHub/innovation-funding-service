@@ -6,15 +6,18 @@ public class RoleProfileStatusResource {
 
     private RoleProfileState roleProfileState;
 
-    private String rejectionReason;
+    private ProfileRole profileRole;
+
+    private String description;
 
     public RoleProfileStatusResource() {
     }
 
-    public RoleProfileStatusResource(long userId, RoleProfileState roleProfileState, String rejectionReason) {
+    public RoleProfileStatusResource(long userId, RoleProfileState roleProfileState, ProfileRole profileRole, String description) {
         this.userId = userId;
         this.roleProfileState = roleProfileState;
-        this.rejectionReason = rejectionReason;
+        this.profileRole = profileRole;
+        this.description = description;
     }
 
     public long getUserId() {
@@ -33,11 +36,19 @@ public class RoleProfileStatusResource {
         this.roleProfileState = roleProfileState;
     }
 
-    public String getRejectionReason() {
-        return rejectionReason;
+    public ProfileRole getProfileRole() {
+        return profileRole;
     }
 
-    public void setRejectionReason(String rejectionReason) {
-        this.rejectionReason = rejectionReason;
+    public void setProfileRole(ProfileRole profileRole) {
+        this.profileRole = profileRole;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
