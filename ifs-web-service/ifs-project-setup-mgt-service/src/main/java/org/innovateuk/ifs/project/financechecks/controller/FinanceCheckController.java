@@ -8,6 +8,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.FileDownloadControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
@@ -48,12 +49,9 @@ public class FinanceCheckController {
 
     @Autowired
     private FinanceCheckService financeCheckService;
-//
-//    @Autowired
-//    private ProjectYourOrganisationRestService projectYourOrganisationRestService;
-//
-//    @Autowired
-//    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private ProjectFinanceResource projectFinanceResource;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
@@ -104,27 +102,7 @@ public class FinanceCheckController {
         return "project/financecheck/summary";
     }
 
-//    private boolean updateFundingLevelPercentage(long projectId, long organisationId) {
-//
-//        OrganisationFinancesWithGrowthTableResource finances = new OrganisationFinancesWithGrowthTableResource();
-//        OrganisationFinancesWithoutGrowthTableResource finances1 = new OrganisationFinancesWithoutGrowthTableResource();
-//
-//        if (isIncludingGrowthTable(projectId)) {
-//            return projectYourOrganisationRestService.updateOrganisationFinancesWithGrowthTable(projectId, organisationId, finances).isSuccess();
-//        }
-//
-//        return projectYourOrganisationRestService.updateOrganisationFinancesWithoutGrowthTable(projectId, organisationId, finances1).isSuccess();
-//
-//    }
-//
-//    private boolean isIncludingGrowthTable(long projectId) {
-//        long competitionId = projectService.getById(projectId).getCompetition();
-//        return competitionRestService.getCompetitionById(competitionId).
-//                andOnSuccessReturn(competition -> TRUE.equals(competition.getIncludeProjectGrowthTable())).getSuccess();
-//    }
-
     private String redirectToViewFinanceCheckSummary(Long projectId) {
         return "redirect:/project/" + projectId + "/finance-check";
     }
-
 }
