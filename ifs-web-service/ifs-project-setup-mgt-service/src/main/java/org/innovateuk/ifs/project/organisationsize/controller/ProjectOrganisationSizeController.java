@@ -33,7 +33,7 @@ public class ProjectOrganisationSizeController {
 
     private String redirectToViewPage(long projectId, long organisationId, boolean includeGrowthTable) {
         return "redirect:" +
-                String.format("/project/%d/organisation/%d/%s",
+                String.format("/project/%d/organisation/%d/%s/edit",
                         projectId,
                         organisationId,
                         includeGrowthTable ? "with-growth-table" : "without-growth-table");

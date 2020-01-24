@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisa
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,7 +49,8 @@ public class OrganisationDetailsWithoutGrowthTableController {
     public String viewOrganisationSize(@PathVariable long competitionId,
                                        @PathVariable long projectId,
                                        @PathVariable long organisationId,
-                                       Model model) {
+                                       Model model,
+                                       UserResource loggedInUser) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
@@ -65,7 +67,8 @@ public class OrganisationDetailsWithoutGrowthTableController {
             project.getName(),
             organisationId,
             true,
-            false));
+            false,
+                loggedInUser));
 
         model.addAttribute("form", getForm(projectId, organisationId));
 

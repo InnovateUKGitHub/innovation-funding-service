@@ -8,6 +8,8 @@ import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,16 +31,26 @@ public class YourOrganisationViewModelPopulator {
     @Autowired
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
+    private UserResource userResource;
+
     public ProjectYourOrganisationViewModel populate(long projectId, long organisationId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
+
         boolean showStateAidAgreement =
                 yourOrganisationRestService.isShowStateAidAgreement(projectId, organisationId).getSuccess();
 
-        PendingPartnerProgressResource pendingPartner =  pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
+        PendingPartnerProgressResource pendingPartner = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
-        return new ProjectYourOrganisationViewModel(showStateAidAgreement, pendingPartner.isYourFundingComplete(), competition.isH2020(),
-                    projectId, project.getName(), organisationId, pendingPartner.isYourOrganisationComplete(), true);
+        return new ProjectYourOrganisationViewModel(showStateAidAgreement,
+                pendingPartner.isYourFundingComplete(),
+                competition.isH2020(),
+                projectId,
+                project.getName(),
+                organisationId,
+                pendingPartner.isYourOrganisationComplete(),
+                true,
+                userResource);
     }
 }

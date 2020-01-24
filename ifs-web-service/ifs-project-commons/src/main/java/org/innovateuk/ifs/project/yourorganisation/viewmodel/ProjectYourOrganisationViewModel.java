@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.yourorganisation.viewmodel;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel {
     private final long projectId;
@@ -9,8 +11,9 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
     private final boolean h2020;
     private final boolean readOnly;
     private final boolean showHints;
+    private final UserResource loggedInUser;
 
-    public ProjectYourOrganisationViewModel(boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, long projectId, String projectName, long organisationId, boolean readOnly, boolean showHints) {
+    public ProjectYourOrganisationViewModel(boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, long projectId, String projectName, long organisationId, boolean readOnly, boolean showHints, UserResource loggedInUser) {
         super(showStateAidAgreement, fundingSectionComplete, h2020);
         this.projectId = projectId;
         this.projectName = projectName;
@@ -18,6 +21,7 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
         this.h2020 = h2020;
         this.readOnly = readOnly;
         this.showHints = showHints;
+        this.loggedInUser = loggedInUser;
     }
 
     public long getProjectId() {
@@ -43,5 +47,13 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
 
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public UserResource getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public boolean isEditOrganisationSizeAvailable() {
+        return getLoggedInUser().hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.PROJECT_FINANCE);
     }
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-@RequestMapping("/project/{projectId}/organisation/{organisationId}/with-growth-table")
+@RequestMapping("/project/{projectId}/organisation/{organisationId}/edit/with-growth-table")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectOrganisationSizeWithGrowthTableController.class)
 public class ProjectOrganisationSizeWithGrowthTableController {
 
