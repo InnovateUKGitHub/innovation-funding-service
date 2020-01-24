@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.organisationsize.viewmodel.ProjectOrganisation
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,9 +33,6 @@ public class ProjectOrganisationSizeWithGrowthTableController {
 
     @Autowired
     private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
-
-    @Autowired
-    private EncryptedCookieService cookieUtil;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")

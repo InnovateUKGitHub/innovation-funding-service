@@ -41,6 +41,10 @@ public class ProjectFinanceCheckSummaryViewModel {
         return financeCheckSummaryResource.isSpendProfilesGenerated();
     }
 
+    public boolean isShowChangeFundingLevelPercentageAlert() {
+        return financeCheckSummaryResource.isAllEligibilityAndViabilityInReview();
+    }
+
     public FinanceCheckSummaryResource getFinanceCheckSummaryResource() {
         return financeCheckSummaryResource;
     }
