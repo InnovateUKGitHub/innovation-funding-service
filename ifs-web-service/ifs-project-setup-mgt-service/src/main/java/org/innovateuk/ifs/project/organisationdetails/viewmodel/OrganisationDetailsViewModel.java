@@ -1,18 +1,17 @@
 package org.innovateuk.ifs.project.organisationdetails.viewmodel;
 
-import java.math.BigDecimal;
-import java.time.YearMonth;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 
 public class OrganisationDetailsViewModel {
 
-    // Details
     private final long projectId;
+    private final long competitionId;
     private final String projectName;
-    private final String organisationType;
     private final String organisationName;
+
+    private final String organisationType;
     private final String registrationNumber;
     private final String addressLine1;
     private final String addressLine2;
@@ -21,87 +20,36 @@ public class OrganisationDetailsViewModel {
     private final String county;
     private final String postcode;
 
-    // Shared
-    private final String organisationSize;
-    private final BigDecimal annualTurnover;
-    private final long employees;
+    private final String previousPage;
 
-    // If includes Growth table
-    private YearMonth endOfLastFinancialYear;
-    private final boolean includeGrowthTable;
-    private BigDecimal annualProfit;
-    private BigDecimal annualExport;
-    private BigDecimal researchAndDevelopmentSpend;
-
-    public OrganisationDetailsViewModel(long projectId,
-                                        String projectName,
+    public OrganisationDetailsViewModel(ProjectResource project,
+                                        long competitionId,
                                         OrganisationResource organisation,
-                                        boolean includeGrowthTable,
-                                        OrganisationFinancesWithGrowthTableResource finances,
-                                        AddressResource addressResource) {
-        this.projectId = projectId;
-        this.organisationType = organisation.getOrganisationTypeName();
-        this.projectName = projectName;
+                                        AddressResource address,
+                                        boolean hasPartners) {
+        this.projectId = project.getId();
+        this.competitionId = competitionId;
+        this.projectName = project.getName();
         this.organisationName = organisation.getName();
+        this.organisationType = organisation.getOrganisationTypeName();
         this.registrationNumber = organisation.getCompaniesHouseNumber();
-        this.addressLine1 = addressResource.getAddressLine1() == null ? "" : addressResource.getAddressLine1();
-        this.addressLine2 = addressResource.getAddressLine2() == null ? "" : addressResource.getAddressLine2();
-        this.addressLine3 = addressResource.getAddressLine3() == null ? "" : addressResource.getAddressLine3();
-        this.town = addressResource.getTown();
-        this.county = addressResource.getTown();
-        this.postcode = addressResource.getPostcode();
 
-        this.organisationSize = finances.getOrganisationSize().getDescription();
-        this.annualTurnover = finances.getAnnualTurnoverAtLastFinancialYear();
-        this.employees = finances.getHeadCountAtLastFinancialYear();
+        this.addressLine1 = address.getAddressLine1();
+        this.addressLine2 = address.getAddressLine2();
+        this.addressLine3 = address.getAddressLine3();
+        this.town = address.getTown();
+        this.county = address.getCounty();
+        this.postcode = address.getPostcode();
 
-        this.includeGrowthTable = includeGrowthTable;
-        if(includeGrowthTable) {
-            this.endOfLastFinancialYear = finances.getFinancialYearEnd();
-            this.annualProfit = finances.getAnnualProfitsAtLastFinancialYear();
-            this.annualExport = finances.getAnnualExportAtLastFinancialYear();
-            this.researchAndDevelopmentSpend = finances.getResearchAndDevelopmentSpendAtLastFinancialYear();
-        }
-    }
-
-    public BigDecimal getAnnualProfit() {
-        return annualProfit;
-    }
-
-    public BigDecimal getAnnualExport() {
-        return annualExport;
-    }
-
-    public BigDecimal getAnnualTurnover() {
-        return annualTurnover;
-    }
-
-    public long getEmployees() {
-        return employees;
-    }
-
-    public BigDecimal getResearchAndDevelopmentSpend() {
-        return researchAndDevelopmentSpend;
-    }
-
-    public boolean isIncludeGrowthTable() {
-        return includeGrowthTable;
-    }
-
-    public String getOrganisationSize() {
-        return organisationSize;
-    }
-
-    public YearMonth getEndOfLastFinancialYear() {
-        return endOfLastFinancialYear;
+        this.previousPage = hasPartners ? "partner details" : "project details";
     }
 
     public long getProjectId() {
         return projectId;
     }
 
-    public String getOrganisationType() {
-        return organisationType;
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     public String getProjectName() {
@@ -110,6 +58,10 @@ public class OrganisationDetailsViewModel {
 
     public String getOrganisationName() {
         return organisationName;
+    }
+
+    public String getOrganisationType() {
+        return organisationType;
     }
 
     public String getRegistrationNumber() {
@@ -140,7 +92,5 @@ public class OrganisationDetailsViewModel {
         return postcode;
     }
 
-    public boolean getReadOnly() {
-        return true;
-    }
+    public String getPreviousPage() { return previousPage; }
 }

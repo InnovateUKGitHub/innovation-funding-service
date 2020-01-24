@@ -2,24 +2,13 @@ package org.innovateuk.ifs.project.organisationdetails.form;
 
 public class SelectOrganisationForm {
 
-    long organisationId;
+    private Long organisationId;
 
-    String organisationName;
-
-    public String getOrganisationName() {
-        return organisationName;
-    }
-
-    public void setOrganisationName(String organisationName) {
-        this.organisationName = organisationName;
-    }
-
-    public long getOrganisationId() {
+    public Long getOrganisationId() {
         return organisationId;
     }
 
-    public void setOrganisationId(long organisationId) {
+    public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
     }
-
 }

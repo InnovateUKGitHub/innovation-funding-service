@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.resource;
 
+import java.time.ZonedDateTime;
+
 public class PartnerOrganisationResource {
     private Long id;
 
@@ -12,6 +14,16 @@ public class PartnerOrganisationResource {
     private boolean leadOrganisation;
 
     private String postcode;
+
+    private ZonedDateTime completedSetup;
+
+    public ZonedDateTime getCompletedSetup() {
+        return completedSetup;
+    }
+
+    public void setCompletedSetup(ZonedDateTime completedSetup) {
+        this.completedSetup = completedSetup;
+    }
 
     public Long getId() {
         return id;

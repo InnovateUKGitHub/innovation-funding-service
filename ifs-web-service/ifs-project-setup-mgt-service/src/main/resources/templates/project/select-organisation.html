@@ -12,13 +12,14 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to project details',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"/>
+              th:with="linkTitle='Back to project details',linkUrl=@{/competition/{competitionId}/project/{projectId}/details
+              (competitionId=${model.competitionId}, projectId=${model.projectId})}, dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title"
-                id="error-summary-title">We are unable to show the partner details</h2>
+                id="error-summary-title">We are unable to show the select partner organisation page</h2>
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li th:each="err : ${#fields.errors('${form.*}')}">
@@ -29,10 +30,9 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='View partner details',subTitle=${model.projectName},size='govuk-heading-xl'"/>
+                  th:with="pageTitle='View partner details',subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
-        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
-              th:object="${form}">
+        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${form}">
             <fieldset class="govuk-fieldset">
                 <div class="govuk-form-group" id="select-partner-section"
                      th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
@@ -42,20 +42,21 @@
                     </th:block>
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         <h2 class="govuk-fieldset__heading">Choose partner</h2>
+                        <p class="govuk-hint">We only show partners that have completed all their organisation details.</p>
                     </legend>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="partnerOrganisation : ${model.partnerOrganisations}">
                             <input type="radio"
                                    class="govuk-radios__input"
-                                   th:field="*{organisationName}"
-                                   th:value="${partnerOrganisation.organisationName}"
+                                   th:field="*{organisationId}"
+                                   th:value="${partnerOrganisation.organisation}"
+                                   th:id="|organisation-radio-${partnerOrganisation.organisation}|"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}"/>
-                            <label th:for="${#ids.prev('organisationName')}"
-                                   th:text="${partnerOrganisation.organisationName}"
-                                   data-set-section-valid="#select-partner-section"
-                                   data-clear-inputs="#name-select-partner,#email-select-partner"
-                                   class="govuk-label govuk-radios__label"></label>
+                                   th:checked=${partnerOrganisation.leadOrganisation}
+                            />
+                          <label class="govuk-label govuk-radios__label selection-button-radio"
+                                       th:for="|organisation-radio-${partnerOrganisation.organisation}|"
+                                       th:text="(${partnerOrganisation.leadOrganisation} ? ${partnerOrganisation.organisationName} + ' (Lead)' : ${partnerOrganisation.organisationName})"></label>
                         </div>
                     </div>
                 </div>
@@ -64,7 +65,8 @@
             <button class="govuk-button" type="submit">View partner details</button>
 
             <div>
-                <button id="cancel_return_project_details" type="submit" name="cancel-return-project-details" class="button-clear" value="true">Cancel and return to project details</button>
+                <a th:href="@{/competition/{competitionId}/project/{projectId}/details(competitionId=${model.competitionId}, projectId=${model.projectId})}"
+                   class="button-clear govuk-!-margin-right-4">Cancel and return to project details</a>
             </div>
 
         </form>
@@ -73,9 +75,8 @@
     </main>
 </div>
 
-<th:block th:insert="fragments/layout :: footer"/>
-<th:block th:insert="fragments/layout :: body-end"/>
-<th:block th:insert="fragments/service-layout :: body-end"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

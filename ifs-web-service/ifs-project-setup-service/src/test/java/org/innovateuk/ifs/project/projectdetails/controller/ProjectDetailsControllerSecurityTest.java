@@ -13,16 +13,14 @@ import static org.mockito.Mockito.when;
 
 public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectDetailsController> {
 
-    private ProjectLookupStrategy projectLookupStrategy;
     private ProjectCompositeId projectCompositeId;
-
 
     @Override
     @Before
     public void lookupPermissionRules() {
         super.lookupPermissionRules();
-        projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
-        projectCompositeId = ProjectCompositeId.id(123l);
+        ProjectLookupStrategy projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
+        projectCompositeId = ProjectCompositeId.id(123L);
         when(projectLookupStrategy.getProjectCompositeId(projectCompositeId.id())).thenReturn(projectCompositeId);
     }
 
@@ -32,20 +30,8 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
     }
 
     @Test
-    public void testViewProjectDetails() {
+    public void viewProjectDetails() {
         assertSecured(() -> classUnderTest.viewProjectDetails(projectCompositeId.id(), null, null),
                 permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testViewStartDate() {
-        assertSecured(() -> classUnderTest.viewStartDate(projectCompositeId.id(), null, null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectStartDatePage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testUpdateStartDate() {
-        assertSecured(() -> classUnderTest.updateStartDate(projectCompositeId.id(), null, null, null, null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectStartDatePage(eq(projectCompositeId), isA(UserResource.class)));
     }
 }
