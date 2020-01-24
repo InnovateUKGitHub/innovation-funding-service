@@ -458,7 +458,7 @@ the user fills in the address info
 
 the user marks your funding section as complete
     the user selects the radio button     requestingFunding   true
-    the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  32.12
     the user selects the radio button     otherFunding  false
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
 

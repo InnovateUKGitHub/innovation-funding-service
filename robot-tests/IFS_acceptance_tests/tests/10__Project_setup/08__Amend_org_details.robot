@@ -30,9 +30,9 @@ Project finance cannot add an invalid percentage
 
 Values are updated dynamically as new percentages are added
     [Documentation]  IFS-6695
-    Given the user enters text to a text field      id = partners[${orgId}].fundingLevel  20
-    Then the user should see the element            jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£37,713") ~ td:contains("39.08%")
-    And the user should see the element             jQuery = th:contains("Total grant value") ~ td:contains("£402,797") ~ td:contains("£116,596") ~ td:contains("£96,506")
+    Given the user enters text to a text field      id = partners[${orgId}].fundingLevel  20.23
+    Then the user should see the element            jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£38,175") ~ td:contains("39.37%")
+    And the user should see the element             jQuery = th:contains("Total grant value") ~ td:contains("£402,797") ~ td:contains("£116,596") ~ td:contains("£96,968")
 
 New funding percentage is canceled if you select cancel
     [Documentation]  IFS-6695
@@ -45,13 +45,13 @@ New funding percentage is applied on finance overview
     [Documentation]  IFS-6695
     Given the user enters text to a text field      id = partners[${orgId}].fundingLevel  20
     When the user clicks the button/link            jQuery = button:contains("Save and return to finances")
-    Then the user should see the element            jQuery = th:contains("Ward Ltd") ~ td:contains("£200,903") ~ td:contains("20%") ~ td:contains("37,713") ~ td:contains("2,468") ~ td:contains("160,723")
-    And the user should see the element             jQuery = h3:contains("Overview") + div table td:contains("24%")
+    Then the user should see the element            jQuery = th:contains("Ward Ltd") ~ td:contains("£200,903") ~ td:contains("20.00%") ~ td:contains("37,713") ~ td:contains("2,468") ~ td:contains("160,723")
+    And the user should see the element             jQuery = h3:contains("Overview") + div table td:contains("23.96%")
 
 New funding percentage is applied on finance checks
     [Documentation]  IFS-6695
     Given the user clicks the button/link    link = Finance checks
-    Then the user should see the element     jQuery = dt:contains("Total percentage grant") ~ dd:contains("24%")
+    Then the user should see the element     jQuery = dt:contains("Total percentage grant") ~ dd:contains("23.96%")
 
 Approving any eligibility removes the link
     [Documentation]  IFS-6712
