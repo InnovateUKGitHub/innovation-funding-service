@@ -96,6 +96,6 @@ public class ProjectOrganisationSizeWithoutGrowthTableController {
 
     private String redirectToOrganisationDetails(long projectId, long organisationId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        return "redirect:" + String.format("/competition/%d/project/%d/organisation/%d/details", project.getCompetition(), projectId, organisationId);
+        return "redirect:" + String.format("/competition/%d/project/%d/organisation/%d/details/without-growth-table", project.getCompetition(), projectId, organisationId);
     }
 }
