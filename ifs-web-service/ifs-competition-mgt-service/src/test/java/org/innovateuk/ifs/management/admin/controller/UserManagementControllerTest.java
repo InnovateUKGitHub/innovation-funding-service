@@ -31,6 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -68,6 +69,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         when(userRestService.getInactiveUsers(null, 0, 5)).thenReturn(restSuccess(userPageResource));
 
         when(inviteUserRestService.getPendingInternalUserInvites(null, 0, 5)).thenReturn(restSuccess(roleInvitePageResource));
+
+        setField(controller, "profileFeatureToggle", true);
     }
 
     @Test
@@ -156,7 +159,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel(user, false)));
+                .andExpect(model().attribute("model", new EditUserViewModel(user, false, true)));
     }
 
     @Test
@@ -222,7 +225,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/edit-user"))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("model", new EditUserViewModel(userResource, false)));
+                .andExpect(model().attribute("model", new EditUserViewModel(userResource, false, true)));
     }
 
     @Test
