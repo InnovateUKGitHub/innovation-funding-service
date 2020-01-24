@@ -35,10 +35,10 @@
                                             )" />
         </form>
 
-
-
-        <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/without-growth-table (projectId=${model.project.getId()}, organisationId=${model.organisationId})}"
-           class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
+        <th:block th:if="${orgSize.isEditOrganisationSizeAvailable()}">
+            <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/with-growth-table (projectId=${orgSize.projectId}, organisationId=${orgSize.organisationId})}"
+               class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
 
