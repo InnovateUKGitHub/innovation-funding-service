@@ -17,6 +17,9 @@ SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause ${TARGET} ${PROJECT} ${SVC_ACCOUNT_TOKEN})
 
 echo "Applying secrets for $PROJECT Openshift project"
+echo "PROJECT="${PROJECT}
+echo "TARGET="${TARGET}
+echo "VERSION="${VERSION}
 
 function applySecrets() {
     AWS_LOOKUP_DISCRIMINATOR=$(getAwsLookupDiscriminator)
@@ -68,7 +71,7 @@ function getAwsLookupDiscriminator(){
 # If this is not a named environment then we do not use aws and instead use secrets in the codebase
 function getKeyValue() {
     KEY=$1
-    if $(isNamedEnvironment ${TARGET}); then
+    if $(isNamedEnvironment ${PROJECT}); then # TODO is this correct?
         # For named environments we get the secrets from an aws store
         echo "$KEY="
         for i in "${@:2}"
@@ -77,12 +80,12 @@ function getKeyValue() {
         done
     else
         # For non named environments we use the secrets stored in the codebase
-        echo "$KEY=$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/${KEY})"
+        echo "$KEY=$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/${KEY})" # TODO how do we get the correct path?
     fi
 }
 
 # If we have a named environment we need to get the secrets from or aws store.
-if $(isNamedEnvironment ${TARGET}); then
+if $(isNamedEnvironment ${PROJECT}); then # TODO is this correct
     if [[ -z ${AWS_PROFILE} || -z ${AWS_ACCESS_KEY} || -z ${AWS_ACCESS_KEY_ID} ]]; then
         echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified on named environments"
         exit 1
@@ -100,6 +103,7 @@ if $(isNamedEnvironment ${TARGET}); then
     docker run -id --rm -e AWS_PROFILE=${AWS_PROFILE} -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 fi
 
-applySecrets
-
+#applySecrets
+echo ${TARGET}
+echo "QQRP"
 docker stop ssm-access-container || true
