@@ -7,6 +7,7 @@ TARGET=$2
 VERSION=$3
 AWS_PROFILE=$4 # Name of aws profile that identifies credentials and config
 AWS_ACCESS_KEY=$5 # Secret key that allows access to AWS parameter store
+AWS_ACCESS_KEY_ID=$6 # Secret key id that allows access to AWS parameter store
 
 # Common functions
 . $(dirname $0)/deploy-functions.sh
@@ -60,16 +61,22 @@ function getKeyValue() {
 
 # If we have a named environment we need to get the secrets from or aws store.
 if $(isNamedEnvironment ${TARGET}); then
-    if [[ -z $AWS_PROFILE || -z AWS_ACCESS_KEY ]]; then
-        echo "AWS_PROFILE and AWS_ACCESS_KEY must be specified on named environments"
+    if [[ -z $AWS_PROFILE || -z $AWS_ACCESS_KEY || -z $AWS_ACCESS_KEY_ID ]]; then
+        echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified on named environments"
+        exit 1
     fi
     # Create a file with AWS credentials which mounted to the aws-cli docker image.
     mkdir -p ifs-auth-service/aws/
-    echo $AWS_ACCESS_KEY > ifs-auth-service/aws/credentials
+    echo -e "[$AWS_PROFILE]" > ifs-auth-service/aws/credentials
+    echo -e "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ifs-auth-service/aws/credentials
+    echo -e "aws_secret_access_key = $AWS_ACCESS_KEY" >> ifs-auth-service/aws/credentials
 
     # Start a docker image that can communicate with the aws
+    docker stop ssm-access-container || true
     docker image rm ssm-access-image || true
     docker build --tag="ssm-access-image" docker/aws-cli
+    echo "docker run -id --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image"
+
     docker run -id --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 fi
 

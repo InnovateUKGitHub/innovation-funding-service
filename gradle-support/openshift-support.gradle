@@ -334,7 +334,7 @@ task createProject(dependsOn: deleteProject) {
 
 task osApplySecrets(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
-    args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: ""]
+    args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
 task osDeployRemote(type: Exec, dependsOn: prepareDeployment) { // TODO dependsOn osCreateSecrets
