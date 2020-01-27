@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.organisationdetails.controller;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -46,20 +47,20 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
     private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
 
     @GetMapping
-    public String viewOrganisationSize(@PathVariable long competitionId,
-                                       @PathVariable long projectId,
-                                       @PathVariable long organisationId,
-                                       Model model) {
+    public String viewOrganisationDetails(@PathVariable long competitionId,
+                                          @PathVariable long projectId,
+                                          @PathVariable long organisationId,
+                                          Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         model.addAttribute("orgDetails", new OrganisationDetailsViewModel(project,
             competitionId,
             organisation,
-            organisation.getAddresses().get(0).getAddress(),
+            getAddress(organisation),
             partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().size() > 1));
 
-        model.addAttribute("orgSize", new ProjectYourOrganisationViewModel(false,
+        model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
             false,
             false,
             projectId,
@@ -71,6 +72,11 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
         model.addAttribute("form", getForm(projectId, organisationId));
 
         return "project/organisation-details-with-growth-table";
+    }
+
+    private AddressResource getAddress(OrganisationResource organisation) {
+        AddressResource address = new AddressResource("", "", "", "", "", "");
+        return organisation.getAddresses().size() > 0 ? organisation.getAddresses().get(0).getAddress() : address;
     }
 
     private YourOrganisationWithGrowthTableForm getForm(long projectId, long organisationId) {

@@ -53,8 +53,13 @@ public class SelectOrganisationController {
                                 @PathVariable long projectId,
                                 @PathVariable long competitionId,
                                 Model model) {
+        List<PartnerOrganisationResource> beforeOrdered = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
 
-        List<PartnerOrganisationResource> sortedOrganisations = getSortedOrganisations(projectId);
+        if(beforeOrdered.size() == 1){
+            redirectToSelectedOrganisationPage(competitionId, projectId, beforeOrdered.get(0).getOrganisation());
+        }
+
+        List<PartnerOrganisationResource> sortedOrganisations = getSortedOrganisations(beforeOrdered);
         ProjectResource projectResource = projectService.getById(projectId);
 
         model.addAttribute("model", new SelectOrganisationViewModel(projectId, projectResource.getName(), competitionId, sortedOrganisations));
@@ -84,13 +89,12 @@ public class SelectOrganisationController {
                 includeGrowthTable ? "with-growth-table" : "without-growth-table");
     }
 
-    private List<PartnerOrganisationResource> getSortedOrganisations(long projectId) {
-        List<PartnerOrganisationResource> beforeOrdered = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess()
-            .stream()
-            .filter(po -> po.getCompletedSetup() == null)
+    private List<PartnerOrganisationResource> getSortedOrganisations(List<PartnerOrganisationResource> partners) {
+        List<PartnerOrganisationResource> unorderedCompletedSetupPartners = partners.stream()
+            .filter(po -> po.getCompletedSetup() != null)
             .collect(Collectors.toList());
 
-        return new PrioritySorting<>(beforeOrdered, simpleFindFirst(beforeOrdered,
+        return new PrioritySorting<>(unorderedCompletedSetupPartners, simpleFindFirst(unorderedCompletedSetupPartners,
             PartnerOrganisationResource::isLeadOrganisation).get(), po -> po.getOrganisationName()).unwrap();
     }
 }

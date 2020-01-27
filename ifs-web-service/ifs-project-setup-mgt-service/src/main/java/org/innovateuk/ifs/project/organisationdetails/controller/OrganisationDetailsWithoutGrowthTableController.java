@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.project.organisationdetails.controller;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
-import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +46,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @GetMapping
-    public String viewOrganisationSize(@PathVariable long competitionId,
+    public String viewOrganisationDetails(@PathVariable long competitionId,
                                        @PathVariable long projectId,
                                        @PathVariable long organisationId,
                                        Model model) {
@@ -55,10 +56,10 @@ public class OrganisationDetailsWithoutGrowthTableController {
         model.addAttribute("orgDetails", new OrganisationDetailsViewModel(project,
             competitionId,
             organisation,
-            organisation.getAddresses().get(0).getAddress(),
+            getAddress(organisation),
             partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().size() > 1));
 
-        model.addAttribute("orgSize", new ProjectYourOrganisationViewModel(false,
+        model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
             false,
             false,
             projectId,
@@ -70,6 +71,11 @@ public class OrganisationDetailsWithoutGrowthTableController {
         model.addAttribute("form", getForm(projectId, organisationId));
 
         return "project/organisation-details-without-growth-table";
+    }
+
+    private AddressResource getAddress(OrganisationResource organisation) {
+        AddressResource address = new AddressResource("", "", "", "", "", "");
+        return organisation.getAddresses().size() > 0 ? organisation.getAddresses().get(0).getAddress() : address;
     }
 
     private YourOrganisationWithoutGrowthTableForm getForm(long projectId, long organisationId) {
