@@ -78,4 +78,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     public RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId) {
         throw new NotImplementedException("Adding of project finance organisation will usually not be necessary as they are added when project is created");
     }
+
+    @Override
+    public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
+        String url = PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance-check/org-size";
+        return getWithRestResult(url, Boolean.class);
+    }
 }

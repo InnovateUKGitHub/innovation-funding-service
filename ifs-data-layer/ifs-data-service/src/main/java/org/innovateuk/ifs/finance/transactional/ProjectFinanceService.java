@@ -24,4 +24,7 @@ public interface ProjectFinanceService {
 
     @PreAuthorize("hasPermission(#projectFinanceResource, 'UPDATE_PROJECT_FINANCE')")
     ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource);
+
+    @PreAuthorize("hasPermission(#projectFinanceResource, 'UPDATE_PROJECT_FINANCE')")
+    ServiceResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId);
 }

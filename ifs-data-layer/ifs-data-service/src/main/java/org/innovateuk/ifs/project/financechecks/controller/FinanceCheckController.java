@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -20,6 +21,10 @@ public class FinanceCheckController {
 
     @Autowired
     private FinanceCheckService financeCheckService;
+
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
+
 
     @GetMapping("/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH)
     public RestResult<FinanceCheckResource> getFinanceCheck(@PathVariable long projectId,
@@ -42,5 +47,10 @@ public class FinanceCheckController {
     public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(@PathVariable long projectId,
                                                                                          @PathVariable long organisationId){
         return financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId).toGetResponse();
+    }
+
+    @GetMapping("/{projectId}/finance-check/org-size")
+    public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(@PathVariable long projectId) {
+        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toGetResponse();
     }
 }

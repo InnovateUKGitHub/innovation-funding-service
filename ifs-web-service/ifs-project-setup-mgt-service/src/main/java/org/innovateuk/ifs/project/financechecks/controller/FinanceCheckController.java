@@ -7,8 +7,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.FileDownloadControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
@@ -51,7 +51,7 @@ public class FinanceCheckController {
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    private ProjectFinanceResource projectFinanceResource;
+    private ProjectFinanceService projectFinanceService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
@@ -98,11 +98,16 @@ public class FinanceCheckController {
     private String doViewFinanceCheckSummary(Long projectId, Model model) {
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
         ProjectResource project = projectService.getById(projectId);
+        model.addAttribute("orgSize", hasOrganisationSizeChanged(projectId));
         model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource, project.getProjectState().isActive(), project.isCollaborativeProject()));
         return "project/financecheck/summary";
     }
 
     private String redirectToViewFinanceCheckSummary(Long projectId) {
         return "redirect:/project/" + projectId + "/finance-check";
+    }
+
+    private boolean hasOrganisationSizeChanged(long projectId) {
+        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
     }
 }
