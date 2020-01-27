@@ -94,8 +94,8 @@ Internal user can not generate SP with pending invites
 Check if target start date can be changed until SP approval
     [Documentation]    IFS-1576
     [Tags]  HappyPath
-    Given log in as a different user          &{lead_applicant_credentials_sp}
-    When the user navigates to the page      ${server}/project-setup/project/${PS_SP_Project_Id}/details
+    Given log in as a different user         &{ifs_admin_user_credentials}
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/details
     And the user changes the start date      2021
     Then the user should see the element     jQuery = #start-date:contains("1 Jan 2021")
     [Teardown]  the user changes the start date   2020

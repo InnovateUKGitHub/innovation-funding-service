@@ -104,7 +104,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Boolean> existsOnApplication(long projectId,  long organisationId) {
-        return getProject(projectId).andOnSuccessReturn(p -> p.getApplication().getProcessRoles().stream().anyMatch(pr -> pr.getOrganisationId() == organisationId));
+        return getProject(projectId).andOnSuccessReturn(p -> p.getApplication().getApplicantProcessRoles().stream()
+                .anyMatch(pr -> pr.getOrganisationId() == organisationId));
     }
 
     @Override

@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Application defines database relations and a model to use client side and server side.
  */
@@ -229,6 +231,12 @@ public class Application implements ProcessActivity {
 
     private Optional<ProcessRole> getLeadProcessRole() {
         return this.processRoles.stream().filter(processRole -> processRole.getRole().isLeadApplicant()).findAny();
+    }
+
+    public List<ProcessRole> getApplicantProcessRoles() {
+        return this.processRoles.stream()
+                .filter(ProcessRole::isLeadApplicantOrCollaborator)
+                .collect(toList());
     }
 
     public User getLeadApplicant() {
