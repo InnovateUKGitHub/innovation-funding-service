@@ -12,31 +12,31 @@ AWS_ACCESS_KEY_ID=$6 # Secret key id that allows access to AWS parameter store
 # Common functions
 . $(dirname $0)/deploy-functions.sh
 
-PROJECT=$(getProjectName $PROJECT $TARGET)
+PROJECT=$(getProjectName ${PROJECT} ${TARGET})
 SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
-SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
+SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause ${TARGET} ${PROJECT} ${SVC_ACCOUNT_TOKEN})
 
 echo "Applying secrets for $PROJECT Openshift project"
 
 function applySecrets() {
-    AWS_DIFFERENTIATOR=$(getAwsDifferentiator)
+    AWS_LOOKUP_DISCRIMINATOR=$(getAwsLookupDiscriminator)
     oc create secret generic idp-keys-secrets \
-    --from-literal="$(getKeyValue ldap-encryption.crt /CI/IFS/$AWS_DIFFERENTIATOR/LDAP/ENCRYPTION/CERT)" \
-    --from-literal="$(getKeyValue idp-encryption.key /CI/IFS/$AWS_DIFFERENTIATOR/IDP/ENCRYPTION/KEY)" \
-    --from-literal="$(getKeyValue idp-encryption.crt /CI/IFS/$AWS_DIFFERENTIATOR/IDP/ENCRYPTION/CERT)" \
-    --from-literal="$(getKeyValue idp_proxy_key.pem /CI/IFS/$AWS_DIFFERENTIATOR/IDP/PROXY/KEY)" \
-    --from-literal="$(getKeyValue idp_proxy_certificate.pem /CI/IFS/$AWS_DIFFERENTIATOR/IDP/PROXY/CERT)" \
-    --from-literal="$(getKeyValue idp_proxy_cacertificate.pem /CI/IFS/$AWS_DIFFERENTIATOR/IDP/PROXY/CACERT/1)" \
-    --from-literal="$(getKeyValue idp-signing.key /CI/IFS/$AWS_DIFFERENTIATOR/IDP/SIGNING/KEY)" \
-    --from-literal="$(getKeyValue idp-signing.crt /CI/IFS/$AWS_DIFFERENTIATOR/IDP/SIGNING/CERT)" \
-    --from-literal="$(getKeyValue sp_proxy_certificate.pem /CI/IFS/$AWS_DIFFERENTIATOR/SP/PROXY/CERT)" \
+    --from-literal="$(getKeyValue ldap-encryption.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/LDAP/ENCRYPTION/CERT)" \
+    --from-literal="$(getKeyValue idp-encryption.key /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/ENCRYPTION/KEY)" \
+    --from-literal="$(getKeyValue idp-encryption.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/ENCRYPTION/CERT)" \
+    --from-literal="$(getKeyValue idp_proxy_key.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/KEY)" \
+    --from-literal="$(getKeyValue idp_proxy_certificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/CERT)" \
+    --from-literal="$(getKeyValue idp_proxy_cacertificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/CACERT/1)" \
+    --from-literal="$(getKeyValue idp-signing.key /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/SIGNING/KEY)" \
+    --from-literal="$(getKeyValue idp-signing.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/SIGNING/CERT)" \
+    --from-literal="$(getKeyValue sp_proxy_certificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/SP/PROXY/CERT)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
 
-# The differentiator in the aws lookup key for a particular environment
-function getAwsDifferentiator(){
-    if [[ $TARGET == "ifs-prod" ]] ; then
+# The discriminator in the aws lookup key for a particular environment
+function getAwsLookupDiscriminator(){
+    if [[ ${TARGET} == "ifs-prod" ]] ; then
       echo "PROD"
     else
       echo "NON-PROD"
@@ -52,16 +52,16 @@ function getKeyValue() {
     AWS_LOOKUP=$2
     if $(isNamedEnvironment ${TARGET}); then
         # For named environments we get the secrets from an aws store
-        echo "$KEY=$(docker exec ssm-access-container aws ssm get-parameter --name $AWS_LOOKUP --with-decryption | jq ".Parameter.Value" | tr -d \")"
+        echo "$KEY=$(docker exec ssm-access-container aws ssm get-parameter --name ${AWS_LOOKUP} --with-decryption --output text --query Parameter.Value --with-decryption)"
     else
         # For non named environments we use the secrets stored in the codebase
-        echo "$KEY=$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/$KEY)"
+        echo "$KEY=$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/${KEY})"
     fi
 }
 
 # If we have a named environment we need to get the secrets from or aws store.
 if $(isNamedEnvironment ${TARGET}); then
-    if [[ -z $AWS_PROFILE || -z $AWS_ACCESS_KEY || -z $AWS_ACCESS_KEY_ID ]]; then
+    if [[ -z ${AWS_PROFILE} || -z ${AWS_ACCESS_KEY} || -z ${AWS_ACCESS_KEY_ID} ]]; then
         echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified on named environments"
         exit 1
     fi
@@ -75,9 +75,7 @@ if $(isNamedEnvironment ${TARGET}); then
     docker stop ssm-access-container || true
     docker image rm ssm-access-image || true
     docker build --tag="ssm-access-image" docker/aws-cli
-    echo "docker run -id --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image"
-
-    docker run -id --rm -e AWS_PROFILE=$AWS_PROFILE -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
+    docker run -id --rm -e AWS_PROFILE=${AWS_PROFILE} -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 fi
 
 applySecrets
