@@ -103,7 +103,7 @@ if $(isNamedEnvironment ${PROJECT}); then # TODO is this correct
     docker run -id --rm -e AWS_PROFILE=${AWS_PROFILE} -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 fi
 
-#applySecrets
-echo ${TARGET}
-echo "QQRP"
+
+applySecrets
+
 docker stop ssm-access-container || true
