@@ -47,11 +47,14 @@ public class ProjectFinanceFundingLevelController {
     @GetMapping
     public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingLevelForm form,
                                     @PathVariable long projectId,
-                                    Model model) {
+                                    Model model,
+                                    BindingResult bindingResult) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         form.setPartners(finances.stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation,
                         pf -> new ProjectFinancePartnerFundingLevelForm(new BigDecimal(pf.getGrantClaimPercentage())))));
+        projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).andOnSuccess(()->
+                validateMaximumFundingLevels(bindingResult, finances, form));
         return viewFunding(projectId, finances, model);
     }
 
