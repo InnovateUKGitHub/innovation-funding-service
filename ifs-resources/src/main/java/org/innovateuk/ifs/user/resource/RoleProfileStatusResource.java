@@ -2,7 +2,7 @@ package org.innovateuk.ifs.user.resource;
 
 public class RoleProfileStatusResource {
 
-    private long userId;
+    private Long userId;
 
     private RoleProfileState roleProfileState;
 
@@ -20,11 +20,11 @@ public class RoleProfileStatusResource {
         this.description = description;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

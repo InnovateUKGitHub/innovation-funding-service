@@ -19,7 +19,7 @@ public class RoleProfileStatusController {
     }
 
     @PutMapping("/role-profile-status")
-    public RestResult<Void> updateUserStatus(@PathVariable long userId, @RequestBody final RoleProfileStatusResource roleProfileStatusResource) {
-        return roleProfileStatusService.updateUserStatus(userId, roleProfileStatusResource).toPostResponse();
+    public RestResult<Void> updateUserStatus(@PathVariable long userId, @RequestBody RoleProfileStatusResource roleProfileStatusResource) {
+        return roleProfileStatusService.updateUserStatus(userId, roleProfileStatusResource).toPutResponse();
     }
 }

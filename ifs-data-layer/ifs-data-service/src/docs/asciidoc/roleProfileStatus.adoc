@@ -1,0 +1,22 @@
+=== Retrieve role profile status by id
+==== Request
+include::{snippets}/roleProfileStatus/get-by-user-id/http-request.adoc[]
+include::{snippets}/roleProfileStatus/get-by-user-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/roleProfileStatus/get-by-user-id/http-response.adoc[]
+include::{snippets}/roleProfileStatus/get-by-user-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/roleProfileStatus/get-by-user-id/curl-request.adoc[]
+
+=== Update role profile status
+==== Request
+include::{snippets}/roleProfileStatus/update-save/http-request.adoc[]
+
+==== Response
+include::{snippets}/roleProfileStatus/document-save/http-response.adoc[]
+include::{snippets}/roleProfileStatus/document-save/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/roleProfileStatus/document-save/curl-request.adoc[]

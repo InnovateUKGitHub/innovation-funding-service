@@ -3,8 +3,8 @@ package org.innovateuk.ifs.user.resource;
 public enum RoleProfileState {
 
     ACTIVE("Active"),
-    UNAVAILABLE("Currently unavailable for assessment"),
-    DISABLED("In our bad books for good");
+    UNAVAILABLE("Temporarily unavailable"),
+    DISABLED("Permanently unavailable");
 
     private String description;
 
