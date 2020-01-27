@@ -4,7 +4,7 @@ CREATE TABLE role_profile_status (
   id bigint(20) PRIMARY KEY AUTO_INCREMENT,
   user_id bigint(20) NOT NULL UNIQUE,
   role_profile_state enum('ACTIVE','UNAVAILABLE','DISABLED'),
-  role enum('ASSESSOR'),
+  profile_role enum('ASSESSOR'),
   description VARCHAR(255),
     -- auditable fields
   created_by BIGINT(20) NOT NULL,
@@ -13,6 +13,7 @@ CREATE TABLE role_profile_status (
   modified_on DATETIME NOT NULL,
   KEY role_profile_status_created_by_to_user_fk (created_by),
   KEY role_profile_status_modified_by_to_user_fk (modified_by),
+  UNIQUE KEY role_profile_status_user_id_profile_role (user_id,profile_role),
   CONSTRAINT role_profile_status_created_by_to_user_fk FOREIGN KEY (created_by) REFERENCES user (id),
   CONSTRAINT role_profile_status_modified_by_to_user_fk FOREIGN KEY (modified_by) REFERENCES user (id),
   CONSTRAINT role_profile_status_user_id FOREIGN KEY (user_id) REFERENCES user(id)

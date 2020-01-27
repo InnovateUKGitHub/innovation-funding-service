@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.resource.RoleProfileState;
 import javax.persistence.*;
 
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE;
 
 /**
  * The status of a user and the reason for making them
@@ -33,6 +34,13 @@ public class RoleProfileStatus extends AuditableEntity {
 
     public RoleProfileStatus() {
     }
+
+    public RoleProfileStatus(User user, ProfileRole profileRole) {
+        this.user = user;
+        this.roleProfileState = ACTIVE;
+        this.profileRole = profileRole;
+    }
+
 
     public RoleProfileStatus(User user, RoleProfileState roleProfileState, ProfileRole profileRole, String description) {
         this.user = user;

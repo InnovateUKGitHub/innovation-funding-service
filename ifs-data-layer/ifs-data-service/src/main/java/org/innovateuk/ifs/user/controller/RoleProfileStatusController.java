@@ -13,7 +13,12 @@ public class RoleProfileStatusController {
     @Autowired
     private RoleProfileStatusService roleProfileStatusService;
 
-    @PostMapping("/update-status")
+    @GetMapping("/role-profile-status")
+    public RestResult<RoleProfileStatusResource> getUserStatus(@PathVariable long userId) {
+        return roleProfileStatusService.findByUserId(userId).toGetResponse();
+    }
+
+    @PutMapping("/role-profile-status")
     public RestResult<Void> updateUserStatus(@PathVariable long userId, @RequestBody final RoleProfileStatusResource roleProfileStatusResource) {
         return roleProfileStatusService.updateUserStatus(userId, roleProfileStatusResource).toPostResponse();
     }
