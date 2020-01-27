@@ -214,6 +214,11 @@ task osInitClusterLocal(type: Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
+task osApplySecretsLocal(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
+    args = [openshiftEnv, "local", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
+
 task osDeployLocal(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local", project.version]
@@ -270,7 +275,7 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 }
 
 // Remote tasks
-
+// TODO deleteProjectRemote?
 task deleteProject(type: Exec) {
     def token
     doFirst {
@@ -299,7 +304,7 @@ task deleteProject(type: Exec) {
         }()) continue
     }
 }
-
+// TODO createProjectRemote?
 task createProject(dependsOn: deleteProject) {
     def token
 
@@ -332,17 +337,17 @@ task createProject(dependsOn: deleteProject) {
     }
 }
 
-task osApplySecrets(type: Exec) {
+task osApplySecretsRemote(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
     args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
-task osDeployRemote(type: Exec, dependsOn: prepareDeployment) { // TODO dependsOn osCreateSecrets
+task osDeployRemote(type: Exec, dependsOn: prepareDeployment) { // TODO dependsOn osCreateSecrets?
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task osUpgradeRemote(type: Exec, dependsOn: prepareDeployment) { // TODO dependsOn osCreateSecrets
+task osUpgradeRemote(type: Exec, dependsOn: prepareDeployment) { // TODO dependsOn osCreateSecrets?
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "remote", project.version]
 }
