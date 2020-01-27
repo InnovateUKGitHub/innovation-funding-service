@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
@@ -21,7 +22,7 @@ import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.n
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 public class RoleProfileStatusServiceImplTest extends BaseServiceUnitTest<RoleProfileStatusServiceImpl> {
 
@@ -47,13 +48,31 @@ public class RoleProfileStatusServiceImplTest extends BaseServiceUnitTest<RolePr
         long userId = 1l;
         User user = newUser().withId(userId).build();
 
+        List<RoleProfileStatus> roleProfileStatus = newRoleProfileStatus().withUser(user).build(1);
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource().withUserId(userId).build();
+
+        when(roleProfileStatusRepository.findByUserId(userId)).thenReturn(roleProfileStatus);
+        when(roleProfileStatusMapper.mapToResource(roleProfileStatus.get(0))).thenReturn(roleProfileStatusResource);
+
+        ServiceResult<List<RoleProfileStatusResource>> result = service.findByUserId(userId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(roleProfileStatusResource, result.getSuccess().get(0));
+    }
+
+    @Test
+    public void findByUserIdAndProfileRole() {
+        long userId = 1l;
+        ProfileRole profileRole = ProfileRole.ASSESSOR;
+        User user = newUser().withId(userId).build();
+
         RoleProfileStatus roleProfileStatus = newRoleProfileStatus().withUser(user).build();
         RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource().withUserId(userId).build();
 
-        when(roleProfileStatusRepository.findByUserId(userId)).thenReturn(Optional.of(roleProfileStatus));
+        when(roleProfileStatusRepository.findByUserIdAndProfileRole(userId, profileRole)).thenReturn(Optional.of(roleProfileStatus));
         when(roleProfileStatusMapper.mapToResource(roleProfileStatus)).thenReturn(roleProfileStatusResource);
 
-        ServiceResult<RoleProfileStatusResource> result = service.findByUserId(userId);
+        ServiceResult<RoleProfileStatusResource> result = service.findByUserIdAndProfileRole(userId, profileRole);
 
         assertTrue(result.isSuccess());
         assertEquals(roleProfileStatusResource, result.getSuccess());
@@ -72,7 +91,7 @@ public class RoleProfileStatusServiceImplTest extends BaseServiceUnitTest<RolePr
                 .withDescription("Description")
                 .build();
 
-        when(roleProfileStatusRepository.findByUserId(userId)).thenReturn(Optional.of(roleProfileStatus));
+//        when(roleProfileStatusRepository.findByUserId(userId)).thenReturn(Optional.of(roleProfileStatus));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(roleProfileStatusMapper.mapToResource(roleProfileStatus)).thenReturn(roleProfileStatusResource);
         when(roleProfileStatusRepository.findByUserIdAndProfileRole(userId, ProfileRole.ASSESSOR)).thenReturn(Optional.of(roleProfileStatus));
@@ -96,7 +115,7 @@ public class RoleProfileStatusServiceImplTest extends BaseServiceUnitTest<RolePr
                 .withDescription("Description")
                 .build();
 
-        when(roleProfileStatusRepository.findByUserId(userId)).thenReturn(Optional.of(roleProfileStatus));
+//        when(roleProfileStatusRepository.findByUserId(userId)).thenReturn(Optional.of(roleProfileStatus));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(roleProfileStatusMapper.mapToResource(roleProfileStatus)).thenReturn(roleProfileStatusResource);
         when(roleProfileStatusRepository.findByUserIdAndProfileRole(userId, ProfileRole.ASSESSOR)).thenReturn(Optional.empty());

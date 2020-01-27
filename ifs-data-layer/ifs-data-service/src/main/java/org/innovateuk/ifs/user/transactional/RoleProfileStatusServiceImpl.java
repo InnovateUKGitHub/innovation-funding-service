@@ -6,13 +6,16 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.RoleProfileStatusMapper;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -37,8 +40,16 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
     }
 
     @Override
-    public ServiceResult<RoleProfileStatusResource> findByUserId(long userId) {
+    public ServiceResult<List<RoleProfileStatusResource>> findByUserId(long userId) {
         return find(roleProfileStatusRepository.findByUserId(userId), notFoundError(RoleProfileStatus.class, userId))
+                .andOnSuccessReturn(rp -> rp.stream()
+                        .map(roleProfileStatusMapper::mapToResource)
+                        .collect(toList()));
+    }
+
+    @Override
+    public ServiceResult<RoleProfileStatusResource> findByUserIdAndProfileRole(long userId, ProfileRole profileRole) {
+        return find(roleProfileStatusRepository.findByUserIdAndProfileRole(userId, profileRole), notFoundError(RoleProfileStatus.class, userId))
                 .andOnSuccessReturn(roleProfileStatusMapper::mapToResource);
     }
 
