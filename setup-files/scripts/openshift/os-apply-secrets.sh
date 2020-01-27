@@ -20,16 +20,35 @@ echo "Applying secrets for $PROJECT Openshift project"
 
 function applySecrets() {
     AWS_LOOKUP_DISCRIMINATOR=$(getAwsLookupDiscriminator)
+
+    # idp secrets
     oc create secret generic idp-keys-secrets \
     --from-literal="$(getKeyValue ldap-encryption.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/LDAP/ENCRYPTION/CERT)" \
     --from-literal="$(getKeyValue idp-encryption.key /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/ENCRYPTION/KEY)" \
     --from-literal="$(getKeyValue idp-encryption.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/ENCRYPTION/CERT)" \
     --from-literal="$(getKeyValue idp_proxy_key.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/KEY)" \
     --from-literal="$(getKeyValue idp_proxy_certificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/CERT)" \
-    --from-literal="$(getKeyValue idp_proxy_cacertificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/CACERT/1)" \
+    --from-literal="$(getKeyValue idp_proxy_cacertificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/CACERT/1 /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/CACERT/2 /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/PROXY/CACERT/3)" \
     --from-literal="$(getKeyValue idp-signing.key /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/SIGNING/KEY)" \
     --from-literal="$(getKeyValue idp-signing.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/SIGNING/CERT)" \
     --from-literal="$(getKeyValue sp_proxy_certificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/SP/PROXY/CERT)" \
+    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
+    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
+
+    # sp secrets
+    oc create secret generic sp-keys-secrets \
+    --from-literal="$(getKeyValue sp_proxy_key.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/SP/PROXY/KEY)" \
+    --from-literal="$(getKeyValue sp_proxy_certificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/SP/PROXY/CERT)" \
+    --from-literal="$(getKeyValue sp_proxy_cacertificate.pem /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/SP/PROXY/CACERT/1 /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/SP/PROXY/CACERT/2 /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/SP/PROXY/CACERT/3)" \
+    --from-literal="$(getKeyValue idp-signing.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/SIGNING/CERT)" \
+    --from-literal="$(getKeyValue idp-encryption.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/IDP/ENCRYPTION/CERT)" \
+    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
+    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
+
+    # ldap secrets
+    oc create secret generic ldap-keys-secrets \
+    --from-literal="$(getKeyValue ldap-encryption.crt /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/LDAP/ENCRYPTION/CERT)" \
+    --from-literal="$(getKeyValue ldap-encryption.key /CI/IFS/${AWS_LOOKUP_DISCRIMINATOR}/LDAP/ENCRYPTION/KEY)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
@@ -43,16 +62,19 @@ function getAwsLookupDiscriminator(){
     fi
 }
 
-# The key and value in the form key=value for the supplied key and aws lookup key
+# The key and value in the form key=value for the supplied key and aws lookup
 # $1 key
-# $2 aws lookup key
+# $2, $3.... the lookups - multiple maybe required due to size limitations
 # If this is not a named environment then we do not use aws and instead use secrets in the codebase
 function getKeyValue() {
     KEY=$1
-    AWS_LOOKUP=$2
     if $(isNamedEnvironment ${TARGET}); then
         # For named environments we get the secrets from an aws store
-        echo "$KEY=$(docker exec ssm-access-container aws ssm get-parameter --name ${AWS_LOOKUP} --with-decryption --output text --query Parameter.Value --with-decryption)"
+        echo "$KEY="
+        for i in "${@:2}"
+        do
+            echo "$(docker exec ssm-access-container aws ssm get-parameter --name ${AWS_LOOKUP} --with-decryption --output text --query Parameter.Value --with-decryption)"
+        done
     else
         # For non named environments we use the secrets stored in the codebase
         echo "$KEY=$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/${KEY})"
