@@ -74,7 +74,7 @@ function getKeyValue() {
     if $(isNamedEnvironment ${PROJECT}); then # TODO is this correct?
         # For named environments we get the secrets from an aws store
         echo "$KEY="
-        for i in "${@:2}"
+        for AWS_LOOKUP in "${@:2}" # TODO is this correct?
         do
             echo "$(docker exec ssm-access-container aws ssm get-parameter --name ${AWS_LOOKUP} --with-decryption --output text --query Parameter.Value --with-decryption)"
         done
