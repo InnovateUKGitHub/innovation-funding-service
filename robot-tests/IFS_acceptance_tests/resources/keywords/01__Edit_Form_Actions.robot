@@ -60,8 +60,7 @@ The user enters text to an autocomplete field
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     the user clicks the button/link    ${text_field}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
-    Wait for autosave
+    the user clicks the button/link    jQuery = li:contains("${TEXT_INPUT}")
 
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
