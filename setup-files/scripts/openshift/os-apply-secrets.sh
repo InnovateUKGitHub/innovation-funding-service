@@ -72,10 +72,10 @@ function getAwsLookupDiscriminator(){
 # If this is not a named environment then we do not use aws and instead use secrets in the codebase
 function getKeyValue() {
     KEY=$1
-    if $(isNamedEnvironment ${PROJECT}); then # TODO is this correct?
+    if $(isNamedEnvironment ${TARGET}); then
         # For named environments we get the secrets from an aws store
         echo "$KEY="
-        for AWS_LOOKUP in "${@:2}" # TODO is this correct?
+        for AWS_LOOKUP in "${@:2}"
         do
             echo "$(docker exec ssm-access-container aws ssm get-parameter --name ${AWS_LOOKUP} --with-decryption --output text --query Parameter.Value --with-decryption)"
         done
@@ -86,7 +86,7 @@ function getKeyValue() {
 }
 
 # If we have a named environment we need to get the secrets from or aws store.
-if $(isNamedEnvironment ${PROJECT}); then # TODO is this correct
+if $(isNamedEnvironment ${TARGET}); then
     if [[ -z ${AWS_PROFILE} || -z ${AWS_ACCESS_KEY} || -z ${AWS_ACCESS_KEY_ID} ]]; then
         echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified on named environments"
         exit 1

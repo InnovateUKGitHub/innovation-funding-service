@@ -6,7 +6,7 @@ function getBuildLocation() {
 }
 
 function isNamedEnvironment() {
-    # TODO I think this might be broken (according to gradle) target is only ever local or remote
+
     TARGET=$1
 
     if [[ ${TARGET} != "ifs-prod" && ${TARGET} != "ifs-demo" && ${TARGET} != "ifs-uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "ifs-perf" ]]; then
@@ -68,7 +68,7 @@ function getProjectName() {
 
     PROJECT=$1
     TARGET=$2
-    # TODO I think this is broken - I think this always returns $PROJECT as (according to gradle) $TARGET is always either local or remote.
+
     if $(isNamedEnvironment $TARGET); then
         echo "$TARGET"
     else
@@ -289,7 +289,7 @@ function blockUntilServiceIsUp() {
             if [ ${ERRORRED_PODS} -ne "0" ]; then
                 echo "$ERRORRED_PODS pods stuck in error state.."
                 POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | awk '{ print $1 }')
-                if ! (( $(isNamedEnvironment ${TARGET}) )); then # TODO I think that this might be broken I think target is only ever local or remote
+                if ! (( $(isNamedEnvironment ${TARGET}) )); then
                     oc logs ${SVC_ACCOUNT_CLAUSE} $POD
                 fi
                 exit 1
@@ -312,7 +312,7 @@ function blockUntilServiceIsUp() {
                 SINCE=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | awk '{ print $5 }')
                 echo "$POD is crashlooping for ${SINCE%m} minutes. Pod logs are:"
                 if [ ${SINCE%m} -gt "5" ]; then
-                    if ! (( $(isNamedEnvironment ${TARGET}) )); then # TODO I think that this might be broken I think target is only ever local or remote
+                    if ! (( $(isNamedEnvironment ${TARGET}) )); then
                         oc logs ${SVC_ACCOUNT_CLAUSE} $POD
                     fi
                 fi
