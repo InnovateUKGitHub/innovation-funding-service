@@ -58,9 +58,8 @@ The user enters text to an autocomplete field
 #different from the keyword above, as we don't want to lose focus from the field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
-    the user enters text to a text field  ${TEXT_FIELD}  ${EMPTY}
-    then the user clicks the button twice    ${text_field}
-    the user clicks the button/link    jQuery = li:contains("${TEXT_INPUT}")
+    click element    ${TEXT_FIELD}
+    click element    jQuery = li:contains("${TEXT_INPUT}")
 
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
