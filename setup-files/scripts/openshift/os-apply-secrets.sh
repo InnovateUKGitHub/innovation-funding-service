@@ -20,6 +20,9 @@ echo "Applying secrets for $PROJECT Openshift project"
 echo "PROJECT="${PROJECT}
 echo "TARGET="${TARGET}
 echo "VERSION="${VERSION}
+echo "AWS_PROFILE="${AWS_PROFILE}
+echo "AWS_ACCESS_KEY"=${AWS_ACCESS_KEY:0:2} # TODO remove
+echo  "AWS_ACCESS_KEY_ID"=${AWS_ACCESS_KEY_ID:0:2} # TODO remove
 
 function applySecrets() {
     AWS_LOOKUP_DISCRIMINATOR=$(getAwsLookupDiscriminator)
