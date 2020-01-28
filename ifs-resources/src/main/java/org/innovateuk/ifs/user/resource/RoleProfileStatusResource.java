@@ -13,12 +13,6 @@ public class RoleProfileStatusResource {
     public RoleProfileStatusResource() {
     }
 
-    public RoleProfileStatusResource(long userId, RoleProfileState roleProfileState, ProfileRole profileRole) {
-        this.userId = userId;
-        this.roleProfileState = roleProfileState;
-        this.profileRole = profileRole;
-    }
-
     public RoleProfileStatusResource(long userId, RoleProfileState roleProfileState, ProfileRole profileRole, String description) {
         this.userId = userId;
         this.roleProfileState = roleProfileState;

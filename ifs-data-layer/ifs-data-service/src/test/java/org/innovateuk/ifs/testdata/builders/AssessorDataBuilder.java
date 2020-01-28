@@ -190,9 +190,11 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
     public AssessorDataBuilder updateRoleProfileState(RoleProfileState roleProfileState) {
         return with((AssessorData data) ->
-                doAs(data.getUser(), () -> {
-                    //long userId, RoleProfileState roleProfileState, ProfileRole profileRole, String description
-                    roleProfileStatusService.updateUserStatus(data.getUser().getId(), new RoleProfileStatusResource(data.getUser().getId(), roleProfileState, ProfileRole.ASSESSOR)).getSuccess();
+                doAs(ifsAdmin(), () -> {
+                    roleProfileStatusService.updateUserStatus(data.getUser().getId(),
+                            new RoleProfileStatusResource(data.getUser().getId(), roleProfileState, ProfileRole.ASSESSOR,
+                            roleProfileState.equals(RoleProfileState.DISABLED) ? "The user no longer works as an assessor."
+                                    : "The user is unavailable to work as an assessor until further notice")).getSuccess();
                 })
         );
     }
