@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.organisationsize.controller;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
@@ -14,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.function.Supplier;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/edit/with-growth-table")
@@ -53,10 +57,23 @@ public class ProjectOrganisationSizeWithGrowthTableController {
     public String saveWithGrowthTable(
             @PathVariable long projectId,
             @PathVariable long organisationId,
-            @ModelAttribute YourOrganisationWithGrowthTableForm form) {
+            @Valid @ModelAttribute("form") YourOrganisationWithGrowthTableForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model) {
 
-        updateYourOrganisationWithGrowthTable(projectId, organisationId, form);
-        return redirectToOrganisationDetails(projectId, organisationId);
+        Supplier<String> failureHandler = () -> {
+            model.addAttribute("model", getViewModel(projectId, organisationId));
+            model.addAttribute("form", form);
+            return "project/edit-organisation-size-with-growth-table";
+        };
+
+        Supplier<String> successHandler = () -> {
+            updateYourOrganisationWithGrowthTable(projectId, organisationId, form);
+            return redirectToOrganisationDetails(projectId, organisationId);
+        };
+
+        return validationHandler.failNowOrSucceedWith(failureHandler, successHandler);
     }
 
     private ProjectOrganisationSizeViewModel getViewModel(long projectId, long organisationId) {
