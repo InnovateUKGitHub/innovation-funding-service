@@ -75,18 +75,30 @@ items:
                     configMapKeyRef:
                       name: survey-db-config
                       key: DB_PASS
+                - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+                - name: NEW_RELIC_LOG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LOG
+                - name: NEW_RELIC_LICENSE_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LICENSE_KEY
+                - name: IFS_WEB_SYSTEM_USER_UID
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_SYSTEM_USER_UID
                 - name: JAVA_OPTS
                   value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
                   value: "ifs-survey-data-service (${openshiftEnv})"
-                - name: NEW_RELIC_LICENSE_KEY
-                  value: "${NEW_RELIC_LICENCE_KEY}"
-                - name: NEW_RELIC_LOG
-                  value: "STDOUT"
-                - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
-                  value: "100"
-                - name: IFS_WEB_SYSTEM_USER_UID
-                  value: "${SYSTEM_USER_UUID}"
               ports:
                 - containerPort: 8080
               resources:

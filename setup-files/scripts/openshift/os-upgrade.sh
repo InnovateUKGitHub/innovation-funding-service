@@ -63,10 +63,10 @@ function upgradeServices {
     fi
 
     # conditionally deploy zipkin
-    if $(isPerfEnvironment ${TARGET}); then
-        oc apply -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
-        oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
-    fi
+#    if $(isPerfEnvironment ${TARGET}); then
+#        oc apply -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
+#        oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+#    fi
 
     watchSilStubStatus
 
