@@ -31,6 +31,7 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -125,6 +126,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     @Mock
     private AffiliationMapper affiliationMapperMock;
 
+    @Mock
+    private RoleProfileStatusRepository roleProfileStatusRepository;
+
     @InjectMocks
     private AssessorService assessorService = new AssessorServiceImpl();
 
@@ -184,13 +188,15 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(assessmentInviteServiceMock, registrationServiceMock,
-                                  userRepositoryMock, assessmentParticipantRepositoryMock, innovationAreaMapperMock, profileRepositoryMock);
+                                  userRepositoryMock, assessmentParticipantRepositoryMock, innovationAreaMapperMock,
+                                  profileRepositoryMock, roleProfileStatusRepository);
         inOrder.verify(assessmentInviteServiceMock).getInvite(hash);
         inOrder.verify(registrationServiceMock).createUser(userRegistrationResource);
         inOrder.verify(registrationServiceMock).activateAssessorAndSendDiversitySurvey(createdUserResource.getId());
         inOrder.verify(userRepositoryMock).findById(createdUserResource.getId());
         inOrder.verify(assessmentParticipantRepositoryMock).getByInviteEmail(email);
         inOrder.verify(assessmentParticipantRepositoryMock).saveAll(participantsForOtherInvites);
+        inOrder.verify(roleProfileStatusRepository).save(any());
         inOrder.verify(profileRepositoryMock).findById(anyLong());
         inOrder.verify(innovationAreaMapperMock).mapToDomain(innovationAreaResource);
         inOrder.verify(profileRepositoryMock).save(any(Profile.class));
