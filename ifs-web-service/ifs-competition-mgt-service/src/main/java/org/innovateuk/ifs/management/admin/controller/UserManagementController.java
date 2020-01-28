@@ -24,6 +24,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,9 @@ public class UserManagementController extends AsyncAdaptor {
 
     @Autowired
     private EncryptedCookieService cookieService;
+
+    @Autowired
+    private RoleProfileStatusRestService roleProfileStatusRestService;
 
     @Value("${ifs.assessor.profile.feature.toggle}")
     private boolean profileFeatureToggle;
@@ -164,9 +168,18 @@ public class UserManagementController extends AsyncAdaptor {
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
-                    model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR), profileFeatureToggle));
+                    model.addAttribute("model", populateEditUserViewModel(user, loggedInUser));
                     return "admin/user";
         }).getSuccess();
+    }
+
+    private EditUserViewModel populateEditUserViewModel(UserResource user, UserResource loggedInUser) {
+        return new EditUserViewModel(user,
+                                     roleProfileStatusRestService.findByUserId(user.getId())
+                                             .getOptionalSuccessObject()
+                                             .orElse(emptyList()),
+                                     loggedInUser.hasRole(IFS_ADMINISTRATOR),
+                                     profileFeatureToggle);
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
@@ -194,7 +207,7 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     private String viewEditUser(Model model, UserResource user, UserResource loggedInUser) {
-        model.addAttribute("model", new EditUserViewModel(user, loggedInUser.hasRole(IFS_ADMINISTRATOR), profileFeatureToggle));
+        model.addAttribute("model", populateEditUserViewModel(user, loggedInUser));
         return "admin/edit-user";
     }
 

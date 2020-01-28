@@ -12,6 +12,7 @@ import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
@@ -27,8 +28,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -57,6 +57,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     @Mock
     private EncryptedCookieService cookieService;
 
+    @Mock
+    private RoleProfileStatusRestService roleProfileStatusRestService;
+
     @Before
     public void setUpCommonExpectations() {
 
@@ -71,6 +74,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         when(inviteUserRestService.getPendingInternalUserInvites(null, 0, 5)).thenReturn(restSuccess(roleInvitePageResource));
 
         setField(controller, "profileFeatureToggle", true);
+
+        when(roleProfileStatusRestService.findByUserId(anyLong())).thenReturn(restSuccess(emptyList()));
     }
 
     @Test
@@ -159,7 +164,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel(user, false, true)));
+                .andExpect(model().attribute("model", new EditUserViewModel(user, emptyList(), false, true)));
     }
 
     @Test
@@ -225,7 +230,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/edit-user"))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("model", new EditUserViewModel(userResource, false, true)));
+                .andExpect(model().attribute("model", new EditUserViewModel(userResource, emptyList(), false, true)));
     }
 
     @Test

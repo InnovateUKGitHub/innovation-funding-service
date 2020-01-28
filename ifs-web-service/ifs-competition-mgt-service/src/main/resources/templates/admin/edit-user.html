@@ -137,7 +137,7 @@
                         <tr class="govuk-table__row" th:each="role : ${model.user.roles}"
                             th:with="canDisableRole=${role.isAssessor() and model.displayRoleProfileLink}">
                             <td class="govuk-table__cell" th:text="${role.displayName}"></td>
-                            <td class="govuk-table__cell" th:text="${canDisableRole ? 'Available' : 'Active'}"></td>
+                            <td class="govuk-table__cell" th:text="${model.roleDisplay(role)}"></td>
                             <td class="govuk-table__cell">
                                 <th:block th:if="${canDisableRole and model.ifsAdmin}">
                                     <a class="govuk-link" href="#">View role profile</a>
