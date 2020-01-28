@@ -26,8 +26,9 @@ if (!isNamedEnv()) {
 task prepareConfigDeployment(type: Copy) {
 
     destinationDir = file('build/resources/main')
-    from('os-files/config-maps/') {
-        include '**/*.yml'
+    from('os-files/') {
+        include 'config-maps/*.yml'
+        include 'routes/*.yml'
     }
     filesMatching("**/**.*") {
         expand project.properties
@@ -40,6 +41,7 @@ task prepareDeployAndUpgrade(type: Copy) {
     from('os-files/') {
         include '**/*.yml'
         exclude 'config-maps/*.yml'
+        exclude 'routes/*.yml'
         // Exclude zipkin for now, ticket to remove later
         exclude 'zipkin/*.yml'
     }

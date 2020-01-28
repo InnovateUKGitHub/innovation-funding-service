@@ -141,11 +141,6 @@ items:
                     configMapKeyRef:
                       name: idp-config
                       key: RESOURCE_DOMAIN
-                - name: SHIB_IDP_ADDRESS
-                  valueFrom:
-                    configMapKeyRef:
-                      name: shibboleth-config
-                      key: SHIB_IDP_ADDRESS
               ports:
                 - containerPort: 9443
                 - containerPort: 9080
@@ -170,19 +165,3 @@ items:
         deploymentconfig: idp
     status:
       loadBalancer: {}
-
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      name: idp
-      annotations:
-        haproxy.router.openshift.io/balance: source
-    spec:
-      host: ${SHIB_IDP_ADDRESS}
-      port:
-        targetPort: 443-tcp
-      tls:
-        termination: passthrough
-      to:
-        kind: Service
-        name: idp

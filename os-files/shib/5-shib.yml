@@ -121,18 +121,3 @@ items:
         deploymentconfig: shib
     status:
       loadBalancer: {}
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      name: shib
-      annotations:
-        haproxy.router.openshift.io/balance: roundrobin
-    spec:
-      host:  ${SHIB_ADDRESS}
-      port:
-        targetPort: 443-tcp
-      tls:
-        termination: passthrough
-      to:
-        kind: Service
-        name: shib

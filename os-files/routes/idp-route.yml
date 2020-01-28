@@ -1,0 +1,15 @@
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: idp
+    annotations:
+      haproxy.router.openshift.io/balance: source
+  spec:
+    host: ${SHIB_IDP_ADDRESS}
+    port:
+      targetPort: 443-tcp
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: idp

@@ -37,6 +37,16 @@ function applyConfigMaps {
     oc apply -f $(getBuildLocation)/web-config.yml ${SVC_ACCOUNT_CLAUSE}
 }
 
+function applyRoutes {
+    oc apply -f $(getBuildLocation)/idp-route.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/shib-route.yml ${SVC_ACCOUNT_CLAUSE}
+
+    if $(isNamedEnvironment ${TARGET}); then
+        oc apply -f $(getBuildLocation)/mail-route.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+}
+
 # Entry point
 applyConfigMaps
+applyRoutes
 
