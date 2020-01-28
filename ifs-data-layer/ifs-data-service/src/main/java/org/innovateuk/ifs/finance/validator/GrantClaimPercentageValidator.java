@@ -36,12 +36,17 @@ public class GrantClaimPercentageValidator implements Validator {
     public void validate(Object target, Errors errors) {
         GrantClaimPercentage response = (GrantClaimPercentage) target;
 
-        if(response.getPercentage() == null) {
+        if (response.getPercentage() == null) {
             rejectValue(errors, "percentage", "org.hibernate.validator.constraints.NotBlank.message");
             return;
         }
 
-        if (response.getPercentage().scale() > MAX_DECIMAL_PLACES) {
+        if (!response.isFundingLevelPercentageToggle() && response.getPercentage().scale() > 0) {
+            rejectValue(errors, "percentage", "validation.field.non.decimal.format");
+            return;
+        }
+
+        if (response.isFundingLevelPercentageToggle() && response.getPercentage().scale() > MAX_DECIMAL_PLACES) {
             rejectValue(errors, "percentage", "validation.finance.percentage");
             return;
         }
@@ -58,7 +63,7 @@ public class GrantClaimPercentageValidator implements Validator {
 
         if (BigDecimal.valueOf(max).compareTo(response.getPercentage()) < 0) {
             rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
-        } else if(BigDecimal.valueOf(max).compareTo(response.getPercentage()) > 1) {
+        } else if (BigDecimal.valueOf(max).compareTo(response.getPercentage()) > 1) {
             rejectValue(errors, "percentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }

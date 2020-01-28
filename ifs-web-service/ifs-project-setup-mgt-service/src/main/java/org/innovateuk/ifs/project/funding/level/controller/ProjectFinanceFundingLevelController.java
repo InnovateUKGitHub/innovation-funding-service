@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinanceFundingL
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,6 +46,9 @@ public class ProjectFinanceFundingLevelController {
     @Autowired
     private ProjectFinanceRowRestService financeRowRestService;
 
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
+
     @GetMapping
     public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingLevelForm form,
                                     @PathVariable long projectId,
@@ -70,6 +74,7 @@ public class ProjectFinanceFundingLevelController {
             return failureView.get();
         }
 
+        validateFundingLevelPercentage(bindingResult, finances, form);
         validateMaximumFundingLevels(bindingResult, finances, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -103,16 +108,27 @@ public class ProjectFinanceFundingLevelController {
         finances.forEach(finance -> {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
 
-            if (fundingLevel.scale() > MAX_DECIMAL_PLACES) {
-                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
-                        "validation.finance.percentage");
-            }
-
             if (finance.getMaximumFundingLevel() < fundingLevel.intValue()) {
                 bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
                         "validation.finance.grant.claim.percentage.max",
                         new String[]{String.valueOf(finance.getMaximumFundingLevel())},
                         "");
+            }
+        });
+    }
+
+    private void validateFundingLevelPercentage(BindingResult bindingResult, List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
+        finances.forEach(finance -> {
+            BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
+
+            if (!fundingLevelPercentageToggle && fundingLevel.scale() > 0) {
+                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
+                        "validation.field.non.decimal.format");
+            }
+
+            if (fundingLevelPercentageToggle && fundingLevel.scale() > MAX_DECIMAL_PLACES) {
+                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
+                        "validation.finance.percentage");
             }
         });
     }

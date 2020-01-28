@@ -81,7 +81,11 @@ public abstract class AbstractYourFundingSaver {
     private void saveGrantClaimPercentage(BaseFinanceResource finance, YourFundingPercentageForm form, ValidationMessages messages) {
         GrantClaimPercentage claim = (GrantClaimPercentage) finance.getGrantClaim();
         if (form.getRequestingFunding()) {
-            claim.setPercentage(form.getGrantClaimPercentage().setScale(MAX_DECIMAL_PLACES, HALF_UP));
+            if (claim.isFundingLevelPercentageToggle()) {
+                claim.setPercentage(form.getGrantClaimPercentage().setScale(MAX_DECIMAL_PLACES, HALF_UP));
+            } else {
+                claim.setPercentage(form.getGrantClaimPercentage());
+            }
         } else {
             claim.setPercentage(BigDecimal.ZERO);
         }

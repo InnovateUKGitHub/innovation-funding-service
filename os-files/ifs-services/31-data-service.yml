@@ -182,6 +182,8 @@ items:
                   value: "${IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN}"
                 - name: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS
                   value: "${IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS}"
+                - name: IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED
+                  value: "${IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED}"
               ports:
                 - containerPort: 8080
               resources:

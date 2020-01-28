@@ -73,6 +73,8 @@ items:
             value: "${IFS_LIVE_PROJECTS_LANDING_PAGE_URL}"
           - name: IFS_EARLY_METRICS_URL
             value: "${IFS_EARLY_METRICS_URL}"
+          - name: IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED
+            value: "${IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED}"
           ports:
           - containerPort: 8080
           resources:

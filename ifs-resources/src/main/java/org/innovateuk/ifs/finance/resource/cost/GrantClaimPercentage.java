@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.resource.cost;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 
@@ -10,6 +11,9 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     private Long id;
 
     private BigDecimal percentage;
+
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
 
     private GrantClaimPercentage() {
         this(null);
@@ -90,6 +94,10 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
                 .divide(new BigDecimal(100))
                 .subtract(otherFunding)
                 .max(BigDecimal.ZERO);
+    }
+
+    public boolean isFundingLevelPercentageToggle() {
+        return fundingLevelPercentageToggle;
     }
 
     @Override

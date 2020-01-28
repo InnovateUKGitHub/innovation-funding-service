@@ -90,7 +90,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return find(financeCheckRepository.findByProjectIdAndOrganisationId(key.getProjectId(), key.getOrganisationId()),
                 notFoundError(FinanceCheck.class, key)).
                 andOnSuccessReturn(this::mapToResource);
-
     }
 
     @Override
