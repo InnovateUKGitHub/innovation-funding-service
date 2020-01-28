@@ -236,7 +236,7 @@ task osInitClusterLocal(type: Exec) {
 
 task osApplySecretsLocal(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
-    args = [openshiftEnv, "local", project.version]
+    args = [openshiftEnv, "local", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
 task osDeployLocal(type: Exec, dependsOn: prepareDeployment) {
@@ -359,7 +359,7 @@ task createProject(dependsOn: deleteProject) {
 
 task osApplySecretsRemote(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
-    args = [openshiftEnv, "remote", project.version]
+    args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
 task osDeployRemote(type: Exec, dependsOn: prepareDeployment) {
