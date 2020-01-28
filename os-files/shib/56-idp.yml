@@ -141,6 +141,11 @@ items:
                     configMapKeyRef:
                       name: idp-config
                       key: RESOURCE_DOMAIN
+                - name: SHIB_IDP_ADDRESS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: shibboleth-config
+                      key: SHIB_IDP_ADDRESS
               ports:
                 - containerPort: 9443
                 - containerPort: 9080
