@@ -44,9 +44,9 @@ task prepareConfig(type: Copy) {
         expand project.properties
     }
 }
-task prepareConfigDeployment() {
-    prepareConfig()
-    prepareRoutes()
+
+task prepareConfigDeployment(dependsOn: [prepareConfig, prepareRoutes]) {
+    println "Preparing Config"
 }
 
 task prepareDeployAndUpgrade(type: Copy) {
