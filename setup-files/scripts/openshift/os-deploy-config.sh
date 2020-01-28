@@ -48,11 +48,11 @@ function applyRoutes {
 
 function applyGlusterConfig {
     if $(isNamedEnvironment ${TARGET}); then
-        oc apply $(getBuildLocation)/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
-        oc apply $(getBuildLocation)/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
-        oc apply $(getBuildLocation)/gluster/named-envs/12-${TARGET}-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/gluster/named-envs/12-${TARGET}-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
     else
-        oc apply $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
     fi
 }
 
