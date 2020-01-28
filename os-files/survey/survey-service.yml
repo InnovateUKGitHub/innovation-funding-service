@@ -66,7 +66,10 @@ items:
                       name: web-config
                       key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
                 - name: SPRING_APPLICATION_JSON
-                  value: '{"logout":{"url": "https://${SHIB_ADDRESS}/Logout/"}}'
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: SPRING_APPLICATION_JSON
                 - name: JAVA_OPTS
                   value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
