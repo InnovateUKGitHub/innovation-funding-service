@@ -88,7 +88,7 @@ items:
                 - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
                   valueFrom:
                     configMapKeyRef:
-                      name: new-relic-config
+                      name: data-service-config
                       key: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
                 - name: IFS_FINANCE-TOTALS_AUTHSECRETKEY
                   valueFrom:
