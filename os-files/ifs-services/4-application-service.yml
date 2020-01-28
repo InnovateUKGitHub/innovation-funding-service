@@ -50,11 +50,6 @@ items:
                     configMapKeyRef:
                       name: web-config
                       key: SPRING_APPLICATION_JSON
-                - name: JAVA_OPTS
-                  valueFrom:
-                    configMapKeyRef:
-                      name: web-config
-                      key: JAVA_OPTS
                 - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
                   valueFrom:
                     configMapKeyRef:
@@ -112,6 +107,8 @@ items:
                       key: NEW_RELIC_LOG
                 - name: NEW_RELIC_APP_NAME
                   value: "ifs-application-service (${openshiftEnv})"
+                - name: JAVA_OPTS
+                  value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
               ports:
                 - containerPort: 8080
               resources:
