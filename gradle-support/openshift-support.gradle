@@ -45,7 +45,18 @@ task prepareConfig(type: Copy) {
     }
 }
 
-task prepareConfigDeployment(dependsOn: [prepareConfig, prepareRoutes]) {
+task prepareGluster(type: Copy) {
+
+    destinationDir = file('build/resources/main')
+    from('os-files/gluster/') {
+        include '**/*.yml'
+    }
+    filesMatching("**/**.*") {
+        expand project.properties
+    }
+}
+
+task prepareConfigDeployment(dependsOn: [prepareConfig, prepareRoutes, prepareGluster]) {
     println "Preparing Config"
 }
 
@@ -56,6 +67,7 @@ task prepareDeployAndUpgrade(type: Copy) {
         include '**/*.yml'
         exclude 'config-maps/*.yml'
         exclude 'routes/*.yml'
+        exclude 'gluster/'
         // Exclude zipkin for now, ticket to remove later
         exclude 'zipkin/*.yml'
     }
