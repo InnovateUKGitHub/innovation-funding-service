@@ -31,7 +31,7 @@ function applyConfigMaps {
     oc apply -f $(getBuildLocation)/config-maps/ldap-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/new-relic-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/performance-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/shibboleth-config.yml.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/shibboleth-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/survey-db-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/web-config.yml ${SVC_ACCOUNT_CLAUSE}
 }
