@@ -35,9 +35,9 @@ RUN apt-get update --fix-missing && \
   ldapadd -H ldapi:/// -f ppolicy_cn.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
   ldapmodify -H ldapi:/// -f ppolicy_cn_attribs.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
 # enable & enforce SSL, be lax about self-signed certificates \
-# TODO IFS-7055 stop using environmental variables.
-# TODO IFS-7055 Default to building with an image with secrets in /var/certs which then get copied where they need to be
-# TODO IFS-7055 Then override /var/certs with OpenShift volume based on secrets
+# TODO IFS-6251 stop using environmental variables.
+# TODO IFS-6251 Default to building with an image with secrets in /var/certs which then get copied where they need to be
+# TODO IFS-6251 Then override /var/certs with OpenShift volume based on secrets
   echo "$LDAP_ENCRYPTION_KEY" > /etc/ldap/ldap-encryption.key && \
   echo "$LDAP_ENCRYPTION_CERTIFICATE" > /etc/ldap/ldap-encryption.crt && \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_ssl.ldif && \

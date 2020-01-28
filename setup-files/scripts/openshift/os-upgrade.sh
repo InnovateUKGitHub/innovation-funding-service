@@ -150,6 +150,7 @@ function forceReload {
 }
 
 function watchSilStubStatus {
+
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         rolloutStatus sil-stub

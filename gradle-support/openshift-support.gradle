@@ -295,7 +295,7 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 }
 
 // Remote tasks
-// TODO deleteProjectRemote?
+// TODO IFS-6251 remove when replaced by deleteProjectRemote in bamboo
 task deleteProject(type: Exec) {
     def token
     doFirst {
@@ -324,8 +324,70 @@ task deleteProject(type: Exec) {
         }()) continue
     }
 }
-// TODO createProjectRemote?
+
+task deleteProjectRemote(type: Exec) {
+    def token
+    doFirst {
+        token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
+        executable 'oc'
+        args 'delete', 'project', openshiftEnv, "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+    }
+
+    ignoreExitValue true
+
+    doLast {
+        while ({
+            sleep(35 * 1000)
+
+            def ocCommand = "oc get project ${openshiftEnv} --token=${token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
+            def proc = ocCommand.execute()
+
+            proc.waitFor()
+
+            def projectDeleted = proc.exitValue() == 1
+            if ( !projectDeleted ) {
+                println "Project is not deleted yet.. "
+            }
+
+            !projectDeleted
+        }()) continue
+    }
+}
+
+// TODO IFS-6251 remove when replaced by createProjectRemote in bamboo
 task createProject(dependsOn: deleteProject) {
+    def token
+
+    def openshiftDevGroup = "CN=ocp_ifs_devs,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
+    def openshiftAdminGroup = "CN=ocp_ifs_admins,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
+
+    doFirst {
+        token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
+        exec {
+            executable 'oc'
+            args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        }
+
+        if (openshiftEnv == "ifs-prod" || openshiftEnv == "ifs-uat") {
+            exec {
+                executable 'oc'
+                args 'adm', 'policy', 'add-role-to-group', 'admin', "${openshiftAdminGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+            }
+        } else {
+            exec {
+                executable 'oc'
+                args 'adm', 'policy', 'add-role-to-group', 'admin', "${openshiftAdminGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+            }
+
+            exec {
+                executable 'oc'
+                args 'adm', 'policy', 'add-role-to-group', 'admin',  "${openshiftDevGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+            }
+        }
+    }
+}
+
+task createProjectRemote(dependsOn: deleteProjectRemote) {
     def token
 
     def openshiftDevGroup = "CN=ocp_ifs_devs,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
