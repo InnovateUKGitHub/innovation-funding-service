@@ -41,12 +41,7 @@ public class GrantClaimPercentageValidator implements Validator {
             return;
         }
 
-        if (!response.isFundingLevelPercentageToggle() && response.getPercentage().scale() > 0) {
-            rejectValue(errors, "percentage", "validation.field.non.decimal.format");
-            return;
-        }
-
-        if (response.isFundingLevelPercentageToggle() && response.getPercentage().scale() > MAX_DECIMAL_PLACES) {
+        if (response.getPercentage().scale() > MAX_DECIMAL_PLACES) {
             rejectValue(errors, "percentage", "validation.finance.percentage");
             return;
         }

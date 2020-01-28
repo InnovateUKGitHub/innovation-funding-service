@@ -19,6 +19,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -32,6 +33,9 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMA
 @Component
 public class YourFundingSaver extends AbstractYourFundingSaver {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -64,7 +68,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
             if (field.equals("grantClaimPercentage")) {
                 GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
 
-                if (grantClaim.isFundingLevelPercentageToggle()) {
+                if (fundingLevelPercentageToggle) {
                     grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
                 } else {
                     grantClaim.setPercentage(new BigDecimal(value));
