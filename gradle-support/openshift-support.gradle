@@ -40,6 +40,7 @@ task prepareDeployAndUpgrade(type: Copy) {
     from('os-files/') {
         include '**/*.yml'
         exclude 'config-maps/*.yml'
+        exclude 'zipkin/*.yml'
     }
     filesMatching("**/**.*") {
         expand project.properties
