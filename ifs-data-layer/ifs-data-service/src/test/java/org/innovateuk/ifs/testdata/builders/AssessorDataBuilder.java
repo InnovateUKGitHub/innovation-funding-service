@@ -188,6 +188,15 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         );
     }
 
+    public AssessorDataBuilder updateRoleProfileState(RoleProfileState roleProfileState) {
+        return with((AssessorData data) ->
+                doAs(data.getUser(), () -> {
+                    //long userId, RoleProfileState roleProfileState, ProfileRole profileRole, String description
+                    roleProfileStatusService.updateUserStatus(data.getUser().getId(), new RoleProfileStatusResource(data.getUser().getId(), roleProfileState, ProfileRole.ASSESSOR)).getSuccess();
+                })
+        );
+    }
+
     private List<AffiliationResource> mapAppointments(List<Map<String, String>> appointments) {
         if (appointments.isEmpty()) {
             return singletonList(AffiliationResourceBuilder.createEmptyAppointments());
@@ -255,4 +264,5 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     protected AssessorData createInitial() {
         return new AssessorData();
     }
+
 }

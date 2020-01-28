@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -626,6 +627,7 @@ public class CsvUtils {
         public List<Map<String, String>> familyAffiliations;
         public String familyFinancialInterests;
         public boolean agreementSigned;
+        public RoleProfileState roleProfileState;
 
         private AssessorUserLine(List<String> line) {
 
@@ -650,6 +652,7 @@ public class CsvUtils {
             familyAffiliations = extractListOfMaps(line.get(i++));
             familyFinancialInterests = line.get(i++);
             agreementSigned = Boolean.valueOf(line.get(i++));
+            roleProfileState = RoleProfileState.valueOf(line.get(i++));
         }
 
         private List<Map<String, String>> extractListOfMaps(String column) {

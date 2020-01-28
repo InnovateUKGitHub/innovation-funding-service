@@ -10,6 +10,7 @@ import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
@@ -325,6 +326,10 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
             baseBuilder = baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment);
         } else if (InviteStatus.OPENED.equals(line.inviteStatus)) {
             baseBuilder = baseBuilder.acceptInvite(inviteHash);
+        }
+
+        if (!RoleProfileState.ACTIVE.equals(line.roleProfileState)) {
+            baseBuilder = baseBuilder.updateRoleProfileState(line.roleProfileState);
         }
 
         baseBuilder.build();
