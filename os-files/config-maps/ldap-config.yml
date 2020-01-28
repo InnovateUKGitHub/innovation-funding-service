@@ -4,6 +4,7 @@ metadata:
   name: ldap-config
 data:
   LDAP_HOST: "${LDAP_HOST}"
+  LDAP_URL: "${LDAP_URL}"
   LDAP_PORT: "${LDAP_PORT}"
   LDAP_PASS: "${LDAP_PASS}"
   LDAP_DOMAIN: "${LDAP_DOMAIN}"
