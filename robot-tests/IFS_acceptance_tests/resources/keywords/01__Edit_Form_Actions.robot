@@ -58,7 +58,7 @@ The user enters text to an autocomplete field
 #different from the keyword above, as we don't want to lose focus from the field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
-    Clear Element Text    ${TEXT_FIELD}
+   the user enters text to a text field  ${TEXT_FIELD}  ${EMPTY}
     the user clicks the button/link    ${text_field}
     the user clicks the button/link    jQuery = li:contains("${TEXT_INPUT}")
 
