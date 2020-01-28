@@ -160,6 +160,9 @@ function watchSilStubStatus {
 function rolloutStatus {
     FINISHED=0
     while [  $FINISHED -ne 1 ]; do
+        # TODO remove
+        echo "oc rollout status  dc/$1 ${SVC_ACCOUNT_CLAUSE}"
+        # TODO remove
         RESULT=$(oc rollout status  dc/$1 ${SVC_ACCOUNT_CLAUSE} 2>&1) || true # the || true is to eat up all non-zero exit codes
         echo "$RESULT"
 
