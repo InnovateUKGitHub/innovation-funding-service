@@ -10,7 +10,6 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 
 @Component
 public class EligibilityApprovedGuard implements Guard<EligibilityState, EligibilityEvent> {
@@ -22,11 +21,10 @@ public class EligibilityApprovedGuard implements Guard<EligibilityState, Eligibi
     public boolean evaluate(StateContext<EligibilityState, EligibilityEvent> context) {
         PartnerOrganisation partnerOrganisation = (PartnerOrganisation) context.getMessage().getHeaders().get("target");
         return isFundingLevelWithinMaximum(
-                projectFinanceService.financeChecksTotals(partnerOrganisation.getProject().getId()).getSuccess());
+                projectFinanceService.financeChecksDetails(partnerOrganisation.getProject().getId(), partnerOrganisation.getOrganisation().getId()).getSuccess());
     }
 
-    private boolean isFundingLevelWithinMaximum(List<ProjectFinanceResource> finances) {
-        return finances.stream().anyMatch(finance ->
-            finance.getMaximumFundingLevel() > finance.getGrantClaimPercentage());
+    private boolean isFundingLevelWithinMaximum(ProjectFinanceResource finance) {
+        return finance.getMaximumFundingLevel() > finance.getGrantClaimPercentage();
     }
 }
