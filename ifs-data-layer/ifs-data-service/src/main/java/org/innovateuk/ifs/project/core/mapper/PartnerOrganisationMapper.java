@@ -19,8 +19,7 @@ import org.mapstruct.Mappings;
 public abstract class PartnerOrganisationMapper extends BaseMapper<PartnerOrganisation, PartnerOrganisationResource, Long> {
 
     @Mappings({
-            @Mapping(source = "organisation.name", target = "organisationName"),
-            @Mapping(source = "pendingPartnerProgress.completedOn", target = "completedSetup")
+            @Mapping(source = "organisation.name", target = "organisationName")
     })
     @Override
     public abstract  PartnerOrganisationResource mapToResource(PartnerOrganisation domain);

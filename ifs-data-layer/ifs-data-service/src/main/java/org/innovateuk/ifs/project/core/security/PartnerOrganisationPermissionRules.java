@@ -43,8 +43,8 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
     }
 
-    @PermissionRule(value = "PENDING_PARTNER_PROGRESS", description = "Partners can view their own progress setting up their organisation")
-    public boolean partnersCanViewTheirOwnPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+    @PermissionRule(value = "UPDATE_PENDING_PARTNER_PROGRESS", description = "Partners can update their own progress when setting up their organisation")
+    public boolean partnersCanUpdateTheirOwnPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
     }
 
