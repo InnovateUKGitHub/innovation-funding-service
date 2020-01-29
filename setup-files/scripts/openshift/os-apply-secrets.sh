@@ -120,7 +120,7 @@ docker build --tag="ssm-access-image" docker/aws-cli
 docker run -id --rm -e AWS_PROFILE=${AWS_PROFILE} -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 
 if $(isNamedEnvironment ${TARGET}); then
-    applyAwsCerts $([[ TARGET == "ifs-prod" ]] && echo "PROD"|| echo "NON-PROD")
+    applyAwsCerts $([[ ${TARGET} == "ifs-prod" ]] && echo "PROD"|| echo "NON-PROD")
 else
     applyFileCerts
 fi
