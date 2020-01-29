@@ -94,8 +94,8 @@ Internal user can not generate SP with pending invites
 Check if target start date can be changed until SP approval
     [Documentation]    IFS-1576
     [Tags]  HappyPath
-    Given log in as a different user          &{lead_applicant_credentials_sp}
-    When the user navigates to the page      ${server}/project-setup/project/${PS_SP_Project_Id}/details
+    Given log in as a different user         &{ifs_admin_user_credentials}
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/details
     And the user changes the start date      2021
     Then the user should see the element     jQuery = #start-date:contains("1 Jan 2021")
     [Teardown]  the user changes the start date   2020
@@ -310,15 +310,15 @@ Project Manager can view combined spend profile
     [Tags]
     [Setup]    log in as a different user            &{lead_applicant_credentials_sp}
     Given the user navigates to the page             ${external_spendprofile_summary}
-    When the user clicks the button/link             jQuery = .govuk-button:contains("Review and send total project spend profile")
+    When the user clicks the button/link             jQuery = a:contains("Review and submit project spend profile")
     Then the user should see the element             jQuery = p:contains("This is the spend profile for your project.")
     And the user should see the element              jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
 
 Project Manager can choose cancel on the dialogue
     [Documentation]    INFUND-3767
-    When the user clicks the button/link  link = Send project spend profile
+    When the user clicks the button/link  jQuery = a:contains("Submit project spend profile")
     And the user clicks the button/link   jQuery = button:contains("Cancel")
-    Then the user should see the element  link = Send project spend profile
+    Then the user should see the element  jQuery = a:contains("Submit project spend profile")
 
 Project Manager can see the button Allow edits
     [Documentation]    INFUND-6350
@@ -362,8 +362,8 @@ Project Manager can send the project's spend profiles
     [Tags]
     [Setup]    log in as a different user    &{lead_applicant_credentials_sp}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery = .govuk-button:contains("Review and send total project spend profile")
-    Then the user clicks the button/link     link = Send project spend profile
+    When the user clicks the button/link     jQuery = a:contains("Review and submit project spend profile")
+    Then the user clicks the button/link     jQuery = a:contains("Submit project spend profile")
     And the user should see the element      jQuery = button:contains("Cancel")
     When the user clicks the button/link     id = submit-send-all-spend-profiles
 
@@ -372,7 +372,7 @@ PM's Spend profile Summary page gets updated after submit
     [Tags]
     Given the user navigates to the page     ${external_spendprofile_summary}
     Then the user should see the element     jQuery = .success-alert p:contains("All project spend profiles have been sent to Innovate UK.")
-    And the user should not see the element  link = Send project spend profile
+    And the user should not see the element  jQuery = a:contains("Submit project spend profile")
 
 Status updates after spend profile submitted
     [Documentation]    INFUND-6225  INFUND-3767  INFUND-3766
@@ -427,7 +427,7 @@ Lead partner can see that the spend profile has been rejected
     [Tags]
     Given log in as a different user        &{lead_applicant_credentials_sp}
     When the user clicks the button/link    link = ${PS_SP_Application_Title}
-    Then the user should see the element    css = li.require-action:nth-of-type(7)
+    Then the user should see the element    css = li.lead-action-required:nth-child(7)
     When the user clicks the button/link    link = View the status of partners
     Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
     [Teardown]    the user goes back to the previous page
@@ -446,8 +446,7 @@ Lead partner no longer has the 'submitted' view of the spend profiles
     When the user clicks the button/link        link = ${PS_SP_Application_Title}
     And the user clicks the button/link         link = Spend profile
     Then the user should not see the element    jQuery = .success-alert p:contains("All project spend profiles have been sent to Innovate UK.")
-    And the user should see the element         jQuery = p:contains("This overview shows the spend profile status of each organisation in your project.")
-    And the user should see the element         jQuery = .govuk-button:contains("Review and send total project spend profile")
+    And the user should see the element         jQuery = a:contains("Review and submit project spend profile")
 
 Lead partner can return edit rights to other project partners
     [Documentation]    INFUND-6977
@@ -478,8 +477,8 @@ Lead partner can send the combined spend profile
     [Documentation]    INFUND-6977
     [Setup]    log in as a different user    &{lead_applicant_credentials_sp}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery = .govuk-button:contains("Review and send total project spend profile")
-    Then the user clicks the button/link     link = Send project spend profile
+    When the user clicks the button/link     jQuery = a:contains("Review and submit project spend profile")
+    Then the user clicks the button/link     jQuery = a:contains("Submit project spend profile")
     And the user should see the element      jQuery = button:contains("Cancel")
     When the user clicks the button/link     id = submit-send-all-spend-profiles
 
@@ -712,7 +711,7 @@ the user marks spend profile as compelete and check status updated
     the user should see the element             jQuery = h1:contains("Project team status")
     the user should see the element             css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).action
     the user clicks the button/link             link = Set up your project
-    the user should see the element             css = li.require-action:nth-child(7)
+    the user should see the element             css = li.lead-action-required:nth-child(7)
     the user should not see the element         link = Grant offer letter
     project Manager doesn't have the option to send spend profiles until all partners have marked as complete
 
@@ -769,7 +768,7 @@ project finance user can view all partners spend profile
     the user should not see the element        css = [name = "mark-as-complete"]
     the user goes back to the previous page
     the user should see all spend profiles as complete
-    the user should see the element            jQuery = .govuk-button:contains("Review and send total project spend profile")
+    the user should see the element            jQuery = a:contains("Review and submit project spend profile")
 
 partners can see the Spend Profile section completed
     Log in as a different user          &{lead_applicant_credentials_sp}

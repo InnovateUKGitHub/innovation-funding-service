@@ -63,7 +63,7 @@ public class FinanceOverviewController {
         return "project/financecheck/overview";
     }
 
-    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final Long projectId) {
+    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(long projectId) {
         final FinanceCheckSummaryResource financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
         final List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
         final PartnerOrganisationResource lead = simpleFindFirst(partnerOrgs, PartnerOrganisationResource::isLeadOrganisation).orElse(null);
@@ -72,13 +72,20 @@ public class FinanceOverviewController {
         ProjectResource project = projectService.getById(projectId);
         long applicationId = project.getApplication();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        boolean canChangeFunding = competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT)
-                && !financeCheckSummary.isSpendProfilesGenerated();
-        return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(project, sortedOrganisations, competition),
-                getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition), applicationId, canChangeFunding, competition.isLoan());
+        boolean canChangeFundingSought =
+                competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT) && !financeCheckSummary.isSpendProfilesGenerated();
+        return
+                new FinanceCheckOverviewViewModel(
+                        getProjectFinanceOverviewViewModel(projectId),
+                        getProjectFinanceSummaries(project, sortedOrganisations, competition),
+                        getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition),
+                        applicationId,
+                        canChangeFundingSought,
+                        competition.isLoan(),
+                        financeCheckSummary.isAllEligibilityAndViabilityInReview());
     }
 
-    private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {
+    private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {
         FinanceCheckOverviewResource financeCheckOverviewResource = financeCheckService.getFinanceCheckOverview(projectId).getSuccess();
         return new ProjectFinanceOverviewViewModel(financeCheckOverviewResource);
     }
@@ -89,9 +96,8 @@ public class FinanceOverviewController {
         return new FinanceCheckSummariesViewModel(summaries, partnerOrgs, competition.getFundingType());
     }
 
-    private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(Long projectId, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
+    private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(long projectId, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
         List<ProjectFinanceResource> finances = financeService.getProjectFinances(projectId);
         return new ProjectFinanceCostBreakdownViewModel(finances, partnerOrgs, competition);
     }
-
 }

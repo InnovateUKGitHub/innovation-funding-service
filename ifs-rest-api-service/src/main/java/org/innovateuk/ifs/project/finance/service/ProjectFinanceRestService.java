@@ -17,7 +17,7 @@ public interface ProjectFinanceRestService {
 
     RestResult<ViabilityResource> getViability(Long projectId, Long organisationId);
 
-    RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityRagStatus viabilityRagStatus);
+    RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus);
 
     RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId);
 

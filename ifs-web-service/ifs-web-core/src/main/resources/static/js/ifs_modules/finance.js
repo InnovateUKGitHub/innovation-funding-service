@@ -118,6 +118,8 @@ IFS.core.finance = (function () {
         formattedNumber = IFS.core.finance.formatPercentage(calculatedValue)
       } else if (format === 'currency') {
         formattedNumber = IFS.core.finance.formatCurrency(calculatedValue)
+      } else if (format === 'decimal-percentage') {
+        formattedNumber = IFS.core.finance.formatDecimalPercentage(calculatedValue)
       }
 
       if (element.is('input')) {
@@ -134,6 +136,10 @@ IFS.core.finance = (function () {
     },
     formatPercentage: function (total) {
       total = total.toFixed()
+      return total + '%'
+    },
+    formatDecimalPercentage: function (total) {
+      total = total.toFixed(2)
       return total + '%'
     }
   }

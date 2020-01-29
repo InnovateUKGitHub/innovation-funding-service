@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -9,7 +8,6 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
-import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.PartnerProjectLocationViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
@@ -22,8 +20,6 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -33,12 +29,9 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_LOCATION_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -81,19 +74,13 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Mock
     private ProjectDetailsService projectDetailsService;
 
-    @Mock
-    private UserService userService;
-
-    @Mock
-    private UserRestService userRestService;
-
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
         return new ProjectDetailsController();
     }
 
     @Test
-    public void testProjectDetails() throws Exception {
+    public void projectDetails() throws Exception {
         Long projectId = 20L;
 
         boolean partnerProjectLocationRequired = true;
@@ -151,7 +138,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testProjectDetailsReadOnlyView() throws Exception {
+    public void projectDetailsReadOnlyView() throws Exception {
         Long projectId = 20L;
 
         boolean partnerProjectLocationRequired = true;
@@ -207,7 +194,37 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testProjectManagerAndAddressCannotBeChangedWhenGOLAlreadyGenerated() throws Exception {
+    public void viewStartDate() throws Exception {
+        long projectId = 20L;
+        LocalDate targetStartDate = LocalDate.now();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withCompetition(competitionResource.getId())
+                .withDuration(23L)
+                .withTargetStartDate(targetStartDate)
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/details/start-date", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/details-start-date"))
+                .andReturn();
+
+        ProjectDetailsStartDateViewModel model = (ProjectDetailsStartDateViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(project.getName(), model.getProjectName());
+        assertEquals(project.getTargetStartDate(), model.getTargetStartDate());
+
+        verify(projectService).getById(project.getId());
+        verifyNoMoreInteractions(projectService);
+    }
+
+    @Test
+    public void projectManagerAndAddressCannotBeChangedWhenGOLAlreadyGenerated() throws Exception {
         Long projectId = 20L;
 
         boolean partnerProjectLocationRequired = true;
@@ -254,67 +271,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testViewStartDate() throws Exception {
-        ApplicationResource applicationResource = newApplicationResource().build();
-
-        ProjectResource project = newProjectResource().
-                withApplication(applicationResource).
-                with(name("My Project")).
-                withDuration(4L).
-                withTargetStartDate(LocalDate.now().withDayOfMonth(5)).
-                withDuration(4L).
-                build();
-
-        OrganisationResource leadOrganisation = newOrganisationResource().build();
-        List<ProjectUserResource> projectUsers = newProjectUserResource().
-                withUser(loggedInUser.getId()).
-                withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
-                build(1);
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-
-        MvcResult result = mockMvc.perform(get("/project/{id}/details/start-date", project.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/details-start-date"))
-                .andReturn();
-
-        Map<String, Object> model = result.getModelAndView().getModel();
-        ProjectDetailsStartDateViewModel viewModel = (ProjectDetailsStartDateViewModel) model.get("model");
-
-        assertEquals(project.getId(), viewModel.getProjectId());
-        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
-
-        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(FORM_ATTR_NAME);
-        assertEquals(project.getTargetStartDate().withDayOfMonth(1), form.getProjectStartDate());
-    }
-
-    @Test
-    public void testUpdateStartDate() throws Exception {
-        ApplicationResource applicationResource = newApplicationResource().build();
-        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
-
-        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(projectDetailsService.updateProjectStartDate(projectResource.getId(), LocalDate.of(2017, 6, 3))).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{id}/details/start-date", projectResource.getId()).
-                contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("projectStartDate", "projectStartDate").
-                param("projectStartDate.dayOfMonth", "3").
-                param("projectStartDate.monthValue", "6").
-                param("projectStartDate.year", "2017"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/project/" + projectResource.getId() + "/details"))
-                .andReturn();
-
-    }
-
-    @Test
-    public void testViewPartnerProjectLocation() throws Exception {
+    public void viewPartnerProjectLocation() throws Exception {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -347,7 +304,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenUpdateFails() throws Exception {
+    public void updatePartnerProjectLocationWhenUpdateFails() throws Exception {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -375,7 +332,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationSuccess() throws Exception {
+    public void updatePartnerProjectLocationSuccess() throws Exception {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -394,8 +351,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
         assertEquals(new PartnerProjectLocationForm(postcode), form);
 
+        verify(projectDetailsService).updatePartnerProjectLocation(projectId, organisationId, postcode);
+
         verify(projectService, never()).userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId());
         verify(projectService, never()).getById(projectId);
     }
 }
-

@@ -15,8 +15,6 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResou
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.invite.InviteService;
@@ -116,7 +114,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     @Test
     public void testUpload() throws Exception {
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
+                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), BigDecimal.valueOf(3));
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();
@@ -144,7 +142,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     @Test
     public void testRemove() throws Exception {
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
+                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), BigDecimal.valueOf(3));
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();

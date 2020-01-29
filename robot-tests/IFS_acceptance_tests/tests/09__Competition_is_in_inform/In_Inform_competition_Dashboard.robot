@@ -171,17 +171,17 @@ Custom Suite Setup
     The user clicks the button/link       link = ${INFORM_COMPETITION_NAME}
 
 the application question scores are correct
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Business opportunity") + div .govuk-grid-column-one-third:contains("Average score 6 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Potential market") + div .govuk-grid-column-one-third:contains("Average score 5 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project exploitation") + div .govuk-grid-column-one-third:contains("Average score 6 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Economic benefit") + div .govuk-grid-column-one-third:contains("Average score 4 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Technical approach") + div .govuk-grid-column-one-third:contains("Average score 4 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Innovation") + div .govuk-grid-column-one-third:contains("Average score 5 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Risks") + div .govuk-grid-column-one-third:contains("Average score 7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project team") + div .govuk-grid-column-one-third:contains("Average score 7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Funding") + div .govuk-grid-column-one-third:contains("Average score 3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Adding value") + div .govuk-grid-column-one-third:contains("Average score 7 / 10")
-    the user should see the element    jQuery = p:contains("Average overall: 53%")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Business opportunity") + div .govuk-grid-column-one-third:contains("Average score 6.3 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Potential market") + div .govuk-grid-column-one-third:contains("Average score 4.7 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project exploitation") + div .govuk-grid-column-one-third:contains("Average score 5.7 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Economic benefit") + div .govuk-grid-column-one-third:contains("Average score 4.3 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Technical approach") + div .govuk-grid-column-one-third:contains("Average score 4.3 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Innovation") + div .govuk-grid-column-one-third:contains("Average score 4.7 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Risks") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project team") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Funding") + div .govuk-grid-column-one-third:contains("Average score 3.3 / 10")
+    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Adding value") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
+    the user should see the element    jQuery = p:contains("Average overall: 53.3%")
 
 the application details are correct
     the user should see the element    jQuery = p:contains("High Performance Gasoline Stratified")

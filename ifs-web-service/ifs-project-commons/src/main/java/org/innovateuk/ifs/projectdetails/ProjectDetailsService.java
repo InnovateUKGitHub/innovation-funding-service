@@ -17,10 +17,9 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
 
-    ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
+    ServiceResult<Void> updateProjectStartDate(long projectId, LocalDate projectStartDate);
 
     ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths);
 
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address);
-
 }

@@ -55,6 +55,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...
 ...               IFS-5758 Adding finance reviewer to project
 ...
+...               IFS-6751  Remove ability to amend project start date externally in Project Setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup  Applicant
@@ -65,6 +67,7 @@ Resource          ../04__Applicant/Applicant_Commons.robot
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 ${user_email}  phillip.ramos@katz.example.com
 ${pmEmailId}  ${user_ids['${user_email}']}
+${projectSetupCompMgtDetailsPage}  ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/1/details
 
 # This suite uses the Magic material project
 
@@ -128,13 +131,12 @@ Lead partner can see the overview of the project details
     When the user clicks the button/link   link = Project details
     Then the user should see the project details
 
-Lead partner can change the Start Date
-    [Documentation]    INFUND-2614
+Lead partner can not change the Start Date
+    [Documentation]    IFS-6751
     [Tags]  HappyPath
     Given the user logs in and navigates to project details     &{lead_applicant_credentials}
-    When the user checks for target start date validation
-    And the user shouldn't be able to edit the day field as all projects start on the first of the month
-    And the user save the target start date
+    When the user clicks the button/link                         link = Target start date
+    Then the user should be able to see change start date instructions
 
 Lead partner can change the project address
     [Documentation]    INFUND-3157 INFUND-2165
@@ -142,6 +144,14 @@ Lead partner can change the project address
     Given the user navigates to the page             ${Project_In_Setup_Details_Page}
     And the user clicks the button/link              link = Correspondence address
     Then the user updates the correspondence address
+
+IFS Admin is able to edit the Start Date
+    [Documentation]  IFS-6751
+    [Setup]  log in as a different user    &{ifs_admin_user_credentials}
+    Given the user navigates to the page   ${projectSetupCompMgtDetailsPage}
+    When the user checks for target start date validation
+    Then the user shouldn't be able to edit the day field as all projects start on the first of the month
+    And the user save the target start date
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
@@ -234,7 +244,7 @@ User is able to accept new site terms and conditions
 Add Finance reviewer validations
     [Documentation]  IFS-5758
     [Setup]  log in as a different user                 &{ifs_admin_user_credentials}
-    Given the user navigates to the page                ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/1/details
+    Given the user navigates to the page                ${projectSetupCompMgtDetailsPage}
     When the user clicks the button/link                jQuery = a:contains("Edit")
     And the user clicks the button/link                 jQuery = button:contains("Update finance reviewer")
     Then the user should see a field and summary error  Enter the name of the finance reviewer.
@@ -254,13 +264,17 @@ IFS Admin is able to edit Finance reviewer
     Then the user should see the element           jQuery = tr:contains("Rianne Almeida")
 
 *** Keywords ***
+The user should be able to see change start date instructions
+    the user should not see the element         css = input.govuk-input[name="projectStartDate.monthValue"]
+    the user should not see the element         css = input.govuk-input[name="projectStartDate.year"]
+    the user should see the element             jQuery = p:contains("To request a change to the project start date please contact Innovate UK.")
+
 The user selects finance reviewer
     [Arguments]   ${FlName}
     input text                          id = userId    ${FlName}
     the user clicks the button/link     jQuery = ul li:contains("${FlName}")
 
 All the fields are completed
-    the user should see the element   jQuery = td:contains("Target start date")~ td strong:contains("Complete")
     the user should see the element   jQuery = td:contains("Correspondence address")~ td strong:contains("Complete")
 
 the user should see a validation error
@@ -401,8 +415,8 @@ the user logs in and navigates to project details
 
 the user checks for target start date validation
     the user clicks the button/link                 link = Target start date
-    the user should see the element                 jQuery = h2:contains("Project duration") ~ p:contains("36 months")
-    the user enters text to a text field            id = projectStartDate_year    2013
+    the user should see the element                 jQuery = h2:contains("Project duration") ~ p:contains("10 months")
+    the user enters text to a text field            id = projectStartDate_year    2019
     the user clicks the button/link                 jQuery = .govuk-button:contains("Save")
     the user should see a field and summary error   Please enter a future date.
 
@@ -470,7 +484,8 @@ the non-lead partner cannot changes any project details
     the user should not see the element         link = Target start date
     the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
     the user should not see the element         link = Correspondence address
-    the user navigates to the page and gets a custom error message    ${Project_Start_Date_Page}    ${403_error_message}
+    the user navigates to the page              ${Project_Start_Date_Page}
+    the user should be able to see change start date instructions
     the user navigates to the page and gets a custom error message    ${Project_Address_Page}    ${403_error_message}
 
 Custom suite teardown
