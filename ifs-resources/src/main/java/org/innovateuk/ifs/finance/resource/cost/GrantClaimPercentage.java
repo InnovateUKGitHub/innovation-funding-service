@@ -33,9 +33,6 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     @Override
     @JsonIgnore
     public BigDecimal getTotal() {
-        if (percentage == null) {
-            return null;
-        }
         return percentage;
     }
 
