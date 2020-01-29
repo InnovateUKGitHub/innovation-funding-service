@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -151,6 +153,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
             model.addAttribute("eligibilityForm", eligibilityForm);
             future.get();
+
+            List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(projectId);
+            model.addAttribute("eligibilityReadyToConfirm", hasAllFundingLevelsWithinMaximum(projectFinances));
 
             return "project/financecheck/eligibility";
         } catch (InterruptedException | ExecutionException e) {
@@ -309,5 +314,12 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
+    }
+
+    private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
+        return finances.stream().allMatch(finance -> {
+            int fundingLevel = finance.getGrantClaimPercentage();
+            return finance.getMaximumFundingLevel() >= fundingLevel;
+        });
     }
 }

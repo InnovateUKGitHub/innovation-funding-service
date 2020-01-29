@@ -127,8 +127,11 @@ public class FinanceChecksViabilityController {
     }
 
     private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
+        List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form);
+        model.addAttribute("viabilityReadyToConfirm", hasAllFundingLevelsWithinMaximum(projectFinances));
+
         return "project/financecheck/viability";
     }
 
@@ -205,4 +208,11 @@ public class FinanceChecksViabilityController {
     private int toZeroScaleInt(BigDecimal value) {
         return value.setScale(0, HALF_EVEN).intValueExact();
     }
+
+    private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
+        return finances.stream().allMatch(finance -> {
+            int fundingLevel = finance.getGrantClaimPercentage();
+            return finance.getMaximumFundingLevel() >= fundingLevel;
+            });
+        }
 }

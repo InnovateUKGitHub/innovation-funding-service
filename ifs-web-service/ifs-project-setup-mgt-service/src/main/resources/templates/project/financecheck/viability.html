@@ -139,7 +139,16 @@
                   <option value="RED">Red</option>
                 </select>
               </div>
-              <button type="button" data-js-modal="modal-confirm-viability" class="govuk-button" id="confirm-button">Confirm viability</button>
+
+              <button th:if="${!viabilityReadyToConfirm}"
+                      disabled="disabled"
+                      class="govuk-button">Confirm viability</button>
+              <button th:unless="${!viabilityReadyToConfirm}"
+                      type="button"
+                      data-js-modal="modal-confirm-viability"
+                      class="govuk-button"
+                      id="confirm-button">Confirm viability</button>
+
               <th:block th:insert="fragments/modals :: modal-confirm-viability (${model})" />
           </th:block>
           <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
