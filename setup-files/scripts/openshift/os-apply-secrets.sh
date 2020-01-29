@@ -34,32 +34,32 @@ fi
 function applyAwsCerts() {
     # idp secrets
     oc create secret generic idp-keys-secrets \
-    --from-literal="ldap-encryption.crt=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/CERT)" \
-    --from-literal="idp-encryption.key=""$(valueFromAws /CI/IFS/$1/IDP/ENCRYPTION/KEY)" \
-    --from-literal="idp-encryption.crt=""$(valueFromAws /CI/IFS/$1/IDP/ENCRYPTION/CERT)" \
-    --from-literal="idp_proxy_key.pem=""$(valueFromAws /CI/IFS/$1/IDP/PROXY/KEY)" \
-    --from-literal="idp_proxy_certificate.pem=""$(valueFromAws  /CI/IFS/$1/IDP/PROXY/CERT)" \
-    --from-literal="idp_proxy_cacertificate.pem=""$(valueFromAws /CI/IFS/$1/IDP/PROXY/CACERT/1 /CI/IFS/$1/IDP/PROXY/CACERT/2 /CI/IFS/$1/IDP/PROXY/CACERT/3)" \
-    --from-literal="idp-signing.key=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/KEY)" \
-    --from-literal="idp-signing.crt=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/CERT)" \
-    --from-literal="sp_proxy_certificate.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/CERT)" \
+        --from-literal="ldap-encryption.crt=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/CERT)" \
+        --from-literal="idp-encryption.key=""$(valueFromAws /CI/IFS/$1/IDP/ENCRYPTION/KEY)" \
+        --from-literal="idp-encryption.crt=""$(valueFromAws /CI/IFS/$1/IDP/ENCRYPTION/CERT)" \
+        --from-literal="idp_proxy_key.pem=""$(valueFromAws /CI/IFS/$1/IDP/PROXY/KEY)" \
+        --from-literal="idp_proxy_certificate.pem=""$(valueFromAws  /CI/IFS/$1/IDP/PROXY/CERT)" \
+        --from-literal="idp_proxy_cacertificate.pem=""$(valueFromAws /CI/IFS/$1/IDP/PROXY/CACERT/1 /CI/IFS/$1/IDP/PROXY/CACERT/2 /CI/IFS/$1/IDP/PROXY/CACERT/3)" \
+        --from-literal="idp-signing.key=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/KEY)" \
+        --from-literal="idp-signing.crt=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/CERT)" \
+        --from-literal="sp_proxy_certificate.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/CERT)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 
     # sp secrets
     oc create secret generic sp-keys-secrets \
-    --from-literal="sp_proxy_key.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/KEY)" \
-    --from-literal="sp_proxy_certificate.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/CERT)" \
-    --from-literal="sp_proxy_cacertificate.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/CACERT/1 /CI/IFS/$1/SP/PROXY/CACERT/2 /CI/IFS/$1/SP/PROXY/CACERT/3)" \
-    --from-literal="idp-signing.crt=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/CERT)" \
-    --from-literal="idp-encryption.crt=""$(valueFromAws /CI/IFS/$1/IDP/ENCRYPTION/CERT)" \
+        --from-literal="sp_proxy_key.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/KEY)" \
+        --from-literal="sp_proxy_certificate.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/CERT)" \
+        --from-literal="sp_proxy_cacertificate.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/CACERT/1 /CI/IFS/$1/SP/PROXY/CACERT/2 /CI/IFS/$1/SP/PROXY/CACERT/3)" \
+        --from-literal="idp-signing.crt=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/CERT)" \
+        --from-literal="idp-encryption.crt=""$(valueFromAws /CI/IFS/$1/IDP/ENCRYPTION/CERT)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 
     # ldap secrets
     oc create secret generic ldap-keys-secrets \
-    --from-literal="ldap-encryption.crt=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/CERT)" \
-    --from-literal="ldap-encryption.key=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/KEY)" \
+        --from-literal="ldap-encryption.crt=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/CERT)" \
+        --from-literal="ldap-encryption.key=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/KEY)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
@@ -77,32 +77,32 @@ function valueFromAws() {
 function applyFileCerts() {
     # idp secrets
     oc create secret generic idp-keys-secrets \
-    --from-literal="ldap-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/ldap-encryption.crt)" \
-    --from-literal="idp-encryption.key=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.key)" \
-    --from-literal="idp-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.crt)" \
-    --from-literal="idp_proxy_key.pem=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_key.pem)" \
-    --from-literal="idp_proxy_certificate.pem=""$(cat  ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_certificate.pem)" \
-    --from-literal="idp_proxy_cacertificate.pem=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem)" \
-    --from-literal="idp-signing.key=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.key)" \
-    --from-literal="idp-signing.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.crt)" \
-    --from-literal="sp_proxy_certificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_certificate.pem)" \
+        --from-literal="ldap-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/ldap-encryption.crt)" \
+        --from-literal="idp-encryption.key=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.key)" \
+        --from-literal="idp-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.crt)" \
+        --from-literal="idp_proxy_key.pem=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_key.pem)" \
+        --from-literal="idp_proxy_certificate.pem=""$(cat  ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_certificate.pem)" \
+        --from-literal="idp_proxy_cacertificate.pem=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem)" \
+        --from-literal="idp-signing.key=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.key)" \
+        --from-literal="idp-signing.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.crt)" \
+        --from-literal="sp_proxy_certificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_certificate.pem)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 
     # sp secrets
     oc create secret generic sp-keys-secrets \
-    --from-literal="sp_proxy_key.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_key.pem)" \
-    --from-literal="sp_proxy_certificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_certificate.pem)" \
-    --from-literal="sp_proxy_cacertificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_cacertificate.pem)" \
-    --from-literal="idp-signing.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.crt)" \
-    --from-literal="idp-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.crt)" \
+        --from-literal="sp_proxy_key.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_key.pem)" \
+        --from-literal="sp_proxy_certificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_certificate.pem)" \
+        --from-literal="sp_proxy_cacertificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_cacertificate.pem)" \
+        --from-literal="idp-signing.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.crt)" \
+        --from-literal="idp-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.crt)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 
     # ldap secrets
     oc create secret generic ldap-keys-secrets \
-    --from-literal="ldap-encryption.crt=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt)" \
-    --from-literal="ldap-encryption.key=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key)" \
+        --from-literal="ldap-encryption.crt=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt)" \
+        --from-literal="ldap-encryption.key=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
