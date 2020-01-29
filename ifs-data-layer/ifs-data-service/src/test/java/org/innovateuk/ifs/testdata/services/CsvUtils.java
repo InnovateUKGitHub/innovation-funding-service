@@ -632,7 +632,7 @@ public class CsvUtils {
         private AssessorUserLine(List<String> line) {
 
             super(line);
-            int i = line.size() - 16;
+            int i = line.size() - 17;
             competitionName = line.get(i++);
             hash = nullable(line.get(i++));
             inviteStatus = InviteStatus.valueOf(line.get(i++));
