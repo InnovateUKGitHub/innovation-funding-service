@@ -34,9 +34,6 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMA
 public class YourFundingSaver extends AbstractYourFundingSaver {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${ifs.funding.level.decimal.percentage.enabled}")
-    private boolean fundingLevelPercentageToggle;
-
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
@@ -45,6 +42,9 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
 
     @Autowired
     private ApplicationFinanceRowRestService financeRowRestService;
+
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
 
     @Override
     protected FinanceRowRestService getFinanceRowService() {
@@ -67,7 +67,6 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         try {
             if (field.equals("grantClaimPercentage")) {
                 GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-
                 if (fundingLevelPercentageToggle) {
                     grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
                 } else {
