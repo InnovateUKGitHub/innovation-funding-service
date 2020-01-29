@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 @Lazy
 public class AssessmentDataBuilderService extends BaseDataBuilderService {
-    List<String> defaultAssessors = asList("carolyn.reed@example.com", "jo.peters@ntag.example.com", "blake.wood@gmail.com");
+    List<String> defaultAssessors = asList("carolyn.reed@example.com", "jo.peters@ntag.example.com");
 
     @Autowired
     private UserRepository userRepository;
