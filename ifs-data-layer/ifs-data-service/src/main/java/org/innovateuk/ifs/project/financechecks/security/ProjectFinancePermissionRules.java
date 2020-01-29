@@ -82,14 +82,12 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project partners can update the project finances of their own project")
-    public boolean projectPartnerCanUpdateProjectFinance(final ProjectFinanceResource financeResource,
-                                                 final UserResource user) {
+    public boolean projectPartnerCanUpdateProjectFinance(final ProjectFinanceResource financeResource, final UserResource user) {
         return isPartner(financeResource.getProject(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Internal users can update the project finances of a project")
-    public boolean internalUsersCanUpdateProjectFinance(final ProjectFinanceResource financeResource,
-                                                         final UserResource user) {
+    public boolean internalUsersCanUpdateProjectFinance(final ProjectFinanceResource financeResource, final UserResource user) {
         return isProjectFinanceUser(user) || isIFSAdmin(user);
     }
 
@@ -113,12 +111,12 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value="READ_OVERVIEW", description = "Internal users can see the project finance overview")
+    @PermissionRule(value = "READ_OVERVIEW", description = "Internal users can see the project finance overview")
     public boolean internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return isInternal(user);
     }
 
-    @PermissionRule(value="READ_OVERVIEW", description = "Project partners can see their project finance overview")
+    @PermissionRule(value = "READ_OVERVIEW", description = "Project partners can see their project finance overview")
     public boolean partnersCanSeeTheProjectFinanceOverviewsForTheirProject(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return isPartner(projectCompositeId.id(), user.getId());
     }

@@ -266,10 +266,10 @@
 
     <th:block th:insert="fragments/form-elements/textfield ::
                         textfield-integer(
-                            label='Turnover (£)',
+                            label='Turnover (&pound;)',
                             hint='Your turnover from the last financial year.',
                             id='turnover',
-                            value=${readOnly ? ('£' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '0')) : form.turnover},
+                            value=${readOnly ? ('&pound;' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '0')) : form.turnover},
                             required=true,
                             readOnly=${readOnly},
                             )" />
