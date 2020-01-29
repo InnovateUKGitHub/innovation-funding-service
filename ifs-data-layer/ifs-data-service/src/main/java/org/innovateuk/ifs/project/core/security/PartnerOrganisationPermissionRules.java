@@ -43,6 +43,21 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
     }
 
+    @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Partners can read their own progress when setting up their organisation")
+    public boolean partnersCanReadTheirOwnPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
+    }
+
+    @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Internal users can read partner progress in project setup")
+    public boolean internalUsersCanReadPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Stakeholders can read partner progress in project setup in competitions they are assigned to")
+    public boolean stakeholdersCanReadPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return userIsStakeholderOnCompetitionForProject(partnerOrganisation.getProject(), user.getId());
+    }
+
     @PermissionRule(value = "UPDATE_PENDING_PARTNER_PROGRESS", description = "Partners can update their own progress when setting up their organisation")
     public boolean partnersCanUpdateTheirOwnPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
