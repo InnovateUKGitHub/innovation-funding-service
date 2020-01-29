@@ -284,19 +284,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getProjectFinance(projectId, organisationId).andOnSuccessReturn(ProjectFinance::getCreditReportConfirmed);
     }
 
-//    @Override
-//    public ServiceResult<Boolean> canEditFinance(long projectId) {
-//        List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(projectId);
-//
-//       return  serviceSuccess(!partnerOrganisations.stream()
-//                .anyMatch(this::somethingApproved));
-//    }
-//
-//    private boolean somethingApproved(PartnerOrganisation partnerOrg) {
-//        return getViabilityProcess(partnerOrg).getSuccess().equals(ViabilityState.APPROVED) ||
-//        getEligibilityProcess(partnerOrg).getSuccess().equals(ViabilityState.APPROVED);
-//    }
-//
     @Override
     public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(long projectId) {
         return projectFinanceService.financeChecksTotals(projectId);

@@ -53,9 +53,4 @@ public class FinanceCheckController {
     public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(@PathVariable long projectId) {
         return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toGetResponse();
     }
-//
-//    @GetMapping("/{projectId}/finance-check/can-edit")
-//    public RestResult<Boolean> canEditFinances(@PathVariable long projectId) {
-//        return financeCheckService.canEditFinance(projectId).toGetResponse();
-//    }
 }

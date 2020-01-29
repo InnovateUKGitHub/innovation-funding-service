@@ -70,7 +70,4 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'VIEW_CREDIT_REPORT')")
     ServiceResult<Boolean> getCreditReport(long projectId, long organisationId);
-//
-//    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'VIEW_CREDIT_REPORT')")
-//    ServiceResult<Boolean> canEditFinance(long projectId);
 }
