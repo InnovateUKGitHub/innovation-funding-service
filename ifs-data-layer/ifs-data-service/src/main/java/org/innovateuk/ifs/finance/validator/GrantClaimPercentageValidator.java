@@ -58,7 +58,7 @@ public class GrantClaimPercentageValidator implements Validator {
 
         if (BigDecimal.valueOf(max).compareTo(response.getPercentage()) < 0) {
             rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
-        } else if (BigDecimal.valueOf(max).compareTo(response.getPercentage()) > 1) {
+        } else if (response.getPercentage().compareTo(BigDecimal.valueOf(max)) > 0) {
             rejectValue(errors, "percentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }

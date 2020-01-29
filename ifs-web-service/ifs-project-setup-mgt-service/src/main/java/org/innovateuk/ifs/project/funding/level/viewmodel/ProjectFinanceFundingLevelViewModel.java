@@ -6,12 +6,16 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.funding.level.form.ProjectFinanceFundingLevelForm;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProjectFinanceFundingLevelViewModel {
+
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
 
     private final long projectId;
     private final long applicationId;
@@ -78,5 +82,9 @@ public class ProjectFinanceFundingLevelViewModel {
                              .calculateFundingSought(entry.getValue().getFundingLevel())
                 )
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public boolean isFundingLevelPercentageToggle() {
+        return fundingLevelPercentageToggle;
     }
 }
