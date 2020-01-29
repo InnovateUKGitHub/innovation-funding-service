@@ -30,10 +30,10 @@ public class GrantClaimValidatorTest {
 
 	@Mock
 	private ApplicationFinanceRowRepository financeRowRepository;
-	
+
 	private GrantClaimPercentage claim;
 	private BindingResult bindingResult;
-	
+
 	@Before
 	public void setUp() {
         claim = new GrantClaimPercentage(CLAIM_ID, BigDecimal.valueOf(100), 1L);
@@ -73,6 +73,18 @@ public class GrantClaimValidatorTest {
 
 		verifyError("validation.finance.grant.claim.percentage.max", 30);
 	}
+
+    @Test
+    public void maximumDecimalPlaceError() {
+        claim.setPercentage(BigDecimal.valueOf(50.444));
+        ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
+        when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
+        when(applicationFinance.getMaximumFundingLevel()).thenReturn(100);
+
+        validator.validate(claim, bindingResult);
+
+        verifyError("validation.finance.percentage");
+    }
 
 	@Test
 	public void success() {

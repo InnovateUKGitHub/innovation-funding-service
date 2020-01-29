@@ -150,4 +150,21 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
 
         verifyZeroInteractions(financeRowRestService);
     }
+
+    @Test
+    public void saveFundingLevels_invalidZeroFundingLevel() throws Exception {
+        when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+        when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
+
+        mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
+                .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
+                .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("project/financecheck/funding-level"))
+                .andExpect(model().attributeHasFieldErrorCode("form", format("partners[%d].fundingLevel", industrialOrganisation),"DecimalMin"))
+                .andReturn();
+
+        verifyZeroInteractions(financeRowRestService);
+    }
 }
