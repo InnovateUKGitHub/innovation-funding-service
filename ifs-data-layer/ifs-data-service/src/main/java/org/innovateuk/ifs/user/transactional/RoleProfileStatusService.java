@@ -15,14 +15,14 @@ import java.util.List;
 public interface RoleProfileStatusService {
 
     @SecuredBySpring(value = "UPDATE_USER_STATUS", description = "Only comp admin, project finance or IFS admin can update a users status")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> updateUserStatus(long userId, RoleProfileStatusResource roleProfileStatusResource);
 
     @SecuredBySpring(value = "RETRIEVE_USER_STATUS", description = "Only comp admin, project finance or IFS admin can retrieve a users status")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<List<RoleProfileStatusResource>> findByUserId(long userId);
 
     @SecuredBySpring(value = "RETRIEVE_USER_STATUS", description = "Only comp admin, project finance or IFS admin can retrieve a users status")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<RoleProfileStatusResource> findByUserIdAndProfileRole(long userId, ProfileRole profileRole);
 }
