@@ -106,10 +106,6 @@ public class SelectOrganisationController {
     }
 
     private boolean hasCompletedSetup(long projectId, PartnerOrganisationResource partner) {
-//        Optional<PendingPartnerProgressResource> partnerProgress = Optional.empty();
-//        partnerProgress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, partner.getOrganisation())
-//            .andOnSuccess(() -> { return; }).getOptionalSuccessObject();
-
         Optional<PendingPartnerProgressResource> partnerProgress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, partner.getOrganisation()).toOptionalIfNotFound().getSuccess();
         return !partnerProgress.isPresent() || partnerProgress.get().isCompleted();
     }
