@@ -323,6 +323,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectDocumentsMapper = serviceLocator.getBean(ProjectDocumentsMapper.class);
         applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
         grantOfferLetterService = serviceLocator.getBean(GrantOfferLetterService.class);
+        roleProfileStatusService = serviceLocator.getBean(RoleProfileStatusService.class);
         compAdminEmail = serviceLocator.getCompAdminEmail();
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
     }
