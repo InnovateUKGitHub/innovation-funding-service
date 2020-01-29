@@ -6,7 +6,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.funding.level.form.ProjectFinanceFundingLevelForm;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,16 +13,17 @@ import java.util.stream.Collectors;
 
 public class ProjectFinanceFundingLevelViewModel {
 
-    @Value("${ifs.funding.level.decimal.percentage.enabled}")
-    private boolean fundingLevelPercentageToggle;
-
     private final long projectId;
     private final long applicationId;
     private final String projectName;
     private final List<ProjectFinancePartnerFundingLevelViewModel> partners;
     private final boolean collaborativeProject;
+    private boolean fundingLevelPercentageToggle;
 
-    public ProjectFinanceFundingLevelViewModel(ProjectResource project, List<ProjectFinanceResource> finances, OrganisationResource lead) {
+    public ProjectFinanceFundingLevelViewModel(ProjectResource project,
+                                               List<ProjectFinanceResource> finances,
+                                               OrganisationResource lead,
+                                               boolean fundingLevelPercentageToggle) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
@@ -35,6 +35,7 @@ public class ProjectFinanceFundingLevelViewModel {
                         pf.getTotalOtherFunding(), totalGrant))
                 .collect(Collectors.toList());
         this.collaborativeProject = project.isCollaborativeProject();
+        this.fundingLevelPercentageToggle = fundingLevelPercentageToggle;
     }
 
     public long getProjectId() {

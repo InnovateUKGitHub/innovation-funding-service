@@ -1,12 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class YourFundingViewModel {
-
-    @Value("${ifs.funding.level.decimal.percentage.enabled}")
-    private boolean fundingLevelPercentageToggle;
-
     private final long applicationId;
 
     private final long sectionId;
@@ -41,6 +35,8 @@ public class YourFundingViewModel {
 
     private final boolean overridingFundingRules;
 
+    private boolean fundingLevelPercentageToggle;
+
     public YourFundingViewModel(long applicationId,
                                 long sectionId,
                                 long organisationId,
@@ -57,7 +53,8 @@ public class YourFundingViewModel {
                                 long yourOrganisationSectionId,
                                 Integer maximumFundingLevel,
                                 String financesUrl,
-                                boolean overridingFundingRules) {
+                                boolean overridingFundingRules,
+                                boolean fundingLevelPercentageToggle) {
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.organisationId = organisationId;
@@ -75,6 +72,7 @@ public class YourFundingViewModel {
         this.maximumFundingLevel = maximumFundingLevel;
         this.financesUrl = financesUrl;
         this.overridingFundingRules = overridingFundingRules;
+        this.fundingLevelPercentageToggle = fundingLevelPercentageToggle;
     }
 
     public long getApplicationId() {

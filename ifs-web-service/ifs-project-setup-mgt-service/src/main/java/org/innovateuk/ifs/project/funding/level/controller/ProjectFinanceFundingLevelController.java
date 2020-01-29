@@ -37,6 +37,9 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMA
 @PreAuthorize("hasAuthority('project_finance')")
 public class ProjectFinanceFundingLevelController {
 
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
+
     @Autowired
     private ProjectRestService projectRestService;
 
@@ -45,9 +48,6 @@ public class ProjectFinanceFundingLevelController {
 
     @Autowired
     private ProjectFinanceRowRestService financeRowRestService;
-
-    @Value("${ifs.funding.level.decimal.percentage.enabled}")
-    private boolean fundingLevelPercentageToggle;
 
     @GetMapping
     public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingLevelForm form,
@@ -89,7 +89,7 @@ public class ProjectFinanceFundingLevelController {
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource lead = projectRestService.getLeadOrganisationByProject(projectId).getSuccess();
-        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead));
+        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead, fundingLevelPercentageToggle));
         return "project/financecheck/funding-level";
     }
 
