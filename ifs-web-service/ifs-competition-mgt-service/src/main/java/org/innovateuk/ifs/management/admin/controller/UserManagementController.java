@@ -130,11 +130,10 @@ public class UserManagementController extends AsyncAdaptor {
         final CompletableFuture<UserPageResource> inactiveUsers;
         final CompletableFuture<RoleInvitePageResource> pendingUsers;
         if (adminUser) {
-            activeUsers = async(() -> userRestService.getActiveUsers(filter, page - 1 , size).getSuccess());
+            activeUsers = async(() -> userRestService.getActiveUsers(filter, page - 1, size).getSuccess());
             inactiveUsers = async(() -> userRestService.getInactiveUsers(filter, page - 1, size).getSuccess());
             pendingUsers = async(() -> inviteUserRestService.getPendingInternalUserInvites(filter, page - 1, size).getSuccess());
-        }
-        else {
+        } else {
             activeUsers = async(() -> userRestService.getActiveExternalUsers(filter, page - 1, size).getSuccess());
             inactiveUsers = async(() -> userRestService.getInactiveExternalUsers(filter, page - 1, size).getSuccess());
             pendingUsers = async(() -> new RoleInvitePageResource());
@@ -167,24 +166,22 @@ public class UserManagementController extends AsyncAdaptor {
             description = "IFS admins and support users can view users.")
     @GetMapping("/user/{userId}")
     public String viewUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
-        return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
-                    model.addAttribute("model", populateEditUserViewModel(user, loggedInUser));
-                    return "admin/user";
+        return userRestService.retrieveUserById(userId).andOnSuccessReturn(user -> {
+            model.addAttribute("model", populateEditUserViewModel(user, loggedInUser));
+            return "admin/user";
         }).getSuccess();
     }
 
     private EditUserViewModel populateEditUserViewModel(UserResource user, UserResource loggedInUser) {
         return new EditUserViewModel(user,
-                                     roleProfileStatusRestService.findByUserId(user.getId())
-                                             .getOptionalSuccessObject()
-                                             .orElse(emptyList()),
-                                     loggedInUser.hasRole(IFS_ADMINISTRATOR),
-                                     profileFeatureToggle);
+                loggedInUser,
+                roleProfileStatusRestService.findByUserId(user.getId())
+                        .getOptionalSuccessObject()
+                        .orElse(emptyList()),
+                profileFeatureToggle);
     }
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
-    @SecuredBySpring(value = "UserManagementController.viewEditUser() method",
-            description = "IFS admins and support users can edit users.")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'VIEW_EDIT_USER_PAGE')")
     @GetMapping("/user/{userId}/edit")
     public String viewEditUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
@@ -227,7 +224,7 @@ public class UserManagementController extends AsyncAdaptor {
 
         Supplier<String> failureView = () -> viewEditUser(model, user, loggedInUser);
         Supplier<String> noEmailChangeSuccess = () -> "redirect:/admin/users/active";
-        Supplier<String> emailChangeSuccess = () ->  {
+        Supplier<String> emailChangeSuccess = () -> {
             cookieService.saveToCookie(response, NEW_EMAIL_COOKIE, form.getEmail());
             return String.format("redirect:/admin/user/%d/edit/confirm", userId);
         };
@@ -305,7 +302,7 @@ public class UserManagementController extends AsyncAdaptor {
             description = "IFS admins and support users can deactivate users.")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
     public String deactivateUser(@PathVariable long userId) {
-        return userRestService.retrieveUserById(userId).andOnSuccess( user ->
+        return userRestService.retrieveUserById(userId).andOnSuccess(user ->
                 userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
@@ -314,7 +311,7 @@ public class UserManagementController extends AsyncAdaptor {
             description = "IFS admins and support users can reactivate users.")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
     public String reactivateUser(@PathVariable long userId) {
-        return userRestService.retrieveUserById(userId).andOnSuccess( user ->
+        return userRestService.retrieveUserById(userId).andOnSuccess(user ->
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
@@ -334,7 +331,7 @@ public class UserManagementController extends AsyncAdaptor {
         return emptyPage(model);
     }
 
-    private static String emptyPage(Model model){
+    private static String emptyPage(Model model) {
         model.addAttribute("mode", "init");
         model.addAttribute("users", emptyList());
         return SEARCH_PAGE_TEMPLATE;

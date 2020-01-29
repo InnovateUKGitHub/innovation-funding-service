@@ -16,15 +16,15 @@ import java.util.Optional;
 public class EditUserViewModel {
 
     private final UserResource user;
+    private final UserResource loggedInUser;
     private final List<RoleProfileStatusResource> roleProfiles;
-    private final boolean ifsAdmin;
     private final boolean displayRoleProfileLink;
 
 
-    public EditUserViewModel(UserResource user, List<RoleProfileStatusResource> roleProfiles, boolean ifsAdmin, boolean displayRoleProfileLink) {
+    public EditUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles, boolean displayRoleProfileLink) {
         this.user = user;
+        this.loggedInUser = loggedInUser;
         this.roleProfiles = roleProfiles;
-        this.ifsAdmin = ifsAdmin;
         this.displayRoleProfileLink = displayRoleProfileLink;
     }
 
@@ -33,20 +33,29 @@ public class EditUserViewModel {
     }
 
     public boolean isIfsAdmin() {
-        return ifsAdmin;
+        return loggedInUser.hasRole(Role.IFS_ADMINISTRATOR);
+    }
+
+    public boolean isSupport() {
+        return loggedInUser.hasRole(Role.SUPPORT);
     }
 
     public boolean isDisplayRoleProfileLink() {
         return displayRoleProfileLink;
     }
 
+    public boolean isDisplayAssessorTitle() {
+        return !(isSupport() || isIfsAdmin());
+    }
     /* view logic */
     public boolean isReadOnly() {
-        return !ifsAdmin && !user.isExternalUser();
+        boolean editable = isIfsAdmin()
+                || loggedInUser.hasRole(Role.SUPPORT) && user.isExternalUser();
+        return !editable;
     }
 
     public boolean isCanEditUserDetails() {
-        return ifsAdmin && user.isInternalUser();
+        return isIfsAdmin() && user.isInternalUser();
     }
 
     public boolean isInternal() {
@@ -66,6 +75,7 @@ public class EditUserViewModel {
         }
         return "Active";
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,9 +85,10 @@ public class EditUserViewModel {
         EditUserViewModel that = (EditUserViewModel) o;
 
         return new EqualsBuilder()
-                .append(ifsAdmin, that.ifsAdmin)
                 .append(displayRoleProfileLink, that.displayRoleProfileLink)
                 .append(user, that.user)
+                .append(loggedInUser, that.loggedInUser)
+                .append(roleProfiles, that.roleProfiles)
                 .isEquals();
     }
 
@@ -85,7 +96,8 @@ public class EditUserViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(user)
-                .append(ifsAdmin)
+                .append(loggedInUser)
+                .append(roleProfiles)
                 .append(displayRoleProfileLink)
                 .toHashCode();
     }

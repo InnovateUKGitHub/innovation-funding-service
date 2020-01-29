@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" th:with="pageTitle=${model.displayAssessorTitle ? 'Assessor details' : 'View user details'}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='View user details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body">
 
@@ -19,7 +19,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View user details',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${pageTitle},size='govuk-heading-xl'" />
         <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <th:block th:if="${model.canEditUserDetails}">
@@ -139,7 +139,7 @@
                             <td class="govuk-table__cell" th:text="${role.displayName}"></td>
                             <td class="govuk-table__cell" th:text="${model.roleDisplay(role)}"></td>
                             <td class="govuk-table__cell">
-                                <th:block th:if="${canDisableRole and model.ifsAdmin}">
+                                <th:block th:if="${canDisableRole and !model.support}">
                                     <a class="govuk-link" href="#">View role profile</a>
                                 </th:block>
                             </td>

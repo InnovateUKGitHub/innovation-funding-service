@@ -164,7 +164,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel(user, emptyList(), false, true)));
+                .andExpect(model().attribute("model", new EditUserViewModel(user, getLoggedInUser(), emptyList(), true)));
     }
 
     @Test
@@ -230,7 +230,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/edit-user"))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("model", new EditUserViewModel(userResource, emptyList(), false, true)));
+                .andExpect(model().attribute("model", new EditUserViewModel(userResource, getLoggedInUser(), emptyList(), true)));
     }
 
     @Test
