@@ -1,0 +1,35 @@
+=== Get role profile status by user id
+==== Request
+include::{snippets}/roleProfileStatus/find-by-user-id/http-request.adoc[]
+include::{snippets}/roleProfileStatus/find-by-user-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/roleProfileStatus/find-by-user-id/http-response.adoc[]
+include::{snippets}/roleProfileStatus/find-by-user-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/roleProfileStatus/find-by-user-id/curl-request.adoc[]
+
+=== Get role profile status by user id and profile role
+==== Request
+include::{snippets}/roleProfileStatus/find-by-user-id-and-profile-role/http-request.adoc[]
+include::{snippets}/roleProfileStatus/find-by-user-id-and-profile-role/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/roleProfileStatus/find-by-user-id-and-profile-role/http-response.adoc[]
+include::{snippets}/roleProfileStatus/find-by-user-id-and-profile-role/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/roleProfileStatus/find-by-user-id-and-profile-role/curl-request.adoc[]
+
+=== update user role profile status
+==== Request
+include::{snippets}/roleProfileStatus/update-user-status/http-request.adoc[]
+include::{snippets}/roleProfileStatus/update-user-status/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/roleProfileStatus/update-user-status/http-response.adoc[]
+include::{snippets}/roleProfileStatus/update-user-status/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/roleProfileStatus/update-user-status/curl-request.adoc[]
