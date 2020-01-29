@@ -155,7 +155,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
         when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
 
-        assertFalse(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
+        assertFalse(rules.partnersOnProjectCanView(partnerOrg, user));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
         when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
 
-        assertTrue(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
+        assertTrue(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
     }
 
     @Test
