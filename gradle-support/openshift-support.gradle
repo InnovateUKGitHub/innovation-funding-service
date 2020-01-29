@@ -295,10 +295,13 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 }
 
 // Remote tasks
-// TODO IFS-6251 remove when replaced by deleteProjectRemote in bamboo
+// TODO IFS-7091 remove when replaced by deleteProjectRemote in bamboo
 task deleteProject(type: Exec) {
     def token
     doFirst {
+        if (isNamedEnv()) {
+            throw new GradleException("Cannot delete a named environment")
+        }
         token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         executable 'oc'
         args 'delete', 'project', openshiftEnv, "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
@@ -328,6 +331,9 @@ task deleteProject(type: Exec) {
 task deleteProjectRemote(type: Exec) {
     def token
     doFirst {
+        if (isNamedEnv()) {
+            throw new GradleException("Cannot delete a named environment")
+        }
         token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         executable 'oc'
         args 'delete', 'project', openshiftEnv, "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
@@ -354,7 +360,7 @@ task deleteProjectRemote(type: Exec) {
     }
 }
 
-// TODO IFS-6251 remove when replaced by createProjectRemote in bamboo
+// TODO IFS-7091 remove when replaced by createProjectRemote in bamboo
 task createProject(dependsOn: deleteProject) {
     def token
 
@@ -362,6 +368,7 @@ task createProject(dependsOn: deleteProject) {
     def openshiftAdminGroup = "CN=ocp_ifs_admins,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
 
     doFirst {
+
         token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         exec {
             executable 'oc'
