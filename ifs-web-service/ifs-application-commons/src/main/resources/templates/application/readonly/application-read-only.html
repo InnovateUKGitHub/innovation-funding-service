@@ -10,10 +10,10 @@
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
             <!--/* Show the accordion sections */-->
             <div class="govuk-accordion" data-module="accordion" id="accordion-questions">
-                <div class="govuk-accordion__section"  th:each="question, iteration : ${section.questions}">
+                <div class="govuk-accordion__section"  th:each="question : ${section.questions}">
                     <div class="govuk-accordion__section-header">
                         <h2 class="govuk-accordion__section-heading">
-                            <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${iteration.count}|">
+                            <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${question.questionId}|">
                                 <th:block th:text="${question.name}"></th:block>
                                 <th:block th:if="${model.settings.includeStatuses}">
                                     <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
@@ -22,7 +22,7 @@
                             </span>
                         </h2>
                     </div>
-                    <div th:id="|accordion-questions-content-${iteration.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${iteration.count}|">
+                    <div th:id="|accordion-questions-content-${question.questionId}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${question.questionId}|">
                         <th:block
                             th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
 
