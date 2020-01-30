@@ -39,6 +39,16 @@
         <a th:href="@{//}"
            class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
 
+        <div class="govuk-form-group govuk-!-margin-top-6">
+            <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+               th:href="@{/competition/{competitionId}/project/{projectId}/details}(competitionId=${model.competitionId}, projectId={model.projectId})"
+               class="button-secondary">Return to project details</a>
+            <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+               th:href="${cookieBackLinkUrl}"
+               class="button-secondary"
+               th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return</a>
+        </div>
+
         <th:block th:insert="fragments/layout :: main-content-end"/>
 
     </main>
