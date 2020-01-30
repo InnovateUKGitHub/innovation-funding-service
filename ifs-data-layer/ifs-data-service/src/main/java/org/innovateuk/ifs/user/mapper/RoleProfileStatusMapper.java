@@ -16,7 +16,6 @@ import org.mapstruct.Mappings;
 )
 public abstract class RoleProfileStatusMapper extends BaseMapper<RoleProfileStatus, RoleProfileStatusResource, Long> {
 
-
     @Mappings({
             @Mapping(source = "user.id", target = "userId"),
     })
