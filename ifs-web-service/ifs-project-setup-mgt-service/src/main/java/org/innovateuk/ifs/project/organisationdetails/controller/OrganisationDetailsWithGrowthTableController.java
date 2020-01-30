@@ -62,14 +62,13 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         FinanceCheckSummaryResource financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
 
-
         model.addAttribute("orgDetails", new OrganisationDetailsViewModel(project,
                 competitionId,
                 organisation,
-                organisation.getAddresses().get(0).getAddress(),
+                getAddress(organisation),
                 partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().size() > 1));
 
-        model.addAttribute("orgSize", new ProjectYourOrganisationViewModel(false,
+        model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
                 false,
                 false,
                 projectId,

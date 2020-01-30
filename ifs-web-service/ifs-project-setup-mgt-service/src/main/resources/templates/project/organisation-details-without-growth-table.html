@@ -27,16 +27,16 @@
             <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                             without-growth-table(
                                                    form=${form},
-                                                   organisationSizeOptions=${orgSize.organisationSizeOptions},
-                                                   isH2020=${orgSize.h2020},
-                                                   readOnly=${orgSize.readOnly},
-                                                   showOrganisationSizeAlert=${orgSize.showOrganisationSizeAlert},
-                                                   showStateAidAgreement=${orgSize.showStateAidAgreement},
+                                                   organisationSizeOptions=${yourOrg.organisationSizeOptions},
+                                                   isH2020=${yourOrg.h2020},
+                                                   readOnly=${yourOrg.readOnly},
+                                                   showOrganisationSizeAlert=${yourOrg.showOrganisationSizeAlert},
+                                                   showStateAidAgreement=${yourOrg.showStateAidAgreement},
                                             )" />
         </form>
 
-        <th:block th:if="${orgSize.isEditOrganisationSizeAvailable()}">
-            <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/without-growth-table (projectId=${orgSize.projectId}, organisationId=${orgSize.organisationId})}"
+        <th:block th:if="${yourOrg.isEditOrganisationSizeAvailable()}">
+            <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/without-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
                class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
         </th:block>
 
