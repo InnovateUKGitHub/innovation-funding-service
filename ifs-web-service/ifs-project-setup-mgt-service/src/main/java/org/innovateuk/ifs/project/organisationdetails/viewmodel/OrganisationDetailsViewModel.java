@@ -21,9 +21,6 @@ public class OrganisationDetailsViewModel {
     private final String postcode;
 
     private final String previousPage;
-    private final String backLink;
-    private final String projectDetailsLink = "";
-    private final String selectPartnerLink = "";
 
     public OrganisationDetailsViewModel(ProjectResource project,
                                         long competitionId,
@@ -45,7 +42,6 @@ public class OrganisationDetailsViewModel {
         this.postcode = address.getPostcode();
 
         this.previousPage = hasPartners ? "partner details" : "project details";
-        this.backLink = hasPartners ? projectDetailsLink : selectPartnerLink;
     }
 
     public long getProjectId() {
