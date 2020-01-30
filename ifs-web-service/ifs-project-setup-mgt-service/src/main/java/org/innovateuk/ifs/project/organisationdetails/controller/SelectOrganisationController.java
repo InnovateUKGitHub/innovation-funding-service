@@ -13,7 +13,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.organisationdetails.form.SelectOrganisationForm;
 import org.innovateuk.ifs.project.organisationdetails.viewmodel.SelectOrganisationViewModel;
-import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -51,7 +50,7 @@ public class SelectOrganisationController {
     @Autowired
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
-    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
+    private static final Log LOG = LogFactory.getLog(SelectOrganisationController.class);
 
     @GetMapping("/select")
     public String selectOrganisation(@ModelAttribute(name = "form", binding = false) SelectOrganisationForm form,

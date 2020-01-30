@@ -74,8 +74,9 @@ public class OrganisationDetailsWithoutGrowthTableController {
     }
 
     private AddressResource getAddress(OrganisationResource organisation) {
-        AddressResource address = new AddressResource("", "", "", "", "", "");
-        return organisation.getAddresses().size() > 0 ? organisation.getAddresses().get(0).getAddress() : address;
+        return organisation.getAddresses().size() > 0
+            ? organisation.getAddresses().get(0).getAddress()
+            : new AddressResource("", "", "", "", "", "");
     }
 
     private YourOrganisationWithoutGrowthTableForm getForm(long projectId, long organisationId) {
