@@ -40,6 +40,13 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
         return percentage;
     }
 
+    public Integer getIntegerPercentage() {
+        if (percentage == null) {
+            return null;
+        }
+        return percentage.intValue();
+    }
+
     public void setPercentage(BigDecimal percentage) {
         this.percentage = percentage;
     }
