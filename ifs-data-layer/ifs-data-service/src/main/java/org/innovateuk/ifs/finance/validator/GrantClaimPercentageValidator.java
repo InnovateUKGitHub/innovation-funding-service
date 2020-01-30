@@ -56,10 +56,11 @@ public class GrantClaimPercentageValidator implements Validator {
             return;
         }
 
-        if (BigDecimal.valueOf(max).compareTo(response.getPercentage()) < 0) {
-            rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
-        } else if (response.getPercentage().compareTo(BigDecimal.valueOf(max)) > 0) {
+        if (response.getPercentage().compareTo(BigDecimal.ZERO) <= 0) {
             rejectValue(errors, "percentage", "validation.field.percentage.max.value.or.higher", 0);
+        }
+        if (response.getPercentage().compareTo(BigDecimal.valueOf(max)) > 0) {
+            rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
         }
     }
 
