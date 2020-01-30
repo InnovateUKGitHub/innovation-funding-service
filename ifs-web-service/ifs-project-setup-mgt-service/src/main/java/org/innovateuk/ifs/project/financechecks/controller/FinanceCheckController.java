@@ -103,6 +103,7 @@ public class FinanceCheckController {
         List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(projectId);
 
         model.addAttribute("fundingLevels", hasAllFundingLevelsWithinMaximum(projectFinances));
+        model.addAttribute("orgSize", hasOrganisationSizeChanged(projectId));
         model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource, project.getProjectState().isActive(), project.isCollaborativeProject()));
         return "project/financecheck/summary";
     }
@@ -110,10 +111,10 @@ public class FinanceCheckController {
     private String redirectToViewFinanceCheckSummary(Long projectId) {
         return "redirect:/project/" + projectId + "/finance-check";
     }
-//
-//    private boolean hasOrganisationSizeChanged(long projectId) {
-//        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
-//    }
+
+    private boolean hasOrganisationSizeChanged(long projectId) {
+        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
+    }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
         return finances.stream().allMatch(finance -> {
