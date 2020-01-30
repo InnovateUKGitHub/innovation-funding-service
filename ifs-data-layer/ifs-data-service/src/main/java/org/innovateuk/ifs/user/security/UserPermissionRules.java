@@ -131,7 +131,7 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Support users and administrators can view external users")
-    public boolean supportUsersCanViewExternalUsers(UserPageResource userToView, UserResource user) {
+    public boolean supportUsersCanViewExternalUsers(ManageUserPageResource userToView, UserResource user) {
         return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
     }
 

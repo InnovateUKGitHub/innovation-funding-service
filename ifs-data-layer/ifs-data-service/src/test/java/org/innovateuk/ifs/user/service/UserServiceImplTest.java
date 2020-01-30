@@ -455,7 +455,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRepositoryMock.findByEmailContainingAndStatus("", UserStatus.ACTIVE, pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
-        ServiceResult<UserPageResource> result = service.findActive("", pageable);
+        ServiceResult<ManageUserPageResource> result = service.findActive("", pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());
@@ -473,7 +473,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRepositoryMock.findByEmailContainingAndStatus("", UserStatus.INACTIVE, pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
-        ServiceResult<UserPageResource> result = service.findInactive("", pageable);
+        ServiceResult<ManageUserPageResource> result = service.findInactive("", pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());
