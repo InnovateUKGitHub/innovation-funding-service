@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<UserManagementController> {
 
-    private UserPageResource userPageResource;
+    private ManageUserPageResource userPageResource;
 
     private RoleInvitePageResource roleInvitePageResource;
 
@@ -59,7 +59,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     @Before
     public void setUpCommonExpectations() {
 
-        userPageResource = new UserPageResource();
+        userPageResource = new ManageUserPageResource();
 
         roleInvitePageResource = new RoleInvitePageResource();
 
