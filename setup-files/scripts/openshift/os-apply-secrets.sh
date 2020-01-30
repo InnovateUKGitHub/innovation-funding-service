@@ -24,7 +24,7 @@ echo "AWS_PROFILE="${AWS_PROFILE}
 
 if $(isNamedEnvironment ${TARGET}); then
     if [[ -z ${AWS_PROFILE} || -z ${AWS_ACCESS_KEY} || -z ${AWS_ACCESS_KEY_ID} ]]; then
-        echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified on named environments"
+        echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified for named environments"
         exit 1
     fi
 fi
