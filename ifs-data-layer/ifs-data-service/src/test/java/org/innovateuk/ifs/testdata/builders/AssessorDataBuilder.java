@@ -194,7 +194,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     roleProfileStatusService.updateUserStatus(data.getUser().getId(),
                             new RoleProfileStatusResource(data.getUser().getId(), roleProfileState, ProfileRole.ASSESSOR,
                             roleProfileState.equals(RoleProfileState.DISABLED) ? "The user no longer works as an assessor."
-                                    : "The user is unavailable to work as an assessor until further notice")).getSuccess();
+                                    : "The user is unavailable to work as an assessor until further notice.")).getSuccess();
                 })
         );
     }

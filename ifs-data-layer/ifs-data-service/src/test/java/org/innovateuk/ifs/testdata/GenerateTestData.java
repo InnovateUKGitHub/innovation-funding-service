@@ -4,7 +4,7 @@ package org.innovateuk.ifs.testdata;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-//@IfProfileValue(name = "testGroups", values = {"generatetestdata"})
+@IfProfileValue(name = "testGroups", values = {"generatetestdata"})
 public class GenerateTestData extends BaseGenerateTestData {
 
     @Override
