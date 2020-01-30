@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.organisationdetails.controller;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/with-growth-table")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
-        securedType = OrganisationDetailsWithGrowthTableController.class)
+    securedType = OrganisationDetailsWithGrowthTableController.class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
 
@@ -82,6 +83,12 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
         model.addAttribute("form", getForm(projectId, organisationId));
 
         return "project/organisation-details-with-growth-table";
+    }
+
+    private AddressResource getAddress(OrganisationResource organisation) {
+        return organisation.getAddresses().size() > 0
+            ? organisation.getAddresses().get(0).getAddress()
+            : new AddressResource("", "", "", "", "", "");
     }
 
     private YourOrganisationWithGrowthTableForm getForm(long projectId, long organisationId) {
