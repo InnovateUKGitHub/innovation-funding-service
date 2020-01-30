@@ -91,7 +91,6 @@ public class RoleProfileStatusServiceImplTest extends BaseServiceUnitTest<RolePr
                 .withDescription("Description")
                 .build();
 
-//        when(roleProfileStatusRepository.findByUserId(userId)).thenReturn(Optional.of(roleProfileStatus));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(roleProfileStatusMapper.mapToResource(roleProfileStatus)).thenReturn(roleProfileStatusResource);
         when(roleProfileStatusRepository.findByUserIdAndProfileRole(userId, ProfileRole.ASSESSOR)).thenReturn(Optional.of(roleProfileStatus));
@@ -115,7 +114,6 @@ public class RoleProfileStatusServiceImplTest extends BaseServiceUnitTest<RolePr
                 .withDescription("Description")
                 .build();
 
-//        when(roleProfileStatusRepository.findByUserId(userId)).thenReturn(Optional.of(roleProfileStatus));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(roleProfileStatusMapper.mapToResource(roleProfileStatus)).thenReturn(roleProfileStatusResource);
         when(roleProfileStatusRepository.findByUserIdAndProfileRole(userId, ProfileRole.ASSESSOR)).thenReturn(Optional.empty());
