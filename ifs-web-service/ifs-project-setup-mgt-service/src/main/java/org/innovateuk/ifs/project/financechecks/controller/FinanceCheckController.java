@@ -9,6 +9,7 @@ import org.innovateuk.ifs.file.controller.FileDownloadControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
@@ -26,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -98,7 +100,9 @@ public class FinanceCheckController {
     private String doViewFinanceCheckSummary(Long projectId, Model model) {
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
         ProjectResource project = projectService.getById(projectId);
-        model.addAttribute("orgSize", hasOrganisationSizeChanged(projectId));
+        List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(projectId);
+
+        model.addAttribute("fundingLevels", hasAllFundingLevelsWithinMaximum(projectFinances));
         model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource, project.getProjectState().isActive(), project.isCollaborativeProject()));
         return "project/financecheck/summary";
     }
@@ -106,8 +110,15 @@ public class FinanceCheckController {
     private String redirectToViewFinanceCheckSummary(Long projectId) {
         return "redirect:/project/" + projectId + "/finance-check";
     }
+//
+//    private boolean hasOrganisationSizeChanged(long projectId) {
+//        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
+//    }
 
-    private boolean hasOrganisationSizeChanged(long projectId) {
-        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
+    private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
+        return finances.stream().allMatch(finance -> {
+            int fundingLevel = finance.getGrantClaimPercentage();
+            return finance.getMaximumFundingLevel() >= fundingLevel;
+        });
     }
 }
