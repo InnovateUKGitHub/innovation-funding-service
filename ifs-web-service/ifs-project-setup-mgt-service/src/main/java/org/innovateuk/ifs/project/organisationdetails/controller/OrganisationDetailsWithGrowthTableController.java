@@ -53,7 +53,7 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
     private FinanceCheckService financeCheckService;
 
     @GetMapping
-    public String viewOrganisationSize(@PathVariable long competitionId,
+    public String viewOrganisationDetails(@PathVariable long competitionId,
                                        @PathVariable long projectId,
                                        @PathVariable long organisationId,
                                        Model model,
