@@ -28,7 +28,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
 
 
-    private String userRestURL = "/user";
+    private String USER_REST_URL = "/user";
 
     private String processRoleRestURL = "/processrole";
 
@@ -37,12 +37,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(isEmpty(uid))
             return restFailure(CommonErrors.notFoundError(UserResource.class, uid));
 
-        return getWithRestResultAnonymous(userRestURL + "/uid/" + uid, UserResource.class);
+        return getWithRestResultAnonymous(USER_REST_URL + "/uid/" + uid, UserResource.class);
     }
 
     @Override
     public Future<RestResult<Void>> sendPasswordResetNotification(String email) {
-        return getWithRestResultAsyncAnonymous(userRestURL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
+        return getWithRestResultAsyncAnonymous(USER_REST_URL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
-        return getWithRestResultAnonymous(userRestURL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
+        return getWithRestResultAnonymous(USER_REST_URL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
-        return postWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, URL_PASSWORD_RESET, hash), password,  Void.class);
+        return postWithRestResultAnonymous(String.format("%s/%s/%s", USER_REST_URL, URL_PASSWORD_RESET, hash), password,  Void.class);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return restFailure(CommonErrors.notFoundError(UserResource.class, email));
         }
 
-        return getWithRestResultAnonymous(userRestURL + "/find-by-email/" + email + "/", UserResource.class);
+        return getWithRestResultAnonymous(USER_REST_URL + "/find-by-email/" + email + "/", UserResource.class);
     }
 
     @Override
@@ -79,29 +79,29 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return restFailure(CommonErrors.notFoundError(UserResource.class, id));
         }
 
-        return getWithRestResult(userRestURL + "/id/" + id, UserResource.class);
+        return getWithRestResult(USER_REST_URL + "/id/" + id, UserResource.class);
     }
 
     @Override
     public RestResult<List<UserResource>> findAll() {
-        return getWithRestResult(userRestURL + "/find-all/", userListType());
+        return getWithRestResult(USER_REST_URL + "/find-all/", userListType());
     }
 
     @Override
     public RestResult<List<UserOrganisationResource>> findExternalUsers(String searchString, SearchCategory searchCategory) {
-        return getWithRestResult(userRestURL + "/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), userOrganisationListType());
+        return getWithRestResult(USER_REST_URL + "/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), userOrganisationListType());
     }
 
     @Override
     public RestResult<List<UserResource>> findByUserRole(Role role) {
-        return getWithRestResult(userRestURL + "/find-by-role/" + role, userListType());
+        return getWithRestResult(USER_REST_URL + "/find-by-role/" + role, userListType());
     }
 
     @Override
     public RestResult<UserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
-        String uriWithParams = buildPaginationUri(userRestURL + "/active", pageNumber, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(USER_REST_URL + "/active", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
@@ -109,7 +109,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<UserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
-        String uriWithParams = buildPaginationUri(userRestURL + "/inactive", pageNumber, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(USER_REST_URL + "/inactive", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
@@ -117,7 +117,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<UserPageResource> getActiveExternalUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
-        String uriWithParams = buildPaginationUri(userRestURL + "/external/active", pageNumber, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(USER_REST_URL + "/external/active", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
@@ -125,7 +125,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<UserPageResource> getInactiveExternalUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
-        String uriWithParams = buildPaginationUri(userRestURL + "/external/inactive", pageNumber, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(USER_REST_URL + "/external/inactive", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 
@@ -151,7 +151,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<List<UserResource>> findAssignableUsers(long applicationId){
-        return getWithRestResult(userRestURL + "/find-assignable-users/" + applicationId, userListType());
+        return getWithRestResult(USER_REST_URL + "/find-assignable-users/" + applicationId, userListType());
     }
 
     @Override
@@ -166,12 +166,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> verifyEmail(String hash){
-        return getWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, URL_VERIFY_EMAIL, hash), Void.class);
+        return getWithRestResultAnonymous(String.format("%s/%s/%s", USER_REST_URL, URL_VERIFY_EMAIL, hash), Void.class);
     }
 
     @Override
     public RestResult<Void> resendEmailVerificationNotification(String email) {
-        return putWithRestResultAnonymous(String.format("%s/%s/%s/", userRestURL, URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
+        return putWithRestResultAnonymous(String.format("%s/%s/%s/", USER_REST_URL, URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
     }
 
     @Override
@@ -191,9 +191,9 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         String url;
         if (competitionId != null) {
-            url = userRestURL + "/create-lead-applicant-for-organisation/" + organisationId +"/"+competitionId;
+            url = USER_REST_URL + "/create-lead-applicant-for-organisation/" + organisationId +"/"+competitionId;
         } else{
-            url = userRestURL + "/create-lead-applicant-for-organisation/" + organisationId;
+            url = USER_REST_URL + "/create-lead-applicant-for-organisation/" + organisationId;
         }
 
         return postWithRestResultAnonymous(url, user, UserResource.class);
@@ -218,47 +218,69 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             user.setTitle(Title.valueOf(title));
         }
         user.setPhoneNumber(phoneNumber);
-        String url = userRestURL + "/update-details";
+        String url = USER_REST_URL + "/update-details";
         return postWithRestResult(url, user, UserResource.class);
     }
 
     @Override
     public RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource) {
-        String url = userRestURL + "/internal/create/" + inviteHash;
+        String url = USER_REST_URL + "/internal/create/" + inviteHash;
         return postWithRestResultAnonymous(url, internalUserRegistrationResource, Void.class);
     }
 
     @Override
     public RestResult<Void> editInternalUser(EditUserResource editUserResource) {
-        String url = userRestURL + "/internal/edit";
+        String url = USER_REST_URL + "/internal/edit";
         return postWithRestResult(url, editUserResource, Void.class);
     }
 
     @Override
     public RestResult<Void> agreeNewSiteTermsAndConditions(long userId) {
-        String url = userRestURL + "/id/" + userId + "/agree-new-site-terms-and-conditions";
+        String url = USER_REST_URL + "/id/" + userId + "/agree-new-site-terms-and-conditions";
         return postWithRestResult(url, Void.class);
     }
 
     @Override
     public RestResult<Void> deactivateUser(long userId) {
-        String url = userRestURL + "/id/" + userId + "/deactivate";
+        String url = USER_REST_URL + "/id/" + userId + "/deactivate";
         return postWithRestResult(url, Void.class);
     }
 
     @Override
     public RestResult<Void> reactivateUser(long userId) {
-        String url = userRestURL + "/id/" + userId + "/reactivate";
+        String url = USER_REST_URL + "/id/" + userId + "/reactivate";
         return postWithRestResult(url, Void.class);
     }
 
     @Override
     public RestResult<Void> grantRole(long userId, Role targetRole) {
-        return postWithRestResult(userRestURL + "/" + userId + "/grant/" + targetRole.name());
+        return postWithRestResult(USER_REST_URL + "/" + userId + "/grant/" + targetRole.name());
     }
 
     @Override
     public RestResult<Void> updateEmail(long userId, String email) {
-        return putWithRestResult(userRestURL + "/" + userId + "/update-email/" + email);
+        return putWithRestResult(USER_REST_URL + "/" + userId + "/update-email/" + email);
+    }
+
+    @Override
+    public RestResult<UserPageResource> getAvailableAssessors(String filter, int pageNumber, int pageSize) {
+        return getAssessorsWithProfileState(RoleProfileState.ACTIVE, filter, pageNumber, pageSize);
+    }
+
+    @Override
+    public RestResult<UserPageResource> getUnavailableAssessors(String filter, int pageNumber, int pageSize) {
+        return getAssessorsWithProfileState(RoleProfileState.UNAVAILABLE, filter, pageNumber, pageSize);
+    }
+
+    @Override
+    public RestResult<UserPageResource> getDisabledAssessors(String filter, int pageNumber, int pageSize) {
+        return getAssessorsWithProfileState(RoleProfileState.DISABLED, filter, pageNumber, pageSize);
+    }
+
+    private RestResult<UserPageResource> getAssessorsWithProfileState(RoleProfileState state, String filter, int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("filter", filter);
+        String uriWithParams = buildPaginationUri(String.format("%s/role-profile-status/%s/%s", USER_REST_URL, state, ProfileRole.ASSESSOR),  pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 }

@@ -75,4 +75,8 @@ public interface UserRestService {
     RestResult<Void> reactivateUser(long userId);
     RestResult<Void> grantRole(long userId, Role targetRole);
     RestResult<Void> updateEmail(long userId, String email);
+
+    RestResult<UserPageResource> getAvailableAssessors(String filter, int pageNumber, int pageSize);
+    RestResult<UserPageResource> getUnavailableAssessors(String filter, int pageNumber, int pageSize);
+    RestResult<UserPageResource> getDisabledAssessors(String filter, int pageNumber, int pageSize);
 }

@@ -1,0 +1,47 @@
+<th:block th:fragment="available(assessors, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
+    <h2 class="govuk-heading-m">Available</h2>
+    <p class="govuk-body">
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">38</span>
+        <span class="govuk-heading-s">available users</span>
+    </p>
+    <th:block th:insert="fragments/admin-assessors :: assessors-table(users=${assessors},tab=available)" /><!--/* might not need to pass tab through */-->
+    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
+</th:block>
+
+<th:block th:fragment="unavailable(assessors, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
+    <h2 class="govuk-heading-m">Unavailable</h2>
+    <p class="govuk-body">
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
+        <span class="govuk-heading-s">unavailable users</span>
+    </p>
+    <th:block th:insert="fragments/admin-assessors :: assessors-table(users=${assessors},tab=unavailable)" />
+    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
+</th:block>
+
+<th:block th:fragment="disabled(assessors, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
+    <h2 class="govuk-heading-m">Role disabled</h2>
+    <p class="govuk-body">
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
+        <span class="govuk-heading-s">disabled users</span>
+    </p>
+    <th:block th:insert="fragments/admin-assessors :: assessors-table(users=${assessors},tab=disabled)" />
+    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
+</th:block>
+
+
+<th:block th:fragment="assessors-table(users,tab)" xmlns:th="http://www.w3.org/1999/html">
+
+    <div class="user-profile" th:each="user : ${users}">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+        <div style="float: right"><a class="govuk-link" href="#">View details</a></div>
+
+        <p class="govuk-body govuk-!-margin-0">Full name: <b><span th:text="${user.name}" class="govuk-">Steve Smith</span></b></p>
+        <p class="govuk-body govuk-!-margin-0">Email address: <b><a th:href="|mailto:${user.email}|" th:text="${user.email}" class="govuk-link">steve.smith@empire.com</a></b></p>
+        <p class="govuk-body govuk-!-margin-0">Role profile: <b><span th:text="${user.roleDisplayNames}">Assessor, Applicant</span></b></p>
+        <p class="govuk-body govuk-!-margin-0"><small>Created by <span th:text="${user.createdBy}">IFS Web System User</span> on <span th:text="${#temporals.format(user.createdOn, 'd MMMM yyyy')}">30 July 2019</span></small></p>
+
+    </div>
+
+     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+</th:block>

@@ -15,6 +15,7 @@ import org.innovateuk.ifs.management.admin.form.EditUserForm;
 import org.innovateuk.ifs.management.admin.form.EditUserForm.InternalUserFieldsGroup;
 import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.management.admin.form.UserManagementFilterForm;
+import org.innovateuk.ifs.management.admin.viewmodel.AssessorListViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.ConfirmEmailViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
@@ -375,5 +376,76 @@ public class UserManagementController extends AsyncAdaptor {
                             }
                     );
         });
+    }
+
+    // TODO probably want to pull out into a separate controller
+
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewAvailableAssessors() method",
+            description = "Only comp admin and project finance can view active assessors")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @GetMapping("/assessors/available")
+    public String viewAvailableAssessors(Model model,
+                                      UserResource user,
+                                      @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                                      @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return viewAssessors(model, "available", filterForm.getFilter(), page, size);
+    }
+
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewAvailableAssessors() method",
+            description = "Only comp admin and project finance can view unavailable assessors")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @GetMapping("/assessors/unavailable")
+    public String viewAssessors(Model model,
+                                         UserResource user,
+                                         @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                                         @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                         @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return viewAssessors(model, "unavailable", filterForm.getFilter(), page, size);
+    }
+
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewAvailableAssessors() method",
+            description = "Only comp admin and project finance can view disabled assessors")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @GetMapping("/assessors/disabled")
+    public String viewDisabledAssessors(Model model,
+                                         UserResource user,
+                                         @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                                         @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                         @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return viewAssessors(model, "disabled", filterForm.getFilter(), page, size);
+    }
+
+    private String viewAssessors(Model model, String activeTab, String filter, int page, int size) {
+        final CompletableFuture<UserPageResource> availableAssessors;
+        final CompletableFuture<UserPageResource> unavailableAssessors;
+        final CompletableFuture<UserPageResource> disabledAssessors;
+
+        availableAssessors = async(() -> userRestService.getAvailableAssessors(filter, page - 1, size).getSuccess());
+        unavailableAssessors = async(() -> userRestService.getUnavailableAssessors(filter, page - 1, size).getSuccess());
+        disabledAssessors = async(() -> userRestService.getDisabledAssessors(filter, page - 1, size).getSuccess());
+
+        awaitAll(availableAssessors, unavailableAssessors, disabledAssessors)
+                .thenAccept((activeInternalUsers, inactiveInternalUsers, pendingInternalUserInvites) -> {
+                    AssessorListViewModel viewModel = new AssessorListViewModel(
+                            activeTab,
+                            filter,
+                            activeInternalUsers.getContent(),
+                            inactiveInternalUsers.getContent(),
+                            pendingInternalUserInvites.getContent(),
+                            activeInternalUsers.getTotalElements(),
+                            inactiveInternalUsers.getTotalElements(),
+                            pendingInternalUserInvites.getTotalElements(),
+                            new PaginationViewModel(activeInternalUsers),
+                            new PaginationViewModel(inactiveInternalUsers),
+                            new PaginationViewModel(pendingInternalUserInvites)
+                    );
+                    model.addAttribute("model", viewModel);
+                });
+
+        return "admin/assessors";
     }
 }
