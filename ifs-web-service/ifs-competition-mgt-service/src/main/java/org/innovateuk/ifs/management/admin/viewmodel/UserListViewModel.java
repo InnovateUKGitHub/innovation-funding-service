@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
+import org.innovateuk.ifs.user.resource.ManageUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -16,9 +17,9 @@ public class UserListViewModel {
 
     private String tab;
 
-    private List<UserResource> activeUsers;
+    private List<ManageUserResource> activeUsers;
 
-    private List<UserResource> inactiveUsers;
+    private List<ManageUserResource> inactiveUsers;
 
     private List<RoleInviteResource> pendingInvites;
 
@@ -38,8 +39,8 @@ public class UserListViewModel {
 
     public UserListViewModel(String tab,
                              String filter,
-                             List<UserResource> activeUsers,
-                             List<UserResource> inactiveUsers,
+                             List<ManageUserResource> activeUsers,
+                             List<ManageUserResource> inactiveUsers,
                              List<RoleInviteResource> pendingInvites,
                              long activeCount,
                              long inactiveCount,
@@ -73,11 +74,11 @@ public class UserListViewModel {
         return pendingCount;
     }
 
-    public List<UserResource> getActiveUsers() {
+    public List<ManageUserResource> getActiveUsers() {
         return activeUsers;
     }
 
-    public List<UserResource> getInactiveUsers() {
+    public List<ManageUserResource> getInactiveUsers() {
         return inactiveUsers;
     }
 

@@ -20,10 +20,7 @@ import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,8 +115,8 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     private String view(Model model, String activeTab, String filter, int page, int size, boolean adminUser) {
-        final CompletableFuture<UserPageResource> activeUsers;
-        final CompletableFuture<UserPageResource> inactiveUsers;
+        final CompletableFuture<ManageUserPageResource> activeUsers;
+        final CompletableFuture<ManageUserPageResource> inactiveUsers;
         final CompletableFuture<RoleInvitePageResource> pendingUsers;
         if (adminUser) {
             activeUsers = async(() -> userRestService.getActiveUsers(filter, page - 1 , size).getSuccess());

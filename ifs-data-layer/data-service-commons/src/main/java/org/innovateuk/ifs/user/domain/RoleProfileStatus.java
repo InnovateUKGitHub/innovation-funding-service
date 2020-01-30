@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
@@ -20,7 +21,7 @@ public class RoleProfileStatus extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userId", referencedColumnName="id", nullable = false)
     private User user;
 
@@ -53,6 +54,7 @@ public class RoleProfileStatus extends AuditableEntity {
         return id;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }
