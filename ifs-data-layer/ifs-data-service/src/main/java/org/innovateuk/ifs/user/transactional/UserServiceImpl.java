@@ -339,10 +339,10 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 user.getRoles().stream().collect(Collectors.toList()),
                 user.getCreatedOn(),
                 user.getCreatedBy().getName(),
-                something(user.getRoleProfileStatuses()));
+                mapRoleProfileStatusesToResource(user.getRoleProfileStatuses()));
     }
 
-    private Set<RoleProfileStatusResource> something(Set<RoleProfileStatus> roleProfileStatuses) {
+    private Set<RoleProfileStatusResource> mapRoleProfileStatusesToResource(Set<RoleProfileStatus> roleProfileStatuses) {
         return roleProfileStatuses.stream()
                 .map(roleProfileStatusMapper::mapToResource)
                 .collect(toSet());
