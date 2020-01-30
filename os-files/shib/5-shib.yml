@@ -29,7 +29,7 @@ items:
           name: shib
           volumeMounts:
             - name: sp-keys-volume
-              mountPath: /var2/certs
+              mountPath: /var/certs
           livenessProbe:
             httpGet:
               path: /Shibboleth.sso/Metadata
