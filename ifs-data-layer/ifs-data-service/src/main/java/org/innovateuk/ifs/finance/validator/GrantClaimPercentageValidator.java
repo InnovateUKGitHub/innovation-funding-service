@@ -36,31 +36,34 @@ public class GrantClaimPercentageValidator implements Validator {
     public void validate(Object target, Errors errors) {
         GrantClaimPercentage response = (GrantClaimPercentage) target;
 
-        if (response.getPercentage() == null) {
-            rejectValue(errors, "percentage", "org.hibernate.validator.constraints.NotBlank.message");
-            return;
-        }
+        if (response.isRequestingFunding()) {
 
-        if (response.getPercentage().scale() > MAX_DECIMAL_PLACES) {
-            rejectValue(errors, "percentage", "validation.finance.percentage");
-            return;
-        }
+            if (response.getPercentage() == null) {
+                rejectValue(errors, "percentage", "org.hibernate.validator.constraints.NotBlank.message");
+                return;
+            }
 
-        Finance finance = applicationFinanceRowRepository.findById(response.getId())
-                .map(ApplicationFinanceRow::getTarget)
-                .map(Finance.class::cast)
-                .orElseGet(() -> projectFinanceRowRepository.findById(response.getId()).get().getTarget());
-        Integer max = finance.getMaximumFundingLevel();
-        if (max == null) {
-            rejectValue(errors, "percentage", "validation.grantClaimPercentage.maximum.not.defined");
-            return;
-        }
+            if (response.getPercentage().scale() > MAX_DECIMAL_PLACES) {
+                rejectValue(errors, "percentage", "validation.finance.percentage");
+                return;
+            }
 
-        if (response.getPercentage().compareTo(BigDecimal.ZERO) <= 0) {
-            rejectValue(errors, "percentage", "validation.field.percentage.max.value.or.higher", 0);
-        }
-        if (response.getPercentage().compareTo(BigDecimal.valueOf(max)) > 0) {
-            rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
+            Finance finance = applicationFinanceRowRepository.findById(response.getId())
+                    .map(ApplicationFinanceRow::getTarget)
+                    .map(Finance.class::cast)
+                    .orElseGet(() -> projectFinanceRowRepository.findById(response.getId()).get().getTarget());
+            Integer max = finance.getMaximumFundingLevel();
+            if (max == null) {
+                rejectValue(errors, "percentage", "validation.grantClaimPercentage.maximum.not.defined");
+                return;
+            }
+
+            if (response.getPercentage().compareTo(BigDecimal.ZERO) <= 0) {
+                rejectValue(errors, "percentage", "validation.field.percentage.max.value.or.higher", 0);
+            }
+            if (response.getPercentage().compareTo(BigDecimal.valueOf(max)) > 0) {
+                rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
+            }
         }
     }
 
