@@ -20,6 +20,13 @@ describe('Accessibility test - Applicant crawl', function () {
           var page = pages[x];
           if (page) {
             cy.visit(`/${page.url}`);
+
+            cy.get("body").then($body => {
+              if ($body.find("form").length > 0) {   //evaluates as true
+              cy.get('form').first().submit();
+              }
+            });
+
             cy.injectAxe();
             cy.checkA11y(OPTIONS);
           }
