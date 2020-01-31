@@ -29,13 +29,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Optional;
 
 /**
- *  This controller will allow the user to view organisation details without a growth table.
+ * This controller will allow the user to view organisation details without a growth table.
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/without-growth-table")
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
-    securedType = OrganisationDetailsWithoutGrowthTableController.class)
+        securedType = OrganisationDetailsWithoutGrowthTableController.class)
 public class OrganisationDetailsWithoutGrowthTableController {
 
     @Autowired
@@ -78,6 +78,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
                 project.isCollaborativeProject()));
 
         model.addAttribute("showYourOrg", includeYourOrganisationSection);
+        model.addAttribute("linkValid", getFinanceChecks(projectId));
 
         if (includeYourOrganisationSection) {
             model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
@@ -91,9 +92,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
                     loggedInUser));
 
             model.addAttribute("form", getForm(projectId, organisationId));
-            model.addAttribute("linkValid", getFinanceChecks(projectId));
         }
-
         return "project/organisation-details-without-growth-table";
     }
 
@@ -101,13 +100,13 @@ public class OrganisationDetailsWithoutGrowthTableController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return competition.getIncludeYourOrganisationSection()
-            && !competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+                && !competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
     }
 
     private AddressResource getAddress(OrganisationResource organisation) {
         return organisation.getAddresses().size() > 0
-            ? organisation.getAddresses().get(0).getAddress()
-            : createNewAddress();
+                ? organisation.getAddresses().get(0).getAddress()
+                : createNewAddress();
     }
 
     private AddressResource createNewAddress() {

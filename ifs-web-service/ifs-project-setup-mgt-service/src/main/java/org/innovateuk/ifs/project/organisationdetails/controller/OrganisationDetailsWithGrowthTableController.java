@@ -35,7 +35,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/with-growth-table")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
-    securedType = OrganisationDetailsWithGrowthTableController.class)
+        securedType = OrganisationDetailsWithGrowthTableController.class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
 
@@ -78,6 +78,7 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                 project.isCollaborativeProject()));
 
         model.addAttribute("showYourOrg", includeYourOrganisationSection);
+        model.addAttribute("linkValid", getFinanceChecks(projectId));
 
         if (includeYourOrganisationSection) {
             model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
@@ -91,9 +92,7 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                     loggedInUser));
 
             model.addAttribute("form", getForm(projectId, organisationId));
-            model.addAttribute("linkValid", getFinanceChecks(projectId));
         }
-
         return "project/organisation-details-with-growth-table";
     }
 
@@ -101,7 +100,7 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return competition.getIncludeYourOrganisationSection()
-            && !competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+                && !competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
     }
 
     private AddressResource getAddress(OrganisationResource organisation) {
@@ -124,6 +123,6 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
         if (financeCheckSummary.isPresent()) {
             return financeCheckSummary.get().isAllEligibilityAndViabilityInReview();
         }
-      return false;
+        return false;
     }
 }

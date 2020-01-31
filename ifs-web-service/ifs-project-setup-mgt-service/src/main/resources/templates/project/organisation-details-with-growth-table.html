@@ -3,7 +3,7 @@
 
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${orgDetails.projectId}: ${orgDetails.projectName} - ${orgDetails.organisationName}|" />
+              th:with="pageTitle=|${orgDetails.projectId}: ${orgDetails.projectName} - ${orgDetails.organisationName}|"/>
 </head>
 <body class="govuk-template__body">
 
@@ -19,7 +19,8 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle=${orgDetails.organisationName},subTitle=|${orgDetails.projectId}: ${orgDetails.projectName}|,size='govuk-heading-xl'"/>
 
-        <th:block th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (orgDetails=${orgDetails})"/>
+        <th:block
+            th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (orgDetails=${orgDetails})"/>
 
         <div th:if="${showYourOrg}">
             <h2 class="govuk-heading-m">Organisation size</h2>
@@ -33,14 +34,16 @@
                                                        readOnly=${yourOrg.readOnly},
                                                        showOrganisationSizeAlert=${yourOrg.showOrganisationSizeAlert},
                                                        showStateAidAgreement=${yourOrg.showStateAidAgreement},
-                                                       showHints=${yourOrg.showHints}
-                                                )" />
+                                                       showHints=${yourOrg.showHints})"/>
             </form>
 
-        <th:block th:if="${yourOrg.isAllowedToEditOrganisationSize() and linkValid}">
-        <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/with-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
-           class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
-        </th:block>
+            <th:block th:unless="${!yourOrg.isAllowedToEditOrganisationSize() and !linkValid}">
+                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/with-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
+                   class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation
+                    size</a>
+            </th:block>
+
+        </div>
 
         <div class="govuk-form-group govuk-!-margin-top-6">
             <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
@@ -57,8 +60,8 @@
     </main>
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
 
 </body>
 </html>

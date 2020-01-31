@@ -32,14 +32,14 @@
                                                        isH2020=${yourOrg.h2020},
                                                        readOnly=${yourOrg.readOnly},
                                                        showOrganisationSizeAlert=${yourOrg.showOrganisationSizeAlert},
-                                                       showStateAidAgreement=${yourOrg.showStateAidAgreement},
-                                                )" />
+                                                       showStateAidAgreement=${yourOrg.showStateAidAgreement})" />
             </form>
 
-        <th:block th:if="${yourOrg.isAllowedToEditOrganisationSize() and linkValid}">
-            <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/without-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
-               class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
-        </th:block>
+            <th:block th:unless="${!yourOrg.isAllowedToEditOrganisationSize() and !linkValid}">
+                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/without-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
+                   class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
+            </th:block>
+        </div>
 
         <div class="govuk-form-group govuk-!-margin-top-6">
             <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
