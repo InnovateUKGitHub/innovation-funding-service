@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 /**
  * This controller will allow the user to view organisation details with a growth table.
  */
@@ -60,7 +62,6 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                                           UserResource loggedInUser) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        FinanceCheckSummaryResource financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
 
         model.addAttribute("orgDetails", new OrganisationDetailsViewModel(project,
                 competitionId,
@@ -77,10 +78,10 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                 organisationId,
                 true,
                 false,
-                loggedInUser,
-                financeCheckSummary.isAllEligibilityAndViabilityInReview()));
+                loggedInUser));
 
         model.addAttribute("form", getForm(projectId, organisationId));
+        model.addAttribute("linkValid", getFinanceChecks(projectId));
 
         return "project/organisation-details-with-growth-table";
     }
@@ -93,5 +94,14 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
 
     private YourOrganisationWithGrowthTableForm getForm(long projectId, long organisationId) {
         return withGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess());
+    }
+
+    private boolean getFinanceChecks(long projectId) {
+        Optional<FinanceCheckSummaryResource> financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getOptionalSuccessObject();
+
+        if (financeCheckSummary.isPresent()) {
+            return financeCheckSummary.get().isAllEligibilityAndViabilityInReview();
+        }
+      return false;
     }
 }

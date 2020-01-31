@@ -36,7 +36,7 @@
                                             )" />
         </form>
 
-        <th:block th:if="${yourOrg.isEditOrganisationSizeAvailable()}">
+        <th:block th:if="${yourOrg.isAllowedToEditOrganisationSize() and linkValid}">
         <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/with-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
            class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
         </th:block>

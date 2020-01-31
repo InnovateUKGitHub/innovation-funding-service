@@ -18,9 +18,8 @@ public abstract class AbstractFinanceService<D extends Finance, F extends BaseFi
         if (financeResource.getOrganisationSize() != null) {
             dbFinance.setOrganisationSize(financeResource.getOrganisationSize());
         }
-        if (!dbFinance.getOrganisationSize().equals(financeResource.getOrganisationSize())) {
-            OrganisationSize organisationSize = financeResource.getOrganisationSize();
-            dbFinance.setOrganisationSize(organisationSize);
+        if (dbFinance.getOrganisationSize() != financeResource.getOrganisationSize()) {
+            dbFinance.setOrganisationSize(financeResource.getOrganisationSize());
         }
         if (TRUE.equals(dbFinance.getCompetition().getIncludeProjectGrowthTable())) {
             updateGrowthTable(financeResource, dbFinance);
