@@ -22,8 +22,8 @@ describe('Accessibility test - Applicant crawl', function () {
             cy.visit(`/${page.url}`);
 
             cy.get("body").then($body => {
-              if ($body.find("form").length > 0) {   //evaluates as true
-              cy.get('form').first().submit();
+              if ($body.find("form").length > 0) {
+                cy.get('form').first().submit();
               }
             });
 
