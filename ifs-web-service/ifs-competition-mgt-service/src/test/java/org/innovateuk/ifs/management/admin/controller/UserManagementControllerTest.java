@@ -41,18 +41,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<UserManagementController> {
 
-    private UserPageResource userPageResource;
-
-    private RoleInvitePageResource roleInvitePageResource;
-
     @Mock
     private InternalUserService internalUserService;
 
     @Mock
     private UserRestService userRestService;
-
-    @Mock
-    private InviteUserRestService inviteUserRestService;
 
     @Mock
     private EncryptedCookieService cookieService;
@@ -63,96 +56,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     @Before
     public void setUpCommonExpectations() {
 
-        userPageResource = new UserPageResource();
-
-        roleInvitePageResource = new RoleInvitePageResource();
-
-        when(userRestService.getActiveUsers(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-
-        when(userRestService.getInactiveUsers(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-
-        when(inviteUserRestService.getPendingInternalUserInvites(null, 0, 5)).thenReturn(restSuccess(roleInvitePageResource));
-
         setField(controller, "profileFeatureToggle", true);
 
         when(roleProfileStatusRestService.findByUserId(anyLong())).thenReturn(restSuccess(emptyList()));
-    }
-
-    @Test
-    public void testViewActive() throws Exception {
-        when(userRestService.getActiveExternalUsers(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
-
-        mockMvc.perform(get("/admin/users/active")
-                .param("page", "1")
-                .param("size", "5"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model",
-                        new UserListViewModel(
-                                "active",
-                                null,
-                                userPageResource.getContent(),
-                                userPageResource.getContent(),
-                                roleInvitePageResource.getContent(),
-                                userPageResource.getTotalElements(),
-                                userPageResource.getTotalElements(),
-                                roleInvitePageResource.getTotalElements(),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(roleInvitePageResource),
-                                false)
-                ));
-    }
-
-    @Test
-    public void testViewInactive() throws Exception {
-        when(userRestService.getActiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
-
-        mockMvc.perform(get("/admin/users/inactive")
-                .param("page", "1")
-                .param("size", "5"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model",
-                        new UserListViewModel(
-                                "inactive",
-                                null,
-                                userPageResource.getContent(),
-                                userPageResource.getContent(),
-                                roleInvitePageResource.getContent(),
-                                userPageResource.getTotalElements(),
-                                userPageResource.getTotalElements(),
-                                roleInvitePageResource.getTotalElements(),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(roleInvitePageResource),
-                                false)
-                ));
-    }
-
-    @Test
-    public void testViewPending() throws Exception {
-        mockMvc.perform(get("/admin/users/pending")
-                .param("page", "1")
-                .param("size", "5"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/users"))
-                .andExpect(model().attribute("model",
-                        new UserListViewModel(
-                                "pending",
-                                null,
-                                userPageResource.getContent(),
-                                userPageResource.getContent(),
-                                roleInvitePageResource.getContent(),
-                                userPageResource.getTotalElements(),
-                                userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(roleInvitePageResource),
-                                true)
-                ));
     }
 
     @Test
@@ -161,9 +67,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc").build();
         when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
-        mockMvc.perform(get("/admin/user/{userId}", 1L))
+        mockMvc.perform(get("/admin/user/{userId}/inactive", 1L))
                 .andExpect(status().isOk())
-                .andExpect(view().name("admin/user"))
+                .andExpect(view().name("admin/inactive-user"))
                 .andExpect(model().attribute("model", new ViewUserViewModel(user, getLoggedInUser(), emptyList(), true)));
     }
 
@@ -177,7 +83,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .build();
         when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
-        mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
+        mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                 param("firstName", "First").
                 param("lastName", "Last").
                 param("email", "asdf@asdf.com").
@@ -195,13 +101,13 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .build();
         when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
-        mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
+        mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                 param("firstName", "First").
                 param("lastName", "Last").
                 param("email", "new-email@asdf.com").
                 param("role", "IFS_ADMINISTRATOR"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/admin/user/" + 1 + "/edit/confirm"));
+                .andExpect(view().name("redirect:/admin/user/" + 1 + "/active/confirm"));
 
         verify(cookieService).saveToCookie(any(), eq("NEW_EMAIL_COOKIE"), any());
     }
@@ -226,9 +132,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         expectedForm.setRole(IFS_ADMINISTRATOR);
         expectedForm.setEmail(email);
 
-        mockMvc.perform(get("/admin/user/{userId}/edit", 1L))
+        mockMvc.perform(get("/admin/user/{userId}/active", 1L))
                 .andExpect(status().isOk())
-                .andExpect(view().name("admin/edit-user"))
+                .andExpect(view().name("admin/active-user"))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", new ViewUserViewModel(userResource, getLoggedInUser(), emptyList(), true)));
     }
@@ -247,10 +153,10 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
         when(userRestService.deactivateUser(1L)).thenReturn(restSuccess());
-        mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
+        mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/admin/user/1"));
+                .andExpect(redirectedUrl("/admin/user/1/inactive"));
 
         verify(userRestService).deactivateUser(1L);
     }
@@ -269,7 +175,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
         when(userRestService.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
-        mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
+        mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().isNotFound());
 
@@ -279,7 +185,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     @Test
     public void deactivateUserFindUserFails() throws Exception {
         when(userRestService.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
-        mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
+        mockMvc.perform(post("/admin/user/{userId}/active", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().isForbidden());
     }
@@ -298,10 +204,10 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
         when(userRestService.reactivateUser(1L)).thenReturn(restSuccess());
-        mockMvc.perform(post("/admin/user/{userId}", 1L).
+        mockMvc.perform(post("/admin/user/{userId}/inactive", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/admin/user/1"));
+                .andExpect(redirectedUrl("/admin/user/1/active"));
 
         verify(userRestService).reactivateUser(1L);
     }
@@ -320,7 +226,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
         when(userRestService.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
         when(userRestService.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
-        mockMvc.perform(post("/admin/user/{userId}", 1L).
+        mockMvc.perform(post("/admin/user/{userId}/inactive", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().isNotFound());
 
@@ -331,73 +237,9 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     public void reactivateUserFindUserFails() throws Exception {
 
         when(userRestService.retrieveUserById(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
-        mockMvc.perform(post("/admin/user/{userId}", 1L).
+        mockMvc.perform(post("/admin/user/{userId}/inactive", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void viewFindExternalUsers() throws Exception {
-        mockMvc.perform(get("/admin/external/users"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/search-external-users"))
-                .andExpect(model().attribute("form", new SearchExternalUsersForm()))
-                .andExpect(model().attribute("tab", "users"))
-                .andExpect(model().attribute("mode", "init"))
-                .andExpect(model().attribute("users", emptyList()));
-    }
-
-    @Test
-    public void viewFindExternalInvites() throws Exception {
-        mockMvc.perform(get("/admin/external/invites"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/search-external-users"))
-                .andExpect(model().attribute("form", new SearchExternalUsersForm()))
-                .andExpect(model().attribute("tab", "invites"))
-                .andExpect(model().attribute("mode", "init"))
-                .andExpect(model().attribute("users", emptyList()));
-    }
-
-    @Test
-    public void findExternalUsers() throws Exception {
-        String searchString = "smith";
-
-        when(userRestService.findExternalUsers(searchString, SearchCategory.EMAIL)).thenReturn(restSuccess(emptyList()));
-        mockMvc.perform(post("/admin/external/users").
-                param("searchString", searchString).
-                param("searchCategory", "EMAIL"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("tab", "users"))
-                .andExpect(model().attribute("mode", "search"))
-                .andExpect(model().attribute("users", emptyList()));
-    }
-
-    @Test
-    public void findExternalInvites() throws Exception {
-        String searchString = "smith";
-
-        when(inviteUserRestService.findExternalInvites(searchString, SearchCategory.ORGANISATION_NAME)).thenReturn(restSuccess(emptyList()));
-        mockMvc.perform(post("/admin/external/users").
-                param("searchString", searchString).
-                param("searchCategory", "ORGANISATION_NAME").
-                param("pending", ""))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("tab", "invites"))
-                .andExpect(model().attribute("mode", "search"))
-                .andExpect(model().attribute("invites", emptyList()));
-    }
-
-    @Test
-    public void resendInvite() throws Exception {
-
-        when(inviteUserRestService.resendInternalUserInvite(123L)).
-                thenReturn(restSuccess());
-
-        mockMvc.perform(post("/admin/users/pending/resend-invite?inviteId=" + 123L))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/admin/users/pending"));
-
-        verify(inviteUserRestService).resendInternalUserInvite(123L);
     }
 
     @Override
