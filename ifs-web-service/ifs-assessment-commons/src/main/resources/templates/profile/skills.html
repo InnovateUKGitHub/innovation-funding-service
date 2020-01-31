@@ -61,8 +61,8 @@
                         <li class="govuk-tabs__list-item">
                             <a th:unless="${model.compAdminUser}"
                                th:href="@{/profile/details/skills}"
-                               class="govuk-tabs__tab"
-                               aria-selected="true">Skills</a>
+                               aria-label="skills"
+                               class="govuk-tabs__tab">Skills</a>
                             <a th:if="${model.compAdminUser}"
                                th:href="@{/competition/{cid}/assessors/profile/{assessorId}?tab=skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})}"
                                class="govuk-tabs__tab govuk-tabs__tab--selected">Skills</a>
@@ -70,6 +70,7 @@
                         <li class="govuk-tabs__list-item">
                             <a th:unless="${model.compAdminUser}"
                                th:href="@{/profile/details/declaration}"
+                               aria-label="declaration of interest"
                                class="govuk-tabs__tab">DOI</a>
                             <a th:if="${model.compAdminUser}"
                                th:href="@{/competition/{cid}/assessors/profile/{assessorId}?tab=declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})}"

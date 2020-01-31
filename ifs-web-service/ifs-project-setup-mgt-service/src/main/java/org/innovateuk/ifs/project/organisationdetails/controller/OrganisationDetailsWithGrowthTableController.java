@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/with-growth-table")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
-    securedType = OrganisationDetailsWithGrowthTableController.class)
+        securedType = OrganisationDetailsWithGrowthTableController.class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
 
@@ -54,10 +54,10 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
 
     @GetMapping
     public String viewOrganisationDetails(@PathVariable long competitionId,
-                                       @PathVariable long projectId,
-                                       @PathVariable long organisationId,
-                                       Model model,
-                                       UserResource loggedInUser) {
+                                          @PathVariable long projectId,
+                                          @PathVariable long organisationId,
+                                          Model model,
+                                          UserResource loggedInUser) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         FinanceCheckSummaryResource financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
@@ -66,7 +66,8 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                 competitionId,
                 organisation,
                 getAddress(organisation),
-                partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().size() > 1));
+                project.isCollaborativeProject()));
+
 
         model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
                 false,
@@ -86,8 +87,8 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
 
     private AddressResource getAddress(OrganisationResource organisation) {
         return organisation.getAddresses().size() > 0
-            ? organisation.getAddresses().get(0).getAddress()
-            : new AddressResource("", "", "", "", "", "");
+                ? organisation.getAddresses().get(0).getAddress()
+                : new AddressResource("", "", "", "", "", "");
     }
 
     private YourOrganisationWithGrowthTableForm getForm(long projectId, long organisationId) {
