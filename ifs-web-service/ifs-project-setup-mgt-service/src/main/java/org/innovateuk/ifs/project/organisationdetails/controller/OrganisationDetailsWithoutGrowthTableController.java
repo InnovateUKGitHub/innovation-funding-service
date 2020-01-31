@@ -5,8 +5,11 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -26,13 +29,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Optional;
 
 /**
- * This controller will allow the user to view organisation details without a growth table.
+ *  This controller will allow the user to view organisation details without a growth table.
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/without-growth-table")
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
-        securedType = OrganisationDetailsWithoutGrowthTableController.class)
+    securedType = OrganisationDetailsWithoutGrowthTableController.class)
 public class OrganisationDetailsWithoutGrowthTableController {
 
     @Autowired
@@ -43,6 +46,9 @@ public class OrganisationDetailsWithoutGrowthTableController {
 
     @Autowired
     private YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -63,32 +69,49 @@ public class OrganisationDetailsWithoutGrowthTableController {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         FinanceCheckSummaryResource financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
 
+        boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
+
         model.addAttribute("orgDetails", new OrganisationDetailsViewModel(project,
                 competitionId,
                 organisation,
                 getAddress(organisation),
                 project.isCollaborativeProject()));
 
-        model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
-                false,
-                false,
-                projectId,
-                project.getName(),
-                organisationId,
-                true,
-                false,
-                loggedInUser));
+        model.addAttribute("showYourOrg", includeYourOrganisationSection);
 
-        model.addAttribute("form", getForm(projectId, organisationId));
-        model.addAttribute("linkValid", getFinanceChecks(projectId));
+        if (includeYourOrganisationSection) {
+            model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
+                    false,
+                    false,
+                    projectId,
+                    project.getName(),
+                    organisationId,
+                    true,
+                    false,
+                    loggedInUser));
+
+            model.addAttribute("form", getForm(projectId, organisationId));
+            model.addAttribute("linkValid", getFinanceChecks(projectId));
+        }
 
         return "project/organisation-details-without-growth-table";
     }
 
+    private boolean isIncludeYourOrganisationSection(long competitionId, OrganisationResource organisation) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        return competition.getIncludeYourOrganisationSection()
+            && !competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+    }
+
     private AddressResource getAddress(OrganisationResource organisation) {
         return organisation.getAddresses().size() > 0
-                ? organisation.getAddresses().get(0).getAddress()
-                : new AddressResource("", "", "", "", "", "");
+            ? organisation.getAddresses().get(0).getAddress()
+            : createNewAddress();
+    }
+
+    private AddressResource createNewAddress() {
+        return new AddressResource("", "", "", "", "", "");
     }
 
     private YourOrganisationWithoutGrowthTableForm getForm(long projectId, long organisationId) {
