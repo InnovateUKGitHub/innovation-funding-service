@@ -53,7 +53,7 @@ public class ProjectFinanceFundingLevelController {
         form.setPartners(finances.stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation,
                         pf -> new ProjectFinancePartnerFundingLevelForm(new BigDecimal(pf.getGrantClaimPercentage())))));
-        projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).andOnSuccess(()->
+        projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).andOnSuccess(() ->
                 validateMaximumFundingLevels(bindingResult, finances, form));
         return viewFunding(projectId, finances, model);
     }
@@ -102,7 +102,7 @@ public class ProjectFinanceFundingLevelController {
             if (finance.getMaximumFundingLevel() < fundingLevel.intValue()) {
                 bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
                         "validation.finance.grant.claim.percentage.max",
-                        new String[] {String.valueOf(finance.getMaximumFundingLevel())},
+                        new String[]{String.valueOf(finance.getMaximumFundingLevel())},
                         "");
             }
         });

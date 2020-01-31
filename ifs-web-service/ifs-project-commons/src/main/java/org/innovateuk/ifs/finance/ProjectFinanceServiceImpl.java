@@ -66,5 +66,4 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     public ServiceResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
         return projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toServiceResult();
     }
-
 }

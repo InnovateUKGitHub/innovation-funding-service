@@ -6,10 +6,8 @@ import org.innovateuk.ifs.finance.domain.GrowthTable;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
 import org.innovateuk.ifs.finance.resource.GrowthTableResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 public abstract class AbstractFinanceService<D extends Finance, F extends BaseFinanceResource> extends BaseTransactionalService {
