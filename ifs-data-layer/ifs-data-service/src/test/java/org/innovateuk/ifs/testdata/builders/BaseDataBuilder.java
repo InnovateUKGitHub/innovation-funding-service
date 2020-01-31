@@ -94,10 +94,7 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.BaseUserService;
-import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.UserService;
-import org.innovateuk.ifs.user.transactional.UsersRolesService;
+import org.innovateuk.ifs.user.transactional.*;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -214,6 +211,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
     protected ApplicationFinanceService financeService;
     protected GrantOfferLetterService grantOfferLetterService;
+    protected RoleProfileStatusService roleProfileStatusService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -325,6 +323,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectDocumentsMapper = serviceLocator.getBean(ProjectDocumentsMapper.class);
         applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
         grantOfferLetterService = serviceLocator.getBean(GrantOfferLetterService.class);
+        roleProfileStatusService = serviceLocator.getBean(RoleProfileStatusService.class);
         compAdminEmail = serviceLocator.getCompAdminEmail();
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
     }
