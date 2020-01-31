@@ -57,7 +57,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
             competitionId,
             organisation,
             getAddress(organisation),
-            partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess().size() > 1));
+            project.isCollaborativeProject()));
 
         model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
             false,
