@@ -4,7 +4,10 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -40,6 +43,9 @@ public class OrganisationDetailsWithoutGrowthTableController {
     private YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator;
 
     @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
     private OrganisationRestService organisationRestService;
 
     @Autowired
@@ -53,30 +59,47 @@ public class OrganisationDetailsWithoutGrowthTableController {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
+        boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
+
         model.addAttribute("orgDetails", new OrganisationDetailsViewModel(project,
             competitionId,
             organisation,
             getAddress(organisation),
             project.isCollaborativeProject()));
 
-        model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
-            false,
-            false,
-            projectId,
-            project.getName(),
-            organisationId,
-            true,
-            false));
+        model.addAttribute("showYourOrg", includeYourOrganisationSection);
 
-        model.addAttribute("form", getForm(projectId, organisationId));
+        if (includeYourOrganisationSection) {
+            model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
+                false,
+                false,
+                projectId,
+                project.getName(),
+                organisationId,
+                true,
+                false));
+
+            model.addAttribute("form", getForm(projectId, organisationId));
+        }
 
         return "project/organisation-details-without-growth-table";
+    }
+
+    private boolean isIncludeYourOrganisationSection(long competitionId, OrganisationResource organisation) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        return competition.getIncludeYourOrganisationSection()
+            && !competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
     }
 
     private AddressResource getAddress(OrganisationResource organisation) {
         return organisation.getAddresses().size() > 0
             ? organisation.getAddresses().get(0).getAddress()
-            : new AddressResource("", "", "", "", "", "");
+            : createNewAddress();
+    }
+
+    private AddressResource createNewAddress() {
+        return new AddressResource("", "", "", "", "", "");
     }
 
     private YourOrganisationWithoutGrowthTableForm getForm(long projectId, long organisationId) {
