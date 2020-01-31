@@ -61,6 +61,13 @@ The user enters text to an autocomplete field
     click element    ${TEXT_FIELD}
     click element    jQuery = li:contains("${TEXT_INPUT}")
 
+The user edits autocomplete field
+    [Arguments]      ${TEXT_FIELD}    ${TEXT_INPUT}
+    click element       ${TEXT_FIELD}
+    Input text          ${TEXT_FIELD}   ${TEXT_INPUT}
+    click element       jQuery = li:contains("${TEXT_INPUT}")
+    Mouse Out           ${TEXT_FIELD}
+
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
     Wait Until Element Is Visible Without Screenshots    ${element}
