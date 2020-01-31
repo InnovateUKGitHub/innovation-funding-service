@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -37,6 +38,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -398,6 +400,18 @@ public class CsvUtils {
             assignToPanel = nullableBoolean(line.get(i++));
             assignToInterview = nullableBoolean(line.get(i++));
         }
+
+        public AssessmentLine(String assessorEmail, String applicationName, String feedback, String recommendComment) {
+            this.assessorEmail = assessorEmail;
+            this.applicationName = applicationName;
+            this.rejectReason = null;
+            this.rejectComment = null;
+            this.state = SUBMITTED;
+            this.feedback = feedback;
+            this.recommendComment = recommendComment;
+            this.assignToPanel = false;
+            this.assignToInterview = false;
+        }
     }
 
     public static class AssessorResponseLine {
@@ -419,6 +433,16 @@ public class CsvUtils {
             description = line.get(i++);
             isResearchCategory = nullableBoolean(line.get(i++));
             value = line.get(i++);
+        }
+
+        public AssessorResponseLine(String competitionName, String applicationName, String assessorEmail, String shortName, String description, boolean isResearchCategory, String value) {
+            this.competitionName = competitionName;
+            this.applicationName = applicationName;
+            this.assessorEmail = assessorEmail;
+            this.shortName = shortName;
+            this.description = description;
+            this.isResearchCategory = isResearchCategory;
+            this.value = value;
         }
     }
 
@@ -573,7 +597,9 @@ public class CsvUtils {
             emailVerified = UserStatus.valueOf(line.get(i++)) == UserStatus.ACTIVE;
             organisationName = line.get(i++);
             phoneNumber = nullable(line.get(i++));
+            processLine(line, i);
         }
+        protected abstract void processLine(List<String> line, int i);
     }
 
     public static class OrganisationLine {
@@ -626,11 +652,14 @@ public class CsvUtils {
         public List<Map<String, String>> familyAffiliations;
         public String familyFinancialInterests;
         public boolean agreementSigned;
+        public RoleProfileState roleProfileState;
 
         private AssessorUserLine(List<String> line) {
-
             super(line);
-            int i = line.size() - 16;
+        }
+
+        @Override
+        protected void processLine(List<String> line, int i) {
             competitionName = line.get(i++);
             hash = nullable(line.get(i++));
             inviteStatus = InviteStatus.valueOf(line.get(i++));
@@ -650,6 +679,8 @@ public class CsvUtils {
             familyAffiliations = extractListOfMaps(line.get(i++));
             familyFinancialInterests = line.get(i++);
             agreementSigned = Boolean.valueOf(line.get(i++));
+            roleProfileState = RoleProfileState.valueOf(line.get(i++));
+
         }
 
         private List<Map<String, String>> extractListOfMaps(String column) {
@@ -696,6 +727,12 @@ public class CsvUtils {
         private ExternalUserLine(List<String> line) {
             super(line);
         }
+
+        @Override
+        protected void processLine(List<String> line, int i) {
+
+        }
+
     }
 
     public static class InternalUserLine extends UserLine {
@@ -704,7 +741,11 @@ public class CsvUtils {
 
         private InternalUserLine(List<String> line) {
             super(line);
-            this.roles = simpleMap(line.get(line.size() - 1).split("&"), s -> s.trim());
+        }
+
+        @Override
+        protected void processLine(List<String> line, int i) {
+            this.roles = simpleMap(line.get(i++).split("&"), s -> s.trim());
         }
     }
 
