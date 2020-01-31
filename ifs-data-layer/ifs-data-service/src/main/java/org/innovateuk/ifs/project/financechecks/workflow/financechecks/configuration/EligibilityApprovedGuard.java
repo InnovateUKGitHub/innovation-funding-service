@@ -10,21 +10,21 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
 
-
-@Component
-public class EligibilityApprovedGuard implements Guard<EligibilityState, EligibilityEvent> {
-
-    @Autowired
-    private ProjectFinanceService projectFinanceService;
-
-    @Override
-    public boolean evaluate(StateContext<EligibilityState, EligibilityEvent> context) {
-        PartnerOrganisation partnerOrganisation = (PartnerOrganisation) context.getMessage().getHeaders().get("target");
-        return isFundingLevelWithinMaximum(
-                projectFinanceService.financeChecksDetails(partnerOrganisation.getProject().getId(), partnerOrganisation.getOrganisation().getId()).getSuccess());
-    }
-
-    private boolean isFundingLevelWithinMaximum(ProjectFinanceResource finance) {
-        return finance.getMaximumFundingLevel() > finance.getGrantClaimPercentage();
-    }
-}
+//
+//@Component
+//public class EligibilityApprovedGuard implements Guard<EligibilityState, EligibilityEvent> {
+//
+//    @Autowired
+//    private ProjectFinanceService projectFinanceService;
+//
+//    @Override
+//    public boolean evaluate(StateContext<EligibilityState, EligibilityEvent> context) {
+//        PartnerOrganisation partnerOrganisation = (PartnerOrganisation) context.getMessage().getHeaders().get("target");
+//        return isFundingLevelWithinMaximum(
+//                projectFinanceService.financeChecksDetails(partnerOrganisation.getProject().getId(), partnerOrganisation.getOrganisation().getId()).getSuccess());
+//    }
+//
+//    private boolean isFundingLevelWithinMaximum(ProjectFinanceResource finance) {
+////        return finance.getMaximumFundingLevel() > finance.getGrantClaimPercentage();
+//    }
+//}

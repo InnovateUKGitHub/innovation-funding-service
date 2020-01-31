@@ -22,9 +22,9 @@ import static org.innovateuk.ifs.project.finance.resource.ViabilityState.*;
 @Configuration
 @EnableStateMachineFactory(name = "viabilityStateMachineFactory")
 public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilityState, ViabilityEvent> {
-
-    @Autowired
-    private ViabilityApprovedGuard viabilityApprovedGuard;
+//
+//    @Autowired
+//    private ViabilityApprovedGuard viabilityApprovedGuard;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ViabilityState, ViabilityEvent> config) throws Exception {
@@ -55,7 +55,7 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
                 .withExternal()
                     .source(REVIEW)
                     .event(VIABILITY_APPROVED)
-                    .guard(viabilityApprovedGuard)
+//                    .guard(viabilityApprovedGuard)
                     .target(APPROVED);
     }
 }
