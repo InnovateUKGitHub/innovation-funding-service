@@ -21,27 +21,29 @@
 
         <th:block th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (orgDetails=${orgDetails})"/>
 
-        <h2 class="govuk-heading-m">Organisation size</h2>
+        <div th:if="${showYourOrg}">
+            <h2 class="govuk-heading-m">Organisation size</h2>
 
-        <form th:object="${form}">
-            <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                            with-growth-table(
-                                                   form=${form},
-                                                   organisationSizeOptions=${yourOrg.organisationSizeOptions},
-                                                   isH2020=${yourOrg.h2020},
-                                                   readOnly=${yourOrg.readOnly},
-                                                   showOrganisationSizeAlert=${yourOrg.showOrganisationSizeAlert},
-                                                   showStateAidAgreement=${yourOrg.showStateAidAgreement},
-                                                   showHints=${yourOrg.showHints}
-                                            )" />
-        </form>
+            <form th:object="${form}">
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                with-growth-table(
+                                                       form=${form},
+                                                       organisationSizeOptions=${yourOrg.organisationSizeOptions},
+                                                       isH2020=${yourOrg.h2020},
+                                                       readOnly=${yourOrg.readOnly},
+                                                       showOrganisationSizeAlert=${yourOrg.showOrganisationSizeAlert},
+                                                       showStateAidAgreement=${yourOrg.showStateAidAgreement},
+                                                       showHints=${yourOrg.showHints}
+                                                )" />
+            </form>
 
-        <a th:href="@{//}"
-           class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
+            <a th:href="@{//}"
+               class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
+        </div>
 
         <div class="govuk-form-group govuk-!-margin-top-6">
             <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
-               th:href="@{/competition/{competitionId}/project/{projectId}/details}(competitionId=${model.competitionId}, projectId={model.projectId})"
+               th:href="@{/competition/{competitionId}/project/{projectId}/details}(competitionId=${orgDetails.competitionId}, projectId={orgDetails.projectId})"
                class="button-secondary">Return to project details</a>
             <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                th:href="${cookieBackLinkUrl}"
