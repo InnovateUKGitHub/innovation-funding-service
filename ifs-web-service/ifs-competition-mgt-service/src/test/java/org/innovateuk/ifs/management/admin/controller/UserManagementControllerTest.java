@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.admin.form.EditUserForm;
 import org.innovateuk.ifs.management.admin.form.SearchExternalUsersForm;
-import org.innovateuk.ifs.management.admin.viewmodel.EditUserViewModel;
+import org.innovateuk.ifs.management.admin.viewmodel.ViewUserViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
@@ -164,7 +164,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/user"))
-                .andExpect(model().attribute("model", new EditUserViewModel(user, getLoggedInUser(), emptyList(), true)));
+                .andExpect(model().attribute("model", new ViewUserViewModel(user, getLoggedInUser(), emptyList(), true)));
     }
 
     @Test
@@ -230,7 +230,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/edit-user"))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("model", new EditUserViewModel(userResource, getLoggedInUser(), emptyList(), true)));
+                .andExpect(model().attribute("model", new ViewUserViewModel(userResource, getLoggedInUser(), emptyList(), true)));
     }
 
     @Test

@@ -29,23 +29,23 @@ public class UserPermissionRules {
         this.userRestService = userRestService;
     }
 
-    @PermissionRule(value = "VIEW_EDIT_USER_PAGE", description = "Support can view edit user page")
+    @PermissionRule(value = "VIEW_USER_PAGE", description = "Support can view edit user page")
     public boolean ifsAdminCanViewEditUserPage(UserCompositeId userCompositeId, UserResource user) {
         return isIFSAdmin(user);
     }
 
-    @PermissionRule(value = "VIEW_EDIT_USER_PAGE", description = "Support can view edit user page")
+    @PermissionRule(value = "VIEW_USER_PAGE", description = "Support can view edit user page")
     public boolean supportCanViewEditUserPage(UserCompositeId userCompositeId, UserResource user) {
         return isSupport(user);
     }
 
-    @PermissionRule(value = "VIEW_EDIT_USER_PAGE", description = "Project finance can view edit user page of assessors")
+    @PermissionRule(value = "VIEW_USER_PAGE", description = "Project finance can view edit user page of assessors")
     public boolean projectFinanceCanViewAssessorsEditUserPage(UserCompositeId userCompositeId, UserResource user) {
         UserResource editUser = userRestService.retrieveUserById(userCompositeId.id()).getSuccess();
         return editUser.hasRole(Role.ASSESSOR) && user.hasRole(Role.PROJECT_FINANCE);
     }
 
-    @PermissionRule(value = "VIEW_EDIT_USER_PAGE", description = "Comp admins can view edit user page of assessors")
+    @PermissionRule(value = "VIEW_USER_PAGE", description = "Comp admins can view edit user page of assessors")
     public boolean compAdminCanViewAssessorsEditUserPage(UserCompositeId userCompositeId, UserResource user) {
         UserResource editUser = userRestService.retrieveUserById(userCompositeId.id()).getSuccess();
         return editUser.hasRole(Role.ASSESSOR) && user.hasRole(Role.COMP_ADMIN);

@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * A view model for serving page listing users to be managed by IFS Administrators
  */
-public class EditUserViewModel {
+public class ViewUserViewModel {
 
     private final UserResource user;
     private final UserResource loggedInUser;
@@ -21,7 +21,7 @@ public class EditUserViewModel {
     private final boolean displayRoleProfileLink;
 
 
-    public EditUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles, boolean displayRoleProfileLink) {
+    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles, boolean displayRoleProfileLink) {
         this.user = user;
         this.loggedInUser = loggedInUser;
         this.roleProfiles = roleProfiles;
@@ -82,7 +82,7 @@ public class EditUserViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        EditUserViewModel that = (EditUserViewModel) o;
+        ViewUserViewModel that = (ViewUserViewModel) o;
 
         return new EqualsBuilder()
                 .append(displayRoleProfileLink, that.displayRoleProfileLink)
