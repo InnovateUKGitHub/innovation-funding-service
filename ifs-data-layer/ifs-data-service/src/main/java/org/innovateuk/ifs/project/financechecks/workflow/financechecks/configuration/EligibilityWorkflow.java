@@ -24,8 +24,8 @@ import static org.innovateuk.ifs.project.finance.resource.EligibilityState.*;
 @EnableStateMachineFactory(name = "eligibilityStateMachineFactory")
 public class EligibilityWorkflow extends StateMachineConfigurerAdapter<EligibilityState, EligibilityEvent> {
 
-//    @Autowired
-//    private EligibilityApprovedGuard eligibilityApprovedGuard;
+    @Autowired
+    private EligibilityApprovedGuard eligibilityApprovedGuard;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<EligibilityState, EligibilityEvent> config) throws Exception {
@@ -56,7 +56,7 @@ public class EligibilityWorkflow extends StateMachineConfigurerAdapter<Eligibili
                 .withExternal()
                     .source(REVIEW)
                     .event(ELIGIBILITY_APPROVED)
-//                    .guard(eligibilityApprovedGuard)
+                    .guard(eligibilityApprovedGuard)
                     .target(APPROVED)
                     .and()
                 .withExternal()
