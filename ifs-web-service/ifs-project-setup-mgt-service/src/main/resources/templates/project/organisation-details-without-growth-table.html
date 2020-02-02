@@ -42,7 +42,7 @@
 
         <div class="govuk-form-group govuk-!-margin-top-6">
             <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
-               th:href="@{/competition/{competitionId}/project/{projectId}/details}(competitionId=${model.competitionId}, projectId={model.projectId})"
+               th:href="@{/competition/{competitionId}/project/{projectId}/details}(competitionId=${orgDetails.competitionId}, projectId={orgDetails.projectId})"
                class="button-secondary">Return to project details</a>
             <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                th:href="${cookieBackLinkUrl}"

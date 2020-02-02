@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.project.organisationdetails;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -20,6 +23,7 @@ import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,7 +32,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.junit.Assert.assertEquals;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,39 +56,69 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
     @Mock
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Override
     protected OrganisationDetailsWithoutGrowthTableController supplyControllerUnderTest() {
         return new OrganisationDetailsWithoutGrowthTableController();
     }
 
+    private long competitionId = 1L;
     private long projectId = 2L;
     private long organisationId = 3L;
 
-    @Test
-    public void viewOrganisationDetailsWithNoPartnerOrganisations() throws Exception {
-        long competitionId = 1L;
-        ProjectResource project = getProject();
-        OrganisationResource organisation = getOrganisation();
+    private CompetitionResource competition;
+    private ProjectResource project;
+    private OrganisationResource organisation;
+    private YourOrganisationWithoutGrowthTableForm form;
+
+    @Before
+    public void setup() {
+        project = getProject();
+        organisation = getOrganisation();
+        competition = new CompetitionResource();
+
         OrganisationFinancesWithoutGrowthTableResource finances = getFinances();
-        YourOrganisationWithoutGrowthTableForm form = getForm();
+        form = getForm();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(new RestResult(restSuccess(organisation)));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(finances));
         when(withoutGrowthTableFormPopulator.populate(finances)).thenReturn(form);
-        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays
-            .asList(new PartnerOrganisationResource()))));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
+    }
 
-        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/organisation/" + organisationId + "/details/without-growth-table"))
+    private MvcResult callEndpoint() throws Exception {
+        return mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/organisation/" + organisationId + "/details/without-growth-table"))
             .andExpect(status().isOk())
             .andReturn();
+    }
 
-        OrganisationDetailsViewModel orgDetails = (OrganisationDetailsViewModel) result.getModelAndView().getModel().get("orgDetails");
+    @Test
+    public void viewOrganisationDetailsWithYourOrganisationSection() throws Exception {
+        competition.setIncludeYourOrganisationSection(true);
+        competition.setIncludeJesForm(false);
+        organisation.setOrganisationType(1L);
+
+        MvcResult result = callEndpoint();
         ProjectYourOrganisationViewModel yourOrganisation = (ProjectYourOrganisationViewModel) result.getModelAndView().getModel().get("yourOrg");
         YourOrganisationWithoutGrowthTableForm actualForm = (YourOrganisationWithoutGrowthTableForm) result.getModelAndView().getModel().get("form");
 
+        sharedAssertions(result, organisation.getAddresses().get(0).getAddress());
+        assertTrue((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
+
+        assertEquals(organisationId, yourOrganisation.getOrganisationId());
+        assertEquals(projectId, yourOrganisation.getProjectId());
+        assertEquals(project.getName(), yourOrganisation.getProjectName());
+
+        assertEquals(form, actualForm);
+    }
+
+    private void sharedAssertions (MvcResult result, AddressResource expectedAddress){
+        OrganisationDetailsViewModel orgDetails = (OrganisationDetailsViewModel) result.getModelAndView().getModel().get("orgDetails");
         assertEquals("project/organisation-details-without-growth-table", result.getModelAndView().getViewName());
-        AddressResource expectedAddress = organisation.getAddresses().get(0).getAddress();
         assertEquals(expectedAddress.getAddressLine1(), orgDetails.getAddressLine1());
         assertEquals(expectedAddress.getAddressLine2(), orgDetails.getAddressLine2());
         assertEquals(expectedAddress.getAddressLine3(), orgDetails.getAddressLine3());
@@ -96,12 +131,22 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
         assertEquals(project.getName(), orgDetails.getProjectName());
         assertEquals(organisation.getCompaniesHouseNumber(), orgDetails.getRegistrationNumber());
         assertEquals(expectedAddress.getTown(), orgDetails.getTown());
+    }
 
-        assertEquals(organisationId, yourOrganisation.getOrganisationId());
-        assertEquals(projectId, yourOrganisation.getProjectId());
-        assertEquals(project.getName(), yourOrganisation.getProjectName());
+    @Test
+    public void viewOrganisationDetailsWithoutYourOrganisationSectionAndAddressEmpty() throws Exception {
+        competition.setIncludeYourOrganisationSection(true);
+        competition.setIncludeJesForm(true);
+        competition.setFundingType(GRANT);
+        organisation.setOrganisationType(2L);
 
-        assertEquals(form, actualForm);
+        organisation.setAddresses(new ArrayList());
+
+        MvcResult result = callEndpoint();
+
+        sharedAssertions(result, new AddressResource("", "", "", "", "", ""));
+
+        assertFalse((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
     }
 
     private OrganisationFinancesWithoutGrowthTableResource getFinances() {
