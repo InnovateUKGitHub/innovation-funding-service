@@ -201,7 +201,7 @@ Mark academic finances as complete
 
 the user should see correct grant percentage
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
-    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  0
+    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  32.12
 
 The user marks the academic application finances as incomplete
     the user navigates to Your-finances page  Academic robot test application
