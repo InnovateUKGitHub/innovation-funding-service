@@ -71,7 +71,6 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
     @Mock
     private FinanceCheckService financeCheckService;
 
-
     @Override
     protected OrganisationDetailsWithGrowthTableController supplyControllerUnderTest() {
         return new OrganisationDetailsWithGrowthTableController();
@@ -95,8 +94,6 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         OrganisationFinancesWithGrowthTableResource finances = getFinances();
         form = getForm();
 
-
-        ////
         FinanceCheckPartnerStatusResource partner = new FinanceCheckPartnerStatusResource();
         partner.setViability(REVIEW);
         partner.setEligibility(EligibilityState.REVIEW);
@@ -104,9 +101,6 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
                 .build();
         financeCheckSummaryResource.setPartnerStatusResources(partnerStatusResources);
-        /////
-
-
 
         when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(new RestResult(restSuccess(organisation)));
@@ -135,6 +129,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
 
         sharedAssertions(result, organisation.getAddresses().get(0).getAddress());
         assertTrue((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
+        assertTrue((Boolean) result.getModelAndView().getModel().get("linkValid"));
 
         assertEquals(organisationId, yourOrganisation.getOrganisationId());
         assertEquals(projectId, yourOrganisation.getProjectId());
