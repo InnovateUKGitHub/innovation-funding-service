@@ -402,7 +402,7 @@ public class UserManagementController extends AsyncAdaptor {
             description = "Only comp admin and project finance can view unavailable assessors")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @GetMapping("/assessors/unavailable")
-    public String viewAssessors(Model model,
+    public String viewUnavailableAssessors(Model model,
                                          UserResource user,
                                          @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
                                          @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
