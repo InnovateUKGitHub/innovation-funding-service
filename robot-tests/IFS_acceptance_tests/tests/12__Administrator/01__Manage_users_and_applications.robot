@@ -295,10 +295,8 @@ Admin can view assessor status unavailable
 
 Comp Admin can view assessor status
     [Documentation]  IFS-7023
-    Given log in as a different user            &{ifs_admin_user_credentials}
-    And the user clicks the button/link         link = Manage users
-    When the user enters text to a text field   id = filter  Kieran
-    And the user clicks the button/link         css = input[type="submit"]
+    Given log in as a different user            &{Comp_admin1_credentials}
+    When the user navigates to the page         ${server}/management/admin/user/311/active
     Then user should see the correct assessor status    Disabled
 
 Administrator is able to mark as successful an unsuccessful application
