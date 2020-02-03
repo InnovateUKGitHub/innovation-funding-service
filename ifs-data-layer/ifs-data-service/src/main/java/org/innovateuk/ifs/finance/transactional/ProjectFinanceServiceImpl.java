@@ -110,7 +110,10 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     }
 
     private boolean hasChanged(Organisation organisation, OrganisationSize projectOrgSize, Map<Long, OrganisationSize> organisationSizeMap) {
-        organisationSizeMap.putIfAbsent(organisation.getId(), projectOrgSize);
+        if (!organisationSizeMap.containsKey(organisation.getId())) {
+            // Organisations added at project stage will not have finances
+            return false;
+        }
         return !organisationSizeMap.get(organisation.getId()).equals(projectOrgSize);
     }
 

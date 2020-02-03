@@ -26,7 +26,7 @@ public class GrantClaimMaximumPermissionRules extends BasePermissionRules {
             description = "A user can see the grant claim maximums if they are an internal admin user")
     public boolean internalAdminCanCheckMaxFundingLevelOverridden
             (CompetitionResource competition, UserResource user) {
-        return isInternalAdmin(user) || isIFSAdmin(user);
+        return isInternalAdmin(user);
     }
 
     @PermissionRule(value = "MAX_FUNDING_LEVEL_OVERRIDDEN",
