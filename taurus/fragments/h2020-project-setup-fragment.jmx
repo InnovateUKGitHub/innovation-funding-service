@@ -40,7 +40,7 @@
           </UserParameters>
           <hashTree/>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Login" enabled="true">
-            <stringProp name="IncludeController.includepath">taurus/fragments/login-fragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/login-fragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
         </hashTree>
@@ -280,7 +280,7 @@
           </UserParameters>
           <hashTree/>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Login" enabled="true">
-            <stringProp name="IncludeController.includepath">taurus/fragments/login-fragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/login-fragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
         </hashTree>
@@ -980,7 +980,7 @@
           </UserParameters>
           <hashTree/>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Login" enabled="true">
-            <stringProp name="IncludeController.includepath">taurus/fragments/login-fragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/login-fragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
         </hashTree>
@@ -1406,7 +1406,7 @@
           </UserParameters>
           <hashTree/>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Login" enabled="true">
-            <stringProp name="IncludeController.includepath">taurus/fragments/login-fragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/login-fragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
         </hashTree>
@@ -1622,7 +1622,7 @@
           </UserParameters>
           <hashTree/>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Login" enabled="true">
-            <stringProp name="IncludeController.includepath">taurus/fragments/login-fragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/login-fragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
         </hashTree>
@@ -1862,7 +1862,7 @@
           </UserParameters>
           <hashTree/>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Login" enabled="true">
-            <stringProp name="IncludeController.includepath">taurus/fragments/login-fragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/login-fragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
         </hashTree>
@@ -2049,7 +2049,7 @@
           </UserParameters>
           <hashTree/>
           <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Login" enabled="true">
-            <stringProp name="IncludeController.includepath">taurus/fragments/login-fragment.jmx</stringProp>
+            <stringProp name="IncludeController.includepath">fragments/login-fragment.jmx</stringProp>
           </IncludeController>
           <hashTree/>
         </hashTree>
