@@ -91,7 +91,11 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private void addShowManageAssessorsAttribute(HttpServletRequest request, ModelAndView modelAndView) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_ASSESSORS_LINK_ATTR, assessorProfileFeatureToggle && user != null && user.hasAnyRoles(Role.COMP_ADMIN, Role.PROJECT_FINANCE));
+        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_ASSESSORS_LINK_ATTR,
+                assessorProfileFeatureToggle &&
+                        user != null &&
+                        !user.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.SUPPORT) &&
+                        user.hasAnyRoles(Role.COMP_ADMIN, Role.PROJECT_FINANCE));
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {
