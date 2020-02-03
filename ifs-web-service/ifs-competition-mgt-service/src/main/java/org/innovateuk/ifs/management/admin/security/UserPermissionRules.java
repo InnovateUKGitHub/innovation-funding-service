@@ -29,7 +29,7 @@ public class UserPermissionRules {
         this.userRestService = userRestService;
     }
 
-    @PermissionRule(value = "VIEW_USER_PAGE", description = "Support can view edit user page")
+    @PermissionRule(value = "VIEW_USER_PAGE", description = "IFS admin can view edit user page")
     public boolean ifsAdminCanViewEditUserPage(UserCompositeId userCompositeId, UserResource user) {
         return isIFSAdmin(user);
     }
