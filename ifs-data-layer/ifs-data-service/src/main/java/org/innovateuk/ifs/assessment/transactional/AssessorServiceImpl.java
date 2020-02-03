@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.checkerframework.checker.units.qual.A;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
@@ -19,9 +20,12 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
+import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -89,6 +93,9 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Autowired
     private AssessmentRepository assessmentRepository;
 
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
+
     @Override
     @Transactional
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
@@ -98,12 +105,17 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
             userRegistrationResource.setRoles(singletonList(Role.ASSESSOR));
             return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
                 assignCompetitionParticipantsToUser(created);
+                createAssessorRoleProfileStatus(created);
                 Profile profile = profileRepository.findById(created.getProfileId()).get();
                 // profile is guaranteed to have been created by createUser(...)
                 profile.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
                 profileRepository.save(profile);
             });
         });
+    }
+
+    private void createAssessorRoleProfileStatus(User user) {
+        roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
     }
 
     @Override
