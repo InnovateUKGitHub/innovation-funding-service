@@ -25,6 +25,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ public class UserManagementController extends AsyncAdaptor {
 
     @Autowired
     private UserRestService userRestService;
+
+    @Autowired
+    private RoleProfileStatusRestService roleProfileStatusRestService;
 
     @Autowired
     private InviteUserRestService inviteUserRestService;
@@ -424,9 +428,9 @@ public class UserManagementController extends AsyncAdaptor {
         final CompletableFuture<UserPageResource> unavailableAssessors;
         final CompletableFuture<UserPageResource> disabledAssessors;
 
-        availableAssessors = async(() -> userRestService.getAvailableAssessors(filter, page - 1, size).getSuccess());
-        unavailableAssessors = async(() -> userRestService.getUnavailableAssessors(filter, page - 1, size).getSuccess());
-        disabledAssessors = async(() -> userRestService.getDisabledAssessors(filter, page - 1, size).getSuccess());
+        availableAssessors = async(() -> roleProfileStatusRestService.getAvailableAssessors(filter, page - 1, size).getSuccess());
+        unavailableAssessors = async(() -> roleProfileStatusRestService.getUnavailableAssessors(filter, page - 1, size).getSuccess());
+        disabledAssessors = async(() -> roleProfileStatusRestService.getDisabledAssessors(filter, page - 1, size).getSuccess());
 
         awaitAll(availableAssessors, unavailableAssessors, disabledAssessors)
                 .thenAccept((activeInternalUsers, inactiveInternalUsers, pendingInternalUserInvites) -> {

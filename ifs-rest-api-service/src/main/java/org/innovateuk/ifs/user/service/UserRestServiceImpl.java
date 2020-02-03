@@ -27,10 +27,9 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Service
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
 
+    private static final String USER_REST_URL = "/user";
 
-    private String USER_REST_URL = "/user";
-
-    private String processRoleRestURL = "/processrole";
+    private static final String PROCESS_ROLE_REST_URL = "/processrole";
 
     @Override
     public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
@@ -131,22 +130,22 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/find-by-user-application/" + userId + "/" + applicationId, ProcessRoleResource.class);
+        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-user-application/" + userId + "/" + applicationId, ProcessRoleResource.class);
     }
 
     @Override
     public Future<RestResult<ProcessRoleResource>> findProcessRoleById(long processRoleId) {
-        return getWithRestResultAsync(processRoleRestURL + "/" + processRoleId, ProcessRoleResource.class);
+        return getWithRestResultAsync(PROCESS_ROLE_REST_URL + "/" + processRoleId, ProcessRoleResource.class);
     }
 
     @Override
     public RestResult<List<ProcessRoleResource>> findProcessRole(long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/find-by-application-id/" + applicationId, processRoleResourceListType());
+        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-application-id/" + applicationId, processRoleResourceListType());
     }
 
     @Override
     public RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(long userId) {
-        return getWithRestResult(processRoleRestURL + "/find-by-user-id/" + userId, processRoleResourceListType());
+        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-user-id/" + userId, processRoleResourceListType());
     }
 
     @Override
@@ -156,12 +155,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(long applicationId){
-        return getWithRestResultAsync(processRoleRestURL + "/find-assignable/" + applicationId, ProcessRoleResource[].class);
+        return getWithRestResultAsync(PROCESS_ROLE_REST_URL + "/find-assignable/" + applicationId, ProcessRoleResource[].class);
     }
 
     @Override
     public RestResult<Boolean> userHasApplicationForCompetition(long userId, long competitionId) {
-        return getWithRestResult(processRoleRestURL + "/user-has-application-for-competition/" + userId + "/" + competitionId, Boolean.class);
+        return getWithRestResult(PROCESS_ROLE_REST_URL + "/user-has-application-for-competition/" + userId + "/" + competitionId, Boolean.class);
     }
 
     @Override
@@ -260,27 +259,5 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<Void> updateEmail(long userId, String email) {
         return putWithRestResult(USER_REST_URL + "/" + userId + "/update-email/" + email);
-    }
-
-    @Override
-    public RestResult<UserPageResource> getAvailableAssessors(String filter, int pageNumber, int pageSize) {
-        return getAssessorsWithProfileState(RoleProfileState.ACTIVE, filter, pageNumber, pageSize);
-    }
-
-    @Override
-    public RestResult<UserPageResource> getUnavailableAssessors(String filter, int pageNumber, int pageSize) {
-        return getAssessorsWithProfileState(RoleProfileState.UNAVAILABLE, filter, pageNumber, pageSize);
-    }
-
-    @Override
-    public RestResult<UserPageResource> getDisabledAssessors(String filter, int pageNumber, int pageSize) {
-        return getAssessorsWithProfileState(RoleProfileState.DISABLED, filter, pageNumber, pageSize);
-    }
-
-    private RestResult<UserPageResource> getAssessorsWithProfileState(RoleProfileState state, String filter, int pageNumber, int pageSize) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("filter", filter);
-        String uriWithParams = buildPaginationUri(String.format("%s/role-profile-status/%s/%s", USER_REST_URL, state, ProfileRole.ASSESSOR),  pageNumber, pageSize, null, params);
-        return getWithRestResult(uriWithParams, UserPageResource.class);
     }
 }

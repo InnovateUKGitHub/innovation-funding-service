@@ -14,7 +14,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.RoleProfileStatusService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -42,12 +41,6 @@ public class UserController {
             new Sort.Order(Sort.Direction.ASC, "firstName"),
             new Sort.Order(Sort.Direction.ASC, "lastName")
     );
-
-    public static final Sort DEFAULT_USER_SORT_ASSESSORS = new Sort(
-            new Sort.Order(Sort.Direction.ASC, "user.firstName"),
-            new Sort.Order(Sort.Direction.ASC, "user.lastName")
-    );
-
     private static final Log LOG = LogFactory.getLog(UserController.class);
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
@@ -68,9 +61,6 @@ public class UserController {
 
     @Autowired
     private CrmService crmService;
-
-    @Autowired
-    private RoleProfileStatusService roleProfileStatusService;
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {
@@ -243,15 +233,5 @@ public class UserController {
     @PostMapping("{id}/grant/{role}")
     public RestResult<Void> grantRole(@PathVariable long id, @PathVariable Role role) {
         return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
-    }
-
-    @GetMapping("/role-profile-status/{roleProfileState}/{profileRole}")
-    public RestResult<UserPageResource> getByRoleProfileStatus(@PathVariable RoleProfileState roleProfileState,
-                                                               @PathVariable ProfileRole profileRole,
-                                                               @RequestParam(required = false) String filter,
-                                                               @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                                               @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return roleProfileStatusService.findByRoleProfile(roleProfileState, profileRole, filter, PageRequest.of(page, size, DEFAULT_USER_SORT_ASSESSORS))
-                .toGetResponse();
     }
 }

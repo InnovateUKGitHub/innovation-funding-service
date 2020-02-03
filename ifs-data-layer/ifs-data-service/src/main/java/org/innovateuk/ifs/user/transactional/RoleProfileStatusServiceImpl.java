@@ -61,8 +61,8 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
                 .andOnSuccessReturn(roleProfileStatusMapper::mapToResource);
     }
 
-
     @Override
+    @Transactional
     public ServiceResult<UserPageResource> findByRoleProfile(RoleProfileState state, ProfileRole profileRole, String filter, Pageable pageable) {
         return userPageResource(
                 roleProfileStatusRepository.findByRoleProfileStateAndProfileRoleAndUserEmailContaining(state, profileRole, filter, pageable)
