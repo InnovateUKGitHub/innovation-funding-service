@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.project.organisationdetails;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
@@ -12,8 +9,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.controller.OrganisationDetailsWithoutGrowthTableController;
 import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
@@ -30,9 +31,16 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,6 +67,9 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private FinanceCheckService financeCheckService;
+
     @Override
     protected OrganisationDetailsWithoutGrowthTableController supplyControllerUnderTest() {
         return new OrganisationDetailsWithoutGrowthTableController();
@@ -82,12 +93,23 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
         OrganisationFinancesWithoutGrowthTableResource finances = getFinances();
         form = getForm();
 
+        ////
+        FinanceCheckPartnerStatusResource partner = new FinanceCheckPartnerStatusResource();
+        partner.setViability(REVIEW);
+        partner.setEligibility(EligibilityState.REVIEW);
+        List<FinanceCheckPartnerStatusResource> partnerStatusResources = Arrays.asList(partner);
+        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
+                .build();
+        financeCheckSummaryResource.setPartnerStatusResources(partnerStatusResources);
+        /////
+
         when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(new RestResult(restSuccess(organisation)));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(finances));
         when(withoutGrowthTableFormPopulator.populate(finances)).thenReturn(form);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
+        when(financeCheckService.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(financeCheckSummaryResource));
     }
 
     private MvcResult callEndpoint() throws Exception {

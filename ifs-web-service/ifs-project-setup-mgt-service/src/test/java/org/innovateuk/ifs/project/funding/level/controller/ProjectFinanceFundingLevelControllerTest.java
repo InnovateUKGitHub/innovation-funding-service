@@ -79,6 +79,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
+        when(projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId)).thenReturn(restSuccess(false));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/funding-level", projectId))
                 .andExpect(status().isOk())
