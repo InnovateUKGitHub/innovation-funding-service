@@ -36,7 +36,7 @@ public class GrantClaimPercentageValidator implements Validator {
     public void validate(Object target, Errors errors) {
         GrantClaimPercentage response = (GrantClaimPercentage) target;
 
-        if (response.isRequestingFunding()) {
+//        if (response.isRequestingFunding()) {
 
             if (response.getPercentage() == null) {
                 rejectValue(errors, "percentage", "org.hibernate.validator.constraints.NotBlank.message");
@@ -58,13 +58,13 @@ public class GrantClaimPercentageValidator implements Validator {
                 return;
             }
 
-            if (response.getPercentage().compareTo(BigDecimal.ZERO) <= 0) {
+            if (response.getPercentage().compareTo(BigDecimal.ZERO) < 0) {
                 rejectValue(errors, "percentage", "validation.field.percentage.max.value.or.higher", 0);
             }
             if (response.getPercentage().compareTo(BigDecimal.valueOf(max)) > 0) {
                 rejectValue(errors, "percentage", "validation.finance.grant.claim.percentage.max", max);
             }
-        }
+//        }
     }
 
 }
