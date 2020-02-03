@@ -291,6 +291,7 @@ Admin can view assessor status unavailable
      And the user clicks the button/link         link = Manage users
      When the user enters text to a text field   id = filter  Isaac
      And the user clicks the button/link         css = input[type="submit"]
+     And the user clicks the button/link         link = Edit
      Then user should see the correct assessor status    Unavailable
 
 Comp Admin can view assessor status
@@ -449,5 +450,4 @@ the user confirms email change
 
 user should see the correct assessor status
     [Arguments]  ${status}
-    the user clicks the button/link   link = Edit
     the user should see the element   jQuery = td:contains("Assessor") ~ td:contains("${status}")

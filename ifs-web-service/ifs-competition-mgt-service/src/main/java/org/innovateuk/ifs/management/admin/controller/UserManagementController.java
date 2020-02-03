@@ -114,7 +114,7 @@ public class UserManagementController {
         validateUser(form, user);
 
         Supplier<String> failureView = () -> viewActiveUser(model, user, loggedInUser);
-        Supplier<String> noEmailChangeSuccess = () -> redirectToActivePage(userId);
+        Supplier<String> noEmailChangeSuccess = () -> redirectToActiveUsersTab();
         Supplier<String> emailChangeSuccess = () -> {
             cookieService.saveToCookie(response, NEW_EMAIL_COOKIE, form.getEmail());
             return String.format("redirect:/admin/user/%d/active/confirm", userId);
@@ -165,7 +165,7 @@ public class UserManagementController {
         Supplier<String> successView = () -> {
             cookieService.removeCookie(response, NEW_EMAIL_COOKIE);
             redirectAttributes.addFlashAttribute("showEmailUpdateSuccess", true);
-            return redirectToActivePage(userId);
+            return redirectToActiveUsersTab();
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -236,6 +236,10 @@ public class UserManagementController {
                         .getOptionalSuccessObject()
                         .orElse(emptyList()),
                 profileFeatureToggle);
+    }
+
+    private String redirectToActiveUsersTab() {
+        return "redirect:/admin/users/active";
     }
 
     private String redirectToActivePage(long userId) {
