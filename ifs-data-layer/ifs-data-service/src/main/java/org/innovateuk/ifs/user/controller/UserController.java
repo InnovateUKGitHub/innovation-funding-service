@@ -245,9 +245,9 @@ public class UserController {
     public RestResult<UserPageResource> getByRoleProfileStatus(@PathVariable RoleProfileState roleProfileState,
                                                                @PathVariable ProfileRole profileRole,
                                                                @RequestParam(required = false) String filter,
-                                                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                               @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-        return userService.findByRoleProfile(roleProfileState, profileRole, filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT_ASSESSORS))
+                                                               @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                                               @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return userService.findByRoleProfile(roleProfileState, profileRole, filter, PageRequest.of(page, size, DEFAULT_USER_SORT_ASSESSORS))
                 .toGetResponse();
     }
 }
