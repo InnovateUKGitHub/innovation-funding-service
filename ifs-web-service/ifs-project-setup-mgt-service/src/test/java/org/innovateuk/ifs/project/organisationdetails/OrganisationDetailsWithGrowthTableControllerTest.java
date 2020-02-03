@@ -136,7 +136,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
 
     @Test
     public void viewOrganisationDetailsWithoutYourOrganisationSectionAndAddressEmpty() throws Exception {
-        competition.setIncludeYourOrganisationSection(true);
+        competition.setIncludeYourOrganisationSection(false);
         competition.setIncludeJesForm(true);
         competition.setFundingType(GRANT);
         organisation.setOrganisationType(2L);
