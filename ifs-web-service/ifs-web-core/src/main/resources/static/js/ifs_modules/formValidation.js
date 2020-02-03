@@ -284,6 +284,7 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
+
     checkNumber: function (field) {
       var numberAttribute = 'number'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, numberAttribute)
@@ -307,7 +308,7 @@ IFS.core.formValidation = (function () {
         var containsExponential = value.indexOf('e') !== -1
         var containsDecimal = domField.value.includes('.')
         var validDecimal = /^\d*(\.\d{1,2})?$/.test(domField.value)
-        var checkDecimal = domField.step != null && containsDecimal && !Number.isInteger(domField.step)
+        var checkDecimal = domField.step != null && domField.step !== '' && containsDecimal && !Number.isInteger(domField.step)
         if (checkDecimal) {
           if (validDecimal) {
             IFS.core.formValidation.setValid(field, decimalMessage, displayValidationMessages)
