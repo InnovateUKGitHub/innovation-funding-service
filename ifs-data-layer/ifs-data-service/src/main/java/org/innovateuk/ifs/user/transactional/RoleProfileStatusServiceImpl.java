@@ -4,11 +4,16 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.RoleProfileStatusMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.ProfileRole;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +38,9 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     @Transactional
     public ServiceResult<Void> updateUserStatus(long userId, RoleProfileStatusResource roleProfileStatusResource) {
@@ -53,6 +61,25 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
                 .andOnSuccessReturn(roleProfileStatusMapper::mapToResource);
     }
 
+
+    @Override
+    public ServiceResult<UserPageResource> findByRoleProfile(RoleProfileState state, ProfileRole profileRole, String filter, Pageable pageable) {
+        return userPageResource(
+                roleProfileStatusRepository.findByRoleProfileStateAndProfileRoleAndUserEmailContaining(state, profileRole, filter, pageable)
+                        .map(RoleProfileStatus::getUser)
+        );
+    }
+
+    private ServiceResult<UserPageResource> userPageResource(Page<User> pagedResult) {
+        return serviceSuccess(new UserPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList()),
+                pagedResult.getNumber(),
+                pagedResult.getSize())
+        );
+    }
+
     private void updateRoleProfileStatus(User user, RoleProfileStatusResource roleProfileStatusResource) {
         findOrCreateRoleProfileStatus(user, roleProfileStatusResource).andOnSuccessReturnVoid(roleProfileStatus -> {
             roleProfileStatus.setRoleProfileState(roleProfileStatusResource.getRoleProfileState());
@@ -60,7 +87,6 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
             roleProfileStatusRepository.save(roleProfileStatus);
         });
     }
-
 
     private ServiceResult<RoleProfileStatus> findOrCreateRoleProfileStatus(User user, RoleProfileStatusResource roleProfileStatusResource) {
 

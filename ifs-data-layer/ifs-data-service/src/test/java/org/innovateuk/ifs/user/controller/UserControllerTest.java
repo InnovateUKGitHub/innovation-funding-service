@@ -12,6 +12,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
+import org.innovateuk.ifs.user.transactional.RoleProfileStatusService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -67,6 +68,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Mock
     private CrmService crmService;
+
+    @Mock
+    private RoleProfileStatusService roleProfileStatusServiceMock;
 
     @Test
     public void resendEmailVerificationNotification() throws Exception {
@@ -400,7 +404,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         String filter = "filter";
         UserPageResource userPageResource = new UserPageResource();
 
-        when(userServiceMock.findByRoleProfile(eq(roleProfileState), eq(profileRole), eq(filter), any(PageRequest.class)))
+        when(roleProfileStatusServiceMock.findByRoleProfile(eq(roleProfileState), eq(profileRole), eq(filter), any(PageRequest.class)))
                 .thenReturn(serviceSuccess(userPageResource));
 
         mockMvc.perform(get("/user/role-profile-status/{roleProfileState}/{profileRole}", roleProfileState, profileRole)

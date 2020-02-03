@@ -39,9 +39,6 @@ public interface UserService {
     ServiceResult<UserPageResource> findActive(String filter, Pageable pageable);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findByRoleProfile(RoleProfileState state, ProfileRole profileRole, String filter, Pageable pageable);
-
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findActiveExternal(String filter, Pageable pageable);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_INTERNAL')")

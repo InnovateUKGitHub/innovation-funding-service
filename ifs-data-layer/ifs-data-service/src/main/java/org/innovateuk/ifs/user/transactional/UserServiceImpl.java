@@ -19,7 +19,6 @@ import org.innovateuk.ifs.user.cache.UserCacheEvict;
 import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -284,14 +283,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.ACTIVE, pageable);
         List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
-    }
-
-    @Override
-    public ServiceResult<UserPageResource> findByRoleProfile(RoleProfileState state, ProfileRole profileRole, String filter, Pageable pageable) {
-        return userPageResource(
-                roleProfileStatusRepository.findByRoleProfileStateAndProfileRoleAndUserEmailContaining(state, profileRole, filter, pageable)
-                        .map(RoleProfileStatus::getUser)
-        );
     }
 
     @Override
