@@ -130,7 +130,7 @@
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="col">Role profile</th>
                             <th class="govuk-table__header" scope="col">Role status</th>
-                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">View role profile</span></th>
+                            <th class="govuk-table__header alignright" scope="col"><span class="govuk-visually-hidden">View role profile</span></th>
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
@@ -138,7 +138,7 @@
                             th:with="canDisableRole=${role.isAssessor() and model.displayRoleProfileLink}">
                             <td class="govuk-table__cell" th:text="${role.displayName}"></td>
                             <td class="govuk-table__cell" th:text="${model.roleDisplay(role)}"></td>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell alignright">
                                 <th:block th:if="${canDisableRole and !model.support}">
                                     <a class="govuk-link" href="#">View role profile</a>
                                 </th:block>
