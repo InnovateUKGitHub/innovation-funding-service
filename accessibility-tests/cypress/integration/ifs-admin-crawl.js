@@ -12,7 +12,7 @@ describe('Accessibility test - IFS Admin crawl', function () {
   });
 
   let i;
-  for (i = 0; i < 50; i++) {
+  for (i = 0; i < 150; i++) {
     ((() => {
       let x = i;
       it('Page ' + x, function () {
