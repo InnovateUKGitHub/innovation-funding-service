@@ -44,15 +44,6 @@ public class UsersManagementController extends AsyncAdaptor {
     @Autowired
     private InviteUserRestService inviteUserRestService;
 
-    @Autowired
-    private InternalUserService internalUserService;
-
-    @Autowired
-    private Validator validator;
-
-    @Autowired
-    private EncryptedCookieService cookieService;
-
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
             description = "Only IFS administrators can view active internal users")
@@ -93,6 +84,15 @@ public class UsersManagementController extends AsyncAdaptor {
         return view(model, "pending", filterForm.getFilter(), page, size, true);
     }
 
+
+    @SecuredBySpring(value = "RESEND_INTERNAL_USER_INVITE", description = "Only the IFS Administrators can resend invites to internal users")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PostMapping("/pending/resend-invite")
+    public String resendInvite(@RequestParam("inviteId") long inviteId) {
+        inviteUserRestService.resendInternalUserInvite(inviteId).getSuccess();
+        return "redirect:/admin/users/pending";
+    }
+
     private String view(Model model, String activeTab, String filter, int page, int size, boolean adminUser) {
         final CompletableFuture<UserPageResource> activeUsers;
         final CompletableFuture<UserPageResource> inactiveUsers;
@@ -128,13 +128,5 @@ public class UsersManagementController extends AsyncAdaptor {
                 });
 
         return "admin/users";
-    }
-
-    @SecuredBySpring(value = "RESEND_INTERNAL_USER_INVITE", description = "Only the IFS Administrators can resend invites to internal users")
-    @PreAuthorize("hasAuthority('ifs_administrator')")
-    @PostMapping("/pending/resend-invite")
-    public String resendInvite(@RequestParam("inviteId") long inviteId) {
-        inviteUserRestService.resendInternalUserInvite(inviteId).getSuccess();
-        return "redirect:/admin/users/pending";
     }
 }
