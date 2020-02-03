@@ -88,8 +88,9 @@ public class OrganisationDetailsWithoutGrowthTableController {
     private boolean isIncludeYourOrganisationSection(long competitionId, OrganisationResource organisation) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        return competition.getIncludeYourOrganisationSection()
-            && !competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+        return competition.applicantShouldUseJesFinances(OrganisationTypeEnum.getFromId(organisation.getOrganisationType()))
+            && !competition.getIncludeYourOrganisationSection()
+            ? false : true;
     }
 
     private AddressResource getAddress(OrganisationResource organisation) {
