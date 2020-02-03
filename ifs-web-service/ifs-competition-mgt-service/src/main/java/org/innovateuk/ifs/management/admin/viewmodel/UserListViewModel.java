@@ -123,7 +123,7 @@ public class UserListViewModel {
     }
 
     private String getRoleDisplay(Role role, Set<RoleProfileStatusResource> roleProfileStatusResources) {
-        if (role.equals(Role.ASSESSOR)) {
+        if (Role.ASSESSOR.equals(role)) {
             Optional<RoleProfileStatusResource> roleProfileStatusResource = roleProfileStatusResources.stream()
                     .filter(profile -> profile.getProfileRole().equals(ProfileRole.ASSESSOR))
                     .findAny();

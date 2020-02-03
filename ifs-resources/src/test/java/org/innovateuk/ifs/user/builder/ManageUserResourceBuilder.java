@@ -12,8 +12,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
 public class ManageUserResourceBuilder extends BaseBuilder<ManageUserResource, ManageUserResourceBuilder> {
 
@@ -37,12 +36,12 @@ public class ManageUserResourceBuilder extends BaseBuilder<ManageUserResource, M
 
     @SafeVarargs
     public final ManageUserResourceBuilder withRolesGlobal(List<Role>... rolesList) {
-        return withArray((roles, user) -> user.setRoles(roles), rolesList);
+        return withArraySetFieldByReflection("roles", rolesList);
     }
 
     @SafeVarargs
     public final ManageUserResourceBuilder withRoleProfileStatuses(Set<RoleProfileStatusResource>... roleProfileStatusResources) {
-        return withArray((roleProfileStatus, user) -> user.setRoleProfileStatusResourceSet(roleProfileStatus), roleProfileStatusResources);
+        return withArraySetFieldByReflection("roleProfileStatusResourceSet", roleProfileStatusResources);
     }
 
     public final ManageUserResourceBuilder withRoleGlobal(Role role) {
@@ -50,22 +49,22 @@ public class ManageUserResourceBuilder extends BaseBuilder<ManageUserResource, M
     }
 
     public ManageUserResourceBuilder withId(Long... ids) {
-        return withArray((id, user) -> setField("id", id, user), ids);
+        return withArraySetFieldByReflection("id", ids);
     }
 
     public ManageUserResourceBuilder withName(String... names) {
-        return withArray((name, user) -> setField("name", name, user), names);
+        return withArraySetFieldByReflection("name", names);
     }
 
     public ManageUserResourceBuilder withEmail(String... emails) {
-        return withArray((email, user) -> setField("email", email, user), emails);
+        return withArraySetFieldByReflection("email", emails);
     }
 
     public ManageUserResourceBuilder withCreatedOn(ZonedDateTime... createdOns) {
-        return withArray((createdOn, user) -> setField("createdOn", createdOn, user), createdOns);
+        return withArraySetFieldByReflection("createdOn", createdOns);
     }
 
     public ManageUserResourceBuilder withCreatedBy(String... createdBys) {
-        return withArray((createdBy, user) -> setField("createdBy", createdBy, user), createdBys);
+        return withArraySetFieldByReflection("createdBy", createdBys);
     }
 }
