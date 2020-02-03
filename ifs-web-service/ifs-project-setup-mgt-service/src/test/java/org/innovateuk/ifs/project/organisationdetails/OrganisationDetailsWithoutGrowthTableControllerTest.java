@@ -128,7 +128,6 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
 
         sharedAssertions(result, organisation.getAddresses().get(0).getAddress());
         assertTrue((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
-        assertTrue((Boolean) result.getModelAndView().getModel().get("linkValid"));
 
         assertEquals(organisationId, yourOrganisation.getOrganisationId());
         assertEquals(projectId, yourOrganisation.getProjectId());

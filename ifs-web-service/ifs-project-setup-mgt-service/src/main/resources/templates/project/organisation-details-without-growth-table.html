@@ -35,7 +35,7 @@
                                                        showStateAidAgreement=${yourOrg.showStateAidAgreement})" />
             </form>
 
-            <th:block th:unless="${!yourOrg.isAllowedToEditOrganisationSize() and !linkValid}">
+            <th:block th:unless="${!yourOrg.isAllowedToEditOrganisationSize()}">
                 <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/without-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
                    class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
             </th:block>

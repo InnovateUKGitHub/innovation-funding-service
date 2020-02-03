@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/edit/without-growth-table")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectOrganisationSizeWithoutGrowthTableController.class)
 public class ProjectOrganisationSizeWithoutGrowthTableController {
 
     @Autowired
@@ -37,6 +36,7 @@ public class ProjectOrganisationSizeWithoutGrowthTableController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
+    @SecuredBySpring(value = "READ", description = "Ifs Admin and Project finance users can view edit organisation size page")
     public String editOrganisationSize(
             @PathVariable long projectId,
             @PathVariable long organisationId,

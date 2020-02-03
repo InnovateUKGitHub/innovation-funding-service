@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.organisationsize.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import static java.lang.Boolean.TRUE;
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}")
 @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectOrganisationSizeController.class)
 public class ProjectOrganisationSizeController {
 
     @Autowired

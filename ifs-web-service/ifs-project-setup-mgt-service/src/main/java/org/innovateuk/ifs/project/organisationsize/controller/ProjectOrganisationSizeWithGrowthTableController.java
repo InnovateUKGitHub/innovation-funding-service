@@ -23,7 +23,6 @@ import java.util.function.Supplier;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/edit/with-growth-table")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectOrganisationSizeWithGrowthTableController.class)
 public class ProjectOrganisationSizeWithGrowthTableController {
 
     @Autowired
@@ -40,6 +39,7 @@ public class ProjectOrganisationSizeWithGrowthTableController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
+    @SecuredBySpring(value = "READ", description = "Ifs Admin and Project finance users can view edit organisation size page")
     public String editOrganisationSize(
                                        @PathVariable long projectId,
                                        @PathVariable long organisationId,

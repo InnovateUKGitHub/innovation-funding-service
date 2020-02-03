@@ -4,19 +4,19 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,8 +25,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Optional;
 
 /**
  * This controller will allow the user to view organisation details without a growth table.
@@ -78,7 +76,6 @@ public class OrganisationDetailsWithoutGrowthTableController {
                 project.isCollaborativeProject()));
 
         model.addAttribute("showYourOrg", includeYourOrganisationSection);
-        model.addAttribute("linkValid", getFinanceChecks(projectId));
 
         if (includeYourOrganisationSection) {
             model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
@@ -89,7 +86,8 @@ public class OrganisationDetailsWithoutGrowthTableController {
                     organisationId,
                     true,
                     false,
-                    loggedInUser));
+                    loggedInUser,
+                    financeCheckSummary.isAllEligibilityAndViabilityInReview()));
 
             model.addAttribute("form", getForm(projectId, organisationId));
         }
@@ -116,14 +114,5 @@ public class OrganisationDetailsWithoutGrowthTableController {
 
     private YourOrganisationWithoutGrowthTableForm getForm(long projectId, long organisationId) {
         return withoutGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId).getSuccess());
-    }
-
-    private boolean getFinanceChecks(long projectId) {
-        Optional<FinanceCheckSummaryResource> financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getOptionalSuccessObject();
-
-        if (financeCheckSummary.isPresent()) {
-            return financeCheckSummary.get().isAllEligibilityAndViabilityInReview();
-        }
-        return false;
     }
 }
