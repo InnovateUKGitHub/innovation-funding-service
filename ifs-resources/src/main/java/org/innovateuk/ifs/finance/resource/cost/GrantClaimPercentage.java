@@ -40,6 +40,7 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
         return percentage;
     }
 
+    @JsonIgnore
     public Integer getIntegerPercentage() {
         if (percentage == null) {
             return null;
