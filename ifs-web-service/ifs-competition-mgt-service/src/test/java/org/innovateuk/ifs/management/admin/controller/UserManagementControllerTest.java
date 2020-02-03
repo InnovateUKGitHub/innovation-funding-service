@@ -89,7 +89,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 param("email", "asdf@asdf.com").
                 param("role", "IFS_ADMINISTRATOR"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/admin/user/1/active"));
+                .andExpect(view().name("redirect:/admin/users/active"));
     }
     @Test
     public void updateUserSuccess_changeEmail() throws Exception {
