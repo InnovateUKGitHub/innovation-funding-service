@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.resource;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.identity.Identifiable;
 
 import java.util.EnumSet;
@@ -100,6 +101,9 @@ public enum Role implements Identifiable {
 
     public static Set<Role> externalApplicantRoles(){
         return EnumSet.of(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER);
+    }
+    public static Set<Role> externalRoles() {
+        return Sets.union(externalApplicantRoles(), EnumSet.of(ASSESSOR));
     }
 
     public static Set<Role> multiDashboardRoles() {
