@@ -677,9 +677,6 @@ the lead partner can edit his spend profile with invalid values and see the erro
     the user clicks the button/link         jQuery = .button-secondary:contains("Edit spend profile")
     the user enters text to a text field    jQuery = th:contains("Labour") + td input  10
     the user should not see the element     jQuery = .govuk-form-group--error th:contains("Labour")
-    the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  35.25
-    Set Focus To Element                    jQuery = th:contains("Overheads") ~ td:nth-child(5)
-    the user should see the element         jQuery = .govuk-error-summary__list li:contains("${only_accept_whole_numbers_message}")
     the user clicks the button/link         jQuery = .button-secondary:contains("Save and return to spend profile overview")
     the user should not see an error in the page
     the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  0
