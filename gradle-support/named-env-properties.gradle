@@ -49,3 +49,5 @@ ext.IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN="innovateuk.ukri.test"
 ext.IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS="innovateuk.ukri.test,innovateuk.test"
 
 ext.RESOURCE_DOMAIN=""
+
+ext.IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED=false

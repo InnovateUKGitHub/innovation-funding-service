@@ -30,10 +30,10 @@ public class GrantClaimValidatorTest {
 
 	@Mock
 	private ApplicationFinanceRowRepository financeRowRepository;
-	
+
 	private GrantClaimPercentage claim;
 	private BindingResult bindingResult;
-	
+
 	@Before
 	public void setUp() {
         claim = new GrantClaimPercentage(CLAIM_ID, BigDecimal.valueOf(100), 1L);
@@ -41,7 +41,7 @@ public class GrantClaimValidatorTest {
     }
 
     @Test
-	public void testNullClaimPercentageError() {
+	public void nullClaimPercentageError() {
 		claim.setPercentage(null);
 
 		validator.validate(claim, bindingResult);
@@ -50,7 +50,7 @@ public class GrantClaimValidatorTest {
 	}
 
 	@Test
-	public void testMinimumError() {
+	public void minimumError() {
 		claim.setPercentage(BigDecimal.valueOf(-1));
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
@@ -63,7 +63,7 @@ public class GrantClaimValidatorTest {
 	}
 
 	@Test
-	public void testMaximumError() {
+	public void maximumError() {
 		claim.setPercentage(BigDecimal.valueOf(50));
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
@@ -74,8 +74,20 @@ public class GrantClaimValidatorTest {
 		verifyError("validation.finance.grant.claim.percentage.max", 30);
 	}
 
+    @Test
+    public void maximumDecimalPlaceError() {
+        claim.setPercentage(BigDecimal.valueOf(50.444));
+        ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
+        when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));
+        when(applicationFinance.getMaximumFundingLevel()).thenReturn(100);
+
+        validator.validate(claim, bindingResult);
+
+        verifyError("validation.finance.percentage");
+    }
+
 	@Test
-	public void testSuccess() {
+	public void success() {
 		claim.setPercentage(BigDecimal.valueOf(100));
 		ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
 		when(financeRowRepository.findById(CLAIM_ID)).thenReturn(Optional.of(newApplicationFinanceRow().withTarget(applicationFinance).build()));

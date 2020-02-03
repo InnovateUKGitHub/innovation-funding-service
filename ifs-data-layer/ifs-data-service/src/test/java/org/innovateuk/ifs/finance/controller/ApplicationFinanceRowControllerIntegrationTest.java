@@ -564,11 +564,12 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", 71, "validation.finance.grant.claim.percentage.max", 70));
+                fieldError("percentage", BigDecimal.valueOf(71), "validation.finance.grant.claim.percentage.max", 70));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -583,11 +584,12 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", BigDecimal.valueOf(-1), "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -617,11 +619,12 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", 61, "validation.finance.grant.claim.percentage.max", 60));
+                fieldError("percentage", BigDecimal.valueOf(61), "validation.finance.grant.claim.percentage.max", 60));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -637,11 +640,12 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", BigDecimal.valueOf(-1), "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -671,11 +675,12 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", 51, "validation.finance.grant.claim.percentage.max", 50));
+                fieldError("percentage", BigDecimal.valueOf(51), "validation.finance.grant.claim.percentage.max", 50));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -696,7 +701,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", BigDecimal.valueOf(-1), "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }

@@ -73,12 +73,12 @@ public class ProjectFinancePartnerFundingLevelViewModel {
         return calculatePercentageTotalGrant(fundingLevel);
     }
 
-    public BigDecimal calculateFundingSought(BigDecimal calcFundingLevel) {
-        if (calcFundingLevel == null) {
+    public BigDecimal calculateFundingSought(BigDecimal fundingLevel) {
+        if (fundingLevel == null) {
             return BigDecimal.valueOf(0);
         }
 
-        return costs.multiply(calcFundingLevel)
+        return costs.multiply(fundingLevel)
                 .divide(new BigDecimal(100), RoundingMode.HALF_UP)
                 .subtract(otherFunding)
                 .max(BigDecimal.ZERO);

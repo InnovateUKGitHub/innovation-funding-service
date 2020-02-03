@@ -19,14 +19,16 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Optional;
 
+import static java.math.RoundingMode.HALF_UP;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 @Component
 public class YourFundingSaver extends AbstractYourFundingSaver {
@@ -40,6 +42,9 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
 
     @Autowired
     private ApplicationFinanceRowRestService financeRowRestService;
+
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
 
     @Override
     protected FinanceRowRestService getFinanceRowService() {
@@ -62,7 +67,11 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         try {
             if (field.equals("grantClaimPercentage")) {
                 GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-                grantClaim.setPercentage(new BigDecimal(value).setScale(2, RoundingMode.HALF_UP));
+                if (fundingLevelPercentageToggle) {
+                    grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
+                } else {
+                    grantClaim.setPercentage(new BigDecimal(value));
+                }
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("amount")) {
                 GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
