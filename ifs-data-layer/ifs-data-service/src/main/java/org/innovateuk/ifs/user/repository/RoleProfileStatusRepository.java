@@ -16,5 +16,6 @@ public interface RoleProfileStatusRepository extends CrudRepository<RoleProfileS
 
     Optional<RoleProfileStatus> findByUserIdAndProfileRole(long userId, ProfileRole role);
 
-    Page<RoleProfileStatus> findByRoleProfileStateAndProfileRoleAndUserEmailContaining(RoleProfileState roleProfileState, ProfileRole role, String filter, Pageable pageable);
+    Page<RoleProfileStatus> findByRoleProfileStateAndProfileRoleAndUserEmailContaining(
+            RoleProfileState roleProfileState, ProfileRole role, String filter, Pageable pageable);
 }

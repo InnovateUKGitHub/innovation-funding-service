@@ -20,8 +20,10 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -45,6 +47,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.Collections.*;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -54,10 +57,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -115,6 +120,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Mock(name = "randomHashSupplier")
     private Supplier<String> randomHashSupplierMock;
+
+    @Mock
+    private RoleProfileStatusRepository roleProfileStatusRepositoryMock;
 
     @Override
     protected UserService supplyServiceUnderTest() {
@@ -761,6 +769,38 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isFailure());
         assertEquals("master@gmail.co.uk", user.getEmail());
+    }
+
+    @Test
+    public void findByRoleProfile() {
+        RoleProfileState roleProfileState = RoleProfileState.ACTIVE;
+        ProfileRole profileRole = ProfileRole.ASSESSOR;
+        String filter = "";
+        Pageable pageable = PageRequest.of(0, 5);
+        int numberOfUsers = 2;
+
+        User[] expectedUsers = newUser().buildArray(numberOfUsers, User.class);
+        UserResource[] expectedUserResources = newUserResource().buildArray(expectedUsers.length, UserResource.class);
+        List<RoleProfileStatus> expectedProfileStatuses = newRoleProfileStatus().withUser(expectedUsers).build(expectedUsers.length);
+        Page<RoleProfileStatus> expectedPage = new PageImpl<>(expectedProfileStatuses, pageable, expectedUsers.length);
+
+        when(roleProfileStatusRepositoryMock.findByRoleProfileStateAndProfileRoleAndUserEmailContaining(roleProfileState, profileRole, filter, pageable))
+                .thenReturn(expectedPage);
+
+        for (int i = 0; i < expectedUsers.length; i++) {
+            when(userMapperMock.mapToResource(expectedUsers[i])).thenReturn(expectedUserResources[i]);
+        }
+        UserPageResource userPageResource = service.findByRoleProfile(roleProfileState, profileRole, filter, pageable).getSuccess();
+
+        assertEquals(asList(expectedUserResources), userPageResource.getContent());
+        assertEquals(numberOfUsers, userPageResource.getTotalElements());
+        assertEquals(pageable.getPageNumber(), userPageResource.getNumber());
+        assertEquals(pageable.getPageSize(), userPageResource.getSize());
+
+        InOrder inOrder = inOrder(roleProfileStatusRepositoryMock, userMapperMock);
+        inOrder.verify(roleProfileStatusRepositoryMock).findByRoleProfileStateAndProfileRoleAndUserEmailContaining(roleProfileState, profileRole, filter, pageable);
+        stream(expectedUsers).forEachOrdered(u -> inOrder.verify(userMapperMock).mapToResource(u));
+        inOrder.verifyNoMoreInteractions();
     }
 
     private User createUserExpectations(Long userId, Set<Long> termsAndConditionsIds) {

@@ -392,4 +392,19 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         verify(userServiceMock).grantRole(new GrantRoleCommand(userId, grantRole));
     }
+
+    @Test
+    public void getByRoleProfileStatus() throws Exception {
+        RoleProfileState roleProfileState = RoleProfileState.ACTIVE;
+        ProfileRole profileRole = ProfileRole.ASSESSOR;
+        String filter = "filter";
+        UserPageResource userPageResource = new UserPageResource();
+
+        when(userServiceMock.findByRoleProfile(eq(roleProfileState), eq(profileRole), eq(filter), any(PageRequest.class)))
+                .thenReturn(serviceSuccess(userPageResource));
+
+        mockMvc.perform(get("/user/role-profile-status/{roleProfileState}/{profileRole}", roleProfileState, profileRole)
+                .param("filter", filter))
+                .andExpect(status().isOk());
+    }
 }

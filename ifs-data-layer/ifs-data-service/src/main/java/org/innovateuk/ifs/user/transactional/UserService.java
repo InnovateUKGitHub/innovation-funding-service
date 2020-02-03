@@ -38,7 +38,7 @@ public interface UserService {
     @PostAuthorize("hasPermission(returnObject, 'READ_INTERNAL')")
     ServiceResult<UserPageResource> findActive(String filter, Pageable pageable);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findByRoleProfile(RoleProfileState state, ProfileRole profileRole, String filter, Pageable pageable);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
