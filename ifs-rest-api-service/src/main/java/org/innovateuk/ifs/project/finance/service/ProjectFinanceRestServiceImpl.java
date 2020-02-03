@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectFinanceResourceListType;
 
 /**
@@ -81,7 +82,6 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
 
     @Override
     public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
-        String url = PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance-check/org-size";
-        return getWithRestResult(url, Boolean.class);
+        return getWithRestResult(format(PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance-check/org-size"), Boolean.class);
     }
 }
