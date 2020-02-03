@@ -260,7 +260,7 @@ Academic partner spend profile: validations
     Given the user clicks the button/link            jQuery = .button-secondary:contains("Edit spend profile")
     And the user enters text to a text field         css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
     And Set Focus To Element                         css = .spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
-    Then the user should see the validation messages triggred
+    Then the user should see a summary error         Your total costs are higher than your eligible costs.
     And academic partner enter valid values in spend profile then should'e see validation error messages
 
 
