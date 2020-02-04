@@ -383,7 +383,7 @@ project finance approves bank details for ${PS_EF_Application_Title}
 the user changes the start date
     [Arguments]  ${year}
     the user clicks the button/link         link = Target start date
-    the user enters text to a text field    id = projectStartDate_year  ${year}
+    the user enters text to a text field    id = projectStartDate-date_year  ${year}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save")
 
 internal user approve uploaded documents

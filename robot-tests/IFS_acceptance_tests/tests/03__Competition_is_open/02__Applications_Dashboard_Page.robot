@@ -81,7 +81,7 @@ Application has application team details
     [Tags]
     Given the user clicks the button/link          link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should see the element           jQuery = h1 span:contains("${OPEN_COMPETITION_APPLICATION_NAME}")
-    When the user clicks the button/link           id = accordion-questions-heading-1     #Application team
+    When the user clicks the button/link           id = accordion-questions-heading-1-1     #Application team
     Then the user should should see lead and partners details
 
 Comp admin can open the view mode of the application
