@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project costs'"/>
+    <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project costs - ' + ${applicationName + ' '}" />
+    </th:block>
 </head>
 <body class="govuk-template__body finance-row-form overheads">
 <th:block th:insert="fragments/layout :: body-start"/>
