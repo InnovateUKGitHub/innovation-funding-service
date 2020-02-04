@@ -48,9 +48,4 @@ public class FinanceCheckController {
                                                                                          @PathVariable long organisationId){
         return financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId).toGetResponse();
     }
-
-    @GetMapping("/{projectId}/finance-check/org-size")
-    public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(@PathVariable long projectId) {
-        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toGetResponse();
-    }
 }

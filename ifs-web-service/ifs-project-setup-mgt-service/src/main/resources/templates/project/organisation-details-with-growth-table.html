@@ -22,7 +22,7 @@
         <th:block
             th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (orgDetails=${orgDetails})"/>
 
-        <div th:if="${showYourOrg}">
+        <div th:if="${yourOrg != null}">
             <h2 class="govuk-heading-m">Organisation size</h2>
 
             <form th:object="${form}">
@@ -31,13 +31,15 @@
                                                        form=${form},
                                                        organisationSizeOptions=${yourOrg.organisationSizeOptions},
                                                        isH2020=${yourOrg.h2020},
+                                                       isInternalUser=${true},
                                                        readOnly=${yourOrg.readOnly},
                                                        showOrganisationSizeAlert=${yourOrg.showOrganisationSizeAlert},
                                                        showStateAidAgreement=${yourOrg.showStateAidAgreement},
                                                        showHints=${yourOrg.showHints})"/>
             </form>
 
-            <th:block th:unless="${!yourOrg.isAllowedToEditOrganisationSize() and !linkValid}">                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/with-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
+            <th:block th:unless="${!yourOrg.isAllowedToEditOrganisationSize() and !linkValid}">
+                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/with-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
                    class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation
                     size</a>
             </th:block>

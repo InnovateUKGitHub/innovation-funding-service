@@ -11,13 +11,16 @@ public class ProjectFinanceCheckSummaryViewModel {
     private FinanceCheckSummaryResource financeCheckSummaryResource;
     private boolean projectIsActive;
     private boolean collaborativeProject;
+    private boolean hasOrganisationSizeChanged;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
-                                               boolean collaborativeProject) {
+                                               boolean collaborativeProject,
+                                               boolean hasOrganisationSizeChanged) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
+        this.hasOrganisationSizeChanged = hasOrganisationSizeChanged;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -42,7 +45,7 @@ public class ProjectFinanceCheckSummaryViewModel {
     }
 
     public boolean isShowChangeFundingLevelPercentageAlert() {
-        return financeCheckSummaryResource.isAllEligibilityAndViabilityInReview();
+        return financeCheckSummaryResource.isAllEligibilityAndViabilityInReview() && hasOrganisationSizeChanged;
     }
 
     public FinanceCheckSummaryResource getFinanceCheckSummaryResource() {

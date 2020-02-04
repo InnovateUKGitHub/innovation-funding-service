@@ -67,7 +67,6 @@ public class OrganisationDetailsWithoutGrowthTableController {
                                           UserResource loggedInUser) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        FinanceCheckSummaryResource financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
 
@@ -76,9 +75,6 @@ public class OrganisationDetailsWithoutGrowthTableController {
                 organisation,
                 getAddress(organisation),
                 project.isCollaborativeProject()));
-
-        model.addAttribute("showYourOrg", includeYourOrganisationSection);
-        model.addAttribute("linkValid", getFinanceChecks(projectId));
 
         if (includeYourOrganisationSection) {
             model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
@@ -89,7 +85,8 @@ public class OrganisationDetailsWithoutGrowthTableController {
                     organisationId,
                     true,
                     false,
-                    loggedInUser));
+                    loggedInUser,
+                    isAllEligibilityAndViabilityInReview(projectId)));
 
             model.addAttribute("form", getForm(projectId, organisationId));
         }
@@ -118,7 +115,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
         return withoutGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId).getSuccess());
     }
 
-    private boolean getFinanceChecks(long projectId) {
+    private boolean isAllEligibilityAndViabilityInReview(long projectId) {
         Optional<FinanceCheckSummaryResource> financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getOptionalSuccessObject();
 
         if (financeCheckSummary.isPresent()) {

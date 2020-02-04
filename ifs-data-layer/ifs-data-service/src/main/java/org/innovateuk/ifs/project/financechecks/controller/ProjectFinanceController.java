@@ -80,4 +80,9 @@ public class ProjectFinanceController {
     public RestResult<ProjectFinanceResource> financeDetails(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId) {
         return projectFinanceService.financeChecksDetails(projectId, organisationId).toGetResponse();
     }
+
+    @GetMapping("/{projectId}/finance/has-organisation-size-changed")
+    public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(@PathVariable long projectId) {
+        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toGetResponse();
+    }
 }

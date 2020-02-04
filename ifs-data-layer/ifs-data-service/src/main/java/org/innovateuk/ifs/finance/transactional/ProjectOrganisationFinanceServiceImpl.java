@@ -60,9 +60,7 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
     @Override
     protected void resetYourFundingSection(ProjectFinanceResource projectFinanceResource, long competitionId, long userId) {
         if (pendingPartnerProgressService.getPendingPartnerProgress(id(projectFinanceResource.getProject(),
-                projectFinanceResource.getOrganisation())).isFailure()) {
-            projectFinanceService.updateProjectFinance(projectFinanceResource);
-        } else {
+                projectFinanceResource.getOrganisation())).isSuccess()) {
             pendingPartnerProgressService.markYourFundingIncomplete(ProjectOrganisationCompositeId.id(projectFinanceResource.getProject(),
                     projectFinanceResource.getOrganisation())).getSuccess();
         }

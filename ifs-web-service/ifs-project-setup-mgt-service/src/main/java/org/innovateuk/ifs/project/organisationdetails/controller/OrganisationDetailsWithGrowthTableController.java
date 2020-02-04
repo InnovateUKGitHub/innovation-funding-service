@@ -77,9 +77,6 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                 getAddress(organisation),
                 project.isCollaborativeProject()));
 
-        model.addAttribute("showYourOrg", includeYourOrganisationSection);
-        model.addAttribute("linkValid", getFinanceChecks(projectId));
-
         if (includeYourOrganisationSection) {
             model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
                     false,
@@ -89,7 +86,8 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                     organisationId,
                     true,
                     false,
-                    loggedInUser));
+                    loggedInUser,
+                    isAllEligibilityAndViabilityInReview(projectId)));
 
             model.addAttribute("form", getForm(projectId, organisationId));
         }
@@ -118,7 +116,7 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
         return withGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess());
     }
 
-    private boolean getFinanceChecks(long projectId) {
+    private boolean isAllEligibilityAndViabilityInReview(long projectId) {
         Optional<FinanceCheckSummaryResource> financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getOptionalSuccessObject();
 
         if (financeCheckSummary.isPresent()) {

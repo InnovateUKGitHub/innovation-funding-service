@@ -25,6 +25,6 @@ public interface ProjectFinanceService {
     @PreAuthorize("hasPermission(#projectFinanceResource, 'UPDATE_PROJECT_FINANCE')")
     ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource);
 
-    @PreAuthorize("hasPermission(#projectFinanceResource, 'UPDATE_PROJECT_FINANCE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
     ServiceResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId);
 }
