@@ -155,7 +155,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
         when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
 
-        assertFalse(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
+        assertFalse(rules.partnersCanReadTheirOwnPendingPartnerProgress(partnerOrg, user));
     }
 
     @Test
@@ -173,7 +173,40 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
         when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
 
-        assertTrue(rules.partnersCanViewTheirOwnPendingPartnerProgress(partnerOrg, user));
+        assertTrue(rules.partnersCanReadTheirOwnPendingPartnerProgress(partnerOrg, user));
+    }
+
+    @Test
+    public void internalUsersCanViewPendingPartnerProgress() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        UserResource user = newUserResource().build();
+        user.isInternalUser();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+            .withProject(projectId)
+            .withOrganisation(organisationId)
+            .build();
+
+        assertFalse(rules.internalUsersCanReadPendingPartnerProgress(partnerOrg, user));
+    }
+
+    @Test
+    public void partnersCanUpdateTheirOwnPendingPartnerProgress() {
+        long projectId = 1L;
+        long organisationId = 2L;
+        UserResource user = newUserResource().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+            .withProject(projectId)
+            .withOrganisation(organisationId)
+            .build();
+        ProjectUser projectUser = newProjectUser()
+            .build();
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+
+        assertTrue(rules.partnersCanUpdateTheirOwnPendingPartnerProgress(partnerOrg, user));
     }
 
     @Test

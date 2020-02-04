@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" th:with="pageTitle=${model.displayAssessorTitle ? 'Assessor details' : 'View user details'}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='View user details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body">
 
@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to manage users',linkUrl=@{/admin/users/active}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to manage users',linkUrl=@{/admin/users/active},dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
@@ -19,7 +19,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View user details',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${pageTitle},size='govuk-heading-xl'" />
         <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <th:block th:if="${model.canEditUserDetails}">
@@ -123,11 +123,32 @@
                     </select>
                 </div>
             </th:block>
+            <th:block th:unless="${model.canEditUserDetails}">
+                <div class="table-overflow">
+                    <table class="govuk-table" id="application-list">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Role profile</th>
+                            <th class="govuk-table__header" scope="col">Role status</th>
+                            <th class="govuk-table__header alignright" scope="col"><span class="govuk-visually-hidden">View role profile</span></th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="role : ${model.user.roles}"
+                            th:with="canDisableRole=${role.isAssessor() and model.displayRoleProfileLink}">
+                            <td class="govuk-table__cell" th:text="${role.displayName}"></td>
+                            <td class="govuk-table__cell" th:text="${model.roleDisplay(role)}"></td>
+                            <td class="govuk-table__cell alignright">
+                                <th:block th:if="${canDisableRole and !model.support}">
+                                    <a class="govuk-link" href="#">View role profile</a>
+                                </th:block>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </th:block>
             <dl class="govuk-list">
-                <th:block th:unless="${model.canEditUserDetails}">
-                    <dt>Role profile</dt>
-                    <dd th:text="${model.user.roleDisplayNames}">Applicant</dd>
-                </th:block>
                 <dt>Status</dt>
                 <dd th:text="${model.user.statusDisplay}">Active</dd>
             </dl>
@@ -143,8 +164,13 @@
             </div>
 
             <div class="govuk-form-group govuk-!-margin-top-6">
-                <a th:href="@{/admin/users/active}"
+                <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+                   th:href="@{/admin/users/active}"
                    class="button-secondary">Return to manage users</a>
+                <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+                   th:href="${cookieBackLinkUrl}"
+                   class="button-secondary"
+                   th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to application overview</a>
             </div>
         </form>
 

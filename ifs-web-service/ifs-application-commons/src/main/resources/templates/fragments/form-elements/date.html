@@ -22,7 +22,7 @@ Available parameters:
     * pastDate - whether this month-year entry should only allow past values
 
 */-->
-<th:block th:fragment="month-and-year(legend, id, monthValue, yearValue)">
+<th:block th:fragment="month-and-year(legend, id, monthValue, yearValue, showHints)">
 
     <div class="govuk-form-group"
          th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
@@ -33,7 +33,7 @@ Available parameters:
                 <h2 class="govuk-fieldset__heading" th:text="${legend}">Legend</h2>
             </legend>
 
-            <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
+            <span th:if="${showHints}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
 
             <th:block th:if="${#fields.hasErrors(id)}">
                 <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>

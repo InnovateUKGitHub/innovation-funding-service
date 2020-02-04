@@ -35,7 +35,7 @@
                         <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
                     </h3>
                 </div>
-                <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
+                <th:block th:insert="project/fragments/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
             </li>
         </ul>
 

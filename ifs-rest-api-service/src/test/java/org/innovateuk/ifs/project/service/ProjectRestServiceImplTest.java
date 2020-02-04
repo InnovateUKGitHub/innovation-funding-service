@@ -1,28 +1,28 @@
 package org.innovateuk.ifs.project.service;
 
-import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.junit.Test;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
+
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.junit.Test;
 
 public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectRestServiceImpl> {
     private static final String PROJECT_REST_URL = "/project";
@@ -98,30 +98,6 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         Optional<ProjectUserResource> result = service.getProjectManager(projectId).toOptionalIfNotFound().getSuccess();
 
         assertFalse(result.isPresent());
-    }
-
-    @Test
-    public void getPartnerOrganisation() {
-        long projectId = 17;
-        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
-
-        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/partner/%d", projectId, partnerOrg.getId()), PartnerOrganisationResource.class, partnerOrg);
-
-        PartnerOrganisationResource result = service.getPartnerOrganisation(projectId, partnerOrg.getId()).getSuccess();
-
-        assertEquals(partnerOrg, result);
-    }
-
-    @Test
-    public void getPartnerOrganisation_notFound() {
-        long projectId = 17;
-        long partnerId = 19;
-
-        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/partner/%d", projectId, partnerId), PartnerOrganisationResource.class, null, NOT_FOUND);
-
-        RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(projectId, partnerId);
-
-        assertTrue(result.isFailure());
     }
 
     @Test
