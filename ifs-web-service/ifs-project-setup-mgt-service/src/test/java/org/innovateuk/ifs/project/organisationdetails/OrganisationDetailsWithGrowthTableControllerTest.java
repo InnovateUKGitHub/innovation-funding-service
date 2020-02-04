@@ -128,8 +128,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         YourOrganisationWithGrowthTableForm actualForm = (YourOrganisationWithGrowthTableForm) result.getModelAndView().getModel().get("form");
 
         sharedAssertions(result, organisation.getAddresses().get(0).getAddress());
-        assertTrue((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
-        assertTrue((Boolean) result.getModelAndView().getModel().get("linkValid"));
+        assertEquals(yourOrganisation, result.getModelAndView().getModel().get("yourOrg"));
 
         assertEquals(organisationId, yourOrganisation.getOrganisationId());
         assertEquals(projectId, yourOrganisation.getProjectId());
@@ -168,7 +167,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
 
         sharedAssertions(result, new AddressResource("", "", "", "", "", ""));
 
-        assertFalse((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
+        assertNotEquals("yourOrg", result.getModelAndView().getModel());
     }
 
     private OrganisationFinancesWithGrowthTableResource getFinances() {
