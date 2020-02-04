@@ -30,9 +30,7 @@ public class YourOrganisationViewModelPopulator {
     @Autowired
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
-    private UserResource userResource;
-
-    public ProjectYourOrganisationViewModel populate(long projectId, long organisationId) {
+    public ProjectYourOrganisationViewModel populate(long projectId, long organisationId, UserResource user) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
@@ -49,7 +47,7 @@ public class YourOrganisationViewModelPopulator {
                 organisationId,
                 pendingPartner.isYourOrganisationComplete(),
                 true,
-                userResource,
+                user,
                 true);
     }
 }
