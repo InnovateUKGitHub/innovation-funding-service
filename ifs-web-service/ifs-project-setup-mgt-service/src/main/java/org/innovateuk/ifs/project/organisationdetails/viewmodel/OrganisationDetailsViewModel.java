@@ -19,9 +19,7 @@ public class OrganisationDetailsViewModel {
     private final String town;
     private final String county;
     private final String postcode;
-
-    private final String previousPage;
-
+    
     public OrganisationDetailsViewModel(ProjectResource project,
                                         long competitionId,
                                         OrganisationResource organisation,
@@ -40,8 +38,6 @@ public class OrganisationDetailsViewModel {
         this.town = address.getTown();
         this.county = address.getCounty();
         this.postcode = address.getPostcode();
-
-        this.previousPage = hasPartners ? "partner details" : "project details";
     }
 
     public long getProjectId() {
@@ -91,6 +87,4 @@ public class OrganisationDetailsViewModel {
     public String getPostcode() {
         return postcode;
     }
-
-    public String getPreviousPage() { return previousPage; }
 }

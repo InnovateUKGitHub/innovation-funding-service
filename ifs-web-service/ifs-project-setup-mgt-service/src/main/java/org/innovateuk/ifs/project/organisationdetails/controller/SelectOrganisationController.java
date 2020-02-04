@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -49,8 +47,6 @@ public class SelectOrganisationController {
 
     @Autowired
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
-
-    private static final Log LOG = LogFactory.getLog(SelectOrganisationController.class);
 
     @GetMapping("/select")
     public String selectOrganisation(@ModelAttribute(name = "form", binding = false) SelectOrganisationForm form,
