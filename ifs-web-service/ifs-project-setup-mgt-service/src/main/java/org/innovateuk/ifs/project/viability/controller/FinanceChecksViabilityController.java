@@ -130,7 +130,6 @@ public class FinanceChecksViabilityController {
         List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form);
-        model.addAttribute("viabilityReadyToConfirm", hasAllFundingLevelsWithinMaximum(projectFinances));
 
         return "project/financecheck/viability";
     }
@@ -139,7 +138,6 @@ public class FinanceChecksViabilityController {
 
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        Long applicationId = project.getApplication();
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
@@ -193,7 +191,8 @@ public class FinanceChecksViabilityController {
                 approver,
                 approvalDate,
                 organisationId,
-                organisationSizeDescription);
+                organisationSizeDescription,
+                projectFinances);
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
@@ -208,11 +207,4 @@ public class FinanceChecksViabilityController {
     private int toZeroScaleInt(BigDecimal value) {
         return value.setScale(0, HALF_EVEN).intValueExact();
     }
-
-    private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
-        return finances.stream().allMatch(finance -> {
-            int fundingLevel = finance.getGrantClaimPercentage();
-            return finance.getMaximumFundingLevel() >= fundingLevel;
-            });
-        }
 }

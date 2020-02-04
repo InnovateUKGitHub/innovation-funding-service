@@ -140,10 +140,10 @@
                 </select>
               </div>
 
-              <button th:if="${!viabilityReadyToConfirm}"
+              <button th:if="${!model.viabilityReadyToConfirm}"
                       disabled="disabled"
                       class="govuk-button">Confirm viability</button>
-              <button th:unless="${!viabilityReadyToConfirm}"
+              <button th:unless="${!model.viabilityReadyToConfirm}"
                       type="button"
                       data-js-modal="modal-confirm-viability"
                       class="govuk-button"

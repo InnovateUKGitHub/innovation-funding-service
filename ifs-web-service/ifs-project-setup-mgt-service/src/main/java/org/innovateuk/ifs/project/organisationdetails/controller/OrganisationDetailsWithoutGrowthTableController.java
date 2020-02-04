@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 /**
  * This controller will allow the user to view organisation details without a growth table.
  */
@@ -76,6 +78,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
                 project.isCollaborativeProject()));
 
         model.addAttribute("showYourOrg", includeYourOrganisationSection);
+        model.addAttribute("linkValid", getFinanceChecks(projectId));
 
         if (includeYourOrganisationSection) {
             model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
@@ -86,8 +89,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
                     organisationId,
                     true,
                     false,
-                    loggedInUser,
-                    financeCheckSummary.isAllEligibilityAndViabilityInReview()));
+                    loggedInUser));
 
             model.addAttribute("form", getForm(projectId, organisationId));
         }
@@ -114,5 +116,14 @@ public class OrganisationDetailsWithoutGrowthTableController {
 
     private YourOrganisationWithoutGrowthTableForm getForm(long projectId, long organisationId) {
         return withoutGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId).getSuccess());
+    }
+
+    private boolean getFinanceChecks(long projectId) {
+        Optional<FinanceCheckSummaryResource> financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getOptionalSuccessObject();
+
+        if (financeCheckSummary.isPresent()) {
+            return financeCheckSummary.get().isAllEligibilityAndViabilityInReview();
+        }
+        return false;
     }
 }

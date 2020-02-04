@@ -135,6 +135,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 }
             }
 
+            List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(projectId);
+
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
@@ -148,14 +150,12 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     eligibility.get().getEligibilityApprovalDate(),
                     false,
                     isUsingJesFinances,
-                    editAcademicFinances
+                    editAcademicFinances,
+                    projectFinances
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
             future.get();
-
-            List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(projectId);
-            model.addAttribute("eligibilityReadyToConfirm", hasAllFundingLevelsWithinMaximum(projectFinances));
 
             return "project/financecheck/eligibility";
         } catch (InterruptedException | ExecutionException e) {
@@ -314,12 +314,5 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
-    }
-
-    private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
-        return finances.stream().allMatch(finance -> {
-            int fundingLevel = finance.getGrantClaimPercentage();
-            return finance.getMaximumFundingLevel() >= fundingLevel;
-        });
     }
 }

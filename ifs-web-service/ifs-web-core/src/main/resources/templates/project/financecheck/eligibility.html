@@ -305,10 +305,10 @@
                         <option value="RED">Red</option>
                     </select>
                 </div>
-                <button th:if="${!eligibilityReadyToConfirm}"
+                <button th:if="${!summaryModel.eligibilityReadyToConfirm}"
                         disabled="disabled"
                         class="govuk-button">Approve eligible costs</button>
-                <button th:unless="${!eligibilityReadyToConfirm}"
+                <button th:unless="${!summaryModel.eligibilityReadyToConfirm}"
                         type="button"
                         data-js-modal="modal-confirm-eligibility"
                         class="govuk-button"
