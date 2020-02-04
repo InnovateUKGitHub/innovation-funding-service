@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.admin.controller;
 
-import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -34,7 +33,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/admin/external")
-public class ExternalUserManagementController extends AsyncAdaptor {
+public class ExternalUserManagementController {
 
     private static final String FORM_ATTR_NAME = "form";
     private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";

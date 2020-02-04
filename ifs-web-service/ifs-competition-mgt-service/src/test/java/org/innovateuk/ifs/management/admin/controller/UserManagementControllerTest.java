@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.admin.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
@@ -39,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * A mock MVC test for user management controller
  */
-public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<UserManagementController> {
+public class UserManagementControllerTest extends BaseControllerMockMVCTest<UserManagementController> {
 
     @Mock
     private InternalUserService internalUserService;
