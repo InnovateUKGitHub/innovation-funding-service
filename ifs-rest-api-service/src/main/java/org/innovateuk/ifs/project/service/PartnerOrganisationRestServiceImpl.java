@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.project.service;
 
+import java.util.List;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.partnerOrganisationResourceList;
 

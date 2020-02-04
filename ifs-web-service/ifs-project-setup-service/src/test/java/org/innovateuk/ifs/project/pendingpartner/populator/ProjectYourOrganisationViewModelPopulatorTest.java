@@ -1,20 +1,9 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.project.builder.PendingPartnerProgressResourceBuilder.newPendingPartnerProgressResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -24,14 +13,25 @@ import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.project.builder.PendingPartnerProgressResourceBuilder.newPendingPartnerProgressResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
-public class YourOrganisationViewModelPopulatorTest extends BaseUnitTest {
+public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private ProjectYourOrganisationRestService yourOrganisationRestService;
@@ -74,13 +74,20 @@ public class YourOrganisationViewModelPopulatorTest extends BaseUnitTest {
         when(yourOrganisationRestService.isShowStateAidAgreement(projectId, organisationId)).thenReturn(serviceSuccess(true));
         when(pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId)).thenReturn(restSuccess(progress));
 
-        YourOrganisationViewModel actual = yourOrganisationViewModelPopulator.populate(projectId,
+        ProjectYourOrganisationViewModel actual = yourOrganisationViewModelPopulator.populate(projectId,
             organisationId);
 
         List<FormOption> expectedOrgSizeOptions = simpleMap(OrganisationSize.values(), size -> new FormOption(size.getDescription(), size.name()));
-        assertTrue(actual.getOrganisationSizeOptions().equals(expectedOrgSizeOptions));
+
+        assertEquals(expectedOrgSizeOptions, actual.getOrganisationSizeOptions());
         assertTrue(actual.isH2020());
         assertTrue(actual.isShowOrganisationSizeAlert());
         assertTrue(actual.isShowStateAidAgreement());
+        assertTrue(actual.isShowHints());
+        assertEquals(organisationId, actual.getOrganisationId());
+        assertEquals(projectId, actual.getProjectId());
+        assertEquals("proj", actual.getProjectName());
+        assertTrue(actual.isReadOnly());
+
     }
 }

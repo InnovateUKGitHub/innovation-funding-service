@@ -59,6 +59,8 @@ items:
                   value: "${NEW_RELIC_LICENCE_KEY}"
                 - name: NEW_RELIC_LOG
                   value: "STDOUT"
+                - name: IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE
+                  value: "${IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE}"
                 - name: IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED
                   value: "${IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED}"
               ports:
