@@ -1,23 +1,5 @@
 package org.innovateuk.ifs.project.financecheck.security;
 
-import static java.util.Arrays.asList;
-import static junit.framework.TestCase.assertFalse;
-import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
-import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
-import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
-
-import java.util.List;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
@@ -33,6 +15,25 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<ProjectFinancePermissionRules> {
     private ProjectProcess projectProcess;
@@ -236,7 +237,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isInternal(user)) {
+            if (isProjectFinanceUser(user)) {
                 assertTrue(rules.internalUsersCanUpdateProjectFinance(projectFinanceResource, user));
             } else {
                 assertFalse(rules.internalUsersCanUpdateProjectFinance(projectFinanceResource, user));
