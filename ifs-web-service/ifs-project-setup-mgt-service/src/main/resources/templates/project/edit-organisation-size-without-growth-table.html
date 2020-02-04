@@ -13,8 +13,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-org"
-              th:with="linkTitle=|Back to ${model.organisationName}|,
+    <th:block th:insert="fragments/layout :: header-sub" th:with="upperCaseBackLink=${true},
+              linkTitle=|Back to ${model.organisationName}|,
               linkUrl=@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/without-growth-table (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
