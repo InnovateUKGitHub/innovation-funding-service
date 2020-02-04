@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
@@ -114,7 +113,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                     build(),
             FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                     newGrantClaimPercentage().
-                            withGrantClaimPercentage(30).
+                            withGrantClaimPercentage(BigDecimal.valueOf(30)).
                             build(1)).
                     build(),
             FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
@@ -142,7 +141,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                     build(),
             FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                     newGrantClaimPercentage().
-                            withGrantClaimPercentage(100).
+                            withGrantClaimPercentage(BigDecimal.valueOf(100)).
                             build(1)).
                     build(),
             FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
@@ -200,7 +199,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertOrganisationDetails(industrialOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6678), viewModel.getTotalCosts());
-        assertEquals(Integer.valueOf(30), viewModel.getPercentageGrant());
+        assertEquals(BigDecimal.valueOf(30), viewModel.getPercentageGrant());
         assertEquals(Integer.valueOf(1004), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
@@ -208,8 +207,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
         assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());
-        assertEquals(false, form.isCreditReportConfirmed());
-        assertEquals(true, form.isConfirmViabilityChecked());
+        assertFalse(form.isCreditReportConfirmed());
+        assertTrue(form.isConfirmViabilityChecked());
 
         assertEquals((Long) 2L, viewModel.getTurnover());
         assertEquals((Long) 1L, viewModel.getHeadCount());
@@ -246,7 +245,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertOrganisationDetails(academicOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6868), viewModel.getTotalCosts());
-        assertEquals(Integer.valueOf(100), viewModel.getPercentageGrant());
+        assertEquals(BigDecimal.valueOf(100), viewModel.getPercentageGrant());
         assertEquals(Integer.valueOf(5868), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(0), viewModel.getContributionToProject());
@@ -255,11 +254,11 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
 
         assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());
-        assertEquals(true, form.isCreditReportConfirmed());
-        assertEquals(false, form.isConfirmViabilityChecked());
+        assertTrue(form.isCreditReportConfirmed());
+        assertFalse(form.isConfirmViabilityChecked());
 
-        assertEquals(null, viewModel.getTurnover());
-        assertEquals(null, viewModel.getHeadCount());
+        assertNull(viewModel.getTurnover());
+        assertNull(viewModel.getHeadCount());
     }
 
     @Test

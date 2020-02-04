@@ -393,7 +393,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             case "Working days per year":
                 return builder.withWorkingDaysPerYear(Integer.valueOf(financeRow.metadata.get(0)));
             case "Grant claim":
-                return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
+                return builder.withGrantClaim(BigDecimal.valueOf(Integer.valueOf(financeRow.metadata.get(0))));
             case "Organisation size":
                 return builder.withOrganisationSize(OrganisationSize.findById(Long.valueOf(financeRow.metadata.get(0))));
             case "Work postcode":
@@ -525,7 +525,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         builder[0] = builder[0].withVat(true);
                         break;
                     case FINANCE:
-                        builder[0] = builder[0].withGrantClaim(30);
+                        builder[0] = builder[0].withGrantClaim(BigDecimal.valueOf(30));
                         break;
                     case GRANT_CLAIM_AMOUNT:
                         builder[0] = builder[0].withGrantClaimAmount(12000);
@@ -575,7 +575,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 withUser(user).
                 withAcademicCosts(costs -> costs.
                         withTsbReference("My REF").
-                        withGrantClaim(100).
+                        withGrantClaim(BigDecimal.valueOf(100)).
                         withOtherFunding("Lottery", LocalDate.of(2016, 4, 1), bd("2468")).
                         withDirectlyIncurredStaff(bd("22")).
                         withDirectlyIncurredTravelAndSubsistence(bd("44")).
