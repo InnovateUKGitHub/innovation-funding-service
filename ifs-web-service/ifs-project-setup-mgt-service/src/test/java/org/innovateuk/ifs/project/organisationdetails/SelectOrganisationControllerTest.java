@@ -12,7 +12,6 @@ import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -46,19 +45,14 @@ public class SelectOrganisationControllerTest extends BaseControllerMockMVCTest<
     @Mock
     PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
-    long competitionId = 1L;
-    long projectId = 2L;
-    long organisationId = 3L;
-    String projectName = "projName";
+    private long competitionId = 1L;
+    private long projectId = 2L;
+    private long organisationId = 3L;
+    private String projectName = "projName";
 
     @Override
     protected SelectOrganisationController supplyControllerUnderTest() {
         return new SelectOrganisationController();
-    }
-
-    @Before
-    public void setup() {
-
     }
 
     @Test
