@@ -18,13 +18,13 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -62,7 +62,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
                     .withCosts(newGrantClaimPercentage().build(1))
                     .build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory()
-                    .withCosts(asList(otherFunding))
+                    .withCosts(singletonList(otherFunding))
                     .build()
         )).build();
 
@@ -72,7 +72,7 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
         YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setRequestingFunding(true);
-        form.setGrantClaimPercentage(100);
+        form.setGrantClaimPercentage(BigDecimal.valueOf(100));
 
         form.setOtherFunding(true);
 

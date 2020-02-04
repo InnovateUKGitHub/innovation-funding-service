@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 public class GrantClaimPercentage extends AbstractFinanceRowItem implements GrantClaim {
     private Long id;
 
-    @Digits(integer = MAX_DIGITS, fraction = 0, message = MAX_DIGITS_MESSAGE)
-    private Integer percentage;
+    private BigDecimal percentage;
 
     private GrantClaimPercentage() {
         this(null);
@@ -21,7 +19,7 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
         super(targetId);
     }
 
-    public GrantClaimPercentage(Long id, Integer percentage, Long targetId) {
+    public GrantClaimPercentage(Long id, BigDecimal percentage, Long targetId) {
         this(targetId);
         this.id = id;
         this.percentage = percentage;
@@ -35,17 +33,22 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     @Override
     @JsonIgnore
     public BigDecimal getTotal() {
-        if (percentage == null) {
-            return null;
-        }
-        return new BigDecimal(percentage);
-    }
-
-    public Integer getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(Integer percentage) {
+    public BigDecimal getPercentage() {
+        return percentage;
+    }
+
+    @JsonIgnore
+    public Integer getIntegerPercentage() {
+        if (percentage == null) {
+            return null;
+        }
+        return percentage.intValue();
+    }
+
+    public void setPercentage(BigDecimal percentage) {
         this.percentage = percentage;
     }
 
@@ -73,14 +76,14 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
     }
 
     @Override
-    public int calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
-        return percentage == null ? 0 : percentage;
+    public BigDecimal calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
+        return percentage == null ? BigDecimal.ZERO : percentage;
     }
 
     @Override
     @JsonIgnore
     public boolean isRequestingFunding() {
-        return percentage != null && !percentage.equals(0);
+        return percentage != null && !percentage.equals(BigDecimal.ZERO);
     }
 
     @Override
@@ -88,7 +91,7 @@ public class GrantClaimPercentage extends AbstractFinanceRowItem implements Gran
         if (percentage == null) {
             return BigDecimal.ZERO;
         }
-        return total.multiply(new BigDecimal(percentage))
+        return total.multiply(percentage)
                 .divide(new BigDecimal(100))
                 .subtract(otherFunding)
                 .max(BigDecimal.ZERO);

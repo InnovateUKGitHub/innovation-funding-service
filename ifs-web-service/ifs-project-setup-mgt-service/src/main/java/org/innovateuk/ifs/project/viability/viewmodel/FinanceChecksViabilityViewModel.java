@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -14,7 +15,7 @@ public class FinanceChecksViabilityViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
     private Integer totalCosts;
-    private Integer percentageGrant;
+    private BigDecimal percentageGrant;
     private Integer fundingSought;
     private Integer otherPublicSectorFunding;
     private Integer contributionToProject;
@@ -40,7 +41,7 @@ public class FinanceChecksViabilityViewModel {
                                            String organisationName,
                                            boolean leadPartnerOrganisation,
                                            Integer totalCosts,
-                                           Integer percentageGrant,
+                                           BigDecimal percentageGrant,
                                            Integer fundingSought,
                                            Integer otherPublicSectorFunding,
                                            Integer contributionToProject,
@@ -111,7 +112,7 @@ public class FinanceChecksViabilityViewModel {
         return totalCosts;
     }
 
-    public Integer getPercentageGrant() {
+    public BigDecimal getPercentageGrant() {
         return percentageGrant;
     }
 

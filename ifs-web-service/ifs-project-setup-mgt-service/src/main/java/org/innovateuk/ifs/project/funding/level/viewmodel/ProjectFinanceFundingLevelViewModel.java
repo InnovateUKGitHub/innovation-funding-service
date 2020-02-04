@@ -18,8 +18,12 @@ public class ProjectFinanceFundingLevelViewModel {
     private final String projectName;
     private final List<ProjectFinancePartnerFundingLevelViewModel> partners;
     private final boolean collaborativeProject;
+    private boolean fundingLevelPercentageToggle;
 
-    public ProjectFinanceFundingLevelViewModel(ProjectResource project, List<ProjectFinanceResource> finances, OrganisationResource lead) {
+    public ProjectFinanceFundingLevelViewModel(ProjectResource project,
+                                               List<ProjectFinanceResource> finances,
+                                               OrganisationResource lead,
+                                               boolean fundingLevelPercentageToggle) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
@@ -27,10 +31,11 @@ public class ProjectFinanceFundingLevelViewModel {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         this.partners =  finances.stream()
                 .map(pf -> new ProjectFinancePartnerFundingLevelViewModel(pf.getOrganisation(), pf.getOrganisationName(), pf.getOrganisation().equals(lead.getId()),
-                        pf.getMaximumFundingLevel(), pf.getOrganisationSize(), pf.getTotal(), new BigDecimal(pf.getGrantClaimPercentage()),
+                        pf.getMaximumFundingLevel(), pf.getOrganisationSize(), pf.getTotal(), pf.getGrantClaimPercentage(),
                         pf.getTotalOtherFunding(), totalGrant))
                 .collect(Collectors.toList());
         this.collaborativeProject = project.isCollaborativeProject();
+        this.fundingLevelPercentageToggle = fundingLevelPercentageToggle;
     }
 
     public long getProjectId() {
@@ -78,5 +83,9 @@ public class ProjectFinanceFundingLevelViewModel {
                              .calculateFundingSought(entry.getValue().getFundingLevel())
                 )
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public boolean isFundingLevelPercentageToggle() {
+        return fundingLevelPercentageToggle;
     }
 }
