@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
@@ -45,6 +46,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -88,11 +90,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return find(financeCheckRepository.findByProjectIdAndOrganisationId(key.getProjectId(), key.getOrganisationId()),
                 notFoundError(FinanceCheck.class, key)).
                 andOnSuccessReturn(this::mapToResource);
-
     }
 
     @Override
-    public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
+    public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(long projectId) {
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
@@ -113,7 +114,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
+    public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(long projectId) {
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
@@ -123,7 +124,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
         BigDecimal totalFundingSought = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalFundingSought);
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
-        BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
+        BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought).setScale(MAX_DECIMAL_PLACES, ROUND_HALF_UP);
 
         ServiceResult<Double> researchParticipationPercentage = projectFinanceService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
@@ -135,7 +136,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
+    public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(long projectId, long organisationId) {
         Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
 
@@ -144,7 +145,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                                 organisationId,
                                 application.getDurationInMonths(),
                                 projectFinance.getTotal(),
-                                BigDecimal.valueOf(projectFinance.getGrantClaimPercentage()),
+                                projectFinance.getGrantClaimPercentage(),
                                 projectFinance.getTotalFundingSought(),
                                 projectFinance.getTotalOtherFunding(),
                                 projectFinance.getTotalContribution(),
@@ -166,7 +167,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return mapWithIndex(partnerOrganisations, (i, org) -> {
 
             ProjectOrganisationCompositeId compositeId = getCompositeId(org);
-            Pair<Viability, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
+            Pair<ViabilityState, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
             Pair<EligibilityState, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
@@ -178,7 +179,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
+    public ServiceResult<Boolean> isQueryActionRequired(long projectId, long organisationId) {
         boolean actionRequired = false;
 
         ServiceResult<ProjectFinanceResource> resource = projectFinanceService.financeChecksDetails(projectId, organisationId);
@@ -196,7 +197,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return new ProjectOrganisationCompositeId(org.getProject().getId(), org.getOrganisation().getId());
     }
 
-    private Pair<Viability, ViabilityRagStatus> getViabilityStatus(ProjectOrganisationCompositeId compositeId) {
+    private Pair<ViabilityState, ViabilityRagStatus> getViabilityStatus(ProjectOrganisationCompositeId compositeId) {
 
         ViabilityResource viabilityDetails = getViability(compositeId).getSuccess();
 
@@ -268,7 +269,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             return ZERO;
         }
 
-        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, 0, HALF_EVEN);
+        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, MAX_DECIMAL_PLACES, HALF_EVEN);
     }
 
     private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
@@ -280,12 +281,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
+    public ServiceResult<Boolean> getCreditReport(long projectId, long organisationId) {
         return getProjectFinance(projectId, organisationId).andOnSuccessReturn(ProjectFinance::getCreditReportConfirmed);
     }
 
     @Override
-    public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
+    public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(long projectId) {
         return projectFinanceService.financeChecksTotals(projectId);
     }
 
@@ -317,9 +318,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
-        Long projectId = projectOrganisationCompositeId.getProjectId();
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
@@ -336,8 +337,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Transactional
     public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
@@ -349,7 +350,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
+    public ServiceResult<Void> saveCreditReport(long projectId, long organisationId, boolean reportPresent) {
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::validateCreditReport)
@@ -395,22 +396,22 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(viabilityResource);
     }
 
-    private Viability convertViabilityState(ViabilityState viabilityState) {
+    private ViabilityState convertViabilityState(ViabilityState viabilityState) {
 
-        Viability viability;
+        ViabilityState viability;
 
         switch (viabilityState) {
             case REVIEW:
-                viability = Viability.REVIEW;
+                viability = ViabilityState.REVIEW;
                 break;
             case NOT_APPLICABLE:
-                viability = Viability.NOT_APPLICABLE;
+                viability = ViabilityState.NOT_APPLICABLE;
                 break;
             case APPROVED:
-                viability = Viability.APPROVED;
+                viability = ViabilityState.APPROVED;
                 break;
             default:
-                viability = Viability.REVIEW;
+                viability = ViabilityState.REVIEW;
         }
 
         return viability;
@@ -450,22 +451,22 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         }
     }
 
-    private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, Viability viability, ViabilityRagStatus viabilityRagStatus) {
+    private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
 
         if (ViabilityState.APPROVED == currentViabilityState) {
             return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
         }
 
-        if (Viability.APPROVED == viability && ViabilityRagStatus.UNSET == viabilityRagStatus) {
+        if (ViabilityState.APPROVED == viability && ViabilityRagStatus.UNSET == viabilityRagStatus) {
             return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
         }
 
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Viability viability) {
+    private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, ViabilityState viability) {
 
-        if (Viability.APPROVED == viability) {
+        if (ViabilityState.APPROVED == viability) {
             viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
         }
 

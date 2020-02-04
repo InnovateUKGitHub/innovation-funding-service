@@ -59,6 +59,8 @@ items:
             value: "${SYSTEM_USER_UUID}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
+          - name: IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE
+            value: "${IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE}"
           ports:
           - containerPort: 8080
           resources:

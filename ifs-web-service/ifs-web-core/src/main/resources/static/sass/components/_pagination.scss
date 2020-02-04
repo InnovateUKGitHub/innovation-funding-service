@@ -29,6 +29,10 @@
     &:hover {
       background: govuk-colour("grey-4");
     }
+
+    &:focus {
+      background-color: $govuk-focus-colour;
+    }
   }
 
   .prev,

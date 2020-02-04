@@ -18,7 +18,7 @@
           <collectionProp name="Arguments.arguments">
             <elementProp name="competition_id" elementType="Argument">
               <stringProp name="Argument.name">competition_id</stringProp>
-              <stringProp name="Argument.value">${__P(competition_id,82)}</stringProp>
+              <stringProp name="Argument.value">${__P(competition_id,85)}</stringProp>
               <stringProp name="Argument.desc">H2020 perf test competition id</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>

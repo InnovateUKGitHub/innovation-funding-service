@@ -1,5 +1,3 @@
-import {OPTIONS} from "../support/cypress_config";
-
 describe('Accessibility test - Applicant crawl', function () {
 
   before(() => {
@@ -20,8 +18,15 @@ describe('Accessibility test - Applicant crawl', function () {
           var page = pages[x];
           if (page) {
             cy.visit(`/${page.url}`);
-            cy.injectAxe();
-            cy.checkA11y(OPTIONS);
+
+            cy.checkAccessibilityOnPage();
+
+            cy.get("body").then($body => {
+              if ($body.find("form").length > 0) {
+                cy.get('form').first().submit();
+                cy.checkAccessibilityOnPage();
+              }
+            });
           }
         });
       });

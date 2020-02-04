@@ -54,7 +54,7 @@
                 <th:block th:if="${model.loanCompetition}">
                     <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
                 </th:block>
-                <td th:text="${model.percentageGrant+'%'}" class="govuk-table__cell govuk-table__cell--numeric"></td>
+                <td th:text="${#numbers.formatDecimal(model.percentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}" class="govuk-table__cell govuk-table__cell--numeric"></td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
                 <th:block th:unless="${model.loanCompetition}">
                     <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>

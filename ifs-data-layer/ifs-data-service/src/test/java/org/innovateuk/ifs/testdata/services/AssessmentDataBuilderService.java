@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -10,6 +12,7 @@ import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
@@ -17,10 +20,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -42,6 +42,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 @Lazy
 public class AssessmentDataBuilderService extends BaseDataBuilderService {
+    List<String> defaultAssessors = asList("carolyn.reed@example.com", "jo.peters@ntag.example.com");
 
     @Autowired
     private UserRepository userRepository;
@@ -64,7 +65,10 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
     }
 
-    public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines) {
+    public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines, List<CompetitionLine> competitionLines) {
+
+        List<CompetitionLine> competitionsPastAssessment = simpleFilter(competitionLines, l -> l.competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
+        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.name);
 
         applications.forEach(application -> {
 
@@ -75,7 +79,8 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
                 createAssessment(assessmentLine);
 
-                createAssessorResponses(assessmentLine, assessorResponseLines, application.getCompetition());
+                createAssessorResponses(assessmentLine.applicationName, assessmentLine.assessorEmail, assessmentLine.state,
+                        assessorResponseLines, application.getCompetition());
 
                 submitAssessment(assessmentLine);
 
@@ -84,30 +89,51 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 assignToInterview(assessmentLine, application.getCompetition());
             });
 
+            if (competitionsPastAssessmentNames.contains(application.getCompetition().getName()) && assessmentLinesForApplication.isEmpty()) {
+                defaultAssessors.forEach(assessorEmail -> {
+
+                    assessmentBuilder.withAssessmentData(
+                            assessorEmail,
+                            application.getApplication().getName(),
+                            null,
+                            null,
+                            SUBMITTED,
+                            "Perfect application",
+                            "You should fund this.")
+                            .build();
+
+                    createAssessorResponses(application.getApplication().getName(), assessorEmail, SUBMITTED, Collections.emptyList(), application.getCompetition());
+
+                    assessmentBuilder.withSubmission(
+                            application.getApplication().getName(),
+                            assessorEmail,
+                            SUBMITTED)
+                            .build();
+                });
+            }
+
         });
     }
 
-    private void createAssessorResponses(AssessmentLine assessmentLine, List<AssessorResponseLine> assessorResponseLines, CompetitionResource competition) {
+    private void createAssessorResponses(String applicationName, String assessorEmail, AssessmentState state, List<AssessorResponseLine> assessorResponseLines, CompetitionResource competition) {
 
         List<AssessorResponseLine> assessorResponsesForAssessment = simpleFilter(assessorResponseLines, l ->
-                Objects.equals(l.applicationName, assessmentLine.applicationName) &&
-                l.assessorEmail.equals(assessmentLine.assessorEmail));
+                Objects.equals(l.applicationName, applicationName) &&
+                l.assessorEmail.equals(assessorEmail));
 
         if (!assessorResponsesForAssessment.isEmpty()) {
 
             createAssessorResponsesFromCsvs(assessorResponsesForAssessment);
 
-        } else if (asList(READY_TO_SUBMIT, SUBMITTED).contains(assessmentLine.state)) {
+        } else if (asList(READY_TO_SUBMIT, SUBMITTED).contains(state)) {
 
-            createAssessorResponsesFromDefaults(assessmentLine, competition);
+            createAssessorResponsesFromDefaults(applicationName, assessorEmail, competition);
         }
     }
 
-    private void createAssessorResponsesFromDefaults(AssessmentLine assessmentLine, CompetitionResource competition) {
+    private void createAssessorResponsesFromDefaults(String applicationName, String assessorEmail, CompetitionResource competition) {
 
         String competitionName = competition.getName();
-        String applicationName = assessmentLine.applicationName;
-        String assessorEmail = assessmentLine.assessorEmail;
 
         List<QuestionResource> competitionQuestions = retrieveCachedQuestionsByCompetitionId(competition.getId());
 
@@ -325,6 +351,10 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
             baseBuilder = baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment);
         } else if (InviteStatus.OPENED.equals(line.inviteStatus)) {
             baseBuilder = baseBuilder.acceptInvite(inviteHash);
+        }
+
+        if (!RoleProfileState.ACTIVE.equals(line.roleProfileState)) {
+            baseBuilder = baseBuilder.updateRoleProfileState(line.roleProfileState);
         }
 
         baseBuilder.build();
