@@ -287,8 +287,8 @@ Deactivated user cannot login until he is activated
 
 Admin can view assessor status unavailable
      [Documentation]  IFS-7023
-     Given log in as a different user            &{ifs_admin_user_credentials}
-     And the user clicks the button/link         link = Manage users
+     [Setup]   log in as a different user            &{ifs_admin_user_credentials}
+     Given the user clicks the button/link       link = Manage users
      When the user enters text to a text field   id = filter  Isaac
      And the user clicks the button/link         css = input[type="submit"]
      And the user clicks the button/link         link = Edit
