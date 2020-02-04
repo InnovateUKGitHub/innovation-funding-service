@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.repository;
 import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -16,6 +17,6 @@ public interface RoleProfileStatusRepository extends CrudRepository<RoleProfileS
 
     Optional<RoleProfileStatus> findByUserIdAndProfileRole(long userId, ProfileRole role);
 
-    Page<RoleProfileStatus> findByRoleProfileStateAndProfileRoleAndUserEmailContaining(
-            RoleProfileState roleProfileState, ProfileRole role, String filter, Pageable pageable);
+    Page<RoleProfileStatus> findByRoleProfileStateAndProfileRoleAndUserEmailContainingAndUserStatus(
+            RoleProfileState roleProfileState, ProfileRole role, String filter, UserStatus userStatus, Pageable pageable);
 }

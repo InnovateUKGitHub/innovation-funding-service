@@ -148,7 +148,9 @@ public class RoleProfileStatusServiceImplTest extends BaseServiceUnitTest<RolePr
         List<RoleProfileStatus> expectedProfileStatuses = newRoleProfileStatus().withUser(expectedUsers).build(expectedUsers.length);
         Page<RoleProfileStatus> expectedPage = new PageImpl<>(expectedProfileStatuses, pageable, expectedUsers.length);
 
-        when(roleProfileStatusRepositoryMock.findByRoleProfileStateAndProfileRoleAndUserEmailContaining(roleProfileState, profileRole, filter, pageable))
+        when(roleProfileStatusRepositoryMock.findByRoleProfileStateAndProfileRoleAndUserEmailContainingAndUserStatus(
+                roleProfileState, profileRole, filter, UserStatus.ACTIVE, pageable)
+        )
                 .thenReturn(expectedPage);
 
         for (int i = 0; i < expectedUsers.length; i++) {
@@ -162,7 +164,8 @@ public class RoleProfileStatusServiceImplTest extends BaseServiceUnitTest<RolePr
         assertEquals(pageable.getPageSize(), userPageResource.getSize());
 
         InOrder inOrder = inOrder(roleProfileStatusRepositoryMock, userMapperMock);
-        inOrder.verify(roleProfileStatusRepositoryMock).findByRoleProfileStateAndProfileRoleAndUserEmailContaining(roleProfileState, profileRole, filter, pageable);
+        inOrder.verify(roleProfileStatusRepositoryMock).findByRoleProfileStateAndProfileRoleAndUserEmailContainingAndUserStatus(
+                roleProfileState, profileRole, filter, UserStatus.ACTIVE, pageable);
         stream(expectedUsers).forEachOrdered(u -> inOrder.verify(userMapperMock).mapToResource(u));
         inOrder.verifyNoMoreInteractions();
     }

@@ -7,10 +7,7 @@ import org.innovateuk.ifs.user.mapper.RoleProfileStatusMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.ProfileRole;
-import org.innovateuk.ifs.user.resource.RoleProfileState;
-import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +62,7 @@ public class RoleProfileStatusServiceImpl implements RoleProfileStatusService {
     @Transactional
     public ServiceResult<UserPageResource> findByRoleProfile(RoleProfileState state, ProfileRole profileRole, String filter, Pageable pageable) {
         return userPageResource(
-                roleProfileStatusRepository.findByRoleProfileStateAndProfileRoleAndUserEmailContaining(state, profileRole, filter, pageable)
+                roleProfileStatusRepository.findByRoleProfileStateAndProfileRoleAndUserEmailContainingAndUserStatus(state, profileRole, filter, UserStatus.ACTIVE, pageable)
                         .map(RoleProfileStatus::getUser)
         );
     }
