@@ -10,6 +10,8 @@
 //
 //
 
+import {OPTIONS} from "../support/cypress_config";
+
 Cypress.Commands.add('logout', () => {
   cy.get('a').contains("Sign out").click()
 });
@@ -80,3 +82,9 @@ Cypress.Commands.add('crawl', (startPage) => {
 Cypress.Commands.add('testForAccessibility', (callback) => {
   callback(pages);
 }, );
+
+Cypress.Commands.add('checkAccessibilityOnPage', () => {
+  cy.injectAxe();
+  cy.checkA11y(OPTIONS);
+});
+
