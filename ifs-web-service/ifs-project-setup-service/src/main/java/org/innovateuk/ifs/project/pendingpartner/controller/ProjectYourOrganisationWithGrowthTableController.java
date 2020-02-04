@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
+import javax.validation.Valid;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
@@ -19,10 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
 
 import static java.lang.String.format;
 

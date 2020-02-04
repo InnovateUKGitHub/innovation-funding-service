@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.project.service;
 
+import java.util.List;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-
-import java.util.List;
 
 public interface ProjectRestService {
     RestResult<ProjectResource> getProjectById(long projectId);
@@ -20,8 +18,6 @@ public interface ProjectRestService {
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId);
 
     RestResult<ProjectUserResource> getProjectManager(long projectId);
-
-    RestResult<PartnerOrganisationResource> getPartnerOrganisation(long projectId, long organisationId);
 
     RestResult<ProjectResource> createProjectFromApplicationId(long applicationId);
 
