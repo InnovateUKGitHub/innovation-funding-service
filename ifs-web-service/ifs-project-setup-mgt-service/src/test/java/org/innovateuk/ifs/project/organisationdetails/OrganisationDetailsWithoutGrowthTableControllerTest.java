@@ -127,7 +127,7 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
         YourOrganisationWithoutGrowthTableForm actualForm = (YourOrganisationWithoutGrowthTableForm) result.getModelAndView().getModel().get("form");
 
         sharedAssertions(result, organisation.getAddresses().get(0).getAddress());
-        assertTrue((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
+        assertEquals(yourOrganisation, result.getModelAndView().getModel().get("yourOrg"));
 
         assertEquals(organisationId, yourOrganisation.getOrganisationId());
         assertEquals(projectId, yourOrganisation.getProjectId());
@@ -166,7 +166,7 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
 
         sharedAssertions(result, new AddressResource("", "", "", "", "", ""));
 
-        assertFalse((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
+        assertNotEquals("yourOrg", result.getModelAndView().getModel());
     }
 
     private OrganisationFinancesWithoutGrowthTableResource getFinances() {
