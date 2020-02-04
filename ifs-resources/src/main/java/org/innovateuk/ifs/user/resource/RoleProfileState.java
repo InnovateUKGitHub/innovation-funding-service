@@ -2,9 +2,9 @@ package org.innovateuk.ifs.user.resource;
 
 public enum RoleProfileState {
 
-    ACTIVE("Active"),
-    UNAVAILABLE("Temporarily unavailable"),
-    DISABLED("Permanently unavailable");
+    ACTIVE("Available"),
+    UNAVAILABLE("Unavailable"),
+    DISABLED("Disabled");
 
     private String description;
 

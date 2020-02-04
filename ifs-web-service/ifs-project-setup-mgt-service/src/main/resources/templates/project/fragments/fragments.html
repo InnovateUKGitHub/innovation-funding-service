@@ -1,0 +1,40 @@
+<th:block th:fragment="bankDetailsStatus(statusName)">
+  <th:block th:switch="${statusName}">
+    <div th:case="'NOT_REQUIRED'" class="task-status"><span>No action required</span></div>
+    <div th:case="'NOT_STARTED'" class="notification">Not yet submitted</div>
+    <div th:case="'ACTION_REQUIRED'" class="action-required"><strong>Review required</strong></div>
+    <div th:case="'PENDING'" class="notification">Pending</div>
+    <div th:case="'COMPLETE'" class="task-status-complete"><span>Complete</span></div>
+  </th:block>
+</th:block>
+
+<th:block th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
+    <div class="alignright">
+        <a class="govuk-link alignright"
+           th:href="@{~/management/competition/{competitionId}/previous(competitionId=${competitionId})}">View only completed projects for this competition</a>
+    </div>
+    <ul class="govuk-tabs__list">
+        <li id="section-1"
+            class="govuk-tabs__list-item">
+            <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}"
+               class="govuk-tabs__tab"
+               th:classappend="${selectedTab == 'all'} ? 'govuk-tabs__tab--selected' : ''">All projects</a>
+        </li>
+        <li th:if="${showAllTabs}"
+            id="section-2"
+            class="govuk-tabs__list-item">
+            <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}"
+               th:text="'Queries (' + ${openQueryCount} + ')'"
+               class="govuk-tabs__tab"
+               th:classappend="${selectedTab == 'queries'} ? 'govuk-tabs__tab--selected' : ''"></a>
+        </li>
+        <li th:if="${showAllTabs}"
+            id="section-3"
+            class="govuk-tabs__list-item">
+            <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}"
+               th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'"
+               class="govuk-tabs__tab"
+               th:classappend="${selectedTab == 'spend-profile'} ? 'govuk-tabs__tab--selected' : ''"></a>
+        </li>
+    </ul>
+</th:block>
