@@ -29,7 +29,7 @@ public class ApplicationFinanceRowController {
         return applicationFinanceRowService.get(id).toGetResponse();
     }
 
-    @PostMapping()
+    @PostMapping
     public RestResult<FinanceRowItem> create(@RequestBody final FinanceRowItem financeRowItem) {
         return applicationFinanceRowService.create(financeRowItem.getTargetId(), financeRowItem).toPostCreateResponse();
     }

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.pendingpartner.viewmodel;
+package org.innovateuk.ifs.project.yourorganisation.viewmodel;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 
@@ -8,14 +8,16 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
     private final long organisationId;
     private final boolean h2020;
     private final boolean readOnly;
+    private final boolean showHints;
 
-    public ProjectYourOrganisationViewModel(boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, long projectId, String projectName, long organisationId, boolean readOnly) {
+    public ProjectYourOrganisationViewModel(boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, long projectId, String projectName, long organisationId, boolean readOnly, boolean showHints) {
         super(showStateAidAgreement, fundingSectionComplete, h2020);
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;
         this.h2020 = h2020;
         this.readOnly = readOnly;
+        this.showHints = showHints;
     }
 
     public long getProjectId() {
@@ -28,6 +30,10 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
 
     public long getOrganisationId() {
         return organisationId;
+    }
+
+    public boolean isShowHints() {
+        return showHints;
     }
 
     @Override
