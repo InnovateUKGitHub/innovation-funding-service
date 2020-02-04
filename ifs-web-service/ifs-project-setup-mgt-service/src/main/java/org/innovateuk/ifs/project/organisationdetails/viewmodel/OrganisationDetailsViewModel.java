@@ -19,7 +19,7 @@ public class OrganisationDetailsViewModel {
     private final String town;
     private final String county;
     private final String postcode;
-    
+
     public OrganisationDetailsViewModel(ProjectResource project,
                                         long competitionId,
                                         OrganisationResource organisation,
