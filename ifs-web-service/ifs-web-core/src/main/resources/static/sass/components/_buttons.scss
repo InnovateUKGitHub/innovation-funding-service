@@ -1,4 +1,4 @@
-  @import "govuk-frontend/govuk/settings/all";
+@import "govuk-frontend/govuk/settings/all";
 @import "govuk-frontend/govuk/tools/all";
 @import "govuk-frontend/govuk/helpers/all";
 
@@ -10,17 +10,6 @@ table {
     &:last-child {
       margin-right: 3px;
     }
-  }
-}
-
-.button-warning{
-  @extend .govuk-button;
-  @include box-shadow(0 2px 0 darken($ifs-warning-button-colour, 15%));
-  background-color: $ifs-warning-button-colour;
-
-  &:hover,
-  &:focus {
-    background-color: darken($ifs-warning-button-colour, 5%);
   }
 }
 
@@ -47,10 +36,18 @@ table {
     border: 0;
   }
 
-  &:hover,
-  &:focus {
+  &:hover {
     background-color: transparent;
     color: $govuk-link-hover-colour;
+  }
+
+  &:focus {
+    outline: 3px solid transparent;
+    text-decoration: none;
+    border-color: $govuk-focus-colour;
+    color: $govuk-focus-text-colour;
+    background-color: $govuk-focus-colour;
+    box-shadow: 0 -2px $govuk-focus-colour, 0 4px $govuk-focus-text-colour;
   }
 
   &.disabled,

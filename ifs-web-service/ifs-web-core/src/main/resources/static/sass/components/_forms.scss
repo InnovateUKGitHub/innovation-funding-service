@@ -415,14 +415,15 @@ td {
         background-color: darken(govuk-colour("blue"), 5%);
       }
     }
-  }
 
-  .inputfile:focus {
-    + label {
-      border-color: $govuk-focus-text-colour;
-      color: $govuk-focus-text-colour;
-      background-color: $govuk-focus-text-colour;
-      box-shadow: 0 2px 0 $govuk-focus-text-colour;
+    &:focus {
+      + label {
+        border-color: $govuk-focus-colour;
+        color: $govuk-focus-text-colour;
+        background-color: $govuk-focus-colour;
+        box-shadow: 0 2px 0 $govuk-focus-text-colour;
+        outline: 3px solid transparent;
+      }
     }
   }
 
@@ -469,14 +470,7 @@ td {
       opacity: 0;
       overflow: hidden;
       position: absolute;
-      z-index: -1;
-
-      &:focus {
-
-        + label {
-          outline: 3px solid $govuk-focus-colour;
-        }
-      }
+      z-index: -1;  
     }
   }
 }
