@@ -10,6 +10,10 @@ ENV LDAP_PORT=8389 \
     LDAP_ENCRYPTION_CERTIFICATE="@auth_ldap_encryption_certificate@" \
     DEBIAN_FRONTEND=noninteractive
 
+# copy certs into build
+RUN mkdir -p /var/certs/
+COPY certs/* /var/certs/
+
 COPY scripts/* /usr/local/bin/
 WORKDIR /usr/local/bin
 
@@ -57,9 +61,11 @@ RUN apt-get update --fix-missing && \
 RUN apt-get update --fix-missing && \
   apt-get -y install grep mysql-client net-tools rsync && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
-  rm -f ppolicy*.ldif
+  rm -f ppolicy*.ldif && \
 
-#USER openldap
+  echo "TO REPLACE KEY" > /etc/ldap/ldap-encryption.key && \
+  echo "TO REPLACE CERT" > /etc/ldap/ldap-encryption.crt
+
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD ldapsearch -H ldaps://localhost:8389 -b dc=nodomain -x -LLL -s base || exit 1
 ENTRYPOINT [ "run-openldap.sh" ]
