@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -22,11 +22,11 @@ public class ExcludedCostCategoryTest {
     @Before
     public void setUp() throws Exception {
 
-        FinanceRowItem grantClaim = newGrantClaimPercentage().withGrantClaimPercentage(10).build();
+        FinanceRowItem grantClaim = newGrantClaimPercentage().withGrantClaimPercentage(BigDecimal.valueOf(10)).build();
 
         costs.add(grantClaim);
 
-        grantClaimCategory = newExcludedCostCategory().withCosts(asList(grantClaim)).build();
+        grantClaimCategory = newExcludedCostCategory().withCosts(singletonList(grantClaim)).build();
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ExcludedCostCategoryTest {
     @Test
     public void addCost() {
 
-        FinanceRowItem grantClaim3 = newGrantClaimPercentage().withGrantClaimPercentage(30).build();
+        FinanceRowItem grantClaim3 = newGrantClaimPercentage().withGrantClaimPercentage(BigDecimal.valueOf(30)).build();
         costs.add(grantClaim3);
         grantClaimCategory.addCost(grantClaim3);
 

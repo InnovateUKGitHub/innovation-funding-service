@@ -10,6 +10,7 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -28,6 +29,6 @@ public class EligibilityApprovedGuard implements Guard<EligibilityState, Eligibi
     }
 
     private boolean isFundingLevelWithinMaximum(ProjectFinanceResource finance) {
-        return finance.getMaximumFundingLevel() >= finance.getGrantClaimPercentage();
+        return BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0;
     }
 }

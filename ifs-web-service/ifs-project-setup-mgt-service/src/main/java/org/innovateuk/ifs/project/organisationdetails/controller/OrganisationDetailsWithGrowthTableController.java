@@ -71,14 +71,14 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
 
-        model.addAttribute("orgDetails", new OrganisationDetailsViewModel(project,
+        model.addAttribute("organisationDetails", new OrganisationDetailsViewModel(project,
                 competitionId,
                 organisation,
                 getAddress(organisation),
                 project.isCollaborativeProject()));
 
         if (includeYourOrganisationSection) {
-            model.addAttribute("yourOrg", new ProjectYourOrganisationViewModel(false,
+            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(false,
                     false,
                     false,
                     projectId,

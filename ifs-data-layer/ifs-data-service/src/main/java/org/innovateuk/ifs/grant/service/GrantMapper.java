@@ -175,7 +175,7 @@ class GrantMapper {
                 organisationSizeOrAcademic,
                 partnerOrganisation.getPostcode(),
                 BigDecimal.valueOf(projectFinanceResource.getMaximumFundingLevel()),
-                BigDecimal.valueOf(projectFinanceResource.getGrantClaimPercentage()),
+                projectFinanceResource.getGrantClaimPercentage(),
                 grantCalculator.getOverheadPercentage(),
                 forecasts);
     }

@@ -3,7 +3,7 @@
 
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${orgDetails.projectId}: ${orgDetails.projectName} - ${orgDetails.organisationName}|" />
+              th:with="pageTitle=|${organisationDetails.projectId}: ${organisationDetails.projectName} - ${organisationDetails.organisationName}|" />
 </head>
 <body class="govuk-template__body">
 
@@ -17,34 +17,34 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=${orgDetails.organisationName},subTitle=|${orgDetails.projectId}: ${orgDetails.projectName}|,size='govuk-heading-xl'"/>
+                  th:with="pageTitle=${organisationDetails.organisationName},subTitle=|${organisationDetails.projectId}: ${organisationDetails.projectName}|,size='govuk-heading-xl'"/>
 
-        <th:block th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (orgDetails=${orgDetails})"/>
+        <th:block th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (organisationDetails=${organisationDetails})"/>
 
-        <div th:if="${yourOrg != null}">
+        <div th:if="${yourOrganisation != null}">
             <h2 class="govuk-heading-m">Organisation size</h2>
 
             <form th:object="${form}">
                 <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                                 without-growth-table(
                                                        form=${form},
-                                                       organisationSizeOptions=${yourOrg.organisationSizeOptions},
-                                                       isH2020=${yourOrg.h2020},
+                                                       organisationSizeOptions=${yourOrganisation.organisationSizeOptions},
+                                                       isH2020=${yourOrganisation.h2020},
                                                        isInternalUser=${true},
-                                                       readOnly=${yourOrg.readOnly},
-                                                       showOrganisationSizeAlert=${yourOrg.showOrganisationSizeAlert},
-                                                       showStateAidAgreement=${yourOrg.showStateAidAgreement})" />
+                                                       readOnly=${yourOrganisation.readOnly},
+                                                       showOrganisationSizeAlert=${yourOrganisation.showOrganisationSizeAlert},
+                                                       showStateAidAgreement=${yourOrganisation.showStateAidAgreement})" />
             </form>
 
-            <th:block th:unless="${!yourOrg.isAllowedToEditOrganisationSize()}">
-                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/without-growth-table (projectId=${yourOrg.projectId}, organisationId=${yourOrg.organisationId})}"
+            <th:block th:unless="${!yourOrganisation.isAllowedToEditOrganisationSize()}">
+                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/without-growth-table (projectId=${yourOrganisation.projectId}, organisationId=${yourOrganisation.organisationId})}"
                    class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation size</a>
             </th:block>
         </div>
 
         <div class="govuk-form-group govuk-!-margin-top-6">
             <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
-               th:href="@{/competition/{competitionId}/project/{projectId}/details}(competitionId=${orgDetails.competitionId}, projectId={orgDetails.projectId})"
+               th:href="@{/competition/{competitionId}/project/{projectId}/details}(competitionId=${organisationDetails.competitionId}, projectId={organisationDetails.projectId})"
                class="button-secondary">Return to project details</a>
             <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                th:href="${cookieBackLinkUrl}"

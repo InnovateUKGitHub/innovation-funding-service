@@ -45,7 +45,7 @@ public class ActivityLogUrlHelper {
                 return format("/project-setup-management/project/%d/finance-check/organisation/%d/eligibility", project.getId(), log.getOrganisation());
             case FINANCE_QUERY:
             case FINANCE_QUERY_RESPONDED:
-                return format("/project-setup-management/project/%d/finance-check/organisation/%d/query?query_section=%s", project.getId(), log.getOrganisation(), log.getQueryType().name());
+                return log.getQueryType() != null ? format("/project-setup-management/project/%d/finance-check/organisation/%d/query?query_section=%s", project.getId(), log.getOrganisation(), log.getQueryType().name()) : null;
             case SPEND_PROFILE_GENERATED:
                 return format("/project-setup-management/project/%d/finance-check", project.getId());
             case SPEND_PROFILE_SENT:

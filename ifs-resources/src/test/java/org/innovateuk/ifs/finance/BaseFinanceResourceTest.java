@@ -38,7 +38,7 @@ public class BaseFinanceResourceTest {
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(30).
+                                withGrantClaimPercentage(BigDecimal.valueOf(30)).
                                 build(1)).
                         build());
 
@@ -46,7 +46,7 @@ public class BaseFinanceResourceTest {
 
         GrantClaimPercentage grantClaim = (GrantClaimPercentage) baseFinanceResource.getGrantClaim();
 
-        assertEquals(grantClaim.getPercentage(), Integer.valueOf(30));
+        assertEquals(grantClaim.getPercentage(), BigDecimal.valueOf(30));
     }
 
     @Test
@@ -54,16 +54,16 @@ public class BaseFinanceResourceTest {
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(30).
+                                withGrantClaimPercentage(BigDecimal.valueOf(30)).
                                 build(1)).
                         withTotal(BigDecimal.valueOf(30)).
                         build());
 
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
-        Integer grantClaimPercentage = baseFinanceResource.getGrantClaimPercentage();
+        BigDecimal grantClaimPercentage = baseFinanceResource.getGrantClaimPercentage();
 
-        assertEquals(grantClaimPercentage, Integer.valueOf(30));
+        assertEquals(grantClaimPercentage, BigDecimal.valueOf(30));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class BaseFinanceResourceTest {
                         build(),
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(50).
+                                withGrantClaimPercentage(BigDecimal.valueOf(50)).
                                 build(1)).
                         withTotal(BigDecimal.valueOf(50)).
                         build());
@@ -105,7 +105,7 @@ public class BaseFinanceResourceTest {
                         build(),
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(50).
+                                withGrantClaimPercentage(BigDecimal.valueOf(50)).
                                 build(1)).
                         withTotal(BigDecimal.valueOf(50)).
                         build());

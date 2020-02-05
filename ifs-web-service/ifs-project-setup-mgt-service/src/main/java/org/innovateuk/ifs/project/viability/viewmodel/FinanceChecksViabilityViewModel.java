@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class FinanceChecksViabilityViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
     private Integer totalCosts;
-    private Integer percentageGrant;
+    private BigDecimal percentageGrant;
     private Integer fundingSought;
     private Integer otherPublicSectorFunding;
     private Integer contributionToProject;
@@ -44,7 +45,7 @@ public class FinanceChecksViabilityViewModel {
                                            String organisationName,
                                            boolean leadPartnerOrganisation,
                                            Integer totalCosts,
-                                           Integer percentageGrant,
+                                           BigDecimal percentageGrant,
                                            Integer fundingSought,
                                            Integer otherPublicSectorFunding,
                                            Integer contributionToProject,
@@ -117,7 +118,7 @@ public class FinanceChecksViabilityViewModel {
         return totalCosts;
     }
 
-    public Integer getPercentageGrant() {
+    public BigDecimal getPercentageGrant() {
         return percentageGrant;
     }
 
@@ -199,9 +200,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
-        return finances.stream().allMatch(finance -> {
-            int fundingLevel = finance.getGrantClaimPercentage();
-            return finance.getMaximumFundingLevel() >= fundingLevel;
-        });
+        return finances.stream().allMatch(finance ->
+                BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
     }
 }

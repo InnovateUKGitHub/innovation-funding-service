@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -229,9 +230,7 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
-        return finances.stream().allMatch(finance -> {
-            int fundingLevel = finance.getGrantClaimPercentage();
-            return finance.getMaximumFundingLevel() >= fundingLevel;
-        });
+        return finances.stream().allMatch(finance ->
+            BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
     }
 }

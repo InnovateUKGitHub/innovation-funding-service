@@ -44,8 +44,12 @@ public class ProjectFinanceCheckSummaryViewModel {
         return financeCheckSummaryResource.isSpendProfilesGenerated();
     }
 
+    public boolean isHasOrganisationSizeChanged() {
+        return hasOrganisationSizeChanged;
+    }
+
     public boolean isShowChangeFundingLevelPercentageAlert() {
-        return financeCheckSummaryResource.isAllEligibilityAndViabilityInReview() && hasOrganisationSizeChanged;
+        return financeCheckSummaryResource.isAllEligibilityAndViabilityInReview() && isHasOrganisationSizeChanged();
     }
 
     public FinanceCheckSummaryResource getFinanceCheckSummaryResource() {

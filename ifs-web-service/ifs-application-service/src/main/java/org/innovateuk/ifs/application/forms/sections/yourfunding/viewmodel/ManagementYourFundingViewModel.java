@@ -2,7 +2,13 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel;
 
 public class ManagementYourFundingViewModel extends YourFundingViewModel {
 
-    public ManagementYourFundingViewModel(long applicationId, long sectionId, long organisationId, long competitionId, String applicationName, String url) {
+    public ManagementYourFundingViewModel(long applicationId,
+                                          long sectionId,
+                                          long organisationId,
+                                          long competitionId,
+                                          String applicationName,
+                                          String url,
+                                          boolean fundingLevelPercentageToggle) {
         super(
                 applicationId,
                 sectionId,
@@ -20,6 +26,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                 0,
                 0,
                 url,
-                false);
+                false,
+                fundingLevelPercentageToggle
+        );
     }
 }
