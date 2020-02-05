@@ -55,6 +55,7 @@ const testable = url => url && url.startsWith('/') &&
   url.indexOf('files/overheads') === -1 &&
   url.indexOf('profile/view') === -1 &&  // temp change to work around the issue described in IFS-6968, remove once complete
   url.indexOf('/bank-details/export') === -1 &&
+  url.indexOf('/generate/confirm') === -1 &&
   !isFile(url);
 
 function isFile(url) {

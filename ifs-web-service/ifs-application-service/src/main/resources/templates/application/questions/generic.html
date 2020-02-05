@@ -76,7 +76,7 @@
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             </th:block>
 
-            <div id="answer" class="govuk-form-group" th:if="${model.textAreaActive}"
+            <div class="govuk-form-group" th:if="${model.textAreaActive}"
                  th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('answer')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('answer')}" th:text="${err}"></span>
