@@ -32,6 +32,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.*;
 import org.mockito.Mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -567,7 +568,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .getId(), SMALL, "ABC 123");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new ExcludedCostCategory();
-        costCategory.addCost(new GrantClaimPercentage(1L, 50, applicationFinanceResource.getId()));
+        costCategory.addCost(new GrantClaimPercentage(1L, BigDecimal.valueOf(50), applicationFinanceResource.getId()));
         organisationFinances.put(FinanceRowType.FINANCE, costCategory);
         applicationFinanceResource.setFinanceOrganisationDetails(organisationFinances);
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn

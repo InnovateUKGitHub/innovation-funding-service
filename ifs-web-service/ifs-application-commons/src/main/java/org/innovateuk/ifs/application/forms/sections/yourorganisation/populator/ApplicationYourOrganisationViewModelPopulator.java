@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel;
+package org.innovateuk.ifs.application.forms.sections.yourorganisation.populator;
 
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -14,13 +15,13 @@ import java.util.List;
  * A populator to build a YourOrganisationViewModel for the "Your organisation" pages.
  */
 @Component
-public class YourOrganisationViewModelPopulator {
+public class ApplicationYourOrganisationViewModelPopulator {
 
     private YourOrganisationRestService yourOrganisationRestService;
     private SectionService sectionService;
     private CompetitionRestService competitionRestService;
 
-    public YourOrganisationViewModelPopulator(
+    public ApplicationYourOrganisationViewModelPopulator(
             YourOrganisationRestService yourOrganisationRestService,
             SectionService sectionService,
             CompetitionRestService competitionRestService) {

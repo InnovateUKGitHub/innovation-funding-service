@@ -22,6 +22,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertEquals;
@@ -39,14 +40,14 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
     private static final ProjectFinanceResource industrialFinances = newProjectFinanceResource()
             .withOrganisation(industrialOrganisation)
             .withIndustrialCosts()
-            .withGrantClaimPercentage(50)
+            .withGrantClaimPercentage(BigDecimal.valueOf(50))
             .withMaximumFundingLevel(60)
             .withOrganisationSize(OrganisationSize.SMALL)
             .build();
     private static final ProjectFinanceResource academicFinances = newProjectFinanceResource()
             .withOrganisation(academicOrganisation)
             .withAcademicCosts()
-            .withGrantClaimPercentage(100)
+            .withGrantClaimPercentage(BigDecimal.valueOf(100))
             .withMaximumFundingLevel(100)
             .build();
     private static final ProjectResource project = newProjectResource()
@@ -100,7 +101,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals(60, industrialViewModel.getMaximumFundingLevel());
         assertEquals(industrialFinances.getTotal(), industrialViewModel.getCosts());
         assertEquals(industrialFinances.getTotalFundingSought(), industrialViewModel.getFundingSought());
-        assertEquals(new BigDecimal("85.86"), industrialViewModel.getPercentageOfTotalGrant().setScale(2, RoundingMode.HALF_UP));
+        assertEquals(new BigDecimal("85.86"), industrialViewModel.getPercentageOfTotalGrant().setScale(MAX_DECIMAL_PLACES, RoundingMode.HALF_UP));
         assertEquals(BigDecimal.ZERO, industrialViewModel.getOtherFunding());
         assertEquals(totalGrant, industrialViewModel.getTotalGrant());
 
@@ -109,7 +110,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals(100, academicViewModel.getMaximumFundingLevel());
         assertEquals(academicFinances.getTotal(), academicViewModel.getCosts());
         assertEquals(academicFinances.getTotalFundingSought(), academicViewModel.getFundingSought());
-        assertEquals(new BigDecimal("14.14"), academicViewModel.getPercentageOfTotalGrant().setScale(2, RoundingMode.HALF_UP));
+        assertEquals(new BigDecimal("14.14"), academicViewModel.getPercentageOfTotalGrant().setScale(MAX_DECIMAL_PLACES, RoundingMode.HALF_UP));
         assertEquals(BigDecimal.ZERO, academicViewModel.getOtherFunding());
         assertEquals(totalGrant, academicViewModel.getTotalGrant());
     }
@@ -119,7 +120,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
         when(financeRowRestService.update(any())).thenReturn(restSuccess(ValidationMessages.noErrors()));
 
-        MvcResult result = mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
+        mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
                 .param(format("partners[%d].fundingLevel", industrialOrganisation), "60")
                 .param(format("partners[%d].fundingLevel", academicOrganisation), "60"))
                 .andExpect(status().is3xxRedirection())
@@ -129,8 +130,8 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
         verify(financeRowRestService).update(industrialFinances.getGrantClaim());
 
-        assertEquals(60, academicFinances.getGrantClaimPercentage());
-        assertEquals(60, industrialFinances.getGrantClaimPercentage());
+        assertEquals(BigDecimal.valueOf(60), academicFinances.getGrantClaimPercentage());
+        assertEquals(BigDecimal.valueOf(60), industrialFinances.getGrantClaimPercentage());
     }
 
     @Test
@@ -145,6 +146,23 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("project/financecheck/funding-level"))
                 .andExpect(model().attributeHasFieldErrorCode("form", format("partners[%d].fundingLevel", industrialOrganisation),"validation.finance.grant.claim.percentage.max"))
+                .andReturn();
+
+        verifyZeroInteractions(financeRowRestService);
+    }
+
+    @Test
+    public void saveFundingLevels_invalidZeroFundingLevel() throws Exception {
+        when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+        when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
+
+        mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
+                .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
+                .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("project/financecheck/funding-level"))
+                .andExpect(model().attributeHasFieldErrorCode("form", format("partners[%d].fundingLevel", industrialOrganisation),"DecimalMin"))
                 .andReturn();
 
         verifyZeroInteractions(financeRowRestService);

@@ -1,6 +1,12 @@
 package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.function.Supplier;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,7 +21,7 @@ import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstrain
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.PostResource;
@@ -33,13 +39,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -66,7 +65,7 @@ public class FinanceChecksQueriesAddQueryController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private ProjectRestService projectRestService;
+    private PartnerOrganisationRestService partnerOrganisationRestService;
     @Autowired
     private EncryptedCookieService cookieUtil;
     @Autowired
@@ -84,7 +83,7 @@ public class FinanceChecksQueriesAddQueryController {
                           UserResource loggedInUser,
                           HttpServletRequest request,
                           HttpServletResponse response) {
-        projectRestService.getPartnerOrganisation(projectId, organisationId);
+        partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
         model.addAttribute("model", viewModel);
@@ -187,7 +186,7 @@ public class FinanceChecksQueriesAddQueryController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        projectRestService.getPartnerOrganisation(projectId, organisationId);
+        partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
         if (attachments.contains(attachmentId)) {
@@ -229,7 +228,7 @@ public class FinanceChecksQueriesAddQueryController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        projectRestService.getPartnerOrganisation(projectId, organisationId);
+        partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId);
         loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);
         return redirectTo(queriesListView(projectId, organisationId, querySection));

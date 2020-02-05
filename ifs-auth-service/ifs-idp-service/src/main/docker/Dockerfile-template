@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:jdk8u222-b10
+FROM innovateuk/openjdk
 EXPOSE 9443
 
 ENV IDPVER="3.3.3"
