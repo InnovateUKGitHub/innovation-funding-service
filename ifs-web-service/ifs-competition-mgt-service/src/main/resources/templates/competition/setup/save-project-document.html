@@ -31,86 +31,85 @@
                <input type="hidden" th:field="${form.enabled}" />
                <input type="hidden" th:field="${form.projectDocumentId}" />
                <input type="hidden" th:field="${form.editable}" />
-               <th:block id="section-input">
-                  <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'" >
-                     <label class="govuk-label govuk-label--s" for="title">
-                        <span>Title</span>
-                        <th:block th:if="${#fields.hasErrors('title')}">
-                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
-                        </th:block>
-                     </label>
-                     <input
-                        id="title"
-                        class="govuk-input govuk-input--width-10"
-                        th:errorclass="govuk-input--error"
-                        type="text"
-                        th:field="${form.title}"
-                        th:disabled="${form.editable ? 'false' : 'true'}"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.standard.title.required},
-                           data-anychange-errormessage=#{PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED}" />
-                      <input th:if="${!form.editable}" type="hidden" th:field="${form.title}"/>
-                  </div>
+              <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'" >
+                 <label class="govuk-label govuk-label--s" for="title">
+                    <span>Title</span>
+                    <th:block th:if="${#fields.hasErrors('title')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+                    </th:block>
+                 </label>
+                 <input
+                    id="title"
+                    th:if="${!form.editable}"
+                    class="govuk-input govuk-input--width-10"
+                    th:errorclass="govuk-input--error"
+                    type="text"
+                    th:field="${form.title}"
+                    th:disabled="${form.editable ? 'false' : 'true'}"
+                    required="required"
+                    th:attr="data-required-errormessage=#{validation.standard.title.required},
+                       data-anychange-errormessage=#{PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED}" />
+                  <input id="hidden-title" th:if="${!form.editable}" type="hidden" th:field="${form.title}"/>
+              </div>
 
-                  <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptedFileTypesId')} ? 'govuk-form-group--error'">
+              <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptedFileTypesId')} ? 'govuk-form-group--error'">
 
-                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="acceptedFileTypesId">
-                           <h2 class="govuk-fieldset__heading">Accepted file types</h2>
-                        </legend>
-                        <th:block th:if="${#fields.hasErrors('acceptedFileTypesId')}">
-                          <span class="govuk-error-message"  th:each="err : ${#fields.errors('acceptedFileTypesId')}" th:text="${err}"></span>
-                       </th:block>
-                        <div class="govuk-checkboxes">
-                           <div class="govuk-checkboxes__item">
-                              <input id="pdf"
-                                 class="govuk-checkboxes__input"
-                                 type="checkbox"
-                                 data-required-group="acceptedFileTypesId"
-                                 th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
-                                 value="pdf"
-                                 th:field="${form.pdf}"
-                                 />
-                              <label th:for="pdf" class="govuk-label govuk-checkboxes__label">
-                                 <span>PDF</span>
-                              </label>
-                           </div>
-                           <div class="govuk-checkboxes__item">
-                              <input id="spreadsheet"
-                                 class="govuk-checkboxes__input"
-                                 type="checkbox"
-                                 data-required-group="acceptedFileTypesId"
-                                 th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
-                                 value="spreadsheet"
-                                 th:field="${form.spreadsheet}"
-                                 />
-                              <label th:for="spreadsheet" class="govuk-label govuk-checkboxes__label">
-                                 <span>Spreadsheet</span>
-                              </label>
-                           </div>
-                        </div>
-                     </fieldset>
-                  </div>
-                  <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('guidance')} ? 'govuk-form-group--error'">
-                     <label class="govuk-label govuk-label--s" for="guidance">
-                        <span>Guidance</span>
-                        <th:block th:if="${#fields.hasErrors('guidance')}">
-                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('guidance')}" th:text="${err}"></span>
-                       </th:block>
-                     </label>
-                     <div class="textarea-wrapped" id="guidance_wrapper">
-                        <textarea id="guidance"
-                           rows="16"
-                           class="govuk-textarea"
-                           data-editor="html"
-                           th:classappend="${#fields.hasErrors('guidance')} ? 'govuk-textarea--error'"
-                           maxlength="5000"
-                           th:field="${form.guidance}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.documentform.guidance.required}"></textarea>
-                     </div>
-                  </div>
-               </th:block>
+                 <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="acceptedFileTypesId">
+                       <h2 class="govuk-fieldset__heading">Accepted file types</h2>
+                    </legend>
+                    <th:block th:if="${#fields.hasErrors('acceptedFileTypesId')}">
+                      <span class="govuk-error-message"  th:each="err : ${#fields.errors('acceptedFileTypesId')}" th:text="${err}"></span>
+                   </th:block>
+                    <div class="govuk-checkboxes">
+                       <div class="govuk-checkboxes__item">
+                          <input id="pdf"
+                             class="govuk-checkboxes__input"
+                             type="checkbox"
+                             data-required-group="acceptedFileTypesId"
+                             th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
+                             value="pdf"
+                             th:field="${form.pdf}"
+                             />
+                          <label th:for="pdf" class="govuk-label govuk-checkboxes__label">
+                             <span>PDF</span>
+                          </label>
+                       </div>
+                       <div class="govuk-checkboxes__item">
+                          <input id="spreadsheet"
+                             class="govuk-checkboxes__input"
+                             type="checkbox"
+                             data-required-group="acceptedFileTypesId"
+                             th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
+                             value="spreadsheet"
+                             th:field="${form.spreadsheet}"
+                             />
+                          <label th:for="spreadsheet" class="govuk-label govuk-checkboxes__label">
+                             <span>Spreadsheet</span>
+                          </label>
+                       </div>
+                    </div>
+                 </fieldset>
+              </div>
+              <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('guidance')} ? 'govuk-form-group--error'">
+                 <label class="govuk-label govuk-label--s" for="guidance">
+                    <span>Guidance</span>
+                    <th:block th:if="${#fields.hasErrors('guidance')}">
+                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('guidance')}" th:text="${err}"></span>
+                   </th:block>
+                 </label>
+                 <div class="textarea-wrapped" id="guidance_wrapper">
+                    <textarea id="guidance"
+                       rows="16"
+                       class="govuk-textarea"
+                       data-editor="html"
+                       th:classappend="${#fields.hasErrors('guidance')} ? 'govuk-textarea--error'"
+                       maxlength="5000"
+                       th:field="${form.guidance}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.documentform.guidance.required}"></textarea>
+                 </div>
+              </div>
                <th:form th:if="${form.projectDocumentId}">
                   <p>
                      <button type="submit" th:if="${form.editable}" data-js-modal="modal-confirm-document-remove" formnovalidate name="removeDocument" class="button-clear">Remove</button>

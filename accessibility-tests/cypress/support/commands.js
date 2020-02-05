@@ -55,6 +55,11 @@ const testable = url => url && url.startsWith('/') &&
   url.indexOf('/bank-details/export') === -1 &&
   !/^\/application\/[0-9]*\/grant-agreement$/.test(url) &&
   url.indexOf('finance-check/generate/confirm') === -1 &&
+  url.indexOf('spend-profile-export/csv') === -1 &&
+  url.indexOf('/grant-offer-letter/template') === -1 &&
+  url.indexOf('/files') === -1 &&
+  url.indexOf('/grant-offer-letter/grant-offer-letter') === -1 &&
+  url.indexOf('/grant-offer-letter/signed-grant-offer-letter') === -1 &&
   !isFile(url);
 
 function isFile(url) {

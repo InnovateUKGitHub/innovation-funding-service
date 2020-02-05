@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.address.service;
+\package org.innovateuk.ifs.address.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
