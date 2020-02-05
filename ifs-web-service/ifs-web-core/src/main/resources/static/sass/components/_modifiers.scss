@@ -90,15 +90,15 @@ table {
   }
 
   .shaded-cell {
-    background-color: govuk-colour("grey-4");
+    background-color: govuk-colour("light-grey");
   }
 
   .border-left-cell {
-    border-left: 2px solid govuk-colour("grey-2");
+    border-left: 2px solid govuk-colour("mid-grey");
   }
 
   .border-right-cell {
-    border-right: 2px solid govuk-colour("grey-2");
+    border-right: 2px solid govuk-colour("mid-grey");
   }
 }
 

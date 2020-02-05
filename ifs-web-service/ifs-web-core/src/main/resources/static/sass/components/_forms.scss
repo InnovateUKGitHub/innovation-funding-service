@@ -405,9 +405,26 @@ td {
   }
 
   .inputfile {
-    + label{
+    + label {
+      @extend .govuk-button;
+      @include box-shadow(0 2px 0 darken(govuk-colour("blue"), 15%));
       margin-top: 20px;
-      background-color: govuk-colour("mid-grey")
+      background-color: govuk-colour("blue");
+
+      &:hover,
+      &:focus {
+        background-color: darken(govuk-colour("blue"), 5%);
+      }
+
+      &.disabled,
+      &[disabled]{
+        background-color: govuk-colour("blue");
+
+        &:hover,
+        &:focus {
+          background-color: govuk-colour("blue");
+        }
+      }
     }
   }
 
