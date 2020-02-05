@@ -93,8 +93,8 @@ Summary:Feedback should show in each section
 Summary:Assessor can return to each question
     [Documentation]    INFUND-4648
     :FOR  ${INDEX}  IN RANGE  1  11    # 11 is the number of assessed questions to iterate through
-     \    the user should see the element            jQuery = #accordion-questions-content-1-${INDEX} a:contains("Return to this question in the application")
-    When the user clicks the button/link             jQuery = #accordion-questions-content-1-2 a:contains("Return to this question in the application")
+     \    the user should see the element            jQuery = #accordion-questions-content-${INDEX} a:contains("Return to this question in the application")
+    When the user clicks the button/link             jQuery = #accordion-questions-content-2 a:contains("Return to this question in the application")
     Then the user should see the element             jQuery = h2:contains("What is the business opportunity that your project addresses?")
     And the user goes back to the previous page
     When the user clicks the button/link             jQuery = #accordion-questions-content-1-11 a:contains("Return to this question in the application")
@@ -104,7 +104,7 @@ Summary:Assessor can return to each question
 Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     [Tags]  HappyPath
-    Given The user clicks the button/link                       jQuery = #accordion-questions-content-1-2 a:contains("Return to this question")
+    Given The user clicks the button/link                       jQuery = #accordion-questions-content-2 a:contains("Return to this question")
     And The user should see the element                         jQuery = h2:contains("What is the business opportunity that your project addresses?")
     Then the user edit the score and description for an assessed question
 

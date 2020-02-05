@@ -139,8 +139,8 @@ ${PS_LP_Application_Academic_Email}       myrtle.barton@jabbertype.example.com
 *** Keywords ***
 The user adds a new team member
   [Arguments]  ${firstName}  ${email}
-  the user enters text to a text field   id = name   ${firstName}
-  the user enters text to a text field   id = email  ${email}
+  the user enters text to a text field   css = input[name=name]   ${firstName}
+  the user enters text to a text field   css = input[name=email]  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to project")
 
 project finance submits monitoring officer
