@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -14,7 +15,7 @@ public class GrantClaimCostBuilder extends AbstractCostBuilder<GrantClaimPercent
         return withArraySetFieldByReflection("id", id);
     }
 
-    public GrantClaimCostBuilder withGrantClaimPercentage(Integer... value) {
+    public GrantClaimCostBuilder withGrantClaimPercentage(BigDecimal... value) {
         return withArray((v, cost) -> cost.setPercentage(v), value);
     }
 

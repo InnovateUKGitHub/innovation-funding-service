@@ -110,7 +110,7 @@
                     </th:block>
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"
-                        th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.percentageGrant,1,'NONE')+'%'}">
+                        th:text="${#numbers.formatDecimal(summaryModel.eligibilityOverview.percentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}">
                         20&percnt;
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"

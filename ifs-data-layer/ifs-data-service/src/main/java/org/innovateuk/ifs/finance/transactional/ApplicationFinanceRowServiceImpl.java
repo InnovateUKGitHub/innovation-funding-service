@@ -97,26 +97,23 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
     }
 
     private ServiceResult<FinanceRow> doUpdate(Long financeRowId, FinanceRowItem newCostItem) {
-        Application application = financeRowRepository.findById(financeRowId).get().getTarget().getApplication();
-        return getOpenApplication(application.getId()).andOnSuccess(app ->
-                find(cost(financeRowId)).andOnSuccessReturn(existingCost -> {
-                    ApplicationFinance applicationFinance = existingCost.getTarget();
-                    OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
-                    ApplicationFinanceRow newCost = organisationFinanceHandler.toApplicationDomain(newCostItem);
-                    ApplicationFinanceRow updatedCost = mapCost(existingCost, newCost);
+        return find(cost(financeRowId)).andOnSuccessReturn(existingCost -> {
+            ApplicationFinance applicationFinance = existingCost.getTarget();
+            OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
+            ApplicationFinanceRow newCost = organisationFinanceHandler.toApplicationDomain(newCostItem);
+            ApplicationFinanceRow updatedCost = mapCost(existingCost, newCost);
 
-                    ApplicationFinanceRow savedCost = organisationFinanceHandler.updateCost(updatedCost);
+            ApplicationFinanceRow savedCost = organisationFinanceHandler.updateCost(updatedCost);
 
-                    newCost.getFinanceRowMetadata()
-                            .stream()
-                            .filter(c -> c.getValue() != null)
-                            .filter(c -> !"null".equals(c.getValue()))
-                            .forEach(costValue -> updateOrCreateCostValue(costValue, savedCost));
+            newCost.getFinanceRowMetadata()
+                    .stream()
+                    .filter(c -> c.getValue() != null)
+                    .filter(c -> !"null".equals(c.getValue()))
+                    .forEach(costValue -> updateOrCreateCostValue(costValue, savedCost));
 
-                    // refresh the object, since we need to reload the costvalues, on the cost object.
-                    return savedCost;
-                })
-        );
+            // refresh the object, since we need to reload the costvalues, on the cost object.
+            return savedCost;
+        });
     }
 
     @Override

@@ -30,9 +30,6 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
 
     @Override
     public BigDecimal getTotal() {
-        if (amount == null) {
-            return null;
-        }
         return amount;
     }
 
@@ -68,14 +65,13 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
     }
 
     @Override
-    public int calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
-        if (amount == null || total.equals(BigDecimal.ZERO)) {
-            return 0;
+    public BigDecimal calculateClaimPercentage(BigDecimal total, BigDecimal totalOtherFunding) {
+        if (amount == null || total.compareTo(totalOtherFunding) == 0) {
+            return BigDecimal.ZERO;
         }
         return amount.add(totalOtherFunding)
                 .multiply(new BigDecimal(100))
-                .divide(total, RoundingMode.HALF_UP)
-                .intValue();
+                .divide(total, 2, RoundingMode.HALF_UP);
     }
 
     @Override

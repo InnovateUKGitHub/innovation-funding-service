@@ -25,7 +25,7 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-631 As a comp executive I am able to confirm if an interview stage is required in competition setup
 ...
-...               IFS-4982 Move Funding type selection from front door to Initial details
+...               IFS-4982 Move Funding type selection from front door to Initial detail
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -225,12 +225,9 @@ Assessor: Server-side validation
 
 Assessor: Client-side validation
     [Documentation]  INFUND-5641
-    When The user enters text to a text field    id = assessorPay  1.1
-    And the user selects the radio button        assessorCount   5
-    Then the user should see a field error       This field can only accept whole numbers
+    Given the user selects the radio button       assessorCount   5
     When The user enters text to a text field    id = assessorPay  120
-    And the user selects the radio button        assessorCount   5
-    Then The user should not see the element     jQuery = .govuk-error-message:contains("This field can only accept whole numbers")
+    Then The user should not see the element     jQuery = .govuk-error-message:contains("Please select an assessment panel option.")
     And the user clicks the button/link          link = Competition setup
 
 Documents in project setup: The competition admin is required to enter a title and guidance message

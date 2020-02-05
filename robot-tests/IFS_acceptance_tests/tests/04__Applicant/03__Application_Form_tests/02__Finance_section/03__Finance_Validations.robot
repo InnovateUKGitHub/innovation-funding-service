@@ -25,21 +25,19 @@ Other funding client side
     [Documentation]    INFUND-2214
     [Tags]
     When the user selects the radio button   otherFunding  true
-    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  -6565
+    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020
     Then the user should see the element     css = #other-funding-table[aria-hidden="false"]
     # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
     When the user should see a field error   Enter a funding source.
     Then the user should see a field error   Enter date secured.
-    And the user should see a field error    ${field_should_be_1_or_higher}
 
 Other funding server side
     [Documentation]    INFUND-2214
     [Tags]
-    When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020
     And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   Enter a funding source.
     And the user should see a field and summary error    Enter date secured.
-    And the user should see a field and summary error    ${field_should_be_1_or_higher}
 
 Select NO Other Funding and mark as complete should be possible
     [Documentation]    INFUND-2214
@@ -262,10 +260,9 @@ Custom Suite Setup
     the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_5_NAME}  ${SMALL_ORGANISATION_SIZE}
 
 the user enters invalid inputs in the other funding fields
-    [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
+    [Arguments]    ${SOURCE}    ${DATE}
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
-    the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
     Set Focus To Element                    css = button.govuk-button[type="submit"]
 
 Remove row

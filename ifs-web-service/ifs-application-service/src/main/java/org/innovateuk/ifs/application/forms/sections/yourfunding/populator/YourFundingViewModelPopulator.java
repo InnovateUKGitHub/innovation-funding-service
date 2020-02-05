@@ -6,7 +6,10 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.Manag
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -16,6 +19,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -48,6 +52,9 @@ public class YourFundingViewModelPopulator {
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         if (user.isInternalUser()) {
@@ -91,13 +98,14 @@ public class YourFundingViewModelPopulator {
                 yourOrganisationSectionId,
                 applicationFinance.getMaximumFundingLevel(),
                 format("/application/%d/form/FINANCE", applicationId),
-                overridingFundingRules);
+                overridingFundingRules,
+                fundingLevelPercentageToggle);
     }
 
     private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         return new ManagementYourFundingViewModel(applicationId, sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), fundingLevelPercentageToggle);
 
     }
 

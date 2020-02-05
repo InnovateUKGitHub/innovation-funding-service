@@ -258,10 +258,9 @@ Academic partner spend profile: validations
     [Documentation]    INFUND-5846
     [Tags]
     Given the user clicks the button/link            jQuery = .button-secondary:contains("Edit spend profile")
-    When the user enters text to a text field        css = .spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
     And the user enters text to a text field         css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
     And Set Focus To Element                         css = .spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
-    Then the user should see the validation messages triggred
+    Then the user should see a summary error         Your total costs are higher than your eligible costs.
     And academic partner enter valid values in spend profile then should'e see validation error messages
 
 
@@ -664,7 +663,6 @@ the lead partner can see calculations in the spend profile table
     the sum of tds equals the total    .spend-profile-table  7  50  1100    # Other costs
 
 the lead partner can edit his spend profile with invalid values and see the error messages
-    the user should see the element         jQuery = th:contains("Labour") + td input
     the user enters text to a text field    jQuery = th:contains("Labour") + td input   520
     Set Focus To Element                    jQuery = th:contains("Overheads") + td input
     the user should see the element         jQuery = .govuk-error-summary:contains("Unable to submit spend profile.")
@@ -677,13 +675,6 @@ the lead partner can edit his spend profile with invalid values and see the erro
     the user clicks the button/link         jQuery = .button-secondary:contains("Edit spend profile")
     the user enters text to a text field    jQuery = th:contains("Labour") + td input  10
     the user should not see the element     jQuery = .govuk-form-group--error th:contains("Labour")
-    the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  -55
-    Set Focus To Element                    jQuery = th:contains("Overheads") ~ td:nth-child(5)
-    the user should see the element         jQuery = .govuk-error-summary__list li:contains("This field should be 0 or higher")
-    the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  35.25
-    Set Focus To Element                    jQuery = th:contains("Overheads") ~ td:nth-child(5)
-    the user should see the element         jQuery = .govuk-error-summary__list li:contains("${only_accept_whole_numbers_message}")
-    the user clicks the button/link         jQuery = .button-secondary:contains("Save and return to spend profile overview")
     the user should not see an error in the page
     the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  0
     Set Focus To Element                    css = .spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
@@ -735,7 +726,6 @@ project Manager doesn't have the option to send spend profiles until all partner
 the user should see the validation messages triggred
     the user should see a summary error         Your total costs are higher than your eligible costs.
     the user clicks the button/link             jQuery = .button-secondary:contains("Save and return to spend profile overview")
-    the user should see a summary error         This field should be 0 or higher.
 
 academic partner enter valid values in spend profile then should'e see validation error messages
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    3  # Staff
@@ -744,8 +734,6 @@ academic partner enter valid values in spend profile then should'e see validatio
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    2  # Estates
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(1) input    0  # Other - Directly allocated
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
-    Set Focus To Element                     link = Set up your project
-    the user should not see the element      jQuery = .govuk-error-message:contains("This field should be 0 or higher")
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(2) input    0  # Other - Exceptions
