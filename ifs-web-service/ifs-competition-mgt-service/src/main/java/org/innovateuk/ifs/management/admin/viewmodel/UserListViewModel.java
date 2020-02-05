@@ -8,7 +8,6 @@ import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.joining;
@@ -123,19 +122,12 @@ public class UserListViewModel {
     }
 
     private String getRoleDisplay(Role role, Set<RoleProfileStatusResource> roleProfileStatusResources) {
-        if (Role.ASSESSOR.equals(role)) {
-            Optional<RoleProfileStatusResource> roleProfileStatusResource = roleProfileStatusResources.stream()
-                    .filter(profile -> profile.getProfileRole().equals(ProfileRole.ASSESSOR))
-                    .findAny();
-
-            if (roleProfileStatusResource.isPresent()
-                    && !roleProfileStatusResource.get().getRoleProfileState().equals(RoleProfileState.ACTIVE)) {
-
-                return String.format("%s (%s)", ASSESSOR.getDisplayName(), roleProfileStatusResource.get().getRoleProfileState().getDescription());
-            }
-        }
-
-        return role.getDisplayName();
+        return roleProfileStatusResources.stream()
+                .filter(profile -> ProfileRole.ASSESSOR.equals(profile.getProfileRole()))
+                .filter(profile -> !RoleProfileState.ACTIVE.equals(profile.getRoleProfileState()))
+                .findAny()
+                .map(profile -> String.format("%s (%s)", ASSESSOR.getDisplayName(), profile.getRoleProfileState().getDescription().toLowerCase()))
+                .orElse(role.getDisplayName());
     }
 
     @Override
