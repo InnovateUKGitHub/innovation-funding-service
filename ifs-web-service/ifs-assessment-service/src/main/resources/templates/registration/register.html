@@ -34,7 +34,8 @@
                         <th:block th:if="${#fields.hasErrors('firstName')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                         </th:block>
-                        <input class="govuk-input govuk-!-width-one-half"
+                        <input id="firstName"
+                               class="govuk-input govuk-!-width-one-half"
                                th:errorclass="govuk-input--error"
                                type="text"
                                th:field="*{firstName}"
@@ -81,7 +82,8 @@
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                         </th:block>
-                        <input class="govuk-input govuk-!-width-one-half"
+                        <input id="phoneNumber"
+                               class="govuk-input govuk-!-width-one-half"
                                th:errorclass="govuk-input--error"
                                type="tel"
                                th:field="*{phoneNumber}"

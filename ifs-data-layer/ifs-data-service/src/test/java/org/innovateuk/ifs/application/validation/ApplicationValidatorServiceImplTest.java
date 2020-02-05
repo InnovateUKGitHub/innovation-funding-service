@@ -338,7 +338,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void getProjectCostHandler() {
-        GrantClaimPercentage grantClaim = new GrantClaimPercentage(1L, 20, 1L);
+        GrantClaimPercentage grantClaim = new GrantClaimPercentage(1L, BigDecimal.valueOf(20), 1L);
         FinanceRowHandler expected = new GrantClaimPercentageHandler();
 
         when(projectFinanceRowService.getCostHandler(grantClaim)).thenReturn(expected);

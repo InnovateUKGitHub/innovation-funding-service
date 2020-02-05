@@ -101,7 +101,9 @@
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                         </th:block>
-                        <input type="tel"
+                        <input
+                               id="phoneNumber"
+                               type="tel"
                                th:errorclass="govuk-input--error"
                                class="govuk-input govuk-grid-column-one-half"
                                th:readonly="${readonly}"

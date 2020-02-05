@@ -33,8 +33,8 @@ ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 ${adminChangeEmailOld}    aaron.powell@example.com
 ${adminChangeEmailNew}    aaron.powell2@example.com
-${supportChangeEmailOld}  megan.rowland@gmail.com
-${supportChangeEmailNew}  megan.rowland2@gmail.com
+${supportChangeEmailOld}  irene.jones@example.com
+${supportChangeEmailNew}  irene.jones2@example.com
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -285,6 +285,21 @@ Deactivated user cannot login until he is activated
     When log in as a different user           ${email}  ${short_password}
     Then the user should not see an error in the page
 
+Admin can view assessor status unavailable
+     [Documentation]  IFS-7023
+     [Setup]   log in as a different user            &{ifs_admin_user_credentials}
+     Given the user clicks the button/link       link = Manage users
+     When the user enters text to a text field   id = filter  Isaac
+     And the user clicks the button/link         css = input[type="submit"]
+     And the user clicks the button/link         link = Edit
+     Then user should see the correct assessor status    Unavailable
+
+Comp Admin can view assessor status
+    [Documentation]  IFS-7023
+    Given log in as a different user            &{Comp_admin1_credentials}
+    When the user navigates to the page         ${server}/management/admin/user/311/active
+    Then user should see the correct assessor status    Disabled
+
 Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50
     [Tags]
@@ -427,8 +442,12 @@ the user should no longer see the application is capable of being marked as succ
 the administrator sees the external user details
     the user should see the element      jQuery = h1:contains("View user details")
     the user should see the element      jQuery = dd:contains("Aaron") ~ dd:contains("Powell")
-    the user should see the element      jQuery = dl:contains("Role profile"):contains("Applicant"):contains("Active")
+    the user should see the element      jQuery = td:contains("Applicant") ~ td:contains("Active")
 
 the user confirms email change
     the user selects the checkbox    confirmation
     the user clicks the button/link  id = confirm-email-change
+
+user should see the correct assessor status
+    [Arguments]  ${status}
+    the user should see the element   jQuery = td:contains("Assessor") ~ td:contains("${status}")

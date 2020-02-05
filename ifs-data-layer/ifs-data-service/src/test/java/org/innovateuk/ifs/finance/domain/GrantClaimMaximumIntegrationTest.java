@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -186,7 +187,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         return financeBuilderWithoutCosts.
                                 withIndustrialCosts(costBuilder -> costBuilder.
                                         withOrganisationSize(organisationSize.orElse(null)).
-                                        withGrantClaim(0));
+                                        withGrantClaim(BigDecimal.ZERO));
                     }
 
                 }).

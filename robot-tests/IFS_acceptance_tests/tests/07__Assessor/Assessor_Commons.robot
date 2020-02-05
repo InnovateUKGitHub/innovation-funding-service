@@ -40,7 +40,7 @@ the assessor adds score and feedback for every question
       \    Wait for autosave
       \    mouse out  css = .editor
       \    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link               jquery = button:contains("Save and return to assessment overview")
+    The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
 
 the competition admin invites assessors to the competition
     the competition admin selects assessors and add them to invite list

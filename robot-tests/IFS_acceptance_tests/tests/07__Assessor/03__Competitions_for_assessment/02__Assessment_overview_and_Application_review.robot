@@ -212,7 +212,7 @@ the user clicks previous and goes to the page
 
 the finance summary total should be correct
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(3)    30%
+    Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(3)    30.00%
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
@@ -251,7 +251,7 @@ The project costs are correct in the overview
 The academic finances are correct
     The user should see the element       jQuery = .table-overview td:contains("3 months")
     The user should see the element       jQuery = .table-overview td:contains("£990")
-    The user should see the element       jQuery = .table-overview td:contains("100%")
+    The user should see the element       jQuery = .table-overview td:contains("100.00%")
     The user should see the element       jQuery = .table-overview td:contains("990")
 
 Custom suite setup
@@ -263,11 +263,11 @@ Custom suite teardown
     Disconnect from database
 
 the user fills in rejection details
-    And the user should see the element                    id = rejectReason
-    the user selects the option from the drop-down menu    Select a reason    id = rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
+    the user should see the element                         id = rejectReasonValid
+    the user selects the option from the drop-down menu    Select a reason    id = rejectReasonValid   # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
     the user clicks the button/link                        jquery = button:contains("Reject")
     the user should see a field error                      Please enter a reason.
-    Select From List By Index                              id = rejectReason    1
+    Select From List By Index                              id = rejectReasonValid    1
     the user should not see an error in the page
     The user enters text to a text field                   id = rejectComment    Have conflicts with the area of expertise.
 

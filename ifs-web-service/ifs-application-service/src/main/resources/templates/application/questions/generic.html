@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=${model.questionName},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head"
+                  th:with="pageTitle=${model.questionName} + ' - ' + ${applicationName},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    </th:block>
 </head>
 <body class="govuk-template__body">
 <th:block th:insert="fragments/modals :: modal-overlay"/>

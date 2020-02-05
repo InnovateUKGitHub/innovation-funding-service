@@ -12,9 +12,9 @@ import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
@@ -77,7 +77,7 @@ public class FinanceChecksViabilityController {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveViability(projectId, organisationId, Viability.REVIEW, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, ViabilityState.REVIEW, form, validationHandler, model, successView);
     }
 
     @PostMapping(params = "confirm-viability")
@@ -91,10 +91,10 @@ public class FinanceChecksViabilityController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        return doSaveViability(projectId, organisationId, Viability.APPROVED, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, ViabilityState.APPROVED, form, validationHandler, model, successView);
     }
 
-    private String doSaveViability(Long projectId, Long organisationId, Viability viability, FinanceChecksViabilityForm form,
+    private String doSaveViability(Long projectId, Long organisationId, ViabilityState viability, FinanceChecksViabilityForm form,
                                    ValidationHandler validationHandler, Model model, Supplier<String> successView) {
 
         Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
@@ -144,7 +144,7 @@ public class FinanceChecksViabilityController {
             throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));
         }
 
-        boolean viabilityConfirmed = viability.getViability() == Viability.APPROVED;
+        boolean viabilityConfirmed = viability.getViability() == ViabilityState.APPROVED;
 
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
@@ -155,7 +155,7 @@ public class FinanceChecksViabilityController {
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
         Integer totalCosts = toZeroScaleInt(financesForOrganisation.getTotal());
-        Integer percentageGrant = financesForOrganisation.getGrantClaimPercentage();
+        BigDecimal percentageGrant = financesForOrganisation.getGrantClaimPercentage();
         Integer fundingSought = toZeroScaleInt(financesForOrganisation.getTotalFundingSought());
         Integer otherPublicSectorFunding = toZeroScaleInt(financesForOrganisation.getTotalOtherFunding());
         Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());

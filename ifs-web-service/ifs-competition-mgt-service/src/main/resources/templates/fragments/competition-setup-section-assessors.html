@@ -50,6 +50,7 @@
                        type="number"
                        min="0"
                        max="99999999"
+                       data-prevent-input-non-number
                        th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
                        data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},

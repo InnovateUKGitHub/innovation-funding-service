@@ -12,7 +12,6 @@ import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -96,7 +95,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     @Override
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findById(projectId).get();
-        ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
         PartnerOrganisation lead = project.getLeadOrganisation().get();
 
         Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
@@ -117,7 +115,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
-        projectTeamStatusResource.setProjectState(process.getProcessState());
+        projectTeamStatusResource.setProjectState(project.getProjectProcess().getProcessState());
         projectTeamStatusResource.setProjectManagerAssigned(getProjectManager(project).isPresent());
 
         return serviceSuccess(projectTeamStatusResource);
@@ -341,7 +339,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeCheckStatus, spendProfile);
         if (COMPLETE.equals(spendProfileStatus) && !ApprovalType.APPROVED.equals(spendProfileWorkflowHandler.getApproval(project))) {
-            return project.getSpendProfileSubmittedDate() != null ? PENDING : ACTION_REQUIRED;
+            return project.getSpendProfileSubmittedDate() != null ? PENDING : LEAD_ACTION_REQUIRED;
         } else {
             return spendProfileStatus;
         }

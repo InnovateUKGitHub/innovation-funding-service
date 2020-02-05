@@ -1,4 +1,4 @@
-FROM boxfuse/flyway:5.0.7
+FROM boxfuse/flyway:5.2.4
 MAINTAINER Ravish Bhagdev <ravish.bhagdev@gmail.com>
 VOLUME /tmp
 RUN apt-get update -y && apt-get install -y mysql-client

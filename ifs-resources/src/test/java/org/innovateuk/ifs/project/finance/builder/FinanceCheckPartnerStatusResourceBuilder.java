@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,8 +41,12 @@ public class FinanceCheckPartnerStatusResourceBuilder extends BaseBuilder<Financ
         return withArray((name, financeCheckPartnerStatusResource) -> setField("name", name, financeCheckPartnerStatusResource), names);
     }
 
-    public FinanceCheckPartnerStatusResourceBuilder withEligibility(EligibilityState... eligibilitys) {
-        return withArray((eligibility, financeCheckPartnerStatusResource) -> setField("eligibility", eligibility, financeCheckPartnerStatusResource), eligibilitys);
+    public FinanceCheckPartnerStatusResourceBuilder withEligibility(EligibilityState... eligibilities) {
+        return withArray((eligibility, financeCheckPartnerStatusResource) -> financeCheckPartnerStatusResource.setEligibility(eligibility), eligibilities);
+    }
+
+    public FinanceCheckPartnerStatusResourceBuilder withViability(ViabilityState... viabilities) {
+        return withArray((viability, financeCheckPartnerStatusResource) -> financeCheckPartnerStatusResource.setViability(viability), viabilities);
     }
 
     public static class FinanceCheckEligibilityResourceBuilder extends BaseBuilder<FinanceCheckEligibilityResource, FinanceCheckEligibilityResourceBuilder> {

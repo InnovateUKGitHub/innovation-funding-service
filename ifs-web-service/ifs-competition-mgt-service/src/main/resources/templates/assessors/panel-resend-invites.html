@@ -26,7 +26,7 @@
 
                 <form th:action="@{/panel/competition/{competitionId}/assessors/invite/resend(competitionId=${model.competitionId})}"  novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
                     <div class="govuk-form-group govuk-!-margin-bottom-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="${#ids.next('subject')}">
+                        <label class="govuk-label" for="subject">
                             Subject
                         </label>
                         <th:block th:if="${#fields.hasErrors('subject')}">

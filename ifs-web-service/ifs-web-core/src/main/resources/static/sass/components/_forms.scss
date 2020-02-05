@@ -85,6 +85,10 @@ tr {
     padding-left:0;
     vertical-align: bottom;
 
+    &.govuk-table__cell--numeric {
+      vertical-align: middle;
+    }
+
     input {
       vertical-align: top;
     }

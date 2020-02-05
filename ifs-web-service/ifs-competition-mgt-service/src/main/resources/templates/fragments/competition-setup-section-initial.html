@@ -194,7 +194,9 @@
                                 <label class="govuk-label" for="openingDateDay">
                                     Day
                                 </label>
-                                <input th:readonly="${model.general.state.setupAndLive}"
+                                <input
+                                     id="openingDateDay"
+                                     th:readonly="${model.general.state.setupAndLive}"
                                      class="govuk-input govuk-input--width-2"
                                      th:errorclass="govuk-input--error"
                                      type="number"
@@ -210,7 +212,9 @@
                                 <label class="govuk-label" for="openingDateMonth">
                                     Month
                                 </label>
-                                <input th:readonly="${model.general.state.setupAndLive}"
+                                <input
+                                     id="openingDateMonth"
+                                     th:readonly="${model.general.state.setupAndLive}"
                                      class="govuk-input govuk-input--width-2"
                                      th:errorclass="govuk-input--error"
                                      type="number"
@@ -226,7 +230,9 @@
                                 <label class="govuk-label" for="openingDateYear">
                                     Year
                                 </label>
-                                <input th:readonly="${model.general.state.setupAndLive}"
+                                <input
+                                     id="openingDateYear"
+                                     th:readonly="${model.general.state.setupAndLive}"
                                      class="govuk-input govuk-input--width-4"
                                      th:errorclass="govuk-input--error"
                                      type="number"

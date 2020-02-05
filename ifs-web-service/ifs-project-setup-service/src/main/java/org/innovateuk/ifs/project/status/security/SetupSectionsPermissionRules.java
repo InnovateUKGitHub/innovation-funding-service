@@ -105,12 +105,6 @@ public class SetupSectionsPermissionRules {
                 .orElse(false);
     }
 
-    @PermissionRule(value = "ACCESS_PROJECT_START_DATE_PAGE", description = "A lead can access the Project Start Date " +
-            "page when their Companies House data is complete or not required, and the Spend Profile has not yet been generated")
-    public boolean leadCanAccessProjectStartDatePage(ProjectCompositeId projectCompositeId, UserResource user) {
-        return !isMonitoringOfficerOnProject(projectCompositeId.id(), user.getId()) && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
-    }
-
     @PermissionRule(value = "ACCESS_PROJECT_ADDRESS_PAGE", description = "A lead can access the Project Address " +
             "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
     public boolean leadCanAccessProjectAddressPage(ProjectCompositeId projectCompositeId, UserResource user) {

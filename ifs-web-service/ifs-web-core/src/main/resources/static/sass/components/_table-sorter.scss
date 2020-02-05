@@ -6,9 +6,10 @@
     cursor: pointer;
     white-space: normal;
     padding: 4px 20px 4px 4px;
+    outline: none;
 
     &:focus {
-      outline: none;
+      background-color: $govuk-focus-colour;
     }
   }
 

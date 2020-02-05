@@ -52,9 +52,9 @@ the assessor updates profile details
     The user enters text to a text field  id = firstName    Joy
     The user enters text to a text field  id = lastName    Archer
     Set Focus To Element                  id = firstName
-    the user enters text to a text field  id = addressForm.addressLine1    7, Phoenix house
-    the user enters text to a text field  id = addressForm.town    Reading
-    the user enters text to a text field  id = addressForm.postcode    RG1 7UH
+    the user enters text to a text field  id = addressLine1    7, Phoenix house
+    the user enters text to a text field  id = town    Reading
+    the user enters text to a text field  id = postcode    RG1 7UH
     the user enters text to a text field  id = phoneNumber    18549731414
     the user clicks the button/link       jQuery = button:contains("Save and return to your details")
 
@@ -76,9 +76,9 @@ the user enters the invalid details
     the user enters text to a text field     id = firstName    Joy12
     the user enters text to a text field     id = lastName    Archer12
     the user enters text to a text field     id = phoneNumber    18549731414test
-    the user enters text to a text field     id = addressForm.addressLine1    ${EMPTY}
-    the user enters text to a text field     id = addressForm.town    ${EMPTY}
-    the user enters text to a text field     id = addressForm.postcode    ${EMPTY}
+    the user enters text to a text field     id = addressLine1    ${EMPTY}
+    the user enters text to a text field     id = town    ${EMPTY}
+    the user enters text to a text field     id = postcode    ${EMPTY}
     the user clicks the button/link          jQuery = button:contains("Save and return to your details")
 
 the user should see the validation messages

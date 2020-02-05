@@ -49,7 +49,7 @@
                     </th:block>
                     <dt th:unless="${model.financeCheckSummaryResource.loan}">Total percentage grant:</dt>
                     <dt th:if="${model.financeCheckSummaryResource.loan}">Total percentage loan:</dt>
-                    <dd th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalPercentageGrant,1,'NONE')+'%'}"></dd>
+                    <dd th:text="${#numbers.formatDecimal(model.financeCheckSummaryResource.totalPercentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}"></dd>
                 </dl>
                 <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View
                     finances</a>

@@ -88,6 +88,18 @@ table {
   .govuk-table__header {
     vertical-align: bottom;
   }
+
+  .shaded-cell {
+    background-color: govuk-colour("grey-4");
+  }
+
+  .border-left-cell {
+    border-left: 2px solid govuk-colour("grey-2");
+  }
+
+  .border-right-cell {
+    border-right: 2px solid govuk-colour("grey-2");
+  }
 }
 
 @include media-down(mobile) {
@@ -291,4 +303,33 @@ hr,
   &.button-clear {
     vertical-align: baseline;
   }
+}
+
+/* Remove after framework upgrade to > 3.0 . */
+@mixin focus-style {
+
+  &:focus {
+    outline: 3px solid transparent;
+    color: $govuk-text-colour;
+    background-color: #fd0;
+    -webkit-box-shadow: 0 -2px #fd0, 0 4px $govuk-text-colour;
+    box-shadow: 0 -2px #fd0, 0 4px $govuk-text-colour;
+    text-decoration: none;
+
+    &:visited {
+      color: $govuk-text-colour;
+    }
+  }
+}
+
+.govuk-link {
+  @include focus-style;
+}
+
+.govuk-footer__link {
+  @include focus-style;
+}
+
+.govuk-back-link {
+  @include focus-style;
 }

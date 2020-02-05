@@ -2,13 +2,16 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
+import javax.validation.Valid;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -26,10 +29,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
-
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
@@ -42,7 +41,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "application/sections/your-organisation/your-organisation-with-growth-table";
 
     private CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator;
-    private YourOrganisationViewModelPopulator viewModelPopulator;
+    private ApplicationYourOrganisationViewModelPopulator viewModelPopulator;
     private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
     private SectionService sectionService;
     private UserRestService userRestService;
@@ -51,7 +50,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     @Autowired
     YourOrganisationWithGrowthTableController(
             CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator,
-            YourOrganisationViewModelPopulator viewModelPopulator,
+            ApplicationYourOrganisationViewModelPopulator viewModelPopulator,
             YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator,
             SectionService sectionService,
             UserRestService userRestService,

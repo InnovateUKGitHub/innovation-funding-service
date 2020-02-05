@@ -59,10 +59,10 @@
                                    type="checkbox" data-switches-button-status="#agree-terms-button"
                                    id="agreed"
                                    th:field="*{agreed}" />
-                            <label th:unless="${model.additionalTerms}" for="agreed"  class="govuk-label govuk-checkboxes__label">
+                            <label th:unless="${model.additionalTerms}" for="agreed" class="govuk-label govuk-checkboxes__label">
                                 I agree to the award terms and conditions set out by Innovate UK.
                             </label>
-                            <label th:if="${model.additionalTerms}" class="govuk-label govuk-checkboxes__label">
+                            <label th:if="${model.additionalTerms}" for="agreed" class="govuk-label govuk-checkboxes__label">
                                 I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}">full terms and conditions</a> set out by the funding authority.
                                 I understand I need to agree to the final contract if my application is successful.
                             </label>

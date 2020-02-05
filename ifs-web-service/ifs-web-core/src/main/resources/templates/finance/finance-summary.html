@@ -76,7 +76,7 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <strong>&pound;<th:block th:text="${#numbers.formatInteger(row.costs, 0, 'DEFAULT')}" /></strong>
                     </td>
-                    <th:block th:with="fundingLevel=|${row.claimPercentage}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
+                    <th:block th:with="fundingLevel=|${#numbers.formatDecimal(row.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
                     </th:block>

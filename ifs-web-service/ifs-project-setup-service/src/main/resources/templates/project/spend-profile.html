@@ -159,6 +159,7 @@
                                             th:id="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
                                             th:value="${cost != null ? #numbers.formatInteger(cost,1,'NONE') : ''}"
                                             type="number"
+                                            data-prevent-input-non-number
                                             min="0"
                                             required="required" />
                                     </td>
@@ -226,6 +227,7 @@
                                                        th:id="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
                                                        th:value="${#numbers.formatInteger(cost,1,'NONE')}"
                                                        type="number"
+                                                       data-prevent-input-non-number
                                                        min="0"
                                                        required="required" />
                                             </td>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" th:with="pageTitle=${model.displayAssessorTitle ? 'Assessor details' : 'View user details'}">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to manage users',linkUrl=@{/admin/users/active},dynamicBackLink=${true}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">You are unable to update user's details.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${pageTitle},size='govuk-heading-xl'" />
+        <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+            <th:block th:if="${model.canEditUserDetails}">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
+                  <label class="govuk-label" for="firstName">
+                      First name
+                  </label>
+                  <th:block th:if="${#fields.hasErrors('firstName')}">
+                      <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                  </th:block>
+                  <input id="firstName"
+                         class="govuk-input"
+                         type="text"
+                         required="required"
+                         minlength="2"
+                         maxlength="70"
+                         th:errorclass="govuk-input--error"
+                         th:field="*{firstName}"
+                         pattern="\D{2,}"
+                         th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                  data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                  data-pattern-errormessage=#{validation.standard.firstname.invalid},
+                                  data-required-errormessage=#{validation.standard.firstname.required}" />
+                </div>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
+                  <label class="govuk-label" for="lastName">
+                      Last name
+                  </label>
+                  <th:block th:if="${#fields.hasErrors('lastName')}">
+                      <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                  </th:block>
+                  <input id="lastName"
+                         class="govuk-input"
+                         type="text"
+                         required="required"
+                         minlength="2"
+                         maxlength="70"
+                         th:errorclass="govuk-input--error"
+                         th:field="*{lastName}"
+                         pattern="\D{2,}"
+                         th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                  data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                  data-pattern-errormessage=#{validation.standard.lastname.invalid},
+                                  data-required-errormessage=#{validation.standard.lastname.required}" />
+                </div>
+            </th:block>
+            <dl class="govuk-list">
+                <th:block th:unless="${model.canEditUserDetails}">
+                    <dl class="govuk-list">
+                        <dt>First name</dt>
+                        <dd th:text="${model.user.firstName}">Steve</dd>
+                        <dt>Last name</dt>
+                        <dd th:text="${model.user.lastName}">Smith</dd>
+                    </dl>
+                </th:block>
+                <th:block th:if="${model.user.phoneNumber != null}">
+                    <dt>Phone number</dt>
+                    <dd th:text="${model.user.phoneNumber}">999</dd>
+                </th:block>
+            </dl>
+            <th:block th:unless="${model.readOnly}">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="email">
+                        Email
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('email')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-!-width-one-half"
+                           id="email"
+                           th:errorclass="govuk-input--error"
+                           type="email"
+                           th:field="*{email}"
+                           maxlength="256"
+                           required="required"
+                           th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                    data-required-errormessage=#{validation.standard.emailinternal.required}" />
+                </div>
+            </th:block>
+            <th:block th:if="${model.readOnly}">
+                <dl class="govuk-list">
+                    <dt>Email address</dt>
+                    <dd th:text="${model.user.email}">email@email.com</dd>
+                </dl>
+            </th:block>
+            <th:block th:if="${model.canEditUserDetails}">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('role')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="role">
+                        Role
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('role')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                    </th:block>
+                    <select name="role"
+                            class="govuk-select"
+                            id="role"
+                            th:field="*{role}"
+                            required="required"
+                            data-required-errormessage="Please select a role">
+                        <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
+                    </select>
+                </div>
+            </th:block>
+            <th:block th:unless="${model.canEditUserDetails}">
+                <div class="table-overflow">
+                    <table class="govuk-table" id="application-list">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Role profile</th>
+                            <th class="govuk-table__header" scope="col">Role status</th>
+                            <th class="govuk-table__header alignright" scope="col"><span class="govuk-visually-hidden">View role profile</span></th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="role : ${model.user.roles}"
+                            th:with="canDisableRole=${role.isAssessor() and model.displayRoleProfileLink}">
+                            <td class="govuk-table__cell" th:text="${role.displayName}"></td>
+                            <td class="govuk-table__cell" th:text="${model.roleDisplay(role)}"></td>
+                            <td class="govuk-table__cell alignright">
+                                <th:block th:if="${canDisableRole and !model.support}">
+                                    <a class="govuk-link" href="#">View role profile</a>
+                                </th:block>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </th:block>
+            <dl class="govuk-list">
+                <dt>Status</dt>
+                <dd th:text="${model.user.statusDisplay}">Active</dd>
+            </dl>
+
+            <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).ACTIVE) and !model.readOnly}">
+                <button class="button-clear" data-js-modal="modal-confirm-deactivate-user" type="button">Deactivate user</button>
+                <th:block th:insert="fragments/modals :: modal-confirm-deactivate-user" />
+            </th:block>
+
+            <div th:unless="${model.readOnly}" class="govuk-form-group govuk-!-margin-top-6">
+                <button class="govuk-button">Save and return</button>
+                <a class="button-clear" th:href="@{/admin/users/active}">Cancel</a>
+            </div>
+
+            <div class="govuk-form-group govuk-!-margin-top-6">
+                <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+                   th:href="@{/admin/users/active}"
+                   class="button-secondary">Return to manage users</a>
+                <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+                   th:href="${cookieBackLinkUrl}"
+                   class="button-secondary"
+                   th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to application overview</a>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

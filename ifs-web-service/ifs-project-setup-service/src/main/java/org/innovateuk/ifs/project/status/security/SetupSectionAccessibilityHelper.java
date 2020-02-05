@@ -105,22 +105,6 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
-    public SectionAccess leadCanAccessProjectStartDatePage(OrganisationResource organisation) {
-        if (setupProgressChecker.isOfflineOrWithdrawn()) {
-            return NOT_ACCESSIBLE;
-        }
-
-        if (isCompaniesHouseIncompleteOrNotLeadPartner(organisation)) {
-            return NOT_ACCESSIBLE;
-        }
-
-        if (isSpendProfileGenerated()) {
-            return NOT_ACCESSIBLE;
-        }
-
-        return ACCESSIBLE;
-    }
-
     public SectionAccess leadCanAccessProjectAddressPage(OrganisationResource organisation) {
         if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
@@ -131,14 +115,6 @@ public class SetupSectionAccessibilityHelper {
         }
 
         return ACCESSIBLE;
-    }
-
-    private boolean isCompaniesHouseIncompleteOrNotLeadPartner(OrganisationResource organisation) {
-
-        return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Unable to access until Companies House details are complete for Organisation")
-                || !setupProgressChecker.isLeadPartnerOrganisation(organisation);
-
     }
 
     private boolean isCompaniesHouseIncompleteOrGOLAlreadyGenerated(OrganisationResource organisation) {

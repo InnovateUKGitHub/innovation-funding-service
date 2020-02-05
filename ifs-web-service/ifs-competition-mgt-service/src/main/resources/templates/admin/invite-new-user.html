@@ -22,13 +22,14 @@
 
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" th:for="${#ids.next('firstName')}">
+                <label class="govuk-label" for="firstName">
                     First name
                 </label>
                 <th:block th:if="${#fields.hasErrors('firstName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input id="firstName"
+                       class="govuk-input"
                        type="text"
                        th:errorclass="govuk-input--error"
                        th:field="*{firstName}"
@@ -42,13 +43,14 @@
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" th:for="${#ids.next('lastName')}">
+                <label class="govuk-label" for="lastName">
                     Last name
                 </label>
                 <th:block th:if="${#fields.hasErrors('lastName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input id="lastName"
+                       class="govuk-input"
                        type="text"
                        th:errorclass="govuk-input--error"
                        th:field="*{lastName}"
@@ -62,13 +64,14 @@
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" th:for="${#ids.next('emailAddress')}">
+                <label class="govuk-label" for="emailAddress">
                     Email address
                 </label>
                 <th:block th:if="${#fields.hasErrors('emailAddress')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input id="emailAddress"
+                       class="govuk-input"
                        type="email"
                        th:errorclass="govuk-input--error"
                        th:field="*{emailAddress}"
@@ -78,7 +81,7 @@
                                         data-required-errormessage=#{validation.invite.email.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" th:for="${#ids.next('role')}">
+                <label class="govuk-label" for="role">
                     Role
                 </label>
                 <th:block th:if="${#fields.hasErrors('role')}">

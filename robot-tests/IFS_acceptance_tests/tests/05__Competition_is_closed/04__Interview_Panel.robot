@@ -439,7 +439,7 @@ an applicant can see the feedback given by as assessor
     the user should see the element      jQuery = h3:contains("Additional Innovate UK feedback") ~ a:contains("testing_5MB.pdf")
     the user clicks the button/link      jQuery = a:contains("Business opportunity")
     the user should see the element      jQuery = p:contains("This is the business opportunity feedback")
-    the user should see the element      jQuery = h2:contains("Average score: 8/ 10")
+    the user should see the element      jQuery = h2:contains("Average score: 8.0/ 10")
 
 an applicant uploads response to an applicantion
     log in as a different user                 ${peter_styles_email}   ${short_password}

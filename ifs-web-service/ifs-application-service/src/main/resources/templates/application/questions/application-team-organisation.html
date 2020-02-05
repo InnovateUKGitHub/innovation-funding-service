@@ -39,7 +39,8 @@
                 <th:block th:if="${#fields.hasErrors('organisationName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
                 </th:block>
-                <input type="text"
+                <input id="organisationName"
+                       type="text"
                        class="govuk-input"
                        th:field="*{organisationName}"
                        required="required"

@@ -25,7 +25,7 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-631 As a comp executive I am able to confirm if an interview stage is required in competition setup
 ...
-...               IFS-4982 Move Funding type selection from front door to Initial details
+...               IFS-4982 Move Funding type selection from front door to Initial detail
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -225,12 +225,9 @@ Assessor: Server-side validation
 
 Assessor: Client-side validation
     [Documentation]  INFUND-5641
-    When The user enters text to a text field    id = assessorPay  1.1
-    And the user selects the radio button        assessorCount   5
-    Then the user should see a field error       This field can only accept whole numbers
+    Given the user selects the radio button       assessorCount   5
     When The user enters text to a text field    id = assessorPay  120
-    And the user selects the radio button        assessorCount   5
-    Then The user should not see the element     jQuery = .govuk-error-message:contains("This field can only accept whole numbers")
+    Then The user should not see the element     jQuery = .govuk-error-message:contains("Please select an assessment panel option.")
     And the user clicks the button/link          link = Competition setup
 
 Documents in project setup: The competition admin is required to enter a title and guidance message
@@ -281,43 +278,43 @@ the validation error above the question should not be visible
 the user fills the milestones with invalid data
     The user enters text to a text field    name = milestoneEntries[OPEN_DATE].day    15
     The user enters text to a text field    name = milestoneEntries[OPEN_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].year    2020
     The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].day    14
     The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].month    1
-    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].year    2019
+    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].year    2020
     The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].day    13
     The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2020
     The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].day    12
     The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2020
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].day    11
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2020
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].day    10
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2020
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].day    9
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2020
     The user enters text to a text field    name = milestoneEntries[LINE_DRAW].day    8
     The user enters text to a text field    name = milestoneEntries[LINE_DRAW].month    1
-    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2020
     The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].day    7
     The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2020
     The user enters text to a text field    name = milestoneEntries[PANEL_DATE].day    6
     The user enters text to a text field    name = milestoneEntries[PANEL_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2020
     The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].day    5
     The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2020
     The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].day    4
     The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].month    1
-    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2020
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    3
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
-    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2018
+    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
 
 Validation summary should be visible
     the user should see a summary error  2. Briefing event: Please enter a future date that is after the previous milestone.
