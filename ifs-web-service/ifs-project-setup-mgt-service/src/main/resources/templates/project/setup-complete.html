@@ -63,7 +63,7 @@
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('successful')}"
                                       th:text="${err}"></span>
                                 </th:block>
-                                <div class="govuk-radios govuk-radios--conditional">
+                                <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id="successful"
                                                type="radio"

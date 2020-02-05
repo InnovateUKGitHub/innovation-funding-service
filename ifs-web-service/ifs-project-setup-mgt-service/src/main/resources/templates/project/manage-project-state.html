@@ -101,7 +101,7 @@
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('state')}"
                               th:text="${err}"></span>
                             </th:block>
-                            <div class="govuk-radios govuk-radios--conditional">
+                            <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
                                 <!-- Handle offline -->
                                 <th:block th:if="${model.canHandleOffline()}">
                                     <div class="govuk-radios__item">
