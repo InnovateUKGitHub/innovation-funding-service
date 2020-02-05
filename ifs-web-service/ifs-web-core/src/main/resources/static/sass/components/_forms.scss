@@ -411,20 +411,18 @@ td {
       margin-top: 20px;
       background-color: govuk-colour("blue");
 
-      &:hover,
-      &:focus {
+      &:hover {
         background-color: darken(govuk-colour("blue"), 5%);
       }
+    }
+  }
 
-      &.disabled,
-      &[disabled]{
-        background-color: govuk-colour("blue");
-
-        &:hover,
-        &:focus {
-          background-color: govuk-colour("blue");
-        }
-      }
+  .inputfile:focus {
+    + label {
+      border-color: $govuk-focus-text-colour;
+      color: $govuk-focus-text-colour;
+      background-color: $govuk-focus-text-colour;
+      box-shadow: 0 2px 0 $govuk-focus-text-colour;
     }
   }
 

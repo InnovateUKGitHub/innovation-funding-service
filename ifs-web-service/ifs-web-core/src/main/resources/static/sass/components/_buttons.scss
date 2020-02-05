@@ -1,4 +1,4 @@
-@import "govuk-frontend/govuk/settings/all";
+  @import "govuk-frontend/govuk/settings/all";
 @import "govuk-frontend/govuk/tools/all";
 @import "govuk-frontend/govuk/helpers/all";
 
@@ -9,36 +9,6 @@ table {
   .govuk-button {
     &:last-child {
       margin-right: 3px;
-    }
-  }
-}
-
-.button-secondary{
-  @extend .govuk-button;
-  @include box-shadow(0 2px 0 darken(govuk-colour("light-grey"), 15%));
-  background-color:govuk-colour("light-grey");
-  color: $govuk-text-colour;
-
-  // Ensure that any global link styles are overridden
-  &:link,
-  &:visited,
-  &:active,
-  &:hover {
-    color: $govuk-text-colour;
-  }
-
-  &:hover,
-  &:focus {
-    background-color: darken(govuk-colour("light-grey"), 5%);
-  }
-
-  &.disabled,
-  &[disabled]{
-    background-color:govuk-colour("light-grey");
-
-    &:hover,
-    &:focus {
-      background-color:govuk-colour("light-grey");
     }
   }
 }
