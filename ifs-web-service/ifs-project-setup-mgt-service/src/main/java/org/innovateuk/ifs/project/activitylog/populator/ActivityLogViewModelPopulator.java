@@ -105,7 +105,7 @@ public class ActivityLogViewModelPopulator {
     private String title(ActivityLogResource activity) {
         String queryType = ofNullable(activity.getQueryType())
                 .map(FinanceChecksSectionType::getDisplayName)
-                .orElse(null);
+                .orElse("");
         return messageSource.getMessage(format("ifs.activity.log.%s.title", activity.getActivityType().name()),
                 new Object[]{queryType},
                 Locale.getDefault());
