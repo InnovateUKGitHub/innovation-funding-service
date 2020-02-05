@@ -124,11 +124,11 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         organisation.setOrganisationType(1L);
 
         MvcResult result = callEndpoint();
-        ProjectYourOrganisationViewModel yourOrganisation = (ProjectYourOrganisationViewModel) result.getModelAndView().getModel().get("yourOrg");
+        ProjectYourOrganisationViewModel yourOrganisation = (ProjectYourOrganisationViewModel) result.getModelAndView().getModel().get("yourOrganisation");
         YourOrganisationWithGrowthTableForm actualForm = (YourOrganisationWithGrowthTableForm) result.getModelAndView().getModel().get("form");
 
         sharedAssertions(result, organisation.getAddresses().get(0).getAddress());
-        assertEquals(yourOrganisation, result.getModelAndView().getModel().get("yourOrg"));
+        assertEquals(yourOrganisation, result.getModelAndView().getModel().get("yourOrganisation"));
 
         assertEquals(organisationId, yourOrganisation.getOrganisationId());
         assertEquals(projectId, yourOrganisation.getProjectId());
@@ -138,7 +138,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
     }
 
     private void sharedAssertions (MvcResult result, AddressResource expectedAddress){
-        OrganisationDetailsViewModel orgDetails = (OrganisationDetailsViewModel) result.getModelAndView().getModel().get("orgDetails");
+        OrganisationDetailsViewModel orgDetails = (OrganisationDetailsViewModel) result.getModelAndView().getModel().get("organisationDetails");
         assertEquals("project/organisation-details-with-growth-table", result.getModelAndView().getViewName());
         assertEquals(expectedAddress.getAddressLine1(), orgDetails.getAddressLine1());
         assertEquals(expectedAddress.getAddressLine2(), orgDetails.getAddressLine2());
@@ -167,7 +167,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
 
         sharedAssertions(result, new AddressResource("", "", "", "", "", ""));
 
-        assertNotEquals("yourOrg", result.getModelAndView().getModel());
+        assertNotEquals("yourOrganisation", result.getModelAndView().getModel());
     }
 
     private OrganisationFinancesWithGrowthTableResource getFinances() {

@@ -40,10 +40,10 @@ public class ProjectOrganisationSizeWithGrowthTableController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @SecuredBySpring(value = "READ", description = "Ifs Admin and Project finance users can view edit organisation size page")
-    public String editOrganisationSize(
-                                       @PathVariable long projectId,
-                                       @PathVariable long organisationId,
-                                       Model model) {
+    public String viewPage(
+            @PathVariable long projectId,
+            @PathVariable long organisationId,
+            Model model) {
 
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", formRequest(projectId, organisationId));
