@@ -118,7 +118,7 @@ public class GrantMapperTest {
         Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(30).
+                                withGrantClaimPercentage(BigDecimal.valueOf(30)).
                                 build(1)).
                         build());
         ProjectFinanceResource projectFinance = newProjectFinanceResource()

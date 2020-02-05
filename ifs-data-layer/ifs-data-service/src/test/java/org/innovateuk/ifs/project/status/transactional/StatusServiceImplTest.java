@@ -52,6 +52,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -355,13 +356,13 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
         when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
 
-        ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(0).getId()).build();
+        ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).withOrganisation(organisations.get(0).getId()).build();
         when(applicationFinanceMapper.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);
 
-        ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(1).getId()).build();
+        ApplicationFinanceResource applicationFinanceResource1 = newApplicationFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).withOrganisation(organisations.get(1).getId()).build();
         when(applicationFinanceMapper.mapToResource(applicationFinances.get(1))).thenReturn(applicationFinanceResource1);
 
-        ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(20).withOrganisation(organisations.get(2).getId()).build();
+        ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).withOrganisation(organisations.get(2).getId()).build();
         when(applicationFinanceMapper.mapToResource(applicationFinances.get(2))).thenReturn(applicationFinanceResource2);
 
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);

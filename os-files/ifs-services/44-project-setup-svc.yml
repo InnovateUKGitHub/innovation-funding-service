@@ -61,6 +61,8 @@ items:
                   value: "STDOUT"
                 - name: IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE
                   value: "${IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE}"
+                - name: IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED
+                  value: "${IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED}"
               ports:
                 - containerPort: 8080
               resources:

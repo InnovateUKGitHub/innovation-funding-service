@@ -64,7 +64,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((financeOrganisationDetail, finance) -> setField("financeOrganisationDetails", financeOrganisationDetail, finance), financeOrganisationDetails);
     }
 
-    public S withGrantClaimPercentage(Integer percentage) {
+    public S withGrantClaimPercentage(BigDecimal percentage) {
         return with(finance -> {
             ExcludedCostCategory costCategory = new ExcludedCostCategory();
             costCategory.addCost(new GrantClaimPercentage(null, percentage, finance.getId()));
@@ -202,7 +202,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
     public S thatIsRequestingFunding() {
         return withFinanceOrganisationDetails(asMap(
                 FINANCE, newExcludedCostCategory().withCosts(
-                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(10).build(1)
+                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(BigDecimal.valueOf(10)).build(1)
                 ).build(),
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newOtherCost().
@@ -216,7 +216,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
     public S thatIsNotRequestingFunding() {
         return withFinanceOrganisationDetails(asMap(
                 FINANCE, newExcludedCostCategory().withCosts(
-                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(0).build(1)
+                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(BigDecimal.ZERO).build(1)
                 ).build(),
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newOtherCost().

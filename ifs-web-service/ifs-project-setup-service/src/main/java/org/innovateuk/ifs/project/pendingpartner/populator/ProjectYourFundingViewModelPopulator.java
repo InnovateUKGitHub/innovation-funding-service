@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,6 +38,9 @@ public class ProjectYourFundingViewModelPopulator {
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
+
     public ProjectYourFundingViewModel populate(long projectId, long organisationId) {
         PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
         ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
@@ -52,6 +56,7 @@ public class ProjectYourFundingViewModelPopulator {
                 projectFinance.getMaximumFundingLevel(),
                 locked,
                 competition.getId(),
-                fundingOverridden);
+                fundingOverridden,
+                fundingLevelPercentageToggle);
     }
 }
