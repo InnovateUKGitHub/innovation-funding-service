@@ -105,9 +105,9 @@ public class ActivityLogViewModelPopulatorTest {
                 .withQueryType(null, null, null, FinanceChecksSectionType.VIABILITY)
                 .build(4);
 
-        when(messageSource.getMessage(eq("ifs.activity.log.APPLICATION_SUBMITTED.title"), aryEq(new Object[]{null}), any())).thenReturn("APPLICATION_SUBMITTED");
-        when(messageSource.getMessage(eq("ifs.activity.log.BANK_DETAILS_APPROVED.title"), aryEq(new Object[]{null}), any())).thenReturn("BANK_DETAILS_APPROVED");
-        when(messageSource.getMessage(eq("ifs.activity.log.DOCUMENT_UPLOADED.title"), aryEq(new Object[]{null}), any())).thenReturn("DOCUMENT_UPLOADED");
+        when(messageSource.getMessage(eq("ifs.activity.log.APPLICATION_SUBMITTED.title"), aryEq(new Object[]{""}), any())).thenReturn("APPLICATION_SUBMITTED");
+        when(messageSource.getMessage(eq("ifs.activity.log.BANK_DETAILS_APPROVED.title"), aryEq(new Object[]{""}), any())).thenReturn("BANK_DETAILS_APPROVED");
+        when(messageSource.getMessage(eq("ifs.activity.log.DOCUMENT_UPLOADED.title"), aryEq(new Object[]{""}), any())).thenReturn("DOCUMENT_UPLOADED");
         when(messageSource.getMessage(eq("ifs.activity.log.FINANCE_QUERY.title"), aryEq(new Object[]{"Viability"}), any())).thenReturn("FINANCE_QUERY");
 
         when(messageSource.getMessage(eq("ifs.activity.log.APPLICATION_SUBMITTED.link"), aryEq(new Object[]{null, null}), any())).thenReturn("APPLICATION_SUBMITTED");
