@@ -35,7 +35,7 @@
                         <a class="govuk-button" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
                     </div>
                     <div class="govuk-!-margin-top-6">
-                        <a class="button-secondary" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
+                        <a class="govuk-button govuk-button--secondary" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
                     </div>
                 </th:block>
                 <th:block th:unless="${model.readOnly}">

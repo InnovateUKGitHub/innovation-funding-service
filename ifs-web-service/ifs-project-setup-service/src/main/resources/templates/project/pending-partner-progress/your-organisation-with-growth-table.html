@@ -59,7 +59,7 @@
             <div>
                 <a th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}"
                    th:if="${model.readOnly}"
-                   class="govuk-!-margin-top-6 button-secondary">Return to
+                   class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to
                     join project
                 </a>
                 <button type="submit" th:unless="${model.readOnly}"

@@ -138,7 +138,7 @@
                class="govuk-link">Add a partner organisation</a>
         </p>
         <th:block th:unless="${model.internal}">
-            <a th:href="@{/project/{id}(id=${model.projectId})}" class="button-secondary">Return to setup your project</a>
+            <a th:href="@{/project/{id}(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to setup your project</a>
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>

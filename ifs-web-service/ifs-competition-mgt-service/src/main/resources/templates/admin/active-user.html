@@ -166,10 +166,10 @@
             <div class="govuk-form-group govuk-!-margin-top-6">
                 <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                    th:href="@{/admin/users/active}"
-                   class="button-secondary">Return to manage users</a>
+                   class="govuk-button govuk-button--secondary">Return to manage users</a>
                 <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                    th:href="${cookieBackLinkUrl}"
-                   class="button-secondary"
+                   class="govuk-button govuk-button--secondary"
                    th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to application overview</a>
             </div>
         </form>

@@ -49,7 +49,7 @@
                 <td class="govuk-table__cell">
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                         <button type="submit"
-                                class="button-secondary"
+                                class="govuk-button govuk-button--secondary"
                                 data-js-modal="modal-resend-internal-user"
                                 th:attr="data-modal-form-action=@{/admin/users/pending/resend-invite},data-modal-input-invite-id=${invite.id}">Resend invite</button>
                     </form>

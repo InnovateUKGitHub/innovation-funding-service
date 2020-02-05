@@ -187,7 +187,7 @@
             <div class="govuk-!-margin-top-6">
 
                 <a th:if="${model.readOnly}" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
-                   class="button-secondary">Return to application overview
+                   class="govuk-button govuk-button--secondary">Return to application overview
                 </a>
                 <button class="govuk-button" th:unless="${model.readOnly}" type="submit">Save and return to application overview</button>
             </div>

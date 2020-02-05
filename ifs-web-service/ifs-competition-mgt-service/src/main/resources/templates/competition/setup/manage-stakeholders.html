@@ -156,7 +156,7 @@
                                 <form method="POST"
                                       th:action="@{/competition/setup/{competitionId}/manage-stakeholders?addStakeholder=addStakeholder&stakeholderUserId={stakeholderUserId}(competitionId=${model.competitionId},stakeholderUserId=${stakeholder.id})}">
                                     <button type="submit"
-                                            class="button-secondary govuk-!-margin-0">
+                                            class="govuk-button govuk-button--secondary govuk-!-margin-0">
                                         Add
                                         <span class="govuk-visually-hidden">
                                             <th:block th:text="${stakeholder.name}" />
@@ -199,7 +199,7 @@
                                 <form method="POST"
                                       th:action="@{/competition/setup/{competitionId}/manage-stakeholders?removeStakeholder=removeStakeholder&stakeholderUserId={stakeholderUserId}(competitionId=${model.competitionId},stakeholderUserId=${stakeholder.id})}">
                                     <button type="submit"
-                                            class="button-secondary govuk-!-margin-0">
+                                            class="govuk-button govuk-button--secondary govuk-!-margin-0">
                                         Remove
                                         <span class="govuk-visually-hidden">
                                             <th:block th:text="${stakeholder.name}" />

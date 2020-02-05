@@ -1998,7 +1998,7 @@
     <div class="alignright-button" th:if="${model.open}">
         <a th:href="@{?financeType={financeType}(financeType=${financeType})}"
            th:if="${model.isReadOnly(financeType)}"
-           class="button-secondary">Edit</a>
+           class="govuk-button govuk-button--secondary">Edit</a>
         <button th:unless="${model.isReadOnly(financeType)}" name="save-eligibility" th:value="${financeType}"
                 class="govuk-button">Save
         </button>

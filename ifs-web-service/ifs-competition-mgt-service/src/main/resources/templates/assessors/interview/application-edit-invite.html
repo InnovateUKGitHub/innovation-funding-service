@@ -73,7 +73,7 @@
                                     <div class="upload-section file-toggle" th:style="${model.hasAttachment()} ? 'display:none' : 'display:block'" >
                                         <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
                                         <label th:for="${fieldName}" class="govuk-!-margin-top-0">Upload</label>
-                                        <button id="upload-applicant-resend-file" class="button-secondary" th:attr="data-for-file-upload=${fieldName}">Save</button>
+                                        <button id="upload-applicant-resend-file" class="govuk-button govuk-button--secondary" th:attr="data-for-file-upload=${fieldName}">Save</button>
                                     </div>
                                     <div class="grid-row file-toggle" th:style="${model.hasAttachment()} ? 'display:block' : 'display:none'" >
                                         <div class="govuk-grid-column-two-thirds">

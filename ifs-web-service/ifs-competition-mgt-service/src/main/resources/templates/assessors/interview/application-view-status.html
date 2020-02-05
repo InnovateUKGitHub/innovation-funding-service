@@ -91,7 +91,7 @@
                             <td class="govuk-table__cell" th:unless="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}">Awaiting response</td>
                             <td class="govuk-table__cell">
                                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
-                                   class="button-secondary">View invite</a>
+                                   class="govuk-button govuk-button--secondary">View invite</a>
                             </td>
 
                         </tr>

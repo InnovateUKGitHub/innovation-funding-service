@@ -68,7 +68,7 @@
                         </th:block>
                         <th:block th:if="${model.projectIsActive}">
                             <th:block th:if="${model.noteId == null}">
-                                <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="govuk-!-margin-top-6 button-secondary">Comment</a>
+                                <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Comment</a>
                             </th:block>
                             <th:block th:if="${(model.noteId != null) and (note.id == model.noteId)}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
                                 <h2 class="govuk-heading-m">Add your comment</h2>
@@ -134,7 +134,7 @@
                                                 </th:block>
                                                 <input type="file" id="attachment" class="inputfile" name="attachment">
                                                 <label for="attachment" class="govuk-!-margin-top-6">Upload</label>
-                                                <button name="uploadAttachment" class="button-secondary" type="submit"
+                                                <button name="uploadAttachment" class="govuk-button govuk-button--secondary" type="submit"
                                                         data-for-file-upload="attachment">Save
                                                 </button>
                                             </div>

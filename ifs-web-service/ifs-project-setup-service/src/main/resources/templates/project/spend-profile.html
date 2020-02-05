@@ -316,7 +316,7 @@
                         </tbody>
                     </table>
                 </th:block>
-                <button th:unless="${readonly}" class="button-secondary govuk-!-margin-top-6">Save and return to spend profile overview</button>
+                <button th:unless="${readonly}" class="govuk-button govuk-button--secondary govuk-!-margin-top-6">Save and return to spend profile overview</button>
             </div>
         </form>
 
@@ -324,7 +324,7 @@
             <th:block th:if="${readonly and !model.submitted}">
 
                 <th:block th:if="${!model.markedAsComplete and !model.leadPartner and model.userPartOfThisOrganisation}">
-                    <a class="button-secondary govuk-!-margin-top-6"
+                    <a class="govuk-button govuk-button--secondary govuk-!-margin-top-6"
                        th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                     <p class="govuk-body govuk-!-margin-top-6">Once you are satisfied with your spend profile please submit to the lead partner.</p>
@@ -338,7 +338,7 @@
                 </th:block>
 
                 <th:block th:if="${model.leadPartner and model.userPartOfThisOrganisation}">
-                    <a class="button-secondary govuk-!-margin-top-6"
+                    <a class="govuk-button govuk-button--secondary govuk-!-margin-top-6"
                        th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                     <th:block th:if="${!model.markedAsComplete}">

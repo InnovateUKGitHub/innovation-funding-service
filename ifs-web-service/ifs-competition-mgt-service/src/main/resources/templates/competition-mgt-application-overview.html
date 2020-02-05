@@ -31,7 +31,7 @@
             <th:block th:if="${model.canReinstate}" th:unless="${model.ineligibility.readOnly}">
                 <div class="govuk-!-margin-top-6">
                     <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${model.application.competition},applicationId=${model.application.id})}"
-                       class="button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
+                       class="govuk-button govuk-button--secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
                 </div>
                 <div class="modal-reinstate" role="dialog" aria-hidden="true">
                     <form th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${model.application.competition},applicationId=${model.application.id})}" method="post">
