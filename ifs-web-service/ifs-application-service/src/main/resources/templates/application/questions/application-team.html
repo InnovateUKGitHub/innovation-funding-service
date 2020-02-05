@@ -232,10 +232,11 @@
             </th:block>
 
             <th:block th:if="${model.leadApplicant}">
-                <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
-                   th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
-                   class="govuk-!-margin-top-5 button-clear">Add a partner organisation</a>
-
+                <p class="govuk-body govuk-!-margin-top-5">
+                    <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
+                       th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                       class="govuk-link">Add a partner organisation</a>
+                </p>
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                       method="post">
                     <div th:if="${model.open}" class="form-footer govuk-!-margin-top-8">
