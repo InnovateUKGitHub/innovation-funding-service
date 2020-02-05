@@ -97,7 +97,7 @@ public final class NonZeroValueProcessor
     private String emptyStringWhenZero(String newValue) {
         BigDecimal decimal = BigDecimal.ZERO;
         try {
-            decimal = NumberUtils.getBigDecimalValue(newValue, new Double(0));
+            decimal = NumberUtils.getBigDecimalValue(newValue, BigDecimal.ZERO);
         } catch (IntegerNumberFormatException e) {
             // Ignore number format exceptions..
             LOG.trace(e);

@@ -155,7 +155,7 @@ public class FinanceChecksViabilityController {
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
         Integer totalCosts = toZeroScaleInt(financesForOrganisation.getTotal());
-        Integer percentageGrant = financesForOrganisation.getGrantClaimPercentage();
+        BigDecimal percentageGrant = financesForOrganisation.getGrantClaimPercentage();
         Integer fundingSought = toZeroScaleInt(financesForOrganisation.getTotalFundingSought());
         Integer otherPublicSectorFunding = toZeroScaleInt(financesForOrganisation.getTotalOtherFunding());
         Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());

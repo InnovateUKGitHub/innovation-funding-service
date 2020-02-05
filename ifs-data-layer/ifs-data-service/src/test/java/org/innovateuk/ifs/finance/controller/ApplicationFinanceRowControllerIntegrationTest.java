@@ -47,7 +47,6 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
     private TravelCost travelCost;
     private OtherCost otherCost;
     private OtherFunding otherFunding;
-    private OtherFunding otherFundingCost;
     private Overhead overhead;
 
     private String overMaxAllowedTextSize;
@@ -58,10 +57,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
     @Autowired
     private ApplicationFinanceRowRepository applicationFinanceRowRepository;
 
-    private FinanceRow grandClaimCost;
     private ApplicationFinance applicationFinance;
-    private long leadApplicantId;
-    private long leadApplicantProcessRole;
     public static final long APPLICATION_ID = 1L;
 
     @Autowired
@@ -76,7 +72,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
     @Before
     public void prepare(){
         loginSteveSmith();
-        grandClaimCost = applicationFinanceRowRepository.findById(48L).get();
+        FinanceRow grandClaimCost = applicationFinanceRowRepository.findById(48L).get();
         applicationFinance = ((ApplicationFinanceRow) grandClaimCost).getTarget();
 
         grantClaim = (GrantClaimPercentage) controller.get(48L).getSuccess();
@@ -96,10 +92,10 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         OtherCost otherCostResult = (OtherCost) controller.create(new OtherCost(applicationFinance.getId())).getSuccess();
         otherCost = (OtherCost) controller.get(otherCostResult.getId()).getSuccess();
         OtherFunding otherFundingResult = (OtherFunding) controller.create(new OtherFunding(applicationFinance.getId())).getSuccess();
-        otherFundingCost = (OtherFunding) controller.get(otherFundingResult.getId()).getSuccess();
+        OtherFunding otherFundingCost = (OtherFunding) controller.get(otherFundingResult.getId()).getSuccess();
 
-        leadApplicantId = 1L;
-        leadApplicantProcessRole = 1L;
+        long leadApplicantId = 1L;
+        long leadApplicantProcessRole = 1L;
 
         overMaxAllowedTextSize = StringUtils.repeat("<ifs_test>", 30);
 
@@ -117,7 +113,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationLabour(){
+    public void validationLabour(){
 
         assertEquals(new BigDecimal("129.31034"), labourCost.getRate(labourCostDaysPerYear.getLabourDays()).setScale(5, BigDecimal.ROUND_HALF_EVEN));
         assertEquals(new BigDecimal("90000"), (labourCost.getTotal(labourCostDaysPerYear.getLabourDays())).setScale(0, BigDecimal.ROUND_HALF_EVEN) );
@@ -129,7 +125,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationLabourUpdateIncorrectValues(){
+    public void validationLabourUpdateIncorrectValues(){
         labourCost.setRole("");
         labourCost.setLabourDays(-50);
         labourCost.setGrossEmployeeCost(new BigDecimal("-500000"));
@@ -153,7 +149,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationLabourUpdateIncorrectMaxValues() {
+    public void validationLabourUpdateIncorrectMaxValues() {
 
         labourCost.setRole(overMaxAllowedTextSize);
         labourCost.setLabourDays(400);
@@ -169,7 +165,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationOverhead() {
+    public void validationOverhead() {
 
         BigDecimal overheadTotal =  overhead.getTotal();
         assertEquals(0, overheadTotal.intValue());
@@ -183,7 +179,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationOverheadUpdateMinRate(){
+    public void validationOverheadUpdateMinRate(){
 
         overhead.setRate(-10);
         assertEquals(-100, overhead.getRate() * 1000/100);
@@ -203,7 +199,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationOverheadUpdateMaxRate(){
+    public void validationOverheadUpdateMaxRate(){
         overhead.setRate(150);
         assertEquals(1500, overhead.getRate() * 1000/100);
 
@@ -225,7 +221,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationMaterial(){
+    public void validationMaterial(){
         assertEquals(new BigDecimal("2000"), materials.getTotal());
 
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
@@ -235,7 +231,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationMaterialUpdateInvalidValues(){
+    public void validationMaterialUpdateInvalidValues(){
         materials.setCost(new BigDecimal("-5"));
 
         materials.setItem("");
@@ -257,7 +253,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationMaterialUpdateMaxValues() {
+    public void validationMaterialUpdateMaxValues() {
 
         materials.setCost(new BigDecimal("1000"));
         materials.setItem(overMaxAllowedTextSize);
@@ -273,7 +269,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationCapitalUsageUpdateSuccess() {
+    public void validationCapitalUsageUpdateSuccess() {
 
         capitalUsage.setDescription(overMaxAllowedTextSize);
         capitalUsage.setExisting("New");
@@ -291,7 +287,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationCapitalUsageUpdateIncorrectValues(){
+    public void validationCapitalUsageUpdateIncorrectValues(){
         capitalUsage.setDescription("");
         capitalUsage.setExisting("");
         capitalUsage.setDeprecation(-5);
@@ -318,7 +314,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationCapitalUsageUpdateOverMaxAllowedValues(){
+    public void validationCapitalUsageUpdateOverMaxAllowedValues(){
         capitalUsage.setDescription("Desc");
         capitalUsage.setExisting("Existing");
         capitalUsage.setDeprecation(1000);
@@ -344,7 +340,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
             "save of the finance_row and finance_row_meta_values, because validation only occurs AFTER a successful " +
             "save occurs in FinanceRowController - these values are over the max MySQL limit for the columns and so could " +
             "never have resulted in a successful save")
-    public void testValidationCapitalUsageUpdateExistingAndDescriptionOverMaxAllowedValues(){
+    public void validationCapitalUsageUpdateExistingAndDescriptionOverMaxAllowedValues(){
         capitalUsage.setDescription(overMaxAllowedTextSize);
         capitalUsage.setExisting(overMaxAllowedTextSize);
         capitalUsage.setDeprecation(1000);
@@ -369,7 +365,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationSubContractingCostUpdateSuccess() {
+    public void validationSubContractingCostUpdateSuccess() {
 
         subContractingCost.setName("Tom Bloggs");
         subContractingCost.setCountry("UK");
@@ -383,7 +379,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationSubContractingCostUpdateIncorrectValues(){
+    public void validationSubContractingCostUpdateIncorrectValues(){
         subContractingCost.setName("");
         subContractingCost.setCountry("");
         subContractingCost.setRole("");
@@ -405,7 +401,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationSubContractingCostUpdateOverMaxAllowedValues(){
+    public void validationSubContractingCostUpdateOverMaxAllowedValues(){
         subContractingCost.setName(overMaxAllowedTextSize);
         subContractingCost.setCountry(overMaxAllowedTextSize);
         subContractingCost.setRole(overMaxAllowedTextSize);
@@ -420,7 +416,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationTravelCostUpdateSuccess() {
+    public void validationTravelCostUpdateSuccess() {
         travelCost.setItem("Travel To Australia for research consultancy");
         travelCost.setCost(new BigDecimal("1000"));
         travelCost.setQuantity(100);
@@ -434,7 +430,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationTravelCostUpdateIncorrectMinValues(){
+    public void validationTravelCostUpdateIncorrectMinValues(){
         travelCost.setItem("");
         travelCost.setCost(new BigDecimal("-1000"));
         travelCost.setQuantity(-500);
@@ -454,7 +450,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationTravelCostUpdateIncorrectMaxAndZeroValues(){
+    public void validationTravelCostUpdateIncorrectMaxAndZeroValues(){
 
         travelCost.setItem(overMaxAllowedTextSize);
         travelCost.setCost(new BigDecimal("0"));
@@ -479,7 +475,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationOtherCostUpdateSuccess() {
+    public void validationOtherCostUpdateSuccess() {
         otherCost.setCost(new BigDecimal("1000"));
         otherCost.setDescription("Additional Test FinanceRow");
 
@@ -490,7 +486,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationOtherCostUpdateIncorrectCostValue() {
+    public void validationOtherCostUpdateIncorrectCostValue() {
 
         otherCost.setCost(new BigDecimal("0"));
         otherCost.setDescription(overMaxAllowedTextSize);
@@ -509,7 +505,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationOtherCostUpdateMinIncorrectValues() {
+    public void validationOtherCostUpdateMinIncorrectValues() {
 
         otherCost.setCost(new BigDecimal("-1000"));
         otherCost.setDescription("");
@@ -531,7 +527,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationOtherFundingUpdate(){
+    public void validationOtherFundingUpdate(){
 
         assertEquals(new BigDecimal("0"), otherFunding.getTotal());
         assertEquals("Yes", otherFunding.getOtherPublicFunding());
@@ -544,10 +540,10 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateSmallOrganisationSize(){
+    public void validationGrantClaimUpdateSmallOrganisationSize(){
 
         assertEquals(SMALL, applicationFinance.getOrganisationSize());
-        grantClaim.setPercentage(55);
+        grantClaim.setPercentage(BigDecimal.valueOf(55));
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
@@ -556,38 +552,40 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateSmallOrganisationSizeHigherValue(){
+    public void validationGrantClaimUpdateSmallOrganisationSizeHigherValue(){
 
         assertEquals(SMALL, applicationFinance.getOrganisationSize());
-        grantClaim.setPercentage(71);
+        grantClaim.setPercentage(BigDecimal.valueOf(71));
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", 71, "validation.finance.grant.claim.percentage.max", 70));
+                fieldError("percentage", BigDecimal.valueOf(71), "validation.finance.grant.claim.percentage.max", 70));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateSmallOrganisationSizeNegativeValue() {
+    public void validationGrantClaimUpdateSmallOrganisationSizeNegativeValue() {
 
         assertEquals(SMALL, applicationFinance.getOrganisationSize());
-        grantClaim.setPercentage(-1);
+        grantClaim.setPercentage(BigDecimal.valueOf(-1));
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", BigDecimal.valueOf(-1), "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -596,7 +594,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateMediumOrganisationSize(){
+    public void validationGrantClaimUpdateMediumOrganisationSize(){
 
         applicationFinance.setOrganisationSize(MEDIUM);
         assertEquals(MEDIUM, applicationFinance.getOrganisationSize());
@@ -608,40 +606,42 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateMediumOrganisationSizeHigherValue(){
+    public void validationGrantClaimUpdateMediumOrganisationSizeHigherValue(){
 
         applicationFinance.setOrganisationSize(MEDIUM);
         assertEquals(MEDIUM, applicationFinance.getOrganisationSize());
-        grantClaim.setPercentage(61);
+        grantClaim.setPercentage(BigDecimal.valueOf(61));
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", 61, "validation.finance.grant.claim.percentage.max", 60));
+                fieldError("percentage", BigDecimal.valueOf(61), "validation.finance.grant.claim.percentage.max", 60));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateMediumOrganisationSizeNegativeValue() {
+    public void validationGrantClaimUpdateMediumOrganisationSizeNegativeValue() {
 
         applicationFinance.setOrganisationSize(MEDIUM);
         assertEquals(MEDIUM, applicationFinance.getOrganisationSize());
-        grantClaim.setPercentage(-1);
+        grantClaim.setPercentage(BigDecimal.valueOf(-1));
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", BigDecimal.valueOf(-1), "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
@@ -650,11 +650,11 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateLargeOrganisationSize(){
+    public void validationGrantClaimUpdateLargeOrganisationSize(){
 
         applicationFinance.setOrganisationSize(LARGE);
         assertEquals(LARGE, applicationFinance.getOrganisationSize());
-        grantClaim.setPercentage(45);
+        grantClaim.setPercentage(BigDecimal.valueOf(45));
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
@@ -663,30 +663,31 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateLargeOrganisationSizeHigherValue() {
+    public void validationGrantClaimUpdateLargeOrganisationSizeHigherValue() {
 
         applicationFinance.setOrganisationSize(LARGE);
         assertEquals(LARGE, applicationFinance.getOrganisationSize());
-        grantClaim.setPercentage(51);
+        grantClaim.setPercentage(BigDecimal.valueOf(51));
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
 
+        assertTrue(messages.hasErrors());
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", 51, "validation.finance.grant.claim.percentage.max", 50));
+                fieldError("percentage", BigDecimal.valueOf(51), "validation.finance.grant.claim.percentage.max", 50));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
 
     @Rollback
     @Test
-    public void testValidationGrantClaimUpdateLargeOrganisationSizeNegativeValue() {
+    public void validationGrantClaimUpdateLargeOrganisationSizeNegativeValue() {
 
         applicationFinance.setOrganisationSize(LARGE);
         assertEquals(LARGE, applicationFinance.getOrganisationSize());
-        grantClaim.setPercentage(-1);
+        grantClaim.setPercentage(BigDecimal.valueOf(-1));
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
@@ -696,7 +697,7 @@ public class ApplicationFinanceRowControllerIntegrationTest extends BaseControll
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = singletonList(
-                fieldError("percentage", -1, "validation.field.percentage.max.value.or.higher", 0));
+                fieldError("percentage", BigDecimal.valueOf(-1), "validation.field.percentage.max.value.or.higher", 0));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
