@@ -34,7 +34,7 @@
     <div class="user-profile" th:each="user : ${users}">
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
 
-        <div style="float: right"><a class="govuk-link" href="#">View details</a></div>
+        <div style="float: right"><a class="govuk-link" th:href="@{/admin/user/{userId}/active(userId=${user.id})}">View details</a></div>
 
         <p class="govuk-body govuk-!-margin-0">Full name: <b><span th:text="${user.name}" class="govuk-">Steve Smith</span></b></p>
         <p class="govuk-body govuk-!-margin-0">Email address: <b><a th:href="|mailto:${user.email}|" th:text="${user.email}" class="govuk-link">steve.smith@empire.com</a></b></p>
