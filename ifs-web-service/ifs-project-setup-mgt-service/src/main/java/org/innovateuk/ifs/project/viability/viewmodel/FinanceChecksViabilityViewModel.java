@@ -198,11 +198,9 @@ public class FinanceChecksViabilityViewModel {
     public boolean isViabilityReadyToConfirm() {
         return viabilityReadyToConfirm;
     }
-
+    
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
-        return finances.stream().allMatch(finance -> {
-            int fundingLevel = finance.getGrantClaimPercentage();
-            return finance.getMaximumFundingLevel() >= fundingLevel;
-        });
+        return finances.stream().allMatch(finance ->
+                BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
     }
 }
