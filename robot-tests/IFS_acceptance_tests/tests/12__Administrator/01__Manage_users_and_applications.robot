@@ -33,8 +33,8 @@ ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 ${adminChangeEmailOld}    aaron.powell@example.com
 ${adminChangeEmailNew}    aaron.powell2@example.com
-${supportChangeEmailOld}  irene.jones@example.com
-${supportChangeEmailNew}  irene.jones2@example.com
+${supportChangeEmailOld}  jacqueline.white@gmail.com
+${supportChangeEmailNew}  jacqueline.white2@gmail.com
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -295,9 +295,22 @@ Admin can view assessor status unavailable
      Then user should see the correct assessor status    Unavailable
 
 Comp Admin can view assessor status
-    [Documentation]  IFS-7023
+    [Documentation]  IFS-7021
     Given log in as a different user            &{Comp_admin1_credentials}
-    When the user navigates to the page         ${server}/management/admin/user/311/active
+    When the user clicks the button/link        link = Assessor status
+    Then the user should see the element        jQuery = h1:contains("Assessor status")
+
+
+Comp Admin can search for assessor
+    [Documentation]  IFS-7054
+    Given the user enters text to a text field   id = filter  Kieran
+    When the user clicks the button/link         css = input[type="submit"]
+    And the user clicks the button/link          link = Role disabled (1)
+    Then the user should see the element         jQuery = p:contains("Kieran Harper")
+
+Comp admin can view details of assessor
+    [Documentation]  IFS-7023
+    Given the user clicks the button/link               link = View details
     Then user should see the correct assessor status    Disabled
 
 Administrator is able to mark as successful an unsuccessful application

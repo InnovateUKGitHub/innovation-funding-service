@@ -22,6 +22,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -57,7 +58,8 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -115,6 +117,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Mock(name = "randomHashSupplier")
     private Supplier<String> randomHashSupplierMock;
+
+    @Mock
+    private RoleProfileStatusRepository roleProfileStatusRepositoryMock;
 
     @Override
     protected UserService supplyServiceUnderTest() {

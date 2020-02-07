@@ -28,8 +28,8 @@ import static org.springframework.http.HttpStatus.OK;
 
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
-    private static final String usersUrl = "/user";
-    private static final String processRoleRestURL = "/processrole";
+    private static final String USERS_URL = "/user";
+    private static final String PROCESS_ROLE_REST_URL = "/processrole";
 
     @Override
     protected UserRestServiceImpl registerRestServiceUnderTest() {
@@ -43,7 +43,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource user2 = new UserResource();
 
         List<UserResource> userList = asList(user1, user2);
-        setupGetWithRestResultExpectations(usersUrl + "/find-all/", userListType(), userList);
+        setupGetWithRestResultExpectations(USERS_URL + "/find-all/", userListType(), userList);
 
         List<UserResource> users = service.findAll().getSuccess();
         assertEquals(2, users.size());
@@ -56,7 +56,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         List<ProcessRoleResource> processRoleList = newProcessRoleResource().build(10);
         Long userId = 249L;
 
-        setupGetWithRestResultExpectations(processRoleRestURL + "/find-by-user-id/" + userId, processRoleResourceListType(), processRoleList);
+        setupGetWithRestResultExpectations(PROCESS_ROLE_REST_URL + "/find-by-user-id/" + userId, processRoleResourceListType(), processRoleList);
 
         List<ProcessRoleResource> response = service.findProcessRoleByUserId(userId).getSuccess();
         assertEquals(10, response.size());
@@ -67,7 +67,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findExistingUserByEmailShouldReturnUserResource() {
         UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
 
-        setupGetWithRestResultAnonymousExpectations(usersUrl + "/find-by-email/" + userResource.getEmail() + "/", UserResource.class, userResource);
+        setupGetWithRestResultAnonymousExpectations(USERS_URL + "/find-by-email/" + userResource.getEmail() + "/", UserResource.class, userResource);
 
         UserResource user = service.findUserByEmail(userResource.getEmail()).getSuccess();
         assertEquals(userResource, user);
@@ -77,7 +77,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findingNonExistingUserByEmailShouldReturnEmptyList() {
         String email = "email@test.test";
 
-        setupGetWithRestResultAnonymousExpectations(usersUrl + "/find-by-email/" + email + "/", UserResource.class, null, HttpStatus.NOT_FOUND);
+        setupGetWithRestResultAnonymousExpectations(USERS_URL + "/find-by-email/" + email + "/", UserResource.class, null, HttpStatus.NOT_FOUND);
 
         RestResult<UserResource> restResult = service.findUserByEmail(email);
         assertTrue(restResult.isFailure());
@@ -109,7 +109,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         Long organisationId = 1L;
 
-        setupPostWithRestResultAnonymousExpectations(usersUrl + "/create-lead-applicant-for-organisation/" + organisationId, UserResource.class, userResource, userResource, OK);
+        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/create-lead-applicant-for-organisation/" + organisationId, UserResource.class, userResource, userResource, OK);
 
         UserResource receivedResource = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
@@ -142,7 +142,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         Long organisationId = 1L;
 
-        setupPostWithRestResultAnonymousExpectations(usersUrl + "/create-lead-applicant-for-organisation/" + organisationId, UserResource.class, userResource, userResource, OK);
+        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/create-lead-applicant-for-organisation/" + organisationId, UserResource.class, userResource, userResource, OK);
 
         UserResource receivedResource = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
@@ -175,7 +175,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         Long organisationId = 1L;
         Long competitionId = 1L;
 
-        setupPostWithRestResultAnonymousExpectations(usersUrl + "/create-lead-applicant-for-organisation/" + organisationId + "/" + competitionId, UserResource.class, userResource, userResource, OK);
+        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/create-lead-applicant-for-organisation/" + organisationId + "/" + competitionId, UserResource.class, userResource, userResource, OK);
 
         UserResource receivedResource = service.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
@@ -209,7 +209,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         Long organisationId = 1L;
         Long competitionId = 1L;
 
-        setupPostWithRestResultAnonymousExpectations(usersUrl + "/create-lead-applicant-for-organisation/" + organisationId + "/" + competitionId, UserResource.class, userResource, userResource, OK);
+        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/create-lead-applicant-for-organisation/" + organisationId + "/" + competitionId, UserResource.class, userResource, userResource, OK);
 
         UserResource receivedResource = service.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
@@ -229,7 +229,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void resendEmailVerificationNotification() {
         final String emailAddress = "sample@me.com";
 
-        setupPutWithRestResultAnonymousExpectations(usersUrl + "/resend-email-verification-notification/" + emailAddress + "/", null, OK);
+        setupPutWithRestResultAnonymousExpectations(USERS_URL + "/resend-email-verification-notification/" + emailAddress + "/", null, OK);
         final RestResult<Void> result = service.resendEmailVerificationNotification(emailAddress);
         assertTrue(result.isSuccess());
     }
@@ -240,7 +240,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         Long competitionId = 2L;
         Boolean expected = true;
 
-        setupGetWithRestResultExpectations(format("%s/user-has-application-for-competition/%s/%s", processRoleRestURL, userId, competitionId), Boolean.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/user-has-application-for-competition/%s/%s", PROCESS_ROLE_REST_URL, userId, competitionId), Boolean.class, expected, OK);
 
         Boolean response = service.userHasApplicationForCompetition(userId, competitionId).getSuccess();
         assertEquals(expected, response);
@@ -284,7 +284,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         String inviteHash = "hash";
 
-        setupPostWithRestResultAnonymousExpectations(usersUrl + "/internal/create/" + inviteHash, Void.class, internalUserRegistrationResource, null, CREATED);
+        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/internal/create/" + inviteHash, Void.class, internalUserRegistrationResource, null, CREATED);
 
         RestResult<Void> result = service.createInternalUser(inviteHash, internalUserRegistrationResource);
 
@@ -296,7 +296,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void editInternalUser() throws Exception {
         EditUserResource editUserResource = new EditUserResource();
-        String url = usersUrl + "/internal/edit";
+        String url = USERS_URL + "/internal/edit";
         setupPostWithRestResultExpectations(url, editUserResource, HttpStatus.OK);
 
         RestResult<Void> result = service.editInternalUser(editUserResource);
@@ -306,7 +306,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
     @Test
     public void deactivateUser() throws Exception {
-        String url = usersUrl + "/id/123/deactivate";
+        String url = USERS_URL + "/id/123/deactivate";
         setupPostWithRestResultExpectations(url, OK);
 
         RestResult<Void> result = service.deactivateUser(123L);
@@ -316,7 +316,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
     @Test
     public void reactivateUser() throws Exception {
-        String url = usersUrl + "/id/123/reactivate";
+        String url = USERS_URL + "/id/123/reactivate";
         setupPostWithRestResultExpectations(url, OK);
 
         RestResult<Void> result = service.reactivateUser(123L);
@@ -329,7 +329,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         String searchString = "%aar%";
         SearchCategory searchCategory = SearchCategory.NAME;
-        String url = usersUrl + "/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory.name();
+        String url = USERS_URL + "/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory.name();
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
         setupGetWithRestResultExpectations(url, userOrganisationListType(), userOrganisationResources);
@@ -344,7 +344,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void agreeNewSiteTermsAndConditions() {
         long userId = 1L;
-        setupPostWithRestResultExpectations(format("%s/id/%s/agree-new-site-terms-and-conditions", usersUrl, userId),
+        setupPostWithRestResultExpectations(format("%s/id/%s/agree-new-site-terms-and-conditions", USERS_URL, userId),
                 HttpStatus.OK);
         assertTrue(service.agreeNewSiteTermsAndConditions(userId).isSuccess());
     }
@@ -353,7 +353,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void grantRole() {
         long userId = 1L;
         Role role = Role.APPLICANT;
-        setupPostWithRestResultExpectations(format("%s/%s/grant/%s", usersUrl, userId, role.name()),
+        setupPostWithRestResultExpectations(format("%s/%s/grant/%s", USERS_URL, userId, role.name()),
                 HttpStatus.OK);
         assertTrue(service.grantRole(userId, role).isSuccess());
     }
