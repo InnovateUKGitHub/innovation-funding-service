@@ -105,6 +105,12 @@ function applyFileCerts() {
         --from-literal="ldap-encryption.key=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
+
+    # registration secrets
+    oc create secret generic registration-keys-secrets \
+        --from-literal="ldap-encryption.crt=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt)" \
+    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
+    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
 
 # Create a file with aws credentials which mounted to the aws-cli docker image.
