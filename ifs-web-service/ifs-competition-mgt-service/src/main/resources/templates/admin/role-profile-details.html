@@ -23,7 +23,7 @@
             <dd th:text="${model.roleProfileStatus.roleProfileState.description}">Available</dd>
             <th:block th:if="${model.displayStatusChange()}">
             <dt>Date status change</dt>
-                <dd th:text="|${#temporals.format(model.roleProfileState.modifiedOn, 'dd MMMM yyyy')} ${#strings.toLowerCase(#temporals.format(model.roleProfileState.modifiedOn, 'hh:mma'))}|">
+                <dd th:text="|${#temporals.format(model.roleProfileStatus.modifiedOn, 'dd MMMM yyyy')}, ${#strings.toLowerCase(#temporals.format(model.roleProfileStatus.modifiedOn, 'hh:mma'))}|">
                     13 May 2019 9:04am</dd>
             <dt>Change made by</dt>
             <dd th:text="${model.modifiedUserDetails()}">Steve, Admin</dd>
