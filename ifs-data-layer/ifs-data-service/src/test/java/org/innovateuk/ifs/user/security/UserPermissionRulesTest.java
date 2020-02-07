@@ -134,13 +134,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void internalUsersCanViewEveryoneUserPageResource() {
 
-        UserPageResource userPageResource = new UserPageResource();
+        ManageUserPageResource manageUserPageResource = new ManageUserPageResource();
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(ifsAdminUser())) {
-                assertTrue(rules.internalUsersCanViewEveryone(userPageResource, user));
+                assertTrue(rules.internalUsersCanViewEveryone(manageUserPageResource, user));
             } else {
-                assertFalse(rules.internalUsersCanViewEveryone(userPageResource, user));
+                assertFalse(rules.internalUsersCanViewEveryone(manageUserPageResource, user));
             }
         });
     }
