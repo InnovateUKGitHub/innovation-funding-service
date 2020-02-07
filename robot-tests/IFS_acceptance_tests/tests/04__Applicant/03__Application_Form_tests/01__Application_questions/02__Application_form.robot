@@ -110,7 +110,7 @@ Review and submit button
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751
     [Tags]
-    Given the user should see the element  jQuery = button:contains("Application details") .section-incomplete
+    Given the user should see the element  jQuery = .section-incomplete + button:contains("Application details")
     When the user expands the section      Application details
     Then the user should see the element   jQuery = #accordion-questions-content-2 button:contains("Mark")
     And the user should see the element    jQuery = #accordion-questions-content-2 button:contains("Return and edit")
