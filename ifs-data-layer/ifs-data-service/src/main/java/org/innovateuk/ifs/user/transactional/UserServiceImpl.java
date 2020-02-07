@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
@@ -111,6 +112,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private UserInviteRepository userInviteRepository;
+
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
@@ -308,11 +312,14 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                         .collect(toSet()),
                 pageable
         );
-        List<UserResource> userResources = simpleMap(pagedResult.getContent(), userMapper::mapToResource);
+        return userPageResource(pagedResult);
+    }
+
+    private ServiceResult<UserPageResource> userPageResource(Page<User> pagedResult) {
         return serviceSuccess(new UserPageResource(
                 pagedResult.getTotalElements(),
                 pagedResult.getTotalPages(),
-                userResources,
+                pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList()),
                 pagedResult.getNumber(),
                 pagedResult.getSize())
         );
@@ -382,6 +389,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         }
         return serviceSuccess(user);
     }
+
     private ServiceResult<Void> validateSearchString(String searchString) {
 
         searchString = StringUtils.trim(searchString);
