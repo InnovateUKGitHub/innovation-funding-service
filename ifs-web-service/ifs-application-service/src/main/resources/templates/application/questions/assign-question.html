@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationName} - Assign ${model.question.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Assign ${model.question.name} - ${model.applicationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start"/>
