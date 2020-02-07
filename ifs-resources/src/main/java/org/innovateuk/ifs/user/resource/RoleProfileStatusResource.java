@@ -23,6 +23,13 @@ public class RoleProfileStatusResource {
     public RoleProfileStatusResource() {
     }
 
+    public RoleProfileStatusResource(Long userId, RoleProfileState roleProfileState, ProfileRole profileRole, String description) {
+        this.userId = userId;
+        this.roleProfileState = roleProfileState;
+        this.profileRole = profileRole;
+        this.description = description;
+    }
+
     public RoleProfileStatusResource(Long userId,
                                      RoleProfileState roleProfileState,
                                      ProfileRole profileRole,
