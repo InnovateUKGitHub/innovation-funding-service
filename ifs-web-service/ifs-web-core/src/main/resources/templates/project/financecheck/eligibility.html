@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${summaryModel.applicationId}: ${summaryModel.projectName} - Eligibility check for ${summaryModel.organisationName}|"/>
+              th:with="pageTitle=|Eligibility check for ${summaryModel.organisationName} - ${summaryModel.projectName}|"/>
 </head>
 
 <body class="govuk-template__body competition-management eligibility-form finance-row-form overheads">

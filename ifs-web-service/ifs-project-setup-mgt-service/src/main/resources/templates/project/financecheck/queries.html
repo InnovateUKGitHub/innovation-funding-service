@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Queries for ${model.organisationName}|,hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}"/>
+              th:with="pageTitle=|Queries for ${model.organisationName} - ${model.projectName}|,hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}"/>
 </head>
 
 <body class="govuk-template__body competition-management project-management query-form">
