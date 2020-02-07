@@ -5,6 +5,7 @@ import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -44,6 +45,18 @@ public class RoleProfileStatusResourceBuilder extends BaseBuilder<RoleProfileSta
 
     public RoleProfileStatusResourceBuilder withModifiedBy(Long... ids) {
         return withArray((modifiedBy, roleProfileStatusResource) -> setField("modifiedBy", modifiedBy, roleProfileStatusResource), ids);
+    }
+
+    public RoleProfileStatusResourceBuilder withCreatedBy(Long... ids) {
+        return withArray((createdBy, roleProfileStatusResource) -> setField("createdBy", createdBy, roleProfileStatusResource), ids);
+    }
+
+    public RoleProfileStatusResourceBuilder withCreatedOn(ZonedDateTime... dates) {
+        return withArray((createdOn, roleProfileStatusResource) -> setField("createdOn", createdOn, roleProfileStatusResource), dates);
+    }
+
+    public RoleProfileStatusResourceBuilder withModifiedOn(ZonedDateTime... dates) {
+        return withArray((modifiedOn, roleProfileStatusResource) -> setField("modifiedOn", modifiedOn, roleProfileStatusResource), dates);
     }
 
     @Override
