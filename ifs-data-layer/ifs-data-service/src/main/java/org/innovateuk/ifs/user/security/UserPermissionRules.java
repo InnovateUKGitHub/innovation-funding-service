@@ -140,6 +140,12 @@ public class UserPermissionRules {
         return isSystemRegistrationUser(user);
     }
 
+    @PermissionRule(value = "READ", description = "Comp admins and project finance can view assessors")
+    public boolean compAdminAndProjectFinanceCanViewAssessors(UserPageResource usersToView,  UserResource user) {
+        return usersToView.getContent().stream().allMatch(u -> u.hasAnyRoles(ASSESSOR_ROLES)) &&
+                user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE);
+    }
+
     @PermissionRule(value = "READ", description = "Consortium members (Lead Applicants and Collaborators) can view the others in their Consortium Teams on their various Applications")
     public boolean consortiumMembersCanViewOtherConsortiumMembers(UserResource userToView, UserResource user) {
         List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(user, consortiumProcessRoleFilter);
