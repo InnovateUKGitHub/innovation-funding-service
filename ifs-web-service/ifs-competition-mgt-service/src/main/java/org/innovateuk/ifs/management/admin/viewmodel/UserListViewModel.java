@@ -131,7 +131,7 @@ public class UserListViewModel {
             if (roleProfileStatusResource.isPresent()
                     && !roleProfileStatusResource.get().getRoleProfileState().equals(RoleProfileState.ACTIVE)) {
 
-                return String.format("%s (%s)", ASSESSOR.getDisplayName(), roleProfileStatusResource.get().getRoleProfileState().getDescription());
+                return String.format("%s (%s)", ASSESSOR.getDisplayName(), roleProfileStatusResource.get().getRoleProfileState().getDescription().toLowerCase());
             }
         }
 

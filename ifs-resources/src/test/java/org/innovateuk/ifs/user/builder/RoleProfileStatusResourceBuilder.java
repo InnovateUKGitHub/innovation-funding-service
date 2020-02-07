@@ -42,6 +42,10 @@ public class RoleProfileStatusResourceBuilder extends BaseBuilder<RoleProfileSta
         return withArray((description, roleProfileStatusResource) -> setField("description", description, roleProfileStatusResource), descriptions);
     }
 
+    public RoleProfileStatusResourceBuilder withModifiedBy(Long... ids) {
+        return withArray((modifiedBy, roleProfileStatusResource) -> setField("modifiedBy", modifiedBy, roleProfileStatusResource), ids);
+    }
+
     @Override
     protected RoleProfileStatusResource createInitial() {
         return new RoleProfileStatusResource();
