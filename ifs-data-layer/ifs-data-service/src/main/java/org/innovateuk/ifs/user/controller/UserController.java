@@ -78,28 +78,28 @@ public class UserController {
     }
 
     @GetMapping("/active")
-    public RestResult<UserPageResource> findActiveUsers(@RequestParam(required = false) String filter,
+    public RestResult<ManageUserPageResource> findActiveUsers(@RequestParam(required = false) String filter,
                                                         @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                         @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return userService.findActive(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/inactive")
-    public RestResult<UserPageResource> findInactiveUsers(@RequestParam(required = false)  String filter,
+    public RestResult<ManageUserPageResource> findInactiveUsers(@RequestParam(required = false)  String filter,
                                                           @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                           @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
         return userService.findInactive(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/external/active")
-    public RestResult<UserPageResource> findActiveExternalUsers(@RequestParam(required = false)  String filter,
+    public RestResult<ManageUserPageResource> findActiveExternalUsers(@RequestParam(required = false)  String filter,
                                                                 @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                 @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return userService.findActiveExternal(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/external/inactive")
-    public RestResult<UserPageResource> findInactiveExternalUsers(@RequestParam(required = false)  String filter,
+    public RestResult<ManageUserPageResource> findInactiveExternalUsers(@RequestParam(required = false)  String filter,
                                                                   @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
         return userService.findInactiveExternal(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();

@@ -22,13 +22,13 @@ public interface UserRestService {
 
     RestResult<List<UserResource>> findByUserRole(Role role);
 
-    RestResult<UserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize);
+    RestResult<ManageUserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize);
 
-    RestResult<UserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize);
+    RestResult<ManageUserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize);
 
-    RestResult<UserPageResource> getActiveExternalUsers(String filter, int pageNumber, int pageSize);
+    RestResult<ManageUserPageResource> getActiveExternalUsers(String filter, int pageNumber, int pageSize);
 
-    RestResult<UserPageResource> getInactiveExternalUsers(String filter, int pageNumber, int pageSize);
+    RestResult<ManageUserPageResource> getInactiveExternalUsers(String filter, int pageNumber, int pageSize);
 
     RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId);
 

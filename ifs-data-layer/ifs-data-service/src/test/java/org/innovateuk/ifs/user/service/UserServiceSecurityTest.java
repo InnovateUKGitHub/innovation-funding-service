@@ -4,10 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
-import org.innovateuk.ifs.user.resource.SearchCategory;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -138,10 +135,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     @Test
     public void findActive() {
         when(classUnderTestMock.findActive("", PageRequest.of(0, 5)))
-                .thenReturn(serviceSuccess(new UserPageResource()));
+                .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
         assertAccessDenied(() -> classUnderTest.findActive("", new PageRequest(0, 5)), () -> {
-            verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
+            verify(userRules).internalUsersCanViewEveryone(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
@@ -149,10 +146,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     @Test
     public void findInactive() {
         when(classUnderTestMock.findInactive("", PageRequest.of(0, 5)))
-                .thenReturn(serviceSuccess(new UserPageResource()));
+                .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
         assertAccessDenied(() -> classUnderTest.findInactive("", new PageRequest(0, 5)), () -> {
-            verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
+            verify(userRules).internalUsersCanViewEveryone(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
@@ -160,11 +157,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     @Test
     public void findActiveExternal() {
         when(classUnderTestMock.findActiveExternal("", PageRequest.of(0, 5)))
-                .thenReturn(serviceSuccess(new UserPageResource()));
+                .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
         assertAccessDenied(() -> classUnderTest.findActiveExternal("", new PageRequest(0, 5)), () -> {
-            verify(userRules).supportUsersCanViewExternalUsers(isA(UserPageResource.class), eq(getLoggedInUser()));
-            verify(userRules).compAdminAndProjectFinanceCanViewAssessors(isA(UserPageResource.class), eq(getLoggedInUser()));
+            verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
@@ -172,11 +168,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     @Test
     public void findInactiveExternal() {
         when(classUnderTestMock.findInactiveExternal("", PageRequest.of(0, 5)))
-                .thenReturn(serviceSuccess(new UserPageResource()));
+                .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
         assertAccessDenied(() -> classUnderTest.findInactiveExternal("", new PageRequest(0, 5)), () -> {
-            verify(userRules).supportUsersCanViewExternalUsers(isA(UserPageResource.class), eq(getLoggedInUser()));
-            verify(userRules).compAdminAndProjectFinanceCanViewAssessors(isA(UserPageResource.class), eq(getLoggedInUser()));
+            verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
