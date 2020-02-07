@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="pageTitle='Role Profile Details'">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Role Profile Details'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to assessor details',linkUrl=@{/admin/user/{userId}/active(userId=${model.roleProfileStatus.userId})},dynamicBackLink=${true}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <dl class="govuk-list">
+            <dt>Role profile</dt>
+            <dd th:text="${model.roleProfileStatus.profileRole.name}">Assessor</dd>
+            <dt>Role status</dt>
+            <dd th:text="${model.roleProfileStatus.roleProfileState.description}">Available</dd>
+            <th:block th:if="${model.displayStatusChange()}">
+            <dt>Date status change</dt>
+                <dd th:text="|${#temporals.format(model.roleProfileState.modifiedOn, 'dd MMMM yyyy')} ${#strings.toLowerCase(#temporals.format(model.roleProfileState.modifiedOn, 'hh:mma'))}|">
+                    13 May 2019 9:04am</dd>
+            <dt>Change made by</dt>
+            <dd th:text="${model.modifiedUserDetails()}">Steve, Admin</dd>
+            <dt>Reason for status change</dt>
+            <dd th:text="${model.statusChangeReason()}">The account was made unavailable</dd>
+            </th:block>
+        </dl>
+
+        <a th:href="@{/admin/user/{userId}/active(userId=${model.roleProfileStatus.userId})}"
+           class="button-secondary"
+           th:text="|Return to assessor details|">Return to assessor details</a>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>
