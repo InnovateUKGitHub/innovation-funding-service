@@ -161,7 +161,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         assertAccessDenied(() -> classUnderTest.findActiveExternal("", new PageRequest(0, 5)), () -> {
             verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
-            verify(userRules).compAdminAndProjectFinanceCanViewAssessors(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
@@ -173,7 +172,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         assertAccessDenied(() -> classUnderTest.findInactiveExternal("", new PageRequest(0, 5)), () -> {
             verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
-            verify(userRules).compAdminAndProjectFinanceCanViewAssessors(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
