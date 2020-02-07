@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationdetails.controller;
+package org.innovateuk.ifs.project.organisationdetails.select.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,8 +9,9 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.Yo
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.organisationdetails.form.SelectOrganisationForm;
-import org.innovateuk.ifs.project.organisationdetails.viewmodel.SelectOrganisationViewModel;
+import org.innovateuk.ifs.project.organisationdetails.view.controller.OrganisationDetailsWithGrowthTableController;
+import org.innovateuk.ifs.project.organisationdetails.select.form.SelectOrganisationForm;
+import org.innovateuk.ifs.project.organisationdetails.select.viewmodel.SelectOrganisationViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;

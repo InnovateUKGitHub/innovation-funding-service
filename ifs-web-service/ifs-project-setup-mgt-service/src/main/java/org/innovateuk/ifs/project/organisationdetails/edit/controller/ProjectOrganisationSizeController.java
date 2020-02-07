@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationsize.controller;
+package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;

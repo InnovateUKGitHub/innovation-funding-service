@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationsize.viewmodel;
+package org.innovateuk.ifs.project.organisationdetails.edit.viewmodel;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationdetails.viewmodel;
+package org.innovateuk.ifs.project.organisationdetails.view.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
