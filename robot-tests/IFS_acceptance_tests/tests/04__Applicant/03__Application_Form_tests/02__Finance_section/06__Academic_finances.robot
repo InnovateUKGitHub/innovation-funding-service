@@ -94,7 +94,7 @@ Academic finances JeS link showing
     [Tags]
     [Setup]    log in as a different user             &{collaborator2_credentials}
     When the user navigates to Your-finances page     Evolution of the global phosphorus cycle
-    And the user should see correct grant percentage
+    And the user should see correct grant percentage  0.00%
     When the user clicks the button/link              link = Your project costs
     Then the user can see JeS details
 
@@ -119,7 +119,7 @@ User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
     [Tags]
     When the user navigates to Your-finances page     Evolution of the global phosphorus cycle
-    And the user should see correct grant percentage
+    And the user should see correct grant percentage  32.12%
     And the user clicks the button/link               link = Your project costs
     Then the user should not see the element          jQuery = button:contains("Remove")
     And the user should see the element               css = [name$="incurredStaff"][readonly]
@@ -199,8 +199,9 @@ Mark academic finances as complete
     the user should see a field and summary error  This field cannot be left blank.
 
 the user should see correct grant percentage
+    [Arguments]  ${percentage}
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
-    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  0
+    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${percentage}
 
 The user marks the academic application finances as incomplete
     the user navigates to Your-finances page  Evolution of the global phosphorus cycle

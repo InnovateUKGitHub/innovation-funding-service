@@ -154,7 +154,7 @@ public abstract class BaseFinanceResource {
     }
 
     @JsonIgnore
-    public int getGrantClaimPercentage() {
+    public BigDecimal getGrantClaimPercentage() {
         GrantClaim grantClaim = getGrantClaim();
         return grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
     }

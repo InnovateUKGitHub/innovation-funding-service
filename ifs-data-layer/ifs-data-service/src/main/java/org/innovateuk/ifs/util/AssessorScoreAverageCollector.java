@@ -59,7 +59,7 @@ public class AssessorScoreAverageCollector implements Collector<String, Assessor
         BigDecimal getAverage() {
             return BigDecimal.ZERO.compareTo(count) == 0 ?
                     BigDecimal.ZERO :
-                    sum.divide(count, 0, BigDecimal.ROUND_HALF_UP);
+                    sum.divide(count, 1, BigDecimal.ROUND_HALF_UP);
         }
 
         ScoreAccumulator combine(ScoreAccumulator another) {

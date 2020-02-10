@@ -11,9 +11,9 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
@@ -33,8 +33,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
@@ -113,7 +113,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                     build(),
             FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                     newGrantClaimPercentage().
-                            withGrantClaimPercentage(30).
+                            withGrantClaimPercentage(BigDecimal.valueOf(30)).
                             build(1)).
                     build(),
             FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
@@ -141,7 +141,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                     build(),
             FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                     newGrantClaimPercentage().
-                            withGrantClaimPercentage(100).
+                            withGrantClaimPercentage(BigDecimal.valueOf(100)).
                             build(1)).
                     build(),
             FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
@@ -168,7 +168,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     @Test
     public void viewViabilityIndustrial() throws Exception {
 
-        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
+        ViabilityResource viability = new ViabilityResource(ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
 
         when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
@@ -199,7 +199,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertOrganisationDetails(industrialOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6678), viewModel.getTotalCosts());
-        assertEquals(Integer.valueOf(30), viewModel.getPercentageGrant());
+        assertEquals(BigDecimal.valueOf(30), viewModel.getPercentageGrant());
         assertEquals(Integer.valueOf(1004), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
@@ -207,8 +207,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
         assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());
-        assertEquals(false, form.isCreditReportConfirmed());
-        assertEquals(true, form.isConfirmViabilityChecked());
+        assertFalse(form.isCreditReportConfirmed());
+        assertTrue(form.isConfirmViabilityChecked());
 
         assertEquals((Long) 2L, viewModel.getTurnover());
         assertEquals((Long) 1L, viewModel.getHeadCount());
@@ -217,7 +217,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     @Test
     public void viewViabilityAcademic() throws Exception {
 
-        ViabilityResource viability = new ViabilityResource(Viability.REVIEW, ViabilityRagStatus.UNSET);
+        ViabilityResource viability = new ViabilityResource(ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
 
         when(organisationRestService.getOrganisationById(academicOrganisation.getId())).thenReturn(restSuccess(academicOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
@@ -245,7 +245,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertOrganisationDetails(academicOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6868), viewModel.getTotalCosts());
-        assertEquals(Integer.valueOf(100), viewModel.getPercentageGrant());
+        assertEquals(BigDecimal.valueOf(100), viewModel.getPercentageGrant());
         assertEquals(Integer.valueOf(5868), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(0), viewModel.getContributionToProject());
@@ -254,11 +254,11 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
 
         assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());
-        assertEquals(true, form.isCreditReportConfirmed());
-        assertEquals(false, form.isConfirmViabilityChecked());
+        assertTrue(form.isCreditReportConfirmed());
+        assertFalse(form.isConfirmViabilityChecked());
 
-        assertEquals(null, viewModel.getTurnover());
-        assertEquals(null, viewModel.getHeadCount());
+        assertNull(viewModel.getTurnover());
+        assertNull(viewModel.getHeadCount());
     }
 
     @Test
@@ -270,7 +270,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, true)).
                 thenReturn(serviceSuccess());
 
-        when(projectFinanceService.saveViability(projectId, organisationId, Viability.APPROVED, ViabilityRagStatus.RED)).
+        when(projectFinanceService.saveViability(projectId, organisationId, ViabilityState.APPROVED, ViabilityRagStatus.RED)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -283,7 +283,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
             andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 
         verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, true);
-        verify(projectFinanceService).saveViability(projectId, organisationId, Viability.APPROVED, ViabilityRagStatus.RED);
+        verify(projectFinanceService).saveViability(projectId, organisationId, ViabilityState.APPROVED, ViabilityRagStatus.RED);
     }
 
     @Test
@@ -295,7 +295,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, false)).
                 thenReturn(serviceSuccess());
 
-        when(projectFinanceService.saveViability(projectId, organisationId, Viability.REVIEW, ViabilityRagStatus.UNSET)).
+        when(projectFinanceService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -308,7 +308,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
         verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, false);
-        verify(projectFinanceService).saveViability(projectId, organisationId, Viability.REVIEW, ViabilityRagStatus.UNSET);
+        verify(projectFinanceService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
     }
 
     @Test
@@ -320,7 +320,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, true)).
                 thenReturn(serviceSuccess());
 
-        when(projectFinanceService.saveViability(projectId, organisationId, Viability.REVIEW, ViabilityRagStatus.UNSET)).
+        when(projectFinanceService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -333,7 +333,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
         verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, true);
-        verify(projectFinanceService).saveViability(projectId, organisationId, Viability.REVIEW, ViabilityRagStatus.UNSET);
+        verify(projectFinanceService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
     }
 
     private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {

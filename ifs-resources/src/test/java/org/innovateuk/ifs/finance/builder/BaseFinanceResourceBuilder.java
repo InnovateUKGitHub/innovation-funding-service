@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
@@ -32,6 +33,7 @@ import static org.innovateuk.ifs.finance.builder.VATCategoryBuilder.newVATCatego
 import static org.innovateuk.ifs.finance.builder.VATCostBuilder.newVATCost;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAIM_AMOUNT;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -62,12 +64,21 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((financeOrganisationDetail, finance) -> setField("financeOrganisationDetails", financeOrganisationDetail, finance), financeOrganisationDetails);
     }
 
-    public S withGrantClaimPercentage(Integer percentage) {
+    public S withGrantClaimPercentage(BigDecimal percentage) {
         return with(finance -> {
             ExcludedCostCategory costCategory = new ExcludedCostCategory();
             costCategory.addCost(new GrantClaimPercentage(null, percentage, finance.getId()));
             costCategory.calculateTotal();
             finance.getFinanceOrganisationDetails().put(FINANCE, costCategory);
+        });
+    }
+
+    public S withGrantClaimAmount(BigDecimal amount) {
+        return with(finance -> {
+            ExcludedCostCategory costCategory = new ExcludedCostCategory();
+            costCategory.addCost(new GrantClaimAmount(null, amount, finance.getId()));
+            costCategory.calculateTotal();
+            finance.getFinanceOrganisationDetails().put(GRANT_CLAIM_AMOUNT, costCategory);
         });
     }
 
@@ -191,7 +202,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
     public S thatIsRequestingFunding() {
         return withFinanceOrganisationDetails(asMap(
                 FINANCE, newExcludedCostCategory().withCosts(
-                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(10).build(1)
+                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(BigDecimal.valueOf(10)).build(1)
                 ).build(),
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newOtherCost().
@@ -205,7 +216,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
     public S thatIsNotRequestingFunding() {
         return withFinanceOrganisationDetails(asMap(
                 FINANCE, newExcludedCostCategory().withCosts(
-                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(0).build(1)
+                        GrantClaimCostBuilder.newGrantClaimPercentage().withGrantClaimPercentage(BigDecimal.ZERO).build(1)
                 ).build(),
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newOtherCost().

@@ -10,16 +10,19 @@ public class FinanceCheckOverviewViewModel {
     private final boolean loanCompetition;
 
     private final long applicationId;
-    private final boolean canChangeFunding;
+    private final boolean canChangeFundingSought;
+
+    private final boolean canChangeFundingLevelPercentages;
 
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries, ProjectFinanceCostBreakdownViewModel breakdown, long applicationId,
-                                         boolean canChangeFunding, boolean loanCompetition) {
+                                         boolean canChangeFundingSought, boolean loanCompetition, boolean canChangeFundingLevelPercentages) {
         this.overview = overview;
         this.summaries = summaries;
         this.breakdown = breakdown;
         this.applicationId = applicationId;
-        this.canChangeFunding = canChangeFunding;
+        this.canChangeFundingSought = canChangeFundingSought;
         this.loanCompetition = loanCompetition;
+        this.canChangeFundingLevelPercentages = canChangeFundingLevelPercentages;
     }
 
     public ProjectFinanceOverviewViewModel getOverview() {
@@ -38,11 +41,15 @@ public class FinanceCheckOverviewViewModel {
         return applicationId;
     }
 
-    public boolean isCanChangeFunding() {
-        return canChangeFunding;
+    public boolean isCanChangeFundingSought() {
+        return canChangeFundingSought;
     }
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isCanChangeFundingLevelPercentages() {
+        return canChangeFundingLevelPercentages;
     }
 }

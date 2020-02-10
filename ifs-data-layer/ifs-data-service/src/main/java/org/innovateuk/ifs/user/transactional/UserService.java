@@ -36,16 +36,16 @@ public interface UserService {
     ServiceResult<Void> changePassword(String hash, String password);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_INTERNAL')")
-    ServiceResult<UserPageResource> findActive(String filter, Pageable pageable);
+    ServiceResult<ManageUserPageResource> findActive(String filter, Pageable pageable);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findActiveExternal(String filter, Pageable pageable);
+    ServiceResult<ManageUserPageResource> findActiveExternal(String filter, Pageable pageable);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_INTERNAL')")
-    ServiceResult<UserPageResource> findInactive(String filter, Pageable pageable);
+    ServiceResult<ManageUserPageResource> findInactive(String filter, Pageable pageable);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserPageResource> findInactiveExternal(String filter, Pageable pageable);
+    ServiceResult<ManageUserPageResource> findInactiveExternal(String filter, Pageable pageable);
 
     @PostFilter("hasPermission(filterObject, 'READ_USER_ORGANISATION')")
     ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<Role> roleTypes, String searchString, SearchCategory searchCategory);

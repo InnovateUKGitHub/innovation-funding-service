@@ -33,8 +33,8 @@ ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 ${adminChangeEmailOld}    aaron.powell@example.com
 ${adminChangeEmailNew}    aaron.powell2@example.com
-${supportChangeEmailOld}  michael.henderson@gmail.com
-${supportChangeEmailNew}  michael.henderson2@gmail.com
+${supportChangeEmailOld}  jacqueline.white@gmail.com
+${supportChangeEmailNew}  jacqueline.white2@gmail.com
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -285,6 +285,39 @@ Deactivated user cannot login until he is activated
     When log in as a different user           ${email}  ${short_password}
     Then the user should not see an error in the page
 
+Admin can view assessor status unavailable
+     [Documentation]  IFS-7023
+     [Setup]   log in as a different user            &{ifs_admin_user_credentials}
+     Given the user clicks the button/link       link = Manage users
+     When the user searches for an assessor       Isaac  unavailable
+     Then user should see the correct assessor status    Unavailable
+
+Support can view assessor status disabled
+    [Documentation]  IFS-7023
+    [Setup]   log in as a different user            &{support_user_credentials}
+    Given the user clicks the button/link       link = Manage users
+    When the user searches for an assessor       Kieran  disabled
+    Then user should see the correct assessor status    Disabled
+
+Comp Admin can view assessor status
+    [Documentation]  IFS-7021
+    Given log in as a different user            &{Comp_admin1_credentials}
+    When the user clicks the button/link        link = Assessor status
+    Then the user should see the element        jQuery = h1:contains("Assessor status")
+
+
+Comp Admin can search for assessor
+    [Documentation]  IFS-7054
+    Given the user enters text to a text field   id = filter  Kieran
+    When the user clicks the button/link         css = input[type="submit"]
+    And the user clicks the button/link          link = Role disabled (1)
+    Then the user should see the element         jQuery = p:contains("Kieran Harper")
+
+Comp admin can view details of assessor
+    [Documentation]  IFS-7023
+    Given the user clicks the button/link               link = View details
+    Then user should see the correct assessor status    Disabled
+
 Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50
     [Tags]
@@ -427,8 +460,19 @@ the user should no longer see the application is capable of being marked as succ
 the administrator sees the external user details
     the user should see the element      jQuery = h1:contains("View user details")
     the user should see the element      jQuery = dd:contains("Aaron") ~ dd:contains("Powell")
-    the user should see the element      jQuery = dl:contains("Role profile"):contains("Applicant"):contains("Active")
+    the user should see the element      jQuery = td:contains("Applicant") ~ td:contains("Active")
 
 the user confirms email change
     the user selects the checkbox    confirmation
     the user clicks the button/link  id = confirm-email-change
+
+user should see the correct assessor status
+    [Arguments]  ${status}
+    the user should see the element   jQuery = td:contains("Assessor") ~ td:contains("${status}")
+
+the user searches for an assessor
+     [Arguments]  ${searchTerm}  ${status}
+     the user enters text to a text field    id = filter  ${searchTerm}
+     the user clicks the button/link         css = input[type="submit"]
+     the user should see the element         jQuery = p:contains("${searchTerm}") ~ p:contains("Assessor (${status})")
+     the user clicks the button/link         link = Edit

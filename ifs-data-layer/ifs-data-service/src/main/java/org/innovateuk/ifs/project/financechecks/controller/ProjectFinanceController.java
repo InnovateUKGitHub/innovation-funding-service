@@ -43,7 +43,7 @@ public class ProjectFinanceController {
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityRagStatus}")
     public RestResult<Void> saveViability(@PathVariable("projectId") final Long projectId,
                                           @PathVariable("organisationId") final Long organisationId,
-                                          @PathVariable("viability") final Viability viability,
+                                          @PathVariable("viability") final ViabilityState viability,
                                           @PathVariable("viabilityRagStatus") final ViabilityRagStatus viabilityRagStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus).toPostResponse();

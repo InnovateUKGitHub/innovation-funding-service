@@ -57,7 +57,7 @@ class SetupProgressChecker {
     }
 
     public boolean isSpendProfileGenerated() {
-        return asList(ACTION_REQUIRED, PENDING, COMPLETE).contains(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+        return asList(ACTION_REQUIRED, LEAD_ACTION_REQUIRED, PENDING, COMPLETE).contains(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
     public boolean isSpendProfileApproved() {

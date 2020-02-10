@@ -9,14 +9,22 @@ public class FinanceSummaryTableRow {
     private final String status;
 
     private final BigDecimal costs;
-    private final Integer claimPercentage;
+    private final BigDecimal claimPercentage;
     private final BigDecimal fundingSought;
     private final BigDecimal otherFunding;
     private final BigDecimal contribution;
 
     private final boolean complete;
 
-    public FinanceSummaryTableRow(Long organisationId, String organisationName, String status, BigDecimal costs, Integer claimPercentage, BigDecimal fundingSought, BigDecimal otherFunding, BigDecimal contribution, boolean complete) {
+    public FinanceSummaryTableRow(Long organisationId,
+                                  String organisationName,
+                                  String status,
+                                  BigDecimal costs,
+                                  BigDecimal claimPercentage,
+                                  BigDecimal fundingSought,
+                                  BigDecimal otherFunding,
+                                  BigDecimal contribution,
+                                  boolean complete) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.status = status;
@@ -44,7 +52,7 @@ public class FinanceSummaryTableRow {
         return costs;
     }
 
-    public Integer getClaimPercentage() {
+    public BigDecimal getClaimPercentage() {
         return claimPercentage;
     }
 
@@ -75,7 +83,7 @@ public class FinanceSummaryTableRow {
                 organisationName,
                 "(pending)",
                 BigDecimal.ZERO,
-                0,
+                BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,

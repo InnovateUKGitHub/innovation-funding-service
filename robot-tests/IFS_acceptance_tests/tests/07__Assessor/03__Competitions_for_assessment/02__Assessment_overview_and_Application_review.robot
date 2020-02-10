@@ -114,7 +114,7 @@ Scope: Status in the overview is updated
     And the user clicks the button/link                      jQuery = label:contains("Yes")
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
     And Wait for autosave
-    Then the user clicks the button/link                     jquery = button:contains("Save and return to assessment overview")
+    Then the user clicks the button with resubmission        jquery = button:contains("Save and return to assessment overview")
     And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
 
 Scope: Autosave
@@ -212,7 +212,7 @@ the user clicks previous and goes to the page
 
 the finance summary total should be correct
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(3)    30%
+    Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(3)    30.00%
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
@@ -251,7 +251,7 @@ The project costs are correct in the overview
 The academic finances are correct
     The user should see the element       jQuery = .table-overview td:contains("3 months")
     The user should see the element       jQuery = .table-overview td:contains("£990")
-    The user should see the element       jQuery = .table-overview td:contains("100%")
+    The user should see the element       jQuery = .table-overview td:contains("100.00%")
     The user should see the element       jQuery = .table-overview td:contains("990")
 
 Custom suite setup

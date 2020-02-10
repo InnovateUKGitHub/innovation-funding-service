@@ -295,8 +295,8 @@ applicant send project spend profile
     the user clicks the button/link       link = Spend profile
     the user clicks the button/link       link = ${Crystalrover_Name}
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    the user clicks the button/link       link = Review and send total project spend profile
-    the user clicks the button/link       link = Send project spend profile
+    the user clicks the button/link       jQuery = a:contains("Review and submit project spend profile")
+    the user clicks the button/link       jQuery = a:contains("Submit project spend profile")
     the user clicks the button/link       id = submit-send-all-spend-profiles
 
 the internal user approve SP and issue GOL
