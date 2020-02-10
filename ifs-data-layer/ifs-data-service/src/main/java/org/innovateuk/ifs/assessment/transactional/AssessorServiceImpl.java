@@ -191,7 +191,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 .isPresent();
     }
 
-    public boolean hasAnyAssessmentsAssigned(long userId) {
+    private boolean hasAnyAssessmentsAssigned(long userId) {
         return assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, userId);
     }
 
