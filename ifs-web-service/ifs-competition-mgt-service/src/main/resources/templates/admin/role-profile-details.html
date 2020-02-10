@@ -19,6 +19,7 @@
     </div>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Role profile details',size='govuk-heading-xl'" />
         <dl class="govuk-list">
             <dl class="govuk-list">
                 <dt>Role profile</dt>
@@ -43,10 +44,6 @@
                th:disabled="${model.applicationsAssigned}"
                th:text="|Change role status|">Change role status</a>
         </div>
-
-        <a th:href="@{/admin/user/{userId}/active(userId=${model.roleProfileStatus.userId})}"
-           class="button-secondary"
-           th:text="|Return to assessor details|">Return to assessor details</a>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
