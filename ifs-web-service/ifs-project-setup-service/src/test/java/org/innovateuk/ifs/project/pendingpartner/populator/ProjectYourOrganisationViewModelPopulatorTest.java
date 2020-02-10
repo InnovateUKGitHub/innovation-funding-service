@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
-import java.time.ZonedDateTime;
-import java.util.List;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -14,17 +12,23 @@ import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.PendingPartnerProgressResourceBuilder.newPendingPartnerProgressResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -68,6 +72,7 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
             .withYourOrganisationCompletedOn(ZonedDateTime.now())
             .withTermsAndConditionsCompletedOn(ZonedDateTime.now())
             .build();
+        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
@@ -75,7 +80,7 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
         when(pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId)).thenReturn(restSuccess(progress));
 
         ProjectYourOrganisationViewModel actual = yourOrganisationViewModelPopulator.populate(projectId,
-            organisationId);
+            organisationId, user);
 
         List<FormOption> expectedOrgSizeOptions = simpleMap(OrganisationSize.values(), size -> new FormOption(size.getDescription(), size.name()));
 

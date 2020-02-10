@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationdetails.form;
+package org.innovateuk.ifs.project.organisationdetails.select.form;
 
 public class SelectOrganisationForm {
 

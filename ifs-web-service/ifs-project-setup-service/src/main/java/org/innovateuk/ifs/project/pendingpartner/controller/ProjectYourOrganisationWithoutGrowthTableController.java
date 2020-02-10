@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
-import javax.validation.Valid;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
@@ -22,6 +19,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
@@ -50,10 +51,13 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
     @AsyncMethod
     @PreAuthorize("hasAnyAuthority('applicant')")
     @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants and internal users can view the Your organisation page")
-    public String viewPage(@PathVariable long projectId, @PathVariable long organisationId, Model model) {
+    public String viewPage(@PathVariable long projectId,
+                           @PathVariable long organisationId,
+                           UserResource loggedInUser,
+                           Model model) {
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
-            getViewModel(projectId, organisationId));
+            getViewModel(projectId, organisationId, loggedInUser));
 
         Future<YourOrganisationWithoutGrowthTableForm> formRequest = async(() ->
             withoutGrowthTableFormPopulator.populate(yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId).getSuccess()));
@@ -81,7 +85,7 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
                                                    @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler, Model model) {
 
         Supplier<String> failureHandler = () -> {
-            YourOrganisationViewModel viewModel = getViewModel(projectId, organisationId);
+            YourOrganisationViewModel viewModel = getViewModel(projectId, organisationId, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             return VIEW_WITHOUT_GROWTH_TABLE_PAGE;
@@ -118,8 +122,8 @@ public class ProjectYourOrganisationWithoutGrowthTableController extends AsyncAd
             getSuccess();
     }
 
-    private YourOrganisationViewModel getViewModel(long projectId, long organisationId) {
-        return viewModelPopulator.populate(projectId, organisationId);
+    private YourOrganisationViewModel getViewModel(long projectId, long organisationId, UserResource user) {
+        return viewModelPopulator.populate(projectId, organisationId, user);
     }
 
     private String redirectToViewPage(long projectId, long organisationId) {

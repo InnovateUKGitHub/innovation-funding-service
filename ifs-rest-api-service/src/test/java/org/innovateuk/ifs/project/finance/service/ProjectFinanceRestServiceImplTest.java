@@ -24,7 +24,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testGetProjectFinances() {
+    public void getProjectFinances() {
 
         Long projectId = 123L;
 
@@ -38,7 +38,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testGetViability() {
+    public void getViability() {
 
         ViabilityResource viability = new ViabilityResource(ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
 
@@ -51,7 +51,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testSaveViability() {
+    public void saveViability() {
 
         String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/viability/" +
                 ViabilityState.APPROVED.name() + "/" + ViabilityRagStatus.RED.name();
@@ -66,7 +66,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testGetEligibility() {
+    public void getEligibility() {
 
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
 
@@ -79,7 +79,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testSaveEligibility() {
+    public void saveEligibility() {
 
         String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/eligibility/" +
                 EligibilityState.APPROVED.name() + "/" + EligibilityRagStatus.RED.name();
@@ -94,7 +94,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testIsCreditReportConfirmed() {
+    public void isCreditReportConfirmed() {
 
         setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/credit-report", Boolean.class, true);
         RestResult<Boolean> results = service.isCreditReportConfirmed(123L, 456L);
@@ -102,7 +102,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testSaveCreditReportConfirmed() {
+    public void saveCreditReportConfirmed() {
 
         String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/credit-report/true";
         setupPostWithRestResultExpectations(postUrl, OK);
@@ -114,7 +114,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testGetProjectFinance() {
+    public void getProjectFinance() {
 
         Long projectId = 123L;
 
@@ -127,5 +127,14 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
         RestResult<ProjectFinanceResource> result = service.getProjectFinance(projectId, organisationId);
 
         assertEquals(expectedResult, result.getSuccess());
+    }
+
+    @Test
+    public void hasAnyProjectOrganisationSizeChangedFromApplication() {
+        long projectId = 123L;
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/finance/has-organisation-size-changed", Boolean.class, true);
+
+        RestResult<Boolean> results = service.hasAnyProjectOrganisationSizeChangedFromApplication(projectId);
+        assertTrue(results.getSuccess());
     }
 }

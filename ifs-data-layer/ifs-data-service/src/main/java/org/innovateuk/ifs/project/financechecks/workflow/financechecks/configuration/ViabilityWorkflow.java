@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.financechecks.workflow.financechecks.configur
 import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -21,6 +22,9 @@ import static org.innovateuk.ifs.project.finance.resource.ViabilityState.*;
 @Configuration
 @EnableStateMachineFactory(name = "viabilityStateMachineFactory")
 public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilityState, ViabilityEvent> {
+
+    @Autowired
+    private ViabilityApprovedGuard viabilityApprovedGuard;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ViabilityState, ViabilityEvent> config) throws Exception {
@@ -51,6 +55,7 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
                 .withExternal()
                     .source(REVIEW)
                     .event(VIABILITY_APPROVED)
+                    .guard(viabilityApprovedGuard)
                     .target(APPROVED);
     }
 }
