@@ -144,7 +144,7 @@
                            required="required"
                            th:attr="data-required-errormessage=#{validation.additionalinfoform.competitioncode.required}"
                            aria-live="assertive" />
-                    <button class="govuk-button govuk-button--secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
+                    <button class="govuk-button govuk-button--secondary govuk-!-margin-top-0" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
                 </div>
             </fieldset>
 
