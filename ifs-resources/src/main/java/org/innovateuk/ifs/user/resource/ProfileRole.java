@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.user.resource;
 
 public enum ProfileRole {
-    ASSESSOR("assessor");
+    ASSESSOR("Assessor");
 
     private String name;
 
