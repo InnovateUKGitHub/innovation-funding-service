@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ProjectOrganisationSizeWithoutGrowthTableControllerTest extends BaseControllerMockMVCTest<ProjectOrganisationSizeWithoutGrowthTableController> {
+public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends BaseControllerMockMVCTest<EditOrganisationDetailsControllerWithoutGrowthTable> {
 
 
     @Mock
@@ -60,8 +60,8 @@ public class ProjectOrganisationSizeWithoutGrowthTableControllerTest extends Bas
     private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size-without-growth-table";
 
     @Override
-    protected ProjectOrganisationSizeWithoutGrowthTableController supplyControllerUnderTest() {
-        return new ProjectOrganisationSizeWithoutGrowthTableController();
+    protected EditOrganisationDetailsControllerWithoutGrowthTable supplyControllerUnderTest() {
+        return new EditOrganisationDetailsControllerWithoutGrowthTable();
     }
 
     @Before
