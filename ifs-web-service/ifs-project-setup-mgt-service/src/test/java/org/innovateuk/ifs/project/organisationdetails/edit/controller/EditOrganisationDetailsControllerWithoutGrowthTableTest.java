@@ -116,7 +116,7 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
         when(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);
 
-        mockMvc.perform(get(viewPageUrl()))
+        mockMvc.perform(post(viewPageUrl()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEW_WITHOUT_GROWTH_TABLE_PAGE))
                 .andReturn();

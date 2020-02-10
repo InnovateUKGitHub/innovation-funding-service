@@ -59,7 +59,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
         Supplier<String> failureHandler = () -> {
             model.addAttribute("model", getViewModel(projectId, organisationId));
-            return "project/organisationdetails/edit-organisation-size-with-growth-table";
+            return view();
         };
         Supplier<String> successHandler = () -> redirectToOrganisationDetails(projectId, organisationId);
 
