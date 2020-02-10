@@ -42,7 +42,7 @@ public class AssessorController {
     }
 
     @GetMapping("/applications-assigned/{assessorId}")
-    public RestResult<Boolean> hasApplicationsAssigned(@PathVariable("assessorId") Long assessorId) {
+    public RestResult<Boolean> hasApplicationsAssigned(@PathVariable("assessorId") long assessorId) {
         return assessorService.hasApplicationsAssigned(assessorId).toGetResponse();
     }
 }
