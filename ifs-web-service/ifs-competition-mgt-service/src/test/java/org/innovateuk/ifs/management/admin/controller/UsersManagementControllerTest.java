@@ -5,7 +5,7 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
-import org.innovateuk.ifs.user.resource.UserPageResource;
+import org.innovateuk.ifs.user.resource.ManageUserPageResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<UsersManagementController> {
 
-    private UserPageResource userPageResource;
-
+    private ManageUserPageResource manageUserPageResource;
     private RoleInvitePageResource roleInvitePageResource;
 
     @Mock
@@ -36,22 +35,19 @@ public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<
     @Before
     public void setUpCommonExpectations() {
 
-        userPageResource = new UserPageResource();
-
+        manageUserPageResource = new ManageUserPageResource();
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestService.getActiveUsers(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-
-        when(userRestService.getInactiveUsers(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-
+        when(userRestService.getActiveUsers(null, 0, 5)).thenReturn(restSuccess(manageUserPageResource));
+        when(userRestService.getInactiveUsers(null, 0, 5)).thenReturn(restSuccess(manageUserPageResource));
         when(inviteUserRestService.getPendingInternalUserInvites(null, 0, 5)).thenReturn(restSuccess(roleInvitePageResource));
 
     }
 
     @Test
-    public void testViewActive() throws Exception {
-        when(userRestService.getActiveExternalUsers(null, 0, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
+    public void viewActive() throws Exception {
+        when(userRestService.getActiveExternalUsers(null, 0, 5)).thenReturn(restSuccess(manageUserPageResource));
+        when(userRestService.getInactiveExternalUsers(null, 0, 5)).thenReturn(restSuccess(manageUserPageResource));
 
         mockMvc.perform(get("/admin/users/active")
                 .param("page", "1")
@@ -62,23 +58,23 @@ public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<
                         new UserListViewModel(
                                 "active",
                                 null,
-                                userPageResource.getContent(),
-                                userPageResource.getContent(),
+                                manageUserPageResource.getContent(),
+                                manageUserPageResource.getContent(),
                                 roleInvitePageResource.getContent(),
-                                userPageResource.getTotalElements(),
-                                userPageResource.getTotalElements(),
+                                manageUserPageResource.getTotalElements(),
+                                manageUserPageResource.getTotalElements(),
                                 roleInvitePageResource.getTotalElements(),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(userPageResource),
+                                new PaginationViewModel(manageUserPageResource),
+                                new PaginationViewModel(manageUserPageResource),
                                 new PaginationViewModel(roleInvitePageResource),
                                 false)
                 ));
     }
 
     @Test
-    public void testViewInactive() throws Exception {
-        when(userRestService.getActiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
-        when(userRestService.getInactiveExternalUsers(null,0, 5)).thenReturn(restSuccess(userPageResource));
+    public void viewInactive() throws Exception {
+        when(userRestService.getActiveExternalUsers(null, 0, 5)).thenReturn(restSuccess(manageUserPageResource));
+        when(userRestService.getInactiveExternalUsers(null, 0, 5)).thenReturn(restSuccess(manageUserPageResource));
 
         mockMvc.perform(get("/admin/users/inactive")
                 .param("page", "1")
@@ -89,21 +85,21 @@ public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<
                         new UserListViewModel(
                                 "inactive",
                                 null,
-                                userPageResource.getContent(),
-                                userPageResource.getContent(),
+                                manageUserPageResource.getContent(),
+                                manageUserPageResource.getContent(),
                                 roleInvitePageResource.getContent(),
-                                userPageResource.getTotalElements(),
-                                userPageResource.getTotalElements(),
+                                manageUserPageResource.getTotalElements(),
+                                manageUserPageResource.getTotalElements(),
                                 roleInvitePageResource.getTotalElements(),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(userPageResource),
+                                new PaginationViewModel(manageUserPageResource),
+                                new PaginationViewModel(manageUserPageResource),
                                 new PaginationViewModel(roleInvitePageResource),
                                 false)
                 ));
     }
 
     @Test
-    public void testViewPending() throws Exception {
+    public void viewPending() throws Exception {
         mockMvc.perform(get("/admin/users/pending")
                 .param("page", "1")
                 .param("size", "5"))
@@ -113,13 +109,13 @@ public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<
                         new UserListViewModel(
                                 "pending",
                                 null,
-                                userPageResource.getContent(),
-                                userPageResource.getContent(),
+                                manageUserPageResource.getContent(),
+                                manageUserPageResource.getContent(),
                                 roleInvitePageResource.getContent(),
-                                userPageResource.getTotalElements(),
-                                userPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
-                                new PaginationViewModel(userPageResource),
-                                new PaginationViewModel(userPageResource),
+                                manageUserPageResource.getTotalElements(),
+                                manageUserPageResource.getTotalElements(), roleInvitePageResource.getTotalElements(),
+                                new PaginationViewModel(manageUserPageResource),
+                                new PaginationViewModel(manageUserPageResource),
                                 new PaginationViewModel(roleInvitePageResource),
                                 true)
                 ));

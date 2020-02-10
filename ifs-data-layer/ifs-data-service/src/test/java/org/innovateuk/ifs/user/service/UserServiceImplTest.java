@@ -20,7 +20,9 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.RoleProfileStatusMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -48,6 +50,7 @@ import java.util.function.Supplier;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static java.util.Optional.of;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -55,6 +58,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.newRoleProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -78,6 +83,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Mock
     private UserOrganisationMapper userOrganisationMapperMock;
+
+    @Mock
+    private RoleProfileStatusMapper roleProfileStatusMapper;
 
     @Mock
     private TermsAndConditionsService termsAndConditionsServiceMock;
@@ -454,13 +462,20 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testFindActive(){
         Set<Role> internalRoles = singleton(Role.PROJECT_FINANCE);
         Pageable pageable = PageRequest.of(0, 5);
-        List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE).withRoles(internalRoles).build(6);
+        User createdByUser = newUser().withFirstName("first").withLastName("last").build();
+        Set<RoleProfileStatus> roleProfileStatuses = newRoleProfileStatus().build(1).stream().collect(toSet());
+
+        List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE)
+                .withCreatedBy(createdByUser)
+                .withRoles(internalRoles)
+                .withRoleProfileStatuses(roleProfileStatuses)
+                .build(6);
         Page<User> expectedPage = new PageImpl<>(activeUsers, pageable, 6L);
 
         when(userRepositoryMock.findByEmailContainingAndStatus("", UserStatus.ACTIVE, pageable)).thenReturn(expectedPage);
-        when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
+        when(roleProfileStatusMapper.mapToResource(any(RoleProfileStatus.class))).thenReturn(newRoleProfileStatusResource().build());
 
-        ServiceResult<UserPageResource> result = service.findActive("", pageable);
+        ServiceResult<ManageUserPageResource> result = service.findActive("", pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());
@@ -472,13 +487,20 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testFindInactive(){
         Set<Role> internalRoles = singleton(Role.COMP_ADMIN);
         Pageable pageable = PageRequest.of(0, 5);
-        List<User> inactiveUsers = newUser().withStatus(UserStatus.INACTIVE).withRoles(internalRoles).build(4);
+        User createdByUser = newUser().withFirstName("first").withLastName("last").build();
+        Set<RoleProfileStatus> roleProfileStatuses = newRoleProfileStatus().build(1).stream().collect(toSet());
+
+        List<User> inactiveUsers = newUser()
+                .withStatus(UserStatus.INACTIVE)
+                .withRoleProfileStatuses(roleProfileStatuses)
+                .withCreatedBy(createdByUser)
+                .withRoles(internalRoles).build(4);
         Page<User> expectedPage = new PageImpl<>(inactiveUsers, pageable, 4L);
 
         when(userRepositoryMock.findByEmailContainingAndStatus("", UserStatus.INACTIVE, pageable)).thenReturn(expectedPage);
-        when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
+        when(roleProfileStatusMapper.mapToResource(any(RoleProfileStatus.class))).thenReturn(newRoleProfileStatusResource().build());
 
-        ServiceResult<UserPageResource> result = service.findInactive("", pageable);
+        ServiceResult<ManageUserPageResource> result = service.findInactive("", pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());

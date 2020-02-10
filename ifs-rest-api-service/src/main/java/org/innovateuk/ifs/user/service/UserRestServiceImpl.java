@@ -97,35 +97,35 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize) {
+    public RestResult<ManageUserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
         String uriWithParams = buildPaginationUri(USER_REST_URL + "/active", pageNumber, pageSize, null, params);
-        return getWithRestResult(uriWithParams, UserPageResource.class);
+        return getWithRestResult(uriWithParams, ManageUserPageResource.class);
     }
 
     @Override
-    public RestResult<UserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize) {
+    public RestResult<ManageUserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
         String uriWithParams = buildPaginationUri(USER_REST_URL + "/inactive", pageNumber, pageSize, null, params);
-        return getWithRestResult(uriWithParams, UserPageResource.class);
+        return getWithRestResult(uriWithParams, ManageUserPageResource.class);
     }
 
     @Override
-    public RestResult<UserPageResource> getActiveExternalUsers(String filter, int pageNumber, int pageSize) {
+    public RestResult<ManageUserPageResource> getActiveExternalUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
         String uriWithParams = buildPaginationUri(USER_REST_URL + "/external/active", pageNumber, pageSize, null, params);
-        return getWithRestResult(uriWithParams, UserPageResource.class);
+        return getWithRestResult(uriWithParams, ManageUserPageResource.class);
     }
 
     @Override
-    public RestResult<UserPageResource> getInactiveExternalUsers(String filter, int pageNumber, int pageSize) {
+    public RestResult<ManageUserPageResource> getInactiveExternalUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);
         String uriWithParams = buildPaginationUri(USER_REST_URL + "/external/inactive", pageNumber, pageSize, null, params);
-        return getWithRestResult(uriWithParams, UserPageResource.class);
+        return getWithRestResult(uriWithParams, ManageUserPageResource.class);
     }
 
     @Override

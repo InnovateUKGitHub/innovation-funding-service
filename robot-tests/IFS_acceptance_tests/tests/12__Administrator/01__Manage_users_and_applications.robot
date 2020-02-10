@@ -289,10 +289,15 @@ Admin can view assessor status unavailable
      [Documentation]  IFS-7023
      [Setup]   log in as a different user            &{ifs_admin_user_credentials}
      Given the user clicks the button/link       link = Manage users
-     When the user enters text to a text field   id = filter  Isaac
-     And the user clicks the button/link         css = input[type="submit"]
-     And the user clicks the button/link         link = Edit
+     When the user searches for an assessor       Isaac  unavailable
      Then user should see the correct assessor status    Unavailable
+
+Support can view assessor status disabled
+    [Documentation]  IFS-7023
+    [Setup]   log in as a different user            &{support_user_credentials}
+    Given the user clicks the button/link       link = Manage users
+    When the user searches for an assessor       Kieran  disabled
+    Then user should see the correct assessor status    Disabled
 
 Comp Admin can view assessor status
     [Documentation]  IFS-7021
@@ -464,3 +469,10 @@ the user confirms email change
 user should see the correct assessor status
     [Arguments]  ${status}
     the user should see the element   jQuery = td:contains("Assessor") ~ td:contains("${status}")
+
+the user searches for an assessor
+     [Arguments]  ${searchTerm}  ${status}
+     the user enters text to a text field    id = filter  ${searchTerm}
+     the user clicks the button/link         css = input[type="submit"]
+     the user should see the element         jQuery = p:contains("${searchTerm}") ~ p:contains("Assessor (${status})")
+     the user clicks the button/link         link = Edit
