@@ -29,7 +29,7 @@ public class AssessorRestServiceImpl extends BaseRestService implements Assessor
     }
 
     @Override
-    public RestResult<Boolean> hasApplicationsAssigned(Long assessorId) {
+    public RestResult<Boolean> hasApplicationsAssigned(long assessorId) {
         return getWithRestResult(format("%s/applications-assigned/%s", assessorRestUrl, assessorId), Boolean.class);
     }
 

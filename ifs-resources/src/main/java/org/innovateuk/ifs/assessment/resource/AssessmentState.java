@@ -56,8 +56,7 @@ public enum AssessmentState implements ProcessState, IdentifiableEnum {
             PENDING,
             ACCEPTED,
             OPEN,
-            READY_TO_SUBMIT,
-            SUBMITTED);
+            READY_TO_SUBMIT);
 
     @Override
     public String getStateName() {

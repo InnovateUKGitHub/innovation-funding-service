@@ -13,7 +13,7 @@ public interface AssessorRestService {
 
     RestResult<AssessorProfileResource> getAssessorProfile(Long assessorId);
 
-    RestResult<Boolean> hasApplicationsAssigned(Long assessorId);
+    RestResult<Boolean> hasApplicationsAssigned(long assessorId);
 
     RestResult<Void> notifyAssessors(long competitionId);
 }
