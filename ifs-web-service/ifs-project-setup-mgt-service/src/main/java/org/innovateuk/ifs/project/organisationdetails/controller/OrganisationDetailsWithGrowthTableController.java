@@ -59,6 +59,7 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                                           Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
 
@@ -78,7 +79,8 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
                 project.getName(),
                 organisationId,
                 true,
-                false));
+                false,
+                    competition.isProcurement()));
 
             model.addAttribute("form", getForm(projectId, organisationId));
         }

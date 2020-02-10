@@ -58,6 +58,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
                                        Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
 
@@ -77,7 +78,8 @@ public class OrganisationDetailsWithoutGrowthTableController {
                 project.getName(),
                 organisationId,
                 true,
-                false));
+                false,
+                    competition.isProcurement()));
 
             model.addAttribute("form", getForm(projectId, organisationId));
         }
