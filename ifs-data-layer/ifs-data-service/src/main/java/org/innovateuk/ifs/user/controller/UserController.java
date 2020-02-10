@@ -41,7 +41,6 @@ public class UserController {
             new Sort.Order(Sort.Direction.ASC, "firstName"),
             new Sort.Order(Sort.Direction.ASC, "lastName")
     );
-
     private static final Log LOG = LogFactory.getLog(UserController.class);
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
@@ -64,43 +63,43 @@ public class UserController {
     private CrmService crmService;
 
     @GetMapping("/uid/{uid}")
-    public RestResult<UserResource> getUserByUid(@PathVariable("uid") final String uid) {
+    public RestResult<UserResource> getUserByUid(@PathVariable String uid) {
         return baseUserService.getUserResourceByUid(uid).toGetResponse();
     }
 
     @GetMapping("/id/{id}")
-    public RestResult<UserResource> getUserById(@PathVariable("id") final Long id) {
+    public RestResult<UserResource> getUserById(@PathVariable long id) {
         return baseUserService.getUserById(id).toGetResponse();
     }
 
     @GetMapping("/find-by-role/{userRole}")
-    public RestResult<List<UserResource>> findByRole(@PathVariable("userRole") final Role userRole) {
+    public RestResult<List<UserResource>> findByRole(@PathVariable Role userRole) {
         return baseUserService.findByProcessRole(userRole).toGetResponse();
     }
 
     @GetMapping("/active")
-    public RestResult<UserPageResource> findActiveUsers(@RequestParam(required = false) String filter,
+    public RestResult<ManageUserPageResource> findActiveUsers(@RequestParam(required = false) String filter,
                                                         @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                         @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return userService.findActive(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/inactive")
-    public RestResult<UserPageResource> findInactiveUsers(@RequestParam(required = false)  String filter,
+    public RestResult<ManageUserPageResource> findInactiveUsers(@RequestParam(required = false)  String filter,
                                                           @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                           @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
         return userService.findInactive(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/external/active")
-    public RestResult<UserPageResource> findActiveExternalUsers(@RequestParam(required = false)  String filter,
+    public RestResult<ManageUserPageResource> findActiveExternalUsers(@RequestParam(required = false)  String filter,
                                                                 @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                 @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return userService.findActiveExternal(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/external/inactive")
-    public RestResult<UserPageResource> findInactiveExternalUsers(@RequestParam(required = false)  String filter,
+    public RestResult<ManageUserPageResource> findInactiveExternalUsers(@RequestParam(required = false)  String filter,
                                                                   @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
         return userService.findInactiveExternal(filter, PageRequest.of(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
@@ -135,46 +134,46 @@ public class UserController {
     }
 
     @GetMapping("/find-external-users")
-    public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam(value = "searchString") final String searchString,
-                                                                        @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
+    public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam String searchString,
+                                                                        @RequestParam SearchCategory searchCategory) {
         return userService.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory).toGetResponse();
     }
 
     @GetMapping("/find-by-email/{email}/")
-    public RestResult<UserResource> findByEmail(@PathVariable("email") final String email) {
+    public RestResult<UserResource> findByEmail(@PathVariable String email) {
         return userService.findByEmail(email).toGetResponse();
     }
 
     @GetMapping("/find-assignable-users/{applicationId}")
-    public RestResult<Set<UserResource>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<Set<UserResource>> findAssignableUsers(@PathVariable long applicationId) {
         return userService.findAssignableUsers(applicationId).toGetResponse();
     }
 
     @GetMapping("/find-related-users/{applicationId}")
-    public RestResult<Set<UserResource>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<Set<UserResource>> findRelatedUsers(@PathVariable long applicationId) {
         return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
-    @GetMapping("/" + URL_SEND_PASSWORD_RESET_NOTIFICATION + "/{emailaddress}/")
-    public RestResult<Void> sendPasswordResetNotification(@PathVariable("emailaddress") final String emailAddress) {
+    @GetMapping("/" + URL_SEND_PASSWORD_RESET_NOTIFICATION + "/{emailAddress}/")
+    public RestResult<Void> sendPasswordResetNotification(@PathVariable String emailAddress) {
         return userService.findByEmail(emailAddress)
                 .andOnSuccessReturn(userService::sendPasswordResetNotification)
                 .toPutResponse();
     }
 
     @GetMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
-    public RestResult<Void> checkPasswordReset(@PathVariable("hash") final String hash) {
+    public RestResult<Void> checkPasswordReset(@PathVariable String hash) {
         return tokenService.getPasswordResetToken(hash).andOnSuccessReturnVoid().toPutResponse();
     }
 
     @PostMapping("/" + URL_PASSWORD_RESET + "/{hash}")
-    public RestResult<Void> resetPassword(@PathVariable("hash") final String hash, @RequestBody final String password) {
+    public RestResult<Void> resetPassword(@PathVariable String hash, @RequestBody final String password) {
         return userService.changePassword(hash, password)
                 .toPutResponse();
     }
 
     @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
-    public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
+    public RestResult<Void> verifyEmail(@PathVariable String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
         LOG.debug(String.format("UserController verifyHash: %s", hash));
         return result.handleSuccessOrFailure(
@@ -190,24 +189,24 @@ public class UserController {
     }
 
     @PutMapping("/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/")
-    public RestResult<Void> resendEmailVerificationNotification(@PathVariable("emailAddress") final String emailAddress) {
+    public RestResult<Void> resendEmailVerificationNotification(@PathVariable String emailAddress) {
         return userService.findInactiveByEmail(emailAddress)
                 .andOnSuccessReturn(user -> registrationService.resendUserVerificationEmail(user))
                 .toPutResponse();
     }
 
     @PostMapping("/create-lead-applicant-for-organisation/{organisationId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final long organisationId, @RequestBody UserResource userResource) {
+    public RestResult<UserResource> createUser(@PathVariable long organisationId, @RequestBody UserResource userResource) {
         return registrationService.createUser(userResource).toPostCreateResponse();
     }
 
     @PostMapping("/create-lead-applicant-for-organisation/{organisationId}/{competitionId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final long organisationId, @PathVariable("competitionId") final long competitionId, @RequestBody UserResource userResource) {
+    public RestResult<UserResource> createUser(@PathVariable long organisationId, @PathVariable long competitionId, @RequestBody UserResource userResource) {
         return registrationService.createUserWithCompetitionContext(competitionId, organisationId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/id/{userId}/agree-new-site-terms-and-conditions")
-    public RestResult<Void> agreeNewSiteTermsAndConditions(@PathVariable("userId") final long userId) {
+    public RestResult<Void> agreeNewSiteTermsAndConditions(@PathVariable long userId) {
         return userService.agreeNewTermsAndConditions(userId).toPostResponse();
     }
 
@@ -217,24 +216,22 @@ public class UserController {
     }
 
     @PutMapping("{id}/update-email/{email:.+}")
-    public RestResult<Void> updateEmail(@PathVariable("id") final long id,
-                                        @PathVariable("email") final String email) {
+    public RestResult<Void> updateEmail(@PathVariable long id, @PathVariable String email) {
         return userService.updateEmail(id, email).toPutResponse();
     }
 
     @PostMapping("/id/{id}/deactivate")
-    public RestResult<Void> deactivateUser(@PathVariable("id") final Long id) {
+    public RestResult<Void> deactivateUser(@PathVariable long id) {
         return registrationService.deactivateUser(id).toPostResponse();
     }
 
     @PostMapping("/id/{id}/reactivate")
-    public RestResult<Void> reactivateUser(@PathVariable("id") final Long id) {
+    public RestResult<Void> reactivateUser(@PathVariable long id) {
         return registrationService.activateUser(id).toPostResponse();
     }
 
     @PostMapping("{id}/grant/{role}")
-    public RestResult<Void> grantRole(@PathVariable("id") final long id,
-                                           @PathVariable("role") final Role role) {
+    public RestResult<Void> grantRole(@PathVariable long id, @PathVariable Role role) {
         return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
     }
 }

@@ -45,8 +45,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -135,13 +134,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void internalUsersCanViewEveryoneUserPageResource() {
 
-        UserPageResource userPageResource = new UserPageResource();
+        ManageUserPageResource manageUserPageResource = new ManageUserPageResource();
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(ifsAdminUser())) {
-                assertTrue(rules.internalUsersCanViewEveryone(userPageResource, user));
+                assertTrue(rules.internalUsersCanViewEveryone(manageUserPageResource, user));
             } else {
-                assertFalse(rules.internalUsersCanViewEveryone(userPageResource, user));
+                assertFalse(rules.internalUsersCanViewEveryone(manageUserPageResource, user));
             }
         });
     }
@@ -898,6 +897,27 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, ifsAdminUser()));
         assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, assessorUser()));
 
+    }
+
+    @Test
+    public void compAdminAndProjectFinanceCanViewAssessors() {
+        UserPageResource userPageResourceWithOnlyAssessors = new UserPageResource();
+        userPageResourceWithOnlyAssessors.setContent(newUserResource().withRoleGlobal(ASSESSOR).build(1));
+
+        UserPageResource userPageResourceWithNonAssessors = new UserPageResource();
+        userPageResourceWithNonAssessors.setContent(newUserResource().withRolesGlobal(singletonList(ASSESSOR), singletonList(APPLICANT)).build(2));
+
+        allGlobalRoleUsers.forEach(u -> {
+                if (u.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE)) {
+                    assertTrue(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithOnlyAssessors, u));
+                    assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithNonAssessors, u));
+                }
+                else {
+                    assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithOnlyAssessors, u));
+                    assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithNonAssessors, u));
+                }
+            }
+        );
     }
 
     @Override
