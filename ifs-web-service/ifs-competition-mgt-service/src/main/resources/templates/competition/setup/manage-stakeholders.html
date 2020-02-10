@@ -125,12 +125,12 @@
                 Manage stakeholders
             </h2>
             <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item" th:classappaend="${param.tab == null or param.tab[0] == 'add' ? 'govuk-tabs__list-item--selected' : ''}">
+                <li class="govuk-tabs__list-item" th:classappend="${param.tab == null or param.tab[0] == 'add' ? 'govuk-tabs__list-item--selected' : ''}">
                     <a href="?tab=add"
                        class="govuk-tabs__tab">Add</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a href="?tab=added" th:classappend="${param.tab != null and param.tab[0] == 'added' ? 'govuk-tabs__list-item--selected' : ''}"
+                <li class="govuk-tabs__list-item" th:classappend="${param.tab != null and param.tab[0] == 'added' ? 'govuk-tabs__list-item--selected' : ''}">
+                    <a href="?tab=added"
                        class="govuk-tabs__tab">Added to competition (<span th:text="${#lists.size(model.stakeholdersAssignedToCompetition) + #lists.size(model.pendingStakeholderInvitesForCompetition)}"></span>)</a>
                 </li>
             </ul>
