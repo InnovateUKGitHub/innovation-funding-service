@@ -74,9 +74,9 @@ public class SelectOrganisationControllerTest extends BaseControllerMockMVCTest<
             .andReturn();
 
         SelectOrganisationViewModel selectViewModel = (SelectOrganisationViewModel) result.getModelAndView().getModel().get("model");
-        String url = "project/select-organisation";
+        String view = "project/organisationdetails/select-organisation";
 
-        assertEquals(url, result.getModelAndView().getViewName());
+        assertEquals(view, result.getModelAndView().getViewName());
         assertEquals(competitionId, selectViewModel.getCompetitionId());
         assertTrue(selectViewModel.getPartnerOrganisations().get(0).isLeadOrganisation());
         assertTrue(selectViewModel.getPartnerOrganisations().get(2).getOrganisationName()

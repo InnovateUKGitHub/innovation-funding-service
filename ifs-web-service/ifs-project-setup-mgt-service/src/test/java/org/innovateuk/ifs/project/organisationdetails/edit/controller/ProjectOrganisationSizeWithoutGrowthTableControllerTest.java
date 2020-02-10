@@ -57,7 +57,7 @@ public class ProjectOrganisationSizeWithoutGrowthTableControllerTest extends Bas
     private OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource;
     private ProjectResource projectResource;
     private OrganisationResource organisationResource;
-    private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/edit-organisation-size-without-growth-table";
+    private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size-without-growth-table";
 
     @Override
     protected ProjectOrganisationSizeWithoutGrowthTableController supplyControllerUnderTest() {

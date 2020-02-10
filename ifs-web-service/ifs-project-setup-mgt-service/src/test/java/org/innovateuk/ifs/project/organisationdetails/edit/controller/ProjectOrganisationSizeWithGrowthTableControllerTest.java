@@ -58,7 +58,7 @@ public class ProjectOrganisationSizeWithGrowthTableControllerTest extends BaseCo
     private OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource;
     private ProjectResource projectResource;
     private OrganisationResource organisationResource;
-    private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/edit-organisation-size-with-growth-table";
+    private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size-with-growth-table";
 
     @Override
     protected ProjectOrganisationSizeWithGrowthTableController supplyControllerUnderTest() {
