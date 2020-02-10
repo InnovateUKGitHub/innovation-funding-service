@@ -215,22 +215,22 @@ Assessor can view the list of allocated applications
 Assessor can view feedback with detailed finances
     [Documentation]  IFS-6561
     Given the comp admin assign an application for interview panel which was not assigned for assessment
-    Then an assessor can view feedback overview of an application   ${computer_vision_application_name}   The lead applicant has not responded to feedback
+#    Then an assessor can view feedback overview of an application   ${computer_vision_application_name}   The lead applicant has not responded to feedback
 
-CompAdmin marks appplications as successful and releases competition feedback
-    [Documentation]  IFS-3542
-    [Tags]  HappyPath
-    Given log in as a different user          &{Comp_admin1_credentials}
-    When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
-    Then the user marks applications as successful and send funding decision email
-    And the user clicks the button/link       css = button[type="submit"]  #Release feedback
-
-Applicant can still see their feedback once the comp feedback has been released
-    [Documentation]  IFS-3542
-    Given log in as a different user          ${aaron_robertson_email}   ${short_password}
-    When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
-    And the user clicks the button/link       link = view application feedback
-    Then the user should see the element      link = testing_5MB.pdf
+#CompAdmin marks appplications as successful and releases competition feedback
+#    [Documentation]  IFS-3542
+#    [Tags]  HappyPath
+#    Given log in as a different user          &{Comp_admin1_credentials}
+#    When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
+#    Then the user marks applications as successful and send funding decision email
+#    And the user clicks the button/link       css = button[type="submit"]  #Release feedback
+#
+#Applicant can still see their feedback once the comp feedback has been released
+#    [Documentation]  IFS-3542
+#    Given log in as a different user          ${aaron_robertson_email}   ${short_password}
+#    When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
+#    And the user clicks the button/link       link = view application feedback
+#    Then the user should see the element      link = testing_5MB.pdf
 
 *** Keywords ***
 Custom Suite Setup
@@ -392,7 +392,7 @@ the comp admin send invites to the applicants
     the user clicks the button/link       link = Review and send invites
     the compAdmin uploads additional feedback for an application
     the compAdmin removes uploaded feedback for an application
-    the user clicks the button/link       css = .govuk-button[type = "submit"]     #Send invite
+    the user clicks the button/link       jQuery = button:contains("Send invite")     #Send invite
     the Competition Admin should see the assigned applications in the View status tab
     the user checks for Key Statistics for assigned to interview panel
 
@@ -465,10 +465,10 @@ the comp admin assign an application for interview panel which was not assigned 
     Log in as a different user           &{Comp_admin1_credentials}
     the comp admin navigates to allocate applications page
     the user clicks the button/link      jQuery = tr:contains("${computer_vision_application}") label
-    the user clicks the button/link      css = .govuk-button[name="addSelected"]
-    the comp admin notify remaining applications to an assessor
-    log in as a different user           ${assessor_joel_email}   ${short_password}
-    the user clicks the button/link      link = ${CLOSED_COMPETITION_NAME}
+#    the user clicks the button/link      css = .govuk-button[name="addSelected"]
+#    the comp admin notify remaining applications to an assessor
+#    log in as a different user           ${assessor_joel_email}   ${short_password}
+#    the user clicks the button/link      link = ${CLOSED_COMPETITION_NAME}
 
 the comp admin notify remaining applications to an assessor
     the user clicks the button/link     css = input[type="submit"]   #Notify
