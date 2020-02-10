@@ -113,7 +113,7 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
 
         when(assessorServiceMock.hasApplicationsAssigned(1L)).thenReturn(serviceSuccess(TRUE));
 
-        mockMvc.perform(put("/assessor/applications-assigned/{id}", userId)
+        mockMvc.perform(get("/assessor/applications-assigned/{id}", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))

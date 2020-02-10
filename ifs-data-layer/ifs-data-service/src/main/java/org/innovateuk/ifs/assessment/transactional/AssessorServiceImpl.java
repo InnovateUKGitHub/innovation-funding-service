@@ -173,7 +173,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         return serviceSuccess(hasAnyAssessmentsAssigned(assessorId) || hasAnyPanelsAssigned(assessorId) || hasAnyInterviewsAssigned(assessorId));
     }
 
-    public boolean hasAnyInterviewsAssigned(long userId) {
+    private boolean hasAnyInterviewsAssigned(long userId) {
         return interviewParticipantRepository
                 .findByUserIdAndRole(userId, INTERVIEW_ASSESSOR)
                 .stream()
@@ -182,7 +182,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 .isPresent();
     }
 
-    public boolean hasAnyPanelsAssigned(long userId) {
+    private boolean hasAnyPanelsAssigned(long userId) {
         return reviewParticipantRepository
                 .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()

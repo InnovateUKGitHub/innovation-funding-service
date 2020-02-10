@@ -379,7 +379,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(assessmentRepository,reviewParticipantRepository, interviewParticipantRepository);
         inOrder.verify(assessmentRepository).existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
-        inOrder.verify(reviewParticipantRepository).findByUserIdAndRole(assessorId, INTERVIEW_ASSESSOR);
+        inOrder.verify(reviewParticipantRepository).findByUserIdAndRole(assessorId, PANEL_ASSESSOR);
         inOrder.verify(interviewParticipantRepository).findByUserIdAndRole(assessorId, INTERVIEW_ASSESSOR);
         inOrder.verifyNoMoreInteractions();
     }
