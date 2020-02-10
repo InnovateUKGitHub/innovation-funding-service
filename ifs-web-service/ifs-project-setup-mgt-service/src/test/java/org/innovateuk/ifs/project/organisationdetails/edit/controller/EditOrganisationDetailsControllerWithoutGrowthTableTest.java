@@ -128,7 +128,7 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
                 .param("organisationSize", organisationFinancesWithoutGrowthTableResource.getOrganisationSize().toString())
                 .param("headCount",
                         organisationFinancesWithoutGrowthTableResource.getHeadCount().toString())
-                .param("annualTurnover",
+                .param("turnover",
                         organisationFinancesWithoutGrowthTableResource.getTurnover().toString());
     }
 

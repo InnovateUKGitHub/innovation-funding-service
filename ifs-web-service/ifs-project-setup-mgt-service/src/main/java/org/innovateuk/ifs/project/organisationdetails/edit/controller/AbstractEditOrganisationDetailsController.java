@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.edit.viewmodel.ProjectOrganisationSizeViewModel;
@@ -73,23 +72,16 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
     private ProjectOrganisationSizeViewModel getViewModel(long projectId, long organisationId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        OrganisationFinancesWithGrowthTableResource financesWithGrowthTable = projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess();
         return new ProjectOrganisationSizeViewModel(project,
                 organisation.getName(),
                 organisationId,
-                financesWithGrowthTable.getOrganisationSize(),
-                financesWithGrowthTable.getAnnualTurnoverAtLastFinancialYear(),
-                financesWithGrowthTable.getHeadCountAtLastFinancialYear(),
                 false,
                 false,
                 false,
                 false);
     }
 
-    private String redirectToOrganisationDetails(long projectId, long organisationId) {
-        ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        return "redirect:" + String.format("/competition/%d/project/%d/organisation/%d/details/with-growth-table", project.getCompetition(), projectId, organisationId);
-    }
+    protected abstract String redirectToOrganisationDetails(long projectId, long organisationId);
 
     protected abstract String view();
 
