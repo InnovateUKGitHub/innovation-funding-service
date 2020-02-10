@@ -14,7 +14,11 @@ public class RoleProfileStatusResourceDocs {
             fieldWithPath("userId").description("Id of the user"),
             fieldWithPath("roleProfileState").description("State of the users role, i.e. ACTIVE, UNAVAILABLE"),
             fieldWithPath("profileRole").description("The role which the state applies to"),
-            fieldWithPath("description").description("reason to why user has current state")
+            fieldWithPath("description").description("reason to why user has current state"),
+            fieldWithPath("createdBy").description("user who created this user"),
+            fieldWithPath("createdOn").description("when the user was created"),
+            fieldWithPath("modifiedBy").description("user who modifiedgit  this user"),
+            fieldWithPath("modifiedOn").description("when the user was modified")
     };
 
     public static final RoleProfileStatusResourceBuilder roleProfileStatusResourceBuilder = newRoleProfileStatusResource()
