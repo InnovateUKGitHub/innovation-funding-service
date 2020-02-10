@@ -15,21 +15,22 @@
               th:with="linkTitle='Back to assessor details',linkUrl=@{/admin/user/{userId}/active(userId=${model.roleProfileStatus.userId})},dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-
         <dl class="govuk-list">
-            <dt>Role profile</dt>
-            <dd th:text="${model.roleProfileStatus.profileRole.name}">Assessor</dd>
-            <dt>Role status</dt>
-            <dd th:text="${model.roleProfileStatus.roleProfileState.description}">Available</dd>
-            <th:block th:if="${model.displayStatusChange()}">
-            <dt>Date status change</dt>
-                <dd th:text="|${#temporals.format(model.roleProfileStatus.modifiedOn, 'dd MMMM yyyy')}, ${#strings.toLowerCase(#temporals.format(model.roleProfileStatus.modifiedOn, 'hh:mma'))}|">
-                    13 May 2019 9:04am</dd>
-            <dt>Change made by</dt>
-            <dd th:text="${model.modifiedUserDetails()}">Steve, Admin</dd>
-            <dt>Reason for status change</dt>
-            <dd th:text="${model.statusChangeReason()}">The account was made unavailable</dd>
-            </th:block>
+            <dl class="govuk-list">
+                <dt>Role profile</dt>
+                <dd th:text="${model.roleProfileStatus.profileRole.name}">Assessor</dd>
+                <dt>Role status</dt>
+                <dd th:text="${model.roleProfileStatus.roleProfileState.description}">Available</dd>
+                <th:block th:if="${model.displayStatusChange()}">
+                <dt>Date status change</dt>
+                    <dd th:text="|${#temporals.format(model.roleProfileStatus.modifiedOn, 'dd MMMM yyyy')}, ${#strings.toLowerCase(#temporals.format(model.roleProfileStatus.modifiedOn, 'hh:mma'))}|">
+                        13 May 2019 9:04am</dd>
+                <dt>Change made by</dt>
+                <dd th:text="${model.modifiedUserDetails()}">Steve, Admin</dd>
+                <dt>Reason for status change</dt>
+                <dd th:text="${model.roleProfileStatus.description}">The account was made unavailable</dd>
+                </th:block>
+            </dl>
         </dl>
 
         <a href="#"

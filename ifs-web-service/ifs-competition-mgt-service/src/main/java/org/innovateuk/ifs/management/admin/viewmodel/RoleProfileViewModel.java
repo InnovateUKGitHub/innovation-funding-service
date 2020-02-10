@@ -54,10 +54,4 @@ public class RoleProfileViewModel {
     public String modifiedUserDetails() {
         return format("%s, %s", this.modifiedUser.getName(), this.modifiedUser.getRolesString());
     }
-
-    public String statusChangeReason() {
-        return "The account has been made " + this.roleProfileStatus.getRoleProfileState().getDescription()
-                + " because " + this.roleProfileStatus.getDescription();
-    }
-
 }
