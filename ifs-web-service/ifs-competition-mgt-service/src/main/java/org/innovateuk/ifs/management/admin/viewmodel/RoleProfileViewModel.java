@@ -12,14 +12,14 @@ public class RoleProfileViewModel {
 
     private UserResource modifiedUser;
 
-    private boolean changeRoleStatusEnabled;
+    private boolean applicationsAssigned;
 
     public RoleProfileViewModel(RoleProfileStatusResource roleProfileStatus,
                                 UserResource modifiedUser,
-                                boolean changeRoleStatusEnabled) {
+                                boolean applicationsAssigned) {
         this.roleProfileStatus = roleProfileStatus;
         this.modifiedUser = modifiedUser;
-        this.changeRoleStatusEnabled = changeRoleStatusEnabled;
+        this.applicationsAssigned = applicationsAssigned;
     }
 
     public RoleProfileStatusResource getRoleProfileStatus() {
@@ -38,12 +38,12 @@ public class RoleProfileViewModel {
         this.modifiedUser = modifiedUser;
     }
 
-    public boolean isChangeRoleStatusEnabled() {
-        return changeRoleStatusEnabled;
+    public boolean isApplicationsAssigned() {
+        return applicationsAssigned;
     }
 
-    public void setChangeRoleStatusEnabled(boolean changeRoleStatusEnabled) {
-        this.changeRoleStatusEnabled = changeRoleStatusEnabled;
+    public void setApplicationsAssigned(boolean applicationsAssigned) {
+        this.applicationsAssigned = applicationsAssigned;
     }
 
     /* view model logic. */

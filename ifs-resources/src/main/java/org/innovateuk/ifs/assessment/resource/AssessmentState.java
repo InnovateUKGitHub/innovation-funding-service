@@ -51,6 +51,14 @@ public enum AssessmentState implements ProcessState, IdentifiableEnum {
             READY_TO_SUBMIT,
             SUBMITTED);
 
+    public static final ImmutableSet<AssessmentState> assignedAssessmentStates = immutableEnumSet(
+            CREATED,
+            PENDING,
+            ACCEPTED,
+            OPEN,
+            READY_TO_SUBMIT,
+            SUBMITTED);
+
     @Override
     public String getStateName() {
         return backingState.name();
