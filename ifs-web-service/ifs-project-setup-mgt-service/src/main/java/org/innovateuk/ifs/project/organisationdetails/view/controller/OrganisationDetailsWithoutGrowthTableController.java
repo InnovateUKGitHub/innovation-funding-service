@@ -90,7 +90,7 @@ public class OrganisationDetailsWithoutGrowthTableController {
 
             model.addAttribute("form", getForm(projectId, organisationId));
         }
-        return "project/organisation-details-without-growth-table";
+        return "project/organisationdetails/organisation-details-without-growth-table";
     }
 
     private boolean isIncludeYourOrganisationSection(long competitionId, OrganisationResource organisation) {

@@ -91,7 +91,7 @@ public class OrganisationDetailsWithGrowthTableController extends AsyncAdaptor {
 
             model.addAttribute("form", getForm(projectId, organisationId));
         }
-        return "project/organisation-details-with-growth-table";
+        return "project/organisationdetails/organisation-details-with-growth-table";
     }
 
     private boolean isIncludeYourOrganisationSection(long competitionId, OrganisationResource organisation) {

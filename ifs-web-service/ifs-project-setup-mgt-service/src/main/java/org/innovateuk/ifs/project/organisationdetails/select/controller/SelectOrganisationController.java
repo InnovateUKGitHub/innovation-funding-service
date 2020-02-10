@@ -1,17 +1,12 @@
 package org.innovateuk.ifs.project.organisationdetails.select.controller;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.organisationdetails.view.controller.OrganisationDetailsWithGrowthTableController;
 import org.innovateuk.ifs.project.organisationdetails.select.form.SelectOrganisationForm;
 import org.innovateuk.ifs.project.organisationdetails.select.viewmodel.SelectOrganisationViewModel;
+import org.innovateuk.ifs.project.organisationdetails.view.controller.OrganisationDetailsWithGrowthTableController;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -23,6 +18,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -64,7 +65,7 @@ public class SelectOrganisationController {
 
         return beforeOrdered.size() == 1
             ? redirectToSelectedOrganisationPage(competitionId, projectId, beforeOrdered.get(0).getOrganisation())
-            : "project/select-organisation";
+            : "project/organisationdetails/select-organisation";
     }
 
     @PostMapping("/select")

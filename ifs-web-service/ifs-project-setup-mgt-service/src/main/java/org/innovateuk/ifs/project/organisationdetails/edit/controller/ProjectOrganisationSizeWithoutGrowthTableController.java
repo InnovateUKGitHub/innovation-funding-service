@@ -45,7 +45,7 @@ public class ProjectOrganisationSizeWithoutGrowthTableController {
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", formRequest(projectId, organisationId));
 
-        return "project/edit-organisation-size-without-growth-table";
+        return "project/organisationdetails/edit-organisation-size-without-growth-table";
     }
 
     @PostMapping
