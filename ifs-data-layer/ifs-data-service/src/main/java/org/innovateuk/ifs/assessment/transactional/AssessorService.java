@@ -24,9 +24,9 @@ public interface AssessorService {
     ServiceResult<Void> notifyAssessorsByCompetition(long competitionId);
 
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(
             value = "HAS_ASSESSMENTS",
-            description = "Comp admins, support and execs can see if an assessor has any assessments assigned to them")
+            description = "Comp admins and execs can see if an assessor has any assessments assigned to them")
     ServiceResult<Boolean> hasApplicationsAssigned(long assessorId);
 }
