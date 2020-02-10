@@ -93,7 +93,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isPartner(financeResource.getProject(), user.getId());
     }
 
-    @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Internal users can update the project finances of a project")
+    @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project finance users users can update the project finances of a project")
     public boolean internalUsersCanUpdateProjectFinance(final ProjectFinanceResource financeResource, final UserResource user) {
         return isProjectFinanceUser(user);
     }
