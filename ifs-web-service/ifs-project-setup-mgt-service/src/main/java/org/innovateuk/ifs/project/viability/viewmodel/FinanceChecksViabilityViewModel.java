@@ -2,10 +2,12 @@ package org.innovateuk.ifs.project.viability.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * View model for the Viability page
@@ -35,6 +37,8 @@ public class FinanceChecksViabilityViewModel {
     private final boolean projectIsActive;
     private final boolean collaborativeProject;
     private final boolean loanCompetition;
+    private final boolean viabilityReadyToConfirm;
+
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
                                            CompetitionResource competition,
@@ -54,7 +58,8 @@ public class FinanceChecksViabilityViewModel {
                                            String approverName,
                                            LocalDate approvalDate,
                                            Long organisationId,
-                                           String organisationSizeDescription) {
+                                           String organisationSizeDescription,
+                                           List<ProjectFinanceResource> projectFinances) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -78,6 +83,7 @@ public class FinanceChecksViabilityViewModel {
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
         this.loanCompetition = competition.isLoan();
+        this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
     }
 
     public String getOrganisationName() {
@@ -187,5 +193,14 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isViabilityReadyToConfirm() {
+        return viabilityReadyToConfirm;
+    }
+
+    private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
+        return finances.stream().allMatch(finance ->
+                BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
     }
 }
