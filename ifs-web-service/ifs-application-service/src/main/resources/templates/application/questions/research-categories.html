@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Research category|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Research category - ${model.applicationName}|" />
 </head>
 <body class="govuk-template__body application details innovation-areas" th:with="model=${researchCategoryModel}">
 <th:block th:insert="fragments/layout :: body-start" />
