@@ -65,7 +65,7 @@ public class ProjectOrganisationSizeWithGrowthTableController {
         Supplier<String> failureHandler = () -> {
             model.addAttribute("model", getViewModel(projectId, organisationId));
             model.addAttribute("form", form);
-            return "project/edit-organisation-size-with-growth-table";
+            return "project/organisationdetails/edit-organisation-size-with-growth-table";
         };
 
         Supplier<String> successHandler = () -> {
