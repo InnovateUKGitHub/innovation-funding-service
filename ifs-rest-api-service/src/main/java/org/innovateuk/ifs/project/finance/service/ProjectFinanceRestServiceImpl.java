@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectFinanceResourceListType;
 
 /**
@@ -77,5 +78,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     @Override
     public RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId) {
         throw new NotImplementedException("Adding of project finance organisation will usually not be necessary as they are added when project is created");
+    }
+
+    @Override
+    public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
+        return getWithRestResult(format(PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance/has-organisation-size-changed"), Boolean.class);
     }
 }
