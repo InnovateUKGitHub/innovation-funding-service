@@ -17,7 +17,7 @@ public class RoleProfileStatusResourceDocs {
             fieldWithPath("description").description("reason to why user has current state"),
             fieldWithPath("createdBy").description("user who created this user"),
             fieldWithPath("createdOn").description("when the user was created"),
-            fieldWithPath("modifiedBy").description("user who modifiedgit  this user"),
+            fieldWithPath("modifiedBy").description("user who modified this user"),
             fieldWithPath("modifiedOn").description("when the user was modified")
     };
 

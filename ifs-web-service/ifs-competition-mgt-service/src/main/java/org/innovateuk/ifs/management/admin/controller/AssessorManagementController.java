@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR;
 @SecuredBySpring(value = "Controller", description = "Project finance, competition admin, support, innovation lead " +
         "can view assessors role profile details",
         securedType = AssessorManagementController.class)
-@PreAuthorize("hasAnyAuthority('project_finance','comp_admin', 'support')")
+@PreAuthorize("hasAnyAuthority('project_finance','comp_admin')")
 public class AssessorManagementController {
 
     @Autowired
