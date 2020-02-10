@@ -17,8 +17,12 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
+import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -28,6 +32,9 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewParticipant;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -50,9 +57,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -60,6 +70,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.assignedAssessmentStates;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -68,10 +79,20 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInvite;
+import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.newInterviewParticipant;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
+import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInviteWithoutId;
+import static org.innovateuk.ifs.review.builder.ReviewParticipantBuilder.newReviewParticipant;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -128,6 +149,12 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private RoleProfileStatusRepository roleProfileStatusRepository;
+
+    @Mock
+    private InterviewParticipantRepository interviewParticipantRepository;
+
+    @Mock
+    private ReviewParticipantRepository reviewParticipantRepository;
 
     @InjectMocks
     private AssessorService assessorService = new AssessorServiceImpl();
@@ -262,6 +289,123 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
+    }
+
+    @Test
+    public void hasApplicationsAssigned_Assessments() {
+        long assessorId = 7L;
+
+        when(assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(TRUE);
+
+        Boolean result = assessorService.hasApplicationsAssigned(assessorId).getSuccess();
+
+        assertEquals(TRUE, result);
+
+        InOrder inOrder = inOrder(assessmentRepository);
+        inOrder.verify(assessmentRepository).existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void hasApplicationsAssigned_ReviewPanel() {
+        long assessorId = 7L;
+
+        List<Milestone> milestones = newMilestone()
+                .withDate(now().plusDays(1))
+                .withType(ASSESSMENT_PANEL).build(1);
+
+        Competition competition = newCompetition()
+                .withMilestones(milestones)
+                .build();
+
+        ReviewInvite invite = newReviewInviteWithoutId()
+                .withName("name1")
+                .withEmail("test1@test.com")
+                .withHash(generateInviteHash())
+                .withCompetition(competition)
+                .withStatus(SENT)
+                .build();
+
+        ReviewParticipant reviewParticipant = newReviewParticipant()
+                .withCompetition(competition)
+                .withInvite(invite)
+                .build();
+
+        when(reviewParticipantRepository.findByUserIdAndRole(assessorId, PANEL_ASSESSOR)).thenReturn(asList(reviewParticipant));
+        when(assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(FALSE);
+
+        Boolean result = assessorService.hasApplicationsAssigned(assessorId).getSuccess();
+
+        assertEquals(TRUE, result);
+
+        InOrder inOrder = inOrder(assessmentRepository, reviewParticipantRepository);
+        inOrder.verify(assessmentRepository).existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
+        inOrder.verify(reviewParticipantRepository).findByUserIdAndRole(assessorId, PANEL_ASSESSOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void hasApplicationsAssigned_Interview() {
+        long assessorId = 7L;
+
+        List<Milestone> milestones = newMilestone()
+                .withDate(now().plusDays(1))
+                .withType(PANEL_DATE).build(1);
+
+        Competition competition = newCompetition()
+                .withMilestones(milestones)
+                .build();
+
+        InterviewInvite invite = newInterviewInvite()
+                .withName("name1")
+                .withEmail("test1@test.com")
+                .withHash(generateInviteHash())
+                .withCompetition(competition)
+                .withStatus(SENT)
+                .build();
+
+        InterviewParticipant interviewParticipant = newInterviewParticipant()
+                .withCompetition(competition)
+                .withInvite(invite)
+                .build();
+
+        when(interviewParticipantRepository.findByUserIdAndRole(assessorId, INTERVIEW_ASSESSOR)).thenReturn(asList(interviewParticipant));
+        when(reviewParticipantRepository.findByUserIdAndRole(assessorId, PANEL_ASSESSOR)).thenReturn(emptyList());
+        when(assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(FALSE);
+
+        Boolean result = assessorService.hasApplicationsAssigned(assessorId).getSuccess();
+
+        assertEquals(TRUE, result);
+
+        InOrder inOrder = inOrder(assessmentRepository,reviewParticipantRepository, interviewParticipantRepository);
+        inOrder.verify(assessmentRepository).existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
+        inOrder.verify(reviewParticipantRepository).findByUserIdAndRole(assessorId, INTERVIEW_ASSESSOR);
+        inOrder.verify(interviewParticipantRepository).findByUserIdAndRole(assessorId, INTERVIEW_ASSESSOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+
+
+    public boolean hasAnyInterviewsAssigned(long userId) {
+        return interviewParticipantRepository
+                .findByUserIdAndRole(userId, INTERVIEW_ASSESSOR)
+                .stream()
+                .filter(participant -> now().isBefore(participant.getInvite().getTarget().getPanelDate()))
+                .findAny()
+                .isPresent();
+    }
+
+    public boolean hasAnyPanelsAssigned(long userId) {
+        return reviewParticipantRepository
+                .findByUserIdAndRole(userId, PANEL_ASSESSOR)
+                .stream()
+                .filter(participant -> now().isBefore(participant.getInvite().getTarget().getAssessmentPanelDate()))
+                .findAny()
+                .isPresent();
+    }
+
+    public boolean hasAnyAssessmentsAssigned(long userId) {
+        return assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, userId);
     }
 
     @Test

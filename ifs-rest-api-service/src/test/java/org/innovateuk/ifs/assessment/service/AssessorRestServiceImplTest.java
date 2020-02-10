@@ -6,6 +6,7 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -22,7 +23,7 @@ public class AssessorRestServiceImplTest extends BaseRestServiceUnitTest<Assesso
     }
 
     @Test
-    public void createAssessorByInviteHash() throws Exception {
+    public void createAssessorByInviteHash() {
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
@@ -33,9 +34,20 @@ public class AssessorRestServiceImplTest extends BaseRestServiceUnitTest<Assesso
         assertTrue(response.isSuccess());
     }
 
+    @Test
+    public void hasApplicationsAssigned() {
+
+        long userId = 1l;
+
+        setupGetWithRestResultAnonymousExpectations(format("%s/applications-assigned/%s", assessorRestUrl, userId), Boolean.class, TRUE);
+
+        RestResult<Boolean> response = service.hasApplicationsAssigned(userId);
+        assertTrue(response.isSuccess());
+    }
+
 
     @Test
-    public void notifyAssessors() throws Exception {
+    public void notifyAssessors() {
         long competitionId = 1L;
 
         setupPutWithRestResultExpectations(format("%s/notify-assessors/competition/%s", assessorRestUrl,
