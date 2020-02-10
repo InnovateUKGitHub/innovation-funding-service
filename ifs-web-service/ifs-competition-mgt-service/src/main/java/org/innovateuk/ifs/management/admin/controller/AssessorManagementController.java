@@ -39,9 +39,15 @@ public class AssessorManagementController {
 
         UserResource modifiedUser = userRestService.retrieveUserById(roleProfileStatusResource.getModifiedBy()).getSuccess();
 
+        boolean changeRoleStatusEnabled = hasUserGotAssignedAssessments(userId);
+
         model.addAttribute("model", new RoleProfileViewModel(roleProfileStatusResource, modifiedUser));
 
         return "admin/role-profile-details";
 
+    }
+
+    private boolean hasUserGotAssignedAssessments(long userId) {
+        return false;
     }
 }

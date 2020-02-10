@@ -32,6 +32,10 @@
             </th:block>
         </dl>
 
+        <a href="#"
+           class="button-secondary"
+           th:text="|Change role status|">Change role status</a>
+
         <a th:href="@{/admin/user/{userId}/active(userId=${model.roleProfileStatus.userId})}"
            class="button-secondary"
            th:text="|Return to assessor details|">Return to assessor details</a>
