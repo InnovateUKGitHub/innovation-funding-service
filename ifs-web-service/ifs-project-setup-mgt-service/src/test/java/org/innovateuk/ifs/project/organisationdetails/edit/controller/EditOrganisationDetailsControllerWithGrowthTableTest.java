@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -23,6 +25,7 @@ import java.time.YearMonth;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithGrowthTableResourceBuilder.newOrganisationFinancesWithGrowthTableResource;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -53,11 +56,15 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
     @Mock
     private YourOrganisationWithGrowthTableFormPopulator viewModelPopulator;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     private static final long projectId = 3L;
     private static final long organisationId = 5L;
     private OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource;
     private ProjectResource projectResource;
     private OrganisationResource organisationResource;
+    private static CompetitionResource competitionResource;
     private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size-with-growth-table";
 
     @Override
@@ -83,6 +90,8 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
                 .withAnnualExport(BigDecimal.valueOf(4))
                 .withResearchAndDevelopment(BigDecimal.valueOf(5))
                 .build();
+        competitionResource = newCompetitionResource()
+                .build();
     }
 
     @Test
@@ -92,6 +101,7 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
+        when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get(viewPageUrl()))
                 .andExpect(status().isOk())
@@ -121,6 +131,7 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
+        when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get(viewPageUrl()))
                 .andExpect(status().isOk())

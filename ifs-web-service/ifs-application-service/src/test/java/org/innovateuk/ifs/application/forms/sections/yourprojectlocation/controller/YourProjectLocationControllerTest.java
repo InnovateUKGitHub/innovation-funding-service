@@ -62,7 +62,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
     private CommonYourProjectFinancesViewModel commonFinancesViewModel =
-            new CommonYourProjectFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true);
+            new CommonYourProjectFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true, false);
 
     @Test
     public void viewPage() throws Exception {
