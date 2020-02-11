@@ -35,9 +35,6 @@ RUN apt-get update --fix-missing && \
   ldapadd -H ldapi:/// -f ppolicy_cn.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
   ldapmodify -H ldapi:/// -f ppolicy_cn_attribs.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
 # enable & enforce SSL, be lax about self-signed certificates \
-# TODO IFS-6251 stop using environmental variables.
-# TODO IFS-6251 Default to building with an image with secrets in /var/certs which then get copied where they need to be
-# TODO IFS-6251 Then override /var/certs with OpenShift volume based on secrets
   echo "$LDAP_ENCRYPTION_KEY" > /etc/ldap/ldap-encryption.key && \
   echo "$LDAP_ENCRYPTION_CERTIFICATE" > /etc/ldap/ldap-encryption.crt && \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_ssl.ldif && \
@@ -57,11 +54,9 @@ RUN apt-get update --fix-missing && \
 RUN apt-get update --fix-missing && \
   apt-get -y install grep mysql-client net-tools rsync && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
-  rm -f ppolicy*.ldif && \
+  rm -f ppolicy*.ldif
 
-  echo "TO REPLACE KEY" > /etc/ldap/ldap-encryption.key && \
-  echo "TO REPLACE CERT" > /etc/ldap/ldap-encryption.crt
-
+#USER openldap
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD ldapsearch -H ldaps://localhost:8389 -b dc=nodomain -x -LLL -s base || exit 1
 ENTRYPOINT [ "run-openldap.sh" ]

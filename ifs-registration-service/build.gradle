@@ -62,6 +62,8 @@ createContainer.hostName = "registration-svc"
 createContainer.containerName = "registration-svc"
 createContainer.containerId = "registration-svc"
 createContainer.env = ["SHIBBOLETH_API_KEYS=1234567890"]
+createContainer.binds = ["${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs":"/var/certs"]
+createContainer.volumes = ["${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs","/var/certs"]
 
 
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
