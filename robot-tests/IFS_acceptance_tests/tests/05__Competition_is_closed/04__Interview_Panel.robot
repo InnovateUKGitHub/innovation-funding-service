@@ -215,22 +215,22 @@ Assessor can view the list of allocated applications
 Assessor can view feedback with detailed finances
     [Documentation]  IFS-6561
     Given the comp admin assign an application for interview panel which was not assigned for assessment
-#    Then an assessor can view feedback overview of an application   ${computer_vision_application_name}   The lead applicant has not responded to feedback
+    Then an assessor can view feedback overview of an application   ${computer_vision_application_name}   The lead applicant has not responded to feedback
 
-#CompAdmin marks appplications as successful and releases competition feedback
-#    [Documentation]  IFS-3542
-#    [Tags]  HappyPath
-#    Given log in as a different user          &{Comp_admin1_credentials}
-#    When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
-#    Then the user marks applications as successful and send funding decision email
-#    And the user clicks the button/link       css = button[type="submit"]  #Release feedback
-#
-#Applicant can still see their feedback once the comp feedback has been released
-#    [Documentation]  IFS-3542
-#    Given log in as a different user          ${aaron_robertson_email}   ${short_password}
-#    When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
-#    And the user clicks the button/link       link = view application feedback
-#    Then the user should see the element      link = testing_5MB.pdf
+CompAdmin marks appplications as successful and releases competition feedback
+    [Documentation]  IFS-3542
+    [Tags]  HappyPath
+    Given log in as a different user          &{Comp_admin1_credentials}
+    When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
+    Then the user marks applications as successful and send funding decision email
+    And the user clicks the button/link       css = button[type="submit"]  #Release feedback
+
+Applicant can still see their feedback once the comp feedback has been released
+    [Documentation]  IFS-3542
+    Given log in as a different user          ${aaron_robertson_email}   ${short_password}
+    When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user clicks the button/link       link = view application feedback
+    Then the user should see the element      link = testing_5MB.pdf
 
 *** Keywords ***
 Custom Suite Setup
