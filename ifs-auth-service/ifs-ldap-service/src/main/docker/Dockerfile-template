@@ -10,10 +10,6 @@ ENV LDAP_PORT=8389 \
     LDAP_ENCRYPTION_CERTIFICATE="@auth_ldap_encryption_certificate@" \
     DEBIAN_FRONTEND=noninteractive
 
-# copy certs into build
-RUN mkdir -p /var/certs/
-COPY certs/* /var/certs/
-
 COPY scripts/* /usr/local/bin/
 WORKDIR /usr/local/bin
 
