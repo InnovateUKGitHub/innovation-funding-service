@@ -15,7 +15,14 @@ public class CommonYourProjectFinancesViewModel {
     private final boolean procurementCompetition;
 
 
-    public CommonYourProjectFinancesViewModel(String financesUrl, String applicationName, long applicationId, long sectionId, boolean open, boolean h2020, boolean complete, boolean procurementCompetition) {
+    public CommonYourProjectFinancesViewModel(String financesUrl,
+                                              String applicationName,
+                                              long applicationId,
+                                              long sectionId,
+                                              boolean open,
+                                              boolean h2020,
+                                              boolean complete,
+                                              boolean procurementCompetition) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.applicationId = applicationId;

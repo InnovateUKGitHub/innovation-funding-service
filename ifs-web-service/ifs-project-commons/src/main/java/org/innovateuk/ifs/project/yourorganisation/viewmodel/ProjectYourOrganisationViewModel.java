@@ -10,7 +10,6 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
     private final long organisationId;
     private final boolean readOnly;
     private final boolean showHints;
-    private final boolean procurementCompetition;
     private final UserResource loggedInUser;
     private final boolean isAllEligibilityAndViabilityInReview;
 
@@ -29,7 +28,6 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;
-        this.procurementCompetition = procurementCompetition;
         this.readOnly = readOnly;
         this.showHints = showHints;
         this.loggedInUser = loggedInUser;
@@ -51,7 +49,6 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
     public boolean isShowHints() {
         return showHints;
     }
-
 
     public boolean isReadOnly() {
         return readOnly;
