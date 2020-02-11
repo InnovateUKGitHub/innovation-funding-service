@@ -29,6 +29,9 @@ items:
           containers:
             - image: innovateuk/registration-service:${registrationServiceVersion}
               name: registration-svc
+              volumeMounts:
+                - name: registration-keys-volume
+                  mountPath: /var/certs
               livenessProbe:
                 httpGet:
                   path: /monitoring/health

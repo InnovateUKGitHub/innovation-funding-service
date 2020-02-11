@@ -29,8 +29,6 @@ items:
               volumeMounts:
                 - name: ldap-keys-volume
                   mountPath: /var/certs
-                - name: registration-keys-volume
-                  mountPath: /var/certs
               livenessProbe:
                 exec:
                   command:

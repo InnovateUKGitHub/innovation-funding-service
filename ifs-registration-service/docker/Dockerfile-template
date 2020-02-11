@@ -6,12 +6,12 @@ EXPOSE 8080
 ENV JAVA_OPTS -Xmx300m
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
+# start and other useful scripts
+COPY scripts/* /usr/local/bin/
+
 # copy certs into build
 RUN mkdir -p /var/certs/
 COPY certs/* /var/certs/
-
-COPY scripts/* /usr/local/bin/
-WORKDIR /usr/local/bin
 
 # LDAP-specific environment variables
 ENV SHIBBOLETH_LDAP_BASE_DN="dc=nodomain" \
@@ -28,11 +28,6 @@ ADD newrelic.jar /
 ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 ADD @app_name@-@version@.jar app.jar
-
-
-// ln 28. /ldap-encryption.crt replace with var/certs
-COPY ldap-encryption.crt /ldap-encryption.crt
-RUN $JAVA_HOME/bin/keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /ldap-encryption.crt
 
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD curl -f http://localhost:8080/monitoring/health || exit 1

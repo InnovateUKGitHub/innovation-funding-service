@@ -33,7 +33,7 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 task prepareDockerInputRegService {
     dependsOn prepareDockerInput
 
-    def inputDir = project.file("$project.buildDir/docker")
+    def inputDir = project.file("$project.buildDir/docker/certs")
 
     doFirst {
         copy {
