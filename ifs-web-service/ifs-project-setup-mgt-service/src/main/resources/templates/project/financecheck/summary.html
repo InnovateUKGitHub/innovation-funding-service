@@ -27,6 +27,13 @@
                 by</strong></p>
         </div>
 
+        <th:block th:if="${model.isShowChangeFundingLevelPercentageAlert()}">
+            <div class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">You need to review the project finances on the
+                    <a th:href="@{/project/{id}/funding-level(id=${model.financeCheckSummaryResource.projectId})}" class="govuk-link">change funding level percentage</a> page.</p>
+            </div>
+        </th:block>
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m">Project finances</h2>

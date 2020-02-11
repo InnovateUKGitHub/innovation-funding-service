@@ -27,4 +27,5 @@ public interface ProjectFinanceService {
 
     ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId);
 
+    ServiceResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId);
 }

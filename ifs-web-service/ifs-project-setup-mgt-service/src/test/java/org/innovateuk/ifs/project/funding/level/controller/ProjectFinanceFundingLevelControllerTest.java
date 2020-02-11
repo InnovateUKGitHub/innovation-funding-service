@@ -80,6 +80,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
+        when(projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId)).thenReturn(restSuccess(false));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/funding-level", projectId))
                 .andExpect(status().isOk())
@@ -166,5 +167,47 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
                 .andReturn();
 
         verifyZeroInteractions(financeRowRestService);
+    }
+
+    @Test
+    public void viewFundingLevels_withChangeInOrganisationSize() throws Exception {
+        industrialFinances.setOrganisationSize(OrganisationSize.LARGE);
+        when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+        when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
+        when(projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId)).thenReturn(restSuccess(true));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/funding-level", projectId))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("project/financecheck/funding-level"))
+                .andReturn();
+
+        ProjectFinanceFundingLevelViewModel viewModel = (ProjectFinanceFundingLevelViewModel) result.getModelAndView().getModel().get("model");
+
+        BigDecimal totalGrant = industrialFinances.getTotalFundingSought().add(academicFinances.getTotalFundingSought());
+        assertEquals("Project", viewModel.getProjectName());
+        assertEquals(5L, viewModel.getApplicationId());
+        assertEquals(projectId, viewModel.getProjectId());
+        assertEquals(totalGrant, viewModel.getTotalFundingSought());
+        assertEquals(industrialFinances.getTotal().add(academicFinances.getTotal()), viewModel.getTotalCosts());
+        assertEquals(2, viewModel.getPartners().size());
+
+        ProjectFinancePartnerFundingLevelViewModel industrialViewModel = viewModel.getPartners().get(0);
+        assertEquals(industrialOrganisation, industrialViewModel.getId());
+        assertEquals(60, industrialViewModel.getMaximumFundingLevel());
+        assertEquals(industrialFinances.getTotal(), industrialViewModel.getCosts());
+        assertEquals(industrialFinances.getTotalFundingSought(), industrialViewModel.getFundingSought());
+        assertEquals(new BigDecimal("85.86"), industrialViewModel.getPercentageOfTotalGrant().setScale(2, RoundingMode.HALF_UP));
+        assertEquals(BigDecimal.ZERO, industrialViewModel.getOtherFunding());
+        assertEquals(totalGrant, industrialViewModel.getTotalGrant());
+
+        ProjectFinancePartnerFundingLevelViewModel academicViewModel = viewModel.getPartners().get(1);
+        assertEquals(academicOrganisation, academicViewModel.getId());
+        assertEquals(100, academicViewModel.getMaximumFundingLevel());
+        assertEquals(academicFinances.getTotal(), academicViewModel.getCosts());
+        assertEquals(academicFinances.getTotalFundingSought(), academicViewModel.getFundingSought());
+        assertEquals(new BigDecimal("14.14"), academicViewModel.getPercentageOfTotalGrant().setScale(2, RoundingMode.HALF_UP));
+        assertEquals(BigDecimal.ZERO, academicViewModel.getOtherFunding());
+        assertEquals(totalGrant, academicViewModel.getTotalGrant());
     }
 }

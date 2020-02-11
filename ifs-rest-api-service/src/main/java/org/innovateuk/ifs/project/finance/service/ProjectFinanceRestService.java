@@ -30,4 +30,6 @@ public interface ProjectFinanceRestService {
     RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId);
 
     RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId);
+
+    RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId);
 }
