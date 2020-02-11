@@ -29,22 +29,8 @@ dependencies {
 
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-
-task prepareDockerInputRegService {
-    dependsOn prepareDockerInput
-
-//    def inputDir = project.file("$project.buildDir/docker/certs")
-//
-//    doFirst {
-//        copy {
-//            from file("${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt")
-//            into inputDir
-//        }
-//    }
-}
-
 buildDocker.dependsOn ":docker:openjdk:buildDocker"
-buildDocker.dependsOn prepareDockerInputRegService
+buildDocker.dependsOn prepareDockerInput
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 
@@ -63,8 +49,6 @@ createContainer.containerName = "registration-svc"
 createContainer.containerId = "registration-svc"
 createContainer.env = ["SHIBBOLETH_API_KEYS=1234567890"]
 createContainer.binds = ["${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs":"/var/certs"]
-createContainer.volumes = ["${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs","/var/certs"]
-
 
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
