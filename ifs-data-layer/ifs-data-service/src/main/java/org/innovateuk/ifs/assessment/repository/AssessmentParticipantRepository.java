@@ -47,13 +47,20 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     String BY_COMP_AND_STATUS_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "LEFT JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status IN :status " +
-            "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%')";
+            "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%')" +
+            " AND (roleStatuses IS NULL OR " +
+            "(" +
+            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "))";
 
     String BY_STATUS_AND_COMPLIANT_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "LEFT JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
@@ -79,10 +86,16 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "       OR profile.skillsAreas IS NULL " +
             "       OR profile.agreement IS NULL)" +
             "   )" +
-            ")) ";
+            "))" +
+            " AND (roleStatuses IS NULL OR " +
+            "(" +
+            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "))";
 
     String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :compId " +
             "AND assessmentParticipant.role = :role " +
             "AND assessmentParticipant.status = :status " +
@@ -91,6 +104,8 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "   FROM Assessment a " +
             "   WHERE a.participant.user = assessmentParticipant.user " +
             "   AND a.target.id = :appId) " +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "AND CONCAT(assessmentParticipant.user.firstName, ' ', assessmentParticipant.user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')";
 
     String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT assessmentParticipant " +
@@ -150,6 +165,17 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     int countByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
+    @Query("SELECT count(participant) " +
+            "FROM AssessmentParticipant participant " +
+            "LEFT JOIN participant.user.roleProfileStatuses roleStatuses " +
+            "WHERE participant.role = :role " +
+            " AND participant.competition.id = :competitionId " +
+            " AND participant.status = :status " +
+            " AND (roleStatuses IS NULL OR " +
+            "(" +
+            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            " AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "))")
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
     @Query(PARTICIPANTS_WITHOUT_ASSESSMENTS)

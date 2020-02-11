@@ -268,10 +268,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter) {
-
-        List<User> result = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter));
-
-        return serviceSuccess(simpleMap(result, User::getId));
+        return serviceSuccess(assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter)));
     }
 
     private AvailableAssessorResource mapToAvailableAssessorResource(User assessor) {
