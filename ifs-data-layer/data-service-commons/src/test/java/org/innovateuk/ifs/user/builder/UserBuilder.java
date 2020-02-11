@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.domain.Affiliation;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.Title;
@@ -46,6 +47,11 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
     @SafeVarargs
     public final UserBuilder withRoles(Set<Role>... rolesList) {
         return withArray((roles, user) -> setField("roles", roles, user), rolesList);
+    }
+
+    @SafeVarargs
+    public final UserBuilder withRoleProfileStatuses(Set<RoleProfileStatus>... roleProfileStatuses) {
+        return withArray((roleProfileStatus, user) -> setField("roleProfileStatuses", roleProfileStatus, user), roleProfileStatuses);
     }
 
     public UserBuilder withFirstName(String... firstNames) {

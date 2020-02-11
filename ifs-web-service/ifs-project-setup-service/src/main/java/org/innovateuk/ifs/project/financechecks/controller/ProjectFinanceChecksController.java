@@ -466,6 +466,8 @@ public class ProjectFinanceChecksController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
+        List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(project.getId());
+
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {
             model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
@@ -485,7 +487,8 @@ public class ProjectFinanceChecksController {
                 eligibility.getEligibilityApprovalDate(),
                 true,
                 isUsingJesFinances,
-                false));
+                false,
+                projectFinances));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

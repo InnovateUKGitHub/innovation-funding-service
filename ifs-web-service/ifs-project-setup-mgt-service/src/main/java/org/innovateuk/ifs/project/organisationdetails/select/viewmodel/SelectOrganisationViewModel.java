@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.organisationdetails.viewmodel;
+package org.innovateuk.ifs.project.organisationdetails.select.viewmodel;
 
 import java.util.List;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;

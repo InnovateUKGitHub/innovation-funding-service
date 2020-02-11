@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
-import javax.validation.Valid;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
@@ -22,6 +19,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
@@ -57,7 +58,7 @@ public class ProjectYourOrganisationWithGrowthTableController extends AsyncAdapt
             Model model) {
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
-                getViewModel(projectId, organisationId));
+                getViewModel(projectId, organisationId, loggedInUser));
 
         Future<YourOrganisationWithGrowthTableForm> formRequest = async(() ->
                 withGrowthTableFormPopulator.populate(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess()));
@@ -93,7 +94,7 @@ public class ProjectYourOrganisationWithGrowthTableController extends AsyncAdapt
             Model model) {
 
         Supplier<String> failureHandler = () -> {
-            YourOrganisationViewModel viewModel = getViewModel(projectId, organisationId);
+            YourOrganisationViewModel viewModel = getViewModel(projectId, organisationId, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             return VIEW_WITH_GROWTH_TABLE_PAGE;
@@ -136,8 +137,8 @@ public class ProjectYourOrganisationWithGrowthTableController extends AsyncAdapt
                 getSuccess();
     }
 
-    private YourOrganisationViewModel getViewModel(long projectId, long organisationId) {
-        return viewModelPopulator.populate(projectId, organisationId);
+    private YourOrganisationViewModel getViewModel(long projectId, long organisationId, UserResource user) {
+        return viewModelPopulator.populate(projectId, organisationId, user);
     }
 
     private String redirectToViewPage(long projectId, long organisationId) {
