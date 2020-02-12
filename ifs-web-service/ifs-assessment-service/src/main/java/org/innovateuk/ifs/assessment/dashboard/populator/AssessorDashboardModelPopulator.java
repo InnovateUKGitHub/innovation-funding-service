@@ -11,13 +11,17 @@ import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
+import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
+import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR;
 
 /**
  * Build the model for the Assessor Panel Dashboard view.
@@ -35,16 +39,20 @@ public class AssessorDashboardModelPopulator {
 
     private CompetitionRestService competitionRestService;
 
+    private RoleProfileStatusRestService roleProfileStatusRestService;
+
     public AssessorDashboardModelPopulator(CompetitionParticipantRestService competitionParticipantRestService,
                                            InterviewInviteRestService interviewInviteRestService,
                                            ProfileRestService profileRestService,
                                            ReviewInviteRestService reviewInviteRestService,
-                                           CompetitionRestService competitionRestService) {
+                                           CompetitionRestService competitionRestService,
+                                           RoleProfileStatusRestService roleProfileStatusRestService) {
         this.competitionParticipantRestService = competitionParticipantRestService;
         this.interviewInviteRestService = interviewInviteRestService;
         this.profileRestService = profileRestService;
         this.reviewInviteRestService = reviewInviteRestService;
         this.competitionRestService = competitionRestService;
+        this.roleProfileStatusRestService = roleProfileStatusRestService;
     }
 
     public AssessorDashboardViewModel populateModel(long userId) {
@@ -53,12 +61,14 @@ public class AssessorDashboardModelPopulator {
 
         UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccess();
 
+        RoleProfileStatusResource roleProfileStatusResource = roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR).getSuccess();
+
         List<ReviewParticipantResource> reviewParticipantResourceList = reviewInviteRestService.getAllInvitesByUser(userId).getSuccess();
 
         List<InterviewParticipantResource> interviewParticipantResourceList = interviewInviteRestService.getAllInvitesByUser(userId).getSuccess();
 
         return new AssessorDashboardViewModel(
-                getProfileStatus(profileStatusResource),
+                getProfileStatus(profileStatusResource, roleProfileStatusResource.getRoleProfileState()),
                 getActiveCompetitions(participantResourceList),
                 getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),
@@ -69,8 +79,8 @@ public class AssessorDashboardModelPopulator {
                 );
     }
 
-    private AssessorProfileStatusViewModel getProfileStatus(UserProfileStatusResource assessorProfileStatusResource) {
-        return new AssessorProfileStatusViewModel(assessorProfileStatusResource);
+    private AssessorProfileStatusViewModel getProfileStatus(UserProfileStatusResource assessorProfileStatusResource, RoleProfileState roleProfileState) {
+        return new AssessorProfileStatusViewModel(assessorProfileStatusResource, roleProfileState);
     }
 
     private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceList) {
