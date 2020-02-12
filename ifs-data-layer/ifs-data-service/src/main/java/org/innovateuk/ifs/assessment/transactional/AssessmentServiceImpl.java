@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
@@ -34,7 +33,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -42,10 +42,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
-    protected static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = asLinkedSet(
-            ApplicationState.APPROVED,
-            ApplicationState.REJECTED,
-            ApplicationState.SUBMITTED);
 
     private AssessmentRepository assessmentRepository;
     private AssessmentMapper assessmentMapper;
