@@ -1357,26 +1357,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withAgreementSignedDate(now())
                 .build(2);
 
-        List<User> assessorUsers = newUser()
-                .withId(expectedAssessorIds.get(0), expectedAssessorIds.get(1))
-                .withFirstName("Jeremy", "Felix")
-                .withLastName("Alufson", "Wilson")
-                .withEmailAddress("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
-                .withAffiliations(newAffiliation()
-                        .withAffiliationType(EMPLOYER)
-                        .withOrganisation("Hive IT")
-                        .withPosition("Software Developer")
-                        .withExists(true)
-                        .build(1))
-                .withProfileId(profiles.get(0).getId(), profiles.get(1).getId())
-                .build(2);
-
         Optional<Long> innovationAreaId = of(innovationArea.getId());
         String assessorFilter = "";
 
 
         when(assessmentInviteRepositoryMock.findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter))
-                .thenReturn(assessorUsers);
+                .thenReturn(expectedAssessorIds);
 
         List<Long> actualAssessorIds = service.getAvailableAssessorIds(competitionId, assessorFilter)
                 .getSuccess();
