@@ -61,3 +61,4 @@ createContainer.env= ["SP_DOMAIN=ifs.local-dev","IDP_DOMAIN=auth.local-dev:9443"
 createContainer.networkAliases=["ifs.local-dev"]
 createContainer.portBindings = ['443:443']
 createContainer.hostName="shib"
+createContainer.binds = ["${rootProject.projectDir}/ifs-auth-service/ifs-sp-service/src/main/docker/certs":"/var/certs"]
