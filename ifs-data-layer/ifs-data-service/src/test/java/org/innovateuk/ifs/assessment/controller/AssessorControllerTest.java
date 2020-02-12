@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -412,6 +413,16 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .andReturn();
 
         verify(assessorServiceMock, only()).getAssessorProfile(1L);
+    }
+
+    @Test
+    public void hasApplicationsAssigned() throws Exception {
+        when(assessorServiceMock.hasApplicationsAssigned(1L)).thenReturn(serviceSuccess(TRUE));
+
+        mockMvc.perform(get("/assessor/has-applications-assigned/{id}", 1L))
+                .andExpect(status().isOk());
+
+        verify(assessorServiceMock, only()).hasApplicationsAssigned(1L);
     }
 
     @Test
