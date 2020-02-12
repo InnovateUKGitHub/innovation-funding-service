@@ -33,17 +33,23 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     String PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
-            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
+            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")" +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE ";
 
     String PARTICIPANTS_NOT_ON_INTERVIEW_PANEL = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
-            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")";
+            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")" +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE ";
 
     String BY_COMP_AND_STATUS_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
