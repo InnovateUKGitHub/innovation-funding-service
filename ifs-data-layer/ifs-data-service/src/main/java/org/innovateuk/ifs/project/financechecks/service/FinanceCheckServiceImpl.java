@@ -427,7 +427,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private ServiceResult<EligibilityProcess> getEligibilityProcess(PartnerOrganisation partnerOrganisation) {
-
         return serviceSuccess(eligibilityWorkflowHandler.getProcess(partnerOrganisation));
     }
 

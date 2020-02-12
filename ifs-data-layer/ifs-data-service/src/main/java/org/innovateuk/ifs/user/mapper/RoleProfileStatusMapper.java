@@ -18,7 +18,10 @@ public abstract class RoleProfileStatusMapper extends BaseMapper<RoleProfileStat
 
     @Mappings({
             @Mapping(source = "user.id", target = "userId"),
+            @Mapping(source = "createdBy.id", target = "createdBy"),
+            @Mapping(source = "modifiedBy.id", target = "modifiedBy")
     })
+    @Override
     public abstract RoleProfileStatusResource mapToResource(RoleProfileStatus domain);
 
     @Override

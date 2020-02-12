@@ -127,8 +127,10 @@ public class FinanceChecksViabilityController {
     }
 
     private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
+        List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form);
+
         return "project/financecheck/viability";
     }
 
@@ -136,7 +138,6 @@ public class FinanceChecksViabilityController {
 
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        Long applicationId = project.getApplication();
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
@@ -190,7 +191,8 @@ public class FinanceChecksViabilityController {
                 approver,
                 approvalDate,
                 organisationId,
-                organisationSizeDescription);
+                organisationSizeDescription,
+                projectFinances);
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
