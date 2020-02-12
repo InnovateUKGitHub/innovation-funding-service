@@ -45,8 +45,9 @@
                             <div class="govuk-radios__item" th:each="satisfaction : ${form.getSatisfactionList()}">
                                 <input type="radio"
                                        class="govuk-radios__input"
+                                       th:field="*{satisfaction}"
                                        th:value="${satisfaction.id}"
-                                       th:field="|satisfaction-radio-${satisfaction.id}|"
+                                       th:id="|satisfaction-radio-${satisfaction.id}|"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.standard.satisfaction.selectionrequired}"/>
                                 <label class="govuk-label govuk-radios__label"
