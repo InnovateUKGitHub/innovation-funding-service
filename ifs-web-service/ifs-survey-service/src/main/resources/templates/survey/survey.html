@@ -50,7 +50,7 @@
                                        th:id="|satisfaction-radio-${satisfaction.id}|"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.standard.satisfaction.selectionrequired}"/>
-                                <label class="govuk-label govuk-radios__label"
+                                <label class="govuk-label govuk-radios__label selection-button-radio"
                                        th:for="|satisfaction-radio-${satisfaction.id}|"
                                        th:text="${satisfaction.displayName}"></label>
                             </div>
@@ -71,6 +71,7 @@
                         <th:block th:if="${#fields.hasErrors('comments')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('comments')}" th:text="${err}"></span>
                         </th:block>
+                        <label class="govuk-visually-hidden">Feedback comments</label>
                         <div class="textarea-wrapped word-count">
                             <textarea
                                 class="govuk-textarea"
