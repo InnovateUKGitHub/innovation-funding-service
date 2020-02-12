@@ -419,7 +419,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
     public void hasApplicationsAssigned() throws Exception {
         when(assessorServiceMock.hasApplicationsAssigned(1L)).thenReturn(serviceSuccess(TRUE));
 
-        mockMvc.perform(get("/assessor/applications-assigned/{id}", 1L))
+        mockMvc.perform(get("/assessor/has-applications-assigned/{id}", 1L))
                 .andExpect(status().isOk());
 
         verify(assessorServiceMock, only()).hasApplicationsAssigned(1L);

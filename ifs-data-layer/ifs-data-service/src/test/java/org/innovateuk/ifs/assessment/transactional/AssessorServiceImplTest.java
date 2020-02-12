@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -57,7 +58,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
@@ -295,14 +295,29 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     public void hasApplicationsAssigned_Assessments() {
         long assessorId = 7L;
 
-        when(assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(TRUE);
+        List<Milestone> milestones = newMilestone()
+                .withDate(now().plusDays(1))
+                .withType(ASSESSMENT_CLOSED).build(1);
+
+        Competition competition = newCompetition()
+                .withMilestones(milestones)
+                .build();
+
+        Application application = newApplication()
+                .withId(1L)
+                .withCompetition(competition)
+                .build();
+
+        List<Assessment> assessments = newAssessment().withApplication(application).build(1);
+
+        when(assessmentRepository.findByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(assessments);
 
         Boolean result = assessorService.hasApplicationsAssigned(assessorId).getSuccess();
 
         assertEquals(TRUE, result);
 
         InOrder inOrder = inOrder(assessmentRepository);
-        inOrder.verify(assessmentRepository).existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
+        inOrder.verify(assessmentRepository).findByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -332,14 +347,14 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(reviewParticipantRepository.findByUserIdAndRole(assessorId, PANEL_ASSESSOR)).thenReturn(asList(reviewParticipant));
-        when(assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(FALSE);
+        when(assessmentRepository.findByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(emptyList());
 
         Boolean result = assessorService.hasApplicationsAssigned(assessorId).getSuccess();
 
         assertEquals(TRUE, result);
 
         InOrder inOrder = inOrder(assessmentRepository, reviewParticipantRepository);
-        inOrder.verify(assessmentRepository).existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
+        inOrder.verify(assessmentRepository).findByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
         inOrder.verify(reviewParticipantRepository).findByUserIdAndRole(assessorId, PANEL_ASSESSOR);
         inOrder.verifyNoMoreInteractions();
     }
@@ -371,41 +386,17 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         when(interviewParticipantRepository.findByUserIdAndRole(assessorId, INTERVIEW_ASSESSOR)).thenReturn(asList(interviewParticipant));
         when(reviewParticipantRepository.findByUserIdAndRole(assessorId, PANEL_ASSESSOR)).thenReturn(emptyList());
-        when(assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(FALSE);
+        when(assessmentRepository.findByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId)).thenReturn(emptyList());
 
         Boolean result = assessorService.hasApplicationsAssigned(assessorId).getSuccess();
 
         assertEquals(TRUE, result);
 
         InOrder inOrder = inOrder(assessmentRepository,reviewParticipantRepository, interviewParticipantRepository);
-        inOrder.verify(assessmentRepository).existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
+        inOrder.verify(assessmentRepository).findByActivityStateInAndParticipantUserId(assignedAssessmentStates, assessorId);
         inOrder.verify(reviewParticipantRepository).findByUserIdAndRole(assessorId, PANEL_ASSESSOR);
         inOrder.verify(interviewParticipantRepository).findByUserIdAndRole(assessorId, INTERVIEW_ASSESSOR);
         inOrder.verifyNoMoreInteractions();
-    }
-
-
-
-    public boolean hasAnyInterviewsAssigned(long userId) {
-        return interviewParticipantRepository
-                .findByUserIdAndRole(userId, INTERVIEW_ASSESSOR)
-                .stream()
-                .filter(participant -> now().isBefore(participant.getInvite().getTarget().getPanelDate()))
-                .findAny()
-                .isPresent();
-    }
-
-    public boolean hasAnyPanelsAssigned(long userId) {
-        return reviewParticipantRepository
-                .findByUserIdAndRole(userId, PANEL_ASSESSOR)
-                .stream()
-                .filter(participant -> now().isBefore(participant.getInvite().getTarget().getAssessmentPanelDate()))
-                .findAny()
-                .isPresent();
-    }
-
-    public boolean hasAnyAssessmentsAssigned(long userId) {
-        return assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, userId);
     }
 
     @Test
