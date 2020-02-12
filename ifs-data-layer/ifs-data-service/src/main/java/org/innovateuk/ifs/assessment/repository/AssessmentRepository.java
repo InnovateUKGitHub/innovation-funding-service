@@ -107,7 +107,7 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     int countByActivityStateAndTargetCompetitionId(AssessmentState state, Long competitionId);
 
-    boolean existsByActivityStateInAndParticipantUserId(Collection<AssessmentState> state, Long userId);
+    List<Assessment> findByActivityStateInAndParticipantUserId(Collection<AssessmentState> state, Long userId);
 
     int countByActivityStateInAndTargetCompetitionId(Collection<AssessmentState> state, Long competitionId);
 

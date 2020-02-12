@@ -192,7 +192,12 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private boolean hasAnyAssessmentsAssigned(long userId) {
-        return assessmentRepository.existsByActivityStateInAndParticipantUserId(assignedAssessmentStates, userId);
+        return assessmentRepository
+                .findByActivityStateInAndParticipantUserId(assignedAssessmentStates, userId)
+                .stream()
+                .filter(assessment -> now().isBefore(assessment.getTarget().getCompetition().getAssessmentClosedDate()))
+                .findAny()
+                .isPresent();
     }
 
     private ServiceResult<Void> attemptNotifyAssessorTransition(Assessment assessment) {
