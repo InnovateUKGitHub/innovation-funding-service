@@ -72,12 +72,7 @@ task prepareDockerFile {
             from file('src/main/docker/default-jre-headless-dummy_1.0_all.deb')
             into inputDir
         }
-
-        copy {
-            from fileTree('src/main/docker/certs')
-            into "${inputDir}/certs"
-        }
-
+        
         copy {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
             from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
@@ -102,3 +97,4 @@ createContainer.networkAliases=["auth.local-dev","iuk-auth-localdev"]
 createContainer.portBindings = ['9443:9443']
 createContainer.hostName="idp"
 createContainer.workingDir="/usr/local/bin"
+createContainer.binds = ["${rootProject.projectDir}/ifs-auth-service/ifs-idp-service/src/main/docker/certs":"/var/certs"]
