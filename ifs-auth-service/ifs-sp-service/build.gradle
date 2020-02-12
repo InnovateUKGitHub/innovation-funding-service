@@ -22,8 +22,6 @@ buildscript {
 }
 
 task prepareDockerFile {
-    dependsOn ':ifs-auth-service:prepareSecrets'
-
     def inputDir = project.file("$project.buildDir/docker")
 
     doFirst {
@@ -40,10 +38,6 @@ task prepareDockerFile {
         copy {
             from fileTree('src/main/docker/files')
             into "${inputDir}/files"
-        }
-        copy {
-            from fileTree('src/main/docker/certs')
-            into "${inputDir}/certs"
         }
     }
 }

@@ -24,6 +24,8 @@ String idpProxyKeyFileName = 'idp_proxy_key.pem'
 String idpProxyCertificateFileName = 'idp_proxy_certificate.pem'
 String idpProxyCacertificateFileName = 'idp_proxy_cacertificate.pem'
 
+
+// Move the copying  from this task into the  generate secrets task
 task prepareSecrets {
     // If certificates are not present and the task is not generating the certificates then fail
     if (gradle.startParameter.getTaskNames().contains('build')) {
