@@ -9,7 +9,7 @@
     outline: none;
 
     &:focus {
-      background-color: $govuk-focus-colour;
+      @include govuk-focused-text;
     }
   }
 

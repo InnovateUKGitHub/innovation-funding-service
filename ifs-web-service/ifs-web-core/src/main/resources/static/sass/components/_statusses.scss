@@ -135,8 +135,8 @@
 
   %marked-as-complete {
     border-width: 2px;
-    border-color: govuk-colour("grey-3");
-    background-color: govuk-colour("grey-4");
+    border-color:govuk-colour("light-grey");
+    background-color: govuk-colour("light-grey");
   }
 
   &.marked-as-complete {
@@ -180,7 +180,7 @@ th,
 span {
   &.status {
     &.na {
-      background: govuk-colour("grey-3");
+      background:govuk-colour("light-grey");
     }
 
     &.ok {

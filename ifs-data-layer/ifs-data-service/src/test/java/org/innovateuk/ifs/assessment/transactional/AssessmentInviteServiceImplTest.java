@@ -35,6 +35,7 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -43,6 +44,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -160,6 +162,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     private AssessmentParticipant competitionParticipant;
 
@@ -1080,12 +1085,13 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
                                   assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock,
-                                  notificationServiceMock, userService);
+                                  notificationServiceMock, userService, roleProfileStatusRepository);
         inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(0)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(0));
+        inOrder.verify(roleProfileStatusRepository).save(any());
         inOrder.verify(userService).evictUserCache(user.getUid());
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
 

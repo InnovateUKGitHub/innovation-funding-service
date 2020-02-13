@@ -16,7 +16,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem submitting the public content.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
@@ -35,7 +35,7 @@
                         <a class="govuk-button" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
                     </div>
                     <div class="govuk-!-margin-top-6">
-                        <a class="button-secondary" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
+                        <a class="govuk-button govuk-button--secondary" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
                     </div>
                 </th:block>
                 <th:block th:unless="${model.readOnly}">

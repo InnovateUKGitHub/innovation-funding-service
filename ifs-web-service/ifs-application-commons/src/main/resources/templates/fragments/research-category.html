@@ -88,7 +88,7 @@
         </div>
 
         <a th:href="${backURL}"
-           class="button-secondary"
+           class="govuk-button govuk-button--secondary"
            th:if="${model.allReadOnly}"
            th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
         <button th:unless="${model.allReadOnly}"

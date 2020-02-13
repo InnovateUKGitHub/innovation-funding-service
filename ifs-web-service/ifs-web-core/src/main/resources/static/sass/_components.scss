@@ -1,8 +1,8 @@
 //variables
 $govuk-is-ie8: false !default;
 // mising govuk variable TODO remove this when govuk fixes the bug
-$govuk-button-colour: #00823B;
-$ifs-warning-button-colour: #c00000;
+$govuk-button-colour: #005a30;
+$ifs-warning-button-colour: govuk-colour("red");
 $wide-page-width: 1380px;
 
 @import "mixins";

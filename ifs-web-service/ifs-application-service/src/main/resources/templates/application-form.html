@@ -19,7 +19,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
-             role="alert" tabindex="-1" data-module="error-summary">
+             role="alert" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
                 There is a problem
             </h2>
@@ -81,7 +81,7 @@
                     </th:block>
                 </div>
                 <th:block th:if="${model.allReadOnly}">
-                    <a th:href="${backURL}" class="button-secondary"
+                    <a th:href="${backURL}" class="govuk-button govuk-button--secondary"
                        th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return
                         to application overview</a>
                 </th:block>
