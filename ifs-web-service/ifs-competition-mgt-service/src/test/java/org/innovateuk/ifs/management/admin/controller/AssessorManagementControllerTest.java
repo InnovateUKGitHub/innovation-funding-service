@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.admin.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.newRoleProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -33,6 +35,9 @@ public class AssessorManagementControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private RoleProfileStatusRestService roleProfileStatusRestService;
 
+    @Mock
+    private AssessorRestService assessorRestService;
+
     @Test
     public void viewFindExternalUsers() throws Exception {
 
@@ -44,6 +49,7 @@ public class AssessorManagementControllerTest extends BaseControllerMockMVCTest<
 
         when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
         when(userRestService.retrieveUserById(modifiedId)).thenReturn(restSuccess(userResource));
+        when(assessorRestService.hasApplicationsAssigned(userId)).thenReturn(restSuccess(TRUE));
 
 
         mockMvc.perform(get("/admin/user/{userId}/role-profile",userId))
