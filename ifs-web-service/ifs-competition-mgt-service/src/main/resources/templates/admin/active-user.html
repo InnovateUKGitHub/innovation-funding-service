@@ -140,7 +140,7 @@
                             <td class="govuk-table__cell" th:text="${model.roleDisplay(role)}"></td>
                             <td class="govuk-table__cell alignright">
                                 <th:block th:if="${canDisableRole and !model.support}">
-                                    <a class="govuk-link" href="#">View role profile</a>
+                                    <a class="govuk-link" th:href="@{/admin/user/{userId}/role-profile(userId=${model.user.id})}">View role profile</a>
                                 </th:block>
                             </td>
                         </tr>

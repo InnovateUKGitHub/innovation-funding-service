@@ -88,7 +88,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
         setupResource();
         setupAsyncExpectations(asyncFuturesGenerator);
         YourOrganisationWithoutGrowthTableForm yourOrganisationWithoutGrowthTableForm = new YourOrganisationWithoutGrowthTableForm();
-        when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(withoutGrowthTableFormPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);
 
@@ -132,7 +132,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
 
     @Test
     public void markAsCompleteWithoutGrowthTable_failure() throws Exception {
-        when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
 
         MvcResult result = mockMvc.perform(post(viewPageUrl())
             .param("mark-as-complete", ""))

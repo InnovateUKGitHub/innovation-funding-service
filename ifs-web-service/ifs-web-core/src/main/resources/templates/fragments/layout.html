@@ -210,10 +210,14 @@
                   th:insert="fragments/layout :: back-link"/>
 
         <th:block th:if="${dynamicBackLink}">
+
             <a th:if="${cookieBackLinkUrl}"
                class="govuk-back-link"
                th:href="${cookieBackLinkUrl}"
-               th:text="${cookieBackLinkText == null ? 'Back' : 'Back to ' + cookieBackLinkText.toLowerCase()}">Back</a>
+               th:text="${cookieBackLinkText == null
+                        ? 'Back'
+                        : 'Back to ' + (upperCaseBackLink != null ? cookieBackLinkText : cookieBackLinkText.toLowerCase())}">Back</a>
+
             <th:block th:unless="${cookieBackLinkUrl}"
                       th:insert="fragments/layout :: back-link" />
         </th:block>

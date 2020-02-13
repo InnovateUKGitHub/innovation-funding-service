@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <th:block
-        th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
+        th:fragment="without-growth-table(form, organisationSizeOptions, isH2020, isInternalUser, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
             <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
@@ -10,7 +10,7 @@
         </div>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                    organisation-size(form=${form}, organisationSizeOptions=${organisationSizeOptions}, isH2020=${isH2020}, readOnly=${readOnly})" />
+                                    organisation-size(form=${form}, organisationSizeOptions=${organisationSizeOptions}, isH2020=${isH2020}, isInternalUser=${isInternalUser}, readOnly=${readOnly})" />
 
         <th:block th:insert="fragments/form-elements/textfield ::
                         textfield-integer(
@@ -35,7 +35,7 @@
     </th:block>
 
     <th:block
-        th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, showOrganisationSizeAlert, showStateAidAgreement, readOnly, showHints)">
+        th:fragment="with-growth-table(form, organisationSizeOptions, isH2020, isInternalUser, showOrganisationSizeAlert, showStateAidAgreement, readOnly, showHints)">
 
 
         <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
@@ -44,7 +44,7 @@
         </div>
 
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                    organisation-size(form=${form}, organisationSizeOptions=${organisationSizeOptions}, isH2020=${isH2020}, readOnly=${readOnly})" />
+                                    organisation-size(form=${form}, organisationSizeOptions=${organisationSizeOptions}, isH2020=${isH2020}, isInternalUser=${isInternalUser}, readOnly=${readOnly})" />
 
 
         <th:block th:insert="fragments/form-elements/date ::
@@ -158,7 +158,7 @@
         </tr>
     </th:block>
 
-    <th:block th:fragment="organisation-size(form, organisationSizeOptions, isH2020, readOnly)">
+    <th:block th:fragment="organisation-size(form, organisationSizeOptions, isH2020, isInternalUser, readOnly)">
         <th:block th:insert="fragments/form-elements/radiofield ::
                         radiofield(
                             legend='Size',
@@ -168,9 +168,12 @@
                             hint=${isH2020 ? 'Please provide your
                                   business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
                                   target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition</a> <span id=&quot;definition-hint&quot;>(opens in a new window)</span> for guidance.'
+                                  : (isInternalUser ? 'To determine the level of funding the organisation are eligible to receive please provide their
+                                  business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
+                                  target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition  <span id=&quot;definition-hint&quot;>(opens in a new window)</span></a> for guidance.'
                                   : 'To determine the level of funding you are eligible to receive please provide your
                                   business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
-                                  target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition</a>  <span id=&quot;definition-hint&quot;>(opens in a new window)</span> for guidance.'},
+                                  target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition</a>  <span id=&quot;definition-hint&quot;>(opens in a new window)</span> for guidance.')},
                             required=true,
                             requiredMessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED},
                             readOnly=${readOnly},
