@@ -157,17 +157,19 @@
                             </tr>
                             </thead>
                             <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row form-group-row-validated">
+                            <tr class="govuk-table__row form-group-row-validated"
+                                th:classappend="((${#fields.hasErrors('name')}) or (${#fields.hasErrors('email')})) ? 'govuk-form-group--error'">
                                 <td class="govuk-table__cell govuk-form-group"
                                     th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label govuk-label--s" th:for="name">
+                                    <label class="govuk-label govuk-label--s" th:for="full-name">
                                         Full name
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('name')}">
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('name')}"
                                           th:text="${err}"/>
                                     </th:block>
-                                    <input th:field="*{name}"
+                                    <input id="full-name"
+                                           th:field="*{name}"
                                            th:errorclass="govuk-input--error"
                                            class="govuk-input govuk-input--width-30"
                                            type="text"
@@ -177,14 +179,15 @@
                                 </td>
                                 <td class="govuk-table__cell govuk-form-group"
                                     th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label govuk-label--s" th:for="email">
+                                    <label class="govuk-label govuk-label--s" th:for="email-address">
                                         Email
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('email')}">
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
                                           th:text="${err}"/>
                                     </th:block>
-                                    <input th:field="*{email}"
+                                    <input id="email-address"
+                                           th:field="*{email}"
                                            th:errorclass="govuk-input--error"
                                            class="govuk-input govuk-input--width-30"
                                            type="email"
