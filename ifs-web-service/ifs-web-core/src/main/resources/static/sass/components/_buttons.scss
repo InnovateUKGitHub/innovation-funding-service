@@ -15,7 +15,6 @@ table {
 
 .button-clear {
   @include govuk-font($size: 19, $line-height: 19px);
-  //@include govuk-focusable; //TODO fix properly
   @include box-shadow(none);
   @include box-sizing(border-box);
   display: inline-block;
@@ -42,12 +41,7 @@ table {
   }
 
   &:focus {
-    outline: 3px solid transparent;
-    text-decoration: none;
-    border-color: $govuk-focus-colour;
-    color: $govuk-focus-text-colour;
-    background-color: $govuk-focus-colour;
-    box-shadow: 0 -2px $govuk-focus-colour, 0 4px $govuk-focus-text-colour;
+    @include govuk-focused-text;
   }
 
   &.disabled,

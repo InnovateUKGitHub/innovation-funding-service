@@ -418,11 +418,7 @@ td {
 
     &:focus {
       + label {
-        border-color: $govuk-focus-colour;
-        color: $govuk-focus-text-colour;
-        background-color: $govuk-focus-colour;
-        box-shadow: 0 2px 0 $govuk-focus-text-colour;
-        outline: 3px solid transparent;
+        @include govuk-focused-text;
       }
     }
   }
@@ -470,7 +466,7 @@ td {
       opacity: 0;
       overflow: hidden;
       position: absolute;
-      z-index: -1;  
+      z-index: -1;
     }
   }
 }
