@@ -137,6 +137,7 @@ public class ApplicationDetailsController {
                                  @PathVariable long questionId,
                                  UserResource user) {
         Supplier<String> failureView = () -> viewDetailsPage(form, bindingResult, model, applicationId, questionId, user);
+        Supplier<String> successView = () -> format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<ValidationMessages> result = saveDetails(form, applicationId);
@@ -144,8 +145,8 @@ public class ApplicationDetailsController {
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> {
                         ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-                        questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
-                        return format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
+                        questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess().forEach(validationHandler::addAnyErrors);
+                        return validationHandler.failNowOrSucceedWith(failureView, successView);
                     });
         });
     }

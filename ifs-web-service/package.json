@@ -4,7 +4,7 @@
     "compass-importer": "^0.4.1",
     "cryptiles": "^4.1.2",
     "files-exist": "^1.1.0",
-    "govuk-frontend": "^2.13.0",
+    "govuk-frontend": "^3.3.0",
     "html5shiv": "^3.7.3",
     "http-proxy-agent": "^2.1.0",
     "jquery": "^1.12.4",

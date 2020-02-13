@@ -54,10 +54,10 @@
                 Invite assessors to interview panel
             </h2>
             <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item">
+                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
                     <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
                        th:text="${'Applications (' + model.unallocatedApplications + ')' }"
-                       class="govuk-tabs__tab govuk-tabs__tab--selected"></a>
+                       class="govuk-tabs__tab"></a>
                 </li>
                 <li class="govuk-tabs__list-item">
                     <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"

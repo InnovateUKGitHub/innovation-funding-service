@@ -15,7 +15,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to upload your file.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -78,8 +78,8 @@
                                 <th:block th:unless="${app.hasAttachment()}">
                                     <div class="upload-section">
                                         <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
-                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-0">Upload</label>
-                                        <button name="attachFeedbackApplicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${fieldName}" th:value="${app.applicationId}">Save</button>
+                                        <label th:for="${fieldName}" class="govuk-!-margin-top-0">Upload</label>
+                                        <button name="attachFeedbackApplicationId" class="govuk-button govuk-button--secondary" type="submit" th:attr="data-for-file-upload=${fieldName}" th:value="${app.applicationId}">Save</button>
                                     </div>
                                 </th:block>
                                 <th:block th:if="${app.hasAttachment()}">
