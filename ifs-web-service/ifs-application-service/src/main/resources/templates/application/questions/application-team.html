@@ -161,14 +161,14 @@
                                 th:classappend="((${#fields.hasErrors('name')}) or (${#fields.hasErrors('email')})) ? 'govuk-form-group--error'">
                                 <td class="govuk-table__cell govuk-form-group"
                                     th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label govuk-label--s" for="fullName">
+                                    <label class="govuk-label govuk-label--s" th:for="name">
                                         Full name
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('name')}">
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('name')}"
                                           th:text="${err}"/>
                                     </th:block>
-                                    <input id="fullName"
+                                    <input id="name"
                                            th:field="*{name}"
                                            th:errorclass="govuk-input--error"
                                            class="govuk-input govuk-input--width-30"
@@ -179,14 +179,14 @@
                                 </td>
                                 <td class="govuk-table__cell govuk-form-group"
                                     th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label govuk-label--s" for="emailAddress">
+                                    <label class="govuk-label govuk-label--s" th:for="email">
                                         Email
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('email')}">
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
                                           th:text="${err}"/>
                                     </th:block>
-                                    <input id="emailAddress"
+                                    <input id="email"
                                            th:field="*{email}"
                                            th:errorclass="govuk-input--error"
                                            class="govuk-input govuk-input--width-30"
