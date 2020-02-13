@@ -346,6 +346,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     }
 
     private void addTestAssessors() {
+        setLoggedInUser(getCompAdmin());
         InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
 
         List<Profile> profiles = newProfile()
