@@ -22,7 +22,7 @@
              aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
-             data-module="error-summary">
+             data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
@@ -234,10 +234,11 @@
             </th:block>
 
             <th:block th:if="${model.leadApplicant}">
-                <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
-                   th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
-                   class="govuk-!-margin-top-5 button-clear">Add a partner organisation</a>
-
+                <p class="govuk-body govuk-!-margin-top-5">
+                    <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
+                       th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                       class="govuk-link">Add a partner organisation</a>
+                </p>
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                       method="post">
                     <div th:if="${model.open}" class="form-footer govuk-!-margin-top-8">
@@ -253,7 +254,7 @@
 
             <div class="govuk-!-margin-top-6">
                 <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
-                   class="button-secondary">Return to application overview
+                   class="govuk-button govuk-button--secondary">Return to application overview
                 </a>
             </div>
 
