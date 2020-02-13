@@ -168,8 +168,7 @@
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('name')}"
                                           th:text="${err}"/>
                                     </th:block>
-                                    <input th:id="name"
-                                           th:field="*{name}"
+                                    <input th:field="*{name}"
                                            th:errorclass="govuk-input--error"
                                            class="govuk-input govuk-input--width-30"
                                            type="text"
@@ -186,8 +185,7 @@
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
                                           th:text="${err}"/>
                                     </th:block>
-                                    <input th:id="email"
-                                           th:field="*{email}"
+                                    <input th:field="*{email}"
                                            th:errorclass="govuk-input--error"
                                            class="govuk-input govuk-input--width-30"
                                            type="email"
