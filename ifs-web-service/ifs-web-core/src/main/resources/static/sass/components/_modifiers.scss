@@ -90,15 +90,15 @@ table {
   }
 
   .shaded-cell {
-    background-color: govuk-colour("grey-4");
+    background-color: govuk-colour("light-grey");
   }
 
   .border-left-cell {
-    border-left: 2px solid govuk-colour("grey-2");
+    border-left: 2px solid govuk-colour("mid-grey");
   }
 
   .border-right-cell {
-    border-right: 2px solid govuk-colour("grey-2");
+    border-right: 2px solid govuk-colour("mid-grey");
   }
 }
 
@@ -223,7 +223,7 @@ hr,
 }
 
 .govuk-panel--grey {
-  background: govuk-colour("grey-3");
+  background:govuk-colour("light-grey");
 }
 
 .govuk-panel--confirmation-outline {
@@ -303,33 +303,4 @@ hr,
   &.button-clear {
     vertical-align: baseline;
   }
-}
-
-/* Remove after framework upgrade to > 3.0 . */
-@mixin focus-style {
-
-  &:focus {
-    outline: 3px solid transparent;
-    color: $govuk-text-colour;
-    background-color: #fd0;
-    -webkit-box-shadow: 0 -2px #fd0, 0 4px $govuk-text-colour;
-    box-shadow: 0 -2px #fd0, 0 4px $govuk-text-colour;
-    text-decoration: none;
-
-    &:visited {
-      color: $govuk-text-colour;
-    }
-  }
-}
-
-.govuk-link {
-  @include focus-style;
-}
-
-.govuk-footer__link {
-  @include focus-style;
-}
-
-.govuk-back-link {
-  @include focus-style;
 }

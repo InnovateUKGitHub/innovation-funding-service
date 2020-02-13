@@ -89,14 +89,14 @@
 }
 
 .button-dashboard{
-  background: govuk-colour("grey-4");
+  background: govuk-colour("light-grey");
   padding: 20px 20px 15px 20px;
   display: block;
   min-height: 110px;
   text-decoration: none;
 
   &:hover{
-    background: govuk-colour("grey-4");
+    background: govuk-colour("light-grey");
   }
 
   &.highlight{
@@ -152,7 +152,7 @@
 .competition-setup {
   select {
     &[disabled] {
-      background:  govuk-colour("grey-4");
+      background:  govuk-colour("light-grey");
       border: 1px solid $govuk-border-colour;
       color: govuk-colour("black");
     }

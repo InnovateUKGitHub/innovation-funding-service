@@ -114,7 +114,7 @@
                             Yes
                         </td>
                         <td class="govuk-table__cell alignright">
-                            <a th:if="${app.notified}" class="button-secondary govuk-!-margin-0" data-js-modal="remove-assigned-assessor-modal"
+                            <a th:if="${app.notified}" class="govuk-button govuk-button--secondary govuk-!-margin-0" data-js-modal="remove-assigned-assessor-modal"
                                th:href="${removeActionNonJs}"
                                th:attr="data-modal-form-action=${removeAction}"
                                th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})},
@@ -122,7 +122,7 @@
                                th:unless="${app.submitted}">Remove</a>
                             <form th:unless="${app.notified}" method="post"
                                 th:action="@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})}">
-                                <button type="submit" class="button-secondary govuk-!-margin-0">Remove</button>
+                                <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Remove</button>
                             </form>
                         </td>
                     </tr>
@@ -193,7 +193,7 @@
                         <td th:text="${app.totalAssessors}" class="govuk-table__cell govuk-table__cell--numeric">3</td>
                         <td class="govuk-table__cell alignright"><form method="post"
                                   th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign(competitionId=${model.competitionId}, assessorId=${model.assessorId}, applicationId=${app.applicationId})}" >
-                            <button type="submit" class="button-secondary govuk-!-margin-0">Reassign</button>
+                            <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Reassign</button>
                         </form>
                         </td>
                     </tr>
@@ -267,7 +267,7 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
                     <td class="govuk-table__cell"><form method="post"
                            th:action="@{/assessment/competition/{competitionid}/assessors/{assessorid}/application/{applicationid}/assign(competitionid=${model.competitionId}, assessorid=${model.assessorId}, applicationid=${app.applicationId})}" >
-                        <button type="submit" class="button-secondary govuk-!-margin-0">Assign</button>
+                        <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Assign</button>
                     </form>
                     </td>
                 </tr>
