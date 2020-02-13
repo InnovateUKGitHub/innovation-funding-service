@@ -157,8 +157,7 @@
                             </tr>
                             </thead>
                             <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row form-group-row-validated"
-                                th:classappend="((${#fields.hasErrors('name')}) or (${#fields.hasErrors('email')})) ? 'govuk-form-group--error'">
+                            <tr class="govuk-table__row form-group-row-validated">
                                 <td class="govuk-table__cell govuk-form-group"
                                     th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
                                     <label class="govuk-label govuk-label--s" th:for="name">
