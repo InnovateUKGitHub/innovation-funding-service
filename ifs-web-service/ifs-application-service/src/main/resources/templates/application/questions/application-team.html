@@ -160,7 +160,7 @@
                             <tr class="govuk-table__row form-group-row-validated"
                                 th:classappend="((${#fields.hasErrors('name')}) or (${#fields.hasErrors('email')})) ? 'govuk-form-group--error'">
                                 <td class="govuk-table__cell govuk-form-group"
-                                    th:each="name, index : ${model.name}"
+                                    th:each="name, index : ${form.name}"
                                     th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
                                     <label class="govuk-label govuk-label--s" th:for="|name-row-${index.count}|">
                                         Full name
@@ -179,7 +179,7 @@
                                            th:attr="data-required-errormessage=#{validation.standard.name.required}"/>
                                 </td>
                                 <td class="govuk-table__cell govuk-form-group"
-                                    th:each="email, index : ${model.email}"
+                                    th:each="email, index : ${form.email}"
                                     th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
                                     <label class="govuk-label govuk-label--s" th:for="|email-row-${index.count}|">
                                         Email
