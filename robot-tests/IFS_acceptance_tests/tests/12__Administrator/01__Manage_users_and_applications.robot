@@ -315,7 +315,7 @@ the user navigates to the View internal user details
     the user clicks the button/link  jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link    css = .button-secondary[type = "submit"]     #Resend invite
+    the user clicks the button/link    jQuery = button:contains("Resend invite")     #Resend invite
     the user clicks the button/link    jQuery = button:contains("Resend")
     the user reads his email           ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
