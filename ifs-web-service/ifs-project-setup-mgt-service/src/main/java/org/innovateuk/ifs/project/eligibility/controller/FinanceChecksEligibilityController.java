@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -133,6 +135,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 }
             }
 
+            List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(projectId);
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
@@ -146,7 +149,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     eligibility.get().getEligibilityApprovalDate(),
                     false,
                     isUsingJesFinances,
-                    editAcademicFinances
+                    editAcademicFinances,
+                    projectFinances
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);

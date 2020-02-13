@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.user.service;
 
+import java.util.List;
+import java.util.concurrent.Future;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
 import org.mockito.Mock;
-
-import java.util.List;
-import java.util.concurrent.Future;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;

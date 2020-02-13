@@ -55,27 +55,48 @@
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(partner.costs,1,'DEFAULT')}" /></td>
 
-                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-left-cell"><th:block th:text="${#numbers.formatInteger(partner.fundingLevel,1,'DEFAULT')}" />%</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-left-cell"><th:block th:text="${#numbers.formatDecimal(partner.fundingLevel,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell">&pound;<th:block th:text="${#numbers.formatInteger(partner.fundingSought,1,'DEFAULT')}" /></td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-right-cell"><th:block th:text="${#numbers.formatDecimal(partner.percentageOfTotalGrant,1,'DEFAULT',2,'DEFAULT')}" />%</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-right-cell"><th:block th:text="${#numbers.formatDecimal(partner.percentageOfTotalGrant,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</td>
 
                             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
                                 <label th:for="__${path}__.fundingLevel">
                                     <span class="govuk-visually-hidden">New funding level</span>
                                 </label>
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('{__${path}__.fundingLevel}')}" th:text="${err}">Error</span>
-                                <input type="number"
-                                       class="govuk-input govuk-input--width-3"
-                                       th:id="__${path}__.fundingLevel"
-                                       th:field="*{__${path}__.fundingLevel}"
-                                       th:errorclass="govuk-input--error"
-                                       placeholder="0"
-                                       required="required"
-                                       min="1"
-                                       th:attr="data-required-errormessage=#{validation.finance.funding.level.required},
+
+                                <th:block th:if="${model.fundingLevelPercentageToggle}">
+                                    <input type="number"
+                                           class="govuk-input govuk-input--width-3"
+                                           th:id="__${path}__.fundingLevel"
+                                           th:field="*{__${path}__.fundingLevel}"
+                                           th:errorclass="govuk-input--error"
+                                           placeholder="0"
+                                           required="required"
+                                           min="1"
+                                           step=".01"
+                                           data-prevent-input-non-decimal
+                                           th:attr="data-required-errormessage=#{validation.finance.funding.level.required},
                                                 data-min-errormessage=#{validation.finance.funding.level.min},
                                                 data-max-errormessage=#{validation.finance.grant.claim.percentage.max(${partner.maximumFundingLevel})},
                                                 max=${partner.maximumFundingLevel}">
+                                </th:block>
+
+                                <th:block th:unless="${model.fundingLevelPercentageToggle}">
+                                    <input type="number"
+                                           class="govuk-input govuk-input--width-3"
+                                           th:id="__${path}__.fundingLevel"
+                                           th:field="*{__${path}__.fundingLevel}"
+                                           th:errorclass="govuk-input--error"
+                                           placeholder="0"
+                                           required="required"
+                                           min="1"
+                                           data-prevent-input-non-number
+                                           th:attr="data-required-errormessage=#{validation.finance.funding.level.required},
+                                                data-min-errormessage=#{validation.finance.funding.level.min},
+                                                data-max-errormessage=#{validation.finance.grant.claim.percentage.max(${partner.maximumFundingLevel})},
+                                                max=${partner.maximumFundingLevel}">
+                                </th:block>
                             </td>
                             <th:block th:with="fundingLevel=*{__${path}__.fundingLevel}">
                                 <td class="govuk-table__cell govuk-table__cell--numeric">

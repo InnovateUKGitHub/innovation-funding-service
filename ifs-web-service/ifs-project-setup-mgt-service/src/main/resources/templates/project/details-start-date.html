@@ -15,24 +15,25 @@
               th:with="linkTitle='Back to project details',linkUrl=@{/competition/{competitionId}/project/{projectId}/details(competitionId=${model.competitionId},projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
-             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to save your target start
-                date.</h2>
-            <div class="govuk-error-summary__body">
-                <ul class="govuk-list govuk-error-summary__list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}">
-                        <a href="#projectStartDate-date_month" th:text="${err}">The error message</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Target start date',subTitle=${model.projectName},size='govuk-heading-xl'"/>
-
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post"
               novalidate="novalidate">
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+                 aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to save your target start
+                    date.</h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        <li th:each="err : ${#fields.errors('${form.*}')}">
+                            <a href="#projectStartDate-date_month" th:text="${err}">The error message</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Target start date',subTitle=${model.projectName},size='govuk-heading-xl'"/>
+
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('projectStartDate')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">

@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.project.financecheck.workflow.financechecks;
 
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityApprovedGuard;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
@@ -14,17 +17,21 @@ import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class ViabilityWorkflowHandlerIntegrationTest extends
@@ -32,11 +39,18 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+    @Autowired
+    private ViabilityApprovedGuard guard;
+
     private ViabilityProcessRepository viabilityProcessRepositoryMock;
+    private ProjectFinanceService projectFinanceService;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
         viabilityProcessRepositoryMock = (ViabilityProcessRepository) mockSupplier.apply(ViabilityProcessRepository.class);
+        //BaseWorkflowHandlerIntegrationTest only supports repository mocks.
+        projectFinanceService = mock(ProjectFinanceService.class);
+        ReflectionTestUtils.setField(guard, "projectFinanceService", projectFinanceService);
     }
 
     @Test
@@ -61,28 +75,46 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
 
     @Test
     public void viabilityApproved() {
+        when(projectFinanceService.financeChecksTotals(anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource()
+                .withGrantClaimPercentage(BigDecimal.valueOf(30))
+                .withMaximumFundingLevel(50)
+                .build(1)));
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                ViabilityState.REVIEW, ViabilityState.APPROVED, ViabilityEvent.VIABILITY_APPROVED);
+                ViabilityState.REVIEW, ViabilityState.APPROVED, ViabilityEvent.VIABILITY_APPROVED, true);
     }
 
+    @Test
+    public void testViabilityApproved_guard() {
+        when(projectFinanceService.financeChecksTotals(anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource()
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
+                .withMaximumFundingLevel(30)
+                .build(1)));
+
+        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                ViabilityState.REVIEW, ViabilityState.APPROVED, ViabilityEvent.VIABILITY_APPROVED, false);
+    }
     @Test
     public void viabilityNotApplicable() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                ViabilityState.REVIEW, ViabilityState.NOT_APPLICABLE, ViabilityEvent.VIABILITY_NOT_APPLICABLE);
+                ViabilityState.REVIEW, ViabilityState.NOT_APPLICABLE, ViabilityEvent.VIABILITY_NOT_APPLICABLE, true);
     }
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<PartnerOrganisation, User, Boolean> workflowMethodToCall,
                                                              ViabilityState currentViabilityState,
                                                              ViabilityState destinationViabilityState,
-                                                             ViabilityEvent expectedEventToBeFired) {
+                                                             ViabilityEvent expectedEventToBeFired,
+                                                             boolean fired) {
 
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        Project project = newProject().build();
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withProject(project).build();
         User internalUser = newUser().build();
 
         // Set the current state in the Viability Process
@@ -101,7 +133,11 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
         // Ensure the correct event was fired by the workflow
         expectedViabilityProcess.setProcessEvent(expectedEventToBeFired.getType());
 
-        verify(viabilityProcessRepositoryMock).save(expectedViabilityProcess);
+        if (fired) {
+            verify(viabilityProcessRepositoryMock).save(expectedViabilityProcess);
+        } else {
+            verify(viabilityProcessRepositoryMock, never()).save(expectedViabilityProcess);
+        }
     }
 
     @Override

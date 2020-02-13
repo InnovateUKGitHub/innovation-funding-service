@@ -22,4 +22,10 @@ public interface AssessorService {
             value = "NOTIFY_ASSESSORS",
             description = "Comp admins and execs can notify all assessors of their assignments for a competition")
     ServiceResult<Void> notifyAssessorsByCompetition(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(
+            value = "HAS_ASSESSMENTS",
+            description = "Comp admins and execs can see if an assessor has any assessments assigned to them")
+    ServiceResult<Boolean> hasApplicationsAssigned(long assessorId);
 }

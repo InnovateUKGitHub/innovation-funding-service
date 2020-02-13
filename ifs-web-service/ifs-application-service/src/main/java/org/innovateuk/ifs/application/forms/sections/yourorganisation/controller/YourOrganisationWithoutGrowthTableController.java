@@ -2,13 +2,16 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
+import javax.validation.Valid;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -26,10 +29,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
-
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
@@ -42,7 +41,7 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "application/sections/your-organisation/your-organisation-without-growth-table";
 
     private CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator;
-    private YourOrganisationViewModelPopulator viewModelPopulator;
+    private ApplicationYourOrganisationViewModelPopulator viewModelPopulator;
     private YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator;
     private SectionService sectionService;
     private UserRestService userRestService;
@@ -51,7 +50,7 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     @Autowired
     YourOrganisationWithoutGrowthTableController(
             CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator,
-            YourOrganisationViewModelPopulator viewModelPopulator,
+            ApplicationYourOrganisationViewModelPopulator viewModelPopulator,
             YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator,
             SectionService sectionService,
             UserRestService userRestService,

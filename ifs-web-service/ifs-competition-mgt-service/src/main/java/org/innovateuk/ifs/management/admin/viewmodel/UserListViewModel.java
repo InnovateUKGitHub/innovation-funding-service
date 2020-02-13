@@ -5,9 +5,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
  * A view model for serving page listing users to be managed by IFS Administrators
@@ -16,9 +22,9 @@ public class UserListViewModel {
 
     private String tab;
 
-    private List<UserResource> activeUsers;
+    private List<ManageUserResource> activeUsers;
 
-    private List<UserResource> inactiveUsers;
+    private List<ManageUserResource> inactiveUsers;
 
     private List<RoleInviteResource> pendingInvites;
 
@@ -38,8 +44,8 @@ public class UserListViewModel {
 
     public UserListViewModel(String tab,
                              String filter,
-                             List<UserResource> activeUsers,
-                             List<UserResource> inactiveUsers,
+                             List<ManageUserResource> activeUsers,
+                             List<ManageUserResource> inactiveUsers,
                              List<RoleInviteResource> pendingInvites,
                              long activeCount,
                              long inactiveCount,
@@ -73,11 +79,11 @@ public class UserListViewModel {
         return pendingCount;
     }
 
-    public List<UserResource> getActiveUsers() {
+    public List<ManageUserResource> getActiveUsers() {
         return activeUsers;
     }
 
-    public List<UserResource> getInactiveUsers() {
+    public List<ManageUserResource> getInactiveUsers() {
         return inactiveUsers;
     }
 
@@ -107,6 +113,29 @@ public class UserListViewModel {
 
     public long getTotalCount() {
         return getActiveCount() + getInactiveCount() + getPendingCount();
+    }
+
+    public String getRoleDisplayNames(ManageUserResource manageUserResource) {
+        if (manageUserResource.getRoles().contains(IFS_ADMINISTRATOR)) {
+            return IFS_ADMINISTRATOR.getDisplayName();
+        }
+        return manageUserResource.getRoles().stream().map(role -> getRoleDisplay(role, manageUserResource.getRoleProfileStatusResourceSet())).collect(joining(", "));
+    }
+
+    private String getRoleDisplay(Role role, Set<RoleProfileStatusResource> roleProfileStatusResources) {
+        if (Role.ASSESSOR.equals(role)) {
+            Optional<RoleProfileStatusResource> roleProfileStatusResource = roleProfileStatusResources.stream()
+                    .filter(profile -> profile.getProfileRole().equals(ProfileRole.ASSESSOR))
+                    .findAny();
+
+            if (roleProfileStatusResource.isPresent()
+                    && !roleProfileStatusResource.get().getRoleProfileState().equals(RoleProfileState.ACTIVE)) {
+
+                return String.format("%s (%s)", ASSESSOR.getDisplayName(), roleProfileStatusResource.get().getRoleProfileState().getDescription().toLowerCase());
+            }
+        }
+
+        return role.getDisplayName();
     }
 
     @Override

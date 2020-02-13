@@ -26,6 +26,13 @@ IFS.core.preventInputRegex = (function () {
         }
       })
 
+      jQuery('[data-prevent-input-non-decimal]').on('keypress', function (event) {
+        var regex = new RegExp('[^0-9.]', 'g')
+        if (event.originalEvent.key.length === 1 && event.originalEvent.key.replace(regex, '') === '') {
+          event.originalEvent.preventDefault()
+        }
+      })
+
       // general form that can be used with any regex
       jQuery(document).on('input', '[' + s.preventInputRegexEl + ']', function () {
         var el = jQuery(this)

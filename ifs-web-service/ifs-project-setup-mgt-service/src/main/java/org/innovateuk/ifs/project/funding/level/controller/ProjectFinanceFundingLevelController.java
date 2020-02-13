@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinanceFundingL
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,12 +29,16 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 @Controller
 @RequestMapping("/project/{projectId}/funding-level")
 @SecuredBySpring(value = "PROJECT_FINANCE_FUNDING", description = "Project finance team can amend funding levels in project setup.")
 @PreAuthorize("hasAuthority('project_finance')")
 public class ProjectFinanceFundingLevelController {
+
+    @Value("${ifs.funding.level.decimal.percentage.enabled}")
+    private boolean fundingLevelPercentageToggle;
 
     @Autowired
     private ProjectRestService projectRestService;
@@ -47,11 +52,14 @@ public class ProjectFinanceFundingLevelController {
     @GetMapping
     public String viewFundingLevels(@ModelAttribute(name = "form", binding = false) ProjectFinanceFundingLevelForm form,
                                     @PathVariable long projectId,
-                                    Model model) {
+                                    Model model,
+                                    BindingResult bindingResult) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         form.setPartners(finances.stream()
                 .collect(toMap(ProjectFinanceResource::getOrganisation,
-                        pf -> new ProjectFinancePartnerFundingLevelForm(new BigDecimal(pf.getGrantClaimPercentage())))));
+                        pf -> new ProjectFinancePartnerFundingLevelForm(pf.getGrantClaimPercentage()))));
+        projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).andOnSuccess(() ->
+                validateMaximumFundingLevels(bindingResult, finances, form));
         return viewFunding(projectId, finances, model);
     }
 
@@ -64,6 +72,12 @@ public class ProjectFinanceFundingLevelController {
                                     RedirectAttributes redirectAttributes) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         Supplier<String> failureView = () -> viewFunding(projectId, finances, model);
+
+        if (bindingResult.hasErrors()) {
+            return failureView.get();
+        }
+
+        validateFundingLevelPercentage(bindingResult, finances, form);
         validateMaximumFundingLevels(bindingResult, finances, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -78,7 +92,7 @@ public class ProjectFinanceFundingLevelController {
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource lead = projectRestService.getLeadOrganisationByProject(projectId).getSuccess();
-        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead));
+        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead, fundingLevelPercentageToggle));
         return "project/financecheck/funding-level";
     }
 
@@ -87,7 +101,7 @@ public class ProjectFinanceFundingLevelController {
         finances.forEach(finance -> {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
             GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-            grantClaim.setPercentage(fundingLevel.intValue());
+            grantClaim.setPercentage(fundingLevel);
             messages.addAll(financeRowRestService.update(grantClaim).getSuccess());
         });
         return messages;
@@ -99,8 +113,24 @@ public class ProjectFinanceFundingLevelController {
             if (finance.getMaximumFundingLevel() < fundingLevel.intValue()) {
                 bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
                         "validation.finance.grant.claim.percentage.max",
-                        new String[] {String.valueOf(finance.getMaximumFundingLevel())},
+                        new String[]{String.valueOf(finance.getMaximumFundingLevel())},
                         "");
+            }
+        });
+    }
+
+    private void validateFundingLevelPercentage(BindingResult bindingResult, List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
+        finances.forEach(finance -> {
+            BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
+
+            if (!fundingLevelPercentageToggle && fundingLevel.scale() > 0) {
+                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
+                        "validation.field.non.decimal.format");
+            }
+
+            if (fundingLevelPercentageToggle && fundingLevel.scale() > MAX_DECIMAL_PLACES) {
+                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
+                        "validation.finance.percentage");
             }
         });
     }

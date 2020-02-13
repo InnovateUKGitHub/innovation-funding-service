@@ -126,18 +126,24 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ_INTERNAL", description = "Administrators can view internal users")
-    public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
+    public boolean internalUsersCanViewEveryone(ManageUserPageResource userToView, UserResource user) {
         return user.hasAnyRoles(IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "Support users and administrators can view external users")
-    public boolean supportUsersCanViewExternalUsers(UserPageResource userToView, UserResource user) {
+    public boolean supportUsersCanViewExternalUsers(ManageUserPageResource userToView, UserResource user) {
         return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
     }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
     public boolean systemRegistrationUserCanViewEveryone(UserResource userToView, UserResource user) {
         return isSystemRegistrationUser(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Comp admins and project finance can view assessors")
+    public boolean compAdminAndProjectFinanceCanViewAssessors(UserPageResource usersToView,  UserResource user) {
+        return usersToView.getContent().stream().allMatch(u -> u.hasAnyRoles(ASSESSOR_ROLES)) &&
+                user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @PermissionRule(value = "READ", description = "Consortium members (Lead Applicants and Collaborators) can view the others in their Consortium Teams on their various Applications")

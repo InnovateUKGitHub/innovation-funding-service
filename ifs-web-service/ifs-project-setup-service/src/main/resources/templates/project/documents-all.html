@@ -19,7 +19,7 @@
         <th:block th:if="${model.projectManager}">
 	       <p class="govuk-body govuk-!-margin-top-6">As Project Manager, you can upload and submit additional documents to support your application.</p>
         </th:block>
-        
+
         <th:block th:unless="${model.projectManager}">
             <p class="govuk-body govuk-!-margin-top-6">Only the Project Manager can upload and submit additional documents to support your grant application.</p>
         </th:block>
@@ -51,7 +51,7 @@
         </ul>
 
         <div class="govuk-!-margin-top-6">
-            <a th:href="@{/project/{projectId}(projectId=${model.projectId})}" class="button-secondary">Return to set up your project</a>
+            <a th:href="@{/project/{projectId}(projectId=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to set up your project</a>
         </div>
 
 	    <th:block th:insert="fragments/layout :: main-content-end" />

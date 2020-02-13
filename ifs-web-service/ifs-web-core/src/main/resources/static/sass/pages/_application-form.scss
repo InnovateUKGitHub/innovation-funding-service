@@ -181,7 +181,7 @@ table {
 
   .totals {
     background: #dee0e2;
-    border: 1px solid govuk-colour("grey-2");
+    border: 1px solid govuk-colour("mid-grey");
     padding: 10px 0;
   }
 }
@@ -211,11 +211,16 @@ table {
   margin-bottom: 30px;
 }
 
-
 .finance-total {
-  text-align: right;
-  float: right;
-  padding-left: 20px;
+  @extend .govuk-accordion__section-button;
+}
+
+.govuk-accordion {
+  .finance-total {
+    text-align: right;
+    float: right;
+    padding-left: 20px;
+  }
 }
 
 

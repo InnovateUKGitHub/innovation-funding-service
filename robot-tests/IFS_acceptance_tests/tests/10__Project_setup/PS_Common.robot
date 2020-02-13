@@ -136,6 +136,20 @@ ${PS_LP_Application_Lead_PM_Email}        dave.adams@gmail.com
 ${PS_LP_Application_Partner_Email}        edward.morris@gmail.com
 ${PS_LP_Application_Academic_Email}       myrtle.barton@jabbertype.example.com
 
+#Project: Growth table comp
+${GrowthTableCompName}              Growth table comp
+${GrowthTableCompId}                ${competition_ids["${GrowthTableCompName}"]}
+${PS_GTC_Application_Title}         Growth table app
+${PS_GTC_Application_No}            ${application_ids["${PS_GTC_Application_Title}"]}
+${PS_GTC_Application_Project_Id}    ${project_ids["${PS_GTC_Application_Title}"]}
+
+#Project: No Growth table comp
+${NoGrowthTableCompName}              No Growth table comp
+${NoGrowthTableCompId}                ${competition_ids["${NoGrowthTableCompName}"]}
+${PS_NGTC_Application_Title}          Single applicant app
+${PS_NGTC_Application_No}             ${application_ids["${PS_NGTC_Application_Title}"]}
+${PS_NGTC_Application_Project_Id}     ${project_ids["${PS_NGTC_Application_Title}"]}
+
 *** Keywords ***
 The user adds a new team member
   [Arguments]  ${firstName}  ${email}

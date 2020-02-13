@@ -36,7 +36,7 @@
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell" th:text="${model.application.durationInMonths+' months'}">15 months</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.total,1,'DEFAULT')}">200,123</th:block></td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.grantClaimPercentage,1,'NONE')+'%'}">20%</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatDecimal(organisationFinance.grantClaimPercentage,1,'DEFAULT',2,'DEFAULT')+'%'}">20%</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.totalFundingSought,1,'DEFAULT')}">60,271</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.totalOtherFunding,1,'DEFAULT')}">2,468</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.totalContribution,1,'DEFAULT')}">138,164</td>
@@ -48,7 +48,7 @@
 
                 <th:block th:unless="${model.academic}" th:with="model=${costsViewModel}" th:object="${form}">
                     <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Detailed finances</h2>
-                    <div class="govuk-accordion" data-module="accordion" id="accordion-finances">
+                    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
                         <th:block th:insert="application/your-project-costs-fragments :: labour" />
                         <th:block th:insert="application/your-project-costs-fragments :: overheads" />
                         <th:block th:insert="application/your-project-costs-fragments :: materials" />

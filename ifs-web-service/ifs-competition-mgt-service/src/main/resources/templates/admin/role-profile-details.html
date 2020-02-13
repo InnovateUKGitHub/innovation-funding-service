@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="pageTitle='Role Profile Details'">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Role Profile Details'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to assessor details',linkUrl=@{/admin/user/{userId}/active(userId=${model.roleProfileStatus.userId})},dynamicBackLink=${true}"/>
+
+    <div class="message-alert" th:if="${model.applicationsAssigned}">
+        <p class="govuk-body">You must unassign all applications from this assessor before you can change their role status.</p>
+    </div>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Role profile details',size='govuk-heading-xl'" />
+        <dl class="govuk-list">
+            <dl class="govuk-list">
+                <dt>Role profile</dt>
+                <dd th:text="${model.roleProfileStatus.profileRole.name}">Assessor</dd>
+                <dt>Role status</dt>
+                <dd th:text="${model.roleProfileStatus.roleProfileState.description}">Available</dd>
+                <th:block th:if="${model.displayStatusChange()}">
+                <dt>Date status change</dt>
+                    <dd th:text="|${#temporals.format(model.roleProfileStatus.modifiedOn, 'dd MMMM yyyy')}, ${#strings.toLowerCase(#temporals.format(model.roleProfileStatus.modifiedOn, 'hh:mma'))}|">
+                        13 May 2019 9:04am</dd>
+                <dt>Change made by</dt>
+                <dd th:text="${model.modifiedUserDetails()}">Steve, Admin</dd>
+                <dt>Reason for status change</dt>
+                <dd th:text="${model.roleProfileStatus.description}">The account was made unavailable</dd>
+                </th:block>
+            </dl>
+        </dl>
+
+        <div class="govuk-!-margin-top-6">
+            <a href="#"
+               class="govuk-button"
+               th:disabled="${model.applicationsAssigned}"
+               th:text="|Change role status|">Change role status</a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

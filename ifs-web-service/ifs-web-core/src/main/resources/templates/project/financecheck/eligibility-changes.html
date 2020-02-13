@@ -37,7 +37,7 @@
                     <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30&percnt;</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatDecimal(summaryModel.percentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}">30&percnt;</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
@@ -114,8 +114,8 @@
         </th:block>
 
 
-        <a th:if="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
-        <a th:unless="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to eligibility</a>
+        <a th:if="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
+        <a th:unless="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to eligibility</a>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
