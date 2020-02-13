@@ -172,6 +172,22 @@
     </div>
 </th:block>
 
+<!-- Change user role profile state -->
+<th:block th:fragment="modal-role-profile-state">
+    <div class="modal-role-profile-state" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Change status to 'fix this'</h2>
+        <p class="govuk-body">You will not(make conditional) be able to assign assessments to this person.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+            <div>
+                <button class="govuk-button" id="submitRoleProfileState" name="submitRoleProfileState" type="submit">Confirm change</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
 <!-- Change bank details as internal user -->
 <th:block th:fragment="modal-partner-change-bank-details">
     <div class="modal-partner-change-bank-details" role="dialog" aria-hidden="true">

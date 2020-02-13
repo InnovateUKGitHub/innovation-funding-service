@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="pageTitle='Change status'">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Change status'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to role profile details',linkUrl=@{/admin/user/{userId}/role-profile(userId=${userId})},dynamicBackLink=${true}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Change status',size='govuk-heading-xl'" />
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <form th:action="@{/admin/user/{userId}/role-profile/status(userId=${userId})}" method="post"
+              th:object="${form}" novalidate="novalidate">
+
+        <div class="govuk-form-group"
+             th:classappend="${#fields.hasErrors('roleProfileState')} ? 'govuk-form-group--error'">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="roleProfileState">
+                    <h2 class="govuk-fieldset__heading">You cannot allocate applications to an assessor if their status is 'Unavailable' or 'Disabled'.</h2>
+                </legend>
+                <span th:if="${#fields.hasErrors('roleProfileState')}" class="govuk-error-message"
+                      th:each="err : ${#fields.errors('roleProfileState')}" th:text="${err}"/>
+
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               id="roleProfileState-active"
+                               th:field="*{roleProfileState}"
+                               value="ACTIVE"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
+                        <label class="govuk-radios__label"
+                               for="roleProfileState-active">
+                            Available
+                        </label>
+                    </div>
+
+                    <div class="govuk-radios__item" data-target="unavailable-reason"
+                               data-target-clear-validation="true" data-target-clear-form="true">
+                    <input type="radio"
+                           class="govuk-radios__input"
+                           id="roleProfileState-unavailable"
+                           th:field="*{roleProfileState}"
+                           value="UNAVAILABLE"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
+                    <label class="govuk-radios__label"
+                           for="roleProfileState-unavailable">
+                        Unavailable
+                    </label>
+                </div>
+
+                    <div id="unavailable-reason" class="panel">
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('reason')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label govuk-label--s" for="disabled-reason" id="unavailable-reason-text">
+                                Reason for changing status
+                                <span class="govuk-hint">
+                                Your comments can be seen in Freedom of Information requests.
+                                </span>
+                            </label>
+                            <span th:if="${#fields.hasErrors('reason')}" class="govuk-error-message"
+                                  th:each="err : ${#fields.errors('reason')}" th:text="${err}"/>
+
+                            <div class="textarea-wrapped">
+                            <textarea id="reason"
+                                      class="govuk-textarea"
+                                      data-editor="html"
+                                      maxlength="5000"
+                                      th:errorclass="govuk-textarea--error"
+                                      rows="4"
+                                      th:field="*{reason}">
+                            </textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="govuk-radios__item" data-target="disabled-reason"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               id="roleProfileState-disabled"
+                               th:field="*{roleProfileState}"
+                               value="DISABLED"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
+                        <label class="govuk-radios__label"
+                               for="roleProfileState-disabled">
+                            Disabled
+                        </label>
+                    </div>
+
+                    <div id="disabled-reason" class="panel">
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('reason')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label govuk-label--s" for="disabled-reason" id="disabled-reason-text">
+                                Reason for changing status
+                                <span class="govuk-hint">
+                                Your comments can be seen in Freedom of Information requests.
+                                </span>
+                            </label>
+
+                            <span th:if="${#fields.hasErrors('reason')}" class="govuk-error-message"
+                                  th:each="err : ${#fields.errors('reason')}" th:text="${err}"/>
+
+                            <div class="textarea-wrapped">
+                            <textarea id="disabled-text"
+                                      class="govuk-textarea"
+                                      data-editor="html"
+                                      maxlength="5000"
+                                      th:errorclass="govuk-textarea--error"
+                                      rows="4"
+                                      th:field="*{reason}">
+                            </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+            <th:block th:insert="fragments/modals :: modal-role-profile-state" />
+
+            <div class="govuk-form-group govuk-!-margin-top-6">
+                <button class="govuk-!-margin-right-0 govuk-button" id="modal-change-bank-details" data-js-modal="modal-role-profile-state">Update status</button>
+            </div>
+    </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>
