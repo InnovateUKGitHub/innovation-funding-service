@@ -29,7 +29,7 @@ public interface CompetitionInviteRepository<T extends CompetitionInvite> extend
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "))";
 
-    String COUNT_BY_COMPETITION_ID_AND_STATUS_WITHOUT_INACTIVE_ASSESSORS = "SELECT COUNT(invite) FROM #{#entityName} invite " +
+    String COUNT_BY_COMPETITION_ID_AND_STATUSES_IN_WITHOUT_INACTIVE_ASSESSORS = "SELECT COUNT(invite) FROM #{#entityName} invite " +
             "LEFT JOIN invite.user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
             "      invite.status IN :statuses AND " +
@@ -49,7 +49,7 @@ public interface CompetitionInviteRepository<T extends CompetitionInvite> extend
     @Query(GET_BY_COMPETITION_ID_AND_STATUS_WITHOUT_INACTIVE_ASSESSORS)
     Page<T> getByCompetitionIdAndStatus(long competitionId, InviteStatus status, Pageable pageable);
 
-    @Query(COUNT_BY_COMPETITION_ID_AND_STATUS_WITHOUT_INACTIVE_ASSESSORS)
+    @Query(COUNT_BY_COMPETITION_ID_AND_STATUSES_IN_WITHOUT_INACTIVE_ASSESSORS)
     int countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
 
     void deleteByCompetitionIdAndStatus(long competitionId, InviteStatus status);

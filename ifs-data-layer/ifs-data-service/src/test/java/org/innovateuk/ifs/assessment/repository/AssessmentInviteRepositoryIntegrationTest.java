@@ -25,7 +25,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +50,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
+@Rollback
 public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentInviteRepository> {
 
     private final long INNOVATION_AREA_ID = 5L;
@@ -346,7 +349,6 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     }
 
     private void addTestAssessors() {
-        setLoggedInUser(getCompAdmin());
         InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
 
         List<Profile> profiles = newProfile()
@@ -373,11 +375,14 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
                 .withProfileRole(ProfileRole.ASSESSOR)
                 .withRoleProfileState(RoleProfileState.ACTIVE)
                 .withUser(users.toArray(new User[users.size()]))
+                .withCreatedBy(users.toArray(new User[users.size()]))
+                .withCreatedOn(ZonedDateTime.now())
                 .buildSet(users.size());
         roleProfileStatusRepository.saveAll(roleProfileStates);
 
         flushAndClearSession();
     }
+
     private void saveInvite(Competition competition, User user) {
         AssessmentInvite invite = new AssessmentInvite(user, AssessmentInvite.generateInviteHash(), competition);
         repository.save(invite);
