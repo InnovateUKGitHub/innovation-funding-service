@@ -79,7 +79,7 @@ Competition information and search: Valid values
     When the user enters text to a text field       id = shortDescription  Short public description
     And the user enters text to a text field        id = projectFundingRange  Up to £1million
     And the user selects the radio button           publishSetting  invite
-    And the user enters text to a text field        css = [aria-labelledby="eligibilitySummary"]  Summary of eligiblity
+    And the user enters text to a text field        css = [aria-labelledby="eligibilitySummary-label"]  Summary of eligiblity
     When the user enters text to a text field       id = keywords  hellohellohellohellohellohellohellohellohellohellou
     And the user clicks the button/link             jQuery = button:contains("Save and review")
     Then the user should see the element            jQuery = .govuk-error-summary__list:contains("Each keyword must be less than 50 characters long.")
@@ -347,7 +347,7 @@ User can view the competition url for invite only competitions
 The user is able to edit and publish again
     [Documentation]  INFUND-6914
     [Tags]
-    Given the user enters text to a text field  css = [aria-labelledby="eligibilitySummary"]  Some other summary
+    Given the user enters text to a text field  css = [aria-labelledby="eligibilitySummary-label"]  Some other summary
     And the user clicks the button/link         jQuery = button:contains("Publish and review")
     Then the user clicks the button/link        link = Return to public content
     When the user should see all sections completed
