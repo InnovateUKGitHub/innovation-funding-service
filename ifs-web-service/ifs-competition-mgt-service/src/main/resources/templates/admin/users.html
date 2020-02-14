@@ -35,7 +35,7 @@
                     <div class="govuk-grid-column-one-half alignright">
                         <div class="form-search">
                             <label class="govuk-visually-hidden" for="filter">Search for:</label>
-                            <input type="text" class="search-query" id="filter" name="filter" th:value="*{filter}" placeholder="Search for user by email address.">
+                            <input type="text" class="govuk-input search-query" id="filter" name="filter" th:value="*{filter}" placeholder="Search for user by email address.">
                             <input type="submit" class="btn" value="Search">
                         </div>
                     </div>
@@ -48,14 +48,14 @@
                 Users
             </h2>
             <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item">
-                    <a th:href="@{active(filter=${form.filter})}" th:text="|Active (${model.activeCount})|" th:classappend="${model.tab == 'active' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Active (38)</a>
+                <li class="govuk-tabs__list-item" th:classappend="${model.tab == 'active' ? 'govuk-tabs__list-item--selected' : ''}" >
+                    <a th:href="@{active(filter=${form.filter})}" th:text="|Active (${model.activeCount})|" class="govuk-tabs__tab">Active (38)</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a th:href="@{inactive(filter=${form.filter})}" th:text="|Inactive (${model.inactiveCount})|" th:classappend="${model.tab == 'inactive' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Inactive (10)</a>
+                <li class="govuk-tabs__list-item" th:classappend="${model.tab == 'inactive' ? 'govuk-tabs__list-item--selected' : ''}">
+                    <a th:href="@{inactive(filter=${form.filter})}" th:text="|Inactive (${model.inactiveCount})|" class="govuk-tabs__tab">Inactive (10)</a>
                 </li>
-                <li th:if="${model.includeInternalUsers}" class="govuk-tabs__list-item">
-                    <a th:href="@{pending(filter=${form.filter})}" th:text="|Pending (${model.pendingCount})|" th:classappend="${model.tab == 'pending' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Pending (10)</a>
+                <li th:if="${model.includeInternalUsers}" class="govuk-tabs__list-item" th:classappend="${model.tab == 'pending' ? 'govuk-tabs__list-item--selected' : ''}">
+                    <a th:href="@{pending(filter=${form.filter})}" th:text="|Pending (${model.pendingCount})|" class="govuk-tabs__tab">Pending (10)</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">

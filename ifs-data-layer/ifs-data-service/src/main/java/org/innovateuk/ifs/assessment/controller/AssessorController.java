@@ -40,4 +40,9 @@ public class AssessorController {
                 .andOnSuccess(() -> assessorService.notifyAssessorsByCompetition(competitionId))
                 .toPutResponse();
     }
+
+    @GetMapping("/has-applications-assigned/{assessorId}")
+    public RestResult<Boolean> hasApplicationsAssigned(@PathVariable("assessorId") long assessorId) {
+        return assessorService.hasApplicationsAssigned(assessorId).toGetResponse();
+    }
 }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.admin.controller;
 
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.admin.viewmodel.RoleProfileViewModel;
 import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
@@ -30,6 +31,9 @@ public class AssessorManagementController {
     @Autowired
     private UserRestService userRestService;
 
+    @Autowired
+    private AssessorRestService assessorRestService;
+
     @GetMapping
     public String viewUser(@PathVariable long userId,
                            Model model) {
@@ -39,9 +43,13 @@ public class AssessorManagementController {
 
         UserResource modifiedUser = userRestService.retrieveUserById(roleProfileStatusResource.getModifiedBy()).getSuccess();
 
-        model.addAttribute("model", new RoleProfileViewModel(roleProfileStatusResource, modifiedUser));
+        model.addAttribute("model", new RoleProfileViewModel(roleProfileStatusResource, modifiedUser, hasApplicationsAssigned(userId)));
 
         return "admin/role-profile-details";
 
+    }
+
+    private boolean hasApplicationsAssigned(long userId) {
+        return assessorRestService.hasApplicationsAssigned(userId).getSuccess();
     }
 }

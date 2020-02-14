@@ -14,6 +14,10 @@
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Back to assessor details',linkUrl=@{/admin/user/{userId}/active(userId=${model.roleProfileStatus.userId})},dynamicBackLink=${true}"/>
 
+    <div class="message-alert" th:if="${model.applicationsAssigned}">
+        <p class="govuk-body">You must unassign all applications from this assessor before you can change their role status.</p>
+    </div>
+
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Role profile details',size='govuk-heading-xl'" />
         <dl class="govuk-list">
@@ -33,6 +37,13 @@
                 </th:block>
             </dl>
         </dl>
+
+        <div class="govuk-!-margin-top-6">
+            <a href="#"
+               class="govuk-button"
+               th:disabled="${model.applicationsAssigned}"
+               th:text="|Change role status|">Change role status</a>
+        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
