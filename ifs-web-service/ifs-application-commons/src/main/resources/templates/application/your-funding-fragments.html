@@ -13,15 +13,16 @@
                 </legend>
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('requestingFunding')}"
                       th:text="${err}"></span>
-                <div id="requestingFunding" class="govuk-radios">
-                    <div class="govuk-radios__item" data-target="request-funding">
+                <div id="requestingFunding" class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
                         <input type="radio"
                                class="govuk-radios__input"
                                id="request-funding-yes"
                                value="true"
                                th:field="*{requestingFunding}"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
+                               th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"
+                               data-aria-controls="request-funding"/>
                         <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
                     </div>
                     <th:block th:insert="application/your-funding-fragments :: requesting_funding(
@@ -155,7 +156,7 @@
 </th:block>
 
 <th:block th:fragment="requesting_funding(guidanceFragment, maximumFundingLevel)">
-    <div class="govuk-radios__conditional" id="request-funding">
+    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="request-funding">
         <div th:class="govuk-form-group"
              th:classappend="${#fields.hasErrors('grantClaimPercentage')} ? 'govuk-form-group--error'">
             <label class="govuk-label" for="grantClaimPercentage">

@@ -190,7 +190,7 @@ the user is required to enter a subject/message
 the user checks for server side validation
     the user clicks the button/link                jQuery = .govuk-details__summary:contains("Mark application as ineligible")
     #There are 2 buttons with the same name so we need to be careful
-    the user should see the element                css = [aria-hidden = "false"] [id = "ineligibleReason"]
+    the user should see the element                css = [id = "ineligibleReason"]
     browser validations have been disabled
     the user clicks the button/link                css = button[name = "markAsIneligible"]
     the user should see a field and summary error  ${empty_field_warning_message}

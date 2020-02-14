@@ -25,6 +25,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.Role;
@@ -93,6 +94,9 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
+    
     @Autowired
     private ProfileRepository profileRepository;
 
@@ -350,16 +354,18 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         Application application = applicationRepository.findByCompetitionId(competitions.get(0).getId()).get(0);
 
-        List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
+        List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com");
+        userRepository.saveAll(users);
+
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newAssessmentInviteWithoutId()
-                        .withName("name1", "name2", "name3")
-                        .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
-                        .withUser(users.toArray(new User[0]))
-                        .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
-                        .withCompetition(competitions.get(0), competitions.get(0), competitions.get(0))
+                        .withName("name1", "name2")
+                        .withEmail("test1@test.com", "test2@test.com")
+                        .withUser(users.toArray(new User[users.size()]))
+                        .withHash(generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(0))
                         .withStatus(SENT)
-                        .build(3));
+                        .build(2));
 
         // Now accept all of the invites
         savedParticipants.forEach(
@@ -383,7 +389,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         Page<AssessmentParticipant> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L, "", pagination);
 
         assertNotNull(retrievedParticipants);
-        assertEquals(2, retrievedParticipants.getTotalElements());
+        assertEquals(1, retrievedParticipants.getTotalElements());
     }
 
     private List<User> findUsersByEmail(String... emails) {
