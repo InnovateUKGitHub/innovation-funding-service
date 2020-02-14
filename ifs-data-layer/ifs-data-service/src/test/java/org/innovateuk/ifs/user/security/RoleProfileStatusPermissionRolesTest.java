@@ -25,10 +25,8 @@ public class RoleProfileStatusPermissionRolesTest extends BasePermissionRulesTes
 
         allGlobalRoleUsers.forEach(user -> {
             if (isInternalAdmin(user) || isSupport(user)) {
-                System.out.println(user.getRoleDisplayNames());
                 assertTrue(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));
             } else {
-                System.out.println(user.getRoleDisplayNames());
                 assertFalse(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));
             }
         });
