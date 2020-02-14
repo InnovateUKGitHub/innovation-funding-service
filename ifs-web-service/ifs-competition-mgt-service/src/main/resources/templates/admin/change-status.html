@@ -44,6 +44,7 @@
                         <input type="radio"
                                class="govuk-radios__input"
                                id="roleProfileState-active"
+                               modal-link="role-profile-available"
                                th:field="*{roleProfileState}"
                                value="ACTIVE"
                                required="required"
@@ -55,10 +56,12 @@
                     </div>
 
                     <div class="govuk-radios__item" data-target="unavailable-reason"
-                               data-target-clear-validation="true" data-target-clear-form="true">
+                               data-target-clear-validation="true"
+                         data-target-clear-form="true">
                     <input type="radio"
                            class="govuk-radios__input"
                            id="roleProfileState-unavailable"
+                           modal-link="role-profile-unavailable"
                            th:field="*{roleProfileState}"
                            value="UNAVAILABLE"
                            required="required"
@@ -95,10 +98,12 @@
                     </div>
 
                     <div class="govuk-radios__item" data-target="disabled-reason"
-                         data-target-clear-validation="true" data-target-clear-form="true">
+                         data-target-clear-validation="true"
+                         data-target-clear-form="true">
                         <input type="radio"
                                class="govuk-radios__input"
                                id="roleProfileState-disabled"
+                               modal-link="role-profile-disabled"
                                th:field="*{roleProfileState}"
                                value="DISABLED"
                                required="required"
@@ -138,18 +143,12 @@
             </fieldset>
         </div>
 
-            <th:block th:insert="fragments/modals :: modal-role-profile-available" />
+            <th:block th:insert="fragments/modals :: modal-role-profile-active" />
             <th:block th:insert="fragments/modals :: modal-role-profile-unavailable" />
             <th:block th:insert="fragments/modals :: modal-role-profile-disabled" />
 
             <div class="govuk-form-group govuk-!-margin-top-6">
-                <button class="govuk-!-margin-right-0 govuk-button" id="modal-role-profile-available" data-js-modal="modal-role-profile-available">Update status</button>
-            </div>
-            <div class="govuk-form-group govuk-!-margin-top-6">
-                <button class="govuk-!-margin-right-0 govuk-button" id="modal-role-profile-unavailable" data-js-modal="modal-role-profile-unavailable">Update status</button>
-            </div>
-            <div class="govuk-form-group govuk-!-margin-top-6">
-                <button class="govuk-!-margin-right-0 govuk-button" id="modal-role-profile-disabled" data-js-modal="modal-role-profile-disabled">Update status</button>
+                <button class="govuk-!-margin-right-0 govuk-button" id="modal-button" data-js-modal="modal-role-profile-available">Update status</button>
             </div>
     </form>
 

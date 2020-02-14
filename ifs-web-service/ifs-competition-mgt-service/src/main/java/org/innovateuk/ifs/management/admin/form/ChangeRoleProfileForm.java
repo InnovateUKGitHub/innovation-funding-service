@@ -4,8 +4,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_STRING_LENGTH;
-
 public class ChangeRoleProfileForm {
 
     @NotNull(message = "{validation.changeroleprofileform.role.required}")
