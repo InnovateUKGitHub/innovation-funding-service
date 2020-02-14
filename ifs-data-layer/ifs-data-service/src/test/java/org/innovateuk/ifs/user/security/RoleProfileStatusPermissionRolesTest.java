@@ -5,7 +5,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +23,7 @@ public class RoleProfileStatusPermissionRolesTest extends BasePermissionRulesTes
         UserResource otherUser = newUserResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isInternal(user)) {
+            if (isInternalAdmin(user)) {
                 assertTrue(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));
             } else {
                 assertFalse(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));

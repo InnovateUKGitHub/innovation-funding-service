@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.user.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE;
@@ -114,6 +116,7 @@ public class RoleProfileStatusResource {
         this.modifiedOn = modifiedOn;
     }
 
+    @JsonIgnore
     public boolean isActive() {
         return ACTIVE.equals(this.getRoleProfileState());
     }
