@@ -2,6 +2,8 @@ package org.innovateuk.ifs.user.resource;
 
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE;
+
 public class RoleProfileStatusResource {
 
     private Long userId;
@@ -110,5 +112,9 @@ public class RoleProfileStatusResource {
 
     public void setModifiedOn(ZonedDateTime modifiedOn) {
         this.modifiedOn = modifiedOn;
+    }
+
+    public boolean isActive() {
+        return ACTIVE.equals(this.getRoleProfileState());
     }
 }

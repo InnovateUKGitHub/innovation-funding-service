@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.user.resource.RoleProfileState.UNAVAILABLE;
 public class AssessorProfileStatusViewModel {
 
     static final String UNAVAILABLE_ASSESSOR_BANNER =  "Your assessor role is unavailable, so you cannot access any applications.";
-    static final String DISABLED_ASSESSOR_BANNER =  "Your assessor role has been disabled. You can no longer access any applications";
+    static final String DISABLED_ASSESSOR_BANNER =  "Your assessor role has been disabled. You can no longer access any applications.";
 
     private final boolean skillsComplete;
     private final boolean affiliationsComplete;
