@@ -7,14 +7,24 @@ public class ChangeRoleProfileForm {
     @NotNull(message = "{validation.changeroleprofileform.role.required}")
     private String roleProfileState;
 
-    private String reason;
+    private String unavailableReason;
 
-    public String getReason() {
-        return reason;
+    private String disabledReason;
+
+    public String getUnavailableReason() {
+        return unavailableReason;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setUnavailableReason(String unavailableReason) {
+        this.unavailableReason = unavailableReason;
+    }
+
+    public String getDisabledReason() {
+        return disabledReason;
+    }
+
+    public void setDisabledReason(String disabledReason) {
+        this.disabledReason = disabledReason;
     }
 
     public String getRoleProfileState() {
@@ -24,4 +34,5 @@ public class ChangeRoleProfileForm {
     public void setRoleProfileState(String roleProfileState) {
         this.roleProfileState = roleProfileState;
     }
+
 }

@@ -16,13 +16,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.RoleProfileState.DISABLED;
+import static org.innovateuk.ifs.user.resource.RoleProfileState.UNAVAILABLE;
 
 @Controller
 @RequestMapping("/admin/user/{userId}/role-profile")
@@ -61,6 +65,9 @@ public class AssessorManagementController {
                                @PathVariable long userId,
                                Model model) {
 
+        RoleProfileStatusResource roleProfileStatusResource =
+                roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR).getSuccess();
+
         model.addAttribute("userId", userId);
 
         return "admin/change-status";
@@ -75,6 +82,8 @@ public class AssessorManagementController {
 
         model.addAttribute("userId", userId);
 
+        validateForm(bindingResult, form);
+
         Supplier<String> failureView = () -> viewStatus(form, userId, model);
         Supplier<String> successView = () -> format("redirect:/admin/user/%d/active", userId);
 
@@ -86,10 +95,27 @@ public class AssessorManagementController {
     }
 
     private RoleProfileStatusResource createRoleProfileStatusResource(long userId, ChangeRoleProfileForm form) {
-        return new RoleProfileStatusResource(userId, ASSESSOR, RoleProfileState.valueOf(form.getRoleProfileState()), form.getReason());
+        RoleProfileState roleProfileState = RoleProfileState.valueOf(form.getRoleProfileState());
+        if (UNAVAILABLE.equals(roleProfileState)) {
+            return new RoleProfileStatusResource(userId, ASSESSOR, RoleProfileState.valueOf(form.getRoleProfileState()), form.getUnavailableReason());
+        } else  if (DISABLED.equals(roleProfileState)) {
+            return new RoleProfileStatusResource(userId, ASSESSOR, RoleProfileState.valueOf(form.getRoleProfileState()), form.getDisabledReason());
+        } else {
+            return new RoleProfileStatusResource(userId, ASSESSOR, RoleProfileState.valueOf(form.getRoleProfileState()), "");
+        }
     }
 
     private boolean hasApplicationsAssigned(long userId) {
         return assessorRestService.hasApplicationsAssigned(userId).getSuccess();
+    }
+
+    private void validateForm(BindingResult bindingResult, ChangeRoleProfileForm form) {
+        if (UNAVAILABLE.equals(RoleProfileState.valueOf(form.getRoleProfileState())) && StringUtils.isEmpty(form.getUnavailableReason())) {
+            bindingResult.addError(new FieldError("form", "unavailableReason", "Enter some text."));
+        }
+
+        if (DISABLED.equals(RoleProfileState.valueOf(form.getRoleProfileState())) && StringUtils.isEmpty(form.getDisabledReason())) {
+            bindingResult.addError(new FieldError("form", "disabledReason", "Enter some text."));
+        }
     }
 }
