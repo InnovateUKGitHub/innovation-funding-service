@@ -1,14 +1,20 @@
 package org.innovateuk.ifs.management.admin.form;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotNull;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_STRING_LENGTH;
 
 public class ChangeRoleProfileForm {
 
     @NotNull(message = "{validation.changeroleprofileform.role.required}")
     private String roleProfileState;
 
+    @Length(max = 255, message = "{validation.field.too.many.characters}")
     private String unavailableReason;
 
+    @Length(max = 255, message = "{validation.field.too.many.characters}")
     private String disabledReason;
 
     public String getUnavailableReason() {
