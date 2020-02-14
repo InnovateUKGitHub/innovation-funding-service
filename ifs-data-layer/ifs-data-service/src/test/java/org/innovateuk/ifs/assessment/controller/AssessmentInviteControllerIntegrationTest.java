@@ -20,10 +20,14 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +40,7 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.FALSE;
@@ -62,6 +67,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
@@ -100,6 +106,9 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
     @Autowired
     private AgreementRepository agreementRepository;
+
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     private Competition competition;
 
@@ -985,6 +994,14 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .build(4);
 
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.toArray(new User[users.size()]))
+                .buildSet(users.size());
+        roleProfileStatusRepository.saveAll(roleProfileStates);
+
         flushAndClearSession();
 
         Pageable pageable = PageRequest.of(0, 10, new Sort(ASC, "firstName", "lastName"));
@@ -1042,6 +1059,14 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .build(4);
 
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.toArray(new User[users.size()]))
+                .buildSet(users.size());
+        roleProfileStatusRepository.saveAll(roleProfileStates);
+
         flushAndClearSession();
     }
 
