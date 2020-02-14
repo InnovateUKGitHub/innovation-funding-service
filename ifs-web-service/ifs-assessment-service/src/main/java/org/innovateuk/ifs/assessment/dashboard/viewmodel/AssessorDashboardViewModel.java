@@ -38,6 +38,10 @@ public class AssessorDashboardViewModel {
         this.interviewPanelAccepted = interviewPanelAccepted;
     }
 
+    public AssessorDashboardViewModel(AssessorProfileStatusViewModel profileStatus) {
+        this.profileStatus = profileStatus;
+    }
+
     public List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions() {
         return activeCompetitions;
     }

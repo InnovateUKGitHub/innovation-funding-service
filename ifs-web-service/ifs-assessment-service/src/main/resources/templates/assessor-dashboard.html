@@ -13,10 +13,10 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessments',size='govuk-heading-xl'" />
 
-            <div class="message-alert " th:if="${model.profileStatus.displayBannerMessage()}">
-                <span class="govuk-body" th:text="${model.profileStatus.bannerMessage}">Banner message</span>
-                <span class="govuk-body"> Please <a href="/info/contact">contact us</a> for more information.</span>
-            </div>
+            <p class="message-alert " th:if="${model.profileStatus.displayBannerMessage()}">
+                <th:block class="govuk-body" th:text="${model.profileStatus.bannerMessage}">Banner message</th:block>
+                <th:block class="govuk-body"> Please <a href="/info/contact">contact us</a> for more information.</th:block>
+            </p>
 
             <div class="message-alert govuk-!-margin-bottom-6" th:unless="${model.profileStatus.complete OR model.profileStatus.displayBannerMessage()}">
                 <h2 class="govuk-heading-s govuk-!-margin-0">Complete your assessor account</h2>

@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR;
 
@@ -60,11 +59,14 @@ public class AssessorDashboardModelPopulator {
 
         RoleProfileStatusResource roleProfileStatusResource = roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR).getSuccess();
 
-        List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
-                .getAssessorParticipants(userId).getSuccess();
-
         UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccess();
 
+        if (!roleProfileStatusResource.isActive()) {
+            return new AssessorDashboardViewModel(getProfileStatus(profileStatusResource, roleProfileStatusResource.getRoleProfileState()));
+        }
+
+        List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
+                .getAssessorParticipants(userId).getSuccess();
 
         List<ReviewParticipantResource> reviewParticipantResourceList = reviewInviteRestService.getAllInvitesByUser(userId).getSuccess();
 
@@ -72,13 +74,13 @@ public class AssessorDashboardModelPopulator {
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource, roleProfileStatusResource.getRoleProfileState()),
-                roleProfileStatusResource.isActive() ? getActiveCompetitions(participantResourceList) : emptyList(),
-                roleProfileStatusResource.isActive() ? getUpcomingCompetitions(participantResourceList) : emptyList(),
-                roleProfileStatusResource.isActive() ? getPendingParticipations(participantResourceList) : emptyList(),
-                roleProfileStatusResource.isActive() ? getAssessmentPanelInvites(reviewParticipantResourceList) : emptyList(),
-                roleProfileStatusResource.isActive() ? getAssessmentPanelAccepted(reviewParticipantResourceList) : emptyList(),
-                roleProfileStatusResource.isActive() ? getInterviewPanelInvites(interviewParticipantResourceList) : emptyList(),
-                roleProfileStatusResource.isActive() ? getInterviewPanelAccepted(interviewParticipantResourceList) : emptyList()
+                getActiveCompetitions(participantResourceList),
+                getUpcomingCompetitions(participantResourceList),
+                getPendingParticipations(participantResourceList),
+                getAssessmentPanelInvites(reviewParticipantResourceList),
+                getAssessmentPanelAccepted(reviewParticipantResourceList),
+                getInterviewPanelInvites(interviewParticipantResourceList),
+                getInterviewPanelAccepted(interviewParticipantResourceList)
                 );
     }
 
