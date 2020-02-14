@@ -27,6 +27,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.CollectionUtils;
 
 import java.time.*;
 import java.util.List;
@@ -690,9 +691,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(emptyList()));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(emptyList()));
-        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(emptyList()));
-
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -702,11 +700,11 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
-        assertTrue(model.getPendingInvites().isEmpty());
-        assertTrue(model.getActiveCompetitions().isEmpty());
-        assertTrue(model.getUpcomingCompetitions().isEmpty());
-        assertTrue(model.getAssessmentPanelInvites().isEmpty());
-        assertTrue(model.getInterviewPanelInvites().isEmpty());
+        assertTrue(CollectionUtils.isEmpty(model.getPendingInvites()));
+        assertTrue(CollectionUtils.isEmpty(model.getActiveCompetitions()));
+        assertTrue(CollectionUtils.isEmpty(model.getUpcomingCompetitions()));
+        assertTrue(CollectionUtils.isEmpty(model.getAssessmentPanelInvites()));
+        assertTrue(CollectionUtils.isEmpty(model.getInterviewPanelInvites()));
     }
 
     @Test

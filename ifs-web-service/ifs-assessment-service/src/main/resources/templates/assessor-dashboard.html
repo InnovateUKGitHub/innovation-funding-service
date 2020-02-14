@@ -13,9 +13,9 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessments',size='govuk-heading-xl'" />
 
-            <p class="message-alert " th:if="${model.profileStatus.displayBannerMessage()}">
-                <th:block class="govuk-body" th:text="${model.profileStatus.bannerMessage}">Banner message</th:block>
-                <th:block class="govuk-body"> Please <a href="/info/contact">contact us</a> for more information.</th:block>
+            <p class="message-alert govuk-body" th:if="${model.profileStatus.displayBannerMessage()}">
+                <th:block th:text="${model.profileStatus.bannerMessage}">Banner message</th:block>
+                <th:block> Please <a href="/info/contact">contact us</a> for more information.</th:block>
             </p>
 
             <div class="message-alert govuk-!-margin-bottom-6" th:unless="${model.profileStatus.complete OR model.profileStatus.displayBannerMessage()}">
