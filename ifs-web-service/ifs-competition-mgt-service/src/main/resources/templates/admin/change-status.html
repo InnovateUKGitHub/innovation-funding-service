@@ -44,6 +44,7 @@
                         <input type="radio"
                                class="govuk-radios__input"
                                id="roleProfileState-active"
+                               modal-link="role-profile-available"
                                th:field="*{roleProfileState}"
                                value="ACTIVE"
                                required="required"
@@ -55,10 +56,12 @@
                     </div>
 
                     <div class="govuk-radios__item" data-target="unavailable-reason"
-                               data-target-clear-validation="true" data-target-clear-form="true">
+                               data-target-clear-validation="true"
+                         data-target-clear-form="true">
                     <input type="radio"
                            class="govuk-radios__input"
                            id="roleProfileState-unavailable"
+                           modal-link="role-profile-unavailable"
                            th:field="*{roleProfileState}"
                            value="UNAVAILABLE"
                            required="required"
@@ -71,34 +74,36 @@
 
                     <div id="unavailable-reason" class="panel">
                         <div class="govuk-form-group"
-                             th:classappend="${#fields.hasErrors('reason')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label govuk-label--s" for="disabled-reason" id="unavailable-reason-text">
+                             th:classappend="${#fields.hasErrors('unavailableReason')} ? 'govuk-form-group--error'">
+                            <label class="govuk-label govuk-label--s" for="unavailable-reason" id="unavailable-reason-text">
                                 Reason for changing status
                                 <span class="govuk-hint">
                                 Your comments can be seen in Freedom of Information requests.
                                 </span>
                             </label>
-                            <span th:if="${#fields.hasErrors('reason')}" class="govuk-error-message"
-                                  th:each="err : ${#fields.errors('reason')}" th:text="${err}"/>
+                            <span th:if="${#fields.hasErrors('unavailableReason')}" class="govuk-error-message"
+                                  th:each="err : ${#fields.errors('unavailableReason')}" th:text="${err}"/>
 
                             <div class="textarea-wrapped">
-                            <textarea id="reason"
+                            <textarea id="unavailableReason"
                                       class="govuk-textarea"
                                       data-editor="html"
                                       maxlength="5000"
                                       th:errorclass="govuk-textarea--error"
                                       rows="4"
-                                      th:field="*{reason}">
+                                      th:field="*{unavailableReason}">
                             </textarea>
                             </div>
                         </div>
                     </div>
 
                     <div class="govuk-radios__item" data-target="disabled-reason"
-                         data-target-clear-validation="true" data-target-clear-form="true">
+                         data-target-clear-validation="true"
+                         data-target-clear-form="true">
                         <input type="radio"
                                class="govuk-radios__input"
                                id="roleProfileState-disabled"
+                               modal-link="role-profile-disabled"
                                th:field="*{roleProfileState}"
                                value="DISABLED"
                                required="required"
@@ -111,7 +116,7 @@
 
                     <div id="disabled-reason" class="panel">
                         <div class="govuk-form-group"
-                             th:classappend="${#fields.hasErrors('reason')} ? 'govuk-form-group--error'">
+                             th:classappend="${#fields.hasErrors('disabledReason')} ? 'govuk-form-group--error'">
                             <label class="govuk-label govuk-label--s" for="disabled-reason" id="disabled-reason-text">
                                 Reason for changing status
                                 <span class="govuk-hint">
@@ -119,17 +124,17 @@
                                 </span>
                             </label>
 
-                            <span th:if="${#fields.hasErrors('reason')}" class="govuk-error-message"
-                                  th:each="err : ${#fields.errors('reason')}" th:text="${err}"/>
+                            <span th:if="${#fields.hasErrors('disabledReason')}" class="govuk-error-message"
+                                  th:each="err : ${#fields.errors('disabledReason')}" th:text="${err}"/>
 
                             <div class="textarea-wrapped">
-                            <textarea id="disabled-text"
+                            <textarea id="disabledReason"
                                       class="govuk-textarea"
                                       data-editor="html"
                                       maxlength="5000"
                                       th:errorclass="govuk-textarea--error"
                                       rows="4"
-                                      th:field="*{reason}">
+                                      th:field="*{disabledReason}">
                             </textarea>
                             </div>
                         </div>
@@ -138,10 +143,12 @@
             </fieldset>
         </div>
 
-            <th:block th:insert="fragments/modals :: modal-role-profile-state" />
+            <th:block th:insert="fragments/modals :: modal-role-profile-active" />
+            <th:block th:insert="fragments/modals :: modal-role-profile-unavailable" />
+            <th:block th:insert="fragments/modals :: modal-role-profile-disabled" />
 
             <div class="govuk-form-group govuk-!-margin-top-6">
-                <button class="govuk-!-margin-right-0 govuk-button" id="modal-change-bank-details" data-js-modal="modal-role-profile-state">Update status</button>
+                <button class="govuk-!-margin-right-0 govuk-button" id="modal-button" data-js-modal="modal-role-profile-available">Update status</button>
             </div>
     </form>
 
