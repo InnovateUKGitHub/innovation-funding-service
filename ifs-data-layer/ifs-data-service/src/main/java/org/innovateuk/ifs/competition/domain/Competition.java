@@ -374,6 +374,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return getMilestoneDate(MilestoneType.ASSESSMENT_PANEL).orElse(null);
     }
 
+    public ZonedDateTime getAssessmentClosedDate() {
+        return getMilestoneDate(MilestoneType.ASSESSMENT_CLOSED).orElse(null);
+    }
+
     public void setAssessmentPanelDate(ZonedDateTime assessmentPanelDate) {
         setMilestoneDate(MilestoneType.ASSESSMENT_PANEL, assessmentPanelDate);
     }

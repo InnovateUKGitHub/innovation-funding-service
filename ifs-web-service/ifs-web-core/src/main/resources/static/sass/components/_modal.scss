@@ -1,6 +1,6 @@
-@import "govuk-frontend/settings/all";
-@import "govuk-frontend/tools/all";
-@import "govuk-frontend/helpers/all";
+@import "govuk-frontend/govuk/settings/all";
+@import "govuk-frontend/govuk/tools/all";
+@import "govuk-frontend/govuk/helpers/all";
 
 [role="dialog"]{
   @include box-sizing(border-box);

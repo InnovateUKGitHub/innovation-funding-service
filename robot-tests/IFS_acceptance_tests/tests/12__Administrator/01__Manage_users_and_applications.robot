@@ -51,7 +51,7 @@ Administrator can navigate to manage users page
     [Setup]  log in as a different user   &{ifs_admin_user_credentials}
     Given the user clicks the button/link     link = Manage users
     Then the user should see the element      jQuery = h1:contains("Manage users")
-    And the user should see the element       jQuery = .govuk-tabs__tab--selected:contains("Active")
+    And the user should see the element       jQuery = .govuk-tabs__list-item--selected:contains("Active")
 
 Administrator can search for a user
     [Documentation]  IFS-6374
@@ -160,7 +160,7 @@ Administrator can successfully invite a new user
     Then the user cannot see a validation error in the page
     And the user should see the element                     jQuery = h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element                     jQuery = .govuk-tabs__tab--selected:contains("Pending")
+    And the user should see the element                     jQuery = .govuk-tabs__list-item--selected:contains("Pending")
 
 Administrator can successfully finish the rest of the invitation
     [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842
@@ -285,48 +285,6 @@ Deactivated user cannot login until he is activated
     When log in as a different user           ${email}  ${short_password}
     Then the user should not see an error in the page
 
-Admin can view assessor status unavailable
-     [Documentation]  IFS-7023
-     [Setup]   log in as a different user            &{ifs_admin_user_credentials}
-     Given the user clicks the button/link       link = Manage users
-     When the user searches for an assessor       Isaac  unavailable
-     Then user should see the correct assessor status    Unavailable   The user is unavailable to work as an assessor until further notice
-
-Support can view assessor status disabled
-    [Documentation]  IFS-7023
-    [Setup]   log in as a different user         &{support_user_credentials}
-    Given the user clicks the button/link        link = Manage users
-    When the user searches for an assessor       Kieran  disabled
-    Then the user should see the element         jQuery = td:contains("Assessor") ~ td:contains("Disabled")
-    And the user should not see the element      link = View role profile
-
-Comp Admin can view assessor status
-    [Documentation]  IFS-7021
-    Given log in as a different user            &{Comp_admin1_credentials}
-    When the user clicks the button/link        link = Assessor status
-    Then the user should see the element        jQuery = h1:contains("Assessor status")
-
-Comp Admin can search for assessor
-    [Documentation]  IFS-7054
-    Given the user enters text to a text field   id = filter  Kieran
-    When the user clicks the button/link         css = input[type="submit"]
-    And the user clicks the button/link          link = Role disabled (1)
-    Then the user should see the element         jQuery = p:contains("Kieran Harper")
-
-Comp admin can view details of assessor
-    [Documentation]  IFS-7023
-    Given the user clicks the button/link               link = View details
-    Then user should see the correct assessor status    Disabled  The user no longer works as an assessor.
-
-Project finance can view details of an assessor
-    [Documentation]  IFS-7024
-    [Setup]   log in as a different user            &{internal_finance_credentials}
-    Given the user clicks the button/link           link = Assessor status
-    When the finance user searches for an assessor  paul.plum  available
-    And the user clicks the button/link             link = View role profile
-    Then the user should see the element            jQuery = dd:contains("Available")
-    And the user should not see the element         jQuery = dt:contains("Reason for status change")
-
 Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50
     [Tags]
@@ -357,7 +315,7 @@ the user navigates to the View internal user details
     the user clicks the button/link  jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link    css = .button-secondary[type = "submit"]     #Resend invite
+    the user clicks the button/link    jQuery = button:contains("Resend invite")     #Resend invite
     the user clicks the button/link    jQuery = button:contains("Resend")
     the user reads his email           ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
@@ -438,7 +396,7 @@ the IFS admin should see the user details
 
 the IFS admin is redirected to the Manage Users page on Success
     the user should see the element    jQuery = h1:contains("Manage users")
-    the user should see the element    jQuery = .govuk-tabs__tab--selected:contains("Active")
+    the user should see the element    jQuery = .govuk-tabs__list-item--selected:contains("Active")
 
 the IFS admin deactivate the user
     the user should see the element    css = .govuk-form-group input

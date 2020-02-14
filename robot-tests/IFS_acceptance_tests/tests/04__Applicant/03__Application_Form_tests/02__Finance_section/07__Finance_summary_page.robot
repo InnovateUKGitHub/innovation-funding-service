@@ -416,7 +416,7 @@ The user verifies labour, overhead costs and materials
     the user should see the element  jQuery = dt:contains("Working days per year") ~ dd:contains("230")
     the user should see the element  jQuery = .labour-costs-table td:contains("Role 2") ~ td:contains("400") ~ td:contains("2")
     the user collapses the section   Labour
-    the user should see the element  jQuery = #accordion-finances-heading-2 span:contains("£1,043,488,990")
+    the user should see the element  jQuery = span:contains("£1,043,488,990") ~ #accordion-finances-heading-2 
     the user expands the section     Materials
     the user should see the element  jQuery = #material-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£1,000")
     the user collapses the section   Materials

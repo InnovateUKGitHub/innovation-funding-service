@@ -42,7 +42,7 @@ Queries section is linked from viability and this selects viability on the query
     [Tags]  HappyPath
     [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Given the user clicks the button/link    jQuery = table.table-progress th:contains("${Dreambit_Name}") + td a
-    When the user clicks the button/link     jQuery = .button-secondary:contains("Queries")
+    When the user clicks the button/link     jQuery = a:contains("Queries")
     And the user clicks the button/link      jQuery = .govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability     id = section
 
@@ -269,7 +269,7 @@ Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
     Given the user navigates to the page  ${dreambit_finance_checks}/eligibility
-    And the user clicks the button/link   jQuery = .button-secondary:contains("Notes")
+    And the user clicks the button/link   jQuery = a:contains("Notes")
     Then the user should see the element  jQuery = .govuk-button:contains("Create a new note")
 
 Link to notes from main finance checks summary page
@@ -520,7 +520,7 @@ the project finance user view the query details
 
 the user navigates to notes section
     the user clicks the button/link   css = table.table-progress tr:nth-child(1) td:nth-child(2)
-    the user clicks the button/link   jQuery = .button-secondary:contains("Notes")
+    the user clicks the button/link   jQuery = a:contains("Notes")
     the user should see the element   jQuery = h2:contains("Review notes")
     the user should see the element   jQuery = .govuk-button:contains("Create a new note")
 
@@ -572,5 +572,5 @@ the user should see the note comments client side validations
 
 the user navigates to queries page
     the user navigates to the page       ${dreambit_finance_checks}/eligibility
-    the user clicks the button/link      jQuery = .button-secondary:contains("Queries")
+    the user clicks the button/link      jQuery = a:contains("Queries")
     the user should see the element      jQuery = h2:contains("Queries")
