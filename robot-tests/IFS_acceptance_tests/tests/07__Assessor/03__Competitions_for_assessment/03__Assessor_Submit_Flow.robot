@@ -97,7 +97,7 @@ Summary:Assessor can return to each question
     When the user clicks the button/link             jQuery = #accordion-questions-content-2 a:contains("Return to this question in the application")
     Then the user should see the element             jQuery = h2:contains("What is the business opportunity that your project addresses?")
     And the user goes back to the previous page
-    When the user clicks the button/link             jQuery = #accordion-questions-content-1-11 a:contains("Return to this question in the application")
+    When the user clicks the button/link             jQuery = #accordion-questions-content-11 a:contains("Return to this question in the application")
     Then the user should see the element             jQuery = h2:contains("How does financial support from Innovate UK and its funding partners add value?")
     And the user goes back to the previous page
 
