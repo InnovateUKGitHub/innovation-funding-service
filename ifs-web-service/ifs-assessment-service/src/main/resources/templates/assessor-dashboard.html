@@ -13,7 +13,7 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessments',size='govuk-heading-xl'" />
 
-            <div class="message-alert" th:if="${model.profileStatus.displayBannerMessage()}">
+            <div class="message-alert " th:if="${model.profileStatus.displayBannerMessage()}">
                 <span class="govuk-body" th:text="${model.profileStatus.bannerMessage}">Banner message</span>
                 <span class="govuk-body"> Please <a href="/info/contact">contact us</a> for more information.</span>
             </div>

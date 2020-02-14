@@ -14,17 +14,13 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 @PermissionRules
 public class RoleProfileStatusPermissionRoles {
 
-    @PermissionRule(value = "RETRIEVE_USER_ROLE_PROFILE", description = "Assessors can retrieve their own status," +
-            "Comp admin, project finance or support can retrieve a users status")
-    public boolean retrieveUserRoleProfile(UserResource userToCheck, UserResource user) {
-        return isAdminOrSupport(user) || isRetrievingOwnStatus(userToCheck, user) ;
+    @PermissionRule(value = "RETRIEVE_USER_ROLE_PROFILE", description = "Comp admin, project finance or support can retrieve a users status")
+    public boolean adminsAndSupportCanRetrieveUserRoleProfile(UserResource userToCheck, UserResource user) {
+        return isInternalAdmin(user) || isSupport(user);
     }
 
-    private boolean isAdminOrSupport(UserResource userResource) {
-        return isInternalAdmin(userResource) || isSupport(userResource);
-    }
-
-    private boolean isRetrievingOwnStatus(UserResource userToCheck, UserResource user) {
+    @PermissionRule(value = "RETRIEVE_USER_ROLE_PROFILE", description = "Assessors can retrieve their own status")
+    public boolean usersCanRetrieveTheirOwnUserRoleProfile(UserResource userToCheck, UserResource user) {
         return userToCheck.equals(user);
     }
 }

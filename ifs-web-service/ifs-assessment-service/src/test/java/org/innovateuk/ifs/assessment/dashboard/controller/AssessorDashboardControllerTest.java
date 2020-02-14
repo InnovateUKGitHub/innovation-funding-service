@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 import static java.time.ZoneId.systemDefault;
 import static java.time.ZonedDateTime.now;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -169,7 +170,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
-
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
@@ -240,10 +240,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -293,10 +300,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -346,10 +360,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -391,10 +412,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -444,10 +472,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -503,10 +538,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(participantResources));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(participantResources));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -592,11 +634,18 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withInvite(interviewInvite)
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(participantResources));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(participantResources));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -621,6 +670,43 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertTrue(model.getActiveCompetitions().isEmpty());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertEquals(expectedPanelAcceptedModel, model.getAssessmentPanelAccepted());
+    }
+
+    @Test
+    public void disabledAssessordashboard() throws Exception {
+
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.DISABLED)
+                .build();
+
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(true)
+                .withAgreementComplete(true)
+                .build();
+
+        long userId = 3l;
+
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(emptyList()));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(emptyList()));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(emptyList()));
+
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        assertTrue(model.getPendingInvites().isEmpty());
+        assertTrue(model.getActiveCompetitions().isEmpty());
+        assertTrue(model.getUpcomingCompetitions().isEmpty());
+        assertTrue(model.getAssessmentPanelInvites().isEmpty());
+        assertTrue(model.getInterviewPanelInvites().isEmpty());
     }
 
     @Test

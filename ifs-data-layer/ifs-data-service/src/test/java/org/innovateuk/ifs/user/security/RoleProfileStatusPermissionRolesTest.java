@@ -24,9 +24,9 @@ public class RoleProfileStatusPermissionRolesTest extends BasePermissionRulesTes
 
         allGlobalRoleUsers.forEach(user -> {
             if (isInternal(user)) {
-                assertTrue(rules.retrieveUserRoleProfile(otherUser, user));
+                assertTrue(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));
             } else {
-                assertFalse(rules.retrieveUserRoleProfile(otherUser, user));
+                assertFalse(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));
             }
         });
     }
@@ -34,6 +34,6 @@ public class RoleProfileStatusPermissionRolesTest extends BasePermissionRulesTes
     @Test
     public void usersCanRetrieveTheirOwnRoleProfiles() {
         UserResource user = newUserResource().build();
-        assertTrue(rules.retrieveUserRoleProfile(user, user));
+        assertTrue(rules.usersCanRetrieveTheirOwnUserRoleProfile(user, user));
     }
 }
