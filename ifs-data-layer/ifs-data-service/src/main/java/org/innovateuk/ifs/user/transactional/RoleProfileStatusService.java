@@ -26,8 +26,7 @@ public interface RoleProfileStatusService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     ServiceResult<List<RoleProfileStatusResource>> findByUserId(long userId);
 
-    @SecuredBySpring(value = "RETRIEVE_USER_STATUS", description = "Only comp admin, project finance or support can retrieve a users status")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'RETRIEVE_USER_ROLE_PROFILE')")
     ServiceResult<RoleProfileStatusResource> findByUserIdAndProfileRole(long userId, ProfileRole profileRole);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")

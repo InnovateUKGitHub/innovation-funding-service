@@ -377,7 +377,7 @@ The user is able to make the competition public
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Publish and review")
     When the user clicks the button/link                 link = Return to public content
     And the user should redirect to the correct page after publish and review
-    Then the user should see the element                 jQuery = .button-secondary:contains("Return to setup overview")
+    Then the user should see the element                 jQuery = a:contains("Return to setup overview")
     [Teardown]  the user logs out if they are logged in
 
 Guest user can filter competitions by Keywords
