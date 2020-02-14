@@ -1112,13 +1112,7 @@ IFS.core.formValidation = (function () {
         closedDetails.attr('aria-hidden', 'false')
         IFS.core.formValidation.scrollToElement(target.first())
       } else {
-        // if the target is invisible we put focus on an element that has the same label as the target
-        // An example of this usecase is the wysiwyg editor
-        var altTarget = jQuery('[aria-labelledby="' + id + '"]')
-        var altTargetVisible = IFS.core.formValidation.isVisible(altTarget)
-        if (altTargetVisible) {
-          IFS.core.formValidation.scrollToElement(altTarget.first())
-        }
+        IFS.core.formValidation.scrollToElement(target.first())
       }
     },
     initDetailsErrors: function () {

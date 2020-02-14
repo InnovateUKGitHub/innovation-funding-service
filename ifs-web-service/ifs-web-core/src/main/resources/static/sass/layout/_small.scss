@@ -1,5 +1,5 @@
-@import "govuk-frontend/settings/all";
-@import "govuk-frontend/components/all";
+@import "govuk-frontend/govuk/settings/all";
+@import "govuk-frontend/govuk/components/all";
 
 strong {
   font-weight:700;
@@ -54,7 +54,7 @@ table {
 
 .grey-box {
   padding: 15px;
-  background: govuk-colour("grey-4");
+  background: govuk-colour("light-grey");
 }
 
 .border-top {
@@ -238,5 +238,5 @@ pre,
 }
 
 .unaccepted {
-  color: govuk-colour("grey-1");
+  color: govuk-colour("dark-grey");
 }

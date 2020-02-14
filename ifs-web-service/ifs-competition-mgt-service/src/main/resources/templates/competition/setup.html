@@ -23,7 +23,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:if="${currentSectionIsHome}">
-            <div class="govuk-error-summary" th:if="${#fields.hasErrors('${competitionSetupForm}')}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <div class="govuk-error-summary" th:if="${#fields.hasErrors('${competitionSetupForm}')}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">There is an error on this page.</h2>
                 <div class="govuk-error-summary__body">
                     <ul class="govuk-list govuk-error-summary__list">

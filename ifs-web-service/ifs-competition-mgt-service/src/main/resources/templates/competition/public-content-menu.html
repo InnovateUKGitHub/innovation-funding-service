@@ -17,7 +17,7 @@
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
             <th:block th:if="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem publishing the public content.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
@@ -68,8 +68,8 @@
         </ul>
 
         <div class="govuk-!-margin-top-6">
-            <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to setup overview</a>
-            <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to non-IFS competition details</a>
+            <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="govuk-button govuk-button--secondary">Return to setup overview</a>
+            <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="govuk-button govuk-button--secondary">Return to non-IFS competition details</a>
         </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
