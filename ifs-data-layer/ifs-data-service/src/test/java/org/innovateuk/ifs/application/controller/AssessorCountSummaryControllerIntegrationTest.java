@@ -16,14 +16,19 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -31,6 +36,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
@@ -58,6 +64,9 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
     private AssessmentRepository assessmentRepository;
 
     @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
+
+    @Autowired
     @Override
     protected void setControllerUnderTest(AssessorCountSummaryController controller) {
         this.controller = controller;
@@ -73,6 +82,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
         List<Profile> profiles = newProfile().with(id(null)).withSkillsAreas("Java Development").build(2);
         profileRepository.saveAll(profiles);
 
+
         List<User> users = newUser()
                 .with(id(null))
                 .withFirstName("Tom", "Cari")
@@ -81,6 +91,13 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.get(0), users.get(1))
+                .buildSet(2);
+        roleProfileStatusRepository.saveAll(roleProfileStates);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))

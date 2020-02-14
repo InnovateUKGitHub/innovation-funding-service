@@ -19,10 +19,14 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProfileRole;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +36,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -43,6 +48,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
@@ -85,6 +91,9 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     @Autowired
     @Override
@@ -218,6 +227,13 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.saveAll(users);
 
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                        .withProfileRole(ProfileRole.ASSESSOR)
+                        .withRoleProfileState(RoleProfileState.ACTIVE)
+                        .withUser(users.get(0), users.get(1))
+                        .buildSet(2);
+        roleProfileStatusRepository.saveAll(roleProfileStates);
+
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
@@ -289,6 +305,13 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.get(0), users.get(1))
+                .buildSet(2);
+        roleProfileStatusRepository.saveAll(roleProfileStates);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -367,6 +390,13 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.saveAll(users);
 
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.get(0), users.get(1))
+                .buildSet(2);
+        roleProfileStatusRepository.saveAll(roleProfileStates);
+
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
@@ -438,6 +468,13 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.get(0), users.get(1))
+                .buildSet(2);
+        roleProfileStatusRepository.saveAll(roleProfileStates);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -511,6 +548,13 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.get(0), users.get(1))
+                .buildSet(2);
+        roleProfileStatusRepository.saveAll(roleProfileStates);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
@@ -593,6 +637,13 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
                 .build(2);
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.get(0), users.get(1))
+                .buildSet(2);
+        roleProfileStatusRepository.saveAll(roleProfileStates);
 
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
