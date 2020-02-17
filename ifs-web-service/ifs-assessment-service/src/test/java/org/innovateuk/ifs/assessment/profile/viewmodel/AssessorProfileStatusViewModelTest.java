@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.profile.viewmodel;
 
+import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,20 +17,20 @@ public class AssessorProfileStatusViewModelTest {
     private AssessorProfileStatusViewModel allCompleteProfileStatus;
 
     @Before
-    public void setUp() throws Exception {
-        nothingCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().build());
-        skillsCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withSkillsComplete(true).build());
-        affiliationsCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withAffliliationsComplete(true).build());
-        agreementCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withAgreementComplete(true).build());
+    public void setUp() {
+        nothingCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().build(), RoleProfileState.ACTIVE);
+        skillsCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withSkillsComplete(true).build(), RoleProfileState.ACTIVE);
+        affiliationsCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withAffliliationsComplete(true).build(), RoleProfileState.ACTIVE);
+        agreementCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withAgreementComplete(true).build(), RoleProfileState.ACTIVE);
         allCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource()
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(true)
                 .withAgreementComplete(true)
-                .build());
+                .build(), RoleProfileState.ACTIVE);
     }
 
     @Test
-    public void isSkillsComplete() throws Exception {
+    public void isSkillsComplete() {
         assertFalse(nothingCompleteProfileStatus.isSkillsComplete());
         assertTrue(skillsCompleteProfileStatus.isSkillsComplete());
         assertFalse(affiliationsCompleteProfileStatus.isSkillsComplete());
@@ -38,7 +39,7 @@ public class AssessorProfileStatusViewModelTest {
     }
 
     @Test
-    public void isAffiliationsComplete() throws Exception {
+    public void isAffiliationsComplete() {
         assertFalse(nothingCompleteProfileStatus.isAffiliationsComplete());
         assertFalse(skillsCompleteProfileStatus.isAffiliationsComplete());
         assertTrue(affiliationsCompleteProfileStatus.isAffiliationsComplete());
@@ -47,7 +48,7 @@ public class AssessorProfileStatusViewModelTest {
     }
 
     @Test
-    public void isAgreementComplete() throws Exception {
+    public void isAgreementComplete() {
         assertFalse(nothingCompleteProfileStatus.isAgreementComplete());
         assertFalse(skillsCompleteProfileStatus.isAgreementComplete());
         assertFalse(affiliationsCompleteProfileStatus.isAgreementComplete());
@@ -56,7 +57,7 @@ public class AssessorProfileStatusViewModelTest {
     }
 
     @Test
-    public void isComplete() throws Exception {
+    public void isComplete() {
         assertFalse(nothingCompleteProfileStatus.isComplete());
         assertFalse(skillsCompleteProfileStatus.isComplete());
         assertFalse(affiliationsCompleteProfileStatus.isComplete());
