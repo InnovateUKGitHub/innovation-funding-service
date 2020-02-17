@@ -68,6 +68,46 @@ Banner applications are removed from assessor
     Given the assessor is removed from all applications
     Then the user should not be blocked from changing the role profile
 
+#Assessor can be set to unavailable
+#    Given the user clicks the button/link   link = Change role status
+ #   When the user selects the radio button  roleProfileState  UNAVAILABLE
+ #   And the user enters text to a text field   css = div[id=unavailable-reason] div[role]   Something
+
+#Select unavailable
+
+#Assessor should not appear in any lists when unavailable
+#check assessor lists: find and accepted to comp
+#Check allocate applications screen that it isn't appearing
+
+#Assessor dashboard should see correct banner when unavailable
+#Sign in as assessor
+#Ensure no panels
+#Ensure banner shows
+
+#Assessor can be set to disabled
+#Sign in as project finance and make them disabled
+
+#Assessor should not appear in any lists when disabled
+#check assessor lists: find and asssign to comp
+#Check allocate applications screen that it isn't appearing
+
+#Assessor dashboard should see correct banner when disabled
+#Sign in as assessor
+#Ensure no panels
+#Ensure banner shows
+
+#Assessor can be set to available
+#Sign in as comp admin and make them available
+
+#Assessor should appear lists when available
+#check assessor lists: find and asssign to comp
+#Check allocate applications screen that it is appearing
+
+#Assessor dashboard should see correct dashboard when available
+#Sign in as assessor
+#Ensure no banner
+#Ensure panel shows
+
 *** Keywords ***
 user should see the correct assessor status
     [Arguments]  ${status}  ${reason}
