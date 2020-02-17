@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.resource;
 
-import com.google.common.base.Enums;
 
 public enum RoleProfileState {
 
@@ -18,7 +17,4 @@ public enum RoleProfileState {
         return description;
     }
 
-    public static RoleProfileState getRoleProfileStateFromString(String value) {
-        return Enums.getIfPresent(RoleProfileState.class, value).or(RoleProfileState.ACTIVE);
-    }
 }

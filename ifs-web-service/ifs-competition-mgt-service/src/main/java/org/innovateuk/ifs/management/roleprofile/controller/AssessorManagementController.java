@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.admin.viewmodel.RoleProfileViewModel;
 import org.innovateuk.ifs.management.roleprofile.form.ChangeRoleProfileForm;
-import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
@@ -65,7 +64,7 @@ public class AssessorManagementController {
                              Model model) {
 
         if (form.getRoleProfileState() == null) {
-            form.setRoleProfileState(ACTIVE.toString());
+            form.setRoleProfileState(ACTIVE);
         }
 
         model.addAttribute("userId", userId);
@@ -94,13 +93,12 @@ public class AssessorManagementController {
     }
 
     private RoleProfileStatusResource createRoleProfileStatusResource(long userId, ChangeRoleProfileForm form) {
-        RoleProfileState roleProfileState = getRoleProfileStateFromString(form.getRoleProfileState());
-        if (UNAVAILABLE.equals(roleProfileState)) {
-            return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, form.getUnavailableReason());
-        } else if (DISABLED.equals(roleProfileState)) {
-            return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, form.getDisabledReason());
+        if (UNAVAILABLE.equals(form.getRoleProfileState())) {
+            return new RoleProfileStatusResource(userId, ASSESSOR, form.getRoleProfileState(), form.getUnavailableReason());
+        } else if (DISABLED.equals(form.getRoleProfileState())) {
+            return new RoleProfileStatusResource(userId, ASSESSOR, form.getRoleProfileState(), form.getDisabledReason());
         } else {
-            return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, "");
+            return new RoleProfileStatusResource(userId, ASSESSOR, form.getRoleProfileState(), "");
         }
     }
 
@@ -109,11 +107,11 @@ public class AssessorManagementController {
     }
 
     private void validateForm(BindingResult bindingResult, ChangeRoleProfileForm form) {
-        if (UNAVAILABLE.equals(getRoleProfileStateFromString(form.getRoleProfileState())) && StringUtils.isEmpty(form.getUnavailableReason())) {
+        if (UNAVAILABLE.equals(form.getRoleProfileState()) && StringUtils.isEmpty(form.getUnavailableReason())) {
             bindingResult.addError(new FieldError("form", "unavailableReason", "validation.changeroleprofileform.reason.required"));
         }
 
-        if (DISABLED.equals(getRoleProfileStateFromString(form.getRoleProfileState())) && StringUtils.isEmpty(form.getDisabledReason())) {
+        if (DISABLED.equals(form.getRoleProfileState()) && StringUtils.isEmpty(form.getDisabledReason())) {
             bindingResult.addError(new FieldError("form", "disabledReason", "validation.changeroleprofileform.reason.required"));
         }
     }
