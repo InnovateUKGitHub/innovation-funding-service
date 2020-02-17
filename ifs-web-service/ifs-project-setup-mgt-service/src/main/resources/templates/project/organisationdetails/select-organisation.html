@@ -2,7 +2,8 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.projectId}: ${model.projectName} - View partner details|" />
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|${model.projectId}: ${model.projectName} - View partner details|"/>
 </head>
 <body class="govuk-template__body">
 
@@ -32,7 +33,8 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='View partner details',subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
-        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${form}">
+        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
+              th:object="${form}">
             <fieldset class="govuk-fieldset">
                 <div class="govuk-form-group" id="select-partner-section"
                      th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
@@ -42,7 +44,8 @@
                     </th:block>
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         <h2 class="govuk-fieldset__heading">Choose partner</h2>
-                        <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">We only show partners that have completed all their organisation details.</p>
+                        <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">We only show partners that
+                            have completed all their organisation details.</p>
                     </legend>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="partnerOrganisation : ${model.partnerOrganisations}">
@@ -53,9 +56,9 @@
                                    th:id="|organisation-radio-${partnerOrganisation.organisation}|"
                                    required="required"
                             />
-                          <label class="govuk-label govuk-radios__label selection-button-radio"
-                                       th:for="|organisation-radio-${partnerOrganisation.organisation}|"
-                                       th:text="(${partnerOrganisation.leadOrganisation} ? ${partnerOrganisation.organisationName} + ' (Lead)' : ${partnerOrganisation.organisationName})"></label>
+                            <label class="govuk-label govuk-radios__label selection-button-radio"
+                                   th:for="|organisation-radio-${partnerOrganisation.organisation}|"
+                                   th:text="(${partnerOrganisation.leadOrganisation} ? ${partnerOrganisation.organisationName} + ' (Lead)' : ${partnerOrganisation.organisationName})"></label>
                         </div>
                     </div>
                 </div>
@@ -74,8 +77,8 @@
     </main>
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
 
 </body>
 </html>

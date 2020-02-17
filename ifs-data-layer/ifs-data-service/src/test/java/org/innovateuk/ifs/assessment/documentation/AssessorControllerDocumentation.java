@@ -10,6 +10,7 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorProfileResourceDocs.assessorProfileResourceBuilder;
 import static org.innovateuk.ifs.documentation.AssessorProfileResourceDocs.assessorProfileResourceFields;
@@ -24,6 +25,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<AssessorController> {
@@ -103,4 +105,24 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
                         ))
                 );
     }
+
+    @Test
+    public void hasApplicationsAssigned() throws Exception {
+
+        long userId = 1l;
+
+        when(assessorServiceMock.hasApplicationsAssigned(1L)).thenReturn(serviceSuccess(TRUE));
+
+        mockMvc.perform(get("/assessor/has-applications-assigned/{id}", userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"))
+                .andDo(document(
+                        "assessor/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the assessor")
+                        ))
+                );
+    }
+
 }

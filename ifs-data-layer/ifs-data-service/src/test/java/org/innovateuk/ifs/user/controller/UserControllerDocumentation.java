@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.commons.service.BaseRestService.buildPagination
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.UserDocs.*;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.user.builder.ManageUserResourceBuilder.newManageUserResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -137,7 +138,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void findActive() throws Exception {
-        UserPageResource userPageResource = buildUserPageResource();
+        ManageUserPageResource userPageResource = buildManageUserPageResource();
         when(userServiceMock.findActive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", "filter");
@@ -146,13 +147,13 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
-                        .andWithPrefix("content[].", UserDocs.userResourceFields)
+                        .andWithPrefix("content[].", UserDocs.manageUserResourceFields)
                 ));
     }
 
     @Test
     public void findInactive() throws Exception {
-        UserPageResource userPageResource = buildUserPageResource();
+        ManageUserPageResource userPageResource = buildManageUserPageResource();
         when(userServiceMock.findInactive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", "filter");
@@ -161,17 +162,17 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
-                        .andWithPrefix("content[].", UserDocs.userResourceFields)
+                        .andWithPrefix("content[].", UserDocs.manageUserResourceFields)
                 ));
     }
 
-    private UserPageResource buildUserPageResource(){
-        UserPageResource pageResource = new UserPageResource();
+    private ManageUserPageResource buildManageUserPageResource(){
+        ManageUserPageResource pageResource = new ManageUserPageResource();
         pageResource.setNumber(5);
         pageResource.setSize(5);
         pageResource.setTotalElements(10);
         pageResource.setTotalPages(2);
-        pageResource.setContent(newUserResource().withEmail("example@innovateuk.test").build(5));
+        pageResource.setContent(newManageUserResource().withEmail("example@innovateuk.test").build(5));
         return pageResource;
     }
 

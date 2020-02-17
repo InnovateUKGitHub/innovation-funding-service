@@ -114,7 +114,7 @@ Scope: Status in the overview is updated
     And the user clicks the button/link                      jQuery = label:contains("Yes")
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
     And Wait for autosave
-    Then the user clicks the button/link                     jquery = button:contains("Save and return to assessment overview")
+    Then the user clicks the button with resubmission        jquery = button:contains("Save and return to assessment overview")
     And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
 
 Scope: Autosave
@@ -132,13 +132,12 @@ Scope: Word count
 
 Scope: Guidance
     [Documentation]    INFUND-4142  INFUND-6281
-    [Tags]
     Given the user clicks the button/link          css = details summary
-    Then the user should see the element          css = div[id^="details-content-"]
-    And The user should see the element           jQuery = td:contains("One or more of the above requirements have not been satisfied.")
-    And The user should see the element           jQuery = td:contains("Does it meet the scope of the competition as defined in the competition brief?")
+    Then the user should see the element           css = details[open]
+    And The user should see the element            jQuery = td:contains("One or more of the above requirements have not been satisfied.")
+    And The user should see the element            jQuery = td:contains("Does it meet the scope of the competition as defined in the competition brief?")
     When the user clicks the button/link           css = details summary
-    Then The user should not see the element       css = div[id^="details-content-"]
+    Then the user should see the element           css = details:not([open])
 
 Economic Benefit: validations
     [Documentation]  IFS-508
@@ -240,13 +239,13 @@ The user sets the finance option to detailed
     execute sql string   UPDATE `${database_name}`.`competition` SET `assessor_finance_view` = 'DETAILED' WHERE `name` = '${competition}';
 
 The project costs are correct in the overview
-    The user should see the element       jQuery = button:contains("Labour") span:contains("£3,081")
-    The user should see the element       jQuery = button:contains("Overhead costs") span:contains("£0")
-    The user should see the element       jQuery = button:contains("Materials") span:contains("£100,200")
-    The user should see the element       jQuery = button:contains("Capital usage") span:contains("£552")
-    The user should see the element       jQuery = button:contains("Subcontracting costs") span:contains("£90,000")
-    The user should see the element       jQuery = button:contains("Travel and subsistence") span:contains("£5,970")
-    The user should see the element       jQuery = button:contains("Other costs") span:contains("£1,100")
+    The user should see the element       jQuery = span:contains("£3,081") + button:contains("Labour")
+    The user should see the element       jQuery = span:contains("£0") + button:contains("Overhead costs")
+    The user should see the element       jQuery = span:contains("£100,200") + button:contains("Materials")
+    The user should see the element       jQuery = span:contains("£552") + button:contains("Capital usage")
+    The user should see the element       jQuery = span:contains("£90,000") + button:contains("Subcontracting costs")
+    The user should see the element       jQuery = span:contains("£5,970") + button:contains("Travel and subsistence")
+    The user should see the element       jQuery = span:contains("£1,100") + button:contains("Other costs")
 
 The academic finances are correct
     The user should see the element       jQuery = .table-overview td:contains("3 months")

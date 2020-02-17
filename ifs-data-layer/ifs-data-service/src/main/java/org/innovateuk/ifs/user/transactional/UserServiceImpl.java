@@ -19,9 +19,12 @@ import org.innovateuk.ifs.user.cache.UserCacheEvict;
 import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.RoleProfileStatusMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
@@ -37,6 +40,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
@@ -110,7 +114,13 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private UserOrganisationMapper userOrganisationMapper;
 
     @Autowired
+    private RoleProfileStatusMapper roleProfileStatusMapper;
+
+    @Autowired
     private UserInviteRepository userInviteRepository;
+
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
@@ -275,30 +285,28 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActive(String filter, Pageable pageable) {
+    public ServiceResult<ManageUserPageResource> findActive(String filter, Pageable pageable) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.ACTIVE, pageable);
-        List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new ManageUserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), mapUsersToManageUserResource(pagedResult.getContent()), pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActiveExternal(String filter, Pageable pageable) {
+    public ServiceResult<ManageUserPageResource> findActiveExternal(String filter, Pageable pageable) {
         return findExternalUserPageResource(filter, pageable, ACTIVE);
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactive(String filter, Pageable pageable) {
+    public ServiceResult<ManageUserPageResource> findInactive(String filter, Pageable pageable) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.INACTIVE, pageable);
-        List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new ManageUserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), mapUsersToManageUserResource(pagedResult.getContent()), pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactiveExternal(String filter, Pageable pageable) {
+    public ServiceResult<ManageUserPageResource> findInactiveExternal(String filter, Pageable pageable) {
         return findExternalUserPageResource(filter, pageable, INACTIVE);
     }
 
-    private ServiceResult<UserPageResource> findExternalUserPageResource(String filter, Pageable pageable, UserStatus userStatus) {
+    private ServiceResult<ManageUserPageResource> findExternalUserPageResource(String filter, Pageable pageable, UserStatus userStatus) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatusAndRolesIn(
                 filter,
                 userStatus,
@@ -308,14 +316,40 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                         .collect(toSet()),
                 pageable
         );
-        List<UserResource> userResources = simpleMap(pagedResult.getContent(), userMapper::mapToResource);
-        return serviceSuccess(new UserPageResource(
+        List<ManageUserResource> userResources = pagedResult.getContent()
+                .stream()
+                .map(this::mapUserToManageUserResource)
+                .collect(toList());
+
+        return serviceSuccess(new ManageUserPageResource(
                 pagedResult.getTotalElements(),
                 pagedResult.getTotalPages(),
                 userResources,
                 pagedResult.getNumber(),
                 pagedResult.getSize())
         );
+    }
+
+    private List<ManageUserResource> mapUsersToManageUserResource(List<User> users) {
+        return users.stream()
+                .map(this::mapUserToManageUserResource)
+                .collect(toList());
+    }
+
+    private ManageUserResource mapUserToManageUserResource(User user) {
+        return new ManageUserResource(user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRoles().stream().collect(Collectors.toList()),
+                user.getCreatedOn(),
+                user.getCreatedBy().getName(),
+                mapRoleProfileStatusesToResource(user.getRoleProfileStatuses()));
+    }
+
+    private Set<RoleProfileStatusResource> mapRoleProfileStatusesToResource(Set<RoleProfileStatus> roleProfileStatuses) {
+        return roleProfileStatuses.stream()
+                .map(roleProfileStatusMapper::mapToResource)
+                .collect(toSet());
     }
 
     @Override
@@ -382,6 +416,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         }
         return serviceSuccess(user);
     }
+
     private ServiceResult<Void> validateSearchString(String searchString) {
 
         searchString = StringUtils.trim(searchString);

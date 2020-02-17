@@ -12,8 +12,11 @@ import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
+import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +27,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.CollectionUtils;
 
 import java.time.*;
 import java.util.List;
@@ -31,6 +35,7 @@ import java.util.stream.Collectors;
 
 import static java.time.ZoneId.systemDefault;
 import static java.time.ZonedDateTime.now;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -39,13 +44,16 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
-import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.*;
+import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.INTERVIEW_ASSESSOR;
+import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
 import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.newRoleProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -74,6 +82,9 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private RoleProfileStatusRestService roleProfileStatusRestService;
+
     @Override
     protected AssessorDashboardController supplyControllerUnderTest() {
         return new AssessorDashboardController();
@@ -98,7 +109,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(ASSESSOR)
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(competitionResource.getId())
@@ -147,12 +158,18 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withInvite(interviewInvite)
                 .build();
 
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -169,7 +186,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         50
                 )
         );
-        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
         AssessorDashboardAssessmentPanelInviteViewModel expectedAssessmentPanelInviteViewModel =
                 new AssessorDashboardAssessmentPanelInviteViewModel("Juggling Craziness", competitionResource.getId(), "");
@@ -198,7 +215,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         ZonedDateTime now = now();
         Clock clock = Clock.fixed(now.toInstant(), systemDefault());
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(ASSESSOR)
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
@@ -224,10 +241,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -244,7 +268,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         16
                 )
         );
-        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
         assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
@@ -255,7 +279,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_activeEndsToday() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(ASSESSOR)
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
@@ -277,10 +301,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -297,7 +328,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         100
                 )
         );
-        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
         assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
@@ -308,7 +339,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_fundersPanel() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(ASSESSOR)
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
@@ -330,10 +361,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -342,7 +380,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .andReturn();
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
-        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
         assertTrue(model.getPendingInvites().isEmpty());
         assertTrue(model.getActiveCompetitions().isEmpty());
@@ -353,7 +391,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_upcomingAssessments() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(ASSESSOR)
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
@@ -375,10 +413,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -395,7 +440,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         ZonedDateTime.now().plusDays(7).toLocalDate()
                 )
         );
-        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
         assertTrue(model.getPendingInvites().isEmpty());
         assertTrue(model.getActiveCompetitions().isEmpty());
@@ -406,7 +451,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_pastAssessmentInAssessment() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(ASSESSOR)
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
@@ -428,10 +473,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(singletonList(participant)));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -448,7 +500,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         100
                 )
         );
-        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
         assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
@@ -464,7 +516,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         List<CompetitionParticipantResource> participantResources = newCompetitionParticipantResource()
                 .withInvite(inviteResource.get(0), inviteResource.get(1))
-                .withCompetitionParticipantRole(ASSESSOR)
+                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(PENDING)
                 .withUser(3L)
                 .withCompetition(1L, 2L)
@@ -487,10 +539,17 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(participantResources));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(participantResources));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -507,7 +566,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
                         competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
 
-        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
         assertEquals(expectedPendingInvitesModel, model.getPendingInvites());
         assertTrue(model.getActiveCompetitions().isEmpty());
@@ -576,11 +635,18 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withInvite(interviewInvite)
                 .build();
 
-        when(competitionParticipantRestService.getAssessorParticipants(3L)).thenReturn(restSuccess(participantResources));
-        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(reviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
-        when(interviewInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .build();
+
+        long userId = 3l;
+
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(participantResources));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
+        when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -598,13 +664,47 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         reviewParticipantResource.getInvite().getPanelDaysLeft(),
                         reviewParticipantResource.getAwaitingApplications()));
 
-        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
         assertTrue(model.getAssessmentPanelInvites().isEmpty());
         assertFalse(model.getAssessmentPanelAccepted().isEmpty());
         assertTrue(model.getActiveCompetitions().isEmpty());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertEquals(expectedPanelAcceptedModel, model.getAssessmentPanelAccepted());
+    }
+
+    @Test
+    public void disabledAssessordashboard() throws Exception {
+
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withRoleProfileState(RoleProfileState.DISABLED)
+                .build();
+
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(true)
+                .withAgreementComplete(true)
+                .build();
+
+        long userId = 3l;
+
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(emptyList()));
+        when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        assertTrue(CollectionUtils.isEmpty(model.getPendingInvites()));
+        assertTrue(CollectionUtils.isEmpty(model.getActiveCompetitions()));
+        assertTrue(CollectionUtils.isEmpty(model.getUpcomingCompetitions()));
+        assertTrue(CollectionUtils.isEmpty(model.getAssessmentPanelInvites()));
+        assertTrue(CollectionUtils.isEmpty(model.getInterviewPanelInvites()));
     }
 
     @Test

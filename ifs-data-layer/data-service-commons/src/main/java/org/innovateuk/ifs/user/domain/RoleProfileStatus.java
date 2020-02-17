@@ -20,7 +20,7 @@ public class RoleProfileStatus extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userId", referencedColumnName="id", nullable = false)
     private User user;
 

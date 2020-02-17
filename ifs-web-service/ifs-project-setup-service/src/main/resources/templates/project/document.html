@@ -17,7 +17,7 @@
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
-             data-module="error-summary">
+             data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <div class="govuk-error-summary__body">
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
@@ -118,7 +118,7 @@
 
          <th:block th:unless="${model.editable}">
             <div class="govuk-!-margin-top-6">
-                <a th:href="@{/project/{projectId}/document/all/(projectId=${model.projectId})}" class="button-secondary">Return to documents</a>
+                <a th:href="@{/project/{projectId}/document/all/(projectId=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
             </div>
         </th:block>
 

@@ -680,4 +680,18 @@
     </div>
 </th:block>
 
+<!-- Edit organisation size -->
+<th:block th:fragment="modal-edit-organisation-size (model)">
+    <div class="modal-edit-organisation-size" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Update organisation size</h2>
+        <p class="govuk-body">Changing the organisation size will affect project finances, you will need to review these once this change has been made.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" name="modal-edit-organisation-size">Update organisation size</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
 </html>

@@ -33,8 +33,8 @@ ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 ${adminChangeEmailOld}    aaron.powell@example.com
 ${adminChangeEmailNew}    aaron.powell2@example.com
-${supportChangeEmailOld}  irene.jones@example.com
-${supportChangeEmailNew}  irene.jones2@example.com
+${supportChangeEmailOld}  jacqueline.white@gmail.com
+${supportChangeEmailNew}  jacqueline.white2@gmail.com
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -51,7 +51,7 @@ Administrator can navigate to manage users page
     [Setup]  log in as a different user   &{ifs_admin_user_credentials}
     Given the user clicks the button/link     link = Manage users
     Then the user should see the element      jQuery = h1:contains("Manage users")
-    And the user should see the element       jQuery = .govuk-tabs__tab--selected:contains("Active")
+    And the user should see the element       jQuery = .govuk-tabs__list-item--selected:contains("Active")
 
 Administrator can search for a user
     [Documentation]  IFS-6374
@@ -160,7 +160,7 @@ Administrator can successfully invite a new user
     Then the user cannot see a validation error in the page
     And the user should see the element                     jQuery = h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element                     jQuery = .govuk-tabs__tab--selected:contains("Pending")
+    And the user should see the element                     jQuery = .govuk-tabs__list-item--selected:contains("Pending")
 
 Administrator can successfully finish the rest of the invitation
     [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842
@@ -285,21 +285,6 @@ Deactivated user cannot login until he is activated
     When log in as a different user           ${email}  ${short_password}
     Then the user should not see an error in the page
 
-Admin can view assessor status unavailable
-     [Documentation]  IFS-7023
-     [Setup]   log in as a different user            &{ifs_admin_user_credentials}
-     Given the user clicks the button/link       link = Manage users
-     When the user enters text to a text field   id = filter  Isaac
-     And the user clicks the button/link         css = input[type="submit"]
-     And the user clicks the button/link         link = Edit
-     Then user should see the correct assessor status    Unavailable
-
-Comp Admin can view assessor status
-    [Documentation]  IFS-7023
-    Given log in as a different user            &{Comp_admin1_credentials}
-    When the user navigates to the page         ${server}/management/admin/user/311/active
-    Then user should see the correct assessor status    Disabled
-
 Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50
     [Tags]
@@ -330,7 +315,7 @@ the user navigates to the View internal user details
     the user clicks the button/link  jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link    css = .button-secondary[type = "submit"]     #Resend invite
+    the user clicks the button/link    jQuery = button:contains("Resend invite")     #Resend invite
     the user clicks the button/link    jQuery = button:contains("Resend")
     the user reads his email           ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
@@ -411,7 +396,7 @@ the IFS admin should see the user details
 
 the IFS admin is redirected to the Manage Users page on Success
     the user should see the element    jQuery = h1:contains("Manage users")
-    the user should see the element    jQuery = .govuk-tabs__tab--selected:contains("Active")
+    the user should see the element    jQuery = .govuk-tabs__list-item--selected:contains("Active")
 
 the IFS admin deactivate the user
     the user should see the element    css = .govuk-form-group input
@@ -449,5 +434,21 @@ the user confirms email change
     the user clicks the button/link  id = confirm-email-change
 
 user should see the correct assessor status
-    [Arguments]  ${status}
+    [Arguments]  ${status}  ${reason}
     the user should see the element   jQuery = td:contains("Assessor") ~ td:contains("${status}")
+    the user clicks the button/link   link = View role profile
+    the user should see the element   jQuery = dd:contains("${status}") ~ dd:contains("${reason}")
+
+the user searches for an assessor
+    [Arguments]  ${searchTerm}  ${status}
+    the user enters text to a text field    id = filter  ${searchTerm}
+    the user clicks the button/link         css = input[type="submit"]
+    the user should see the element         jQuery = p:contains("${searchTerm}") ~ p:contains("Assessor (${status})")
+    the user clicks the button/link         link = Edit
+
+the finance user searches for an assessor
+    [Arguments]  ${searchTerm}  ${status}
+    the user enters text to a text field    id = filter  ${searchTerm}
+    the user clicks the button/link         css = input[type="submit"]
+    the user should see the element         jQuery = p:contains("${searchTerm}") ~ p:contains("Assessor")
+    the user clicks the button/link         link = View details

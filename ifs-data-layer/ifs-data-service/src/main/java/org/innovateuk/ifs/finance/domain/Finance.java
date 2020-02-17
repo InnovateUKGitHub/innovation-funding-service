@@ -120,6 +120,10 @@ public abstract class Finance {
             return FundingLevel.HUNDRED.getPercentage();
         }
 
+        if (getCompetition().isFullyFunded()) {
+            return FundingLevel.HUNDRED.getPercentage();
+        }
+
         if (isMaximumFundingLevelOverridden()) {
             // The same maximum funding level is set for all GrantClaimMaximums when overriding
             return getCompetition().getGrantClaimMaximums().stream().findAny().map(GrantClaimMaximum::getMaximum).get();

@@ -1,8 +1,8 @@
 /*--- Progress list ---*/
-@import "govuk-frontend/settings/all";
+@import "govuk-frontend/govuk/settings/all";
 
 .progress-list{
-  background-color: govuk-colour("grey-3");
+  background-color:govuk-colour("light-grey");
   margin: 20px 0 50px;
   padding: 15px;
 
@@ -248,7 +248,7 @@
 
   .read-only,
   .waiting{
-    background-color: govuk-colour("grey-4");
+    background-color: govuk-colour("light-grey");
     color: $govuk-secondary-text-colour;
 
     .govuk-heading-s,

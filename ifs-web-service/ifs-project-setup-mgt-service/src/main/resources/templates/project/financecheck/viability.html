@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to update viability.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -102,8 +102,8 @@
                 </div>
           </div>
           <div class="govuk-!-margin-top-6">
-              <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="button-secondary govuk-!-margin-right-4">Queries</a>
-              <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="button-secondary">Notes</a>
+              <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
+              <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary">Notes</a>
           </div>
           <th:block th:unless="${model.isReadOnly()}">
               <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve viability</h2>
@@ -139,12 +139,21 @@
                   <option value="RED">Red</option>
                 </select>
               </div>
-              <button type="button" data-js-modal="modal-confirm-viability" class="govuk-button" id="confirm-button">Confirm viability</button>
+
+              <button th:if="${!model.viabilityReadyToConfirm}"
+                      disabled="disabled"
+                      class="govuk-button">Confirm viability</button>
+              <button th:unless="${!model.viabilityReadyToConfirm}"
+                      type="button"
+                      data-js-modal="modal-confirm-viability"
+                      class="govuk-button"
+                      id="confirm-button">Confirm viability</button>
+
               <th:block th:insert="fragments/modals :: modal-confirm-viability (${model})" />
           </th:block>
           <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-          <button th:if="${model.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
-          <a th:if="${model.showBackToFinanceCheckButton}" class="button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
+          <button th:if="${model.showSaveAndContinueButton}" class="govuk-button govuk-button--secondary" name="save-and-continue">Save and return to finance checks</button>
+          <a th:if="${model.showBackToFinanceCheckButton}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

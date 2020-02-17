@@ -242,11 +242,16 @@ ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables
 ${EMPIRE_LTD_NAME}         Empire Ltd
-${EMPIRE_LTD_ID}           ${organisation_ids["${EMPIRE_LTD_NAME}"]}
-${organisationLudlowName}  Ludlow
-${organisationLudlowId}    ${organisation_ids["${organisationLudlowName}"]}
-${organisationEggsName}    EGGS
-${organisationEggsId}      ${organisation_ids["${organisationEggsName}"]}
+${EMPIRE_LTD_ID}            ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${organisationLudlowName}   Ludlow
+${organisationLudlowId}     ${organisation_ids["${organisationLudlowName}"]}
+${organisationEggsName}     EGGS
+${organisationEggsId}       ${organisation_ids["${organisationEggsName}"]}
+${organisationRedName}      Red Planet
+${organisationRedId}        ${organisation_ids["${organisationRedName}"]}
+${organisationSmithName}    SmithZone
+${organisationSmithId}      ${organisation_ids["${organisationSmithName}"]}
+
 
 # Organisation type ids
 ${BUSINESS_TYPE_ID}       1

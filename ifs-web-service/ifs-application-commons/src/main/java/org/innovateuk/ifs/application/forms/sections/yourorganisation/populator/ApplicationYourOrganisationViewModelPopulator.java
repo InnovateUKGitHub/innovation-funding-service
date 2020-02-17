@@ -45,6 +45,6 @@ public class ApplicationYourOrganisationViewModelPopulator {
             return completedSectionIds.contains(fundingSection.getId());
         }).orElse(false);
 
-        return new YourOrganisationViewModel(showStateAidAgreement, fundingSectionComplete, competition.isH2020());
+        return new YourOrganisationViewModel(showStateAidAgreement, fundingSectionComplete, competition.isH2020(), competition.isProcurement());
     }
 }

@@ -52,6 +52,12 @@
                     <a href="/management/admin/users/active"
                        class="govuk-header__link">Manage users</a>
                 </li>
+                <li th:if="${showManageAssessorsLink}"
+                    class="govuk-header__navigation-item"
+                    th:classappend="${(#httpServletRequest.requestURI == '/management/admin/assessors/active')} ? 'govuk-header__navigation-item--active'">
+                    <a href="/management/admin/assessors/available"
+                           class="govuk-header__link">Assessor status</a>
+                </li>
                 <li class="govuk-header__navigation-item">
                     <a th:href="${logoutUrl}"
                        class="govuk-header__link">Sign out</a>

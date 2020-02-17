@@ -15,7 +15,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back',linkUrl='/', dynamicBackLink=${true})" />
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${ineligibleForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${ineligibleForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to mark this application as ineligible.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(ineligibleForm)" />
         </div>
@@ -31,7 +31,7 @@
             <th:block th:if="${model.canReinstate}" th:unless="${model.ineligibility.readOnly}">
                 <div class="govuk-!-margin-top-6">
                     <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${model.application.competition},applicationId=${model.application.id})}"
-                       class="button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
+                       class="govuk-button govuk-button--secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
                 </div>
                 <div class="modal-reinstate" role="dialog" aria-hidden="true">
                     <form th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${model.application.competition},applicationId=${model.application.id})}" method="post">

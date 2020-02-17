@@ -406,10 +406,10 @@ Validate errors on Your project Finances section
 
 Validate the user is unable to submit an incomplete application
     the user clicks the button/link    jQuery = a:contains("Review and submit")
-    Element Should Contain             jQuery = button:contains("Application details")    Incomplete
-    Element Should Contain             jQuery = button:contains("Public description")    Incomplete
-    Element Should Contain             jQuery = button:contains("Horizon 2020 grant agreement")    Incomplete
-    Element Should Contain             jQuery = button:contains("Funding breakdown")  Incomplete
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Application details")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Public description")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Horizon 2020 grant agreement")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Funding breakdown")
 
 Custom Suite Teardown
     the user closes the browser
