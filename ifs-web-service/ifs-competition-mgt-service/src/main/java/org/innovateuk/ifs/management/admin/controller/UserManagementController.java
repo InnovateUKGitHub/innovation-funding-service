@@ -75,9 +75,6 @@ public class UserManagementController extends AsyncAdaptor {
     @Autowired
     private RoleProfileStatusRestService roleProfileStatusRestService;
 
-    @Value("${ifs.assessor.profile.feature.toggle}")
-    private boolean profileFeatureToggle;
-
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @SecuredBySpring(value = "UserManagementController.viewUser() method",
             description = "IFS admins and support users can view users.")
@@ -244,8 +241,7 @@ public class UserManagementController extends AsyncAdaptor {
                 loggedInUser,
                 roleProfileStatusRestService.findByUserId(user.getId())
                         .getOptionalSuccessObject()
-                        .orElse(emptyList()),
-                profileFeatureToggle);
+                        .orElse(emptyList()));
     }
 
     private String redirectToActiveUsersTab() {
