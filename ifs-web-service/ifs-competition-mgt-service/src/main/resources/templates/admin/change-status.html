@@ -39,12 +39,12 @@
                 <span th:if="${#fields.hasErrors('roleProfileState')}" class="govuk-error-message"
                       th:each="err : ${#fields.errors('roleProfileState')}" th:text="${err}"/>
 
-                <div class="govuk-radios" change-modal>
+                <div class="govuk-radios" data-change-modal="#update-status">
                     <div class="govuk-radios__item">
                         <input type="radio"
                                class="govuk-radios__input"
                                id="roleProfileState-active"
-                               modal-link="role-profile-available"
+                               data-modal-link="role-profile-available"
                                th:field="*{roleProfileState}"
                                value="ACTIVE"
                                required="required"
@@ -61,7 +61,7 @@
                     <input type="radio"
                            class="govuk-radios__input"
                            id="roleProfileState-unavailable"
-                           modal-link="role-profile-unavailable"
+                           data-modal-link="role-profile-unavailable"
                            th:field="*{roleProfileState}"
                            value="UNAVAILABLE"
                            required="required"
@@ -103,7 +103,7 @@
                         <input type="radio"
                                class="govuk-radios__input"
                                id="roleProfileState-disabled"
-                               modal-link="role-profile-disabled"
+                               data-modal-link="role-profile-disabled"
                                th:field="*{roleProfileState}"
                                value="DISABLED"
                                required="required"
@@ -148,7 +148,7 @@
             <th:block th:insert="fragments/modals :: modal-role-profile-disabled" />
 
             <div class="govuk-form-group govuk-!-margin-top-6">
-                <button class="govuk-!-margin-right-0 govuk-button" id="modal-button" data-js-modal="modal-role-profile-available">Update status</button>
+                <button class="govuk-!-margin-right-0 govuk-button" id="update-status" data-js-modal="modal-role-profile-available">Update status</button>
             </div>
     </form>
 
