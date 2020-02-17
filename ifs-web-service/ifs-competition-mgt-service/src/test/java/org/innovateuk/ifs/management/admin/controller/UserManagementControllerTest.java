@@ -64,8 +64,6 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Before
     public void setUpCommonExpectations() {
-        setField(controller, "profileFeatureToggle", true);
-
         userPageResource = new UserPageResource();
 
         when(roleProfileStatusRestServiceMock.findByUserId(anyLong())).thenReturn(restSuccess(emptyList()));
