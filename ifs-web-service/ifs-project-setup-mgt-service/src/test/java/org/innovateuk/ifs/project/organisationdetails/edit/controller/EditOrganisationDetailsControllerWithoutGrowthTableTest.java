@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -22,6 +24,7 @@ import java.math.BigDecimal;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -52,11 +55,15 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
     @Mock
     private YourOrganisationWithoutGrowthTableFormPopulator viewModelPopulator;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     private static final long projectId = 3L;
     private static final long organisationId = 5L;
     private OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource;
     private ProjectResource projectResource;
     private OrganisationResource organisationResource;
+    private static CompetitionResource competitionResource;
     private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size-without-growth-table";
 
     @Override
@@ -78,6 +85,8 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
                 .withHeadCount(1L)
                 .withTurnover(BigDecimal.valueOf(2))
                 .build();
+        competitionResource = newCompetitionResource()
+                .build();
     }
 
     @Test
@@ -87,6 +96,7 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);
+        when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get(viewPageUrl()))
                 .andExpect(status().isOk())
@@ -115,6 +125,7 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);
+        when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(post(viewPageUrl()))
                 .andExpect(status().isOk())
