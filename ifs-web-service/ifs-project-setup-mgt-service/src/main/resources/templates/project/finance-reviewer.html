@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle='Manage project status',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+              th:with="pageTitle=|Innovate UK project finance reviewer - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body competition-management project-management">
 

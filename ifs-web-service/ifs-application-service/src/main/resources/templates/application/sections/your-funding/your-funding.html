@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Your funding - ${model.applicationName}|" />
+    <th:block
+        th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Your funding - ${applicationName}|"/>
+    </th:block>
 </head>
 <body class="govuk-template__body finance-row-form">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your project finances',linkClass='link-back',linkUrl=${model.financesUrl}" />
+              th:with="linkTitle='Your project finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -21,11 +24,11 @@
              tabindex="-1"
              data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Your funding',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+                  th:with="pageTitle='Your funding',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.fundingSectionLocked}">
             <p class="govuk-body" th:if="${model.leadApplicant}">
@@ -44,7 +47,8 @@
                     page as complete
                 </li>
                 <li th:if="${model.yourOrganisationRequired}">
-                    <th:block th:unless="${model.leadApplicant}">you must </th:block>mark the
+                    <th:block th:unless="${model.leadApplicant}">you must</th:block>
+                    mark the
                     <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.applicationId}, sectionId=${model.yourOrganisationSectionId})}"
                        class="govuk-link">
                         your organisation
@@ -72,7 +76,7 @@
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'applicant-business' : 'applicant-non-business'},
                                maximumFundingLevel=${model.maximumFundingLevel}
-                                               )" />
+                                               )"/>
 
                 <div class="form-footer" th:if="${model.open}">
                     <div class="form-footer__actions">
@@ -97,11 +101,11 @@
             </form>
         </th:block>
 
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
 </body>
 </html>
