@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.management.admin.controller;
+package org.innovateuk.ifs.management.roleprofile.controller;
 
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.admin.form.ChangeRoleProfileForm;
 import org.innovateuk.ifs.management.admin.viewmodel.RoleProfileViewModel;
+import org.innovateuk.ifs.management.roleprofile.form.ChangeRoleProfileForm;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -55,7 +55,7 @@ public class AssessorManagementController {
 
         model.addAttribute("model", new RoleProfileViewModel(roleProfileStatusResource, modifiedUser, hasApplicationsAssigned(userId)));
 
-        return "admin/role-profile-details";
+        return "roleprofile/role-profile-details";
 
     }
 
@@ -70,7 +70,7 @@ public class AssessorManagementController {
 
         model.addAttribute("userId", userId);
 
-        return "admin/change-status";
+        return "roleprofile/change-status";
     }
 
     @PostMapping("/status")
@@ -79,8 +79,6 @@ public class AssessorManagementController {
                                @PathVariable long userId,
                                Model model,
                                ValidationHandler validationHandler) {
-
-        model.addAttribute("userId", userId);
 
         Supplier<String> failureView = () -> viewStatus(form, userId, model);
         Supplier<String> successView = () -> format("redirect:/admin/user/%d/active", userId);
@@ -99,7 +97,7 @@ public class AssessorManagementController {
         RoleProfileState roleProfileState = getRoleProfileStateFromString(form.getRoleProfileState());
         if (UNAVAILABLE.equals(roleProfileState)) {
             return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, form.getUnavailableReason());
-        } else  if (DISABLED.equals(roleProfileState)) {
+        } else if (DISABLED.equals(roleProfileState)) {
             return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, form.getDisabledReason());
         } else {
             return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, "");
@@ -112,11 +110,11 @@ public class AssessorManagementController {
 
     private void validateForm(BindingResult bindingResult, ChangeRoleProfileForm form) {
         if (UNAVAILABLE.equals(getRoleProfileStateFromString(form.getRoleProfileState())) && StringUtils.isEmpty(form.getUnavailableReason())) {
-            bindingResult.addError(new FieldError("form", "unavailableReason", "Enter some text."));
+            bindingResult.addError(new FieldError("form", "unavailableReason", "validation.changeroleprofileform.reason.required"));
         }
 
         if (DISABLED.equals(getRoleProfileStateFromString(form.getRoleProfileState())) && StringUtils.isEmpty(form.getDisabledReason())) {
-            bindingResult.addError(new FieldError("form", "disabledReason", "Enter some text."));
+            bindingResult.addError(new FieldError("form", "disabledReason", "validation.changeroleprofileform.reason.required"));
         }
     }
 }

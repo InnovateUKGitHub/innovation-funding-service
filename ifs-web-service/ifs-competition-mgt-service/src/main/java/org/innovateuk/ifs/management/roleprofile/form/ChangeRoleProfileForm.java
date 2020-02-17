@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.admin.form;
+package org.innovateuk.ifs.management.roleprofile.form;
 
 import org.hibernate.validator.constraints.Length;
 
