@@ -46,7 +46,7 @@
                                id="roleProfileState-active"
                                data-modal-link="role-profile-available"
                                th:field="*{roleProfileState}"
-                               value="ACTIVE"
+                               th:value="${T(org.innovateuk.ifs.user.resource.RoleProfileState).ACTIVE}"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
                         <label class="govuk-radios__label"
@@ -63,7 +63,7 @@
                            id="roleProfileState-unavailable"
                            data-modal-link="role-profile-unavailable"
                            th:field="*{roleProfileState}"
-                           value="UNAVAILABLE"
+                           th:value="${T(org.innovateuk.ifs.user.resource.RoleProfileState).UNAVAILABLE}"
                            required="required"
                            th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
                     <label class="govuk-radios__label"
@@ -105,7 +105,7 @@
                                id="roleProfileState-disabled"
                                data-modal-link="role-profile-disabled"
                                th:field="*{roleProfileState}"
-                               value="DISABLED"
+                               th:value="${T(org.innovateuk.ifs.user.resource.RoleProfileState).DISABLED}"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
                         <label class="govuk-radios__label"
