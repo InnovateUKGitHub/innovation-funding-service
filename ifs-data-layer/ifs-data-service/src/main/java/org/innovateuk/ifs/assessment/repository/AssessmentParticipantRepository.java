@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionParticipantRepository;
@@ -176,14 +177,18 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "))")
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
+    String totalApplications = "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
+    String assigned = "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
+    String submitted = "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
 
-    @Query( "SELECT user.id, " +
+    @Query( "SELECT NEW org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource(" +
+            "user.id, " +
             "user.firstName, " +
             "user.lastName, " +
             "profile.skillsAreas, " +
-            "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END) AS totalApplications, " +
-            "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END) AS assigned, " +
-            "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END) AS submitted " +
+            totalApplications + ", " +
+            assigned + ", " +
+            submitted + ") " +
             "FROM AssessmentParticipant assessmentParticipant " +
             "JOIN User user ON user.id = assessmentParticipant.user.id " +
             "JOIN user.roleProfileStatuses roleStatuses " +
@@ -204,7 +209,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%') " +
             "GROUP BY user"
     )
-    Page<Object[]> findParticipantsWithoutAssessments(long competitionId,
+    Page<ApplicationAvailableAssessorResource> findParticipantsWithoutAssessments(long competitionId,
                                                                                   long applicationId,
                                                                                   String assessorNameFilter,
                                                                                   Pageable pageable);

@@ -61,21 +61,12 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
                     Pageable pageable = PageRequest.of(pageIndex, pageSize, getSort(sort));
 
-                    Page<Object[]> result = assessmentParticipantRepository.findParticipantsWithoutAssessments(
+                    Page<ApplicationAvailableAssessorResource> result = assessmentParticipantRepository.findParticipantsWithoutAssessments(
                             application.getCompetition().getId(),
                             applicationId,
                             EncodingUtils.urlDecode(assessorNameFilter),
                             pageable);
-                    Page<ApplicationAvailableAssessorResource> page = result.map(row -> new ApplicationAvailableAssessorResource(
-                            (long) row[0],
-                            (String) row[1],
-                            (String) row[2],
-                            (String) row[3],
-                            (long) row[4],
-                            (long) row[5],
-                            (long) row[6]
-                    ));
-                    return new ApplicationAvailableAssessorPageResource(result.getTotalElements(), result.getTotalPages(), page.getContent(), result.getNumber(), result.getSize());
+                    return new ApplicationAvailableAssessorPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize());
                 }
         );
     }
@@ -85,13 +76,13 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
             case ASSESSOR:
                 return new Sort(ASC, "user.firstName", "user.lastName");
             case SKILL_AREAS:
-                return new Sort(ASC, "profile.skillsAreas");
+                return new Sort(ASC, "profile.skillsArea");
             case TOTAL_APPLICATIONS:
-                return JpaSort.unsafe(ASC, "(totalApplications)");
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.totalApplications);
             case ASSIGNED:
-                return JpaSort.unsafe(ASC, "(assigned)");
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.assigned);
             case SUBMITTED:
-                return JpaSort.unsafe(ASC, "(submitted)");
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.submitted);
         }
         throw new IFSRuntimeException("Unknown sort type " + sort.name());
     }
