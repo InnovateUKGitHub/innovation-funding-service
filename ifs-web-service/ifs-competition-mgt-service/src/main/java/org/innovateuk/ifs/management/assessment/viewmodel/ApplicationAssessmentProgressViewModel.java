@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.assessment.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
@@ -27,6 +28,7 @@ public class ApplicationAssessmentProgressViewModel {
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned;
     private List<InnovationSectorResource> innovationSectors;
     private String assessorNameFilter;
+    private Sort currentSort;
     private Pagination pagination;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
@@ -43,6 +45,7 @@ public class ApplicationAssessmentProgressViewModel {
                                                   List<ApplicationAvailableAssessorsRowViewModel> available,
                                                   List<InnovationSectorResource> innovationSectors,
                                                   String assessorNameFilter,
+                                                  Sort currentSort,
                                                   Pagination pagination) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -58,6 +61,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.available = available;
         this.innovationSectors = innovationSectors;
         this.assessorNameFilter = assessorNameFilter;
+        this.currentSort = currentSort;
         this.pagination = pagination;
     }
 
@@ -115,6 +119,10 @@ public class ApplicationAssessmentProgressViewModel {
 
     public String getAssessorNameFilter() {
         return assessorNameFilter;
+    }
+
+    public Sort getCurrentSort() {
+        return currentSort;
     }
 
     public Pagination getPagination() {

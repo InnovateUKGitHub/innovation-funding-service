@@ -4,12 +4,13 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationAssessorMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationAssessorPageMapper;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 
 import java.text.Collator;
@@ -54,20 +56,44 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     private ApplicationAssessorPageMapper applicationAssessorPageMapper;
 
     @Override
-    public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, String assessorNameFilter) {
+    public ServiceResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, String assessorNameFilter, ApplicationAvailableAssessorResource.Sort sort) {
 
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
-                    Pageable pageable = PageRequest.of(pageIndex, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
-                    Page<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.findParticipantsWithoutAssessments(
+                    Pageable pageable = PageRequest.of(pageIndex, pageSize, getSort(sort));
+
+                    Page<Object[]> result = assessmentParticipantRepository.findParticipantsWithoutAssessments(
                             application.getCompetition().getId(),
-                            ASSESSOR,
-                            ParticipantStatus.ACCEPTED,
                             applicationId,
                             EncodingUtils.urlDecode(assessorNameFilter),
                             pageable);
-                    return applicationAssessorPageMapper.mapToResource(competitionParticipants);
+                    Page<ApplicationAvailableAssessorResource> page = result.map(row -> new ApplicationAvailableAssessorResource(
+                            (long) row[0],
+                            (String) row[1],
+                            (String) row[2],
+                            (String) row[3],
+                            (long) row[4],
+                            (long) row[5],
+                            (long) row[6]
+                    ));
+                    return new ApplicationAvailableAssessorPageResource(result.getTotalElements(), result.getTotalPages(), page.getContent(), result.getNumber(), result.getSize());
                 }
         );
+    }
+
+    private Sort getSort(ApplicationAvailableAssessorResource.Sort sort) {
+        switch(sort) {
+            case ASSESSOR:
+                return new Sort(ASC, "user.firstName", "user.lastName");
+            case SKILL_AREAS:
+                return new Sort(ASC, "profile.skillsAreas");
+            case TOTAL_APPLICATIONS:
+                return JpaSort.unsafe(ASC, "(totalApplications)");
+            case ASSIGNED:
+                return JpaSort.unsafe(ASC, "(assigned)");
+            case SUBMITTED:
+                return JpaSort.unsafe(ASC, "(submitted)");
+        }
+        throw new IFSRuntimeException("Unknown sort type " + sort.name());
     }
 
     @Override

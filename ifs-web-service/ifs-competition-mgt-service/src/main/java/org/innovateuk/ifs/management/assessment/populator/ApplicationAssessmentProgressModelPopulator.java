@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.management.assessment.populator;
 
-import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
@@ -31,12 +30,12 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private CategoryRestService categoryRestService;
 
-    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, String assessorNameFilter, int page) {
+    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, String assessorNameFilter, int page, Sort sort) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
                 .getApplicationAssessmentSummary(applicationId).getSuccess();
 
         List<ApplicationAssessorResource> notAvailableAssessors = applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId).getSuccess();
-        ApplicationAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, assessorNameFilter).getSuccess();
+        ApplicationAvailableAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, assessorNameFilter, sort).getSuccess();
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
@@ -52,6 +51,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 getAvailableAssessors(availableAssessors.getContent()),
                 getInnovationSectors(),
                 assessorNameFilter,
+                sort,
                 new Pagination(availableAssessors));
     }
 
@@ -122,11 +122,11 @@ public class ApplicationAssessmentProgressModelPopulator {
                 simpleMap(applicationAssessorResource.getInnovationAreas(), CategoryResource::getName));
     }
 
-    private List<ApplicationAvailableAssessorsRowViewModel> getAvailableAssessors(List<ApplicationAssessorResource> assessors) {
+    private List<ApplicationAvailableAssessorsRowViewModel> getAvailableAssessors(List<ApplicationAvailableAssessorResource> assessors) {
         return assessors.stream().map(this::getAvailableRowViewModel).collect(toList());
     }
 
-    private ApplicationAvailableAssessorsRowViewModel getAvailableRowViewModel(ApplicationAssessorResource applicationAssessorResource) {
+    private ApplicationAvailableAssessorsRowViewModel getAvailableRowViewModel(ApplicationAvailableAssessorResource applicationAssessorResource) {
         return new ApplicationAvailableAssessorsRowViewModel(
                 applicationAssessorResource.getUserId(),
                 applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
