@@ -155,7 +155,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         String email = "asdf@asdf.com";
         Role role = IFS_ADMINISTRATOR;
         UserResource userResource = newUserResource()
-                .withFirstName("first")UserManagementControllerTest
+                .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
                 .withRolesGlobal(Collections.singletonList(role))
