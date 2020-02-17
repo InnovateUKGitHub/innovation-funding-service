@@ -179,12 +179,10 @@
         <h2 class="govuk-heading-m">Change status to 'Available'</h2>
         <p class="govuk-body">You will be able to assign assessments to this person.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
-            <div>
-                <button class="govuk-button" id="submitRoleProfileState-available" name="submitRoleProfileState-available" type="submit">Confirm change</button>
-                <button type="button" class="js-close button-clear">Cancel</button>
-            </div>
-        </form>
+        <div>
+            <button class="govuk-button" id="submitRoleProfileState-available" name="submitRoleProfileState-available" type="submit">Confirm change</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
     </div>
 </th:block>
 
@@ -194,12 +192,10 @@
         <h2 class="govuk-heading-m">Change status to 'Unavailable'</h2>
         <p class="govuk-body">You will not be able to assign assessments to this person.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
-            <div>
-                <button class="govuk-button" id="submitRoleProfileState-unavailable" name="submitRoleProfileState-unavailable" type="submit">Confirm change</button>
-                <button type="button" class="js-close button-clear">Cancel</button>
-            </div>
-        </form>
+        <div>
+            <button class="govuk-button" id="submitRoleProfileState-unavailable" name="submitRoleProfileState-unavailable" type="submit">Confirm change</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
     </div>
 </th:block>
 
@@ -209,12 +205,10 @@
         <h2 class="govuk-heading-m">Change status to 'Disabled'</h2>
         <p class="govuk-body">You will not be able to assign assessments to this person.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
-            <div>
-                <button class="govuk-button" id="submitRoleProfileState-disabled" name="submitRoleProfileState-disabled" type="submit">Confirm change</button>
-                <button type="button" class="js-close button-clear">Cancel</button>
-            </div>
-        </form>
+        <div>
+            <button class="govuk-button" id="submitRoleProfileState-disabled" name="submitRoleProfileState-disabled" type="submit">Confirm change</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
     </div>
 </th:block>
 

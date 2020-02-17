@@ -39,7 +39,7 @@
                 <span th:if="${#fields.hasErrors('roleProfileState')}" class="govuk-error-message"
                       th:each="err : ${#fields.errors('roleProfileState')}" th:text="${err}"/>
 
-                <div class="govuk-radios">
+                <div class="govuk-radios" change-modal>
                     <div class="govuk-radios__item">
                         <input type="radio"
                                class="govuk-radios__input"

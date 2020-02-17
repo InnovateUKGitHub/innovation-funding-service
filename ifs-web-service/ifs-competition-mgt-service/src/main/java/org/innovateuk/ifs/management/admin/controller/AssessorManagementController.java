@@ -25,8 +25,7 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.RoleProfileState.DISABLED;
-import static org.innovateuk.ifs.user.resource.RoleProfileState.UNAVAILABLE;
+import static org.innovateuk.ifs.user.resource.RoleProfileState.*;
 
 @Controller
 @RequestMapping("/admin/user/{userId}/role-profile")
@@ -62,11 +61,12 @@ public class AssessorManagementController {
 
     @GetMapping("/status")
     public String viewStatus(@ModelAttribute(name = "form") ChangeRoleProfileForm form,
-                               @PathVariable long userId,
-                               Model model) {
+                             @PathVariable long userId,
+                             Model model) {
 
-        RoleProfileStatusResource roleProfileStatusResource =
-                roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR).getSuccess();
+        if (form.getRoleProfileState() == null) {
+            form.setRoleProfileState(ACTIVE.toString());
+        }
 
         model.addAttribute("userId", userId);
 
@@ -82,26 +82,27 @@ public class AssessorManagementController {
 
         model.addAttribute("userId", userId);
 
-        validateForm(bindingResult, form);
-
         Supplier<String> failureView = () -> viewStatus(form, userId, model);
         Supplier<String> successView = () -> format("redirect:/admin/user/%d/active", userId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                    RoleProfileStatusResource roleProfileStatusResource = createRoleProfileStatusResource(userId, form);
-                    RestResult<Void> result = roleProfileStatusRestService.updateUserStatus(userId, roleProfileStatusResource);
-                    return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, successView);
-                });
+            validateForm(bindingResult, form);
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                RoleProfileStatusResource roleProfileStatusResource = createRoleProfileStatusResource(userId, form);
+                RestResult<Void> result = roleProfileStatusRestService.updateUserStatus(userId, roleProfileStatusResource);
+                return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, successView);
+            });
+        });
     }
 
     private RoleProfileStatusResource createRoleProfileStatusResource(long userId, ChangeRoleProfileForm form) {
-        RoleProfileState roleProfileState = RoleProfileState.valueOf(form.getRoleProfileState());
+        RoleProfileState roleProfileState = getRoleProfileStateFromString(form.getRoleProfileState());
         if (UNAVAILABLE.equals(roleProfileState)) {
-            return new RoleProfileStatusResource(userId, ASSESSOR, RoleProfileState.valueOf(form.getRoleProfileState()), form.getUnavailableReason());
+            return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, form.getUnavailableReason());
         } else  if (DISABLED.equals(roleProfileState)) {
-            return new RoleProfileStatusResource(userId, ASSESSOR, RoleProfileState.valueOf(form.getRoleProfileState()), form.getDisabledReason());
+            return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, form.getDisabledReason());
         } else {
-            return new RoleProfileStatusResource(userId, ASSESSOR, RoleProfileState.valueOf(form.getRoleProfileState()), "");
+            return new RoleProfileStatusResource(userId, ASSESSOR, roleProfileState, "");
         }
     }
 
@@ -110,11 +111,11 @@ public class AssessorManagementController {
     }
 
     private void validateForm(BindingResult bindingResult, ChangeRoleProfileForm form) {
-        if (UNAVAILABLE.equals(RoleProfileState.valueOf(form.getRoleProfileState())) && StringUtils.isEmpty(form.getUnavailableReason())) {
+        if (UNAVAILABLE.equals(getRoleProfileStateFromString(form.getRoleProfileState())) && StringUtils.isEmpty(form.getUnavailableReason())) {
             bindingResult.addError(new FieldError("form", "unavailableReason", "Enter some text."));
         }
 
-        if (DISABLED.equals(RoleProfileState.valueOf(form.getRoleProfileState())) && StringUtils.isEmpty(form.getDisabledReason())) {
+        if (DISABLED.equals(getRoleProfileStateFromString(form.getRoleProfileState())) && StringUtils.isEmpty(form.getDisabledReason())) {
             bindingResult.addError(new FieldError("form", "disabledReason", "Enter some text."));
         }
     }
