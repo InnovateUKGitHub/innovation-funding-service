@@ -211,8 +211,8 @@
                     </div>
 
                     <div class="govuk-body govuk-grid-row sorting">
-                        <div class="govuk-grid-column-two-thirds">
-                            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                        <div class="govuk-grid-column-one-half">
+                            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalElements}">20</span>
                             <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Assessors</span>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
@@ -265,7 +265,7 @@
                     </table>
                 </div>
 
-                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                <th:block th:insert="fragments/elements :: pagination(pagination=${model.pagination})" />
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>
         </div>

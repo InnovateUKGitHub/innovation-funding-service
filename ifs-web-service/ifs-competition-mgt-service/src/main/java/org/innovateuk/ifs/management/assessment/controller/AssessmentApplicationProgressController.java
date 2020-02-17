@@ -33,10 +33,10 @@ public class AssessmentApplicationProgressController {
     @GetMapping
     public String applicationProgress(Model model,
                                       @PathVariable("applicationId") Long applicationId,
-                                      @RequestParam(value = "page", defaultValue = "0") int page,
+                                      @RequestParam(value = "page", defaultValue = "1") int page,
                                       @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter,
                                       @RequestParam(value = "sort", defaultValue = "ASSESSOR") Sort sort) {
-        return doProgressView(model, applicationId, assessorNameFilter, page, sort);
+        return doProgressView(model, applicationId, assessorNameFilter, page - 1, sort);
     }
 
     @PostMapping(path = "/assign/{assessorId}")

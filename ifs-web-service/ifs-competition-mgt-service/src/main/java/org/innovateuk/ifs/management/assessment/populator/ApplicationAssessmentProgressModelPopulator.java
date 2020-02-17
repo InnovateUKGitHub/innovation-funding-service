@@ -8,6 +8,7 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +53,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 getInnovationSectors(),
                 assessorNameFilter,
                 sort,
-                new Pagination(availableAssessors));
+                new PaginationViewModel(availableAssessors));
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {
