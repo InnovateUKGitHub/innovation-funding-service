@@ -47,6 +47,7 @@ public class YourOrganisationViewModelPopulator {
                 organisationId,
                 pendingPartner.isYourOrganisationComplete(),
                 true,
+                competition.isProcurement(),
                 user,
                 true);
     }
