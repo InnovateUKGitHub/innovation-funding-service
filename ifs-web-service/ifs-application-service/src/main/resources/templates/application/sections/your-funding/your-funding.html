@@ -47,8 +47,7 @@
                     page as complete
                 </li>
                 <li th:if="${model.yourOrganisationRequired}">
-                    <th:block th:unless="${model.leadApplicant}">you must</th:block>
-                    mark the
+                    <th:block th:unless="${model.leadApplicant}">you must</th:block>mark the
                     <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.applicationId}, sectionId=${model.yourOrganisationSectionId})}"
                        class="govuk-link">
                         your organisation
