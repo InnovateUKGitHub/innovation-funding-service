@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Turn on bash's job control. We need this so we can start back ground process.
 # see https://docs.docker.com/config/containers/multi-service_container/ for more information.
 set -m
@@ -12,7 +12,7 @@ cat /var/certs/ldap-encryption.crt > /etc/ldap/ldap-encryption.crt
 
 # Do any actions we need after we'ce started LDAP.
 # TODO better solution than wait
-sleep 60
+sleep 30
 ldapmodify -H ldapi:/// -D cn=admin,cn=config -w foobar123 -f mod_ssl.ldif
 # TODO remove root user.
 
