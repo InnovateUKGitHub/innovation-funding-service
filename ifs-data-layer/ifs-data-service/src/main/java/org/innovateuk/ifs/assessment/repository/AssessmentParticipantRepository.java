@@ -180,16 +180,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
     String totalApplications = "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
     String assigned = "SUM(CASE WHEN application.id IS NOT NULL AND application.competition.id = :competitionId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
     String submitted = "SUM(CASE WHEN application.id IS NOT NULL AND application.competition.id = :competitionId AND assessment.activityState IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)";
-
-    @Query( "SELECT NEW org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource(" +
-            "user.id, " +
-            "user.firstName, " +
-            "user.lastName, " +
-            "profile.skillsAreas, " +
-            totalApplications + ", " +
-            assigned + ", " +
-            submitted + ") " +
-            "FROM AssessmentParticipant assessmentParticipant " +
+    String AVAILABLE_ASSESSOR_QUERY = "FROM AssessmentParticipant assessmentParticipant " +
             "JOIN User user ON user.id = assessmentParticipant.user.id " +
             "JOIN user.roleProfileStatuses roleStatuses " +
             "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
@@ -207,12 +198,29 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%') " +
-            "GROUP BY user"
+            "GROUP BY user";
+
+    @Query( "SELECT NEW org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource(" +
+            "user.id, " +
+            "user.firstName, " +
+            "user.lastName, " +
+            "profile.skillsAreas, " +
+            totalApplications + ", " +
+            assigned + ", " +
+            submitted + ") " +
+            AVAILABLE_ASSESSOR_QUERY
     )
-    Page<ApplicationAvailableAssessorResource> findParticipantsWithoutAssessments(long competitionId,
+    Page<ApplicationAvailableAssessorResource> findAvailableAssessorsForApplication(long competitionId,
                                                                                   long applicationId,
                                                                                   String assessorNameFilter,
                                                                                   Pageable pageable);
+    @Query("SELECT user.id " +
+            AVAILABLE_ASSESSOR_QUERY
+    )
+    List<Long> findAvailableAssessorIdsForApplication(long competitionId,
+                                                      long applicationId,
+                                                      String assessorNameFilter);
+
 
     @Query(PARTICIPANTS_WITH_ASSESSMENTS)
     List<AssessmentParticipant> findParticipantsWithAssessments(

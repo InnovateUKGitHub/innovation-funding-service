@@ -30,6 +30,7 @@ public class ApplicationAssessmentProgressViewModel {
     private String assessorNameFilter;
     private Sort currentSort;
     private PaginationViewModel pagination;
+    private boolean selectAllDisabled;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
@@ -46,7 +47,8 @@ public class ApplicationAssessmentProgressViewModel {
                                                   List<InnovationSectorResource> innovationSectors,
                                                   String assessorNameFilter,
                                                   Sort currentSort,
-                                                  PaginationViewModel pagination) {
+                                                  PaginationViewModel pagination,
+                                                  boolean selectAllDisabled) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationInnovationArea = applicationInnovationArea;
@@ -63,6 +65,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.assessorNameFilter = assessorNameFilter;
         this.currentSort = currentSort;
         this.pagination = pagination;
+        this.selectAllDisabled = selectAllDisabled;
     }
 
     public long getApplicationId() {
@@ -127,6 +130,10 @@ public class ApplicationAssessmentProgressViewModel {
 
     public PaginationViewModel getPagination() {
         return pagination;
+    }
+
+    public boolean isSelectAllDisabled() {
+        return selectAllDisabled;
     }
 
     @Override

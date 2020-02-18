@@ -21,6 +21,10 @@ public interface ApplicationAssessmentSummaryService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
+    ServiceResult<List<Long>> getAvailableAssessorIds(Long applicationId, String assessorNameFilter);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
     ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

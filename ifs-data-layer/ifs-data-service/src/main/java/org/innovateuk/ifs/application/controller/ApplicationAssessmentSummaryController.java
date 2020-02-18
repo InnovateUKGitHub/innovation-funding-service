@@ -36,6 +36,11 @@ public class ApplicationAssessmentSummaryController {
                                                                                       @RequestParam(value = "sort", required = false, defaultValue = "ASSESSOR") ApplicationAvailableAssessorResource.Sort sort) {
         return applicationAssessmentSummaryService.getAvailableAssessors(applicationId, pageIndex, pageSize, assessorNameFilter, sort).toGetResponse();
     }
+    @GetMapping("/{applicationId}/available-assessors-ids")
+    public RestResult<List<Long>> getAvailableAssessorIds(@PathVariable("applicationId") Long applicationId,
+                                                          @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter) {
+        return applicationAssessmentSummaryService.getAvailableAssessorIds(applicationId, assessorNameFilter).toGetResponse();
+    }
 
     @GetMapping("/{applicationId}")
     public RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(@PathVariable("applicationId") Long applicationId) {
