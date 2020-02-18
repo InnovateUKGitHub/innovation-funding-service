@@ -59,24 +59,19 @@
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total project
-                            costs
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total project costs
                         </th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric "
                             th:classappend="${model.fundingLevelFirst} ? 'width-80' : 'width-100'"
-                            th:text="${model.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding
-                            level (%)
+                            th:text="${model.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding level (%)
                         </th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric "
                             th:classappend="${model.fundingSoughtFirst} ? 'width-80' : 'width-100'"
-                            th:text="${model.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding
-                            sought (&pound;)
+                            th:text="${model.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)
                         </th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other public
-                            sector funding (&pound;)
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other public sector funding (&pound;)
                         </th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Contribution
-                            to project (&pound;)
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Contribution to project (&pound;)
                         </th>
                     </tr>
                     </thead>
