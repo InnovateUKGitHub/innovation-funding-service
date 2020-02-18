@@ -5,6 +5,7 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
  */
 public enum FundingType {
     GRANT("Grant", "Innovate UK"),
+    KTP("Knowledge Transfer Partnership (KTP)", "Knowledge Transfer Partnership"),
     LOAN("Loan", "Loans"),
     PROCUREMENT("Procurement", "Procurement");
 
