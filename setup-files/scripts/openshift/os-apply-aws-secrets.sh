@@ -73,46 +73,6 @@ function valueFromAws() {
     done
 }
 
-# Apply the certs from the file system
-function applyFileCerts() {
-    # idp secrets
-    oc create secret generic idp-keys-secrets \
-        --from-literal="ldap-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/ldap-encryption.crt)" \
-        --from-literal="idp-encryption.key=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.key)" \
-        --from-literal="idp-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.crt)" \
-        --from-literal="idp_proxy_key.pem=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_key.pem)" \
-        --from-literal="idp_proxy_certificate.pem=""$(cat  ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_certificate.pem)" \
-        --from-literal="idp_proxy_cacertificate.pem=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp_proxy_cacertificate.pem)" \
-        --from-literal="idp-signing.key=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.key)" \
-        --from-literal="idp-signing.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.crt)" \
-        --from-literal="sp_proxy_certificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_certificate.pem)" \
-    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
-    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
-
-    # sp secrets
-    oc create secret generic sp-keys-secrets \
-        --from-literal="sp_proxy_key.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_key.pem)" \
-        --from-literal="sp_proxy_certificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_certificate.pem)" \
-        --from-literal="sp_proxy_cacertificate.pem=""$(cat ifs-auth-service/ifs-sp-service/src/main/docker/certs/sp_proxy_cacertificate.pem)" \
-        --from-literal="idp-signing.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-signing.crt)" \
-        --from-literal="idp-encryption.crt=""$(cat ifs-auth-service/ifs-idp-service/src/main/docker/certs/idp-encryption.crt)" \
-    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
-    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
-
-    # ldap secrets
-    oc create secret generic ldap-keys-secrets \
-        --from-literal="ldap-encryption.crt=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt)" \
-        --from-literal="ldap-encryption.key=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.key)" \
-    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
-    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
-
-    # registration secrets
-    oc create secret generic registration-keys-secrets \
-        --from-literal="ldap-encryption.crt=""$(cat ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt)" \
-    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
-    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
-}
-
 # Create a file with aws credentials which mounted to the aws-cli docker image.
 mkdir -p ifs-auth-service/aws/
 echo -e "[$AWS_PROFILE]" > ifs-auth-service/aws/credentials
@@ -125,10 +85,6 @@ docker image rm ssm-access-image || true
 docker build --tag="ssm-access-image" docker/aws-cli
 docker run -id --rm -e AWS_PROFILE=${AWS_PROFILE} -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 
-#if $(isNamedEnvironment ${TARGET}); then
-    applyAwsCerts $([[ ${TARGET} == "ifs-prod" ]] && echo "PROD"|| echo "NON-PROD")
-#else
-#    applyFileCerts
-#fi
+applyAwsCerts $([[ ${TARGET} == "ifs-prod" ]] && echo "PROD"|| echo "NON-PROD")
 
 docker stop ssm-access-container || true
