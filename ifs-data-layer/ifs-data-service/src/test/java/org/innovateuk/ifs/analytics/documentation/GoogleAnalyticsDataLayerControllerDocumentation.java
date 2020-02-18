@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -45,6 +46,22 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
                 .andDo(document("analytics/{method-name}",
                         pathParameters(
                                 parameterWithName("application").description("Id of the application")
+                        )
+                ));
+    }
+
+    @Test
+    public void getCompetitionNameForInvite() throws Exception {
+        final String inviteHash = new UUID(1L, 1L).toString();
+
+        when(googleAnalyticsDataLayerService.getCompetitionNameByInviteHash(inviteHash)).thenReturn(serviceSuccess(competitionName()));
+
+        mockMvc.perform(get("/analytics/invite/{inviteHash}/competition-name", inviteHash)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andDo(document("analytics/{method-name}",
+                        pathParameters(
+                                parameterWithName("inviteHash").description("Hash of the invite")
                         )
                 ));
     }

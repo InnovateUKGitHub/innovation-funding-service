@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
@@ -93,9 +94,26 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
         verify(googleAnalyticsDataLayerRestServiceMock).getCompetitionNameForApplication(expectedApplicationId);
         verify(googleAnalyticsDataLayerRestServiceMock).getRolesByApplicationId(expectedApplicationId);
-
     }
 
+    @Test
+    public void postHandle_inviteHash() {
+        final String inviteHash = new UUID(1L, 1L).toString();
+
+        when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForInvite(inviteHash)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
+
+        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("inviteHash", inviteHash));
+
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
+        expectedDataLayer.setCompetitionName(expectedCompName);
+        expectedDataLayer.setUserRoles(emptyList());
+
+        assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
+
+        verify(googleAnalyticsDataLayerRestServiceMock, only()).getCompetitionNameForInvite(inviteHash);
+    }
 
     @Test
     public void postHandle_applicationRole() {
