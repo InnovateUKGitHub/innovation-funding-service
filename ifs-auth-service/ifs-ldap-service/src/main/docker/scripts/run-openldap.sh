@@ -9,3 +9,6 @@ cat /var/certs/ldap-encryption.crt > /etc/ldap/ldap-encryption.crt
 # Enable SSL
 post_start_actions.sh
 
+# Now we bring the LDAP primary process back into the foreground and leave it there
+fg %1
+
