@@ -160,7 +160,7 @@ Supprot user should the pending invite on application team
     ${applicationId} =  get application id by name   ${application_name}
     When the user clicks the button/link   link = ${applicationId}
     Then the user navigates to the page    ${server}/management/competition/${openCompetitionBusinessRTO}/application/${applicationId}
-    And the user clicks the button/link    id = accordion-questions-heading-1
+    And the user clicks the button/link    id = accordion-questions-heading-1-1
     Then the user should see the element   jQuery = td:contains("Adrian Booth (pending for")
 
 Business organisation (partner accepts invitation)
