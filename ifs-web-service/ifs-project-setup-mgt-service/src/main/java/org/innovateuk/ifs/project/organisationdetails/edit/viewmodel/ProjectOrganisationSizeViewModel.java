@@ -19,13 +19,15 @@ public class ProjectOrganisationSizeViewModel {
     private boolean fundingSectionComplete;
     private boolean h2020;
     private boolean readOnly;
+    private boolean procurementCompetition;
 
     public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName,
                                             long organisationId,
                                             boolean showStateAidAgreement,
                                             boolean fundingSectionComplete,
                                             boolean h2020,
-                                            boolean readOnly) {
+                                            boolean readOnly,
+                                            boolean procurementCompetition) {
         this.project = project;
         this.organisationName = organisationName;
         this.organisationId = organisationId;
@@ -33,6 +35,7 @@ public class ProjectOrganisationSizeViewModel {
         this.fundingSectionComplete = fundingSectionComplete;
         this.h2020 = h2020;
         this.readOnly = readOnly;
+        this.procurementCompetition = procurementCompetition;
     }
 
     public List<FormOption> getOrganisationSizeOptions() {
@@ -67,6 +70,10 @@ public class ProjectOrganisationSizeViewModel {
         return readOnly;
     }
 
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,6 +89,7 @@ public class ProjectOrganisationSizeViewModel {
                 .append(showStateAidAgreement, that.showStateAidAgreement)
                 .append(fundingSectionComplete, that.fundingSectionComplete)
                 .append(h2020, that.h2020)
+                .append(procurementCompetition, that.procurementCompetition)
                 .isEquals();
     }
 
@@ -94,6 +102,7 @@ public class ProjectOrganisationSizeViewModel {
                 .append(showStateAidAgreement)
                 .append(fundingSectionComplete)
                 .append(h2020)
+                .append(procurementCompetition)
                 .toHashCode();
     }
 }
