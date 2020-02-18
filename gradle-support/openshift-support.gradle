@@ -426,12 +426,6 @@ task createProjectRemote(dependsOn: deleteProjectRemote) {
     }
 }
 
-// TODO remove once we've switched over to the task osApplyAwsSecretsRemote
-task osApplySecretsRemote(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
-    args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
-}
-
 task osApplyAwsSecretsRemote(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
     args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
