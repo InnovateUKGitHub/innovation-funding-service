@@ -13,6 +13,46 @@ public class ApplicationCountSummaryResource extends AssessmentCountSummaryResou
     private long accepted;
     private long submitted;
 
+    public enum Sort {
+        APPLICATION_NUMBER("Application number"),
+        TITLE("Title"),
+        LEAD_ORGANISATION("Lead organisation"),
+        ASSESSORS("Assessors"),
+        ACCEPTED("Accepted", true),
+        SUBMITTED("Submitted", true);
+
+        Sort(String columnName) {
+            this(columnName, false);
+        }
+
+        Sort(String columnName, boolean onlyInAssessment) {
+            this.columnName = columnName;
+            this.onlyInAssessment = onlyInAssessment;
+        }
+
+        private String columnName;
+        private boolean onlyInAssessment;
+
+        public String getColumnName() {
+            return columnName;
+        }
+
+        public boolean isOnlyInAssessment() {
+            return onlyInAssessment;
+        }
+    }
+
+    public ApplicationCountSummaryResource() { }
+
+    public ApplicationCountSummaryResource(Long id, String name, String leadOrganisation, long assessors, long accepted, long submitted) {
+        super(id);
+        this.name = name;
+        this.leadOrganisation = leadOrganisation;
+        this.assessors = assessors;
+        this.accepted = accepted;
+        this.submitted = submitted;
+    }
+
     public String getName() {
         return name;
     }

@@ -233,16 +233,29 @@
                     <a href="?" th:href="'?filterSearch='" class="govuk-body govuk-link">Clear all filters</a>
                 </div>
             </div>
-        </form>
-        <div class="govuk-body govuk-grid-row sorting">
-            <div class="govuk-grid-column-one-half">
-                <div class="data">
-                    <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.applicationsView.totalApplications}">2</span>
-                    <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Applications</span>
+            <div class="govuk-body govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half">
+                    <div class="data">
+                        <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.applicationsView.totalApplications}">2</span>
+                        <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Applications</span>
+                    </div>
+                </div>
+                <div class="govuk-grid-column-one-half alignright">
+                    <label for="sort-by" class="govuk-label govuk-!-display-inline">Sort by</label>
+                    <select id="sort-by"
+                            name="sort"
+                            class="govuk-select govuk-input--width-20">
+                        <option th:each="sort : ${T(org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort).values()}"
+                                th:unless="${sort.onlyInAssessment && !model.applicationsView.inAssessment}"
+                                th:value="${sort}"
+                                th:selected="${model.applicationsView.currentSort == sort}"
+                                th:text="${sort.columnName}"></option>
+                    </select>
+                    <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Sort</button>
                 </div>
             </div>
-        </div>
 
+        </form>
 
         <div class="table-overflow">
             <table class="govuk-table applications-available">
@@ -274,7 +287,7 @@
                 </tbody>
             </table>
         </div>
-        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.applicationsView.pagination})" />
+        <th:block th:insert="fragments/elements :: pagination(pagination=${model.applicationsView.pagination})" />
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
