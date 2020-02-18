@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.application.transactional.ApplicationAssessmentSummaryService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,12 @@ public class ApplicationAssessmentSummaryController {
     }
 
     @GetMapping("/{applicationId}/available-assessors")
-    public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(@PathVariable("applicationId") Long applicationId,
-                                                                             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
-                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                             @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter) {
-        return applicationAssessmentSummaryService.getAvailableAssessors(applicationId, pageIndex, pageSize, assessorNameFilter).toGetResponse();
+    public RestResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(@PathVariable("applicationId") Long applicationId,
+                                                                                      @RequestParam(value = "page", defaultValue = "0") int pageIndex,
+                                                                                      @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                                      @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter,
+                                                                                      @RequestParam(value = "sort", required = false, defaultValue = "ASSESSOR") ApplicationAvailableAssessorResource.Sort sort) {
+        return applicationAssessmentSummaryService.getAvailableAssessors(applicationId, pageIndex, pageSize, assessorNameFilter, sort).toGetResponse();
     }
 
     @GetMapping("/{applicationId}")
