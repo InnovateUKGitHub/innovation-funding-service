@@ -22,12 +22,11 @@ echo "TARGET="${TARGET}
 echo "VERSION="${VERSION}
 echo "AWS_PROFILE="${AWS_PROFILE}
 
-if $(isNamedEnvironment ${TARGET}); then
-    if [[ -z ${AWS_PROFILE} || -z ${AWS_ACCESS_KEY} || -z ${AWS_ACCESS_KEY_ID} ]]; then
-        echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified for named environments"
-        exit 1
-    fi
+if [[ -z ${AWS_PROFILE} || -z ${AWS_ACCESS_KEY} || -z ${AWS_ACCESS_KEY_ID} ]]; then
+    echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified"
+    exit 1
 fi
+
 
 # Apply the certs from the aws
 # $1 the discriminator
