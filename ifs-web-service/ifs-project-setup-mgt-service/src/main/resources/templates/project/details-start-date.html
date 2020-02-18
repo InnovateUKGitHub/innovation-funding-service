@@ -25,7 +25,7 @@
                 <div class="govuk-error-summary__body">
                     <ul class="govuk-list govuk-error-summary__list">
                         <li th:each="err : ${#fields.errors('${form.*}')}">
-                            <a href="#projectStartDate_month" th:text="${err}">The error message</a>
+                            <a href="#projectStartDate-date_month" th:text="${err}">The error message</a>
                         </li>
                     </ul>
                 </div>
@@ -46,7 +46,7 @@
                               th:text="${err}"/>
                     </th:block>
                     <th:block
-                        th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate', field='projectStartDate', dayReadonly=true)"/>
+                        th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate-date', field='projectStartDate', dayReadonly=true)"/>
                 </fieldset>
             </div>
 
