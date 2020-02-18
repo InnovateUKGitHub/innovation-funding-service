@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Application details - ${model.applicationName}|"/>
+    <th:block
+        th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Application details - ${applicationName}|"/>
+    </th:block>
 </head>
 <body class="govuk-template__body application">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -24,8 +27,11 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
 
+        <th:block
+            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Application details',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+                  th:with="pageTitle='Application details',subTitle=${applicationName},size='govuk-heading-xl'"/>
+        </th:block>
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
