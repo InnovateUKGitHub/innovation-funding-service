@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.management.competition.setup.eligibility.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +15,11 @@ import java.util.Set;
 @FieldRequiredIf(required = "overrideFundingRules", argument = "researchCategoriesApplicable", predicate = true, message = "{validation.eligibilityform.overrideFundingRules.required}")
 @FieldRequiredIf(required = "fundingLevelPercentage", argument = "researchCategoriesApplicable", predicate = false, message = "{validation.eligibilityform.fundingLevel.required}")
 @FieldRequiredIf(required = "fundingLevelPercentageOverride", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
+//@FieldComparison(
+//        firstField = "fundingLevelPercentageOverride",
+//        secondField = "overrideFundingRules",
+//        message = "{competition.setup.applicationdetails.max.projectduration.beneathmin}",
+//        predicate = DetailsForm.MaxBeneathMinPredicateProvider.class)
 public class EligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
@@ -41,6 +43,8 @@ public class EligibilityForm extends CompetitionSetupForm {
 
     private Integer fundingLevelPercentage;
 
+    @Max(value = 100, message = "{validation.eligibilityform.fundingLevel.max}")
+    @Min(value = 0, message = "{validation.eligibilityform.fundingLevel.min}")
     private Integer fundingLevelPercentageOverride;
 
     @NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
