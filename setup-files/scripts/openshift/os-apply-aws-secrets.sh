@@ -61,6 +61,12 @@ function applyAwsCerts() {
         --from-literal="ldap-encryption.key=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/KEY)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
+
+    # registration secrets
+    oc create secret generic registration-keys-secrets \
+        --from-literal="ldap-encryption.crt=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/CERT)" \
+    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
+    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
 
 # The value for the supplied key and aws lookups
