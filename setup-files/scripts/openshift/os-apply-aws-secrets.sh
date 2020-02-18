@@ -42,7 +42,7 @@ function applyAwsCerts() {
         --from-literal="idp-signing.key=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/KEY)" \
         --from-literal="idp-signing.crt=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/CERT)" \
         --from-literal="sp_proxy_certificate.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/CERT)" \
-    ${SVC_ACCOUNT_CLAUSE} -o yaml | \
+    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 
     # sp secrets
@@ -52,14 +52,14 @@ function applyAwsCerts() {
         --from-literal="sp_proxy_cacertificate.pem=""$(valueFromAws /CI/IFS/$1/SP/PROXY/CACERT/1 /CI/IFS/$1/SP/PROXY/CACERT/2 /CI/IFS/$1/SP/PROXY/CACERT/3)" \
         --from-literal="idp-signing.crt=""$(valueFromAws /CI/IFS/$1/IDP/SIGNING/CERT)" \
         --from-literal="idp-encryption.crt=""$(valueFromAws /CI/IFS/$1/IDP/ENCRYPTION/CERT)" \
-    ${SVC_ACCOUNT_CLAUSE} -o yaml | \
+    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 
     # ldap secrets
     oc create secret generic ldap-keys-secrets \
         --from-literal="ldap-encryption.crt=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/CERT)" \
         --from-literal="ldap-encryption.key=""$(valueFromAws /CI/IFS/$1/LDAP/ENCRYPTION/KEY)" \
-    ${SVC_ACCOUNT_CLAUSE} -o yaml | \
+    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
 
