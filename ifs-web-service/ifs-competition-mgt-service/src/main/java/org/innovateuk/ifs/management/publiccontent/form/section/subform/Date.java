@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.publiccontent.form.section.subform;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.Range;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.management.publiccontent.form.section.DatesForm;
 

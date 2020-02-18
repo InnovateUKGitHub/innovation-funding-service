@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.forms.questions.granttransferdetails.form
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.Range;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
 import javax.validation.constraints.Digits;

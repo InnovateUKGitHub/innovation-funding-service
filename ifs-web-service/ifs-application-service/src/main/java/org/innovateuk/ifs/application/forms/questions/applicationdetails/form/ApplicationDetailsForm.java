@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.form;
 
-import org.hibernate.validator.constraints.Range;
+import javax.validation.constraints.Range;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;

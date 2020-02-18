@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.competition.setup.projectdocument.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.Length;
+import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 /**
@@ -98,7 +98,7 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
     public void setSpreadsheet(boolean spreadsheet) {
         this.spreadsheet = spreadsheet;
     }
-    
+
     public String getAcceptedFileTypesId() { return acceptedFileTypesId; }
 
     public void setAcceptedFileTypesId(String acceptedFileTypesId) {

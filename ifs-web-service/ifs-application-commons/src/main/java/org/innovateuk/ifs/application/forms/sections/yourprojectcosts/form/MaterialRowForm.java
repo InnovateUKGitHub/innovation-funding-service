@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.Length;
+import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 

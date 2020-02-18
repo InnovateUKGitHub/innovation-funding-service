@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.application.form;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 
 import javax.validation.constraints.Min;

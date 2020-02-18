@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.core.form;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.constraints.Range;
+import javax.validation.constraints.Range;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 

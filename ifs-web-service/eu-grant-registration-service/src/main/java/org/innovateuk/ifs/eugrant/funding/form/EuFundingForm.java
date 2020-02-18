@@ -2,14 +2,10 @@ package org.innovateuk.ifs.eugrant.funding.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.Range;
+import javax.validation.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -22,7 +18,7 @@ public class EuFundingForm {
     private String grantAgreementNumber;
 
     @NotNull(message = "{validation.fundingForm.participant.identification.code}")
-    @Pattern(regexp="[\\d]{9}", message = "{validation.fundingForm.participant.identification.code.format.invalid}")
+    @Pattern(regexp = "[\\d]{9}", message = "{validation.fundingForm.participant.identification.code.format.invalid}")
     private String participantId;
 
     @NotBlank(message = "{validation.fundingForm.project.name}")
