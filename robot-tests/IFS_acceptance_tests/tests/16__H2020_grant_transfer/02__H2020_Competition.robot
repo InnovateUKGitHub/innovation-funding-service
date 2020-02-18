@@ -7,13 +7,16 @@ Documentation  IFS-5158 - Competition Template
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
-Resource          ../../resources/defaultResources.robot
+Resource          ../../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
-${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
-${competitionTitle}  H2020 Grant Transfer
+${CA_UpcomingComp}           ${server}/management/dashboard/upcoming
+${competitionTitle}          H2020 Grant Transfer
+${H2020_Project_Name}        Project name
+${externalUsrProjectPage}    ${server}/project-setup/project/${HProjectID}
 
 *** Test Cases ***
 User can select H2020 Competition Template and complete Initial details
@@ -74,8 +77,54 @@ An internal user is able to progress an H2020 grant transfer to project set up
     Given the internal user is able to progress an application to project set up
     And the user is able to filter on status
     Then the user is able to see that the application is now in project setup
+    [Teardown]  get project id
+
+The user is able to complete Project details section
+    [Documentation]  IFS-5700
+    [Setup]  the user logs-in in new browser     &{collaborator1_credentials}
+    Given the user navigates to the page         ${server}/project-setup/project/${HProjectID}
+    When the user is able to complete project details section
+    Then the user should see the element         css = ul li.complete:nth-child(1)
+
+The user is able to complete Project team section
+    [Documentation]  IFS-5700
+    [Setup]  the user clicks the button/link       link = Project team
+    Given the user completes the project team section
+    Then the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+The user is able to complete the Documents section
+    [Documentation]  IFS-5700
+    Given the user clicks the button/link     link = Documents
+    When the user uploads the exploitation plan
+    And the user clicks the button/link       link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
 
 *** Keywords ***
+the user uploads the exploitation plan
+    the user clicks the button/link     link = Exploitation plan
+    the user uploads the file           css = .inputfile  ${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+
+The user completes the project team section
+    the user selects their finance contact   financeContact1
+    the user clicks the button/link          link = Project manager
+    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
+    the user selects the radio button        projectManager   projectManager1
+    the user clicks the button/link          jQuery = button:contains("Save project manager")
+    the user clicks the button/link          link = Set up your project
+
+Get project id
+    ${HProjectID} =  get project id by name    ${H2020_Project_Name}
+    Set suite variable           ${HProjectID}
+
+The user is able to complete project details section
+    the user clicks the button/link         link = Project details
+    the user clicks the button/link         link = Correspondence address
+    the user updates the correspondence address
+    the user clicks the button/link         link = Return to set up your project
+
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
