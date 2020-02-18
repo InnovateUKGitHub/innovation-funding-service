@@ -64,7 +64,7 @@ task setDbResetDefaults {
 prepareDeployment.mustRunAfter setDbResetDefaults
 
 task osApplySecretsProduction(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
     args = [openshiftEnv, "ifs-prod", project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
@@ -96,7 +96,7 @@ task financeDataSyncProduction(type: Exec, dependsOn: [setDatabaseDefaults, setF
 // UAT tasks
 
 task osApplySecretsUat(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
     args = [openshiftEnv, "ifs-uat", project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
@@ -138,7 +138,7 @@ task importAnonDataIntoUat(type: Exec, dependsOn: prepareDeployment) {
 // Demo tasks
 
 task osApplySecretsDemo(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
     args = [openshiftEnv, "ifs-demo", project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
@@ -165,7 +165,7 @@ task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinance
 // Sysint tasks
 
 task osApplySecretsSysint(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
     args = [openshiftEnv, "ifs-sysint", project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
@@ -198,7 +198,7 @@ task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinan
 // Perf tasks
 
 task osApplySecretsPerf(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
     args = [openshiftEnv, "ifs-perf", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
 }
 
@@ -235,8 +235,8 @@ task osInitClusterLocal(type: Exec) {
 }
 
 task osApplySecretsLocal(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
-    args = [openshiftEnv, "local", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+    executable = 'setup-files/scripts/openshift/os-apply-local-secrets.sh'
+    args = [openshiftEnv, "local", project.version]
 }
 
 task osDeployLocal(type: Exec, dependsOn: prepareDeployment) {
@@ -426,9 +426,20 @@ task createProjectRemote(dependsOn: deleteProjectRemote) {
     }
 }
 
+// TODO remove once we've switched over to the task osApplyAwsSecretsRemote
 task osApplySecretsRemote(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-secrets.sh'
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
     args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
+
+task osApplyAwsSecretsRemote(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
+    args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
+
+task osApplyLocalSecretsRemote(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-local-secrets.sh'
+    args = [openshiftEnv, "remote", project.version]
 }
 
 task osDeployRemote(type: Exec, dependsOn: prepareDeployment) {
