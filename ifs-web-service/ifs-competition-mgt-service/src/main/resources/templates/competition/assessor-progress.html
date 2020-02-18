@@ -257,36 +257,80 @@
 
         </form>
 
-        <div class="table-overflow">
-            <table class="govuk-table applications-available">
-                <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Application number</th>
-                    <th class="govuk-table__header" scope="col">Title</th>
-                    <th class="govuk-table__header" scope="col">Lead organisation</th>
-                    <th class="govuk-table__header aligncentre" scope="col" th:text="${model.applicationsView.inAssessment ? 'Assessors' : 'Assigned'}">Assessors</th>
-                    <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Accepted</th>
-                    <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Submitted</th>
-                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
-                </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                <tr class="govuk-table__row" th:each="app : ${model.applicationsView.applications}">
-                    <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})}" th:text="${app.applicationId}" class="govuk-link" /></td>
-                    <td class="govuk-table__cell" th:text="${app.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
-                    <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.assessors}">4</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
-                    <td class="govuk-table__cell"><form method="post"
-                           th:action="@{/assessment/competition/{competitionid}/assessors/{assessorid}/application/{applicationid}/assign(competitionid=${model.competitionId}, assessorid=${model.assessorId}, applicationid=${app.applicationId})}" >
-                        <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Assign</button>
-                    </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <form method="POST"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:object="${applicationSelectionForm}"
+              data-multipage-select=""
+              autocomplete="off"
+              th:attr="data-total-checkboxes=${model.applicationsView.pagination.totalElements}">
+
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half select-all">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input type="checkbox"
+                                   class="govuk-checkboxes__input"
+                                   data-select-all=""
+                                   id="select-all-check"
+                                   th:checked="${applicationSelectionForm.isAllSelected()}"
+                                   th:disabled="${model.selectAllDisabled || model.applicationsView.pagination.totalElements == 0}"/>
+                            <label for="select-all-check"
+                                   class="govuk-label govuk-checkboxes__label">
+                                Select all applications
+                            </label>
+                        </div>
+                    </div>
+                    <span class="govuk-hint">
+                        <span data-count-selected="" th:text="${#lists.size(applicationSelectionForm.selectedApplications)}"></span> applications selected
+                    </span>
+                </div>
+                <div class="govuk-grid-column-one-half select-all alignright">
+                    <button class="govuk-button govuk-!-margin-bottom-3" data-submit-el="" th:attr="disabled=${#lists.isEmpty(applicationSelectionForm.selectedApplications)}">
+                        Add to assessor
+                    </button>
+                </div>
+            </div>
+            <div class="table-overflow">
+                <table class="govuk-table applications-available">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header width-100" scope="col">Select application</th>
+                        <th class="govuk-table__header" scope="col">Application number</th>
+                        <th class="govuk-table__header" scope="col">Title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                        <th class="govuk-table__header aligncentre" scope="col" th:text="${model.applicationsView.inAssessment ? 'Assessors' : 'Assigned'}">Assessors</th>
+                        <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Accepted</th>
+                        <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Submitted</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="app, index : ${model.applicationsView.applications}">
+                        <td class="govuk-table__cell">
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           th:id="|assessor-row-${index.count}|"
+                                           th:field="*{selectedApplications}"
+                                           th:value="${app.applicationId}"/>
+                                    <label th:for="|assessor-row-${index.count}|"
+                                           class="govuk-label govuk-checkboxes__label">
+                                        <span class="govuk-visually-hidden">Add</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})}" th:text="${app.applicationId}" class="govuk-link" /></td>
+                        <td class="govuk-table__cell" th:text="${app.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                        <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.assessors}">4</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
         <th:block th:insert="fragments/elements :: pagination(pagination=${model.applicationsView.pagination})" />
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

@@ -16,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -77,6 +74,11 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
         applicationStatisticsRepository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, filter, pageable);
 
         return serviceSuccess(new ApplicationCountSummaryPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize()));
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(long competitionId, long assessorId, String filter) {
+       return serviceSuccess(applicationStatisticsRepository.findApplicationIdsNotAssignedTo(competitionId, assessorId, filter));
     }
 
     private Sort getApplicationSummarySortField(ApplicationCountSummaryResource.Sort sort) {

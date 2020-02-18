@@ -59,14 +59,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
     String SUM_ACCEPTED = "SUM(CASE WHEN assessment.id IS NOT NULL AND assessment.activityState NOT IN " + NOT_ACCEPTED_STATES + " THEN 1 ELSE 0 END)";
     String SUM_SUBMITTED = "SUM(CASE WHEN assessment.id IS NOT NULL AND assessment.activityState IN " + SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
 
-    String ASSESSOR_FILTER = "SELECT NEW org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource(" +
-            " application.id, " +
-            " application.name, " +
-            " lead.name, " +
-            SUM_ASSESSORS + ", " +
-            SUM_ACCEPTED + ", " +
-            SUM_SUBMITTED +
-            ")" +
+    String ASSESSOR_FILTER =
             " FROM Application application " +
             " JOIN ProcessRole leadRole ON leadRole.applicationId = application.id AND leadRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
             " JOIN Organisation lead ON lead.id = leadRole.organisationId " +
@@ -85,11 +78,26 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                                                                                       @Param("filter") String filter,
                                                                                       Pageable pageable);
 
-    @Query(ASSESSOR_FILTER)
+    @Query("SELECT NEW org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource(" +
+            " application.id, " +
+            " application.name, " +
+            " lead.name, " +
+            SUM_ASSESSORS + ", " +
+            SUM_ACCEPTED + ", " +
+            SUM_SUBMITTED +
+            ")" +
+            ASSESSOR_FILTER)
     Page<ApplicationCountSummaryResource> findStatisticsForApplicationsNotAssignedTo(long competitionId,
                                                                                      long assessorId,
                                                                                      String filter,
                                                                                      Pageable pageable);
+
+
+    @Query("SELECT application.id " +
+            ASSESSOR_FILTER)
+    List<Long> findApplicationIdsNotAssignedTo(long competitionId,
+                                               long assessorId,
+                                               String filter);
 
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
             "  user.id, " +
