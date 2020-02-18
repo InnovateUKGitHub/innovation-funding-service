@@ -55,7 +55,13 @@ const testable = url => url && url.startsWith('/') &&
   url.indexOf('files/overheads') === -1 &&
   url.indexOf('profile/view') === -1 &&  // temp change to work around the issue described in IFS-6968, remove once complete
   url.indexOf('/bank-details/export') === -1 &&
-  url.indexOf('/generate/confirm') === -1 &&
+  !/^\/application\/[0-9]*\/grant-agreement$/.test(url) &&
+  url.indexOf('finance-check/generate/confirm') === -1 &&
+  url.indexOf('spend-profile-export/csv') === -1 &&
+  url.indexOf('/grant-offer-letter/template') === -1 &&
+  url.indexOf('/files') === -1 &&
+  url.indexOf('/grant-offer-letter/grant-offer-letter') === -1 &&
+  url.indexOf('/grant-offer-letter/signed-grant-offer-letter') === -1 &&
   !isFile(url);
 
 function isFile(url) {
