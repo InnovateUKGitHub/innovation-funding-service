@@ -1,8 +1,11 @@
 #!/bin/sh
-# enable & enforce SSL, be lax about self-signed certificates \
-  echo /var/certs/ldap-encryption.key > /etc/ldap/ldap-encryption.key
-  echo /var/certs/ldap-encryption.crt > /etc/ldap/ldap-encryption.crt
+# Copy certs from the mounted runtime directory
+cat /var/certs/ldap-encryption.key > /etc/ldap/ldap-encryption.key
+cat /var/certs/ldap-encryption.crt > /etc/ldap/ldap-encryption.crt
 
-  ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/local/bin/mod_ssl.ldif
+# Start the main process in a background thread - see https://docs.docker.com/config/containers/multi-service_container/
+/usr/sbin/slapd -h "ldaps://0.0.0.0:$LDAP_PORT/ ldapi:///" -F /etc/ldap/slapd.d -d 256 &
 
-exec /usr/sbin/slapd -h "ldaps://0.0.0.0:$LDAP_PORT/ ldapi:///" -F /etc/ldap/slapd.d -d 256
+# Enable SSL
+post_start_actions.sh
+

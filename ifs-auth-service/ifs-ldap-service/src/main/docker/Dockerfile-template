@@ -33,9 +33,13 @@ RUN apt-get update --fix-missing && \
   ldapadd -H ldapi:/// -f ppolicy_cn.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
   ldapmodify -H ldapi:/// -f ppolicy_cn_attribs.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
 
-  # enable & enforce SSL, be lax about self-signed certificates \
-    sed -i 's#/etc/ssl/certs/ca-certificates.crt#/etc/ldap/ldap-encryption.crt##' /etc/ldap/ldap.conf && \
-    echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf && \
+# config ldap root user - we need this so that we have permissions to edit config when ldap starts up in OpenShift. \
+  ldapmodify -Y EXTERNAL -H ldapi:/// -f /var/certs/rootpw_cnconfig.ldif && \
+
+# Set up the config for enabling and enforcing SSL, be lax about self-signed certificates. \
+# Note we do not run the command here to use the certs as this requires the certs which we don't have until runtime. \
+  sed -i 's#/etc/ssl/certs/ca-certificates.crt#/etc/ldap/ldap-encryption.crt##' /etc/ldap/ldap.conf && \
+  echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf && \
 
 # allow unlimited search results \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_search_limit.ldif && \
@@ -44,8 +48,8 @@ RUN apt-get update --fix-missing && \
 
 # run openldap as its own user \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f openldap_user_access.ldif && \
-  chown -R openldap:0 /etc/ldap /var/lib/ldap /var/run/slapd /etc/ldap/slapd.d/cn=config.ldif && \
-  chmod -R g+rw /etc/ldap /var/lib/ldap /var/run/slapd /etc/ldap/slapd.d/cn=config.ldif
+  chown -R openldap:0 /etc/ldap /var/lib/ldap /var/run/slapd && \
+  chmod -R g+rw /etc/ldap /var/lib/ldap /var/run/slapd
 
 # install dev tools and test ldap entries \
 RUN apt-get update --fix-missing && \
@@ -53,7 +57,8 @@ RUN apt-get update --fix-missing && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
   rm -f ppolicy*.ldif
 
-USER openldap
+#USER openldap
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD ldapsearch -H ldaps://localhost:8389 -b dc=nodomain -x -LLL -s base || exit 1
 ENTRYPOINT [ "run-openldap.sh" ]
+
