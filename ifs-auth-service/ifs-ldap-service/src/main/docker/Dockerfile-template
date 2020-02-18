@@ -34,7 +34,7 @@ RUN apt-get update --fix-missing && \
   ldapmodify -H ldapi:/// -f ppolicy_cn_attribs.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
 
 # config ldap root user - we need this so that we have permissions to edit config when ldap starts up in OpenShift. \
-  ldapmodify -Y EXTERNAL -H ldapi:/// -f /var/certs/rootpw_cnconfig.ldif && \
+  ldapmodify -Y EXTERNAL -H ldapi:/// -f rootpw_cnconfig_create.ldif && \
 
 # Set up the config for enabling and enforcing SSL, be lax about self-signed certificates. \
 # Note we do not run the command here to use the certs as this requires the certs which we don't have until runtime. \
