@@ -73,7 +73,7 @@ Lead cannot be removed
 Lead organisation server-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]
-    Given the user clicks the button/link      jQuery = button:contains("Add person to ${organisation}")
+    Given the user clicks the button/link               jQuery = button:contains("Add person to ${organisation}")
     the user invites a person to the same organisation  ${EMPTY}  @test.co.uk
     Then The user should see a field and summary error  Enter an email address in the right format.
     And The user should see a field and summary error   Please enter a name.
@@ -209,10 +209,9 @@ Partner can see the Application team
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335  INFUND-7977
-    [Tags]
     Given the user clicks the button/link      jQuery = button:contains("Add person to NOMENSA LTD")
     When the user invites a person to the same organisation  Mark  mark21@innovateuk.com
-    Then The user should see the element      jQuery = td:contains("Mark (pending for")
+    Then The user should see the element       jQuery = td:contains("Mark (pending for")
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
