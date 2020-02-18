@@ -15,11 +15,6 @@ import java.util.Set;
 @FieldRequiredIf(required = "overrideFundingRules", argument = "researchCategoriesApplicable", predicate = true, message = "{validation.eligibilityform.overrideFundingRules.required}")
 @FieldRequiredIf(required = "fundingLevelPercentage", argument = "researchCategoriesApplicable", predicate = false, message = "{validation.eligibilityform.fundingLevel.required}")
 @FieldRequiredIf(required = "fundingLevelPercentageOverride", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
-//@FieldComparison(
-//        firstField = "fundingLevelPercentageOverride",
-//        secondField = "overrideFundingRules",
-//        message = "{competition.setup.applicationdetails.max.projectduration.beneathmin}",
-//        predicate = DetailsForm.MaxBeneathMinPredicateProvider.class)
 public class EligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
