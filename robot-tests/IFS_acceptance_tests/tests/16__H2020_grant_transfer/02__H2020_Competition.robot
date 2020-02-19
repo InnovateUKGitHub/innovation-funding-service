@@ -102,23 +102,66 @@ The user is able to complete the Documents section
 The user is able to complete the Bank details section
     [Documentation]  IFS-5700
     Given the user enters bank details
-    When the user clicks the button/link       link = Set up your project
+    When the user clicks the button/link      link = Set up your project
     Then the user should see the element      jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
 
 Internal user is able to approve documents
     [Documentation]  IFS-5700
     [Setup]  log in as a different user         &{Comp_admin1_credentials}
     Given Internal user is able to approve documents
-    When  the user clicks the button/link       link = Documents
-    And the user clicks the button/link         link = Back to project setup
-    Then the user should see the element
+    When the user navigates to the page        ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element       css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+
+Internal user is able to assign an MO
+    [Documentation]  IFS-5700
+    [Setup]  the user navigates to the page        ${server}/project-setup-management/project/${HProjectID}/monitoring-officer
+    Given Search for MO                            Orvill  Orville Gibbs
+    When The internal user assign project to MO    ${HApplicationID}  ${H2020_Project_Name}
+    And the user navigates to the page             ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element           css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
 
 Finance user approves bank details
     [Setup]  log in as a different user                      &{internal_finance_credentials}
-    the project finance user approves bank details           ${HProjectID}
+    Given the project finance user approves bank details     ${HProjectID}
+    When the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element                     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
 
+Internal user is able to approve Finance checks and generate spend profile
+    [Documentation]  IFS-5700
+    [Setup]  the user navigates to the page        ${server}/project-setup-management/project/${HProjectID}/finance-check
+    Given the user approves h2020 finance checks
+    When the user navigates to the page           ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element           css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    And the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+
+User is able to submit the spend profile
+    [Documentation]  IFS-5700
+    [Setup]  log in as a different user      &{collaborator1_credentials}
+    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review  
+    When the user submits the spend profile
+    Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+
+Internal user is able to approve Spend profile
+    Given proj finance approves the spend profiles  ${HProjectID}
+    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
 
 *** Keywords ***
+The user submits the spend profile
+    the user clicks the button/link    jQuery = button:contains("Mark as complete")
+    the user clicks the button/link    link = Review and submit project spend profile
+    the user clicks the button/link    link = Submit project spend profile
+    the user clicks the button/link    id = submit-send-all-spend-profiles
+
+The user approves h2020 finance checks
+    the user should see the element     jQuery = table.table-progress span.viability-0:contains("Auto approved")
+    the user clicks the button/link     jQuery = table.table-progress a.eligibility-0
+    the user approves project costs
+    the user clicks the button/link     link = Return to finance checks
+    the user should see the element     jQuery = table.table-progress a.eligibility-0:contains("Approved")
+    the user clicks the button/link     link = Generate spend profile
+    the user clicks the button/link     css = #generate-spend-profile-modal-button
+    the user should see the element     jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
+
 Internal user is able to approve documents
     the user navigates to the page         ${server}/project-setup-management/project/${HProjectID}/document/all
     the user clicks the button/link        link = Exploitation plan
@@ -146,8 +189,11 @@ The user completes the project team section
     the user clicks the button/link          link = Set up your project
 
 Get project id
-    ${HProjectID} =  get project id by name    ${H2020_Project_Name}
+    ${HProjectID} =  get project id by name            ${H2020_Project_Name}
+    ${HApplicationID} =  get application id by name    ${H2020_Project_Name}
+    get competitions id and set it as suite variable   ${competitionTitle}
     Set suite variable           ${HProjectID}
+    Set suite variable           ${HApplicationID}
 
 The user is able to complete project details section
     the user clicks the button/link         link = Project details
