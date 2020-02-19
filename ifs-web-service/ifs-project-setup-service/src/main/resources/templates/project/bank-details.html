@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=${project.name + ' - Bank Details'},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+              th:with="pageTitle=|Bank details - ${project.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body bank-detail">
 <th:block th:insert="fragments/layout :: body-start"/>
