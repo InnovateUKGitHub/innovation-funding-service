@@ -7,7 +7,7 @@ Documentation  IFS-5158 - Competition Template
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
-Resource          ../../../resources/defaultResources.robot
+Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 Resource          ../10__Project_setup/PS_Common.robot
@@ -99,8 +99,38 @@ The user is able to complete the Documents section
     And the user clicks the button/link       link = Set up your project
     Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
 
+The user is able to complete the Bank details section
+    [Documentation]  IFS-5700
+    Given the user enters bank details
+    When the user clicks the button/link       link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
+
+Internal user is able to approve documents
+    [Documentation]  IFS-5700
+    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    Given Internal user is able to approve documents
+    When  the user clicks the button/link       link = Documents
+    And the user clicks the button/link         link = Back to project setup
+    Then the user should see the element
+
+Finance user approves bank details
+    [Setup]  log in as a different user                      &{internal_finance_credentials}
+    the project finance user approves bank details           ${HProjectID}
+
+
 *** Keywords ***
-the user uploads the exploitation plan
+Internal user is able to approve documents
+    the user navigates to the page         ${server}/project-setup-management/project/${HProjectID}/document/all
+    the user clicks the button/link        link = Exploitation plan
+    internal user approve uploaded documents
+
+The project finance user approves bank details
+    [Arguments]  ${org_id}
+    the user navigates to the page            ${server}/project-setup-management/project/${org_id}/review-all-bank-details
+    the user clicks the button/link           jQuery = .govuk-button:contains("Approve bank account details")
+    the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
+
+The user uploads the exploitation plan
     the user clicks the button/link     link = Exploitation plan
     the user uploads the file           css = .inputfile  ${valid_pdf}
     the user clicks the button/link     id = submitDocumentButton

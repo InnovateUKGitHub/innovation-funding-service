@@ -157,6 +157,16 @@ The user adds a new team member
   the user enters text to a text field   id = email  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to project")
 
+the user enters bank details
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = accountNumber  ${Account_Two}
+    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link                      id = submit-bank-details
+
 The user selects their finance contact
     [Arguments]  ${financeContactName}
     the user clicks the button/link     link = Your finance contact
