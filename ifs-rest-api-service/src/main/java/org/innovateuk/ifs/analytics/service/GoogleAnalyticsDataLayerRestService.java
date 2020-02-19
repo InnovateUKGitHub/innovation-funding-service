@@ -20,4 +20,6 @@ public interface GoogleAnalyticsDataLayerRestService {
     RestResult<List<Role>> getRolesByProjectId(long projectId);
 
     RestResult<Long> getApplicationIdForProject(long projectId);
+
+    RestResult<Long> getApplicationIdForAssessment(long assessmentId);
 }

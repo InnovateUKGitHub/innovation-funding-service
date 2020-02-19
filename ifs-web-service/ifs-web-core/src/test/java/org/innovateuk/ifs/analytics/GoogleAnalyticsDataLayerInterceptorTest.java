@@ -173,8 +173,10 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
     @Test
     public void postHandle_assessmentId() {
         final long expectedAssessmentId = 7L;
+        final long expectedApplicationId = 83L;
 
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForAssessment(expectedAssessmentId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
+        when(googleAnalyticsDataLayerRestServiceMock.getApplicationIdForAssessment(expectedAssessmentId)).thenReturn(RestResult.restSuccess(expectedApplicationId));
 
         when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("assessmentId", Long.toString(expectedAssessmentId)));
 
@@ -183,10 +185,12 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
         expectedDataLayer.setUserRoles(emptyList());
+        expectedDataLayer.setApplicationId(expectedApplicationId);
 
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
 
-        verify(googleAnalyticsDataLayerRestServiceMock, only()).getCompetitionNameForAssessment(expectedAssessmentId);
+        verify(googleAnalyticsDataLayerRestServiceMock).getCompetitionNameForAssessment(expectedAssessmentId);
+        verify(googleAnalyticsDataLayerRestServiceMock).getApplicationIdForAssessment(expectedAssessmentId);
     }
 
     @Test

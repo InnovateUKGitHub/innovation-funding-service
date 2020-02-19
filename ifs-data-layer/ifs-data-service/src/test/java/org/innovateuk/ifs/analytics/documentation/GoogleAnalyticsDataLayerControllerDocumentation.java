@@ -133,6 +133,20 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
                 ));
     }
 
+    @Test
+    public void getApplicationIdForAssessment() throws Exception {
+        when(googleAnalyticsDataLayerService.getApplicationIdForAssessment(ASSESSMENT_ID)).thenReturn(serviceSuccess(APPLICATION_ID));
+
+        mockMvc.perform(get("/analytics/assessment/{assessmentId}/application-id", ASSESSMENT_ID)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andDo(document("analytics/{method-name}",
+                        pathParameters(
+                                parameterWithName("assessmentId").description("Id of the assessment")
+                        )
+                ));
+    }
+
     private static String competitionName() {
         return "competition name";
     }

@@ -52,4 +52,9 @@ public class GoogleAnalyticsDataLayerController {
     public RestResult<Long> getApplicationIdForProject(@PathVariable("projectId") long projectId) {
         return googleAnalyticsDataLayerService.getApplicationIdForProject(projectId).toGetResponse();
     }
+
+    @GetMapping("/assessment/{assessmentId}/application-id")
+    public RestResult<Long> getApplicationIdForAssessment(@PathVariable("assessmentId") long assessmentId) {
+        return googleAnalyticsDataLayerService.getApplicationIdForAssessment(assessmentId).toGetResponse();
+    }
 }

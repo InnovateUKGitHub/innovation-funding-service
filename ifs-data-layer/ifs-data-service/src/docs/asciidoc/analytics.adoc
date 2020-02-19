@@ -75,3 +75,13 @@ include::{snippets}/analytics/get-application-id-for-project/http-response.adoc[
 ==== Curl Example-
 include::{snippets}/analytics/get-application-id-for-project/curl-request.adoc[]
 
+=== Retrieve application id by assessment id
+==== Request
+include::{snippets}/analytics/get-application-id-for-assessment/http-request.adoc[]
+include::{snippets}/analytics/get-application-id-for-assessment/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-application-id-for-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/analytics/get-application-id-for-assessment/curl-request.adoc[]

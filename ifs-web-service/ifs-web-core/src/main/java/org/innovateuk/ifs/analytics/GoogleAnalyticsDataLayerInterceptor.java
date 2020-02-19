@@ -127,6 +127,12 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
             final Optional<Long> applicationId = googleAnalyticsDataLayerRestService.getApplicationIdForProject(projectId).getOptionalSuccessObject();
             applicationId.ifPresent(dataLayer::setApplicationId);
         }
+
+        if (pathVariables.containsKey(ASSESSMENT_ID)) {
+            final long assessmentId = getIdFromPathVariable(pathVariables, ASSESSMENT_ID);
+            final Optional<Long> applicationId = googleAnalyticsDataLayerRestService.getApplicationIdForAssessment(assessmentId).getOptionalSuccessObject();
+            applicationId.ifPresent(dataLayer::setApplicationId);
+        }
     }
 
     private static void setCompetitionNameFromRestService(GoogleAnalyticsDataLayer dl,

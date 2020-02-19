@@ -59,4 +59,10 @@ public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService imp
         return getWithRestResult(format("%s/project/%d/application-id", ANALYTICS_BASE_URL, projectId),
                                  Long.class);
     }
+
+    @Override
+    public RestResult<Long> getApplicationIdForAssessment(long assessmentId) {
+        return getWithRestResult(format("%s/assessment/%d/application-id", ANALYTICS_BASE_URL, assessmentId),
+                Long.class);
+    }
 }
