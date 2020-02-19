@@ -27,7 +27,6 @@ buildscript {
 }
 
 task prepareDockerFile {
-    dependsOn ':ifs-auth-service:prepareSecrets'
     dependsOn getNewRelicAgent
 
     def inputDir = project.file("$project.buildDir/docker")
