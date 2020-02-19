@@ -54,7 +54,7 @@
                 aria-describedby="guidance-hint">general guidance</a> <span id="guidance-hint">(opens in a new window)</span> before you start.</p>
         </th:block>
 
-            <th:block th:each="organisation: ${model.organisations}">
+            <th:block th:each="organisation, iterator: ${model.organisations}">
 
                 <div class="govuk-form-group"
                      th:id="|organisation.${organisation.inviteId}|"
@@ -161,14 +161,15 @@
                                 th:classappend="((${#fields.hasErrors('name')}) or (${#fields.hasErrors('email')})) ? 'govuk-form-group--error'">
                                 <td class="govuk-table__cell govuk-form-group"
                                     th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label govuk-label--s" for="name">
+                                    <label class="govuk-label govuk-label--s" th:for="|name-${iterator.index}|">
                                         Full name
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('name')}">
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('name')}"
                                           th:text="${err}"/>
                                     </th:block>
-                                    <input id="name"
+                                    <input th:id="|name-${iterator.index}|"
+                                           th:name="name"
                                            th:field="*{name}"
                                            th:errorclass="govuk-input--error"
                                            class="govuk-input govuk-input--width-30"
@@ -179,14 +180,15 @@
                                 </td>
                                 <td class="govuk-table__cell govuk-form-group"
                                     th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label govuk-label--s" for="email">
+                                    <label class="govuk-label govuk-label--s" th:for="|email-${iterator.index}|">
                                         Email
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('email')}">
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
                                           th:text="${err}"/>
                                     </th:block>
-                                    <input id="email"
+                                    <input th:id="|email-${iterator.index}|"
+                                           th:name="email"
                                            th:field="*{email}"
                                            th:errorclass="govuk-input--error"
                                            class="govuk-input govuk-input--width-30"
