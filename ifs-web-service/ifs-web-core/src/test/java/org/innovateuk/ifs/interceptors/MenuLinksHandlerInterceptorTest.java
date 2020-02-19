@@ -10,10 +10,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(SpringRunner.class)
 public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
 
     private static final String USER_DASHBOARD_LINK = "userDashboardLink";
@@ -38,7 +38,6 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
     private static final String USER_PROFILE_URL = "/profile/view";
     private static final String APPLICANT_DIRECT_LANDING_PAGE_URL ="applicant/dashboard";
     private static final String ASSESSOR_DIRECT_LANDING_PAGE_URL ="assessment/assessor/dashboard";
-
 
     @InjectMocks
     private MenuLinksHandlerInterceptor menuLinksHandlerInterceptor;
@@ -90,7 +89,7 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
         assertEquals(APPLICANT_DIRECT_LANDING_PAGE_URL, mav.getModelMap().get(USER_DASHBOARD_LINK));
         assertEquals(USER_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
         verify(userAuthenticationService, times(2)).getAuthenticatedUser(request);
-        verify(navigationUtils, times(1)).getDirectLandingPageUrl(request);
+        verify(navigationUtils).getDirectLandingPageUrl(request);
     }
 
     @Test
