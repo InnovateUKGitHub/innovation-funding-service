@@ -86,12 +86,12 @@
 
         <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
            th:href="${cookieBackLinkUrl}"
-           class="button-secondary"
+           class="govuk-button govuk-button--secondary"
            th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to application overview</a>
 
         <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
            th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
-           class="button-secondary">Return to application overview</a>
+           class="govuk-button govuk-button--secondary">Return to application overview</a>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

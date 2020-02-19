@@ -71,7 +71,7 @@ the user moves the closed competition to panel
 
 the compadmin can remove an assessor or application from the invite list
     [Arguments]   ${assessor_or_application}
-    the user clicks the button/link      jQuery = td:contains("${assessor_or_application}") ~ td:contains("Remove")
+    the user clicks the button/link      jQuery = tr:contains("${assessor_or_application}") button:contains("Remove")
     the user clicks the button/link      link = Find
     the user should see the element      jQuery = tr:contains("${assessor_or_application}")
 
@@ -114,7 +114,8 @@ comp admin navigate to manage applications
 
 assessor should see the competition terms and conditions
     [Arguments]  ${back_link}
-    Given the user clicks the button/link        link = View award terms and conditions
+    Given the user expands the section           Award terms and conditions
+    When the user clicks the button/link         link = View award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     [Teardown]  the user clicks the button/link  link = ${back_link}
 

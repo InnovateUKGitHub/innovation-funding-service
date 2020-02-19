@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.financechecks.workflow.financechecks.configur
 import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -22,6 +23,9 @@ import static org.innovateuk.ifs.project.finance.resource.EligibilityState.*;
 @Configuration
 @EnableStateMachineFactory(name = "eligibilityStateMachineFactory")
 public class EligibilityWorkflow extends StateMachineConfigurerAdapter<EligibilityState, EligibilityEvent> {
+
+    @Autowired
+    private EligibilityApprovedGuard eligibilityApprovedGuard;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<EligibilityState, EligibilityEvent> config) throws Exception {
@@ -52,6 +56,7 @@ public class EligibilityWorkflow extends StateMachineConfigurerAdapter<Eligibili
                 .withExternal()
                     .source(REVIEW)
                     .event(ELIGIBILITY_APPROVED)
+                    .guard(eligibilityApprovedGuard)
                     .target(APPROVED)
                     .and()
                 .withExternal()

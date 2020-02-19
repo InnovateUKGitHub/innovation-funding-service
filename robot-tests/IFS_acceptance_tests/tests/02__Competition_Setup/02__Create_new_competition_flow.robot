@@ -568,15 +568,15 @@ Public content is required for a Competition to be setup
 Complete button disabled when sections are edited
     [Documentation]  IFs-648
     [Tags]
-    Given the user should see the element       css = #compCTA
+    Given the user should see the element       id = compCTA
     When the user clicks the button/link        link = Eligibility
     And the user clicks the button/link         jQuery = button:contains("Edit")
     And the user clicks the button/link         link = Competition setup
-    Then the user should see the element        css = #compCTA[disabled="disabled"]
+    Then the user should see the element        css = #compCTA[disabled]
     When the user clicks the button/link        link = Eligibility
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user clicks the button/link         link = Return to setup overview
-    Then the user should not see the element    css = #compCTA[disabled="disabled"]
+    Then the user should not see the element    css = #compCTA[disabled]
 
 Moving competition to Ready to Open state
     [Documentation]
@@ -594,7 +594,7 @@ Ready To Open button is visible when the user re-opens a section
     When The user clicks the button/link       link = Initial details
     And the user clicks the button/link        jQuery = .govuk-button:contains("Edit")
     And The user clicks the button/link        link = Competition setup
-    Then the user should see the element       css = #compCTA[disabled="disabled"]
+    Then the user should see the element       css = #compCTA[disabled]
     [Teardown]    Run keywords    Given The user clicks the button/link    link = Initial details
     ...    AND    The user clicks the button/link    jQuery = button:contains("Done")
     ...    AND    And The user clicks the button/link    link = Competition setup
@@ -606,7 +606,7 @@ Application: Edit again should mark as incomplete
     Given the user clicks the button/link       link = Application details
     When the user clicks the button/link        link = Edit this question
     And the user navigates to the page          ${server}/management/competition/setup/${competitionId}
-    Then the user should see the element        css = #compCTA[disabled="disabled"]
+    Then the user should see the element        css = #compCTA[disabled]
     When the user navigates to the page         ${server}/management/competition/setup/${competitionId}/section/application/landing-page
     When the user clicks the button/link        link = Application details
     And the user clicks the button/link         jQuery = button:contains('Done')

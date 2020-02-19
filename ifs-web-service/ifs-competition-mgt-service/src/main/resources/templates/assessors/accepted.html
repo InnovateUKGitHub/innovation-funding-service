@@ -62,8 +62,8 @@
                 <li class="govuk-tabs__list-item">
                     <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Pending and declined</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}" class="govuk-tabs__tab govuk-tabs__tab--selected">Accepted</a>
+                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+                    <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Accepted</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">

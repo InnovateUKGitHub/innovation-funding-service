@@ -84,10 +84,10 @@
                                     <th:block th:if="${model.lead}">
                                         <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${rowModel.question.id})}"
                                            class="govuk-link"
-                                           aria-describedby="assign-hint">
+                                           th:attr="aria-describedby=|assign-hint-${rowModel.question.id}|">
                                             Assigned to
                                             <th:block th:text="${assignee}">you/Name</th:block>
-                                            <span id="assign-hint" class="govuk-visually-hidden">,assign to somebody else in your team</span>
+                                            <span th:id="|assign-hint-${rowModel.question.id}|" class="govuk-visually-hidden">,assign to somebody else in your team</span>
                                         </a>
                                     </th:block>
                                     <!--/* collaborator */-->

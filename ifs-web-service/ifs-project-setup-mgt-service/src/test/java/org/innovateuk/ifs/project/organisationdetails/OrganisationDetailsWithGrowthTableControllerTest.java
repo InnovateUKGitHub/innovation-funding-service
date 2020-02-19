@@ -1,9 +1,5 @@
 package org.innovateuk.ifs.project.organisationdetails;
 
-import java.math.BigDecimal;
-import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Arrays;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
@@ -13,11 +9,15 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
-import org.innovateuk.ifs.project.organisationdetails.controller.OrganisationDetailsWithGrowthTableController;
-import org.innovateuk.ifs.project.organisationdetails.viewmodel.OrganisationDetailsViewModel;
+import org.innovateuk.ifs.project.organisationdetails.view.controller.OrganisationDetailsWithGrowthTableController;
+import org.innovateuk.ifs.project.organisationdetails.view.viewmodel.OrganisationDetailsViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
@@ -31,9 +31,17 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,6 +68,9 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private FinanceCheckService financeCheckService;
+
     @Override
     protected OrganisationDetailsWithGrowthTableController supplyControllerUnderTest() {
         return new OrganisationDetailsWithGrowthTableController();
@@ -83,12 +94,21 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         OrganisationFinancesWithGrowthTableResource finances = getFinances();
         form = getForm();
 
+        FinanceCheckPartnerStatusResource partner = new FinanceCheckPartnerStatusResource();
+        partner.setViability(REVIEW);
+        partner.setEligibility(EligibilityState.REVIEW);
+        List<FinanceCheckPartnerStatusResource> partnerStatusResources = Arrays.asList(partner);
+        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
+                .build();
+        financeCheckSummaryResource.setPartnerStatusResources(partnerStatusResources);
+
         when(projectRestService.getProjectById(projectId)).thenReturn(new RestResult(restSuccess(project)));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(new RestResult(restSuccess(organisation)));
         when(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(finances));
         when(withGrowthTableFormPopulator.populate(finances)).thenReturn(form);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
+        when(financeCheckService.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(financeCheckSummaryResource));
     }
 
     private MvcResult callEndpoint() throws Exception {
@@ -104,11 +124,11 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         organisation.setOrganisationType(1L);
 
         MvcResult result = callEndpoint();
-        ProjectYourOrganisationViewModel yourOrganisation = (ProjectYourOrganisationViewModel) result.getModelAndView().getModel().get("yourOrg");
+        ProjectYourOrganisationViewModel yourOrganisation = (ProjectYourOrganisationViewModel) result.getModelAndView().getModel().get("yourOrganisation");
         YourOrganisationWithGrowthTableForm actualForm = (YourOrganisationWithGrowthTableForm) result.getModelAndView().getModel().get("form");
 
         sharedAssertions(result, organisation.getAddresses().get(0).getAddress());
-        assertTrue((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
+        assertEquals(yourOrganisation, result.getModelAndView().getModel().get("yourOrganisation"));
 
         assertEquals(organisationId, yourOrganisation.getOrganisationId());
         assertEquals(projectId, yourOrganisation.getProjectId());
@@ -118,20 +138,20 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
     }
 
     private void sharedAssertions (MvcResult result, AddressResource expectedAddress){
-        OrganisationDetailsViewModel orgDetails = (OrganisationDetailsViewModel) result.getModelAndView().getModel().get("orgDetails");
-        assertEquals("project/organisation-details-with-growth-table", result.getModelAndView().getViewName());
-        assertEquals(expectedAddress.getAddressLine1(), orgDetails.getAddressLine1());
-        assertEquals(expectedAddress.getAddressLine2(), orgDetails.getAddressLine2());
-        assertEquals(expectedAddress.getAddressLine3(), orgDetails.getAddressLine3());
-        assertEquals(competitionId, orgDetails.getCompetitionId());
-        assertEquals(expectedAddress.getCounty(), orgDetails.getCounty());
-        assertEquals(organisation.getName(), orgDetails.getOrganisationName());
-        assertEquals(organisation.getOrganisationTypeName(), orgDetails.getOrganisationType());
-        assertEquals(expectedAddress.getPostcode(), orgDetails.getPostcode());
-        assertEquals(projectId, orgDetails.getProjectId());
-        assertEquals(project.getName(), orgDetails.getProjectName());
-        assertEquals(organisation.getCompaniesHouseNumber(), orgDetails.getRegistrationNumber());
-        assertEquals(expectedAddress.getTown(), orgDetails.getTown());
+        OrganisationDetailsViewModel organisationDetails = (OrganisationDetailsViewModel) result.getModelAndView().getModel().get("organisationDetails");
+        assertEquals("project/organisationdetails/organisation-details-with-growth-table", result.getModelAndView().getViewName());
+        assertEquals(expectedAddress.getAddressLine1(), organisationDetails.getAddressLine1());
+        assertEquals(expectedAddress.getAddressLine2(), organisationDetails.getAddressLine2());
+        assertEquals(expectedAddress.getAddressLine3(), organisationDetails.getAddressLine3());
+        assertEquals(competitionId, organisationDetails.getCompetitionId());
+        assertEquals(expectedAddress.getCounty(), organisationDetails.getCounty());
+        assertEquals(organisation.getName(), organisationDetails.getOrganisationName());
+        assertEquals(organisation.getOrganisationTypeName(), organisationDetails.getOrganisationType());
+        assertEquals(expectedAddress.getPostcode(), organisationDetails.getPostcode());
+        assertEquals(projectId, organisationDetails.getProjectId());
+        assertEquals(project.getName(), organisationDetails.getProjectName());
+        assertEquals(organisation.getCompaniesHouseNumber(), organisationDetails.getRegistrationNumber());
+        assertEquals(expectedAddress.getTown(), organisationDetails.getTown());
     }
 
     @Test
@@ -147,7 +167,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
 
         sharedAssertions(result, new AddressResource("", "", "", "", "", ""));
 
-        assertFalse((Boolean) result.getModelAndView().getModel().get("showYourOrg"));
+        assertNotEquals("yourOrganisation", result.getModelAndView().getModel());
     }
 
     private OrganisationFinancesWithGrowthTableResource getFinances() {

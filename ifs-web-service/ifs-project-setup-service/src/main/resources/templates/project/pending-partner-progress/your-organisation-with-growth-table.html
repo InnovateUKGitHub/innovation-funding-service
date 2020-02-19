@@ -20,7 +20,7 @@
              aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
-             data-module="error-summary">
+             data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -36,6 +36,8 @@
                                                form=${form},
                                                organisationSizeOptions=${model.organisationSizeOptions},
                                                isH2020=${model.h2020},
+                                               isInternalUser=${false},
+                                               isProcurementCompetition=${model.isProcurementCompetition()},
                                                readOnly=${model.readOnly},
                                                showOrganisationSizeAlert=${model.showOrganisationSizeAlert},
                                                showStateAidAgreement=${model.showStateAidAgreement},
@@ -59,7 +61,7 @@
             <div>
                 <a th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}"
                    th:if="${model.readOnly}"
-                   class="govuk-!-margin-top-6 button-secondary">Return to
+                   class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to
                     join project
                 </a>
                 <button type="submit" th:unless="${model.readOnly}"
