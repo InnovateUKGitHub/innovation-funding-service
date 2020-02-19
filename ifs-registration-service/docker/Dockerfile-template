@@ -25,6 +25,9 @@ ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 ADD @app_name@-@version@.jar app.jar
 
+# Add write permission to cacerts directory to allow adding certs at runtime on an OpenShift environment
+RUN chmod -R a+rw /opt/java/openjdk/jre/lib/security/cacerts
+
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD curl -f http://localhost:8080/monitoring/health || exit 1
 
