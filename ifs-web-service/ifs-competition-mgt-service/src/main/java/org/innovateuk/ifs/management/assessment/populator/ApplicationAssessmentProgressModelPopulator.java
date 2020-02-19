@@ -1,13 +1,15 @@
 package org.innovateuk.ifs.management.assessment.populator;
 
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
-import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

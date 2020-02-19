@@ -4,8 +4,9 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.junit.Test;
@@ -37,8 +38,8 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
     @Test
     public void getAvailableAssessors() {
         loginCompAdmin();
-        ApplicationAssessorPageResource applicationAssessorResources = controller
-                .getAvailableAssessors(1L, 0, 20, "Name")
+        ApplicationAvailableAssessorPageResource applicationAssessorResources = controller
+                .getAvailableAssessors(1L, 0, 20, "Name", Sort.ASSESSOR)
                 .getSuccess();
 
         assertEquals(Collections.emptyList(), applicationAssessorResources.getContent());

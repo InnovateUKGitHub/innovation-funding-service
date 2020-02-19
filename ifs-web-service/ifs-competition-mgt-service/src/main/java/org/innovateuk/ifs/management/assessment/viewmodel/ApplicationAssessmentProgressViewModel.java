@@ -152,6 +152,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(previouslyAssigned, that.previouslyAssigned)
                 .append(innovationSectors, that.innovationSectors)
                 .append(assessorNameFilter, that.assessorNameFilter)
+                .append(currentSort, that.currentSort)
                 .append(pagination, that.pagination)
                 .isEquals();
     }
@@ -173,6 +174,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(previouslyAssigned)
                 .append(innovationSectors)
                 .append(assessorNameFilter)
+                .append(currentSort)
                 .append(pagination)
                 .toHashCode();
     }
@@ -194,6 +196,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append("previouslyAssigned", previouslyAssigned)
                 .append("innovationSectors", innovationSectors)
                 .append("assessorNameFilter", assessorNameFilter)
+                .append("currentSort", currentSort)
                 .append("pagination", pagination)
                 .toString();
     }
