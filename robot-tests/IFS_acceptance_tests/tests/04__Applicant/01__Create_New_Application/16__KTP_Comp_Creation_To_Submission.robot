@@ -61,8 +61,7 @@ The user completes the application
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${KTPapplicationTitle}
     the user marks the finances as complete                  ${KTPapplicationTitle}   Calculate  52,214  yes
-#    TODO when T&C's are uploaded
-#    the user accept the competition terms and conditions     Return to application overview
+    the user accept the competition terms and conditions     Return to application overview
 
 The user completes the research category
     [Arguments]  ${res_category}
