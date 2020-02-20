@@ -6,4 +6,5 @@ import org.springframework.data.repository.Repository;
 public interface ApplicationHiddenFromDashboardRepository extends Repository<ApplicationHiddenFromDashboard, Long> {
 
     ApplicationHiddenFromDashboard save(ApplicationHiddenFromDashboard deletedApplicationAudit);
+    void deleteByApplicationId(long applicationId);
 }

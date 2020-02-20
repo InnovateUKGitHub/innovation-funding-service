@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.hibernate.annotations.Immutable;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -22,35 +20,35 @@ public class ApplicationHiddenFromDashboard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreatedBy
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="createdBy", referencedColumnName="id")
-    private User createdBy;
-
     @CreatedDate
     private ZonedDateTime createdOn;
 
-    @JoinColumn(name = "process_role_id")
+    @JoinColumn(name = "application_id")
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    private ProcessRole processRole;
+    private Application application;
 
-    public ApplicationHiddenFromDashboard(ProcessRole processRole) {
-        this.processRole = processRole;
+    @JoinColumn(name = "user_id")
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    private User user;
+
+    public ApplicationHiddenFromDashboard(Application application, User user) {
+        this.application = application;
+        this.user = user;
     }
 
     public Long getId() {
         return id;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
     public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public ProcessRole getProcessRole() {
-        return processRole;
+    public Application getApplication() {
+        return application;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

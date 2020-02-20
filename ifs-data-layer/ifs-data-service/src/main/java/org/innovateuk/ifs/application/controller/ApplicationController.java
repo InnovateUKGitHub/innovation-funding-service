@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.transactional.ApplicationDeletionService;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -33,30 +34,37 @@ public class ApplicationController {
 
     private static final String PREVIOUS_APP_DEFAULT_FILTER = "ALL";
 
+    @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
+    @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
     private ApplicationNotificationService applicationNotificationService;
 
+    @Autowired
     private ApplicationProgressService applicationProgressService;
 
+    @Autowired
     private CrmService crmService;
 
-    public ApplicationController() {}
-
     @Autowired
-    public ApplicationController(IneligibleOutcomeMapper ineligibleOutcomeMapper, ApplicationService applicationService, ApplicationNotificationService applicationNotificationService, ApplicationProgressService applicationProgressService, CrmService crmService) {
-        this.ineligibleOutcomeMapper = ineligibleOutcomeMapper;
-        this.applicationService = applicationService;
-        this.applicationNotificationService = applicationNotificationService;
-        this.applicationProgressService = applicationProgressService;
-        this.crmService = crmService;
-    }
+    private ApplicationDeletionService applicationDeletionService;
 
     @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
         return applicationService.getApplicationById(id).toGetResponse();
+    }
+
+    @DeleteMapping("/{id}")
+    public RestResult<Void> delete(@PathVariable final long id) {
+        return applicationDeletionService.deleteApplication(id).toDeleteResponse();
+    }
+
+    @PostMapping("/{id}/hide-for-user/{userId}")
+    public RestResult<Void> delete(@PathVariable final long id, @PathVariable final long userId) {
+        return applicationDeletionService.hideApplicationFromDashboard(id, userId).toDeleteResponse();
     }
 
     @GetMapping("/")
