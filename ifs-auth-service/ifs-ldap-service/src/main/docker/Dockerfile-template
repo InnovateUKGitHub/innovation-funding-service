@@ -46,9 +46,8 @@ RUN apt-get update --fix-missing && \
 # allow unlimited search results -frontend \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_search_limit_frontend.ldif && \
 
-# run openldap as its own user \
-  ldapmodify -Y EXTERNAL -H ldapi:/// -f openldap_user_access.ldif && \
-  chown -R openldap:0 /etc/ldap /var/lib/ldap /var/run/slapd && \
+# run openldap as an abritarty user \
+  chgrp -R 0 /etc/ldap /var/lib/ldap /var/run/slapd && \
   chmod -R g+rw /etc/ldap /var/lib/ldap /var/run/slapd
 
 # install dev tools and test ldap entries \
@@ -57,8 +56,6 @@ RUN apt-get update --fix-missing && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
   rm -f ppolicy*.ldif
 
-#USER openldap
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD ldapsearch -H ldaps://localhost:8389 -b dc=nodomain -x -LLL -s base || exit 1
 ENTRYPOINT [ "run-openldap.sh" ]
-
