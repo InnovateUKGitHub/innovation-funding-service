@@ -26,8 +26,10 @@ public final class CompetitionInitialiser {
                 break;
             case PROCUREMENT:
                 addProcurementProjectSetupColumns(competition);
+                break;
             case KTP:
                 addKTPProjectSetupColumns(competition);
+                break;
             default:
                 break;
         }
@@ -47,8 +49,10 @@ public final class CompetitionInitialiser {
                 break;
             case PROCUREMENT:
                 addProcurementFinanceTypes(competition);
+                break;
             case KTP:
                 addKTPFinanceTypes(competition);
+                break;
             default:
                 break;
         }
