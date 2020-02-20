@@ -39,7 +39,8 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
             "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")" +
             "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
-            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE ";
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE ";
 
     String PARTICIPANTS_NOT_ON_INTERVIEW_PANEL = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
@@ -49,7 +50,8 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
             "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")" +
             "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
-            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE ";
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE ";
 
     String BY_COMP_AND_STATUS_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
@@ -62,6 +64,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "(" +
             "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "))";
 
     String BY_STATUS_AND_COMPLIANT_AND_NAME = "SELECT assessmentParticipant " +
@@ -97,6 +100,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "(" +
             "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "))";
 
     String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT assessmentParticipant " +
@@ -112,6 +116,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "   AND a.target.id = :appId) " +
             "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "AND CONCAT(assessmentParticipant.user.firstName, ' ', assessmentParticipant.user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')";
 
     String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT assessmentParticipant " +
@@ -181,6 +186,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "(" +
             "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             " AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            " AND participant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "))")
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
