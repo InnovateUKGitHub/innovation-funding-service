@@ -16,6 +16,13 @@ public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService imp
     private static final String ANALYTICS_BASE_URL = "/analytics";
 
     @Override
+    public RestResult<String> getCompetitionNameForInvite(String inviteHash) {
+        return getWithRestResultAnonymous(format("%s/invite/%s/competition-name", ANALYTICS_BASE_URL, inviteHash),
+                String.class
+        );
+    }
+
+    @Override
     public RestResult<String> getCompetitionNameForApplication(long applicationId) {
         return getWithRestResult(format("%s/application/%d/competition-name", ANALYTICS_BASE_URL, applicationId),
                                  String.class
@@ -58,5 +65,11 @@ public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService imp
     public RestResult<Long> getApplicationIdForProject(long projectId) {
         return getWithRestResult(format("%s/project/%d/application-id", ANALYTICS_BASE_URL, projectId),
                                  Long.class);
+    }
+
+    @Override
+    public RestResult<Long> getApplicationIdForAssessment(long assessmentId) {
+        return getWithRestResult(format("%s/assessment/%d/application-id", ANALYTICS_BASE_URL, assessmentId),
+                Long.class);
     }
 }
