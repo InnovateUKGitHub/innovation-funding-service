@@ -64,7 +64,7 @@ public class ApplicationController {
 
     @PostMapping("/{id}/hide-for-user/{userId}")
     public RestResult<Void> delete(@PathVariable final long id, @PathVariable final long userId) {
-        return applicationDeletionService.hideApplicationFromDashboard(id, userId).toDeleteResponse();
+        return applicationDeletionService.hideApplicationFromDashboard(ApplicationUserCompositeId.id(id, userId)).toDeleteResponse();
     }
 
     @GetMapping("/")

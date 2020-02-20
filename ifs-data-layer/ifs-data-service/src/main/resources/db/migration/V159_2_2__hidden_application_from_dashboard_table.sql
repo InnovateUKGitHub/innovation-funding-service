@@ -9,5 +9,5 @@ CREATE TABLE application_hidden_from_dashboard (
   KEY application_hidden_from_dashboard_application_fk (application_id),
   UNIQUE KEY application_hidden_user_id_application (application_id, user_id),
   CONSTRAINT application_hidden_from_dashboard_user_fk FOREIGN KEY (user_id) REFERENCES user (id),
-  CONSTRAINT application_hidden_from_dashboard_application_fk FOREIGN KEY (application_id) REFERENCES application (id),
+  CONSTRAINT application_hidden_from_dashboard_application_fk FOREIGN KEY (application_id) REFERENCES application (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

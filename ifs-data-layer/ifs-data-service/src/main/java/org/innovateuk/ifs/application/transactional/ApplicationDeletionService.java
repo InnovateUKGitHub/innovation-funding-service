@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -8,12 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface ApplicationDeletionService {
 
-//    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'DELETE_APPLICATION')")
-
-    @PreAuthorize("permitAll")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'DELETE_APPLICATION')")
     ServiceResult<Void> deleteApplication(long applicationId);
 
-//    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'HIDE_APPLICATION')")
-    @PreAuthorize("permitAll")
-    ServiceResult<Void> hideApplicationFromDashboard(long applicationId, long userId);
+    @PreAuthorize("hasPermission(#id, 'HIDE_APPLICATION')")
+    ServiceResult<Void> hideApplicationFromDashboard(ApplicationUserCompositeId id);
 }

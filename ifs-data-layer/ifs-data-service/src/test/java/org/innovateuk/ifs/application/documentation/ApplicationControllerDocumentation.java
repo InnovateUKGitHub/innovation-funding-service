@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.controller.ApplicationController;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.transactional.ApplicationDeletionService;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -54,6 +52,9 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
     @Mock
     private CrmService crmService;
+
+    @Mock
+    private ApplicationDeletionService applicationDeletionService;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -316,6 +317,37 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition we want the latest email funding date from")
+                        )
+                ));
+    }
+    @Test
+    public void deleteApplication() throws Exception {
+        long applicationId = 1L;
+        when(applicationDeletionService.deleteApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/application/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isNoContent())
+                .andDo(document("application/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to delete")
+                        )
+                ));
+    }
+
+    @Test
+    public void hideApplicationFromDashboard() throws Exception {
+        long applicationId = 1L;
+        long userId = 1L;
+        when(applicationDeletionService.hideApplicationFromDashboard(ApplicationUserCompositeId.id(applicationId, userId))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/{applicationId}/hide-from-dashboard/{userId}", applicationId, userId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isNoContent())
+                .andDo(document("application/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to hide"),
+                                parameterWithName("applicationId").description("Id of the users dashboard to hide from")
                         )
                 ));
     }

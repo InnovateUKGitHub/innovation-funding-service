@@ -3,10 +3,9 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.ApplicationHiddenFromDashboard;
 import org.innovateuk.ifs.application.domain.DeletedApplicationAudit;
 import org.innovateuk.ifs.application.repository.*;
+import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
-import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
@@ -22,12 +21,6 @@ public class ApplicationDeletionServiceImpl extends BaseTransactionalService imp
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private GrowthTableRepository growthTableRepository;
-
-    @Autowired
-    private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -69,9 +62,9 @@ public class ApplicationDeletionServiceImpl extends BaseTransactionalService imp
 
     @Override
     @Transactional
-    public ServiceResult<Void> hideApplicationFromDashboard(long applicationId, long userId) {
-        return getApplication(applicationId).andOnSuccessReturnVoid((application) ->
-            getUser(userId).andOnSuccessReturnVoid(user ->
+    public ServiceResult<Void> hideApplicationFromDashboard(ApplicationUserCompositeId id) {
+        return getApplication(id.getApplicationId()).andOnSuccessReturnVoid((application) ->
+            getUser(id.getUserId()).andOnSuccessReturnVoid(user ->
                     applicationHiddenFromDashboardRepository.save(new ApplicationHiddenFromDashboard(application, user))));
     }
 }
