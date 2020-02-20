@@ -131,7 +131,7 @@ Eligibility funding level validation
     [Tags]
     Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
     When the user clicks the button/link                jQuery = button:contains("Done")
-    Then The user should see a field and summary error  Please select the maximum funding level that applicants can apply for.
+    Then The user should see a field and summary error  Please enter the maximum funding level that applicants can apply for.
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
