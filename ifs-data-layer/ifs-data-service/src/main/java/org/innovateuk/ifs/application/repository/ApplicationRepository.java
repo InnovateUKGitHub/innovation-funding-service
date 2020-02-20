@@ -221,8 +221,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            "        AND pu.user.id=:userId " +
            "        AND type(pu) = ProjectUser " +
            " WHERE (proj.id IS NULL AND pr iS NOT NULL" + // No project exists and user has applicant process role
-           "    OR  pu.id IS NOT NULL)" +
-            "   AND hidden IS NULL") // Or project exists and user is a project user.
+           "    OR  pu.id IS NOT NULL)" + // Or project exists and user is a project user.
+            "   AND hidden IS NULL")
     List<Application> findApplicationsForDashboard(long userId);
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
