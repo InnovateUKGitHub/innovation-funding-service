@@ -38,7 +38,7 @@ RUN apt-get update --fix-missing && \
 
 # Set up the config for enabling and enforcing SSL, be lax about self-signed certificates. \
 # Note we do not run the command here to use the certs as this requires the certs which we don't have until runtime. \
-  sed -i 's#/etc/ssl/certs/ca-certificates.crt#/etc/ldap/ldap-encryption.crt##' /etc/ldap/ldap.conf && \
+  sed -i 's#/etc/ssl/certs/ca-certificates.crt#/var/certs/ldap-encryption.crt##' /etc/ldap/ldap.conf && \
   echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf && \
 
 # allow unlimited search results \
