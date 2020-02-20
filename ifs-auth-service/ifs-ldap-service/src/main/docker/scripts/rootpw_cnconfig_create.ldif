@@ -1,4 +1,4 @@
 dn: olcDatabase={0}config,cn=config
 changetype: modify
-replace: olcRootPW
+add: olcRootPW
 olcRootPW: root_password_123
