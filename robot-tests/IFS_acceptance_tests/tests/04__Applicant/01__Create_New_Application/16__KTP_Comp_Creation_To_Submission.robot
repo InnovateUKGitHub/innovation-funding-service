@@ -53,6 +53,13 @@ Moving KTP Competition to Project Setup
     And making the application a successful project    ${competitionId}  ${KTPapplicationTitle}
     And moving competition to Project Setup            ${competitionId}
 
+Applicant is able to complete project details
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Setup]  log in as a different user                 &{lead_applicant_credentials}
+    Given the user clicks the button/link               link = KTP Application
+    When the user completes project details 
+
+
 *** Keywords ***
 The user completes the application
     the user clicks the button/link                          link = Application details
