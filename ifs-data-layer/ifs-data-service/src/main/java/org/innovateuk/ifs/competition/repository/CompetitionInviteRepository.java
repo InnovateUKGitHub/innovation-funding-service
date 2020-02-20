@@ -22,6 +22,7 @@ public interface CompetitionInviteRepository<T extends CompetitionInvite> extend
     String GET_BY_COMPETITION_ID_AND_STATUS_WITHOUT_INACTIVE_ASSESSORS = "SELECT invite FROM #{#entityName} invite " +
             "LEFT JOIN invite.user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
+            "      invite.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
             "      invite.status = :status AND " +
             " (roleStatuses IS NULL OR " +
             "(" +
@@ -32,6 +33,7 @@ public interface CompetitionInviteRepository<T extends CompetitionInvite> extend
     String COUNT_BY_COMPETITION_ID_AND_STATUSES_IN_WITHOUT_INACTIVE_ASSESSORS = "SELECT COUNT(invite) FROM #{#entityName} invite " +
             "LEFT JOIN invite.user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
+            "      invite.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
             "      invite.status IN :statuses AND " +
             " (roleStatuses IS NULL OR " +
             "(" +
