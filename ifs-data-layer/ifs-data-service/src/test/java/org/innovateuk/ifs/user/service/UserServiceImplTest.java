@@ -1,29 +1,37 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.repository.UserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.RoleProfileStatusMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
@@ -52,12 +60,18 @@ import static java.util.Collections.*;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.newRoleProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -122,6 +136,18 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Mock
     private UserInviteRepository userInviteRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepository;
+
+    @Mock
+    private ApplicationInviteRepository applicationInviteRepository;
+
+    @Mock
+    private ProjectUserRepository projectUserRepository;
+
+    @Mock
+    private ProjectUserInviteRepository projectUserInviteRepository;
 
     @Mock(name = "randomHashSupplier")
     private Supplier<String> randomHashSupplierMock;
@@ -732,6 +758,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userInviteRepositoryMock.findByEmail(oldEmail)).thenReturn(invite);
         when(idpServiceMock.updateUserEmail(user.getUid(), updateEmail)).thenReturn(serviceSuccess(user.getUid()));
         when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(processRoleRepository.findByUser(user)).thenReturn(emptyList());
+        when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
+        when(projectUserRepository.findByUserId(user.getId())).thenReturn(emptyList());
+        when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -742,8 +772,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void updateEmailForNoInviteUsers() {
-
-        User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress("old@gmail.com").build();
+        String oldEmail = "old@gmail.com";
+        User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress(oldEmail).build();
         String updateEmail = "new@gmail.com";
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
@@ -752,6 +782,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRepositoryMock.save(user)).thenReturn(user);
         when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
         when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(processRoleRepository.findByUser(user)).thenReturn(emptyList());
+        when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
+        when(projectUserRepository.findByUserId(user.getId())).thenReturn(emptyList());
+        when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -762,12 +796,16 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void updateEmailAndDisplayErrorIfDuplicateEmailHasBeenFound() {
-
+        String oldEmail = "old@gmail.com";
         User user = newUser().withUid("uid").withEmailAddress("new@gmail.com").build();
         String updateEmail = "new@gmail.com";
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(idpServiceMock.updateUserEmail(user.getUid(),user.getEmail())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
+        when(processRoleRepository.findByUser(user)).thenReturn(emptyList());
+        when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
+        when(projectUserRepository.findByUserId(user.getId())).thenReturn(emptyList());
+        when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -788,6 +826,60 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isFailure());
         assertEquals("master@gmail.co.uk", user.getEmail());
+    }
+
+    @Test
+    public void updateEmailFailsApplicationInvite() {
+        String oldEmail = "old@gmail.com";
+        User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress(oldEmail).build();
+        String updateEmail = "new@gmail.com";
+        long applicationId = 1L;
+
+        Application application = newApplication().withId(applicationId).build();
+        ProcessRole processRole = newProcessRole().withApplication(application).build();
+        ApplicationInvite applicationInvite = newApplicationInvite().withStatus(InviteStatus.SENT).withApplication(application).build();
+
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
+        user.setEmail(updateEmail);
+        when(userRepositoryMock.save(user)).thenReturn(user);
+        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(processRoleRepository.findByUser(user)).thenReturn(singletonList(processRole));
+        when(applicationInviteRepository.findByEmail(updateEmail)).thenReturn(singletonList(applicationInvite));
+        when(projectUserRepository.findByUserId(user.getId())).thenReturn(emptyList());
+        when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
+
+        ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void updateEmailFailsProjectInvite() {
+        String oldEmail = "old@gmail.com";
+        User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress(oldEmail).build();
+        String updateEmail = "new@gmail.com";
+        long projectId = 1L;
+
+        Project project = newProject().withId(projectId).build();
+        ProjectUser projectUser = newProjectUser().withProject(project).build();
+        ProjectUserInvite projectInvite = newProjectUserInvite().withStatus(InviteStatus.SENT).withProject(project).build();
+
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
+        user.setEmail(updateEmail);
+        when(userRepositoryMock.save(user)).thenReturn(user);
+        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(processRoleRepository.findByUser(user)).thenReturn(emptyList());
+        when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
+        when(projectUserRepository.findByUserId(user.getId())).thenReturn(singletonList(projectUser));
+        when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(singletonList(projectInvite));
+
+        ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isFailure());
     }
 
     private User createUserExpectations(Long userId, Set<Long> termsAndConditionsIds) {
