@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -26,6 +28,9 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
 
     @Autowired
     private AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private AssessmentInviteRepository assessmentInviteRepository;
 
     @Override
     public ServiceResult<String> getCompetitionNameByApplicationId(long applicationId) {
@@ -81,6 +86,12 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
         return find(getProject(projectId)).andOnSuccessReturn(
                 project -> project.getApplication().getId()
         );
+    }
+
+    @Override
+    public ServiceResult<String> getCompetitionNameByInviteHash(String inviteHash) {
+        return find(assessmentInviteRepository.getByHash(inviteHash), notFoundError(AssessmentInvite.class, inviteHash))
+                .andOnSuccessReturn(invite -> invite.getTarget().getName());
     }
 
     @Override

@@ -10,14 +10,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
@@ -36,8 +37,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
     @InjectMocks
     private GoogleAnalyticsDataLayerInterceptor googleAnalyticsDataLayerInterceptor;
 
-    @Mock
-    private HttpServletRequest httpServletRequestMock;
+    private MockHttpServletRequest httpServletRequest;
 
     @Mock
     private HttpServletResponse httpServletResponseMock;
@@ -51,18 +51,17 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         super.setup();
         mav = new ModelAndView();
         setAnonymousAuthentication();
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(emptyMap());
+        httpServletRequest = new MockHttpServletRequest();
     }
 
     @Test
     public void postHandle() {
         final long expectedCompetitionId = 7L;
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("competitionId", Long.toString(expectedCompetitionId)));
 
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionName(expectedCompetitionId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
 
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("competitionId", Long.toString(expectedCompetitionId)));
-
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
@@ -77,12 +76,12 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
     public void postHandle_applicationId() {
         final long expectedApplicationId = 7L;
 
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("applicationId", Long.toString(expectedApplicationId)));
+
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForApplication(expectedApplicationId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
         when(googleAnalyticsDataLayerRestServiceMock.getRolesByApplicationId(expectedApplicationId)).thenReturn(RestResult.restSuccess(emptyList()));
 
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("applicationId", Long.toString(expectedApplicationId)));
-
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
@@ -93,21 +92,37 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
         verify(googleAnalyticsDataLayerRestServiceMock).getCompetitionNameForApplication(expectedApplicationId);
         verify(googleAnalyticsDataLayerRestServiceMock).getRolesByApplicationId(expectedApplicationId);
-
     }
 
+    @Test
+    public void postHandle_inviteHash() {
+        final String inviteHash = new UUID(1L, 1L).toString();
+        httpServletRequest.setRequestURI(String.format("/assessment/invite/%s", inviteHash));
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("inviteHash", inviteHash));
+
+        when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForInvite(inviteHash)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
+
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
+
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
+        expectedDataLayer.setCompetitionName(expectedCompName);
+        expectedDataLayer.setUserRoles(emptyList());
+
+        assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
+
+        verify(googleAnalyticsDataLayerRestServiceMock, only()).getCompetitionNameForInvite(inviteHash);
+    }
 
     @Test
     public void postHandle_applicationRole() {
         final long expectedApplicationId = 321L;
         final List<Role> expectedRoles = singletonList(Role.COLLABORATOR);
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("applicationId", Long.toString(expectedApplicationId)));
 
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForApplication(expectedApplicationId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
         when(googleAnalyticsDataLayerRestServiceMock.getRolesByApplicationId(expectedApplicationId)).thenReturn(RestResult.restSuccess(expectedRoles));
 
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("applicationId", Long.toString(expectedApplicationId)));
-
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
@@ -124,13 +139,13 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         final long expectedProjectId = 7L;
         final long expectedApplicationId = 8L;
 
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("projectId", Long.toString(expectedProjectId)));
+
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForProject(expectedProjectId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
         when(googleAnalyticsDataLayerRestServiceMock.getRolesByProjectId(expectedProjectId)).thenReturn(RestResult.restSuccess(emptyList()));
         when(googleAnalyticsDataLayerRestServiceMock.getApplicationIdForProject(expectedProjectId)).thenReturn(RestResult.restSuccess(expectedApplicationId));
 
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("projectId", Long.toString(expectedProjectId)));
-
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
@@ -149,14 +164,14 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
         final long expectedProjectId = 123L;
         final long expectedApplicationId = 456L;
         final List<Role> expectedRoles = asList(Role.PARTNER, Role.PROJECT_MANAGER);
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("projectId", Long.toString(expectedProjectId)));
+
 
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForProject(expectedProjectId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
         when(googleAnalyticsDataLayerRestServiceMock.getRolesByProjectId(expectedProjectId)).thenReturn(RestResult.restSuccess(expectedRoles));
         when(googleAnalyticsDataLayerRestServiceMock.getApplicationIdForProject(expectedProjectId)).thenReturn(RestResult.restSuccess(expectedApplicationId));
 
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("projectId", Long.toString(expectedProjectId)));
-
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
@@ -173,14 +188,13 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
     @Test
     public void postHandle_assessmentId() {
         final long expectedAssessmentId = 7L;
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, singletonMap("assessmentId", Long.toString(expectedAssessmentId)));
         final long expectedApplicationId = 83L;
 
         when(googleAnalyticsDataLayerRestServiceMock.getCompetitionNameForAssessment(expectedAssessmentId)).thenReturn(RestResult.restSuccess(toJson(expectedCompName)));
         when(googleAnalyticsDataLayerRestServiceMock.getApplicationIdForAssessment(expectedAssessmentId)).thenReturn(RestResult.restSuccess(expectedApplicationId));
 
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(singletonMap("assessmentId", Long.toString(expectedAssessmentId)));
-
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setCompetitionName(expectedCompName);
@@ -195,7 +209,8 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
     @Test
     public void postHandle_noParam() {
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, emptyMap());
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setUserRoles(emptyList());
@@ -208,8 +223,9 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
     @Test
     public void postHandle_singleRole() {
         Role [] expectedRoles = setAuthenticatedRoleTypes(Role.COMP_ADMIN);
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, emptyMap());
 
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setUserRoles(singletonList(Role.COMP_ADMIN));
@@ -219,9 +235,10 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
     @Test
     public void postHandle_multipleRoles() {
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, emptyMap());
         Role [] expectedRoles = setAuthenticatedRoleTypes(Role.COMP_ADMIN, Role.IFS_ADMINISTRATOR);
 
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setUserRoles(asList(Role.COMP_ADMIN, Role.IFS_ADMINISTRATOR));
@@ -231,7 +248,8 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTest {
 
     @Test
     public void postHandle_anon() {
-        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+        httpServletRequest.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, emptyMap());
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequest, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
         expectedDataLayer.setUserRoles(emptyList());
