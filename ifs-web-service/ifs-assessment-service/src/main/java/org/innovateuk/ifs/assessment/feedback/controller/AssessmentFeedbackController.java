@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.form.Form;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
@@ -19,13 +20,12 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,6 +66,9 @@ public class AssessmentFeedbackController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
 
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
@@ -196,8 +199,7 @@ public class AssessmentFeedbackController {
     }
 
     private boolean isApplicationDetailsQuestion(long questionId) {
-        List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
-        return applicationFormInputs.stream().anyMatch(formInputResource -> FormInputType.APPLICATION_DETAILS == formInputResource.getType());
+        return questionRestService.findById(questionId).getSuccess().getQuestionSetupType().equals(QuestionSetupType.APPLICATION_DETAILS);
     }
 
     private String getApplicationDetails(Model model, long assessmentId, QuestionResource question) {
