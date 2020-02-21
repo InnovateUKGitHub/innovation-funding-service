@@ -52,8 +52,83 @@ Moving KTP Competition to Project Setup
     Then moving competition to Closed                  ${competitionId}
     And making the application a successful project    ${competitionId}  ${KTPapplicationTitle}
     And moving competition to Project Setup            ${competitionId}
+    [Teardown]  Requesting IDs of this Project
+    
+The user is able to complete Project details section
+    [Documentation]  IFS-5700
+    [Setup]  the user logs-in in new browser     &{lead_applicant_credentials}
+    Given the user navigates to the page         ${server}/project-setup/project/${ProjectID}
+    When the user is able to complete project details section
+    Then the user should see the element         css = ul li.complete:nth-child(1)
+
+The user is able to complete Project team section
+    [Documentation]  IFS-5700
+    [Setup]  the user clicks the button/link       link = Project team
+    Given the user completes the project team section
+    Then the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+The user is able to complete the Documents section
+    [Documentation]  IFS-5700
+    Given the user clicks the button/link     link = Documents
+    When the user uploads the exploitation plan
+    And the user uploads the Test document type
+    And the user clicks the button/link       link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
+
+The user is able to complete the Bank details section
+    [Documentation]  IFS-5700
+    Given the user enters bank details
+    When the user clicks the button/link      link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
+
+Internal user is able to approve documents
+    [Documentation]  IFS-5700
+    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    Given Internal user is able to approve documents
+    When the user navigates to the page        ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element       css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+
+Internal user is able to assign an MO
+    [Documentation]  IFS-5700
+    [Setup]  the user navigates to the page        ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
+    Given Search for MO                            Orvill  Orville Gibbs
+    When The internal user assign project to MO    ${ApplicationID}  ${ProjectID}
+    And the user navigates to the page             ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element           css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+
+#Finance user approves bank details
+#    [Setup]  log in as a different user                      &{internal_finance_credentials}
+#    Given the project finance user approves bank details     ${ProjectID}
+#    When the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
+#    Then the user should see the element                     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
+#
+#Internal user is able to approve Finance checks and generate spend profile
+#    [Documentation]  IFS-5700
+#    [Setup]  the user navigates to the page        ${server}/project-setup-management/project/${ProjectID}/finance-check
+#    Given the user approves h2020 finance checks
+#    When the user navigates to the page           ${server}/project-setup-management/competition/${competitionId}/status/all
+#    Then the user should see the element           css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+#    And the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+#
+#User is able to submit the spend profile
+#    [Documentation]  IFS-5700
+#    [Setup]  log in as a different user      &{lead_applicant_credentials}
+#    Given the user navigates to the page     ${server}/project-setup/project/${ProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review
+#    When the user submits the spend profile
+#    Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+#
+#Internal user is able to approve Spend profile
+#    Given proj finance approves the spend profiles  ${ProjectID}
+#    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+
+
 
 *** Keywords ***
+Internal user is able to approve documents
+    the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/document/all
+    the user clicks the button/link        link = Exploitation plan
+    internal user approve uploaded documents
+
 The user completes the application
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -61,8 +136,7 @@ The user completes the application
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${KTPapplicationTitle}
     the user marks the finances as complete                  ${KTPapplicationTitle}   Calculate  52,214  yes
-#    TODO when T&C's are uploaded
-#    the user accept the competition terms and conditions     Return to application overview
+    the user accept the competition terms and conditions     Return to application overview
 
 The user completes the research category
     [Arguments]  ${res_category}
@@ -77,9 +151,11 @@ Custom Suite Setup
     The guest user opens the browser
     Connect to database  @{database}
 
-Requesting Project ID of this Project
+Requesting IDs of this Project
     ${ProjectID} =  get project id by name    ${KTPapplicationTitle}
     Set suite variable    ${ProjectID}
+    ${ApplicationID} =  get application id by name    ${KTPapplicationTitle}
+    Set suite variable    ${ApplicationID}
 
 Custom suite teardown
     Close browser and delete emails
