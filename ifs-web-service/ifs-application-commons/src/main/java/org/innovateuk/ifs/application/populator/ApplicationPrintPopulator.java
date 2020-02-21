@@ -3,20 +3,20 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.populator.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -75,8 +75,8 @@ public class ApplicationPrintPopulator {
     private FormInputRestService formInputRestService;
     @Autowired
     private ApplicantRestService applicantRestService;
-    @Autowired
-    private FormInputViewModelGenerator formInputViewModelGenerator;
+//    @Autowired
+//    private FormInputViewModelGenerator formInputViewModelGenerator;
     @Autowired
     private UserService userService;
     @Autowired
@@ -85,6 +85,8 @@ public class ApplicationPrintPopulator {
     private FileEntryRestService fileEntryRestService;
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+    @Autowired
+    private ApplicationReadOnlyViewModelPopulator applicationReadOnlyViewModelPopulator;
 
     public String print(final Long applicationId,
                         Model model, UserResource user) {
@@ -109,6 +111,8 @@ public class ApplicationPrintPopulator {
         addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, user.getId(), completedSectionsByOrganisation, Optional.empty());
         addFinanceDetails(model, competition, applicationId);
 
+        ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, ApplicationReadOnlySettings.defaultSettings());
+        model.addAttribute("model", applicationReadOnlyViewModel);
         return "application/print";
     }
 
@@ -248,17 +252,18 @@ public class ApplicationPrintPopulator {
         } else {
             applicantId = userId;
         }
-        Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
-                .map(question -> applicantRestService.getQuestion(applicantId, application.getId(), question.getId()))
-                .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
-                .flatMap(List::stream)
-                .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
-        model.addAttribute("formInputViewModels", formInputViewModels);
-        formInputViewModels.values().forEach(viewModel -> {
-            viewModel.setClosed(!(competition.isOpen() && application.isOpen()));
-            viewModel.setReadonly(true);
-            viewModel.setSummary(true);
-        });
+//
+//        Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
+//                .map(question -> applicantRestService.getQuestion(applicantId, application.getId(), question.getId()))
+//                .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
+//                .flatMap(List::stream)
+//                .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
+//        model.addAttribute("formInputViewModels", formInputViewModels);
+//        formInputViewModels.values().forEach(viewModel -> {
+//            viewModel.setClosed(!(competition.isOpen() && application.isOpen()));
+//            viewModel.setReadonly(true);
+//            viewModel.setSummary(true);
+//        });
 
 
         addSubSections(currentSection, model, parentSections, allSections, questions, formInputResources);

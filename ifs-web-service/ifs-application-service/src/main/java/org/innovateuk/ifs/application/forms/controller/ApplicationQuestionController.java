@@ -1,28 +1,22 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
-import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
-import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +37,6 @@ import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -56,8 +49,6 @@ public class ApplicationQuestionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
 
-    @Autowired
-    private QuestionModelPopulator questionModelPopulator;
     @Autowired
     private ApplicationResearchCategoryModelPopulator researchCategoryPopulator;
     @Autowired
@@ -123,31 +114,15 @@ public class ApplicationQuestionController {
         if (questionUrl.isPresent()) {
             return "redirect:" + questionUrl.get() + (markAsComplete.isPresent() ? "?show-errors=true" : "");
         }
-
-        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
-        boolean isSupport = user.hasRole(SUPPORT);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), isSupport);
-
-        if (question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
+        if (questionType == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
             model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
                     applicationResource, user.getId(), questionId));
             model.addAttribute("form", researchCategoryFormPopulator.populate(applicationResource,
                     new ResearchCategoryForm()));
         }
-        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
 
-        if (questionType == null) {
-            return APPLICATION_FORM;
-        }
-        switch (questionType) {
-            case APPLICATION_TEAM:
-            case RESEARCH_CATEGORY:
-                return APPLICATION_FORM_LEAD;
-            default:
-                return APPLICATION_FORM;
-        }
+        throw new IFSRuntimeException("Unknown question type" + questionType.name());
     }
 
 }

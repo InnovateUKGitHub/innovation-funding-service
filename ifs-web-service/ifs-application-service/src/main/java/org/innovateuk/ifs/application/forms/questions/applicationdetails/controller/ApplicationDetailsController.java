@@ -3,16 +3,10 @@ package org.innovateuk.ifs.application.forms.questions.applicationdetails.contro
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
-import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.form.ApplicationDetailsForm;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.populator.ApplicationDetailsViewModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.CompanyAge;
-import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
-import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -34,17 +28,15 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static org.apache.commons.lang3.EnumUtils.isValidEnum;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/application-details")
@@ -58,10 +50,6 @@ public class ApplicationDetailsController {
     private QuestionStatusRestService questionStatusRestService;
     @Autowired
     private UserRestService userRestService;
-    @Autowired
-    private ApplicantRestService applicantRestService;
-    @Autowired
-    private ApplicationNavigationPopulator applicationNavigationPopulator;
     @Autowired
     private ApplicationService applicationService;
     @Autowired
@@ -78,16 +66,10 @@ public class ApplicationDetailsController {
                               @PathVariable long questionId,
                               UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), user.hasRole(SUPPORT));
-        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(question, competition);
-        form.populateForm(viewModel);
-
+        ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(application, questionId, user);
+        form.populateForm(application);
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
-
-        return "application/questions/application-details";
+            return "application/questions/application-details";
     }
 
     @PostMapping
@@ -128,7 +110,7 @@ public class ApplicationDetailsController {
 
     }
 
-    @PostMapping(params = "mark_as_complete")
+    @PostMapping(params = "complete")
     public String markAsComplete(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) @Valid ApplicationDetailsForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
@@ -136,6 +118,8 @@ public class ApplicationDetailsController {
                                  @PathVariable long applicationId,
                                  @PathVariable long questionId,
                                  UserResource user) {
+        validate(form, applicationId, bindingResult);
+
         Supplier<String> failureView = () -> viewDetailsPage(form, bindingResult, model, applicationId, questionId, user);
         Supplier<String> successView = () -> format("redirect:/application/%d/form/question/%d/application-details", applicationId, questionId);
 
@@ -171,7 +155,7 @@ public class ApplicationDetailsController {
         return String.format("redirect:/application/%d/form/question/%d/innovation-area", applicationId, questionId);
     }
 
-    @PostMapping(params = "mark_as_incomplete")
+    @PostMapping(params = "edit")
     public String edit(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
                        BindingResult bindingResult,
                        Model model,
@@ -192,16 +176,40 @@ public class ApplicationDetailsController {
         application.setResubmission(form.getResubmission());
         application.setPreviousApplicationNumber(form.getResubmission() == TRUE ? form.getPreviousApplicationNumber() : null);
         application.setPreviousApplicationTitle(form.getResubmission() == TRUE ? form.getPreviousApplicationTitle() : null);
-        if (isValidEnum(CompetitionReferralSource.class, form.getCompetitionReferralSource())) {
-            application.setCompetitionReferralSource(CompetitionReferralSource.valueOf(form.getCompetitionReferralSource()));
-        }
-        if (isValidEnum(CompanyAge.class, form.getCompanyAge())) {
-            application.setCompanyAge(CompanyAge.valueOf(form.getCompanyAge()));
-        }
-        if (isValidEnum(CompanyPrimaryFocus.class, form.getCompanyPrimaryFocus())) {
-            application.setCompanyPrimaryFocus(CompanyPrimaryFocus.valueOf(form.getCompanyPrimaryFocus()));
-        }
+        application.setCompetitionReferralSource(form.getCompetitionReferralSource());
+        application.setCompanyAge(form.getCompanyAge());
+        application.setCompanyPrimaryFocus(form.getCompanyPrimaryFocus());
         return applicationService.save(application);
+    }
+
+    private void validate(ApplicationDetailsForm form, long applicationId, BindingResult bindingResult) {
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        if (Boolean.TRUE.equals(form.getResubmission())) {
+            if (isNullOrEmpty(form.getPreviousApplicationNumber())) {
+                bindingResult.rejectValue("previousApplicationNumber", "validation.application.previous.application.number.required");
+            }
+            if (isNullOrEmpty(form.getPreviousApplicationTitle())) {
+                bindingResult.rejectValue("previousApplicationTitle", "validation.application.previous.application.title.required");
+            }
+        }
+        if (competition.isProcurement()) {
+            if (form.getCompetitionReferralSource() == null) {
+                bindingResult.rejectValue("competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
+            }
+            if (form.getCompanyAge() == null) {
+                bindingResult.rejectValue("companyAge", "validation.application.procurement.companyage.required");
+            }
+            if (form.getCompanyPrimaryFocus() == null) {
+                bindingResult.rejectValue("companyPrimaryFocus", "validation.application.procurement.companyprimaryfocus.required");
+            }
+        }
+        if (competition.getInnovationAreas().size() > 1 && !application.getNoInnovationAreaApplicable()) {
+            if (application.getInnovationArea() == null) {
+                bindingResult.rejectValue("innovationAreaErrorHolder", "validation.application.innovationarea.category.required");
+            }
+        }
     }
 
 }

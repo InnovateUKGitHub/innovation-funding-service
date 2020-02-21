@@ -11,6 +11,9 @@
     <div class="hidden">You can print your application by pressing CTRL+P (Windows) or CMD+P (mac)</div>
 </div>
 
+<th:block th:insert="application/readonly/application-read-only :: print (${model})" />
+
+<!--/*
 <div th:with="procurementCompetition=${currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
     <section class="portrait" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
         <h1 th:text="${section.getName()}" class="govuk-heading-l" />
@@ -41,6 +44,7 @@
         </div>
     </section>
 </div>
+*/-->
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:unless="${param.noprint}">
     <script type="text/javascript">
