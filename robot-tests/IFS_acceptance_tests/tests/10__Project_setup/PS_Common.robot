@@ -157,6 +157,47 @@ The user adds a new team member
   the user enters text to a text field   css = input[name=email]  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to project")
 
+the user enters bank details
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = accountNumber  ${Account_Two}
+    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link                      id = submit-bank-details
+
+The user selects their finance contact
+    [Arguments]  ${financeContactName}
+    the user clicks the button/link     link = Your finance contact
+    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
+    the user selects the radio button   financeContact   ${financeContactName}
+    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+
+the user should see project manager/finance contact validations
+    [Arguments]   ${save_CTA}  ${errormessage}
+    the user clicks the button/link                  jQuery = button:contains("${save_CTA}")
+    the user should see a field and summary error    ${errormessage}
+
+the user updates the correspondence address
+    the user clicks the button/link                     jQuery = .govuk-button:contains("Save")
+    the user should see a field and summary error       Search using a valid postcode or enter the address manually.
+    the user enter the Correspondence address
+    the user should see the address data
+    the user clicks the button/link                     link = Correspondence address
+    the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
+    the user should see the element                     jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
+
+the user should see the address data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != 'NO'    the user should see the valid data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == 'NO'    the user should see the dummy data
+
+the user should see the valid data
+    the user should see the element           jQuery = td:contains("Correspondence address") ~ td:contains("Am Reprographics, Bristol, BS1 4NT")
+
+the user should see the dummy data
+    the user should see the element           jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
+
 project finance submits monitoring officer
     [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}
     log in as a different user              &{internal_finance_credentials}

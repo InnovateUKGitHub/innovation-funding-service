@@ -251,16 +251,6 @@ Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${appl_name}
     Set suite variable    ${ProjectID}
 
-the user enters bank details
-    the user clicks the button/link                      link = Bank details
-    the user enters text to a text field                 name = accountNumber  ${Account_Two}
-    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
-    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link                      id = postcode-lookup
-    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                      id = submit-bank-details
-
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Search for MO                            Orvill  Orville Gibbs
