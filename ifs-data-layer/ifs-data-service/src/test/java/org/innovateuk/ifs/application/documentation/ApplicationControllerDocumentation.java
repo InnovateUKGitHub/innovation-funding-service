@@ -341,7 +341,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         long userId = 1L;
         when(applicationDeletionService.hideApplicationFromDashboard(ApplicationUserCompositeId.id(applicationId, userId))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/application/{applicationId}/hide-from-dashboard/{userId}", applicationId, userId)
+        mockMvc.perform(post("/application/{applicationId}/hide-for-user/{userId}", applicationId, userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent())
                 .andDo(document("application/{method-name}",

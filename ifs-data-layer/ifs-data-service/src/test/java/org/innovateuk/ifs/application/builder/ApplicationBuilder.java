@@ -62,7 +62,6 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((activityState, application)
                         -> {
                     ApplicationProcess applicationProcess = new ApplicationProcess(application, null, activityState);
-                    setField("id", 1L, applicationProcess);
                     setField("applicationProcess", applicationProcess, application);
                 },
                 activityStates

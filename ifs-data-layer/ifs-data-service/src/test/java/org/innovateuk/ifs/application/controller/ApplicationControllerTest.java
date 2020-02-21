@@ -230,10 +230,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void hideApplicationFromDashboard() throws Exception {
         long applicationId = 1L;
-        long userId = 1L;
+        long userId = 2L;
         when(applicationDeletionService.hideApplicationFromDashboard(ApplicationUserCompositeId.id(applicationId, userId))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/application/{applicationId}/hide-from-dashboard/{userId}", applicationId, userId))
+        mockMvc.perform(post("/application/{applicationId}/hide-for-user/{userId}", applicationId, userId))
                 .andExpect(status().isNoContent());
     }
 }

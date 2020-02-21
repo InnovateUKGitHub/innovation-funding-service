@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<ApplicationDeletionServiceImpl> {
 
@@ -62,7 +63,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         Application application = newApplication()
                 .withApplicationState(ApplicationState.OPENED)
                 .build();
-
+        setField(application.getApplicationProcess(), "id", 1L);
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
 
         ServiceResult<Void> result = service.deleteApplication(applicationId);
