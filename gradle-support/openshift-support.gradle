@@ -394,7 +394,7 @@ task createProject(dependsOn: deleteProject) {
     }
 }
 
-task osCreateProjectRemote(dependsOn: deleteProjectRemote) {
+task osCreateProjectRemote(dependsOn: osDeleteProjectRemote) {
     def token
 
     def openshiftDevGroup = "CN=ocp_ifs_devs,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
