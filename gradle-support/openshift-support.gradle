@@ -269,7 +269,7 @@ task dbAnonymisedDumpLocal(type: Exec, dependsOn: [setDatabaseDefaults, prepareD
     args = [openshiftEnv, "local", project.version]
 }
 
-task deleteProjectLocal(type: Exec) {
+task osDeleteProjectLocal(type: Exec) {
     doFirst {
         executable 'oc'
         args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServerLocal}", "--insecure-skip-tls-verify=true"
@@ -282,7 +282,7 @@ task deleteProjectLocal(type: Exec) {
     }
 }
 
-task createProjectLocal(type: Exec, dependsOn: deleteProjectLocal) {
+task osCreateProjectLocal(type: Exec, dependsOn: deleteProjectLocal) {
     doFirst {
         executable 'oc'
         args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServerLocal}", "--insecure-skip-tls-verify=true"
@@ -328,7 +328,7 @@ task deleteProject(type: Exec) {
     }
 }
 
-task deleteProjectRemote(type: Exec) {
+task osDeleteProjectRemote(type: Exec) {
     def token
     doFirst {
         if (isNamedEnv()) {
@@ -394,7 +394,7 @@ task createProject(dependsOn: deleteProject) {
     }
 }
 
-task createProjectRemote(dependsOn: deleteProjectRemote) {
+task osCreateProjectRemote(dependsOn: deleteProjectRemote) {
     def token
 
     def openshiftDevGroup = "CN=ocp_ifs_devs,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
