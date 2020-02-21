@@ -23,6 +23,11 @@ public class GoogleAnalyticsDataLayerController {
         return googleAnalyticsDataLayerService.getCompetitionNameByApplicationId(applicationId).toGetResponse();
     }
 
+    @GetMapping("/invite/{inviteHash}/competition-name")
+    public RestResult<String> getCompetitionNameForInvite(@PathVariable("inviteHash") String inviteHash) {
+        return googleAnalyticsDataLayerService.getCompetitionNameByInviteHash(inviteHash).toGetResponse();
+    }
+
     @GetMapping("/application/{applicationId}/user-roles")
     public RestResult<List<Role>> getRolesByApplicationIdForCurrentUser(@PathVariable("applicationId") long applicationId) {
         return googleAnalyticsDataLayerService.getRolesByApplicationIdForCurrentUser(applicationId).toGetResponse();
@@ -51,5 +56,10 @@ public class GoogleAnalyticsDataLayerController {
     @GetMapping("/project/{projectId}/application-id")
     public RestResult<Long> getApplicationIdForProject(@PathVariable("projectId") long projectId) {
         return googleAnalyticsDataLayerService.getApplicationIdForProject(projectId).toGetResponse();
+    }
+
+    @GetMapping("/assessment/{assessmentId}/application-id")
+    public RestResult<Long> getApplicationIdForAssessment(@PathVariable("assessmentId") long assessmentId) {
+        return googleAnalyticsDataLayerService.getApplicationIdForAssessment(assessmentId).toGetResponse();
     }
 }
