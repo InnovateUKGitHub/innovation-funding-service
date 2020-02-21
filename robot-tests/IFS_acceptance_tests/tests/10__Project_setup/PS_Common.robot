@@ -167,6 +167,41 @@ the user enters bank details
     the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
     the user clicks the button/link                      id = submit-bank-details
 
+The user is able to complete project details section
+    the user clicks the button/link         link = Project details
+    the user clicks the button/link         link = Correspondence address
+    the user updates the correspondence address
+    the user clicks the button/link         link = Return to set up your project
+
+The user completes the project team section
+    the user selects their finance contact   financeContact1
+    the user clicks the button/link          link = Project manager
+    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
+    the user selects the radio button        projectManager   projectManager1
+    the user clicks the button/link          jQuery = button:contains("Save project manager")
+    the user clicks the button/link          link = Set up your project
+
+The user uploads the exploitation plan
+    the user clicks the button/link     link = Exploitation plan
+    the user uploads the file           css = .inputfile  ${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+
+The user uploads the Test document type
+    the user clicks the button/link     link = Test document type
+    the user uploads the file           css = .inputfile  ${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+
+The user is able to complete the Documents section
+    [Documentation]  IFS-5700
+    Given the user clicks the button/link     link = Documents
+    When the user uploads the exploitation plan
+    And the user clicks the button/link       link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
+
 The user selects their finance contact
     [Arguments]  ${financeContactName}
     the user clicks the button/link     link = Your finance contact
