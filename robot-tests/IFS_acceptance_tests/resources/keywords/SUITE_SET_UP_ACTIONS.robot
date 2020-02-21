@@ -135,8 +135,8 @@ the user fills in the inviting steps
 
 the user invites a person to the same organisation
     [Arguments]  ${name}  ${email}
-    the user enters text to a text field   id = name   ${name}
-    the user enters text to a text field   id = email  ${email}
+    the user enters text to a text field   css = [name=name]   ${name}
+    the user enters text to a text field   css = [name=email]  ${email}
     the user clicks the button/link        jQuery = button:contains("Invite to application")
 
 # The search results are specific to Research Organisation type

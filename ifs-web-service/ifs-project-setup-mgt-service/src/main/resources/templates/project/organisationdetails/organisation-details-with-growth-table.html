@@ -31,6 +31,7 @@
                                                        form=${form},
                                                        organisationSizeOptions=${yourOrganisation.organisationSizeOptions},
                                                        isH2020=${yourOrganisation.h2020},
+                                                       isProcurementCompetition=${yourOrganisation.procurementCompetition},
                                                        isInternalUser=${true},
                                                        readOnly=${yourOrganisation.readOnly},
                                                        showOrganisationSizeAlert=${yourOrganisation.showOrganisationSizeAlert},
@@ -49,10 +50,10 @@
         <div class="govuk-form-group govuk-!-margin-top-6">
             <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                th:href="@{/competition/{competitionId}/project/{projectId}/details}(competitionId=${organisationDetails.competitionId}, projectId={organisationDetails.projectId})"
-               class="button-secondary">Return to project details</a>
+               class="govuk-button govuk-button--secondary">Return to project details</a>
             <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                th:href="${cookieBackLinkUrl}"
-               class="button-secondary"
+               class="govuk-button govuk-button--secondary"
                th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return</a>
         </div>
 

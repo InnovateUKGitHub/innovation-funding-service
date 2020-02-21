@@ -42,6 +42,7 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                                           UserResource loggedInUser) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
 
@@ -60,6 +61,7 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                     organisationId,
                     true,
                     false,
+                    competition.isProcurement(),
                     loggedInUser,
                     isAllEligibilityAndViabilityInReview(projectId)));
 

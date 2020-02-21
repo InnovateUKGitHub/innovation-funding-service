@@ -416,13 +416,13 @@ the user logs in and navigates to project details
 the user checks for target start date validation
     the user clicks the button/link                 link = Target start date
     the user should see the element                 jQuery = h2:contains("Project duration") ~ p:contains("10 months")
-    the user enters text to a text field            id = projectStartDate_year    2019
+    the user enters text to a text field            id = projectStartDate-date_year    2019
     the user clicks the button/link                 jQuery = .govuk-button:contains("Save")
     the user should see a field and summary error   Please enter a future date.
 
 the user save the target start date
-    the user enters text to a text field       id = projectStartDate_month    1
-    the user enters text to a text field       id = projectStartDate_year    ${nextyear}
+    the user enters text to a text field       id = projectStartDate-date_month    1
+    the user enters text to a text field       id = projectStartDate-date_year    ${nextyear}
     the user clicks the button/link            jQuery = .govuk-button:contains("Save")
     the user should see the element            jQuery = td:contains("1 Jan ${nextyear}")
 

@@ -168,7 +168,7 @@ The user fills in the public content competition inforation and search
     the user clicks the button/link         link = Competition information and search
     the user enters text to a text field    id = shortDescription  Horizon 2020 competition
     the user enters text to a text field    id = projectFundingRange  Up to £5million
-    the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary"]  Summary of eligiblity
+    the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary-label"]  Summary of eligiblity
     the user selects the radio button       publishSetting  invite
     the user enters text to a text field    id = keywords  Search, Testing, Robot
     the user clicks the button/link         jQuery = button:contains("Save and review")
@@ -406,10 +406,10 @@ Validate errors on Your project Finances section
 
 Validate the user is unable to submit an incomplete application
     the user clicks the button/link    jQuery = a:contains("Review and submit")
-    Element Should Contain             jQuery = button:contains("Application details")    Incomplete
-    Element Should Contain             jQuery = button:contains("Public description")    Incomplete
-    Element Should Contain             jQuery = button:contains("Horizon 2020 grant agreement")    Incomplete
-    Element Should Contain             jQuery = button:contains("Funding breakdown")  Incomplete
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Application details")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Public description")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Horizon 2020 grant agreement")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Funding breakdown")
 
 Custom Suite Teardown
     the user closes the browser

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project details - ' + ${model.project.name + ' '}"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Project details - ${model.project.name}|"/>
 </head>
 <body class="govuk-template__body project-detail">
 
@@ -91,7 +91,7 @@
             </tr>
             </tbody>
         </table>
-        <a class="button-secondary"
+        <a class="govuk-button govuk-button--secondary"
            th:href="@{/project/{id}(id=${model.project.id})}">Return to set up your project</a>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${model.projectName} - Finance Contact|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+              th:with="pageTitle=|Finance contact - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body">
 
@@ -16,7 +16,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
-             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to save your finance contact</h2>
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">

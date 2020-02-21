@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.application.name + ' - Feedback overview'}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Feedback overview - ${model.application.name}|" />
     </head>
 
     <body class="govuk-template__body app-summary" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">
@@ -190,7 +190,7 @@
 
                 <section th:if="${model.hasFinanceSection}">
                     <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Finance</h2>
-                    <div class="govuk-accordion" data-module="accordion" id="accordion-finance">
+                    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finance">
                         <div class="govuk-accordion__section">
                             <div class="govuk-accordion__section-header">
                                 <h3 class="govuk-accordion__section-heading">

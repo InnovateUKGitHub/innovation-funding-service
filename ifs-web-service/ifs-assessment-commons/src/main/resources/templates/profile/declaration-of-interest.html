@@ -68,14 +68,14 @@
                            th:href="@{/competition/{cid}/assessors/profile/{assessorId}?tab=skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})}"
                            class="govuk-tabs__tab">Skills</a>
                     </li>
-                    <li class="govuk-tabs__list-item">
+                    <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
                         <a th:unless="${model.compAdminUser}"
                            th:href="@{/profile/details/declaration}"
                            aria-label="declaration of interest"
                            class="govuk-tabs__tab">DOI</a>
                         <a th:if="${model.compAdminUser}"
                            th:href="@{/competition/{cid}/assessors/profile/{assessorId}?tab=declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})}"
-                           class="govuk-tabs__tab govuk-tabs__tab--selected">DOI</a>
+                           class="govuk-tabs__tab">DOI</a>
                     </li>
                 </ul>
                 <section class="govuk-tabs__panel">
@@ -168,7 +168,7 @@
                     </div>
 
                     <div class="govuk-!-margin-top-6" th:if="${!model.compAdminUser}">
-                        <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessments</a>
+                        <a href="/assessment/assessor/dashboard" class="govuk-button govuk-button--secondary">Return to assessments</a>
                     </div>
                 </section>
             </div>

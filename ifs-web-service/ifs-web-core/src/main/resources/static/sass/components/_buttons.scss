@@ -1,6 +1,6 @@
-@import "govuk-frontend/settings/all";
-@import "govuk-frontend/tools/all";
-@import "govuk-frontend/helpers/all";
+@import "govuk-frontend/govuk/settings/all";
+@import "govuk-frontend/govuk/tools/all";
+@import "govuk-frontend/govuk/helpers/all";
 
 $button-shadow-size: $govuk-border-width-form-element;
 // Button styling and overrides
@@ -13,50 +13,8 @@ table {
   }
 }
 
-.button-secondary{
-  @extend .govuk-button;
-  @include box-shadow(0 2px 0 darken(govuk-colour("grey-3"), 15%));
-  background-color: govuk-colour("grey-3");
-  color: $govuk-text-colour;
-
-  // Ensure that any global link styles are overridden
-  &:link,
-  &:visited,
-  &:active,
-  &:hover {
-    color: $govuk-text-colour;
-  }
-
-  &:hover,
-  &:focus {
-    background-color: darken(govuk-colour("grey-3"), 5%);
-  }
-
-  &.disabled,
-  &[disabled]{
-    background-color: govuk-colour("grey-3");
-
-    &:hover,
-    &:focus {
-      background-color: govuk-colour("grey-3");
-    }
-  }
-}
-
-.button-warning{
-  @extend .govuk-button;
-  @include box-shadow(0 2px 0 darken($ifs-warning-button-colour, 15%));
-  background-color: $ifs-warning-button-colour;
-
-  &:hover,
-  &:focus {
-    background-color: darken($ifs-warning-button-colour, 5%);
-  }
-}
-
 .button-clear {
   @include govuk-font($size: 19, $line-height: 19px);
-  @include govuk-focusable;
   @include box-shadow(none);
   @include box-sizing(border-box);
   display: inline-block;
@@ -77,10 +35,13 @@ table {
     border: 0;
   }
 
-  &:hover,
-  &:focus {
+  &:hover {
     background-color: transparent;
     color: $govuk-link-hover-colour;
+  }
+
+  &:focus {
+    @include govuk-focused-text;
   }
 
   &.disabled,

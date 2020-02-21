@@ -110,11 +110,11 @@ Review and submit button
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751
     [Tags]
-    Given the user should see the element  jQuery = button:contains("Application details") .section-incomplete
+    Given the user should see the element  jQuery = .section-incomplete + button:contains("Application details")
     When the user expands the section      Application details
-    Then the user should see the element   jQuery = #accordion-questions-content-2 button:contains("Mark")
-    And the user should see the element    jQuery = #accordion-questions-content-2 button:contains("Return and edit")
-    When the user clicks the button/link   jQuery = #accordion-questions-content-2 button:contains("Mark")
+    Then the user should see the element   jQuery = #accordion-questions-content-1-2 button:contains("Mark")
+    And the user should see the element    jQuery = #accordion-questions-content-1-2 button:contains("Return and edit")
+    When the user clicks the button/link   jQuery = #accordion-questions-content-1-2 button:contains("Mark")
     And the user fills in the Application details  ${aeroApplication}  ${tomorrowday}  ${month}  ${nextyear}
     Then the user should no longer see the Mark-as-complete-link  Application details
 
@@ -213,7 +213,7 @@ Log in and create a new application for the Aerospace competition
 the user should no longer see the Mark-as-complete-link
     [Arguments]  ${Section}
     the user navigates to the page       ${server}/application/${appId}/review-and-submit
-    the user should see the element      jQuery = #accordion-questions-content-2 button:contains("Return and edit")
+    the user should see the element      jQuery = #accordion-questions-content-1-2 button:contains("Return and edit")
 
 Custom suite teardown
     The user closes the browser

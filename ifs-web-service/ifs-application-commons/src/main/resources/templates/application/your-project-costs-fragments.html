@@ -13,12 +13,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-1">
                     Labour
-                    <span class="finance-total" data-mirror="#section-total-labour"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-labour"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-labour"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-labour"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-1" class="govuk-accordion__section-content"
@@ -297,12 +297,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-2">
                     Overhead costs
-                    <span class="finance-total" data-mirror="#section-total-overhead"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-overhead"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-overhead"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-overhead"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-2" class="govuk-accordion__section-content"
@@ -548,22 +548,20 @@
             PROCUREMENT OVERHEADS
 
 *********************************/-->
-
 <th:block th:fragment="procurement-overheads"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
-
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
             <div class="govuk-accordion__section-header">
                 <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-10">
                 Overhead costs
+                </span>
                 <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
                       th:text="${#ifsUtil.calculatePercentage(form.totalProcurementOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
-                </span>
                 </h3>
             </div>
             <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
@@ -806,12 +804,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-3">
                     Materials
-                    <span class="finance-total" data-mirror="#section-total-material"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-material"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalMaterialCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-material"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-material"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalMaterialCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-3" class="govuk-accordion__section-content"
@@ -891,14 +889,11 @@
                             refer to our guide to project costs for further information.</a></p>
                     </div>
                     <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary" role="button"
-                                 aria-controls="details-content-43406a87-dcf3-428e-aba8-9e455c94a1ff"
-                                 aria-expanded="false">
+                        <summary class="govuk-details__summary" role="group">
                             <span class="govuk-details__summary-text">Materials costs guidance</span>
                         </summary>
-                        <div class="govuk-details__text wysiwyg-styles"
-                             id="details-content-43406a87-dcf3-428e-aba8-9e455c94a1ff" aria-hidden="true"><p>
-                            Materials
+                        <div class="govuk-details__text">
+                            <p>Materials
                             supplied
                             by associated companies or project partners should be charged at cost.</p>
                             <p>Software that you have purchased specifically for use during your project may be
@@ -908,7 +903,8 @@
                                 during
                                 your
                                 project, will be eligible. For example, installation, training or customisation.</p>
-                            <p>Material costs must be itemised to justify that they are eligible.</p></div>
+                            <p>Material costs must be itemised to justify that they are eligible.</p>
+                        </div>
                     </details>
                 </th:block>
             </th:block>
@@ -1058,12 +1054,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-4">
                     Capital usage
-                    <span class="finance-total" data-mirror="#section-total-capital-usage"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-capital-usage"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-capital-usage"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-capital-usage"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-4" class="govuk-accordion__section-content"
@@ -1113,13 +1109,10 @@
                         your
                         project.</p></div>
                     <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary" role="button"
-                                 aria-controls="details-content-412b50ac-c8d6-49eb-bf7d-24b1eeaeb7a1"
-                                 aria-expanded="false">
+                        <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">Capital usage guidance</span>
                         </summary>
-                        <div class="govuk-details__text wysiwyg-styles"
-                             id="details-content-412b50ac-c8d6-49eb-bf7d-24b1eeaeb7a1" aria-hidden="true"><p>You
+                        <div class="govuk-details__text"><p>You
                             will
                             need
                             to
@@ -1131,7 +1124,8 @@
                             then you should use its net present value.</p>
                             <p>This value is then multiplied by the amount, in percentages, that is used during the
                                 project.
-                                This final value represents the eligible cost to your project.</p></div>
+                                This final value represents the eligible cost to your project.</p>
+                        </div>
                     </details>
                 </th:block>
             </th:block>
@@ -1370,12 +1364,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-5">
                     Subcontracting costs
-                    <span class="finance-total" data-mirror="#section-total-subcontracting"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-subcontracting"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalSubcontractingCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-subcontracting"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-subcontracting"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalSubcontractingCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-5" class="govuk-accordion__section-content"
@@ -1423,13 +1417,10 @@
                         team.
                         You can also subcontract if it is cheaper than developing your skills in-house.</p></div>
                     <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary" role="button"
-                                 aria-controls="details-content-6f96a41f-908c-4039-8aa3-4edb6a35af0e"
-                                 aria-expanded="false">
+                        <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
                         </summary>
-                        <div class="govuk-details__text wysiwyg-styles"
-                             id="details-content-6f96a41f-908c-4039-8aa3-4edb6a35af0e" aria-hidden="true">
+                        <div class="govuk-details__text">
                             <p>Subcontracting costs relate to work carried out by third party organisations. These
                                 organisations are not part of your project.</p>
                             <p>Subcontracting is eligible providing it is justified<span
@@ -1590,12 +1581,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-6">
                     Travel and subsistence
-                    <span class="finance-total" data-mirror="#section-total-travel"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-travel"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-travel"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-travel"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-6" class="govuk-accordion__section-content"
@@ -1829,12 +1820,12 @@
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-7">
                     Other costs
-                    <span class="finance-total" data-mirror="#section-total-other"></span>
-                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                          data-calculation-operations="/,*"
-                          data-calculation-fields="100, #total-cost, #section-total-other"
-                          th:text="${#ifsUtil.calculatePercentage(form.totalOtherCosts, form.organisationFinanceTotal) + '%'}"></span>
                 </span>
+                <span class="finance-total" data-mirror="#section-total-other"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-other"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalOtherCosts, form.organisationFinanceTotal) + '%'}"></span>
             </h3>
         </div>
         <div id="accordion-finances-content-7" class="govuk-accordion__section-content"
@@ -1845,10 +1836,11 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal}">Please note that legal or project audit and accountancy fees are not eligible and
+                <p class="govuk-body" th:unless="${model.internal || model.isProcurementCompetition()}">Please note that legal or project audit and accountancy fees are not eligible and
                     should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
                     limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
                     within any other cost headings.</p>
+                <p class="govuk-body" th:if="${model.isProcurementCompetition()}">Provide estimates of other costs that do not fall under our standard cost headings.</p>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="other-costs-table">
                         <thead class="govuk-table__head">
@@ -2000,7 +1992,7 @@
     <div class="alignright-button" th:if="${model.open}">
         <a th:href="@{?financeType={financeType}(financeType=${financeType})}"
            th:if="${model.isReadOnly(financeType)}"
-           class="button-secondary">Edit</a>
+           class="govuk-button govuk-button--secondary">Edit</a>
         <button th:unless="${model.isReadOnly(financeType)}" name="save-eligibility" th:value="${financeType}"
                 class="govuk-button">Save
         </button>

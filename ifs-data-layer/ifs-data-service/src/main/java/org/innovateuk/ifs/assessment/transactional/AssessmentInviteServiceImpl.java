@@ -32,7 +32,10 @@ import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
+import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -101,6 +104,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Autowired
     private InnovationAreaRepository innovationAreaRepository;
+
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     @Autowired
     private AssessmentInviteMapper assessmentInviteMapper;
@@ -268,10 +274,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter) {
-
-        List<User> result = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter));
-
-        return serviceSuccess(simpleMap(result, User::getId));
+        return serviceSuccess(assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter)));
     }
 
     private AvailableAssessorResource mapToAvailableAssessorResource(User assessor) {
@@ -549,7 +552,12 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     private void addAssessorRoleToUser(User user) {
         user.addRole(Role.ASSESSOR);
+        createAssessorRoleProfileStatus(user);
         userService.evictUserCache(user.getUid());
+    }
+
+    private void createAssessorRoleProfileStatus(User user) {
+        roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
     }
 
     @Override

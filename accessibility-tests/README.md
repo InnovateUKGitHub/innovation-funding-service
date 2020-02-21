@@ -1,7 +1,11 @@
 
 # Accesibility Testing
 
+## Installing
 
+`cd accessibility-tests`
+
+`npm install`
 
 ## Deploying
 

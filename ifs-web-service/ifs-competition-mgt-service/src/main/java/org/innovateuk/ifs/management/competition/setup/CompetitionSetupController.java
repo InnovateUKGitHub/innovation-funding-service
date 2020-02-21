@@ -45,6 +45,7 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -439,7 +440,8 @@ public class CompetitionSetupController {
                                            Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
+        Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
+        Supplier<String> failure = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
 
         MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
@@ -449,7 +451,7 @@ public class CompetitionSetupController {
         competitionSetupService.saveCompetitionSetupSection(termsAndConditionsForm, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS);
 
         return validationHandler.addAnyErrors(error(uploadResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
-                .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
+                .failNowOrSucceedWith(failure, success);
     }
 
     @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "deleteTermsAndConditionsDoc")

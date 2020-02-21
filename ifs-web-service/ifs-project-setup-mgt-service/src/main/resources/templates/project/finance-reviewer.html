@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle='Manage project status',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+              th:with="pageTitle=|Innovate UK project finance reviewer - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body competition-management project-management">
 
@@ -19,7 +19,7 @@
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
-             data-module="error-summary">
+             data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <div class="govuk-error-summary__body">
                 <th:block th:insert="fragments/elements :: error-summary-list(form)"/>

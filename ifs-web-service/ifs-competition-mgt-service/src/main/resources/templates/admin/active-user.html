@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to manage users',linkUrl=@{/admin/users/active},dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">You are unable to update user's details.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -68,12 +68,10 @@
             </th:block>
             <dl class="govuk-list">
                 <th:block th:unless="${model.canEditUserDetails}">
-                    <dl class="govuk-list">
-                        <dt>First name</dt>
-                        <dd th:text="${model.user.firstName}">Steve</dd>
-                        <dt>Last name</dt>
-                        <dd th:text="${model.user.lastName}">Smith</dd>
-                    </dl>
+                    <dt>First name</dt>
+                    <dd th:text="${model.user.firstName}">Steve</dd>
+                    <dt>Last name</dt>
+                    <dd th:text="${model.user.lastName}">Smith</dd>
                 </th:block>
                 <th:block th:if="${model.user.phoneNumber != null}">
                     <dt>Phone number</dt>
@@ -166,10 +164,10 @@
             <div class="govuk-form-group govuk-!-margin-top-6">
                 <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                    th:href="@{/admin/users/active}"
-                   class="button-secondary">Return to manage users</a>
+                   class="govuk-button govuk-button--secondary">Return to manage users</a>
                 <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
                    th:href="${cookieBackLinkUrl}"
-                   class="button-secondary"
+                   class="govuk-button govuk-button--secondary"
                    th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to application overview</a>
             </div>
         </form>
