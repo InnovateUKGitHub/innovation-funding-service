@@ -282,7 +282,7 @@ task osDeleteProjectLocal(type: Exec) {
     }
 }
 
-task osCreateProjectLocal(type: Exec, dependsOn: deleteProjectLocal) {
+task osCreateProjectLocal(type: Exec, dependsOn: osDeleteProjectLocal) {
     doFirst {
         executable 'oc'
         args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServerLocal}", "--insecure-skip-tls-verify=true"
