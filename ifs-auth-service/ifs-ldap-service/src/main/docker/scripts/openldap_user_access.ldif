@@ -1,0 +1,4 @@
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * by dn.regex="gidNumber=0*" manage by * break

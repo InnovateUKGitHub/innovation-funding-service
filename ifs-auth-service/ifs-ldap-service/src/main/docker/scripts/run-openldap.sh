@@ -12,15 +12,11 @@ echo "Post start up configuration"
 
 # Enable SSL
 echo "Enabling SSL"
-until ldapmodify -H ldapi:/// -D cn=admin,cn=config -w root_password_123 -f mod_ssl.ldif
+until ldapmodify -Y EXTERNAL -H ldapi:/// -f /usr/local/bin/mod_ssl.ldif
 do
     echo "Waiting for LDAP to start"
     sleep 3
 done
-
-# Remove the root password now configuration is complete
-echo "Removing the root password now configuration is complete"
-ldapmodify -H ldapi:/// -D cn=admin,cn=config -w root_password_123 -f rootpw_cnconfig_delete.ldif
 
 # Now we bring the LDAP primary process back into the foreground and leave it there.
 echo "Bringing LDAP to the foreground"

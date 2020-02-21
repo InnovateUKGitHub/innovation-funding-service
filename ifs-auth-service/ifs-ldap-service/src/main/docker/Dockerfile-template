@@ -33,11 +33,8 @@ RUN apt-get update --fix-missing && \
   ldapadd -H ldapi:/// -f ppolicy_cn.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
   ldapmodify -H ldapi:/// -f ppolicy_cn_attribs.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
 
-# config ldap root user - we need this so that we have permissions to edit config when ldap starts up in OpenShift. \
-  ldapmodify -Y EXTERNAL -H ldapi:/// -f rootpw_cnconfig_create.ldif && \
-
 # Set up the config for enabling and enforcing SSL, be lax about self-signed certificates. \
-# Note we do not run the command here to use the certs as this requires the certs which we don't have until runtime. \
+# Note we do not run the command here to use the certs as this requires the certs which we do not have until runtime. \
   sed -i 's#/etc/ssl/certs/ca-certificates.crt#/var/certs/ldap-encryption.crt##' /etc/ldap/ldap.conf && \
   echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf && \
 
@@ -46,7 +43,9 @@ RUN apt-get update --fix-missing && \
 # allow unlimited search results -frontend \
   ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_search_limit_frontend.ldif && \
 
-# run openldap as an abritarty user \
+# allow any user with gidNumber=0 edit the config database so we have edit config permissions when running in OpenShift \
+  ldapmodify -Y EXTERNAL -H ldapi:/// -f openldap_user_access.ldif && \
+# allow openldap to run as abritarty \
   chgrp -R 0 /etc/ldap /var/lib/ldap /var/run/slapd && \
   chmod -R g+rw /etc/ldap /var/lib/ldap /var/run/slapd
 
