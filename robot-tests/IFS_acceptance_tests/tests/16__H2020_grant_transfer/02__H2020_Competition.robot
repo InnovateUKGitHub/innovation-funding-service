@@ -98,6 +98,13 @@ The user is able to complete the Bank details section
     When the user clicks the button/link      link = Set up your project
     Then the user should see the element      jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
 
+The user is able to complete the Documents section
+    [Documentation]  IFS-5700
+    Given the user clicks the button/link     link = Documents
+    When the user uploads the exploitation plan
+    And the user clicks the button/link       link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
+
 Internal user is able to approve documents
     [Documentation]  IFS-5700
     [Setup]  log in as a different user         &{Comp_admin1_credentials}
@@ -134,17 +141,26 @@ User is able to submit the spend profile
     When the user submits the spend profile
     Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
-Internal user is able to approve Spend profile
+Internal user is able to approve Spend profile and generates the GOL
+    [Documentation]  IFS-5700
     Given proj finance approves the spend profiles  ${HProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And internal user generates the GOL             ${HProjectID}
+
+Applicant is able to upload the GOL
+    [Documentation]  IFS-5700
+    Given log in as a different user         &{collaborator1_credentials}
+    When Applicant uploads the GOL           ${HProjectID}
+    Then the user should see the element     jQUery = .progress-list li:nth-child(8):contains("Awaiting review")
+
+Internal user is able to approve the GOL and the project is now Live
+    [Documentation]  IFS-5700
+    Given the internal user approve the GOL  ${HProjectID}
+    When log in as a different user          &{collaborator1_credentials}
+    And the user navigates to the page       ${server}/project-setup/project/${HProjectID}
+    Then the user should see the element     jQuery = p:contains("The project is live")
 
 *** Keywords ***
-The user submits the spend profile
-    the user clicks the button/link    jQuery = button:contains("Mark as complete")
-    the user clicks the button/link    link = Review and submit project spend profile
-    the user clicks the button/link    link = Submit project spend profile
-    the user clicks the button/link    id = submit-send-all-spend-profiles
-
 The user approves h2020 finance checks
     the user should see the element     jQuery = table.table-progress span.viability-0:contains("Auto approved")
     the user clicks the button/link     jQuery = table.table-progress a.eligibility-0
@@ -159,12 +175,6 @@ Internal user is able to approve documents
     the user navigates to the page         ${server}/project-setup-management/project/${HProjectID}/document/all
     the user clicks the button/link        link = Exploitation plan
     internal user approve uploaded documents
-
-The project finance user approves bank details
-    [Arguments]  ${org_id}
-    the user navigates to the page            ${server}/project-setup-management/project/${org_id}/review-all-bank-details
-    the user clicks the button/link           jQuery = .govuk-button:contains("Approve bank account details")
-    the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
 Get project id
     ${HProjectID} =  get project id by name            ${H2020_Project_Name}

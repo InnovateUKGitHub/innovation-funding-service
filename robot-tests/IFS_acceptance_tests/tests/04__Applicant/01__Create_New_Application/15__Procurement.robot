@@ -142,7 +142,7 @@ Internal user generate the GOL
     Given applicant send project spend profile
     When the internal user approve SP and issue GOL
     Then applicant upload the GOL
-    And the internal user approve the GOL
+    And the internal user approve the GOL   ${ProjectID}
 
 *** Keywords ***
 Custom Suite Setup
@@ -308,11 +308,3 @@ applicant upload the GOL
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
-
-the internal user approve the GOL
-    log in as a different user          &{internal_finance_credentials}
-    the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
-    the user selects the radio button   APPROVED  acceptGOL
-    the user clicks the button/link     id = submit-button
-    the user clicks the button/link     id = accept-signed-gol
-    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
