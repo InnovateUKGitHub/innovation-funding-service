@@ -139,6 +139,8 @@ Eligibility funding level validation
     Then The user should see a field and summary error  The funding level percentage must be 100 or lower.
     And the user enters text to a text field            id = fundingLevelPercentageOverride  0
     Then The user should see a field and summary error  The funding level percentage must be 1 or higher.
+    And the user clicks the button twice                css = label[for="comp-overrideFundingRules-no"]
+    [Teardown]  the user clicks the button/link         jQuery = button:contains("Done")
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
