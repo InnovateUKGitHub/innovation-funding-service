@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Confirm bank details - ${project.name}|" />
 </head>
 <body class="govuk-template__body bank-detail-confirm">
 <th:block th:insert="fragments/layout :: body-start" />

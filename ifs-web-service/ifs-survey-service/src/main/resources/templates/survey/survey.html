@@ -66,11 +66,12 @@
                     </h2>
                 </legend>
 
-                <div th:id="comments">
+                <div>
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comments')} ? 'govuk-form-group--error'">
                         <th:block th:if="${#fields.hasErrors('comments')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('comments')}" th:text="${err}"></span>
                         </th:block>
+                        <label class="govuk-visually-hidden" th:for="comments">Use this space to provide comments</label>
                         <div class="textarea-wrapped word-count">
                             <textarea
                                 class="govuk-textarea"
