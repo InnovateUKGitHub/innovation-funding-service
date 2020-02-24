@@ -68,7 +68,7 @@ the user fills in the Application details
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
     The user clicks the button/link       id = complete-application-details
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       link = Back to application overview
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user selects research category from funding

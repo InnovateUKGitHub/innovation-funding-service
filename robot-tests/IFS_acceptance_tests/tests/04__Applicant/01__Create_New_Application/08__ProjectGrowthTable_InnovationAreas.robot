@@ -102,7 +102,7 @@ Application details read only view shows correct details without innovation area
     Given The user clicks the button/link    link = Application details
     Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("NewApplFromNewComp without GrowthTable")
     And The user should not see the element  jQuery = dt:contains("Innovation area")
-    [Teardown]  the user clicks the button/link  link = Application overview
+    [Teardown]  the user clicks the button/link  link = Back to application overview
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -307,7 +307,7 @@ Application details read only view shows correct details with innovation area
     Given The user clicks the button/link    link = Application details
     Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("All-Innov-Areas Application With GrowthTable")
     And The user should see the element  jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
-    [Teardown]  the user clicks the button/link  link = Application overview
+    [Teardown]  the user clicks the button/link  link = Back to application overview
 
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
