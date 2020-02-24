@@ -30,6 +30,9 @@ fi
 
 # Apply the certs from the aws
 # $1 the discriminator
+# Note that we use "oc create secret" with "--dry-run" to generate the yaml. This is then applied with "oc apply".
+# We do this because "oc create secret" fails if there is already a secret present, while "oc apply" will create or
+# update but only takes yaml.
 function applyAwsCerts() {
     # idp secrets
     oc create secret generic idp-keys-secrets \
