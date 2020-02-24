@@ -18,7 +18,10 @@ import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
@@ -63,6 +66,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -133,6 +137,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private ProjectUserInviteRepository projectUserInviteRepository;
+
+    @Autowired
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
@@ -444,6 +454,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 .collect(toList());
 
         List<ProjectUserInvite> projectUserInvites = projectUserInviteRepository.findByEmail(email);
+        List<ProjectPartnerInvite> projectPartnerInvites = projectPartnerInviteRepository.findByEmail(email);
 
         List<Long> newEmailInviteProjectIds = projectUserInvites.stream()
                 .filter(invite -> !OPENED.equals(invite.getStatus()))
@@ -451,17 +462,17 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 .map(Project::getId)
                 .collect(toList());
 
-        List<Long> invalidProjects = new ArrayList(intersection(userProjectIds, newEmailInviteProjectIds));
+        List<Long> newEmailInvitePartnerProjectIds = projectPartnerInvites.stream()
+                .filter(invite -> !OPENED.equals(invite.getStatus()))
+                .map(Invite::getTarget)
+                .map(Project::getId)
+                .collect(toList());
+
+        List<Long> invalidProjects = new ArrayList(intersection(userProjectIds, combineLists(newEmailInvitePartnerProjectIds, newEmailInviteProjectIds)));
 
         if (!invalidProjects.isEmpty()) {
 
-            Long applicationId = projectUserInvites.stream()
-                    .filter(invite -> invite.getTarget().getId().equals(invalidProjects.get(0)))
-                    .map(ProjectInvite::getTarget)
-                    .map(Project::getApplication)
-                    .map(Application::getId)
-                    .findAny()
-                    .get();
+          Long applicationId = projectRepository.findById(invalidProjects.get(0)).get().getApplication().getId();
 
             return serviceFailure(new Error(USER_EMAIL_UPDATE_EMAIL_EXISTS_ON_APPLICATION, applicationId) );
         }
