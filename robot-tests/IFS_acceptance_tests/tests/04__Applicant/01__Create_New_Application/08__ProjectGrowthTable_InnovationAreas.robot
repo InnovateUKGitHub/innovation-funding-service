@@ -517,7 +517,7 @@ the user logs in and apply to a competition
     logged in user applies to competition             ${compWithGrowth}  1
     the user clicks the button/link                   link = Application details
     the user enters text to a text field              css = [id="name"]  Application With GrowthTable
-    the user clicks the button/link                   link = Application overview
+    the user clicks the button/link                   link = Back to application overview
 
 Custom suite setup
     Set predefined date variables

@@ -7,8 +7,10 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,12 +28,16 @@ public class ApplicationDetailsViewModelPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private UserRestService userRestService;
+
     public ApplicationDetailsViewModel populate(ApplicationResource application, long questionId, UserResource user) {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
+        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), application.getId()).getSuccess();
 
         boolean complete = isComplete(application, organisation, questionId);
-        boolean open = application.isOpen() && competition.isOpen();
+        boolean open = application.isOpen() && competition.isOpen() && role.getRole().isLeadApplicant();
 
         return new ApplicationDetailsViewModel(application, competition, open, complete);
     }
