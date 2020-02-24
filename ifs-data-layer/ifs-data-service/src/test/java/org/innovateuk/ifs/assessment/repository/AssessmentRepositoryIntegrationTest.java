@@ -319,7 +319,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findById(1L).get();
 
         long found = repository
-                .countByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, application.getCompetition().getId());
+                .countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(AssessmentState.CREATED, application.getCompetition().getId());
 
         assertEquals(1L, found);
     }
@@ -331,7 +331,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findById(1L).get();
 
         long found = repository
-                .countByActivityStateInAndTargetCompetitionId(states, application.getCompetition().getId());
+                .countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(states, application.getCompetition().getId());
 
         assertEquals(3L, found);
     }
