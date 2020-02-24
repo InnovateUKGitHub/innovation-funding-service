@@ -125,4 +125,12 @@ public class ApplicationDetailsForm {
     public void setCompanyPrimaryFocus(CompanyPrimaryFocus companyPrimaryFocus) {
         this.companyPrimaryFocus = companyPrimaryFocus;
     }
+
+    public Object getInnovationAreaErrorHolder() {
+        return innovationAreaErrorHolder;
+    }
+
+    public void setInnovationAreaErrorHolder(Object innovationAreaErrorHolder) {
+        this.innovationAreaErrorHolder = innovationAreaErrorHolder;
+    }
 }

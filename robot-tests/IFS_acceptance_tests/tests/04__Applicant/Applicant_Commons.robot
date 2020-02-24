@@ -67,7 +67,7 @@ the user fills in the Application details
     the user enters text to a text field  css = [id="durationInMonths"]  24
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    The user clicks the button/link       css = button[name="mark_as_complete"]
+    The user clicks the button/link       id = complete-application-details
     the user clicks the button/link       link = Application overview
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 

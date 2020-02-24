@@ -51,7 +51,7 @@
                                 <button class="govuk-button button-clear"
                                         type="submit"
                                         name="assign"
-                                        th:unless="${question.lead && !question.complete}"
+                                        th:unless="${question.lead || question.complete}"
                                         th:value="${question.questionId}">
                                     Assign to lead for review
                                 </button>
