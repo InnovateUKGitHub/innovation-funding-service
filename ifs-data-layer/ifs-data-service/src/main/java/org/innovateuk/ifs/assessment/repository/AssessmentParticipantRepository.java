@@ -55,16 +55,16 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     String BY_COMP_AND_STATUS_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
-            "LEFT JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
+            "LEFT JOIN assessmentParticipant.user user " +
+            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status IN :status " +
             "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%')" +
-            " AND (roleStatuses IS NULL OR " +
-            "(" +
+            "AND (user IS NULL OR " +
+            "(user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
             "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
-            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "))";
 
     String BY_STATUS_AND_COMPLIANT_AND_NAME = "SELECT assessmentParticipant " +
