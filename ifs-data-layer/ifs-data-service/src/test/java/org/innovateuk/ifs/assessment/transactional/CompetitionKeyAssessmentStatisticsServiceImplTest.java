@@ -149,13 +149,13 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
 
 
         when(assessmentRepositoryMock.countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(
-                complementOf(of(REJECTED, WITHDRAWN)), competitionId)).thenReturn(keyStatisticsResource.getAssignmentCount());
+                complementOf(of(REJECTED, WITHDRAWN)), competitionId, singletonList(UserStatus.ACTIVE))).thenReturn(keyStatisticsResource.getAssignmentCount());
         when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(PENDING, competitionId, singletonList(UserStatus.ACTIVE))).thenReturn
                 (keyStatisticsResource.getAssignmentsWaiting());
         when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(ACCEPTED, competitionId, singletonList(UserStatus.ACTIVE))).thenReturn
                 (keyStatisticsResource.getAssignmentsAccepted());
         when(assessmentRepositoryMock.countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(of(OPEN,
-                DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId)).thenReturn(keyStatisticsResource
+                DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId, singletonList(UserStatus.ACTIVE))).thenReturn(keyStatisticsResource
                 .getAssessmentsStarted());
         when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(SUBMITTED, competitionId, singletonList(UserStatus.ACTIVE)))
                 .thenReturn(keyStatisticsResource.getAssessmentsSubmitted());
