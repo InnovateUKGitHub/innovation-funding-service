@@ -166,7 +166,7 @@ the user fills the other application details questions
     The user enters text to a text field  id = application_details-startdate_month  11
     The user enters text to a text field  css = [id="durationInMonths"]  20
     the user clicks the button/link       jQuery = button:contains("Mark")
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       link = Back to application overview
 
 the business user fills in the project costs
 # The project costs are added such that business partner costs are less than 50% of overall project costs

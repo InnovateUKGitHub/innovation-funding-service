@@ -34,6 +34,7 @@ the user selects Research category
     ...    AND             the user selects the checkbox         researchCategory
     Run Keyword If  '${status}' == 'FAIL'    the user clicks the button twice  jQuery=label:contains("${res_category}")
     the user clicks the button/link   id=application-question-complete
+    the user clicks the button/link   link=Back to application overview
     the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
 
 the lead applicant fills all the questions and marks as complete(programme)

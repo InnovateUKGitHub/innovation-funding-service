@@ -3,13 +3,11 @@ package org.innovateuk.ifs.application.forms.questions.researchcategory.controll
 import org.innovateuk.ifs.application.forms.questions.researchcategory.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
-import org.innovateuk.ifs.application.forms.validator.ResearchCategoryEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationUtil;
-import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -56,9 +54,6 @@ public class ResearchCategoryController {
     private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Autowired
-    private ResearchCategoryEditableValidator researchCategoryEditableValidator;
-
-    @Autowired
     private ApplicationService applicationService;
 
     @Autowired
@@ -84,8 +79,6 @@ public class ResearchCategoryController {
                                         @PathVariable long questionId,
                                         @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-
-        checkIfAllowed(questionId, applicationResource);
 
         model.addAttribute("researchCategoryModel", researchCategoryModelPopulator.populate(
                 applicationResource, loggedInUser.getId(), questionId));
@@ -135,15 +128,14 @@ public class ResearchCategoryController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
 
-            checkIfAllowed(questionId, applicationResource);
-
             ServiceResult<ApplicationResource> updateResult = saveResearchCategoryChoice(applicationId,
                     loggedInUser.getId(), researchCategoryForm, markQuestionAsCompleteRequest);
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
                         cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
-                        return getRedirectUrl(applicationResource);
+                        return markQuestionAsCompleteRequest ? redirectToResearchCategory(applicationResource, questionId)
+                            : redirectToApplicationOverview(applicationResource);
                     });
         });
     }
@@ -163,19 +155,15 @@ public class ResearchCategoryController {
         return result.toServiceResult();
     }
 
-    private void checkIfAllowed(long questionId, ApplicationResource applicationResource)
-            throws ForbiddenActionException {
-        if (!researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
-                applicationResource)) {
-            throw new ForbiddenActionException();
-        }
-    }
-
     private long getProcessRoleId(long userId, long applicationId) {
         return userRestService.findProcessRole(userId, applicationId).getSuccess().getId();
     }
 
-    private String getRedirectUrl(ApplicationResource applicationResource) {
+    private String redirectToResearchCategory(ApplicationResource applicationResource, long questionId) {
+        return "redirect:" + APPLICATION_BASE_URL + applicationResource.getId() + "/form/question/" + questionId + "/research-category";
+    }
+
+    private String redirectToApplicationOverview(ApplicationResource applicationResource) {
         return "redirect:" + APPLICATION_BASE_URL + applicationResource.getId();
     }
 }
