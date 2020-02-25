@@ -11,6 +11,6 @@ public class PercentageSerializer extends JsonSerializer<BigDecimal> {
     @Override
     public void serialize(BigDecimal value, JsonGenerator generator, SerializerProvider serializers)
             throws IOException {
-        generator.writeString(value.stripTrailingZeros().toString() + "%");
+        generator.writeString(value.stripTrailingZeros().toPlainString() + "%");
     }
 }
