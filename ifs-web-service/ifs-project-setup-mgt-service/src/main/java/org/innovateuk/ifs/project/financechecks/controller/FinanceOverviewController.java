@@ -55,7 +55,7 @@ public class FinanceOverviewController {
     private CompetitionRestService competitionRestService;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping()
+    @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String view(@PathVariable("projectId") Long projectId,
                        Model model) {

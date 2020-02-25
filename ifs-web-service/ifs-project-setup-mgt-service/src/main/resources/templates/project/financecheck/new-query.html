@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Post a new query for ${model.organisationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+              th:with="pageTitle=|Post a new query for ${model.organisationName} - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
 <body class="govuk-template__body competition-management project-management query-form">
@@ -18,7 +18,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main"
           th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
-             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to post a query.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
@@ -163,8 +163,8 @@
                                   th:text="${err}"/>
                         </th:block>
                         <input type="file" id="attachment" class="inputfile" name="attachment">
-                        <label for="attachment" class="button-secondary govuk-!-margin-top-6">Upload</label>
-                        <button name="uploadAttachment" class="button-secondary" type="submit"
+                        <label for="attachment" class="govuk-!-margin-top-6">Upload</label>
+                        <button name="uploadAttachment" class="govuk-button govuk-button--secondary" type="submit"
                                 data-for-file-upload="attachment">Save
                         </button>
                     </div>

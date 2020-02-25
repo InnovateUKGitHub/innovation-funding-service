@@ -10,7 +10,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableRe
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.pendingpartner.populator.YourOrganisationViewModelPopulator;
-import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,7 +92,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
         setupResource();
         setupAsyncExpectations(asyncFuturesGenerator);
         YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm = new YourOrganisationWithGrowthTableForm();
-        when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
         when(withGrowthTableFormPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
 
@@ -136,7 +136,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
 
     @Test
     public void markAsCompleteWithGrowthTable_failure() throws Exception {
-        when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
 
         MvcResult result = mockMvc.perform(post(viewPageUrl())
             .param("mark-as-complete", ""))

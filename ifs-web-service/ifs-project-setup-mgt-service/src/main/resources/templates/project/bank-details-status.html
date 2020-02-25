@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-	<th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationId}: ${model.projectName} - Bank details|" />
+	<th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Bank details - ${model.projectName}|" />
 </head>
 <body class="govuk-template__body competition-management project-management application-overview">
 
@@ -35,7 +35,7 @@
                         <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
                     </h3>
                 </div>
-                <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
+                <th:block th:insert="project/fragments/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
             </li>
         </ul>
 

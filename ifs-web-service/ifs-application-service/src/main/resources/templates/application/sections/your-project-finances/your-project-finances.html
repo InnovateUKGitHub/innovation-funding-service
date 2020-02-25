@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project finances'"/>
+    <th:block
+        th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head"
+                  th:with="pageTitle=|Your project finances - ${applicationName}|"/>
+    </th:block>
 </head>
 <body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -15,8 +19,11 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Your project finances',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+        <th:block
+            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Your project finances',subTitle=${applicationName},size='govuk-heading-xl'"/>
+        </th:block>
 
         <div class="your-finances">
             <h2 th:unless="${model.h2020}"
@@ -52,25 +59,34 @@
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total project costs</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total project costs
+                        </th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric "
                             th:classappend="${model.fundingLevelFirst} ? 'width-80' : 'width-100'"
-                            th:text="${model.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding level (%)</th>
+                            th:text="${model.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding level (%)
+                        </th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric "
                             th:classappend="${model.fundingSoughtFirst} ? 'width-80' : 'width-100'"
-                            th:text="${model.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other public sector funding (&pound;)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Contribution to project (&pound;)</th>
+                            th:text="${model.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)
+                        </th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other public sector funding (&pound;)
+                        </th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Contribution to project (&pound;)
+                        </th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <strong>&pound;<th:block th:text="${#numbers.formatInteger(model.costs, 0, 'DEFAULT')}"/></strong>
+                            <strong>&pound;<th:block th:text="${#numbers.formatInteger(model.costs, 0, 'DEFAULT')}"/>
+                            </strong>
                         </td>
-                        <th:block th:with="fundingLevel=|${model.claimPercentage}%|, fundingSought=${#numbers.formatInteger(model.fundingSought, 0, 'DEFAULT')}">
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${model.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
-                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${model.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                        <th:block
+                            th:with="fundingLevel=|${#numbers.formatDecimal(model.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(model.fundingSought, 0, 'DEFAULT')}">
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                th:text="${model.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                th:text="${model.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
                         </th:block>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:text="${#numbers.formatInteger(model.otherFunding, 0, 'DEFAULT')}"/>
@@ -86,12 +102,12 @@
 
         <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
            th:href="${cookieBackLinkUrl}"
-           class="button-secondary"
+           class="govuk-button govuk-button--secondary"
            th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to application overview</a>
 
         <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
            th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
-           class="button-secondary">Return to application overview</a>
+           class="govuk-button govuk-button--secondary">Return to application overview</a>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

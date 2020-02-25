@@ -54,6 +54,9 @@ public class User extends AuditableEntity implements Serializable {
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
 
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RoleProfileStatus> roleProfileStatuses = new HashSet<>();
+
     @Column(name = "allow_marketing_emails")
     private boolean allowMarketingEmails = false;
 
@@ -241,5 +244,13 @@ public class User extends AuditableEntity implements Serializable {
 
     public boolean isInternalUser() {
         return CollectionUtils.containsAny(Role.internalRoles(), roles);
+    }
+
+    public Set<RoleProfileStatus> getRoleProfileStatuses() {
+        return roleProfileStatuses;
+    }
+
+    public void setRoleProfileStatuses(Set<RoleProfileStatus> roleProfileStatuses) {
+        this.roleProfileStatuses = roleProfileStatuses;
     }
 }

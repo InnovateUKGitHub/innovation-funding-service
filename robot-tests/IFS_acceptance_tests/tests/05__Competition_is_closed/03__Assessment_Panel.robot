@@ -244,7 +244,7 @@ Assessor can attend Panel and see applications that he has assessed
     And the user expands the section            Business opportunity
     Then the user should see the element        jQuery = p:contains("This is the business opportunity feedback")
     And the user should see the element         jQuery = div:contains("Score") span:contains(8)
-    And assessor should see the competition terms and conditions     Back to application summary
+    And assessor should see the competition terms and conditions    Back to application summary
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138

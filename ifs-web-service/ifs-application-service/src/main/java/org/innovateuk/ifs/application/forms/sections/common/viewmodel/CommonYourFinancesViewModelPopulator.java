@@ -52,7 +52,8 @@ public class CommonYourFinancesViewModelPopulator {
                 sectionId,
                 open,
                 competition.isH2020(),
-                sectionMarkedAsComplete);
+                sectionMarkedAsComplete,
+                competition.isProcurement());
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {

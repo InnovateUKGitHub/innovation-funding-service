@@ -18,7 +18,7 @@
                      role="alert"
                      aria-labelledby="error-summary-title"
                      tabindex="-1"
-                     data-module="error-summary">
+                     data-module="govuk-error-summary">
                     <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
@@ -28,7 +28,7 @@
                 </th:block>
 
                 <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Review assessment</h2>
-                <div class="govuk-accordion" data-module="accordion" id="accordion-questions">
+                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-questions">
                     <th:block th:each="question, iteration : ${model.questionsForReview}">
                         <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question}, count=${iteration.count})" />
                     </th:block>

@@ -284,22 +284,45 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
+
     checkNumber: function (field) {
       var numberAttribute = 'number'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, numberAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'number')
+      var decimalMessage = 'You must enter a number with up to 2 decimal places.'
+      var invalidMessage = 'You must enter a valid number'
       var value = field.val()
       // In modern browsers the number field doesn't allow text input
-      // When inserting a string like "test" the browser converts this to an empty string "" (this is the specced behaviour)
+      // When inserting a string like "test" the browser converts this to an empty string "" (this is the expected behaviour)
       // An empty string is returned as true therefore
       // http://stackoverflow.com/questions/18852244/how-to-get-the-raw-value-an-input-type-number-field
+      // Validates that number is of valid decimal by checking that value entered is same length as the length of the step
       if (s.html5validationMode) {
         var domField = field[0]
+        if (domField.validity.badInput) {
+          IFS.core.formValidation.setInvalid(field, invalidMessage, displayValidationMessages)
+          return false
+        } else {
+          IFS.core.formValidation.setValid(field, invalidMessage, displayValidationMessages)
+        }
         var containsExponential = value.indexOf('e') !== -1
-        if (domField.validity.badInput === true || domField.validity.stepMismatch === true || containsExponential) {
+        var containsDecimal = domField.value.includes('.')
+        var validDecimal = /^\d*(\.\d{1,2})?$/.test(domField.value)
+        var checkDecimal = domField.step != null && domField.step !== '' && containsDecimal && !Number.isInteger(domField.step)
+        if (checkDecimal) {
+          if (validDecimal) {
+            IFS.core.formValidation.setValid(field, decimalMessage, displayValidationMessages)
+            return true
+          } else {
+            IFS.core.formValidation.setInvalid(field, decimalMessage, displayValidationMessages)
+            return false
+          }
+        }
+        if (!checkDecimal && (domField.validity.badInput === true || domField.validity.stepMismatch === true || containsExponential)) {
           IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
           return false
         } else {
+          IFS.core.formValidation.setValid(field, decimalMessage, displayValidationMessages)
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
         }
@@ -1089,13 +1112,7 @@ IFS.core.formValidation = (function () {
         closedDetails.attr('aria-hidden', 'false')
         IFS.core.formValidation.scrollToElement(target.first())
       } else {
-        // if the target is invisible we put focus on an element that has the same label as the target
-        // An example of this usecase is the wysiwyg editor
-        var altTarget = jQuery('[aria-labelledby="' + id + '"]')
-        var altTargetVisible = IFS.core.formValidation.isVisible(altTarget)
-        if (altTargetVisible) {
-          IFS.core.formValidation.scrollToElement(altTarget.first())
-        }
+        IFS.core.formValidation.scrollToElement(target.first())
       }
     },
     initDetailsErrors: function () {

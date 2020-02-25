@@ -2,10 +2,10 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:if="${form != null}">
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Spend profile'},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Spend profile - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </th:block>
     <th:block th:if="${form == null}">
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Spend profile'},hasFormErrors=${#lists.isEmpty(model.table.validationMessages.errors) == false}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Spend profile - ${model.projectName}|,hasFormErrors=${#lists.isEmpty(model.table.validationMessages.errors) == false}" />
     </th:block>
 </head>
 
@@ -24,14 +24,14 @@
 <main class="govuk-main-wrapper" id="main-content" role="main">
     <div class="govuk-width-container">
         <th:block th:if="${form != null}">
-            <div th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <div th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to submit spend profile.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
         </th:block>
 
         <th:block th:if="${form == null}">
-          <div class="govuk-error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+          <div class="govuk-error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
               <h2 class="govuk-error-summary__title" id="error-summary-title">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
               <div class="govuk-error-summary__body">
                   <ul class="govuk-list govuk-error-summary__list">
@@ -159,6 +159,7 @@
                                             th:id="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
                                             th:value="${cost != null ? #numbers.formatInteger(cost,1,'NONE') : ''}"
                                             type="number"
+                                            data-prevent-input-non-number
                                             min="0"
                                             required="required" />
                                     </td>
@@ -226,6 +227,7 @@
                                                        th:id="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
                                                        th:value="${#numbers.formatInteger(cost,1,'NONE')}"
                                                        type="number"
+                                                       data-prevent-input-non-number
                                                        min="0"
                                                        required="required" />
                                             </td>
@@ -314,7 +316,7 @@
                         </tbody>
                     </table>
                 </th:block>
-                <button th:unless="${readonly}" class="button-secondary govuk-!-margin-top-6">Save and return to spend profile overview</button>
+                <button th:unless="${readonly}" class="govuk-button govuk-button--secondary govuk-!-margin-top-6">Save and return to spend profile overview</button>
             </div>
         </form>
 
@@ -322,7 +324,7 @@
             <th:block th:if="${readonly and !model.submitted}">
 
                 <th:block th:if="${!model.markedAsComplete and !model.leadPartner and model.userPartOfThisOrganisation}">
-                    <a class="button-secondary govuk-!-margin-top-6"
+                    <a class="govuk-button govuk-button--secondary govuk-!-margin-top-6"
                        th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                     <p class="govuk-body govuk-!-margin-top-6">Once you are satisfied with your spend profile please submit to the lead partner.</p>
@@ -336,7 +338,7 @@
                 </th:block>
 
                 <th:block th:if="${model.leadPartner and model.userPartOfThisOrganisation}">
-                    <a class="button-secondary govuk-!-margin-top-6"
+                    <a class="govuk-button govuk-button--secondary govuk-!-margin-top-6"
                        th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                     <th:block th:if="${!model.markedAsComplete}">

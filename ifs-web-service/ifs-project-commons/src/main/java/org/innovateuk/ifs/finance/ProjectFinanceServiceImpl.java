@@ -61,4 +61,9 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     public ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId) {
         return projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
     }
+
+    @Override
+    public ServiceResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
+        return projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toServiceResult();
+    }
 }

@@ -32,6 +32,16 @@ public class UserDocs {
             fieldWithPath("modifiedOn").description("when the user was modified"),
     };
 
+    public static final FieldDescriptor[] manageUserResourceFields = {
+            fieldWithPath("id").description("id of the user"),
+            fieldWithPath("name").type("String").description("full name of the user"),
+            fieldWithPath("email").type("String").description("e-mail address of the user"),
+            fieldWithPath("roles").description("roles that the user is associated with"),
+            fieldWithPath("createdBy").description("user who created this user"),
+            fieldWithPath("createdOn").description("when the user was created"),
+            fieldWithPath("roleProfileStatusResourceSet").description("status of the roles the user holds"),
+    };
+
     public static final FieldDescriptor[] internalUserRegistrationResourceFields = {
             fieldWithPath("firstName").description("first name of the user"),
             fieldWithPath("lastName").description("last name of the user"),

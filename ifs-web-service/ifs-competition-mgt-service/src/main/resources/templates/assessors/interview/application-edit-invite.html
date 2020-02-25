@@ -16,7 +16,7 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to send your invite.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
@@ -72,8 +72,8 @@
 
                                     <div class="upload-section file-toggle" th:style="${model.hasAttachment()} ? 'display:none' : 'display:block'" >
                                         <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
-                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-0">Upload</label>
-                                        <button id="upload-applicant-resend-file" class="button-secondary" th:attr="data-for-file-upload=${fieldName}">Save</button>
+                                        <label th:for="${fieldName}" class="govuk-!-margin-top-0">Upload</label>
+                                        <button id="upload-applicant-resend-file" class="govuk-button govuk-button--secondary" th:attr="data-for-file-upload=${fieldName}">Save</button>
                                     </div>
                                     <div class="grid-row file-toggle" th:style="${model.hasAttachment()} ? 'display:block' : 'display:none'" >
                                         <div class="govuk-grid-column-two-thirds">

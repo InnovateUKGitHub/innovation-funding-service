@@ -11,8 +11,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
-
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -36,20 +34,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testUpdateProjectStartDate() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.updateProjectStartDate(123L, LocalDate.now()), () -> {
-            verify(projectDetailsPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectDetailsPermissionRules);
-        });
-    }
-
-    @Test
-    public void testUpdateProjectAddress() {
+    public void updateProjectAddress() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -62,7 +47,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testUpdateFinanceContact() {
+    public void updateFinanceContact() {
 
         ProjectResource project = newProjectResource().build();
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
@@ -76,7 +61,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testUpdatePartnerProjectLocation() {
+    public void updatePartnerProjectLocation() {
 
         Long projectId = 1L;
         Long organisationId = 2L;
@@ -89,7 +74,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testGetProjectManager() {
+    public void getProjectManager() {
         ProjectResource project = newProjectResource().build();
 
         when(classUnderTestMock.getProjectManager(123L))
@@ -119,7 +104,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
-    public void testSetProjectManager() {
+    public void setProjectManager() {
 
         ProjectResource project = newProjectResource().build();
 

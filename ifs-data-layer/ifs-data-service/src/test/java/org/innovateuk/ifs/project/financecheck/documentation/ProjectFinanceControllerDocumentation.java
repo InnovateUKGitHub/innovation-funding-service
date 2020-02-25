@@ -236,7 +236,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         build(),
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(30).
+                                withGrantClaimPercentage(BigDecimal.valueOf(30)).
                                 build(1)).
                         build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
@@ -264,7 +264,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         build(),
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(100).
+                                withGrantClaimPercentage(BigDecimal.valueOf(100)).
                                 build(1)).
                         build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(

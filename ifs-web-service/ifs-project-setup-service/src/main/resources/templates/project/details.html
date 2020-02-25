@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Project details - ${model.project.name}|"/>
 </head>
 <body class="govuk-template__body project-detail">
 
@@ -33,17 +33,14 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
-                    <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}" class="govuk-link">Target start date</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.spendProfileGenerated}">Target start date</th:block>
+                    <a th:if="${model.userLeadPartner and !model.isProjectLive()}" th:href="@{/project/{id}/details/start-date(id=${model.project.id})}" class="govuk-link">Target start date</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.isProjectLive()}">Target start date</th:block>
                 </td>
                 <td class="govuk-table__cell" id="start-date">
                     <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
                     <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
                 </td>
-                <td class="govuk-table__cell alignright">
-                    <strong th:if="${model.project.targetStartDate == null}" id="start-date-status" class="incomplete-status">Incomplete</strong>
-                    <strong th:unless="${model.project.targetStartDate == null}" id="start-date-status" class="complete-status">Complete</strong>
-                </td>
+                <td class="govuk-table__cell alignright"></td>
             </tr>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
@@ -94,7 +91,7 @@
             </tr>
             </tbody>
         </table>
-        <a class="button-secondary"
+        <a class="govuk-button govuk-button--secondary"
            th:href="@{/project/{id}(id=${model.project.id})}">Return to set up your project</a>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

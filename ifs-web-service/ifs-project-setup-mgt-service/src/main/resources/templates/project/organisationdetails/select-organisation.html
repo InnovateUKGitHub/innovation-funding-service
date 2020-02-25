@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|${model.projectId}: ${model.projectName} - View partner details|"/>
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to project details',linkUrl=@{/competition/{competitionId}/project/{projectId}/details
+              (competitionId=${model.competitionId}, projectId=${model.projectId})}, dynamicBackLink=${true}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title"
+                id="error-summary-title">We are unable to show the select partner organisation page</h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}">
+                        <a href="#select-partner-section" th:text="${err}">The error message</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='View partner details',subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+
+        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
+              th:object="${form}">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group" id="select-partner-section"
+                     th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
+                    <th:block th:if="${#fields.hasErrors('*')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('*')}"
+                              th:text="${err}"></span>
+                    </th:block>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading">Choose partner</h2>
+                        <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">We only show partners that
+                            have completed all their organisation details.</p>
+                    </legend>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" th:each="partnerOrganisation : ${model.partnerOrganisations}">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   th:field="*{organisationId}"
+                                   th:value="${partnerOrganisation.organisation}"
+                                   th:id="|organisation-radio-${partnerOrganisation.organisation}|"
+                                   required="required"
+                            />
+                            <label class="govuk-label govuk-radios__label selection-button-radio"
+                                   th:for="|organisation-radio-${partnerOrganisation.organisation}|"
+                                   th:text="(${partnerOrganisation.leadOrganisation} ? ${partnerOrganisation.organisationName} + ' (Lead)' : ${partnerOrganisation.organisationName})"></label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <button class="govuk-button" type="submit">View partner details</button>
+
+            <div>
+                <a th:href="@{/competition/{competitionId}/project/{projectId}/details(competitionId=${model.competitionId}, projectId=${model.projectId})}"
+                   class="button-clear govuk-!-margin-right-4">Cancel and return to project details</a>
+            </div>
+
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

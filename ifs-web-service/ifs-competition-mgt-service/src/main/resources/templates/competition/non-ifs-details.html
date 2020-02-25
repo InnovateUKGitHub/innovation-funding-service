@@ -17,7 +17,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
-             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem on this page.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
@@ -148,6 +148,7 @@
                         <td class="govuk-table__cell time"></td>
                         <td class="govuk-table__cell js-addWeekDay">Wed</td>
                         <td class="govuk-table__cell day">
+                            <label class="govuk-visually-hidden" for="openDate-day">Opening day</label>
                             <input id="openDate-day"
                                    th:errorclass="govuk-input--error"
                                    class="govuk-input govuk-input--width-4"
@@ -161,6 +162,7 @@
                                    th:field="${form.openDate.day}"/>
                         </td>
                         <td class="govuk-table__cell month">
+                            <label class="govuk-visually-hidden" for="openDate-month">Opening month</label>
                             <input id="openDate-month"
                                    th:errorclass="govuk-input--error"
                                    class="govuk-input govuk-input--width-4"
@@ -174,6 +176,7 @@
                                    th:field="${form.openDate.month}"/>
                         </td>
                         <td class="govuk-table__cell year">
+                            <label class="govuk-visually-hidden" for="openDate-year">Opening year</label>
                             <input id="openDate-year"
                                    class="govuk-input govuk-input--width-4"
                                    th:errorclass="govuk-input--error"
@@ -194,6 +197,7 @@
                                    th:field="${form.registrationCloseDate.milestoneType}"/>
                         </th>
                         <td class="govuk-table__cell time">
+                            <label class="govuk-visually-hidden" for="registrationCloseDate-time">Registration time</label>
                             <select id="registrationCloseDate-time"
                                     class="govuk-select"
                                     required="required"
@@ -207,6 +211,7 @@
                         </td>
                         <td class="govuk-table__cell js-addWeekDay">-</td>
                         <td class="govuk-table__cell day">
+                            <label class="govuk-visually-hidden" for="registrationCloseDate-day">Registration day</label>
                             <input id="registrationCloseDate-day"
                                    th:errorclass="govuk-input--error"
                                    class="govuk-input govuk-input--width-4"
@@ -220,6 +225,7 @@
                                    th:field="${form.registrationCloseDate.day}"/>
                         </td>
                         <td class="govuk-table__cell month">
+                            <label class="govuk-visually-hidden" for="registrationCloseDate-month">Registration month</label>
                             <input id="registrationCloseDate-month"
                                    th:errorclass="govuk-input--error"
                                    class="govuk-input govuk-input--width-4"
@@ -233,6 +239,7 @@
                                    th:field="${form.registrationCloseDate.month}"/>
                         </td>
                         <td class="govuk-table__cell year">
+                            <label class="govuk-visually-hidden" for="registrationCloseDate-year">Registration year</label>
                             <input id="registrationCloseDate-year"
                                    class="govuk-input govuk-input--width-4"
                                    th:errorclass="govuk-input--error"
@@ -253,6 +260,7 @@
                                    th:field="${form.closeDate.milestoneType}"/>
                         </th>
                         <td class="govuk-table__cell time">
+                            <label class="govuk-visually-hidden" for="closeDate-time">Closing time</label>
                             <select id="closeDate-time"
                                     class="govuk-select"
                                     required="required"
@@ -266,6 +274,7 @@
                         </td>
                         <td class="govuk-table__cell js-addWeekDay">-</td>
                         <td class="govuk-table__cell day">
+                            <label class="govuk-visually-hidden" for="closeDate-day">Closing day</label>
                             <input id="closeDate-day"
                                    th:errorclass="govuk-input--error"
                                    class="govuk-input govuk-input--width-4"
@@ -279,6 +288,7 @@
                                    th:field="${form.closeDate.day}"/>
                         </td>
                         <td class="govuk-table__cell month">
+                            <label class="govuk-visually-hidden" for="closeDate-month">Closing month</label>
                             <input id="closeDate-month"
                                    class="govuk-input govuk-input--width-4"
                                    th:errorclass="govuk-input--error"
@@ -292,6 +302,7 @@
                                    th:field="${form.closeDate.month}"/>
                         </td>
                         <td class="govuk-table__cell year">
+                            <label class="govuk-visually-hidden" for="closeDate-year">Closing year</label>
                             <input id="closeDate-year"
                                    class="govuk-input govuk-input--width-4"
                                    th:errorclass="govuk-input--error"
@@ -314,6 +325,7 @@
                         <td class="govuk-table__cell time"></td>
                         <td class="govuk-table__cell js-addWeekDay">-</td>
                         <td class="govuk-table__cell day">
+                            <label class="govuk-visually-hidden" for="applicantNotifiedDate-day">Applicant notified day</label>
                             <input id="applicantNotifiedDate-day"
                                    class="govuk-input govuk-input--width-4"
                                    th:errorclass="govuk-input--error"
@@ -325,6 +337,7 @@
                                    th:field="${form.applicantNotifiedDate.day}"/>
                         </td>
                         <td class="govuk-table__cell month">
+                            <label class="govuk-visually-hidden" for="applicantNotifiedDate-month">Applicant notified month</label>
                             <input id="applicantNotifiedDate-month"
                                    th:errorclass="govuk-input--error"
                                    class="govuk-input govuk-input--width-4"
@@ -336,6 +349,7 @@
                                    th:field="${form.applicantNotifiedDate.month}"/>
                         </td>
                         <td class="govuk-table__cell year">
+                            <label class="govuk-visually-hidden" for="applicantNotifiedDate-year">Applicant notified year</label>
                             <input id="applicantNotifiedDate-year"
                                    th:errorclass="govuk-input--error"
                                    class="govuk-input govuk-input--width-4"

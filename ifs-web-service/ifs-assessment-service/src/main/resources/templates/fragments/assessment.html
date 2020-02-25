@@ -79,15 +79,15 @@
             <h2 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${count}|">
                     <th:block th:text="${question.displayLabel}" />
-                    <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
-                    <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
-
-                    <div class="section-score" th:if="${question.scoreFormInputExists}">
-                        Score
-                        <th:block th:if="${question.scoreGiven}" th:text="|${question.scoreGiven}/${question.scorePossible}|" />
-                        <th:block th:unless="${question.scoreGiven}">N/A</th:block>
-                    </div>
                 </span>
+                <div th:if="${question.isComplete()}" class="section-status section-complete">Complete</div>
+                <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
+
+                <div class="section-score" th:if="${question.scoreFormInputExists}">
+                    Score
+                    <th:block th:if="${question.scoreGiven}" th:text="|${question.scoreGiven}/${question.scorePossible}|" />
+                    <th:block th:unless="${question.scoreGiven}">N/A</th:block>
+                </div>
             </h2>
         </div>
         <div th:id="|accordion-questions-content-${count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${count}|">

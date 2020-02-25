@@ -17,19 +17,16 @@ public final class NumberUtils {
 
     private NumberUtils() {}
 
-    public static BigDecimal getBigDecimalValue(String value, Double defaultValue) {
+    public static BigDecimal getBigDecimalValue(String value, BigDecimal defaultValue) {
         value = cleanNumberValue(value);
 
         if (StringUtils.isEmpty(value))
-            return defaultValue != null ? new BigDecimal(defaultValue) : BigDecimal.ZERO;
+            return defaultValue != null ? defaultValue : BigDecimal.ZERO;
 
         NumberFormat nf = getNumberFormat();
-
         try {
             return new BigDecimal(nf.parse(value).toString());
-        } catch (NumberFormatException nfe) {
-            throw new BigDecimalNumberFormatException(value);
-        } catch (ParseException e) {
+        } catch (NumberFormatException | ParseException nfe) {
             throw new BigDecimalNumberFormatException(value);
         }
     }
