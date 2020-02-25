@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationDeletionPermissionRules extends BasePermissionRules {
 
-    @PermissionRule(value = "DELETE_APPLICATION", description = "Only the lead can delete unsubmitted applications")
+    @PermissionRule(value = "DELETE_APPLICATION", description = "Only the lead can delete un-submitted applications")
     public boolean onlyApplicantCanDeleteUnsubmitted(final ApplicationResource applicationResource, UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user)
                 && !applicationResource.isSubmitted();
     }
 
-    @PermissionRule(value = "HIDE_APPLICATION", description = "Only the lead can delete unsubmitted applications")
+    @PermissionRule(value = "HIDE_APPLICATION", description = "Only the collaborators can hide applications")
     public boolean onlyCollaboratorsCanHideApplications(final ApplicationUserCompositeId id, UserResource user) {
         return isMemberOfProjectTeam(id.getApplicationId(), user)
                 && user.getId().equals(id.getUserId());
