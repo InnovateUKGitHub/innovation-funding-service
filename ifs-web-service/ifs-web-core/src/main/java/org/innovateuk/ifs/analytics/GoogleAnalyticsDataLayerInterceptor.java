@@ -34,6 +34,8 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
     private static final String PROJECT_ID = "projectId";
     private static final String APPLICATION_ID = "applicationId";
     private static final String ASSESSMENT_ID = "assessmentId";
+    private static final String INVITE_HASH = "inviteHash";
+    private static final String INVITE_URL = "/assessment/invite";
 
     @Autowired
     private GoogleAnalyticsDataLayerRestService googleAnalyticsDataLayerRestService;
@@ -83,6 +85,11 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
                                               googleAnalyticsDataLayerRestService::getCompetitionNameForAssessment,
                                               getIdFromPathVariable(pathVariables, ASSESSMENT_ID));
         }
+        else if (request.getRequestURI().contains(INVITE_URL) && pathVariables.containsKey(INVITE_HASH)) {
+            setInviteCompetitionNameFromRestService(dataLayer,
+                                                    googleAnalyticsDataLayerRestService::getCompetitionNameForInvite,
+                                                    pathVariables.get(INVITE_HASH));
+        }
     }
 
     private void setUserRoles(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request) {
@@ -127,11 +134,26 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
             final Optional<Long> applicationId = googleAnalyticsDataLayerRestService.getApplicationIdForProject(projectId).getOptionalSuccessObject();
             applicationId.ifPresent(dataLayer::setApplicationId);
         }
+
+        if (pathVariables.containsKey(ASSESSMENT_ID)) {
+            final long assessmentId = getIdFromPathVariable(pathVariables, ASSESSMENT_ID);
+            final Optional<Long> applicationId = googleAnalyticsDataLayerRestService.getApplicationIdForAssessment(assessmentId).getOptionalSuccessObject();
+            applicationId.ifPresent(dataLayer::setApplicationId);
+        }
     }
 
     private static void setCompetitionNameFromRestService(GoogleAnalyticsDataLayer dl,
                                                           Function<Long, RestResult<String>> f,
                                                           final long id) {
+        final Optional<String> competitionName = f.apply(id).getOptionalSuccessObject();
+        if (competitionName.filter(negate(Strings::isNullOrEmpty)).isPresent()) {
+            dl.setCompetitionName(fromJson(competitionName.get(), String.class));
+        }
+    }
+
+    private static void setInviteCompetitionNameFromRestService(GoogleAnalyticsDataLayer dl,
+                                                          Function<String, RestResult<String>> f,
+                                                          final String id) {
         final Optional<String> competitionName = f.apply(id).getOptionalSuccessObject();
         if (competitionName.filter(negate(Strings::isNullOrEmpty)).isPresent()) {
             dl.setCompetitionName(fromJson(competitionName.get(), String.class));
@@ -146,6 +168,5 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
     private static long getIdFromPathVariable(final Map<String,String> pathVariables, final String pathVariable) {
         return parseLong(pathVariables.get(pathVariable));
     }
-
 
 }

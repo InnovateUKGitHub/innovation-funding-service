@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface GoogleAnalyticsDataLayerRestService {
 
+    RestResult<String> getCompetitionNameForInvite(String inviteHash);
+
     RestResult<String> getCompetitionNameForApplication(long applicationId);
 
     RestResult<String> getCompetitionName(long competitionId);
@@ -20,4 +22,6 @@ public interface GoogleAnalyticsDataLayerRestService {
     RestResult<List<Role>> getRolesByProjectId(long projectId);
 
     RestResult<Long> getApplicationIdForProject(long projectId);
+
+    RestResult<Long> getApplicationIdForAssessment(long assessmentId);
 }
