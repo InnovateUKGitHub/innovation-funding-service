@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.forms.questions.applicationdetails.form.Ap
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.populator.ApplicationDetailsViewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -51,7 +51,7 @@ public class ApplicationDetailsController {
     @Autowired
     private UserRestService userRestService;
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationRestService applicationRestService;
     @Autowired
     private CompetitionRestService competitionRestService;
     @Autowired
@@ -65,7 +65,7 @@ public class ApplicationDetailsController {
                               @PathVariable long applicationId,
                               @PathVariable long questionId,
                               UserResource user) {
-        ApplicationResource application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(application, questionId, user);
         form.populateForm(application);
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
@@ -156,7 +156,7 @@ public class ApplicationDetailsController {
     }
 
     @PostMapping(params = "edit")
-    public String edit(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) ApplicationDetailsForm form,
+    public String edit(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationDetailsForm form,
                        BindingResult bindingResult,
                        Model model,
                        @PathVariable long applicationId,
@@ -169,7 +169,7 @@ public class ApplicationDetailsController {
     }
 
     private ServiceResult<ValidationMessages> saveDetails(ApplicationDetailsForm form, long applicationId) {
-        ApplicationResource application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         application.setName(form.getName());
         application.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
         application.setDurationInMonths(form.getDurationInMonths());
@@ -179,11 +179,11 @@ public class ApplicationDetailsController {
         application.setCompetitionReferralSource(form.getCompetitionReferralSource());
         application.setCompanyAge(form.getCompanyAge());
         application.setCompanyPrimaryFocus(form.getCompanyPrimaryFocus());
-        return applicationService.save(application);
+        return applicationRestService.saveApplication(application).toServiceResult();
     }
 
     private void validate(ApplicationDetailsForm form, long applicationId, BindingResult bindingResult) {
-        ApplicationResource application = applicationService.getById(applicationId);
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         if (Boolean.TRUE.equals(form.getResubmission())) {

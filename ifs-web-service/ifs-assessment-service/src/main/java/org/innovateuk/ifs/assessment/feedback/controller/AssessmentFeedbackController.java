@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
@@ -46,7 +45,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingFieldErrorToField;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -66,9 +64,6 @@ public class AssessmentFeedbackController {
 
     @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private QuestionRestService questionRestService;
 
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
@@ -96,7 +91,7 @@ public class AssessmentFeedbackController {
 
         QuestionResource question = getQuestionForAssessment(questionId, assessmentId);
 
-        if (isApplicationDetailsQuestion(questionId)) {
+        if (question.getQuestionSetupType().equals(QuestionSetupType.APPLICATION_DETAILS)) {
             return getApplicationDetails(model, assessmentId, question);
         }
 
@@ -198,10 +193,6 @@ public class AssessmentFeedbackController {
         return "redirect:/" + assessmentId;
     }
 
-    private boolean isApplicationDetailsQuestion(long questionId) {
-        return questionRestService.findById(questionId).getSuccess().getQuestionSetupType().equals(QuestionSetupType.APPLICATION_DETAILS);
-    }
-
     private String getApplicationDetails(Model model, long assessmentId, QuestionResource question) {
         AssessmentFeedbackApplicationDetailsViewModel viewModel = assessmentFeedbackApplicationDetailsModelPopulator.populateModel(assessmentId, question);
         AssessmentFeedbackNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question);
@@ -212,10 +203,6 @@ public class AssessmentFeedbackController {
         organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId(), userApplicationRoles);
 
         return "assessment/application-details";
-    }
-
-    private List<FormInputResource> getApplicationFormInputs(long questionId) {
-        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccess();
     }
 
     private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {

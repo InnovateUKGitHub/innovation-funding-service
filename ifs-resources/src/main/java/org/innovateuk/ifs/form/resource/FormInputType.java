@@ -6,7 +6,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * FormInputType is used to identify what response a FormInput needs.
@@ -22,8 +21,6 @@ public enum FormInputType implements IdentifiableEnum {
     ASSESSOR_SCORE(23),
     TEMPLATE_DOCUMENT(29);
 
-    private static List<FormInputType> PRINT_TYPES = asList(TEXTAREA);
-
     private long id;
 
     FormInputType(long id) {
@@ -37,14 +34,6 @@ public enum FormInputType implements IdentifiableEnum {
 
     public String getNameLower() {
         return this.name().toLowerCase();
-    }
-
-    public boolean isDisplayablePrintType() {
-        return PRINT_TYPES.contains(this);
-    }
-
-    public boolean isDisplayableQuestionType() {
-        return !combineLists(TEMPLATE_DOCUMENT).contains(this);
     }
 
     public static FormInputType findByName(String name) {
