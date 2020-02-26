@@ -155,7 +155,8 @@ The user adds a new team member
   [Arguments]  ${firstName}  ${email}
   the user enters text to a text field   css = input[name=name]   ${firstName}
   the user enters text to a text field   css = input[name=email]  ${email}
-  the user clicks the button/link        jQuery = button:contains("Invite to project")
+  the user clicks the button/link        jQuery = button:contains("Invite to")
+
 
 project finance submits monitoring officer
     [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}
