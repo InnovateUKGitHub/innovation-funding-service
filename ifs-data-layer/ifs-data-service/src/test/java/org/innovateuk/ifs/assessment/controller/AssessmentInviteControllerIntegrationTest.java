@@ -1125,6 +1125,8 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         List<AssessmentInvite> createdInvites = newAssessmentInvite()
                 .withId()
+                .withName("Angela Merkel", "Bill Gates", "Serena Williams", "Will Smith")
+                .withEmail("angela@email.com", "bill@email.com", "serena@email.com", "will@email.com")
                 .withStatus(CREATED)
                 .withCompetition(competition)
                 .withInnovationArea(innovationArea)
