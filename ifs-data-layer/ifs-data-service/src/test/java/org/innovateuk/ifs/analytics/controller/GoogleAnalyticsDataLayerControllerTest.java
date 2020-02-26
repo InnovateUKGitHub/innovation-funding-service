@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -38,6 +39,21 @@ public class GoogleAnalyticsDataLayerControllerTest extends BaseControllerMockMV
                 .andExpect(content().string(toJson(competitionName)));
 
         verify(googleAnalyticsDataLayerServiceMock, only()).getCompetitionNameByApplicationId(applicationId);
+    }
+
+    @Test
+    public void getCompetitionNameForInvite() throws Exception {
+        final String inviteHash = new UUID(1L, 1L).toString();
+        final String competitionName="Competition Name";
+
+        when(googleAnalyticsDataLayerServiceMock.getCompetitionNameByInviteHash(inviteHash))
+                .thenReturn(serviceSuccess(competitionName));
+
+        mockMvc.perform(get("/analytics/invite/{inviteHash}/competition-name", inviteHash))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(competitionName)));
+
+        verify(googleAnalyticsDataLayerServiceMock, only()).getCompetitionNameByInviteHash(inviteHash);
     }
 
     @Test
@@ -122,5 +138,20 @@ public class GoogleAnalyticsDataLayerControllerTest extends BaseControllerMockMV
         mockMvc.perform(get("/analytics/project/{projectId}/application-id", projectId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(applicationId)));
+    }
+
+    @Test
+    public void getApplicationIdForAssessment() throws Exception {
+        final long assessmentId=30L;
+        final long applicationId = 875L;
+
+        when(googleAnalyticsDataLayerServiceMock.getApplicationIdForAssessment(assessmentId))
+                .thenReturn(serviceSuccess(applicationId));
+
+        mockMvc.perform(get("/analytics/assessment/{assessmentId}/application-id", assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(applicationId)));
+
+        verify(googleAnalyticsDataLayerServiceMock, only()).getApplicationIdForAssessment(assessmentId);
     }
 }

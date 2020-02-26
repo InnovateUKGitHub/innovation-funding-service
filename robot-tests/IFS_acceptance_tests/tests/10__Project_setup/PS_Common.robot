@@ -153,8 +153,8 @@ ${PS_NGTC_Application_Project_Id}     ${project_ids["${PS_NGTC_Application_Title
 *** Keywords ***
 The user adds a new team member
   [Arguments]  ${firstName}  ${email}
-  the user enters text to a text field   id = name   ${firstName}
-  the user enters text to a text field   id = email  ${email}
+  the user enters text to a text field   css = input[name=name]   ${firstName}
+  the user enters text to a text field   css = input[name=email]  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to project")
 
 project finance submits monitoring officer
@@ -397,7 +397,7 @@ project finance approves bank details for ${PS_EF_Application_Title}
 the user changes the start date
     [Arguments]  ${year}
     the user clicks the button/link         link = Target start date
-    the user enters text to a text field    id = projectStartDate_year  ${year}
+    the user enters text to a text field    id = projectStartDate-date_year  ${year}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save")
 
 internal user approve uploaded documents

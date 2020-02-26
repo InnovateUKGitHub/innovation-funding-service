@@ -36,4 +36,12 @@ public interface GoogleAnalyticsDataLayerService {
     @SecuredBySpring(value = "READ", description = "Any authenticated user can see the corresponding application id for a project")
     @PreAuthorize("isAuthenticated()")
     ServiceResult<Long> getApplicationIdForProject(long projectId);
+
+    @SecuredBySpring(value = "READ", description = "Any anonymous or authenticated user can get any competition name for an invite")
+    @PreAuthorize("permitAll")
+    ServiceResult<String> getCompetitionNameByInviteHash(String inviteHash);
+
+    @SecuredBySpring(value = "READ", description = "Any authenticated user can see the corresponding application id for an assessment")
+    @PreAuthorize("isAuthenticated()")
+    ServiceResult<Long> getApplicationIdForAssessment(long assessmentId);
 }

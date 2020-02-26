@@ -21,9 +21,10 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
                                             long organisationId,
                                             boolean readOnly,
                                             boolean showHints,
+                                            boolean procurementCompetition,
                                             UserResource loggedInUser,
                                             boolean isAllEligibilityAndViabilityInReview) {
-        super(showStateAidAgreement, fundingSectionComplete, h2020);
+        super(showStateAidAgreement, fundingSectionComplete, h2020, procurementCompetition);
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;

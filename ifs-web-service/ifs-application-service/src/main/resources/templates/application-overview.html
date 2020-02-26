@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application overview - ' + ${applicationName + ' '}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Application overview - ${applicationName}|" />
     </th:block>
 </head>
 <body class="govuk-template__body app-details">
@@ -84,10 +84,10 @@
                                     <th:block th:if="${model.lead}">
                                         <a th:href="@{/application/{applicationId}/form/question/{questionId}/assign(applicationId=${model.application.id},questionId=${rowModel.question.id})}"
                                            class="govuk-link"
-                                           aria-describedby="assign-hint">
+                                           th:attr="aria-describedby=|assign-hint-${rowModel.question.id}|">
                                             Assigned to
                                             <th:block th:text="${assignee}">you/Name</th:block>
-                                            <span id="assign-hint" class="govuk-visually-hidden">,assign to somebody else in your team</span>
+                                            <span th:id="|assign-hint-${rowModel.question.id}|" class="govuk-visually-hidden">,assign to somebody else in your team</span>
                                         </a>
                                     </th:block>
                                     <!--/* collaborator */-->

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.applicationName} - Assign ${model.question.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block
+        th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head"
+                  th:with="pageTitle=|Assign ${model.question.name} - ${applicationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    </th:block>
 </head>
 <body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -11,7 +15,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back',linkUrl='/', dynamicBackLink=${true}" />
+              th:with="linkTitle='Back',linkUrl='/', dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
@@ -45,7 +49,7 @@
                               th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item" th:each="user : ${model.users}" >
+                        <div class="govuk-radios__item" th:each="user : ${model.users}">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    th:field="*{assignee}"
