@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CA
 @Controller
 @RequestMapping("/application")
 public class ReviewAndSubmitController {
-    public static final String FORM_ATTR_NAME = "applicationSubmitForm";
+    public static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator;
@@ -67,7 +67,7 @@ public class ReviewAndSubmitController {
     @PreAuthorize("hasAnyAuthority('applicant')")
     @GetMapping("/{applicationId}/review-and-submit")
     @AsyncMethod
-    public String reviewAndSubmit(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationSubmitForm applicationSubmitForm,
+    public String reviewAndSubmit(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationSubmitForm form,
                                   BindingResult bindingResult,
                                   @PathVariable long applicationId,
                                   Model model,
@@ -81,7 +81,7 @@ public class ReviewAndSubmitController {
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/review-and-submit")
     public String submitApplication(@PathVariable long applicationId,
-                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm applicationSubmitForm,
+                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
                                     BindingResult bindingResult,
                                     RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("termsAgreed", true);
