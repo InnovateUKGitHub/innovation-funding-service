@@ -24,7 +24,8 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.RoleProfileState.*;
+import static org.innovateuk.ifs.user.resource.RoleProfileState.DISABLED;
+import static org.innovateuk.ifs.user.resource.RoleProfileState.UNAVAILABLE;
 
 @Controller
 @RequestMapping("/admin/user/{userId}/role-profile")
@@ -47,13 +48,7 @@ public class AssessorManagementController {
     public String viewUser(@PathVariable long userId,
                            Model model) {
 
-        RoleProfileStatusResource roleProfileStatusResource =
-                roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR).getSuccess();
-
-        UserResource modifiedUser = userRestService.retrieveUserById(roleProfileStatusResource.getModifiedBy()).getSuccess();
-
-        model.addAttribute("model", new RoleProfileViewModel(roleProfileStatusResource, modifiedUser, hasApplicationsAssigned(userId)));
-
+        model.addAttribute("model", getRoleProfileViewModel(userId));
         return "roleprofile/role-profile-details";
 
     }
@@ -63,12 +58,21 @@ public class AssessorManagementController {
                              @PathVariable long userId,
                              Model model) {
 
+        RoleProfileStatusResource roleProfileStatus = getRoleProfileViewModel(userId).getRoleProfileStatus();
+
         if (form.getRoleProfileState() == null) {
-            form.setRoleProfileState(ACTIVE);
+
+            form.setRoleProfileState(roleProfileStatus.getRoleProfileState());
+
+            if (form.getRoleProfileState() == UNAVAILABLE) {
+                form.setUnavailableReason(roleProfileStatus.getDescription());
+            }
+            if (form.getRoleProfileState() == DISABLED) {
+                form.setDisabledReason(roleProfileStatus.getDescription());
+            }
         }
 
         model.addAttribute("userId", userId);
-
         return "roleprofile/change-status";
     }
 
@@ -92,6 +96,15 @@ public class AssessorManagementController {
         });
     }
 
+    private RoleProfileViewModel getRoleProfileViewModel(long userId) {
+
+        RoleProfileStatusResource roleProfileStatusResource =
+                roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR).getSuccess();
+
+        UserResource modifiedUser = userRestService.retrieveUserById(roleProfileStatusResource.getModifiedBy()).getSuccess();
+        return new RoleProfileViewModel(roleProfileStatusResource, modifiedUser, hasApplicationsAssigned(userId));
+    }
+
     private RoleProfileStatusResource createRoleProfileStatusResource(long userId, ChangeRoleProfileForm form) {
         if (UNAVAILABLE.equals(form.getRoleProfileState())) {
             return new RoleProfileStatusResource(userId, ASSESSOR, form.getRoleProfileState(), form.getUnavailableReason());
@@ -108,11 +121,11 @@ public class AssessorManagementController {
 
     private void validateForm(BindingResult bindingResult, ChangeRoleProfileForm form) {
         if (UNAVAILABLE.equals(form.getRoleProfileState()) && StringUtils.isEmpty(form.getUnavailableReason())) {
-            bindingResult.addError(new FieldError("form", "unavailableReason", "validation.changeroleprofileform.reason.required"));
+            bindingResult.addError(new FieldError("form", "unavailableReason", "Please enter some text."));
         }
 
         if (DISABLED.equals(form.getRoleProfileState()) && StringUtils.isEmpty(form.getDisabledReason())) {
-            bindingResult.addError(new FieldError("form", "disabledReason", "validation.changeroleprofileform.reason.required"));
+            bindingResult.addError(new FieldError("form", "disabledReason", "Please enter some text."));
         }
     }
 }
