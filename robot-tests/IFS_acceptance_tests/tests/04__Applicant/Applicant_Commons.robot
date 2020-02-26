@@ -54,8 +54,8 @@ the applicant completes the application details
     the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
-     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=mark_as_incomplete]
-     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=mark_as_incomplete]  # the Edit link
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
