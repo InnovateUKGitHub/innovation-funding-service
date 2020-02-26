@@ -23,12 +23,12 @@ public class ApplicationHiddenFromDashboard {
     @CreatedDate
     private ZonedDateTime createdOn;
 
-    @JoinColumn(name = "application_id")
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "application_id", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Application application;
 
-    @JoinColumn(name = "user_id")
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public ApplicationHiddenFromDashboard(Application application, User user) {

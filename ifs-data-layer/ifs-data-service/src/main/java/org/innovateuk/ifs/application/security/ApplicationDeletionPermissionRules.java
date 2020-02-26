@@ -8,6 +8,9 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+
 @PermissionRules
 @Component
 public class ApplicationDeletionPermissionRules extends BasePermissionRules {
@@ -20,10 +23,8 @@ public class ApplicationDeletionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "HIDE_APPLICATION", description = "Only the collaborators can hide applications")
     public boolean onlyCollaboratorsCanHideApplications(final ApplicationUserCompositeId id, UserResource user) {
-        return isMemberOfProjectTeam(id.getApplicationId(), user)
+        return checkProcessRole(user, id.getApplicationId(), COLLABORATOR, processRoleRepository)
                 && user.getId().equals(id.getUserId());
     }
-
-
 }
 
