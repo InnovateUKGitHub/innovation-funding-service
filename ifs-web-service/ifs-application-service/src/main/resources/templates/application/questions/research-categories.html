@@ -2,12 +2,12 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block
-        th:with="applicationName=${#strings.isEmpty(researchCategoryModel.applicationName)} ? #{ifs.application.no_title} : ${researchCategoryModel.applicationName}">
+        th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
         <th:block th:insert="fragments/layout :: head"
                   th:with="pageTitle=|Research category - ${applicationName}|"/>
     </th:block>
 </head>
-<body class="govuk-template__body application details innovation-areas" th:with="model=${researchCategoryModel}">
+<body class="govuk-template__body application details innovation-areas">
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 

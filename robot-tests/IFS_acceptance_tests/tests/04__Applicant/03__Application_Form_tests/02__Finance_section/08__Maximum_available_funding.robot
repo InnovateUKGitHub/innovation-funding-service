@@ -189,6 +189,7 @@ the user edits the research category
     the user clicks the button/link     jQuery = button:contains("Edit")
     the user clicks the button twice    jQuery = label[for^="researchCategory"]:contains("${research_category}")
     the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
     the user clicks the button/link     link = Your project finances
 
 the user edits the organisation size

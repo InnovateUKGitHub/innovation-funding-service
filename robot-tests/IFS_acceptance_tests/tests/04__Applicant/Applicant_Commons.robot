@@ -40,7 +40,7 @@ Mark application details as incomplete
     the user should see the element  jQuery = li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  css = img.complete[alt*="Application details"]
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  css = li:contains("Application details") > .task-status-complete
     Run Keyword If  '${status}' == 'FAIL'  Run keywords  the user clicks the button/link  link = Application details
     ...   AND  the user moves Application details in Edit mode
     ...   AND  the user fills in the Application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
@@ -76,6 +76,7 @@ the user selects research category from funding
     the user clicks the button/link   link = research category
     the user clicks the button twice  jQuery = label:contains("${res_category}")
     the user clicks the button/link   id = application-question-complete
+    the user clicks the button/link   link = Back to application overview
     the user should see the element   jQuery = li:contains("Research category") > .task-status-complete
 
 the user marks the finances as complete

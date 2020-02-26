@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.controller;
 
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -9,7 +10,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,19 +32,26 @@ public class ApplicationQuestionController {
     @Autowired
     private QuestionRestService questionRestService;
 
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
     @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String showQuestion(
-            Model model,
-            @PathVariable(APPLICATION_ID) final Long applicationId,
-            @PathVariable(QUESTION_ID) final Long questionId,
-            @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
+            @PathVariable long applicationId,
+            @PathVariable long questionId,
+            @RequestParam("show-errors") final Optional<Boolean> showErrors,
             UserResource user) {
+        verifyApplicationIdExistsAndPermission(applicationId);
         QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
         QuestionSetupType questionType = questionResource.getQuestionSetupType();
         Optional<String> questionUrl = getQuestionUrl(questionType, questionId, applicationId);
         if (questionUrl.isPresent()) {
-            return "redirect:" + questionUrl.get() + (markAsComplete.isPresent() ? "?show-errors=true" : "");
+            return "redirect:" + questionUrl.get() + (showErrors.isPresent() ? "?show-errors=true" : "");
         }
         throw new IFSRuntimeException("Unknown question type" + questionType.name());
+    }
+
+    private void verifyApplicationIdExistsAndPermission(long applicationId) {
+        applicationRestService.getApplicationById(applicationId).getSuccess();
     }
 }
