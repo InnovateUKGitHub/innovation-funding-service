@@ -298,11 +298,13 @@ Admin cannot change email to an email which is a pending invitation to an organi
 the internal user isnt able to update an existing users email with a pending email
     [Arguments]   ${emailToBeChanged}
     the user navigates to the page         ${server}/management/admin/users/active
+    the user enters text to a text field   id = filter   ${emailToBeChanged}
+    the user clicks the button/link        css = input[type="submit"]
     the user clicks the button/link        jQuery = .user-profile:contains("${emailToBeChanged}") a:contains("Edit")
     the user enters text to a text field   id = email   ${newPendingEmail}
     the user clicks the button/link        jQuery = button:contains("Save and return")
     the user confirms email change
-    the user should see the element        the user should see a field error
+    the user should see a summary error    The new email address has already been used to invite a partner to application 154. You must remove the invitation before making this change.
 
 the external user adds a pending partner to the organisation in application
      log in as a different user        &{lead_applicant_credentials}
