@@ -43,7 +43,7 @@ if (enabled) {
 
 task createTestSchema(type: Exec) {
     doFirst {
-        commandLine 'docker', 'exec', '-d', sqlContainer, 'mysql', '-uroot', '-ppassword', '-h' + sqlContainer, '-e', 'create database if not exists ' + testSchema
+        commandLine 'docker', 'exec', '-d', sqlContainer, 'mysql', '-uroot', '-ppassword', '-e', 'create database if not exists ' + testSchema
     }
 }
 

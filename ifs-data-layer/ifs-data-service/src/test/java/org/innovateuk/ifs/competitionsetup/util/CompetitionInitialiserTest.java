@@ -65,7 +65,6 @@ public class CompetitionInitialiserTest {
                 YOUR_FINANCE
         )));
     }
-
     @Test
     public void initaliseProjectSetup_Grant() {
         Competition competition = newCompetition().withFundingType(GRANT).build();
@@ -110,42 +109,6 @@ public class CompetitionInitialiserTest {
         assertTrue(competitionWithFinanceTypes.getProjectSetupStages().containsAll(EnumSet.of(
                 PROJECT_DETAILS,
                 PROJECT_TEAM,
-                MONITORING_OFFICER,
-                BANK_DETAILS,
-                FINANCE_CHECKS,
-                SPEND_PROFILE,
-                GRANT_OFFER_LETTER
-        )));
-    }
-
-    @Test
-    public void initaliseFinance_KTP() {
-        Competition competition = newCompetition().withFundingType(KTP).build();
-        Competition competitionWithFinanceTypes = initialiseFinanceTypes(competition);
-
-        assertTrue(competitionWithFinanceTypes.getFinanceRowTypes().containsAll(EnumSet.of(
-                LABOUR,
-                OVERHEADS,
-                MATERIALS,
-                CAPITAL_USAGE,
-                SUBCONTRACTING_COSTS,
-                TRAVEL,
-                OTHER_COSTS,
-                FINANCE,
-                OTHER_FUNDING,
-                YOUR_FINANCE
-        )));
-    }
-
-    @Test
-    public void initaliseProjectSetup_KTP() {
-        Competition competition = newCompetition().withFundingType(KTP).build();
-        Competition competitionWithFinanceTypes = initialiseProjectSetupColumns(competition);
-
-        assertTrue(competitionWithFinanceTypes.getProjectSetupStages().containsAll(EnumSet.of(
-                PROJECT_DETAILS,
-                PROJECT_TEAM,
-                DOCUMENTS,
                 MONITORING_OFFICER,
                 BANK_DETAILS,
                 FINANCE_CHECKS,

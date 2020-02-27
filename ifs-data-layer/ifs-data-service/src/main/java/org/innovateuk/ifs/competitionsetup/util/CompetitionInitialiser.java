@@ -26,10 +26,6 @@ public final class CompetitionInitialiser {
                 break;
             case PROCUREMENT:
                 addProcurementProjectSetupColumns(competition);
-                break;
-            case KTP:
-                addKTPProjectSetupColumns(competition);
-                break;
             default:
                 break;
         }
@@ -49,10 +45,6 @@ public final class CompetitionInitialiser {
                 break;
             case PROCUREMENT:
                 addProcurementFinanceTypes(competition);
-                break;
-            case KTP:
-                addKTPFinanceTypes(competition);
-                break;
             default:
                 break;
         }
@@ -91,21 +83,6 @@ public final class CompetitionInitialiser {
     }
 
     private static void addGrantFinanceTypes(Competition competition) {
-        competition.getFinanceRowTypes().addAll(EnumSet.of(
-                LABOUR,
-                OVERHEADS,
-                MATERIALS,
-                CAPITAL_USAGE,
-                SUBCONTRACTING_COSTS,
-                TRAVEL,
-                OTHER_COSTS,
-                FINANCE,
-                OTHER_FUNDING,
-                YOUR_FINANCE
-        ));
-    }
-
-    private static void addKTPFinanceTypes(Competition competition) {
         competition.getFinanceRowTypes().addAll(EnumSet.of(
                 LABOUR,
                 OVERHEADS,
@@ -164,23 +141,6 @@ public final class CompetitionInitialiser {
         );
 
         competition.setProjectStages(stages);
-    }
-
-    private static void addKTPProjectSetupColumns(Competition competition) {
-
-        List<ProjectStages> stages = asList(
-                createProjectSetupStage(competition, PROJECT_DETAILS),
-                createProjectSetupStage(competition, PROJECT_TEAM),
-                createProjectSetupStage(competition, DOCUMENTS),
-                createProjectSetupStage(competition, MONITORING_OFFICER),
-                createProjectSetupStage(competition, BANK_DETAILS),
-                createProjectSetupStage(competition, FINANCE_CHECKS),
-                createProjectSetupStage(competition, SPEND_PROFILE),
-                createProjectSetupStage(competition, GRANT_OFFER_LETTER)
-        );
-
-        competition.setProjectStages(stages);
-
     }
 
     private static ProjectStages createProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage) {

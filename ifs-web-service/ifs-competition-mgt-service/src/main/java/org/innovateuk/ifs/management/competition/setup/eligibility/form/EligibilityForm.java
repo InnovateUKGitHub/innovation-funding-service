@@ -1,16 +1,15 @@
 package org.innovateuk.ifs.management.competition.setup.eligibility.form;
 
-import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
-import org.innovateuk.ifs.finance.resource.FundingLevel;
-import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
+import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiPredicate;
 
 /**
  * Form for the eligibility competition setup section.
@@ -19,16 +18,6 @@ import java.util.function.BiPredicate;
 @FieldRequiredIf(required = "overrideFundingRules", argument = "researchCategoriesApplicable", predicate = true, message = "{validation.eligibilityform.overrideFundingRules.required}")
 @FieldRequiredIf(required = "fundingLevelPercentage", argument = "researchCategoriesApplicable", predicate = false, message = "{validation.eligibilityform.fundingLevel.required}")
 @FieldRequiredIf(required = "fundingLevelPercentageOverride", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
-@FieldComparison(
-        firstField = "fundingLevelPercentageOverride",
-        secondField = "overrideFundingRules",
-        message = "{validation.eligibilityform.fundingLevel.max}",
-        predicate = EligibilityForm.FundingLevelMaxPredicateProvider.class)
-@FieldComparison(
-        firstField = "fundingLevelPercentageOverride",
-        secondField = "overrideFundingRules",
-        message = "{validation.eligibilityform.fundingLevel.min}",
-        predicate = EligibilityForm.FundingLevelMinPredicateProvider.class)
 public class EligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
@@ -161,31 +150,5 @@ public class EligibilityForm extends CompetitionSetupForm {
 
     public boolean includesLeadApplicantType(Long id) {
         return leadApplicantTypes != null && leadApplicantTypes.contains(id);
-    }
-
-    public static class FundingLevelMaxPredicateProvider implements BiPredicateProvider<Integer, Boolean> {
-        public BiPredicate<Integer, Boolean> predicate() {
-            return (fundingLevelPercentageOverride, overrideFundingRules) -> isFundingLevelLessThan(fundingLevelPercentageOverride, overrideFundingRules);
-        }
-
-        private boolean isFundingLevelLessThan(Integer fundingLevelPercentageOverride, Boolean overrideFundingRules) {
-            if (overrideFundingRules) {
-                return fundingLevelPercentageOverride <= FundingLevel.HUNDRED.getPercentage();
-            }
-            return true;
-        }
-    }
-
-    public static class FundingLevelMinPredicateProvider implements BiPredicateProvider<Integer, Boolean> {
-        public BiPredicate<Integer, Boolean> predicate() {
-            return (fundingLevelPercentageOverride, overrideFundingRules) -> isFundingLevelLessThan(fundingLevelPercentageOverride, overrideFundingRules);
-        }
-
-        private boolean isFundingLevelLessThan(Integer fundingLevelPercentageOverride, Boolean overrideFundingRules) {
-            if (overrideFundingRules) {
-                return fundingLevelPercentageOverride > 0;
-            }
-            return true;
-        }
     }
 }
