@@ -63,10 +63,14 @@ public class AssessorManagementController {
                              @PathVariable long userId,
                              Model model) {
 
+        RoleProfileStatusResource roleProfileStatusResource =
+                roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR).getSuccess();
+
         if (form.getRoleProfileState() == null) {
-            form.setRoleProfileState(ACTIVE);
+            form.setRoleProfileState(roleProfileStatusResource.getRoleProfileState());
         }
 
+        model.addAttribute("state", roleProfileStatusResource.getRoleProfileState().getDescription().toLowerCase());
         model.addAttribute("userId", userId);
 
         return "roleprofile/change-status";

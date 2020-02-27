@@ -148,7 +148,7 @@
             <th:block th:insert="fragments/modals :: modal-role-profile-disabled" />
 
             <div class="govuk-form-group govuk-!-margin-top-6">
-                <button class="govuk-!-margin-right-0 govuk-button" id="update-status" data-js-modal="modal-role-profile-available">Update status</button>
+                <button class="govuk-!-margin-right-0 govuk-button" id="update-status" th:data-js-modal="|modal-role-profile-${state}|">Update status</button>
             </div>
     </form>
 
