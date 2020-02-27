@@ -286,16 +286,6 @@ the user should see a validation error
 the user shouldn't be able to edit the day field as all projects start on the first of the month
     the user should see the element    css = .day [readonly]
 
-the user should see the address data
-    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != 'NO'    the user should see the valid data
-    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == 'NO'    the user should see the dummy data
-
-the user should see the valid data
-    the user should see the element           jQuery = td:contains("Correspondence address") ~ td:contains("Am Reprographics, Bristol, BS1 4NT")
-
-the user should see the dummy data
-    the user should see the element           jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
-
 the user should not see duplicated select options
     ${NO_OPTIONs} =     Get Element Count    //*[@class="govuk-radios__item"]
     Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
@@ -452,15 +442,6 @@ the user should see validations triggered correctly
     the user should see a field and summary error   ${enter_a_last_name}
     the user should see a field and summary error   To create a new account you must agree to the website terms and conditions.
     the user should see a field and summary error   Please enter your password.
-
-the user updates the correspondence address
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Save")
-    the user should see a field and summary error       Search using a valid postcode or enter the address manually.
-    the user enter the Correspondence address
-    the user should see the address data
-    the user clicks the button/link                     link = Correspondence address
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
-    the user should see the element                     jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
 
 the non-lead partner see the completed project details
     the user logs in and navigates to project details   &{collaborator1_credentials}
