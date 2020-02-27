@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
@@ -31,6 +33,9 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
     @Autowired
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
@@ -72,13 +77,15 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
     private ProjectOrganisationSizeViewModel getViewModel(long projectId, long organisationId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         return new ProjectOrganisationSizeViewModel(project,
                 organisation.getName(),
                 organisationId,
                 false,
                 false,
                 false,
-                false);
+                false,
+                competition.isProcurement());
     }
 
     protected abstract String redirectToOrganisationDetails(long projectId, long organisationId);

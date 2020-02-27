@@ -46,8 +46,8 @@ the user invites collaborator by email address
     the user clicks the button/link       link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link       link = Application team
     the user clicks the button/link       jQuery=button:contains("Add person to INNOVATE LTD")
-    The user enters text to a text field  id = name  research collab
-    The user enters text to a text field  id = email  ${COLLAB_USER_EMAIL}
+    The user enters text to a text field  css = [name=name]  research collab
+    The user enters text to a text field  css = [name=email]  ${COLLAB_USER_EMAIL}
     the user clicks the button/link       jQuery = button:contains("Invite to application")
 
 the user changes the application name
@@ -82,8 +82,8 @@ the user navigates to the Application Team Page
 the user updates his organisation inviting the user
     [Arguments]  ${name}  ${email}
     the user clicks the button/link       jQuery = button:contains("Add person to University of Warwick")
-    the user enters text to a text field  id = name  ${name}
-    the user enters text to a text field  id = email  ${email}
+    the user enters text to a text field  css = [name=name]  ${name}
+    the user enters text to a text field  css = [name=email]   ${email}
     the user clicks the button/link       jQuery = button:contains("Invite to application")
 
 # I am on purpose not making the following lines one keyword.
