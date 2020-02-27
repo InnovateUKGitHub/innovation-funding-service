@@ -61,6 +61,7 @@ public class AssessorManagementController {
         RoleProfileStatusResource roleProfileStatus = getRoleProfileViewModel(userId).getRoleProfileStatus();
 
         if (form.getRoleProfileState() == null) {
+            form.setRoleProfileState(roleProfileStatus.getRoleProfileState());
 
             form.setRoleProfileState(roleProfileStatus.getRoleProfileState());
 
@@ -72,6 +73,7 @@ public class AssessorManagementController {
             }
         }
 
+        model.addAttribute("state", roleProfileStatus.getRoleProfileState().getDescription().toLowerCase());
         model.addAttribute("userId", userId);
         return "roleprofile/change-status";
     }
