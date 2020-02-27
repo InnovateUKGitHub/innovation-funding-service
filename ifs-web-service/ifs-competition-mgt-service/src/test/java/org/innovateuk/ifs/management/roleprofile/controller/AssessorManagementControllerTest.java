@@ -60,10 +60,21 @@ public class AssessorManagementControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("roleprofile/role-profile-details"));
     }
 
-
     @Test
     public void viewStatus() throws Exception {
         long userId = 1L;
+        long modifiedId = 2L;
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withUserId(userId)
+                .withProfileRole(ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withModifiedBy(modifiedId)
+                .build();
+        UserResource userResource = newUserResource().withId(modifiedId).build();
+
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
+        when(userRestService.retrieveUserById(modifiedId)).thenReturn(restSuccess(userResource));
+        when(assessorRestService.hasApplicationsAssigned(userId)).thenReturn(restSuccess(TRUE));
 
         mockMvc.perform(get("/admin/user/{userId}/role-profile/status",userId))
                 .andExpect(status().isOk())
@@ -87,10 +98,21 @@ public class AssessorManagementControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void UpdateStatus_failure() throws Exception {
         long userId = 1L;
-        String roleProfileState = "UNAVAILABLE";
+        long modifiedId = 2L;
+        RoleProfileStatusResource roleProfileStatusResource = newRoleProfileStatusResource()
+                .withUserId(userId)
+                .withProfileRole(ASSESSOR)
+                .withRoleProfileState(RoleProfileState.UNAVAILABLE)
+                .withModifiedBy(modifiedId)
+                .build();
+        UserResource userResource = newUserResource().withId(modifiedId).build();
+
+        when(roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR)).thenReturn(restSuccess(roleProfileStatusResource));
+        when(userRestService.retrieveUserById(modifiedId)).thenReturn(restSuccess(userResource));
+        when(assessorRestService.hasApplicationsAssigned(userId)).thenReturn(restSuccess(TRUE));
 
         mockMvc.perform(post("/admin/user/{userId}/role-profile/status",userId).
-                param("roleProfileState", roleProfileState))
+                param("roleProfileState", roleProfileStatusResource.getRoleProfileState().name()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("roleprofile/change-status"));
     }
