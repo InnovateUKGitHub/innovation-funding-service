@@ -132,14 +132,7 @@ Eligibility funding level validation
     [Documentation]  IFS-3622  IFS-7148
     Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
     When the user clicks the button/link                jQuery = button:contains("Done")
-    Then The user should see a field and summary error  Please enter the maximum funding level that applicants can apply for.
-    And the user enters text to a text field            id = fundingLevelPercentageOverride  8.9
-    Then The user should see a field and summary error  This field can only accept whole numbers.
-    And the user enters text to a text field            id = fundingLevelPercentageOverride  1993
-    Then The user should see a field and summary error  The funding level percentage must be 100 or lower.
-    And the user enters text to a text field            id = fundingLevelPercentageOverride  0
-    Then The user should see a field and summary error  The funding level percentage must be 1 or higher.
-    And the user clicks the button twice                css = label[for="comp-overrideFundingRules-no"]
+    Then the user is able to see all validations
     [Teardown]  the user clicks the button/link         jQuery = button:contains("Done")
 
 Eligibility client-side validations
@@ -258,6 +251,16 @@ Documents in project setup: The competition admin addresses the errors
     Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
 
 *** Keywords ***
+The user is able to see all validations
+    the user should see a field and summary error   Please enter the maximum funding level that applicants can apply for.
+    the user enters text to a text field            id = fundingLevelPercentageOverride  8.9
+    the user should see a field and summary error   This field can only accept whole numbers.
+    the user enters text to a text field            id = fundingLevelPercentageOverride  1993
+    the user should see a field and summary error   The funding level percentage must be 100 or lower.
+    the user enters text to a text field            id = fundingLevelPercentageOverride  0
+    the user should see a field and summary error   The funding level percentage must be 1 or higher.
+    the user clicks the button twice                css = label[for="comp-overrideFundingRules-no"]
+
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${month} =  get tomorrow month
