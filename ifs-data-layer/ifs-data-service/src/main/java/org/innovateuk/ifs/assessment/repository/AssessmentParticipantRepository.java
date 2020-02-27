@@ -61,8 +61,9 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status IN :status " +
             "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%')" +
-            "AND user IS NULL OR user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
-            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND (user IS NULL OR " +
+            "(user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
+            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "))";
 
@@ -177,15 +178,16 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     @Query("SELECT count(participant) " +
             "FROM AssessmentParticipant participant " +
-            "LEFT JOIN participant.user.roleProfileStatuses roleStatuses " +
-            "WHERE participant.role = :role " +
-            " AND participant.competition.id = :competitionId " +
-            " AND participant.status = :status " +
-            " AND (roleStatuses IS NULL OR " +
+            "LEFT JOIN participant.user user " +
+            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
+            "WHERE participant.role = :role AND " +
+            " participant.competition.id = :competitionId AND" +
+            " participant.status = :status AND" +
+            " (user IS NULL OR " +
             "(" +
-            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "     roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             " AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
-            " AND participant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            " AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "))")
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 

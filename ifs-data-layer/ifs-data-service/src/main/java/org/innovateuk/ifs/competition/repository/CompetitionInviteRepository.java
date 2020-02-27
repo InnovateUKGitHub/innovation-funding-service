@@ -24,9 +24,10 @@ public interface CompetitionInviteRepository<T extends CompetitionInvite> extend
             "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
             "      invite.status = :status AND " +
-            " (user IS NULL OR user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE" +
+            " (user IS NULL OR " +
             "(" +
-            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "    user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "))";
 
@@ -34,11 +35,11 @@ public interface CompetitionInviteRepository<T extends CompetitionInvite> extend
             "LEFT JOIN invite.user user " +
             "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
-            "      (user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE OR user IS NULL) AND " +
             "      invite.status IN :statuses AND " +
-            " (roleStatuses IS NULL OR " +
+            " (user IS NULL OR " +
             "(" +
-            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "    user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "))";
 
