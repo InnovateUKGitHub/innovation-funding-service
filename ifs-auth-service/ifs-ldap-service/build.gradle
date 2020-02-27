@@ -19,12 +19,7 @@ version project.version
 
 apply plugin: 'idea'
 
-def String ldapCertsVolume = 'src/main/docker/certs'
-
-def String ldapEncryptionKeyFile = "${ldapCertsVolume}/ldap-encryption.key"
-def String ldapEncryptionCertificateFile = "${ldapCertsVolume}/ldap-encryption.crt"
-
-def String ldapPassword = project.properties['auth.ldap.password'] ?: "default"
+String ldapPassword = project.properties['auth.ldap.password'] ?: "default"
 
 buildscript {
     repositories { jcenter() }
@@ -35,16 +30,12 @@ task prepareDockerFile {
 
     doFirst {
 
-        def String ldapEncryptionKey = file(ldapEncryptionKeyFile).text.trim().replace('\n', '\\n')
-        def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
         copy {
             from 'src/main/docker/'
             into 'src/main/docker/'
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [auth_ldap_password              : ldapPassword,
-                                           auth_ldap_encryption_key        : ldapEncryptionKey,
-                                           auth_ldap_encryption_certificate: ldapEncryptionCertificate])
+            filter(ReplaceTokens, tokens: [auth_ldap_password              : ldapPassword])
         }
         copy {
             from file('src/main/docker/Dockerfile')
@@ -69,3 +60,4 @@ createContainer.containerId = "ldap"
 createContainer.env = ["LDAP_PORT=8389"]
 createContainer.portBindings = ['8389:8389']
 createContainer.hostName = "ldap"
+createContainer.binds = ["${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs":"/var/certs"]
