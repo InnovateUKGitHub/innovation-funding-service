@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardSection.PREVIOUS;
+import static org.innovateuk.ifs.application.resource.ApplicationState.submittedAndFinishedStates;
 
 /**
  * Resource representing an application or project for use in the previous section of the applicant dashboard.
@@ -71,6 +72,11 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
     public Long getProjectId() {
         return projectId;
     }
+
+//    @JsonIgnore
+//    public boolean canHideApplication(){
+//        return !leadApplicant && !submittedAndFinishedStates.contains(applicationState);
+//    }
 
     @JsonIgnore
     public boolean activeProject() {

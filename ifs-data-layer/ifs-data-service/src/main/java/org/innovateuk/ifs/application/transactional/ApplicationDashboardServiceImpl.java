@@ -67,7 +67,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                     inProgress.add(toInProgressResource(application, userId));
                     break;
                 case PREVIOUS:
-                    previous.add(toPreviousResource(application));
+                    previous.add(toPreviousResource(application, userId));
                     break;
             }
         });
@@ -142,9 +142,10 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
         return !application.getProject().getProjectProcess().getProcessState().isComplete();
     }
 
-    private DashboardPreviousRowResource toPreviousResource(Application application) {
+    private DashboardPreviousRowResource toPreviousResource(Application application, long userId) {
         return new DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder()
                 .withTitle(application.getName())
+                .withLeadApplicant(application.getLeadApplicant().getId().equals(userId))
                 .withApplicationId(application.getId())
                 .withCompetitionTitle(application.getCompetition().getName())
                 .withApplicationState(application.getApplicationProcess().getProcessState())

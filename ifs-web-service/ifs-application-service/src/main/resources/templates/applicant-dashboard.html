@@ -6,7 +6,7 @@
 </head>
 
 <body class="govuk-template__body app-dashboard">
-
+    <th:block th:insert="fragments/modals :: modal-overlay" />
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
     <div class="govuk-width-container">
@@ -162,6 +162,20 @@
                                 <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
                                 <p th:if="${previousView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
                                 <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
+                            </div>
+                            <div th:if="${previousView.canHideApplication()}">
+                                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                                      method="post">
+                                    <th:block
+                                        th:insert="fragments/modals :: modal-confirm-hide-application (${previousView.applicationNumber})"/>
+                                <button name="remove-partner-invite"
+                                        class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
+                                        type="submit"
+                                        th:attr="data-js-modal=${'modal-confirm-hide-application-' + previousView.applicationNumber}"
+                                        th:value="${previousView.applicationNumber}">
+                                    Remove
+                                </button>
+                                    </form>
                             </div>
                         </li>
                     </ul>

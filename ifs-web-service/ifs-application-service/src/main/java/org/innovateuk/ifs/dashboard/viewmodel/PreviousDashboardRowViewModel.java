@@ -18,6 +18,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     private final LocalDate startDate;
     private final ProjectState projectState;
     private final Long projectId;
+    private final boolean leadApplicant;
 
     public PreviousDashboardRowViewModel(String title,
                                          long applicationId,
@@ -25,12 +26,14 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
                                          String competitionTitle,
                                          ApplicationState applicationState,
                                          ProjectState projectState,
-                                         LocalDate startDate) {
+                                         LocalDate startDate,
+                                         boolean leadApplicant) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
         this.projectState = projectState;
         this.projectId = projectId;
         this.startDate = startDate;
+        this.leadApplicant = leadApplicant;
     }
 
     public PreviousDashboardRowViewModel(DashboardPreviousRowResource resource){
@@ -39,6 +42,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         this.projectState = resource.getProjectState();
         this.projectId = resource.getProjectId();
         this.startDate = resource.getStartDate();
+        this.leadApplicant = resource.isLeadApplicant();
     }
 
     public ApplicationState getApplicationState() {
@@ -51,6 +55,10 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     private boolean hasProject() {
         return projectState != null;
+    }
+
+    public boolean isLeadApplicant() {
+        return leadApplicant;
     }
 
     /* View logic */
@@ -81,6 +89,10 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     public boolean isUnsuccessful() {
         return hasProject() && projectState.isUnsuccessful();
+    }
+
+    public boolean canHideApplication() {
+        return !leadApplicant && !submittedAndFinishedStates.contains(applicationState);
     }
 
     @Override
