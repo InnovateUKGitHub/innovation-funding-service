@@ -61,10 +61,9 @@ public class AssessorManagementController {
         RoleProfileStatusResource roleProfileStatus = getRoleProfileViewModel(userId).getRoleProfileStatus();
 
         if (form.getRoleProfileState() == null) {
-            form.setRoleProfileState(roleProfileStatus.getRoleProfileState());
 
             form.setRoleProfileState(roleProfileStatus.getRoleProfileState());
-
+            
             if (form.getRoleProfileState() == UNAVAILABLE) {
                 form.setUnavailableReason(roleProfileStatus.getDescription());
             }
