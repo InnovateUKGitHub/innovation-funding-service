@@ -61,9 +61,8 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status IN :status " +
             "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%')" +
-            "AND (user IS NULL OR " +
-            "(user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
-            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND user IS NULL OR user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "))";
 
