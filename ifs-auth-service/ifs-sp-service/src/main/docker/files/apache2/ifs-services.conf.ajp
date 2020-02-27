@@ -9,9 +9,9 @@ ShibCompatValidUser On
 
   SSLProxyEngine on
   SSLEngine on
-  SSLCertificateKeyFile /etc/apache2/certs/sp_proxy_key.pem
-  SSLCertificateFile /etc/apache2/certs/sp_proxy_certificate.pem
-  SSLCertificateChainFile /etc/apache2/certs/sp_proxy_cacertificate.pem
+  SSLCertificateKeyFile /var/certs/sp_proxy_key.pem
+  SSLCertificateFile /var/certs/sp_proxy_certificate.pem
+  SSLCertificateChainFile /var/certs/sp_proxy_cacertificate.pem
 
   Header always set Strict-Transport-Security "max-age=15768000"
 
