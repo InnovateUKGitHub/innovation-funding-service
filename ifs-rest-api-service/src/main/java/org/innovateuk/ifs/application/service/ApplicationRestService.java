@@ -29,4 +29,5 @@ public interface ApplicationRestService {
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
     RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
     RestResult<Void> hideApplication(long applicationId, long userId);
+    RestResult<Void> deleteApplication(long applicationId);
 }

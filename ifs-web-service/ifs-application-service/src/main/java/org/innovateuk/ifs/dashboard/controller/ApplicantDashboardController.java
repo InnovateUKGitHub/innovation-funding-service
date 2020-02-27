@@ -45,4 +45,10 @@ public class ApplicantDashboardController {
         return format("redirect:/applicant/dashboard");
     }
 
+    @PostMapping(params = "delete-application")
+    public String deleteApplication(@RequestParam("delete-application") long applicationId) {
+        applicationRestService.deleteApplication(applicationId);
+        return format("redirect:/applicant/dashboard");
+    }
+
 }

@@ -27,6 +27,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
     private int applicationProgress;
     private boolean assignedToInterview;
     private LocalDate startDate;
+    private boolean collaborationLevelSingle;
 
     // Private constructor to enforce immutability
     private DashboardPreviousRowResource() {
@@ -73,10 +74,9 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
         return projectId;
     }
 
-//    @JsonIgnore
-//    public boolean canHideApplication(){
-//        return !leadApplicant && !submittedAndFinishedStates.contains(applicationState);
-//    }
+    public boolean isCollaborationLevelSingle() {
+        return collaborationLevelSingle;
+    }
 
     @JsonIgnore
     public boolean activeProject() {
@@ -103,6 +103,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
                 .append(competitionTitle, that.competitionTitle)
                 .append(dashboardSection, that.dashboardSection)
                 .append(startDate, that.startDate)
+                .append(collaborationLevelSingle, that.collaborationLevelSingle)
                 .isEquals();
     }
 
@@ -123,6 +124,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
                 .append(competitionTitle)
                 .append(dashboardSection)
                 .append(startDate)
+                .append(collaborationLevelSingle)
                 .toHashCode();
     }
 
@@ -141,6 +143,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
         private int applicationProgress;
         private boolean assignedToInterview;
         private LocalDate startDate;
+        private boolean collaborationLevelSingle;
 
         public DashboardPreviousApplicationResourceBuilder withTitle(String title) {
             this.title = title;
@@ -207,6 +210,11 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
             return this;
         }
 
+        public DashboardPreviousApplicationResourceBuilder withCollaborationLevelSingle(boolean collaborationLevelSingle) {
+            this.collaborationLevelSingle = collaborationLevelSingle;
+            return this;
+        }
+
         public DashboardPreviousRowResource build(){
             DashboardPreviousRowResource result = new DashboardPreviousRowResource();
             result.title = this.title;
@@ -222,6 +230,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
             result.applicationProgress = this.applicationProgress;
             result.assignedToInterview = this.assignedToInterview;
             result.startDate = startDate;
+            result.collaborationLevelSingle = this.collaborationLevelSingle;
 
             return result;
         }
