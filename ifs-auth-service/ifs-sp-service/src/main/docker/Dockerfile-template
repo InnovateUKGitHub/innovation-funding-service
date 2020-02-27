@@ -21,18 +21,11 @@ WORKDIR /usr/local/bin
 
 COPY files /usr/local/files/
 
-# copy certs into build
-RUN mkdir -p /var/certs/
-COPY certs/* /var/certs/
-
 RUN apt-get update --fix-missing && \
 
 # install apache and shibboleth sp module \
   apt-get -y install curl apache2 libapache2-modsecurity libapache2-mod-shib2 && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
-
-# directory for certificates, added in entrypoint \
-  mkdir /etc/apache2/certs && \
 
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
