@@ -35,8 +35,8 @@
                  th:classappend="${#fields.hasErrors('roleProfileState')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="roleProfileState">
-                        <h2 class="govuk-fieldset__heading">You cannot allocate applications to an assessor if their
-                            status is 'Unavailable' or 'Disabled'.</h2>
+                        <p class="govuk-body">You cannot allocate applications to an assessor if their
+                            status is 'Unavailable' or 'Disabled'.</p>
                     </legend>
                     <span th:if="${#fields.hasErrors('roleProfileState')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('roleProfileState')}" th:text="${err}"/>
