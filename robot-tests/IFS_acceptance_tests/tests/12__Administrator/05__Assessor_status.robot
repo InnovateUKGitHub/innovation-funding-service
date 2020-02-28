@@ -68,33 +68,61 @@ Banner applications are removed from assessor
     Given the assessor is removed from all applications
     Then the user should not be blocked from changing the role profile
 
-#Assessor can be set to unavailable
-#    Given the user clicks the button/link   link = Change role status
- #   When the user selects the radio button  roleProfileState  UNAVAILABLE
- #   And the user enters text to a text field   css = div[id=unavailable-reason] div[role]   Something
+Assessor can be set to unavailable
+    Given the user clicks the button/link      link = Change role status
+    When the user selects the radio button     roleProfileState  UNAVAILABLE
+    And the user enters text to a text field   css = div[id=unavailable-reason] div[role]   Something
+    Then the user clicks the button/link       id = update-status
+    And the user clicks the button/link        id = submitRoleProfileState-unavailable
+    And the user should see the element        jQuery = td:contains("Assessor") ~ td:contains("Unavailable")
 
-#Select unavailable
+Assessor should not appear in any lists when unavailable
+    Given the user clicks the button/link     link = Dashboard
+    When the user clicks the button/link      link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link       link = Invite assessors to assess the competition
+    And the user enters text to a text field  id = assessorNameFilter  myra
+    the user clicks the button/link           jQuery = button:contains("Filter")
+    Then the user should see the element      jQuery = td:contains("No available assessors found")
+    When the user clicks the button/link      link = Accepted
+    And the user clicks the button/link       link = 21 to 40
+    Then the user should not see the element  link = Myra Cole
 
-#Assessor should not appear in any lists when unavailable
-#check assessor lists: find and accepted to comp
-#Check allocate applications screen that it isn't appearing
+Assessor dashboard should see correct banner when unavailable
+    Given Log in as a different user          myra.cole@gmail.com  Passw0rd
+    When the user should see the element      jQuery = .message-alert:contains("Your assessor role is unavailable")
+    Then the user should not see the element  css = .progress-list
 
-#Assessor dashboard should see correct banner when unavailable
-#Sign in as assessor
-#Ensure no panels
-#Ensure banner shows
+Assessor can be set to disabled
+    [Setup]   log in as a different user            &{internal_finance_credentials}
+    Given the user clicks the button/link           link = Assessor status
+    the user enters text to a text field    id = filter  myra
+    the user clicks the button/link         css = input[type="submit"]
+    then the user clicks the button/link    link = Unavailable (1)
+    the user clicks the button/link         link = View details
+    then the user clicks the button/link    link = View role profile
+     the user clicks the button/link      link = Change role status
+     When the user selects the radio button     roleProfileState  DISABLED
+     And the user enters text to a text field   css = div[id=disabled-reason] div[role]   Something
+         Then the user clicks the button/link       id = update-status
+         And the user clicks the button/link        id = submitRoleProfileState-disabled
+         And the user should see the element        jQuery = td:contains("Assessor") ~ td:contains("Disabled")
 
-#Assessor can be set to disabled
-#Sign in as project finance and make them disabled
 
-#Assessor should not appear in any lists when disabled
-#check assessor lists: find and asssign to comp
-#Check allocate applications screen that it isn't appearing
+Assessor should not appear in any lists when disabled
+    Given the user clicks the button/link     link = Dashboard
+    When the user clicks the button/link      link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link       link = Invite assessors to assess the competition
+    And the user enters text to a text field  id = assessorNameFilter  myra
+    the user clicks the button/link           jQuery = button:contains("Filter")
+    Then the user should see the element      jQuery = td:contains("No available assessors found")
+    When the user clicks the button/link      link = Accepted
+    And the user clicks the button/link       link = 21 to 40
+    Then the user should not see the element  link = Myra Cole
 
-#Assessor dashboard should see correct banner when disabled
-#Sign in as assessor
-#Ensure no panels
-#Ensure banner shows
+Assessor dashboard should see correct banner when disabled
+    Given Log in as a different user          myra.cole@gmail.com  Passw0rd
+    When the user should see the element      jQuery = .message-alert:contains("Your assessor role has been disabled")
+    Then the user should not see the element  css = .progress-list
 
 #Assessor can be set to available
 #Sign in as comp admin and make them available
