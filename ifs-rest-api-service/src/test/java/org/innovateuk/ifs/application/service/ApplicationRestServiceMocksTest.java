@@ -210,7 +210,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         long userId = 1L;
         String expectedUrl = format("%s/%d/hide-for-user/%d", applicationRestURL, applicationId, userId);
 
-        setupPostWithRestResultVerifications(expectedUrl, Void.class);
+        setupPostWithRestResultExpectations(expectedUrl, OK);
 
         RestResult<Void> result = service.hideApplication(applicationId, userId);
         assertTrue(result.isSuccess());
@@ -221,7 +221,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         long applicationId = 1L;
         String expectedUrl = format("%s/%d", applicationRestURL, applicationId);
 
-        setupDeleteWithRestResultVerifications(expectedUrl);
+        setupDeleteWithRestResultExpectations(expectedUrl, OK);
 
         RestResult<Void> result = service.deleteApplication(applicationId);
         assertTrue(result.isSuccess());
