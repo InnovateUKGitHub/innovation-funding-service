@@ -134,10 +134,34 @@ task prepareLDAPEncryptionSecrets {
     }
 }
 
+task replicateSecrets {
+    doLast {
+        // on top of their respective certificates SP and IDP need each other's
+        // and the IDP needs ldap's
+        copy {
+            // Copy from the spCertsVolume and ldapCertsVolume as these files should always present at this point where as
+            // the relevant buildDir may well not contain them if a clean has been performed.
+            // Additionally it allows us to drop know cert files into the spCertsVolume and ldapCertsVolume for named builds
+            from file(spCertsVolume + "/" + spProxyCertificateFileName)
+            from file(ldapCertsVolume + "/" + ldapEncryptionCertificateFileName)
+            into idpCertsVolume
+        }
+        copy {
+            // Copy from the idpCertsVolume as these files should always present at this point whereas the relevant
+            // buildDir may well not contain them if a clean has been performed.
+            // Additionally it allows us to drop know cert files into the idpCertsVolume for named builds
+            from file(idpCertsVolume + "/" + idpSigningCertificateFileName)
+            from file(idpCertsVolume + "/" + idpEncryptionCertificateFileName)
+            into spCertsVolume
+        }
+    }
+}
+
 task generateCertificates {
     dependsOn prepareIDPProxySecrets
     dependsOn prepareIDPSigningSecrets
     dependsOn prepareIDPEncryptionSecrets
     dependsOn prepareLDAPEncryptionSecrets
-    dependsOn prepareSPSecrets
+    dependsOn replicateSecrets
+    replicateSecrets.mustRunAfter prepareLDAPEncryptionSecrets, prepareIDPEncryptionSecrets, prepareIDPSigningSecrets, prepareIDPProxySecrets
 }

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=${#strings.isEmpty(model.title) ? 'Application Form' : model.title},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+    <th:block
+        th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
+        <th:block th:insert="fragments/layout :: head"
+                  th:with="pageTitle=|${model.title} - ${applicationName}|"/>
+    </th:block>
 </head>
 
 <body class="govuk-template__body app-form finance">
@@ -30,7 +33,7 @@
         <th:block
             th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
             <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle=${model.title},subTitle=${model.application.name},size='govuk-heading-xl'"/>
+                      th:with="pageTitle=${model.title},subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
 
         <th:block th:if="${model.isQuestion()}">

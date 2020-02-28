@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
       th:with="pageTitle=${model.monitoringOfficer ? 'Monitor project' : 'Set up your project'}">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - ' + pageTitle}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle + ' - ' + model.projectName}" />
 </head>
 <body class="govuk-template__body project-overview">
 <th:block th:insert="fragments/layout :: body-start" />
