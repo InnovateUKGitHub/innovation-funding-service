@@ -5,7 +5,7 @@ SET @system_maintenance_user_id = (
     FROM user
     WHERE email = 'ifs_system_maintenance_user@innovateuk.org');
 
-SET @new_terms_id = 27;
+SET @new_terms_id = 28;
 SET @sector_template_id=(SELECT template_competition_id FROM competition_type WHERE name='Sector');
 SET @programme_template_id=(SELECT template_competition_id FROM competition_type WHERE name='Programme');
 SET @generic_template_id=(SELECT template_competition_id FROM competition_type WHERE name='Generic');
