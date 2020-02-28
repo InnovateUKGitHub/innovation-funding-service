@@ -5,10 +5,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.transactional.ApplicationDeletionService;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -37,6 +35,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
@@ -55,6 +54,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Mock
     private CrmService crmService;
+
+    @Mock
+    private ApplicationDeletionService applicationDeletionService;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -213,5 +215,25 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(get("/application/show-application-team/{applicationId}/{userId}", applicationId, userId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
+    }
+
+    @Test
+    public void deleteApplication() throws Exception {
+        long applicationId = 1L;
+        when(applicationDeletionService.deleteApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/application/{applicationId}", applicationId))
+                .andExpect(status().isNoContent());
+
+    }
+
+    @Test
+    public void hideApplicationFromDashboard() throws Exception {
+        long applicationId = 1L;
+        long userId = 2L;
+        when(applicationDeletionService.hideApplicationFromDashboard(ApplicationUserCompositeId.id(applicationId, userId))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/{applicationId}/hide-for-user/{userId}", applicationId, userId))
+                .andExpect(status().isNoContent());
     }
 }
