@@ -3,5 +3,7 @@ package org.innovateuk.ifs.workflow.audit;
 
 import org.springframework.data.repository.CrudRepository;
 
-interface ProcessHistoryRepository extends CrudRepository<ProcessHistory, Long> {
+public interface ProcessHistoryRepository extends CrudRepository<ProcessHistory, Long> {
+
+    void deleteByProcessId(long processId);
 }
