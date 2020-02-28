@@ -26,6 +26,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...               IFS-631 As a comp executive I am able to confirm if an interview stage is required in competition setup
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial detail
+...
+...               IFS-7148 Replace maximum funding level drop down menu with free type field in comp setup
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
