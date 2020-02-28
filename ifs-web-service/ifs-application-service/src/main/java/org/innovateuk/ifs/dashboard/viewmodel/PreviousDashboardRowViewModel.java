@@ -26,6 +26,24 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     private final boolean leadApplicant;
     private final boolean collaborationLevelSingle;
 
+    public PreviousDashboardRowViewModel(String title,
+                                         long applicationId,
+                                         Long projectId,
+                                         String competitionTitle,
+                                         ApplicationState applicationState,
+                                         ProjectState projectState,
+                                         LocalDate startDate,
+                                         boolean leadApplicant,
+                                         boolean collaborationLevelSingle) {
+        super(title, applicationId, competitionTitle);
+        this.applicationState = applicationState;
+        this.projectState = projectState;
+        this.projectId = projectId;
+        this.startDate = startDate;
+        this.leadApplicant = leadApplicant;
+        this.collaborationLevelSingle = collaborationLevelSingle;
+    }
+
     public PreviousDashboardRowViewModel(DashboardPreviousRowResource resource){
         super(resource.getTitle(), resource.getApplicationId(), resource.getCompetitionTitle());
         this.applicationState = resource.getApplicationState();

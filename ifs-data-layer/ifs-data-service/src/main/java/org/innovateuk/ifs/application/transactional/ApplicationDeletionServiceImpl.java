@@ -96,7 +96,7 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> sendNotification(Application application,List<ProcessRole> processRoles) {
+    private ServiceResult<Void> sendNotification(Application application, List<ProcessRole> processRoles) {
 
         List<NotificationTarget> notificationTargets = processRoles.stream()
                 .map(ProcessRole::getUser)
