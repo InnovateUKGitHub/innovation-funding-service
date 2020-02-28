@@ -128,7 +128,9 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             // relevant competition is not necessarily IN_ASSESSMENT.
             // This means that the state transition to SUBMITTED through the workflow
             // handler will fail due to the `CompetitionInAssessmentGuard`.
-            assessment.ifPresent(a -> a.setProcessState(AssessmentState.SUBMITTED));
+            testService.doWithinTransaction(() -> {
+                assessment.ifPresent(a -> a.setProcessState(AssessmentState.SUBMITTED));
+            });
         });
     }
 
