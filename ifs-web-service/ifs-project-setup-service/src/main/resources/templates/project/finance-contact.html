@@ -24,7 +24,7 @@
                     <li>review the spend profile of your project costs</li>
                 </ul>
 
-                <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
+                <form id="finance-contact-form" method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
                     <input type="hidden" th:field="*{organisation}" />
 
                     <div class="govuk-form-group govuk-!-margin-top-6" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
@@ -139,7 +139,7 @@
 
                     <p class="govuk-body">You can change your finance contact up until your grant offer letter is generated.</p>
 
-                    <button class="govuk-button govuk-!-margin-top-6" type="submit"  name="save-fc" id="save">Save finance contact</button>
+                    <button class="govuk-button govuk-!-margin-top-6" type="submit" name="save-fc" id="save-finance-contact">Save finance contact</button>
                 </form>
 
 

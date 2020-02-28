@@ -44,7 +44,7 @@
             <li>review the spend profile of your project costs</li>
         </ul>
 
-        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
+        <form id="finance-contact-form" method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
               th:object="${form}">
             <fieldset class="govuk-fieldset">
                 <div class="govuk-form-group" id="finance-contact-section"
@@ -72,7 +72,7 @@
             </fieldset>
 
             <div class="govuk-form-group">
-                <button class="govuk-button" type="submit">Save finance contact</button>
+                <button class="govuk-button" type="submit" id="save-finance-contact">Save finance contact</button>
             </div>
 
         </form>

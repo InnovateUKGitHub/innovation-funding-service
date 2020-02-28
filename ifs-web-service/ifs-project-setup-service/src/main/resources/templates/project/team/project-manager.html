@@ -37,7 +37,7 @@
         <p class="govuk-body" th:if="${model.loanCompetition}">Select your project manager so that your Monitoring
             Officer can make contact. You can change your project manager at any time until project setup is complete.</p>
 
-        <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
+        <form id="project-manager-form" method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
               th:object="${form}">
             <fieldset class="govuk-fieldset">
                 <div class="govuk-form-group" id="project-manager-section"
@@ -65,7 +65,7 @@
             </fieldset>
 
             <div class="govuk-form-group">
-                <button class="govuk-button" type="submit">Save project manager</button>
+                <button class="govuk-button" type="submit" id="save-project-manager">Save project manager</button>
             </div>
 
         </form>
