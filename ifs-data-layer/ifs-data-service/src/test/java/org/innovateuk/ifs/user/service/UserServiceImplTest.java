@@ -20,7 +20,9 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
@@ -149,8 +151,14 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Mock
     private ProjectUserInviteRepository projectUserInviteRepository;
 
+    @Mock
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
+
     @Mock(name = "randomHashSupplier")
     private Supplier<String> randomHashSupplierMock;
+
+    @Mock
+    private ProjectRepository projectRepository;
 
     @Mock
     private RoleProfileStatusRepository roleProfileStatusRepositoryMock;
@@ -762,6 +770,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
         when(projectUserRepository.findByUserId(user.getId())).thenReturn(emptyList());
         when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
+        when(projectPartnerInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -786,6 +795,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
         when(projectUserRepository.findByUserId(user.getId())).thenReturn(emptyList());
         when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
+        when(projectPartnerInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -806,6 +816,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
         when(projectUserRepository.findByUserId(user.getId())).thenReturn(emptyList());
         when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
+        when(projectPartnerInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -862,7 +873,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         String updateEmail = "new@gmail.com";
         long projectId = 1L;
 
-        Project project = newProject().withId(projectId).build();
+        Application application = newApplication().withId(1l).build();
+        Project project = newProject().withId(projectId).withApplication(application).build();
         ProjectUser projectUser = newProjectUser().withProject(project).build();
         ProjectUserInvite projectInvite = newProjectUserInvite().withStatus(InviteStatus.SENT).withProject(project).build();
 
@@ -875,7 +887,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(processRoleRepository.findByUser(user)).thenReturn(emptyList());
         when(applicationInviteRepository.findByEmail(oldEmail)).thenReturn(emptyList());
         when(projectUserRepository.findByUserId(user.getId())).thenReturn(singletonList(projectUser));
-        when(projectUserInviteRepository.findByEmail(oldEmail)).thenReturn(singletonList(projectInvite));
+        when(projectUserInviteRepository.findByEmail(updateEmail)).thenReturn(singletonList(projectInvite));
+        when(projectRepository.findById(any())).thenReturn(Optional.of(project));
 
         ServiceResult<UserResource> result = service.updateEmail(user.getId(), updateEmail);
 
