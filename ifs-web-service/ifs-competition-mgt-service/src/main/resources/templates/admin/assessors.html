@@ -43,14 +43,14 @@
                 Users
             </h2>
             <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item">
-                    <a th:href="@{available(filter=${form.filter})}" th:text="|Available (${model.availableCount})|" th:classappend="${model.tab == 'available' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Available (38)</a>
+                <li class="govuk-tabs__list-item" th:classappend="${model.tab == 'available' ? 'govuk-tabs__list-item--selected' : ''}">
+                    <a th:href="@{available(filter=${form.filter})}" th:text="|Available (${model.availableCount})|" class="govuk-tabs__tab">Available (38)</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a th:href="@{unavailable(filter=${form.filter})}" th:text="|Unavailable (${model.unavailableCount})|" th:classappend="${model.tab == 'unavailable' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Unavailable (10)</a>
+                <li class="govuk-tabs__list-item" th:classappend="${model.tab == 'unavailable' ? 'govuk-tabs__list-item--selected' : ''}">
+                    <a th:href="@{unavailable(filter=${form.filter})}" th:text="|Unavailable (${model.unavailableCount})|" class="govuk-tabs__tab">Unavailable (10)</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a th:href="@{disabled(filter=${form.filter})}" th:text="|Role disabled (${model.disabledCount})|" th:classappend="${model.tab == 'disabled' ? 'govuk-tabs__tab--selected' : ''}" class="govuk-tabs__tab">Role disabled (10)</a>
+                <li class="govuk-tabs__list-item" th:classappend="${model.tab == 'disabled' ? 'govuk-tabs__list-item--selected' : ''}">
+                    <a th:href="@{disabled(filter=${form.filter})}" th:text="|Role disabled (${model.disabledCount})|" class="govuk-tabs__tab">Role disabled (10)</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">
