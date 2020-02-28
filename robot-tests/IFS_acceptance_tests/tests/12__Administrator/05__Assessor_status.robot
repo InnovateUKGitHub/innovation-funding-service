@@ -81,11 +81,13 @@ Assessor should not appear in any lists when unavailable
     Then the user should not see the element  link = Myra Cole
 
 Assessor dashboard should see correct banner when unavailable
+    [Documentation]  IFS-7025
     Given Log in as a different user          myra.cole@gmail.com  Passw0rd
     When the user should see the element      jQuery = .message-alert:contains("Your assessor role is unavailable")
     Then the user should not see the element  css = .progress-list
 
 Assessor can be set to disabled
+    [Documentation]  IFS-7025
     [Setup]   log in as a different user            &{internal_finance_credentials}
     Given the user navigates to change role   Unavailable
     When the user changes the role status     DISABLED
