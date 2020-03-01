@@ -157,6 +157,107 @@ The user adds a new team member
   the user enters text to a text field   css = input[name=email]  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to project")
 
+internal user generates the GOL
+    [Arguments]  ${projectID}
+    the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user uploads the file          grantOfferLetter  ${valid_pdf}
+    the user selects the checkbox      confirmation
+    the user clicks the button/link    jQuery = button:contains("Send to project team")
+    the user clicks the button/link    jQuery = button:contains("Publish to project team")
+
+Applicant uploads the GOL
+    [Arguments]  ${projectID}
+    the user navigates to the page        ${server}/project-setup/project/${projectID}
+    the user clicks the button/link       link = Grant offer letter
+    the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
+    the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
+    the user clicks the button/link       id = submit-gol-for-review
+
+the internal user approve the GOL
+    [Arguments]  ${projectID}
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button   APPROVED  acceptGOL
+    the user clicks the button/link     id = submit-button
+    the user clicks the button/link     id = accept-signed-gol
+    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
+
+the user enters bank details
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = accountNumber  ${Account_Two}
+    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link                      id = submit-bank-details
+
+The user is able to complete project details section
+    the user clicks the button/link         link = Project details
+    the user clicks the button/link         link = Correspondence address
+    the user updates the correspondence address
+    the user clicks the button/link         link = Return to set up your project
+
+The user completes the project team section
+    the user selects their finance contact   financeContact1
+    the user clicks the button/link          link = Project manager
+    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
+    the user selects the radio button        projectManager   projectManager1
+    the user clicks the button/link          jQuery = button:contains("Save project manager")
+    the user clicks the button/link          link = Set up your project
+
+The user uploads the exploitation plan
+    the user clicks the button/link     link = Exploitation plan
+    the user uploads the file           css = .inputfile  ${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+
+The user uploads the Test document type
+    the user clicks the button/link     link = Test document type
+    the user uploads the file           css = .inputfile  ${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+
+The user is able to complete the Documents section
+    [Documentation]  IFS-5700
+    Given the user clicks the button/link     link = Documents
+    When the user uploads the exploitation plan
+    And the user clicks the button/link       link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
+
+The user selects their finance contact
+    [Arguments]  ${financeContactName}
+    the user clicks the button/link     link = Your finance contact
+    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
+    the user selects the radio button   financeContact   ${financeContactName}
+    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+
+the user should see project manager/finance contact validations
+    [Arguments]   ${save_CTA}  ${errormessage}
+    the user clicks the button/link                  jQuery = button:contains("${save_CTA}")
+    the user should see a field and summary error    ${errormessage}
+
+the user updates the correspondence address
+    the user clicks the button/link                     jQuery = .govuk-button:contains("Save")
+    the user should see a field and summary error       Search using a valid postcode or enter the address manually.
+    the user enter the Correspondence address
+    the user should see the address data
+    the user clicks the button/link                     link = Correspondence address
+    the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
+    the user should see the element                     jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
+
+the user should see the address data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != 'NO'    the user should see the valid data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == 'NO'    the user should see the dummy data
+
+the user should see the valid data
+    the user should see the element           jQuery = td:contains("Correspondence address") ~ td:contains("Am Reprographics, Bristol, BS1 4NT")
+
+the user should see the dummy data
+    the user should see the element           jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
+
 project finance submits monitoring officer
     [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}
     log in as a different user              &{internal_finance_credentials}
@@ -332,6 +433,12 @@ project finance generates the Spend Profile
     the user clicks the button/link         css = .generate-spend-profile-main-button
     the user clicks the button/link         css = #generate-spend-profile-modal-button
 
+The user submits the spend profile
+    the user clicks the button/link    jQuery = button:contains("Mark as complete")
+    the user clicks the button/link    link = Review and submit project spend profile
+    the user clicks the button/link    link = Submit project spend profile
+    the user clicks the button/link    id = submit-send-all-spend-profiles
+
 project finance approves Viability for
     [Arguments]  ${partner}  ${project}
     the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
@@ -399,6 +506,12 @@ the user changes the start date
     the user clicks the button/link         link = Target start date
     the user enters text to a text field    id = projectStartDate-date_year  ${year}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save")
+
+The project finance user approves bank details
+    [Arguments]  ${org_id}
+    the user navigates to the page            ${server}/project-setup-management/project/${org_id}/review-all-bank-details
+    the user clicks the button/link           jQuery = .govuk-button:contains("Approve bank account details")
+    the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
 internal user approve uploaded documents
     the user selects the radio button      approved   true
