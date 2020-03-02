@@ -15,6 +15,7 @@ public class FinanceCheckDocs {
             fieldWithPath("durationInMonths").description("Total expected project duration in months"),
             fieldWithPath("totalProjectCost").description("Total cost of project (a sum of costs of all partners)"),
             fieldWithPath("grantAppliedFor").description("Total grant applied for, excluding any other sources of funding"),
+            fieldWithPath("fundingAppliedFor").description("Total funding applied for at start of project, excluding any other sources of funding"),
             fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the project"),
             fieldWithPath("totalPercentageGrant").description("Total percentage of grant through IFS"),
             fieldWithPath("spendProfilesGenerated").description("Flag to signify if spend profiles have already been generated using these finance checks"),
