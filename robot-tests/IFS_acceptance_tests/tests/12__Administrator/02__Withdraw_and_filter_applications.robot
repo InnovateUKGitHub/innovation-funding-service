@@ -179,14 +179,3 @@ the user should see the all projects and navigate back to completed projects
     the user navigates to the page      ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
     the user clicks the button/link     link = View only completed projects for this competition
     the user navigates to the page      ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/previous
-
-The table should be sorted by column
-    [Arguments]    ${column_number}
-    ${row_count}=    Get Element Count    css=#application-list tr
-    @{sorted_column_contents}=    Create List
-    : FOR    ${row}    IN RANGE    2    ${row_count} + 1
-    \    ${cell_contents}=    get table cell    css=#application-list    ${row}    ${column_number}
-    \    append to list    ${sorted_column_contents}    ${cell_contents}
-    ${test_sorting_list}=    Copy List    ${sorted_column_contents}
-    Sort List    ${test_sorting_list}
-    Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}

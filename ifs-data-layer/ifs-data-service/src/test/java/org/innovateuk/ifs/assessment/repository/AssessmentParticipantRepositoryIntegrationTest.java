@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -36,6 +37,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -64,6 +66,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
+@Rollback
 public class AssessmentParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentParticipantRepository> {
 
     private Competition competition;
@@ -384,9 +387,9 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         flushAndClearSession();
 
-        Pageable pagination = PageRequest.of(0, 1);
+        Pageable pagination = PageRequest.of(0, 5);
 
-        Page<AssessmentParticipant> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L, "", pagination);
+        Page<ApplicationAvailableAssessorResource> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, 1L, "", pagination);
 
         assertNotNull(retrievedParticipants);
         assertEquals(1, retrievedParticipants.getTotalElements());

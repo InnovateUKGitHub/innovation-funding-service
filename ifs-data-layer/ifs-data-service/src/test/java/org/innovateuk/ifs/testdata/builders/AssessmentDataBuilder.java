@@ -116,19 +116,28 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                 return;
             }
 
-            Application application = applicationRepository.findByName(applicationName).get(0);
-            UserResource assessor = retrieveUserByEmail(assessorEmail);
-            Optional<Assessment> assessment = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId());
-
-            if (!assessment.isPresent()) {
-                return;
-            }
-
             // We have to forcefully set the SUBMITTED state for the assessment, as the
             // relevant competition is not necessarily IN_ASSESSMENT.
             // This means that the state transition to SUBMITTED through the workflow
             // handler will fail due to the `CompetitionInAssessmentGuard`.
-            assessment.ifPresent(a -> a.setProcessState(AssessmentState.SUBMITTED));
+
+            Application application = applicationRepository.findByName(applicationName).get(0);
+            UserResource assessor = retrieveUserByEmail(assessorEmail);
+            doAs(assessor, () -> {
+                testService.doWithinTransaction(() -> {
+
+                    Optional<Assessment> assessment = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId());
+
+                    if (!assessment.isPresent()) {
+                        return;
+                    }
+
+                    assessment.ifPresent(a -> {
+                        a.setProcessEvent(AssessmentEvent.SUBMIT.getType());
+                        a.setProcessState(AssessmentState.SUBMITTED);
+                    });
+                });
+            });
         });
     }
 

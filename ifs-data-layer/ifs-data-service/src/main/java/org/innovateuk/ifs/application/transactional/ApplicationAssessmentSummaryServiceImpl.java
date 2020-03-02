@@ -87,7 +87,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
             case ASSESSOR:
                 return new Sort(ASC, "user.firstName", "user.lastName");
             case SKILL_AREAS:
-                return new Sort(ASC, "profile.skillsArea");
+                return new Sort(ASC, "profile.skillsAreas");
             case TOTAL_APPLICATIONS:
                 return JpaSort.unsafe(ASC, AssessmentParticipantRepository.totalApplications);
             case ASSIGNED:
