@@ -83,8 +83,8 @@ a collaborator has been invited but he has not yet approved the invitation
     the user navigates to the page        ${server}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     the user clicks the button/link       link = Application team
     the user clicks the button/link       jQuery = button:contains("Add person to Empire Ltd")
-    the user enters text to a text field  id = name  Stuart
-    the user enters text to a text field  id = email  ${invitedCollaborator}
+    the user enters text to a text field  css = [name=name]  Stuart
+    the user enters text to a text field  css = [name=email]  ${invitedCollaborator}
     the user clicks the button/link       jQuery = button:contains("Invite to application")
     logout as user
 

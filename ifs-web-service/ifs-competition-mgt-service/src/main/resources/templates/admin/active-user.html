@@ -68,12 +68,10 @@
             </th:block>
             <dl class="govuk-list">
                 <th:block th:unless="${model.canEditUserDetails}">
-                    <dl class="govuk-list">
-                        <dt>First name</dt>
-                        <dd th:text="${model.user.firstName}">Steve</dd>
-                        <dt>Last name</dt>
-                        <dd th:text="${model.user.lastName}">Smith</dd>
-                    </dl>
+                    <dt>First name</dt>
+                    <dd th:text="${model.user.firstName}">Steve</dd>
+                    <dt>Last name</dt>
+                    <dd th:text="${model.user.lastName}">Smith</dd>
                 </th:block>
                 <th:block th:if="${model.user.phoneNumber != null}">
                     <dt>Phone number</dt>

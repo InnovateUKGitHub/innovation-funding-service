@@ -127,12 +127,12 @@ the user fills out the non-IFS details
     the user selects the option from the drop-down menu    6:00 pm  id = registrationCloseDate-time
     And the user enters text to a text field     id = closeDate-day    1
     And the user enters text to a text field     id = closeDate-month    3
-    And the user enters text to a text field     id = closeDate-year    2020
+    And the user enters text to a text field     id = closeDate-year    2024
     And the user selects the option from the drop-down menu  4:00 pm  id = closeDate-time
     And the user should see the text in the element   css = #applicantNotifiedDate  Applicants notified (optional)
     And the user enters text to a text field     id = applicantNotifiedDate-day    1
     And the user enters text to a text field     id = applicantNotifiedDate-month    5
-    And the user enters text to a text field     id = applicantNotifiedDate-year    2020
+    And the user enters text to a text field     id = applicantNotifiedDate-year    2024
 
 the user navigates to the Non IFS competitions tab
     the user navigates to the page     ${CA_Live}

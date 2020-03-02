@@ -208,6 +208,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     int countPrevious(long competitionId);
 
     @Query(" SELECT DISTINCT app FROM Application app" +
+            " LEFT JOIN ApplicationHiddenFromDashboard hidden " +
+            "   ON app.id = hidden.application.id AND hidden.user.id = :userId " +
            " LEFT JOIN ProcessRole pr " +
            "    ON app.id = pr.applicationId " +
            "        AND pr.user.id=:userId " +
@@ -218,8 +220,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            "    ON pu.project.id = proj.id " +
            "        AND pu.user.id=:userId " +
            "        AND type(pu) = ProjectUser " +
-           " WHERE (proj.id IS NULL AND pr iS NOT NULL)" + // No project exists and user has applicant process role
-           "    OR  pu.id IS NOT NULL") // Or project exists and user is a project user.
+           " WHERE (proj.id IS NULL AND pr iS NOT NULL" + // No project exists and user has applicant process role
+           "    OR  pu.id IS NOT NULL)" + // Or project exists and user is a project user.
+            "   AND hidden IS NULL")
     List<Application> findApplicationsForDashboard(long userId);
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
