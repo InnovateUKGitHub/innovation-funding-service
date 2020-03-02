@@ -43,10 +43,7 @@ ${organisation}        org2
 
 *** Test Cases ***
 Application team page
-    [Documentation]    INFUND-928
-    ...
-    ...    INFUND-7973
-    [Tags]
+    [Documentation]    INFUND-928 INFUND-7973
     [Setup]    The user navigates to the page      ${APPLICANT_DASHBOARD_URL}
     Given the user clicks the button/link          link = Invite robot test application
     When the user clicks the button/link           link = Application team
@@ -67,37 +64,28 @@ Lead Adds/Removes rows
 
 Lead cannot be removed
     [Documentation]    INFUND-901  INFUND-7974
-    [Tags]
     Then the lead applicant cannot be removed
 
 Lead organisation server-side validations
     [Documentation]    INFUND-901  INFUND-7974
-    [Tags]
-    Given the user clicks the button/link               jQuery = button:contains("Add person to ${organisation}")
-    the user invites a person to the same organisation  ${EMPTY}  @test.co.uk
-    Then The user should see a field and summary error  Enter an email address in the right format.
-    And The user should see a field and summary error   Please enter a name.
+    Given the user clicks the button/link                    jQuery = button:contains("Add person to ${organisation}")
+    When the user invites a person to the same organisation  ${EMPTY}  @test.co.uk
+    Then The user should see a field and summary error       Enter an email address in the right format.
+    And The user should see a field and summary error        Please enter a name.
 
 Lead organisation client-side validations
     [Documentation]    INFUND-901  INFUND-7974
-    [Tags]
     Given the user invites a person to the same organisation  Florian  florian21@florian.com
     Then the user cannot see a validation error in the page
 
 Lead organisation already used email
     [Documentation]  IFS-3361
-    Given the user clicks the button/link      jQuery = button:contains("Add person to ${organisation}")
-    When the user invites a person to the same organisation  Steve  steve.smith@empire.com
-    Then The user should see a field and summary error  This email is already in use.
+    Given the user clicks the button/link                     jQuery = button:contains("Add person to ${organisation}")
+    When the user invites a person to the same organisation   Steve  steve.smith@empire.com
+    Then The user should see a field and summary error        This email is already in use.
 
 Lead Adds/Removes partner organisation
-    [Documentation]    INFUND-1039
-    ...
-    ...    INFUND-7973
-    ...
-    ...    INFUND-7979
-    ...
-    ...    INFUND-8590
+    [Documentation]    INFUND-1039 INFUND-7973 INFUND-7979 INFUND-8590
     [Tags]  HappyPath
     Given the user clicks the button/link              link = Add a partner organisation
     And the user adds a partner organisation           Fannie May  Collaborator 2  ewan+10@hiveit.co.uk
@@ -109,9 +97,7 @@ Lead Adds/Removes partner organisation
     [Teardown]  the user clicks the button/link        link = Add a partner organisation
 
 Partner organisation Server-side validations
-    [Documentation]    INFUND-896
-    ...
-    ...    INFUND-7979
+    [Documentation]    INFUND-896 INFUND-7979
     [Tags]
     Given the user adds a partner organisation            ${EMPTY}  ${EMPTY}  ${EMPTY}
     And the user clicks the button/link                   jQuery = button:contains("Invite partner organisation")
