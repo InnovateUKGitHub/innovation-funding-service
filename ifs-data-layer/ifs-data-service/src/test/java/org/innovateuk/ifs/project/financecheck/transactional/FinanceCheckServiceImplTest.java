@@ -520,14 +520,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().
-                withApplication(applicationId).
-                withFinanceOrganisationDetails(applicationFinances).
-                build(2);
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(applicationFinanceResources));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(3.0));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
@@ -592,14 +587,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().
-                withApplication(applicationId).
-                withFinanceOrganisationDetails(applicationFinances).
-                build(2);
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(applicationFinanceResources));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
@@ -664,14 +654,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().
-                withApplication(applicationId).
-                withFinanceOrganisationDetails(applicationFinances).
-                build(2);
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(applicationFinanceResources));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
