@@ -48,7 +48,7 @@ Project finance user cannot navigate to manage users page
 Administrator can navigate to manage users page
     [Documentation]    INFUND-604  SIFS-6377
     [Tags]  HappyPath
-    [Setup]  log in as a different user   &{ifs_admin_user_credentials}
+    [Setup]  log in as a different user       &{ifs_admin_user_credentials}
     Given the user clicks the button/link     link = Manage users
     Then the user should see the element      jQuery = h1:contains("Manage users")
     And the user should see the element       jQuery = .govuk-tabs__list-item--selected:contains("Active")
@@ -148,7 +148,7 @@ The user must use an Innovate UK email
 Client side validations for invite new internal user
     [Documentation]  IFS-27
     [Tags]
-    Given the user navigates to the page       ${server}/management/admin/invite-user
+    Given the user navigates to the page                              ${server}/management/admin/invite-user
     Then the user enters the text and checks for validation message   firstName  A  ${enter_a_first_name}  Your first name should have at least 2 characters.
     And the user enters the text and checks for validation message    lastName  D  ${enter_a_last_name}  Your last name should have at least 2 characters.
     And the user enters the text and checks for validation message    emailAddress  astle  Please enter an email address.  ${enter_a_valid_email}
@@ -183,10 +183,10 @@ Account creation validation checks - Blank
 Account creation validation checks - Lowercase password
     [Documentation]  IFS-3554
     [Tags]
-    Given the user enters text to a text field  id = password  PASSWORD123
-    When The user clicks the button/link        jQuery = .govuk-button:contains("Create account")
+    Given the user enters text to a text field          id = password  PASSWORD123
+    When The user clicks the button/link                jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
-    [Teardown]  the user enters text to a text field   css = #password  ${short_password}
+    [Teardown]  the user enters text to a text field    css = #password  ${short_password}
 
 New user account is created and verified
     [Documentation]  IFS-643 IFS-983
@@ -218,9 +218,9 @@ Administrator can navigate to edit page to edit the internal user details
 Server side validation for edit internal user details
     [Documentation]  IFS-18
     [Tags]
-    Given the user enters text to a text field  id = firstName  ${empty}
-    And the user enters text to a text field    id = lastName  ${empty}
-    When the user clicks the button/link        jQuery = button:contains("Save and return")
+    Given the user enters text to a text field               id = firstName  ${empty}
+    And the user enters text to a text field                id = lastName  ${empty}
+    When the user clicks the button/link                    jQuery = button:contains("Save and return")
     Then the user should see a field and summary error      ${enter_a_first_name}
     And the user should see a field and summary error       Your first name should have at least 2 characters.
     And the user should see a field and summary error       ${enter_a_last_name}
@@ -235,7 +235,7 @@ Client side validations for edit internal user details
 Administrator can successfully edit internal user details
     [Documentation]  IFS-18
     [Tags]  InnovationLead
-    [Setup]  log in as a different user                      &{ifs_admin_user_credentials}
+    [Setup]  log in as a different user                         &{ifs_admin_user_credentials}
     Given the user navigates to the View internal user details  ${email}  active
     When the IFS admin edit internal user details
     Then the user cannot see a validation error in the page
