@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:with="pageTitle='Change status'">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Change status'"/>
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="fragments/modals :: modal-overlay"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to role profile details',linkUrl=@{/admin/user/{userId}/role-profile(userId=${userId})},dynamicBackLink=${true}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Change status',size='govuk-heading-xl'"/>
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <form th:action="@{/admin/user/{userId}/role-profile/status(userId=${userId})}" method="post"
+              th:object="${form}" novalidate="novalidate">
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('roleProfileState')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="roleProfileState">
+                        <p class="govuk-body">You cannot allocate applications to an assessor if their
+                            status is 'Unavailable' or 'Disabled'.</p>
+                    </legend>
+                    <span th:if="${#fields.hasErrors('roleProfileState')}" class="govuk-error-message"
+                          th:each="err : ${#fields.errors('roleProfileState')}" th:text="${err}"/>
+
+                    <div class="govuk-radios" data-change-modal="#update-status">
+                        <div class="govuk-radios__item">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="roleProfileState-active"
+                                   data-modal-link="role-profile-available"
+                                   th:field="*{roleProfileState}"
+                                   th:value="${T(org.innovateuk.ifs.user.resource.RoleProfileState).ACTIVE}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="roleProfileState-active">
+                                Available
+                            </label>
+                        </div>
+
+                        <div class="govuk-radios__item" data-target="unavailable-reason"
+                             data-target-clear-validation="true"
+                             data-target-clear-form="true">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="roleProfileState-unavailable"
+                                   data-modal-link="role-profile-unavailable"
+                                   th:field="*{roleProfileState}"
+                                   th:value="${T(org.innovateuk.ifs.user.resource.RoleProfileState).UNAVAILABLE}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="roleProfileState-unavailable">
+                                Unavailable
+                            </label>
+                        </div>
+
+                        <div id="unavailable-reason" class="panel">
+                            <div class="govuk-form-group"
+                                 th:classappend="${#fields.hasErrors('unavailableReason')} ? 'govuk-form-group--error'">
+                                <label class="govuk-label govuk-label--s" for="unavailable-reason"
+                                       id="unavailable-reason-text">
+                                    Reason for changing status
+                                    <span class="govuk-hint">
+                                Your comments can be seen in Freedom of Information requests.
+                                </span>
+                                </label>
+                                <span th:if="${#fields.hasErrors('unavailableReason')}" class="govuk-error-message"
+                                      th:each="err : ${#fields.errors('unavailableReason')}" th:text="${err}"/>
+
+                                <div class="textarea-wrapped">
+                            <textarea id="unavailableReason"
+                                      class="govuk-textarea"
+                                      data-editor="html"
+                                      maxlength="5000"
+                                      th:errorclass="govuk-textarea--error"
+                                      rows="4"
+                                      th:field="*{unavailableReason}">
+                            </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="govuk-radios__item" data-target="disabled-reason"
+                             data-target-clear-validation="true"
+                             data-target-clear-form="true">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="roleProfileState-disabled"
+                                   data-modal-link="role-profile-disabled"
+                                   th:field="*{roleProfileState}"
+                                   th:value="${T(org.innovateuk.ifs.user.resource.RoleProfileState).DISABLED}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.changeroleprofileform.role.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="roleProfileState-disabled">
+                                Disabled
+                            </label>
+                        </div>
+
+                        <div id="disabled-reason" class="panel">
+                            <div class="govuk-form-group"
+                                 th:classappend="${#fields.hasErrors('disabledReason')} ? 'govuk-form-group--error'">
+                                <label class="govuk-label govuk-label--s" for="disabled-reason"
+                                       id="disabled-reason-text">
+                                    Reason for changing status
+                                    <span class="govuk-hint">
+                                Your comments can be seen in Freedom of Information requests.
+                                </span>
+                                </label>
+
+                                <span th:if="${#fields.hasErrors('disabledReason')}" class="govuk-error-message"
+                                      th:each="err : ${#fields.errors('disabledReason')}" th:text="${err}"/>
+
+                                <div class="textarea-wrapped">
+                            <textarea id="disabledReason"
+                                      class="govuk-textarea"
+                                      data-editor="html"
+                                      maxlength="5000"
+                                      th:errorclass="govuk-textarea--error"
+                                      rows="4"
+                                      th:field="*{disabledReason}">
+                            </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <th:block th:insert="fragments/modals :: modal-role-profile-active"/>
+            <th:block th:insert="fragments/modals :: modal-role-profile-unavailable"/>
+            <th:block th:insert="fragments/modals :: modal-role-profile-disabled"/>
+
+            <div class="govuk-form-group govuk-!-margin-top-6">
+                <button class="govuk-!-margin-right-0 govuk-button" id="update-status"
+                        th:data-js-modal="|modal-role-profile-${state}|">Update status
+                </button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

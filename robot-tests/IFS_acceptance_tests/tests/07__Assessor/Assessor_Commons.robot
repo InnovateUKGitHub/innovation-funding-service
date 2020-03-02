@@ -114,7 +114,8 @@ comp admin navigate to manage applications
 
 assessor should see the competition terms and conditions
     [Arguments]  ${back_link}
-    Given the user clicks the button/link        link = View award terms and conditions
+    Given the user expands the section           Award terms and conditions
+    When the user clicks the button/link         link = View award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     [Teardown]  the user clicks the button/link  link = ${back_link}
 

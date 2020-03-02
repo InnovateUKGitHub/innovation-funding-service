@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.resource;
 
+
 public enum RoleProfileState {
 
     ACTIVE("Available"),
@@ -15,4 +16,5 @@ public enum RoleProfileState {
     public String getDescription() {
         return description;
     }
+
 }

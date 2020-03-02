@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.application.name + ' - Feedback overview'}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Feedback overview - ${model.application.name}|" />
     </head>
 
     <body class="govuk-template__body app-summary" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">
