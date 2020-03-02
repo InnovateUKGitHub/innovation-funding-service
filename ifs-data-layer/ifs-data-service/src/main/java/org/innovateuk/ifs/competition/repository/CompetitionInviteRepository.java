@@ -24,7 +24,7 @@ public interface CompetitionInviteRepository<T extends CompetitionInvite> extend
             "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
             "      invite.status = :status AND " +
-            " (user IS NULL OR " +
+            " (user IS NULL OR roleStatuses IS NULL OR " +
             "(" +
             "    user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
@@ -36,7 +36,7 @@ public interface CompetitionInviteRepository<T extends CompetitionInvite> extend
             "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
             "      invite.status IN :statuses AND " +
-            " (user IS NULL OR " +
+            " (user IS NULL OR roleStatuses IS NULL OR " +
             "(" +
             "    user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
