@@ -10,11 +10,13 @@ import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmen
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
 
+import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
@@ -88,17 +90,17 @@ public class CompetitionKeyAssessmentStatisticsServiceImpl extends BaseTransacti
         CompetitionInAssessmentKeyAssessmentStatisticsResource competitionInAssessmentKeyAssessmentStatisticsResource
                 = new CompetitionInAssessmentKeyAssessmentStatisticsResource();
         competitionInAssessmentKeyAssessmentStatisticsResource.setAssignmentCount(
-                assessmentRepository.countByActivityStateInAndTargetCompetitionId(
-                        complementOf(of(REJECTED, WITHDRAWN)), competitionId));
+                assessmentRepository.countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(
+                        complementOf(of(REJECTED, WITHDRAWN)), competitionId, singletonList(UserStatus.ACTIVE)));
         competitionInAssessmentKeyAssessmentStatisticsResource.setAssignmentsWaiting(assessmentRepository
-                .countByActivityStateAndTargetCompetitionId(PENDING, competitionId));
+                .countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(PENDING, competitionId, singletonList(UserStatus.ACTIVE)));
         competitionInAssessmentKeyAssessmentStatisticsResource.setAssignmentsAccepted(assessmentRepository
-                .countByActivityStateAndTargetCompetitionId(ACCEPTED, competitionId));
+                .countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(ACCEPTED, competitionId, singletonList(UserStatus.ACTIVE)));
         competitionInAssessmentKeyAssessmentStatisticsResource.setAssessmentsStarted(assessmentRepository
-                .countByActivityStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT),
-                        competitionId));
+                .countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT),
+                        competitionId, singletonList(UserStatus.ACTIVE)));
         competitionInAssessmentKeyAssessmentStatisticsResource.setAssessmentsSubmitted(assessmentRepository
-                .countByActivityStateAndTargetCompetitionId(SUBMITTED, competitionId));
+                .countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(SUBMITTED, competitionId, singletonList(UserStatus.ACTIVE)));
 
         return serviceSuccess(competitionInAssessmentKeyAssessmentStatisticsResource);
     }

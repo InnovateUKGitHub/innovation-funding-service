@@ -12,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmen
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -19,6 +20,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
@@ -146,16 +148,16 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
                 .build();
 
 
-        when(assessmentRepositoryMock.countByActivityStateInAndTargetCompetitionId(
-                complementOf(of(REJECTED, WITHDRAWN)), competitionId)).thenReturn(keyStatisticsResource.getAssignmentCount());
-        when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionId(PENDING, competitionId)).thenReturn
+        when(assessmentRepositoryMock.countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(
+                complementOf(of(REJECTED, WITHDRAWN)), competitionId, singletonList(UserStatus.ACTIVE))).thenReturn(keyStatisticsResource.getAssignmentCount());
+        when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(PENDING, competitionId, singletonList(UserStatus.ACTIVE))).thenReturn
                 (keyStatisticsResource.getAssignmentsWaiting());
-        when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionId(ACCEPTED, competitionId)).thenReturn
+        when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(ACCEPTED, competitionId, singletonList(UserStatus.ACTIVE))).thenReturn
                 (keyStatisticsResource.getAssignmentsAccepted());
-        when(assessmentRepositoryMock.countByActivityStateInAndTargetCompetitionId(of(OPEN,
-                DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId)).thenReturn(keyStatisticsResource
+        when(assessmentRepositoryMock.countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(of(OPEN,
+                DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId, singletonList(UserStatus.ACTIVE))).thenReturn(keyStatisticsResource
                 .getAssessmentsStarted());
-        when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionId(SUBMITTED, competitionId))
+        when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(SUBMITTED, competitionId, singletonList(UserStatus.ACTIVE)))
                 .thenReturn(keyStatisticsResource.getAssessmentsSubmitted());
 
         CompetitionInAssessmentKeyAssessmentStatisticsResource response = service
