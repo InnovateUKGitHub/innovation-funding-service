@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.form.Form;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
@@ -19,13 +19,12 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,7 +45,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingFieldErrorToField;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -93,7 +91,7 @@ public class AssessmentFeedbackController {
 
         QuestionResource question = getQuestionForAssessment(questionId, assessmentId);
 
-        if (isApplicationDetailsQuestion(questionId)) {
+        if (question.getQuestionSetupType().equals(QuestionSetupType.APPLICATION_DETAILS)) {
             return getApplicationDetails(model, assessmentId, question);
         }
 
@@ -195,11 +193,6 @@ public class AssessmentFeedbackController {
         return "redirect:/" + assessmentId;
     }
 
-    private boolean isApplicationDetailsQuestion(long questionId) {
-        List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
-        return applicationFormInputs.stream().anyMatch(formInputResource -> FormInputType.APPLICATION_DETAILS == formInputResource.getType());
-    }
-
     private String getApplicationDetails(Model model, long assessmentId, QuestionResource question) {
         AssessmentFeedbackApplicationDetailsViewModel viewModel = assessmentFeedbackApplicationDetailsModelPopulator.populateModel(assessmentId, question);
         AssessmentFeedbackNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question);
@@ -210,10 +203,6 @@ public class AssessmentFeedbackController {
         organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId(), userApplicationRoles);
 
         return "assessment/application-details";
-    }
-
-    private List<FormInputResource> getApplicationFormInputs(long questionId) {
-        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccess();
     }
 
     private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {

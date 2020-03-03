@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackView
 import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
@@ -31,7 +30,6 @@ import org.mockito.Spy;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
@@ -73,9 +71,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     private ApplicantRestService applicantRestService;
 
     @Mock
-    private FormInputViewModelGenerator formInputViewModelGenerator;
-
-    @Mock
     private CategoryRestService categoryRestServiceMock;
 
     @Mock
@@ -106,7 +101,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
         this.setupInvites();
 
         questionResources.forEach((id, questionResource) -> when(applicantRestService.getQuestion(any(), any(), eq(questionResource.getId()))).thenReturn(newApplicantQuestionResource().build()));
-        when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }

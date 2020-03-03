@@ -24,8 +24,7 @@ import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGui
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
-import static org.innovateuk.ifs.form.resource.FormInputType.APPLICATION_DETAILS;
-import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -37,7 +36,7 @@ public class FormInputBuilderTest {
     public void buildOne() {
         Long expectedId = 1L;
         Integer expectedWordCount = 100;
-        FormInputType expectedType = APPLICATION_DETAILS;
+        FormInputType expectedType = TEXTAREA;
         List<FormInputResponse> expectedResponses = newFormInputResponse().build(2);
         Question expectedQuestion = newQuestion().build();
         Competition expectedCompetition = newCompetition().build();
@@ -88,7 +87,7 @@ public class FormInputBuilderTest {
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
         Integer[] expectedWordCounts = {100, 150};
-        FormInputType[] expectedTypes = {APPLICATION_DETAILS, FILEUPLOAD};
+        FormInputType[] expectedTypes = {TEXTAREA, FILEUPLOAD};
         List<List<FormInputResponse>> expectedResponses = asList(newFormInputResponse().build(2), newFormInputResponse().build(2));
         Question[] expectedQuestions = newQuestion().buildArray(2, Question.class);
         Competition[] expectedCompetitions = newCompetition().buildArray(2, Competition.class);

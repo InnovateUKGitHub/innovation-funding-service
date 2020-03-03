@@ -29,6 +29,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -217,11 +218,6 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentService, competitionRestService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
-        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
-                assessmentResource.getId(), questionResource.getId());
-        inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
-        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
         inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
@@ -301,11 +297,6 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentService, competitionRestService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
-        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
-                assessmentResource.getId(), questionResource.getId());
-        inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
-        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
         inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
@@ -378,6 +369,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         QuestionResource questionResource = newQuestionResource()
                 .withShortName("Application details")
+                .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS)
                 .build();
 
         QuestionResource nextQuestionResource = newQuestionResource()
@@ -387,19 +379,16 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         when(questionService.getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId()))
                 .thenReturn(questionResource);
-        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
 
         when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
         when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
                 newProcessRoleResource().withRoleName(Role.LEADAPPLICANT.getName()).build(3)));
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));
 
         AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
                 empty(), of(nextQuestionResource));
-
-        List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), APPLICATION_DETAILS);
-        setupApplicantResponses(applicationResource.getId(), applicationFormInputs);
 
         setupInvites();
 
@@ -424,7 +413,6 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         InOrder inOrder = inOrder(questionService, formInputRestService, assessmentService, applicationService, sectionService);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
-        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
@@ -496,10 +484,6 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 competitionRestService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
-        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
-        inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
-        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
         inOrder.verify(categoryRestServiceMock).getResearchCategories();
@@ -569,10 +553,6 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService,
                 assessmentService, competitionRestService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
-        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
-        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
-        inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
@@ -900,6 +880,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .withShortName("Market opportunity")
                 .withName("1. What is the business opportunity that this project addresses?")
                 .withAssessorMaximumScore(50)
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
                 .build();
 
         when(questionService.getByIdAndAssessmentId(questionResource.getId(), assessmentId))
