@@ -5,6 +5,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
@@ -84,12 +85,9 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
             testService.doWithinTransaction(() -> {
 
                 User user = userRepository.findByEmail(data.getEmail()).get();
-
-                if (!user.getRoles().contains(Role.ASSESSOR)) {
-                    user.getRoles().add(Role.ASSESSOR);
-                }
-
+                user.getRoles().add(Role.ASSESSOR);
                 userRepository.save(user);
+                roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
             });
 
             UserResource userResource = doAs(systemRegistrar(), () -> userService.findByEmail(data.getEmail()).getSuccess());

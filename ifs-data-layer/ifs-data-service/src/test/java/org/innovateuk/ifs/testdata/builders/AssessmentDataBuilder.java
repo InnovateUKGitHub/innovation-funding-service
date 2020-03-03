@@ -8,7 +8,9 @@ import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.ProfileRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
@@ -44,14 +46,10 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
 
             if (!assessor.hasRole(Role.ASSESSOR)) {
                 testService.doWithinTransaction(() -> {
-
                     User user = userRepository.findByEmail(assessor.getEmail()).get();
-
-                    if (!user.getRoles().contains(Role.ASSESSOR)) {
-                        user.getRoles().add(Role.ASSESSOR);
-                    }
-
+                    user.getRoles().add(Role.ASSESSOR);
                     userRepository.save(user);
+                    roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
                 });
             }
             Application application = applicationRepository.findByName(applicationName).get(0);
