@@ -41,8 +41,10 @@
         <div class="govuk-!-margin-top-6">
             <a th:href="@{/admin/user/{userId}/role-profile/status(userId=${model.roleProfileStatus.userId})}"
                class="govuk-button"
-               th:disabled="${model.applicationsAssigned}"
-               th:text="|Change role status|">Change role status</a>
+               th:unless="${model.applicationsAssigned}">Change role status</a>
+            <button class="govuk-button"
+                    disabled="disabled"
+                    th:if="${model.applicationsAssigned}">Change role status</button>
         </div>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
