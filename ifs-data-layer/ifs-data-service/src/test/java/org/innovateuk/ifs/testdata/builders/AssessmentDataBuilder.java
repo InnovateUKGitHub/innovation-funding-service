@@ -45,11 +45,15 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             UserResource assessor = retrieveUserByEmail(assessorEmail);
 
             if (!assessor.hasRole(Role.ASSESSOR)) {
-                testService.doWithinTransaction(() -> {
-                    User user = userRepository.findByEmail(assessor.getEmail()).get();
-                    user.getRoles().add(Role.ASSESSOR);
-                    userRepository.save(user);
-                    roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+                doAs(compAdmin(), () -> {
+                    testService.doWithinTransaction(() -> {
+                        User user = userRepository.findByEmail(assessor.getEmail()).get();
+                        if (!user.hasRole(Role.ASSESSOR)) {
+                            user.getRoles().add(Role.ASSESSOR);
+                            userRepository.save(user);
+                            roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+                        }
+                    });
                 });
             }
             Application application = applicationRepository.findByName(applicationName).get(0);

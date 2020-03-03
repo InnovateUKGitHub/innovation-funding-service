@@ -82,12 +82,15 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     public AssessorDataBuilder addAssessorRole() {
         return with((AssessorData data) -> {
 
-            testService.doWithinTransaction(() -> {
-
-                User user = userRepository.findByEmail(data.getEmail()).get();
-                user.getRoles().add(Role.ASSESSOR);
-                userRepository.save(user);
-                roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+            doAs(compAdmin(), () -> {
+                testService.doWithinTransaction(() -> {
+                    User user = userRepository.findByEmail(data.getEmail()).get();
+                    if (!user.hasRole(Role.ASSESSOR)) {
+                        user.getRoles().add(Role.ASSESSOR);
+                        userRepository.save(user);
+                        roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+                    }
+                });
             });
 
             UserResource userResource = doAs(systemRegistrar(), () -> userService.findByEmail(data.getEmail()).getSuccess());
