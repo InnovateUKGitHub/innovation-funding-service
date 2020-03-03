@@ -52,7 +52,6 @@ Validation errors on non-IFS competition details
 
 Submit non-IFS competition details
     [Documentation]    INFUND-7964
-    [Tags]
     [Setup]  log in as a different user     &{Comp_admin1_credentials}
     Given the user navigates to the Non IFS competitions tab
     And the user clicks the button/link     link = Test non-IFS competition
@@ -64,7 +63,6 @@ Submit non-IFS competition details
 
 Non-IFS public content
     [Documentation]    INFUND-7965
-    [Tags]
     Given the user should see the element      jQuery = h1:contains("Public content")
     When the user fills in the Public content and publishes  Non-IFS
     Then the user should see the element       jQuery = small:contains("Last published")
@@ -74,7 +72,6 @@ Non-IFS public content
 
 Internal user can see the Non-IFS comp and its brief information
     [Documentation]  INFUND-7963 INFUND-7964
-    [Tags]
     Given the user navigates to the Non IFS competitions tab
     Then the user should see the element    jQuery = div:contains("Test non-IFS competition") ~ *:contains("Assembly / disassembly / joining")
     And the user should see the element     jQuery = div:contains("Test non-IFS competition") ~ *:contains("Last published")
@@ -88,7 +85,6 @@ Internal user is able to delete a Non-IFS comp
 
 Guest user can apply to a Non-IFS competition at the FrontDoor
     [Documentation]    INFUND-7965
-    [Tags]
     Given the user navigates to the page                   ${frontDoor}
     And the user enters text to a text field               id = keywords    search
     When the user clicks the button/link                   jQuery = button:contains("Update results")
