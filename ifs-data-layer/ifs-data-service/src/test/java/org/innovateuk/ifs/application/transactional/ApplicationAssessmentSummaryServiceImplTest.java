@@ -130,7 +130,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         ApplicationAvailableAssessorPageResource expected = new ApplicationAvailableAssessorPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize());
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(assessmentParticipantRepositoryMock.findParticipantsWithoutAssessments(
+        when(assessmentParticipantRepositoryMock.findAvailableAssessorsForApplication(
                 competition.getId(),
                 application.getId(),
                 assessorNameFilter,
