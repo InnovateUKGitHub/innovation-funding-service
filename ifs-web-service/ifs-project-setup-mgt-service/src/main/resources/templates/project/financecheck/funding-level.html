@@ -157,9 +157,9 @@
                     </div>
                     <dl class="list-eligibility">
                         <dt>Funding applied for</dt>
-                        <dd data-value-one th:text="|&pound;${#numbers.formatInteger(model.fundingAppliedFor,1,'DEFAULT')}|"></dd>
+                        <dd data-value-left="" th:text="|&pound;${#numbers.formatInteger(model.fundingAppliedFor,1,'DEFAULT')}|"></dd>
                         <dt>Current amount</dt>
-                        <dd data-value-two data-operator=">=" th:text="|&pound;${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|" data-value-change data-mirror="#total-funding-sought"></dd>
+                        <dd data-value-right="" data-operator=">=" th:text="|&pound;${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|" data-value-change="" data-mirror="#total-funding-sought"></dd>
                     </dl>
                 </div>
             </div>
