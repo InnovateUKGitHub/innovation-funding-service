@@ -25,10 +25,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.ProfileRole;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.RoleProfileState;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +69,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -990,6 +988,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withFirstName("Robert", "Robert", "Alexis", "Alexis")
                 .withLastName("Stark", "Salt", "Kinney", "Colon")
                 .withRoles(singleton(Role.ASSESSOR))
+                .withStatus(ACTIVE)
                 .withProfileId(profileIds)
                 .build(4);
 
@@ -1055,6 +1054,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
                 .withRoles(singleton(Role.ASSESSOR))
+                .withStatus(ACTIVE)
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 
@@ -1125,8 +1125,8 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         List<AssessmentInvite> createdInvites = newAssessmentInvite()
                 .withId()
-                .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel")
-                .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com")
+                .withName("Angela Merkel", "Bill Gates", "Serena Williams", "Will Smith")
+                .withEmail("angela@email.com", "bill@email.com", "serena@email.com", "will@email.com")
                 .withStatus(CREATED)
                 .withCompetition(competition)
                 .withInnovationArea(innovationArea)
