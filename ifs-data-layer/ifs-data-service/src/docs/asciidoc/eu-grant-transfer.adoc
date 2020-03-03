@@ -1,0 +1,47 @@
+=== Upload grant agreement
+==== Request
+include::{snippets}/eu-grant-transfer/upload-grant-agreement/http-request.adoc[]
+include::{snippets}/eu-grant-transfer/upload-grant-agreement/request-parameters.adoc[]
+include::{snippets}/eu-grant-transfer/upload-grant-agreement/path-parameters.adoc[]
+include::{snippets}/eu-grant-transfer/upload-grant-agreement/request-headers.adoc[]
+
+==== Response
+include::{snippets}/eu-grant-transfer/upload-grant-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant-transfer/upload-grant-agreement/curl-request.adoc[]
+
+=== Delete grant agreement
+==== Request
+include::{snippets}/eu-grant-transfer/delete-grant-agreement/http-request.adoc[]
+include::{snippets}/eu-grant-transfer/delete-grant-agreement/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/eu-grant-transfer/delete-grant-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant-transfer/delete-grant-agreement/curl-request.adoc[]
+
+=== Download grant agreement
+==== Request
+include::{snippets}/eu-grant-transfer/download-grant-agreement/http-request.adoc[]
+include::{snippets}/eu-grant-transfer/download-grant-agreement/request-headers.adoc[]
+include::{snippets}/eu-grant-transfer/download-grant-agreement/request-headers.adoc[]
+
+==== Response
+include::{snippets}/eu-grant-transfer/download-grant-agreement/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant-transfer/download-grant-agreement/curl-request.adoc[]
+
+=== Find grant agreement
+==== Request
+include::{snippets}/eu-grant-transfer/find-grant-agreement/http-request.adoc[]
+include::{snippets}/eu-grant-transfer/find-grant-agreement/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/eu-grant-transfer/find-grant-agreement/http-response.adoc[]
+include::{snippets}/eu-grant-transfer/find-grant-agreement/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/eu-grant-transfer/find-grant-agreement/curl-request.adoc[]
