@@ -31,13 +31,6 @@ execution:
       europe-west2-a: 1
     concurrency: ${applicant_users}
 
-  - scenario: h2020_users
-    iterations: 1
-    locations:
-      eu-west-2: 1
-      europe-west2-a: 1
-    concurrency: ${H2020_users}
-
   - scenario: front_door_users
     iterations: 1
     locations:
@@ -66,8 +59,6 @@ execution:
 scenarios:
   applicant_users:
     script: taurus/application.jmx
-  h2020_users:
-    script: taurus/h2020.jmx
   front_door_users:
     script: taurus/front_door.jmx
   competition_management:

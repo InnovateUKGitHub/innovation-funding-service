@@ -40,7 +40,6 @@ public enum DashboardSection {
     public static class Constant {
         private Constant() {}
         public static final String IN_SETUP = "in-setup";
-        public static final String EU_GRANT_TRANSFER = "eu-grant-transfer";
         public static final String IN_PROGRESS = "in-progress";
         public static final String PREVIOUS = "previous";
     }}
