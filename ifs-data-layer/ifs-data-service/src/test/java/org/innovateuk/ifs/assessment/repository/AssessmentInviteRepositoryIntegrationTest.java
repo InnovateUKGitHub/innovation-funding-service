@@ -25,7 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.Rollback;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -45,12 +44,13 @@ import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-@Rollback
+
 public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentInviteRepository> {
 
     private final long INNOVATION_AREA_ID = 5L;
@@ -366,6 +366,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
                 .withRoles(singleton(ASSESSOR))
+                .withStatus(ACTIVE)
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 

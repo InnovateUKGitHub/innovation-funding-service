@@ -119,13 +119,13 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
                 .map(question ->  populateQuestionViewModel(question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
-        return new ApplicationSectionReadOnlyViewModel(section.getName(), questionViews);
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), false, questionViews);
     }
 
     //Currently only theA finance section has child sections.
     private ApplicationSectionReadOnlyViewModel sectionWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         ApplicationQuestionReadOnlyViewModel finance = financeSummaryViewModelPopulator.populate(data);
-        return new ApplicationSectionReadOnlyViewModel(section.getName(), asSet(finance));
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, asSet(finance));
     }
 
     private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
