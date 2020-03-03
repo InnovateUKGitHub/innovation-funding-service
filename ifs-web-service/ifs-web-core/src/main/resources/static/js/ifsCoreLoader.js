@@ -27,6 +27,7 @@ IFS.core.loadOrder = {
       IFS.core.wordCount.init()
       IFS.core.disableSubmitUntilChecked.init()
       IFS.core.finance.init()
+      IFS.core.conditionalAlert.init()
       IFS.core.progressiveGroupSelect.init()
       IFS.core.singleSubmit.init()
       IFS.core.submitNotification.init()

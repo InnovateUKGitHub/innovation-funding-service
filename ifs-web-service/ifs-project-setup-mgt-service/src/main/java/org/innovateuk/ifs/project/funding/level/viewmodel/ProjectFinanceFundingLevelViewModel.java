@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.funding.level.viewmodel;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -19,11 +20,15 @@ public class ProjectFinanceFundingLevelViewModel {
     private final List<ProjectFinancePartnerFundingLevelViewModel> partners;
     private final boolean collaborativeProject;
     private boolean fundingLevelPercentageToggle;
+    private final boolean loanCompetition;
+    private final BigDecimal fundingAppliedFor;
 
     public ProjectFinanceFundingLevelViewModel(ProjectResource project,
                                                List<ProjectFinanceResource> finances,
                                                OrganisationResource lead,
-                                               boolean fundingLevelPercentageToggle) {
+                                               boolean fundingLevelPercentageToggle,
+                                               CompetitionResource competition,
+                                               BigDecimal fundingAppliedFor) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
@@ -36,6 +41,8 @@ public class ProjectFinanceFundingLevelViewModel {
                 .collect(Collectors.toList());
         this.collaborativeProject = project.isCollaborativeProject();
         this.fundingLevelPercentageToggle = fundingLevelPercentageToggle;
+        this.loanCompetition = competition.isLoan();
+        this.fundingAppliedFor = fundingAppliedFor;
     }
 
     public long getProjectId() {
@@ -56,6 +63,14 @@ public class ProjectFinanceFundingLevelViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public boolean isLoanCompetition() {
+        return loanCompetition;
+    }
+
+    public BigDecimal getFundingAppliedFor() {
+        return fundingAppliedFor;
     }
 
     /* View logic. */
