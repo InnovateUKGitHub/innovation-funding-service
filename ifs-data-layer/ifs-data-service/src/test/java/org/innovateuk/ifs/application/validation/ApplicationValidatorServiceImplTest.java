@@ -28,6 +28,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -116,7 +117,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)).thenReturn(formInputResponses);
         when(applicationValidationUtil.validateResponse(formInputResponse1, false)).thenReturn(bindingResult1);
         when(applicationValidationUtil.validateResponse(formInputResponse2, false)).thenReturn(bindingResult2);
-        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withType(FormInputType.ASSESSOR_SCORE).build()));
+        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withQuestion(newQuestion().withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION).build()).withType(FormInputType.ASSESSOR_SCORE).build()));
 
         List<BindingResult> bindingResults = service.validateFormInputResponse(applicationId, formInputId);
 
@@ -142,7 +143,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         BindingResult bindingResultForEmptyResponse =  ValidatorTestUtil.getBindingResult(emptyResponse);
 
         when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)).thenReturn(formInputResponses);
-        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withType(FormInputType.ASSESSOR_SCORE).build()));
+        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withQuestion(newQuestion().withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION).build()).build()));
         when(applicationValidationUtil.validateResponse(isA(FormInputResponse.class), eq(false))).thenReturn(bindingResultForEmptyResponse);
 
         List<BindingResult> bindingResults = service.validateFormInputResponse(applicationId, formInputId);
@@ -175,7 +176,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)).thenReturn(formInputResponses);
         when(applicationValidationUtil.validateResponse(formInputResponse1, false)).thenReturn(bindingResult1);
         when(applicationValidationUtil.validateResponse(formInputResponse2, false)).thenReturn(bindingResult2);
-        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withType(FormInputType.APPLICATION_DETAILS).build()));
+        when(formInputRepository.findById(formInputId)).thenReturn(Optional.of(newFormInput().withQuestion(newQuestion().withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS).build()).build()));
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationValidationUtil.addValidation(eq(application), isA(Validator.class))).thenReturn(applicationBindingResult);
 
