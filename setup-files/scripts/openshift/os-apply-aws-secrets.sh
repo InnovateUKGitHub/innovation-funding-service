@@ -86,7 +86,7 @@ function loadSpDataFromAws() {
 #    for sp in ${SSO_SP}; do
 #      echo $sp
       # sp secrets
-      oc create secret generic shibboleth-volume \
+      oc create secret generic sp-secrets \
         --from-literal="ACC-SYSINT.properties=""$(valueFromAws /CI/IFS/ACC-SYSINT/PROPERTY)" \
         --from-literal="ACC-SYSINT.crt=""$(valueFromAws /CI/IFS/ACC-SYSINT/CERT)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
