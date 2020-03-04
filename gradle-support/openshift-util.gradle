@@ -1,13 +1,7 @@
+ext.svcAccountClauseServerLocal = "https://localhost:8443"
+ext.openshiftDomain=project.properties['openshiftDomain']
+ext.svcAccountClauseServer = "https://console." + ext.openshiftDomain
+ext.dockerRegistry = "docker-registry-default.apps." + ext.openshiftDomain
+ext.internalRegistry = "docker-registry.default.svc:5000"
 
-ext.target = 'remote' // TODO pull in from gradle profile.
-
-if(target == 'local') {
-    ext.svcAccountClauseServer = "https://localhost:8443"
-    //TODO local Internal Registry required
-} else {
-    ext.openshiftDomain=project.properties['openshiftDomain']
-    ext.svcAccountClauseServer = "https://console." + ext.openshiftDomain
-    ext.dockerRegistry = "docker-registry-default.apps." + ext.openshiftDomain
-    ext.internalRegistry = "docker-registry.default.svc:5000"
-}
 

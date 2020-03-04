@@ -64,8 +64,6 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Before
     public void setUpCommonExpectations() {
-        setField(controller, "profileFeatureToggle", true);
-
         userPageResource = new UserPageResource();
 
         when(roleProfileStatusRestServiceMock.findByUserId(anyLong())).thenReturn(restSuccess(emptyList()));
@@ -80,7 +78,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
         mockMvc.perform(get("/admin/user/{userId}/inactive", 1L))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/inactive-user"))
-                .andExpect(model().attribute("model", new ViewUserViewModel(user, getLoggedInUser(), emptyList(), true)));
+                .andExpect(model().attribute("model", new ViewUserViewModel(user, getLoggedInUser(), emptyList())));
     }
 
     @Test
@@ -146,7 +144,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/active-user"))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("model", new ViewUserViewModel(userResource, getLoggedInUser(), emptyList(), true)));
+                .andExpect(model().attribute("model", new ViewUserViewModel(userResource, getLoggedInUser(), emptyList())));
     }
 
     @Test

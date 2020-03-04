@@ -1,28 +1,20 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.resource.FormInputType.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -30,9 +22,6 @@ import static org.mockito.Mockito.when;
  * Tests the CompetitionSetupFinanceServiceImpl with mocked repository.
  */
 public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<CompetitionSetupFinanceServiceImpl> {
-
-    @Mock
-    private CompetitionSetupTransactionalService competitionSetupTransactionalServiceMock;
 
     @Mock
     private CompetitionRepository competitionRepositoryMock;
@@ -63,19 +52,6 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
                 .withApplicationFinanceType(NO_FINANCES)
                 .build();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(c));
-        // Turnover and count - these should be active in sync with each other.
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(isIncludeGrowthTable).build();
-        FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(isIncludeGrowthTable).build();
-        // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(!isIncludeGrowthTable).build();
-        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(!isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
-
-        when(competitionSetupTransactionalServiceMock.countInput(competitionId)).thenReturn(serviceSuccess(staffCountFormInput));
-        when(competitionSetupTransactionalServiceMock.turnoverInput(competitionId)).thenReturn(serviceSuccess(organisationTurnoverFormInput));
-        when(competitionSetupTransactionalServiceMock.financeYearEnd(competitionId)).thenReturn(serviceSuccess(financialYearEnd));
-        when(competitionSetupTransactionalServiceMock.financeCount(competitionId)).thenReturn(serviceSuccess(financialCount));
-        when(competitionSetupTransactionalServiceMock.financeOverviewRow(competitionId)).thenReturn(serviceSuccess(financialOverviewRows));
 
         // Method under test
         ServiceResult<Void> save = service.save(compSetupFinanceRes);
@@ -85,11 +61,6 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         assertEquals(STANDARD, c.getApplicationFinanceType());
         assertFalse(c.getIncludeProjectGrowthTable());
         assertFalse(c.getIncludeYourOrganisationSection());
-        assertEquals(isIncludeGrowthTable, !staffCountFormInput.getActive());
-        assertEquals(isIncludeGrowthTable, !organisationTurnoverFormInput.getActive());
-        assertEquals(isIncludeGrowthTable, financialYearEnd.getActive());
-        assertTrue(!simpleMap(financialOverviewRows, FormInput::getActive).contains(!isIncludeGrowthTable));
-        assertEquals(isIncludeGrowthTable, financialYearEnd.getActive());
         assertEquals(c.getIncludeJesForm(), includeJesForm);
     }
 

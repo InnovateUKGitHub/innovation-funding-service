@@ -142,7 +142,7 @@ Internal user generate the GOL
     Given applicant send project spend profile
     When the internal user approve SP and issue GOL
     Then applicant upload the GOL
-    And the internal user approve the GOL
+    And the internal user approve the GOL   ${ProjectID}
 
 *** Keywords ***
 Custom Suite Setup
@@ -163,8 +163,8 @@ the user fills in procurement Application details
     the user selects the value from the drop-down menu   BANKS_AND_INSURANCE   id = companyPrimaryFocus
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    The user clicks the button/link       css = button[name="mark_as_complete"]
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       id = application-question-complete
+    the user clicks the button/link       link = Back to application overview
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user marks the procurement finances as complete
@@ -251,16 +251,6 @@ Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${appl_name}
     Set suite variable    ${ProjectID}
 
-the user enters bank details
-    the user clicks the button/link                      link = Bank details
-    the user enters text to a text field                 name = accountNumber  ${Account_Two}
-    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
-    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link                      id = postcode-lookup
-    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                      id = submit-bank-details
-
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Search for MO                            Orvill  Orville Gibbs
@@ -318,11 +308,3 @@ applicant upload the GOL
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
-
-the internal user approve the GOL
-    log in as a different user          &{internal_finance_credentials}
-    the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
-    the user selects the radio button   APPROVED  acceptGOL
-    the user clicks the button/link     id = submit-button
-    the user clicks the button/link     id = accept-signed-gol
-    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")

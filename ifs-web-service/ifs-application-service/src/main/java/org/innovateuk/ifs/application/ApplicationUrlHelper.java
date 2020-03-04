@@ -36,6 +36,8 @@ public class ApplicationUrlHelper {
                     return Optional.of(format("/application/%d/form/question/%d/team", applicationId, questionId));
                 case TERMS_AND_CONDITIONS:
                     return Optional.of(format("/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId));
+                case RESEARCH_CATEGORY:
+                    return Optional.of(format("/application/%d/form/question/%d/research-category", applicationId, questionId));
             }
             if (questionType.hasFormInputResponses()) {
                 return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));

@@ -21,14 +21,14 @@ import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.AffiliationType;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -58,12 +59,14 @@ import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
+@Rollback
 public class AssessmentParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentParticipantRepository> {
 
     private Competition competition;
@@ -537,9 +540,18 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 .withFirstName("Anthony")
                 .withLastName("Hale")
                 .withProfileId()
+                .withStatus(UserStatus.ACTIVE)
                 .build();
 
         userRepository.save(acceptedUser);
+
+        RoleProfileStatus roleProfileStatus = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(acceptedUser)
+                .build();
+        roleProfileStatusRepository.save(roleProfileStatus);
+
 
         List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
