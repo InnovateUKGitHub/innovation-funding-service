@@ -109,7 +109,7 @@ createEntitiesFromProperties() {
     echo "Creating entity ${entityName} using template ${TEMPLATE} : ${entityNameHash}"
 
     entityFileName=${SHIBBOLETH_CONF_DIR}/metadata/${entityNameHash}.xml
-    templateFileName=${CONFIG_DIR}/templates/${TEMPLATE}
+    templateFileName=/etc/shibboleth/extras/templates/${TEMPLATE}
     cp ${templateFileName} ${entityFileName}
 
     replacePlaceholders ${entityFileName} DOMAIN PROTOCOL PORT_POSTFIX CERTIFICATE ENCRYPTION_CERTIFICATE
