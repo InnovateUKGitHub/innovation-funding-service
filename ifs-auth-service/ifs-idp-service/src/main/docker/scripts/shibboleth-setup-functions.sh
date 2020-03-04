@@ -89,7 +89,7 @@ property() {
 #
 createEntitiesFromProperties() {
   echo "Creating entities from properties"
-  for properties in ${CONFIG_DIR}/entities/*.properties ; do
+  for properties in ${CONFIG_DIR}/*.properties ; do
     DOMAIN=$(property DOMAIN ${properties})
     PORT=$(property PORT ${properties})
     PROTOCOL=$(property PROTOCOL ${properties})
