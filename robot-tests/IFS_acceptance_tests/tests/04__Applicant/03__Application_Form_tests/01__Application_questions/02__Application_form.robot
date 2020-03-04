@@ -41,7 +41,7 @@ Application details: Previous submission
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
-    Given the user clicks the button/link      link = Application overview
+    Given the user clicks the button/link      link = Back to application overview
     And the user clicks the button/link        link = Application details
     Given the user should not see the element  jQuery = button:contains("Change your innovation area")
     When The user clicks the button/link       jQuery = button:contains("Choose your innovation area")
@@ -61,7 +61,7 @@ Autosave in the form questions
     And the user clicks the button/link   link = ${aeroApplication}
     When the user clicks the button/link  link = Application details
     Then the application details need to be autosaved
-    And the user clicks the button/link   link = Application overview
+    And the user clicks the button/link   link = Back to application overview
     And the user clicks the button/link   link = Project summary
     When The user enters text to a text field  css = .editor  I am a robot
     And the user reloads the page
@@ -128,7 +128,7 @@ Research category validation
     Given The user clicks the button/link                 link = Research category
     When The user clicks the button/link                  id = application-question-complete
     Then The user should see a field and summary error    ${empty_field_warning_message}
-    [Teardown]  the user clicks the button/link           link = Application overview
+    [Teardown]  the user clicks the button/link           link = Back to application overview
 
 Mark research section as complete
     [Documentation]  IFS-2123
@@ -170,7 +170,7 @@ Custom Suite Setup
 the application details need to be autosaved
     the user enters text to a text field    durationInMonths    22
     wait for autosave
-    the user clicks the button/link         link = Application overview
+    the user clicks the button/link         link = Back to application overview
     the user clicks the button/link         link = Application details
     the user should not see the text in the element    durationInMonths    22
 

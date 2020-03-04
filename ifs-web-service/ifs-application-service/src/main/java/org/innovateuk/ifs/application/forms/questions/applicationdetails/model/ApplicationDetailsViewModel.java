@@ -1,94 +1,97 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.model;
 
-import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
-import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-import static java.lang.Boolean.TRUE;
+import java.util.Set;
 
 /**
  * View model for application details.
  */
 public class ApplicationDetailsViewModel {
 
-    private ApplicantQuestionResource applicantResource;
-    private NavigationViewModel navigationViewModel;
-    private ApplicationDetailsInputViewModel formInputViewModel;
-    private boolean allReadOnly;
+    private ApplicationResource application;
 
-    public ApplicationDetailsViewModel(ApplicantQuestionResource applicantResource,
-                                       ApplicationDetailsInputViewModel formInputViewModel,
-                                       NavigationViewModel navigationViewModel) {
-        this.applicantResource = applicantResource;
-        this.formInputViewModel = formInputViewModel;
-        this.navigationViewModel = navigationViewModel;
-        this.allReadOnly = formInputViewModel.isReadonly();
-    }
+    private boolean competitionIsClosingSoon;
 
-    public NavigationViewModel getNavigation() {
-        return getNavigationViewModel();
-    }
+    private int minProjectDuration;
+    private int maxProjectDuration;
 
-    public NavigationViewModel getNavigationViewModel() {
-        return navigationViewModel;
-    }
+    private Set<Long> competitionInnovationAreas;
+    private String selectedInnovationAreaName;
 
-    public Boolean isShowReturnButtons() {
-        return TRUE;
-    }
+    private boolean procurementCompetition;
 
-    public String getTitle() {
-        return applicantResource.getQuestion().getShortName();
-    }
+    private boolean open;
+    private boolean complete;
 
-    public ApplicationDetailsInputViewModel getFormInputViewModel() {
-        return formInputViewModel;
-    }
-
-    public boolean isAllReadOnly() {
-        return allReadOnly;
-    }
-
-    public void setAllReadOnly(boolean allReadOnly) {
-        this.allReadOnly = allReadOnly;
-    }
-
-    public Boolean getApplicationIsClosed() {
-        return !getCompetition().isOpen() || !getApplication().isOpen();
-    }
-
-    public Boolean getApplicationIsReadOnly() {
-        return !getCompetition().isOpen() || !getApplication().isOpen();
+    public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete) {
+        this.application = application;
+        this.competitionIsClosingSoon = competition.isClosingSoon();
+        this.competitionInnovationAreas = competition.getInnovationAreas();
+        this.minProjectDuration = competition.getMinProjectDuration();
+        this.maxProjectDuration = competition.getMaxProjectDuration();
+        this.selectedInnovationAreaName = application.getInnovationArea().getName();
+        this.procurementCompetition = competition.isProcurement();
+        this.open = open;
+        this.complete = complete;
     }
 
     public ApplicationResource getApplication() {
-        return applicantResource.getApplication();
+        return application;
     }
 
-    public CompetitionResource getCompetition() {
-        return applicantResource.getCompetition();
+    public boolean isCompetitionIsClosingSoon() {
+        return competitionIsClosingSoon;
     }
 
-    public ApplicantQuestionResource getApplicantResource() {
-        return applicantResource;
+    public int getMinProjectDuration() {
+        return minProjectDuration;
     }
 
-    public boolean isQuestion() {
-        return true;
+    public int getMaxProjectDuration() {
+        return maxProjectDuration;
     }
 
-    public boolean isSection() {
-        return false;
+    public Set<Long> getCompetitionInnovationAreas() {
+        return competitionInnovationAreas;
     }
 
-    public boolean isLeadApplicant() {
-        return applicantResource.getCurrentApplicant().isLead();
+    public String getSelectedInnovationAreaName() {
+        return selectedInnovationAreaName;
     }
 
-    public ApplicantResource getCurrentApplicant() {
-        return applicantResource.getCurrentApplicant();
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
     }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    /* view logic. */
+    public boolean isReadonly() {
+        return !open || complete;
+    }
+
+    public String getInnovationAreaText() {
+        return  selectedInnovationAreaName != null ? "Change your innovation area" : "Choose your innovation area";
+    }
+
+    public boolean isCanSelectInnovationArea() {
+        return competitionInnovationAreas.size() > 1;
+    }
+
+    public boolean isInnovationAreaHasBeenSelected() {
+        return application.getNoInnovationAreaApplicable() || selectedInnovationAreaName != null;
+    }
+
+    public boolean isNoInnovationAreaApplicable() {
+        return application.getNoInnovationAreaApplicable();
+    }
+
 }
