@@ -82,9 +82,9 @@ function valueFromAws() {
 }
 
 function loadSpDataFromAws() {
-    echo "loading sp stuff"
+    echo "Configuring SSO SP's"
     export IFS=","
-    for sp in ${SSO_SP}; do
+    for sp in "ACC-SYSINT"; do
       text=$text"--from-literal="$sp".properties"=""$(valueFromAws /CI/IFS/$sp/PROPERTY)" "
       text=$text"--from-literal="$sp".crt"=""$(valueFromAws /CI/IFS/$sp/CERT)" "
     done
