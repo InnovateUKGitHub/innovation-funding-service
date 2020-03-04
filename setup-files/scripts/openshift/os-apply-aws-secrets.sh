@@ -85,8 +85,8 @@ function loadSpDataFromAws() {
     echo "Configuring SSO SP's"
     export IFS=","
     for sp in "ACC-SYSINT"; do
-      text=$text"--from-literal="$sp".properties"=""$(valueFromAws /CI/IFS/$sp/PROPERTY)" "
-      text=$text"--from-literal="$sp".crt"=""$(valueFromAws /CI/IFS/$sp/CERT)" "
+      text=$text" --from-literal="$sp".properties=""$(valueFromAws /CI/IFS/$sp/PROPERTY)"
+      text=$text" --from-literal="$sp".crt=""$(valueFromAws /CI/IFS/$sp/CERT)"
     done
 
     eval "oc create secret generic sp-secrets ${text} ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | oc apply -f - ${SVC_ACCOUNT_CLAUSE}"
