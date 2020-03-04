@@ -82,16 +82,16 @@ function valueFromAws() {
 }
 
 function loadSpDataFromAws() {
-    export IFS=","
-    for sp in ${SSO_SP}; do
-      echo $sp
+#    export IFS=","
+#    for sp in ${SSO_SP}; do
+#      echo $sp
       # sp secrets
       oc create secret generic shibboleth-volume \
-        --from-literal="entities/"$sp".properties=""$(valueFromAws /CI/IFS/$sp/PROPERTY)" \
-        --from-literal="certs/"$sp".crt=""$(valueFromAws /CI/IFS/$sp/CERT)" \
+        --from-literal="entities/ACC-SYSINT.properties=""$(valueFromAws /CI/IFS/ACC-SYSINT/PROPERTY)" \
+        --from-literal="certs/ACC-SYSINT.crt=""$(valueFromAws /CI/IFS/ACC-SYSINT/CERT)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
-    done
+#    done
 }
 
 # Create a file with aws credentials which mounted to the aws-cli docker image.
