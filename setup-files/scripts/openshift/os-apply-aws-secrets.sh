@@ -82,16 +82,16 @@ function valueFromAws() {
 }
 
 function loadSpDataFromAws() {
-#    export IFS=","
-#    for sp in ${SSO_SP}; do
-#      echo $sp
-      # sp secrets
+    export IFS=","
+    for sp in ${SSO_SP}; do
+      echo $sp
+#       sp secrets
       oc create secret generic sp-secrets \
-        --from-literal="ACC-SYSINT.properties=""$(valueFromAws /CI/IFS/ACC-SYSINT/PROPERTY)" \
-        --from-literal="ACC-SYSINT.crt=""$(valueFromAws /CI/IFS/ACC-SYSINT/CERT)" \
+        --from-literal=$sp".properties=""$(valueFromAws /CI/IFS/$sp/PROPERTY)" \
+        --from-literal=$sp".crt=""$(valueFromAws /CI/IFS/A$sp/CERT)" \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
-#    done
+    done
 }
 
 # Create a file with aws credentials which mounted to the aws-cli docker image.
