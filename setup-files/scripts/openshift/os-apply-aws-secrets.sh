@@ -86,8 +86,8 @@ function loadSpDataFromAws() {
     text=""
     export IFS=","
     for sp in ${SSO_SP}; do
-      text=$text'--from-literal='$sp'".properties=""$(valueFromAws /CI/IFS/'$sp'/PROPERTY)" \ \n'
-      text=$text'--from-literal='$sp'".crt=""$(valueFromAws /CI/IFS/'$sp'/CERT)" \ \n'
+      text=$text"--from-literal="$sp".properties"=""$(valueFromAws /CI/IFS/$sp/PROPERTY)" \ "
+      text=$text"--from-literal="$sp".crt"=""$(valueFromAws /CI/IFS/$sp/CERT)" \ "
     done
 
     oc create secret generic sp-secrets \
