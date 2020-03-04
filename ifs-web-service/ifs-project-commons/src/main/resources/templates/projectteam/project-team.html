@@ -71,7 +71,7 @@
             <th:block th:insert="projectteam/project-team-fragments :: assign-role(${model})"/>
         </th:block>
 
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
+        <form id="project-team-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
               method="post">
             <th:block th:each="organisation: ${model.partners}">
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
@@ -112,6 +112,7 @@
                 <th:block th:if="${!organisation.lead and model.canRemovePartnerOrganisation}">
                     <th:block th:unless="${organisation.partnerInvite}">
                         <button name="remove-organisation"
+                                th:id="|remove-organisation-button-${organisation.id}|"
                                 class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
                                 th:attr="data-js-modal=${'modal-project-team-remove-organisation-' + organisation.id}">
                             Remove organisation
@@ -122,6 +123,7 @@
                 </th:block>
                 <th:block th:if="${organisation.partnerInvite and model.canInvitePartnerOrganisation}">
                     <button name="remove-partner-invite"
+                            th:id="|remove-organisation-button-${organisation.id}|"
                             class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
                             type="submit"
                             th:value="${organisation.id}">

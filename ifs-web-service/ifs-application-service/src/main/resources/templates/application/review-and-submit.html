@@ -61,7 +61,7 @@
                     <p class="govuk-body">You will not be able to make changes to your application or resubmit after this point.</p>
                 </div>
 
-                <form class="govuk-!-margin-top-6" th:object="${applicationSubmitForm}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
+                <form id="submit-application-form" class="govuk-!-margin-top-6" th:object="${applicationSubmitForm}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
                     <button id="submit-application-button"
                             th:disabled="${!model.applicationReadyForSubmit}"
                             class="govuk-button"

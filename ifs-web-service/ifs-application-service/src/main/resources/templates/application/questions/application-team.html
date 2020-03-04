@@ -104,8 +104,8 @@
                                     th:classappend="${row.invite ? 'hint' : ''}">
                                     <th:block th:if="${organisation.editable and !model.readOnly and !row.lead}">
                                         <th:block th:if="${row.invite}">
-                                            <button class="button-clear govuk-!-margin-right-1" type="submit"
-                                                    name="resend-invite" th:value="${row.id}">Resend invite
+                                            <button class="button-clear govuk-!-margin-right-1" id="resent-invite-button"
+                                                    type="submit" name="resend-invite" th:value="${row.id}">Resend invite
                                             </button>
                                             <span>|</span>
                                         </th:block>
@@ -121,7 +121,7 @@
                                             </th:block>
                                             <th:block th:if="${row.invite}">
                                                 <button class="button-clear govuk-!-margin-left-1" type="submit"
-                                                        name="remove-invite" th:value="${row.id}">Remove
+                                                        id="remove-invite-button" name="remove-invite" th:value="${row.id}">Remove
                                                 </button>
                                             </th:block>
                                         </th:block>
@@ -203,6 +203,7 @@
                                     <button
                                         th:name="${organisation.existing ? 'invite-to-existing-organisation' : 'invite-to-organisation'}"
                                         class="govuk-button govuk-!-margin-top-6"
+                                        id="invite-to-application-button"
                                         th:value="${organisation.id}">
                                         Invite to application
                                     </button>
