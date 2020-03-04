@@ -81,6 +81,19 @@ function valueFromAws() {
     done
 }
 
+function loadSpDataFromAws() {
+    export IFS=","
+    for sp in ${SSO_SP}; do
+      echo $sp
+      # sp secrets
+      oc create secret generic shibboleth-volume \
+        --from-literal="entities/"$sp".properties=""$(valueFromAws /CI/IFS/$sp/PROPERTY)" \
+        --from-literal="certs/"$sp".crt=""$(valueFromAws /CI/IFS/$sp/CERT)" \
+    ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
+    oc apply -f - ${SVC_ACCOUNT_CLAUSE}
+    done
+}
+
 # Create a file with aws credentials which mounted to the aws-cli docker image.
 mkdir -p ifs-auth-service/aws/
 echo -e "[$AWS_PROFILE]" > ifs-auth-service/aws/credentials
@@ -94,5 +107,7 @@ docker build --tag="ssm-access-image" docker/aws-cli
 docker run -id --rm -e AWS_PROFILE=${AWS_PROFILE} -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
 
 applyAwsCerts $([[ ${TARGET} == "ifs-prod" ]] && echo "PROD"|| echo "NON-PROD")
+
+loadSpDataFromAws
 
 docker stop ssm-access-container || true

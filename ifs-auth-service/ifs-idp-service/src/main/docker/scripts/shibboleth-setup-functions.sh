@@ -37,7 +37,7 @@ replacePlaceholders() {
         else
           # Prepend default config directory if filename is relative name
           if [ "${variable_file%"${variable_file#?}"}" != "/" ] ; then
-            variable_file="${LOCAL_CONFIG_DIR}/${variable_file}"
+            variable_file="${CONFIG_DIR}/${variable_file}"
           fi
           echo "file containing variable ${name} : ${variable_file}"
 
@@ -89,7 +89,7 @@ property() {
 #
 createEntitiesFromProperties() {
   echo "Creating entities from properties"
-  for properties in ${LOCAL_CONFIG_DIR}/entities/*.properties ; do
+  for properties in ${CONFIG_DIR}/entities/*.properties ; do
     DOMAIN=$(property DOMAIN ${properties})
     PORT=$(property PORT ${properties})
     PROTOCOL=$(property PROTOCOL ${properties})
@@ -109,7 +109,7 @@ createEntitiesFromProperties() {
     echo "Creating entity ${entityName} using template ${TEMPLATE} : ${entityNameHash}"
 
     entityFileName=${SHIBBOLETH_CONF_DIR}/metadata/${entityNameHash}.xml
-    templateFileName=${LOCAL_CONFIG_DIR}/templates/${TEMPLATE}
+    templateFileName=${CONFIG_DIR}/templates/${TEMPLATE}
     cp ${templateFileName} ${entityFileName}
 
     replacePlaceholders ${entityFileName} DOMAIN PROTOCOL PORT_POSTFIX CERTIFICATE ENCRYPTION_CERTIFICATE

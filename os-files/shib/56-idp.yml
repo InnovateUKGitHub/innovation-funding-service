@@ -30,6 +30,8 @@ items:
           volumeMounts:
             - name: idp-keys-volume
               mountPath: /var/certs
+            - name: shibboleth-volume
+              mountPath: /var/shibboleth
           livenessProbe:
             httpGet:
               path: /idp/status
@@ -94,6 +96,8 @@ items:
             value: "${GA_TRACKING_ID}"
           - name: RESOURCE_DOMAIN
             value: "${RESOURCE_DOMAIN}"
+          - name: SSO_SP
+            value: "${SSO_SP}"
           ports:
           - containerPort: 9443
           - containerPort: 9080
