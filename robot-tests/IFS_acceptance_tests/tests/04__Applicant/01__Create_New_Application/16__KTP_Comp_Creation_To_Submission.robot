@@ -182,6 +182,7 @@ The user completes the research category
 
 Custom Suite Setup
     Set predefined date variables
+    The guest user opens the browser
     Connect to database  @{database}
 
 Requesting IDs of this Project

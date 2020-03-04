@@ -59,9 +59,9 @@ public class CompetitionKeyAssessmentStatisticsControllerIntegrationTest extends
                 .getInAssessmentKeyStatistics(1L).getSuccess();
 
         assertEquals(4, keyStatisticsResource.getAssessmentsStarted());
-        assertEquals(9, keyStatisticsResource.getAssignmentCount());
+        assertEquals(8, keyStatisticsResource.getAssignmentCount());
         assertEquals(2, keyStatisticsResource.getAssessmentsSubmitted());
-        assertEquals(1, keyStatisticsResource.getAssignmentsAccepted());
+        assertEquals(0, keyStatisticsResource.getAssignmentsAccepted());
         assertEquals(1, keyStatisticsResource.getAssignmentsWaiting());
     }
 }

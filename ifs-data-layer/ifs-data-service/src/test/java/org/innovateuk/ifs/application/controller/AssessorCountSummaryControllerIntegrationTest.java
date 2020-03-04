@@ -38,6 +38,7 @@ import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.junit.Assert.assertEquals;
 
 public class AssessorCountSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<AssessorCountSummaryController> {
@@ -89,6 +90,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .withLastName("Baldwin", "Morton")
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .withStatus(ACTIVE)
                 .build(2);
         userRepository.saveAll(users);
 
