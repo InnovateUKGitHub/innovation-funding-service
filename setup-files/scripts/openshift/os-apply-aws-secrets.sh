@@ -89,7 +89,7 @@ function loadSpDataFromAws() {
       text=$text" --from-literal="$sp".crt=""$(valueFromAws /CI/IFS/$sp/CERT)"
     done
 
-    eval "oc create secret generic sp-secrets ${text} ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | oc apply -f - ${SVC_ACCOUNT_CLAUSE}"
+    oc create secret generic sp-secrets ${text} ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
 
 # Create a file with aws credentials which mounted to the aws-cli docker image.
