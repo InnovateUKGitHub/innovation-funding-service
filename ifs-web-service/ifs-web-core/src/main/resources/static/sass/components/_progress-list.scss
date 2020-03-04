@@ -103,6 +103,12 @@
     justify-content: flex-end;
     align-items: center;
     margin: 0;
+    flex-direction: column;
+
+    .action {
+      align-self: flex-end;
+      margin-right: 30px;
+    }
   }
 
   .status-msg {
