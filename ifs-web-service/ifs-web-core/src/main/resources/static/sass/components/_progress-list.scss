@@ -33,12 +33,19 @@
     padding: 15px 0 15px 30px;
     background-color: govuk-colour("white");
     border: 1px solid $govuk-border-colour;
+   }
+
+  .row {
     overflow: auto;
     display: flex; // Using flex as a progressive enhancement for vertical alignment of dashboard elements. Container heights are varaiable depending on length of application titles.
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-   }
+  }
+
+  .action {
+    margin-right: 30px;
+  }
 
   .task{
     @include govuk-font(16);
@@ -103,7 +110,6 @@
     justify-content: flex-end;
     align-items: center;
     margin: 0;
-    flex-direction: column;
 
     .action {
       align-self: flex-end;

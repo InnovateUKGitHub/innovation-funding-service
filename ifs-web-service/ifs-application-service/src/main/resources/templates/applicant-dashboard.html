@@ -25,7 +25,7 @@
                 <div class="progress-list">
                     <h2 class="govuk-heading-m">Set up your project</h2>
                     <ul>
-                        <li th:each="projectView : ${model.projects}">
+                        <li class="row" th:each="projectView : ${model.projects}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="${projectView.linkUrl}"
@@ -54,7 +54,7 @@
                 <div class="progress-list">
                     <h2 class="govuk-heading-m">Horizon 2020 grant transfers</h2>
                     <ul>
-                        <li th:each="euGrantTransfer : ${model.euGrantTransfers}">
+                        <li class="row" th:each="euGrantTransfer : ${model.euGrantTransfers}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="${euGrantTransfer.linkUrl}" th:text="${euGrantTransfer.title}" class="govuk-link" />
@@ -87,7 +87,7 @@
                 <div class="progress-list">
                     <h2 class="govuk-heading-m" th:text="${model.applicationInProgressText}"/>
                     <ul>
-                        <li class="status-2-col" th:each="inProgressView : ${model.inProgress}" th:classappend="${inProgressView.assignedToMe ? 'assigned-to-me' : '' }">
+                        <li class="row status-2-col" th:each="inProgressView : ${model.inProgress}" th:classappend="${inProgressView.assignedToMe ? 'assigned-to-me' : '' }">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" class="govuk-link" />
@@ -145,50 +145,51 @@
                     <ul>
                         <li th:each="previousView : ${model.previous}"
                             th:class="${previousView.approved} ? 'positive'">
-                            <div class="task">
-                                <h3 class="govuk-heading-s">
-                                    <a th:href="${previousView.linkUrl}" th:text="${previousView.title}" class="govuk-link" />
-                                </h3>
-                                <ul class="application-details">
-                                    <li>Application number: <span th:text="${previousView.applicationNumber}"></span></li>
-                                    <li>Competition: <span th:text="${previousView.competitionTitle}">COMPETITION NAME</span></li>
-                                </ul>
-                            </div>
-                            <div class="status">
-                                <p th:if="${previousView.rejected}" class="govuk-body status-msg msg-progress">Unsuccessful</p>
-                                <p th:if="${previousView.approved}" class="govuk-body status-msg msg-progress">Successful</p>
-                                <p th:if="${previousView.createdOrOpen}" class="govuk-body status-msg msg-progress not-submitted">Not submitted</p>
-                                <p th:if="${previousView.informedIneligible}" class="govuk-body status-msg msg-progress">Ineligible</p>
-                                <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
-                                <p th:if="${previousView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
-                                <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
-
-                                <div class="action">
-                                    <th:block th:if="${previousView.canHideApplication()}">
-                                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
-                                            <th:block th:insert="fragments/modals :: modal-confirm-hide-application (${previousView.applicationNumber})"/>
-                                            <button name="hide-application"
-                                                    class="button-clear"
-                                                    type="submit"
-                                                    th:attr="data-js-modal=${'modal-confirm-hide-application-' + previousView.applicationNumber}"
-                                                    th:value="${previousView.applicationNumber}">
-                                                Remove
-                                            </button>
-                                        </form>
-                                    </th:block>
-                                    <th:block th:if="${previousView.canDeleteApplication()}">
-                                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
-                                            <th:block th:insert="fragments/modals :: modal-confirm-delete-application (${previousView.applicationNumber}, ${previousView.messageTitle}, ${previousView.message})"/>
-                                            <button name="delete-application"
-                                                    class="button-clear"
-                                                    type="submit"
-                                                    th:attr="data-js-modal=${'modal-confirm-delete-application-' + previousView.applicationNumber}"
-                                                    th:value="${previousView.applicationNumber}">
-                                                Delete
-                                            </button>
-                                        </form>
-                                    </th:block>
+                            <div class="row">
+                                <div class="task">
+                                    <h3 class="govuk-heading-s">
+                                        <a th:href="${previousView.linkUrl}" th:text="${previousView.title}" class="govuk-link" />
+                                    </h3>
+                                    <ul class="application-details">
+                                        <li>Application number: <span th:text="${previousView.applicationNumber}"></span></li>
+                                        <li>Competition: <span th:text="${previousView.competitionTitle}">COMPETITION NAME</span></li>
+                                    </ul>
                                 </div>
+                                <div class="status">
+                                    <p th:if="${previousView.rejected}" class="govuk-body status-msg msg-progress">Unsuccessful</p>
+                                    <p th:if="${previousView.approved}" class="govuk-body status-msg msg-progress">Successful</p>
+                                    <p th:if="${previousView.createdOrOpen}" class="govuk-body status-msg msg-progress not-submitted">Not submitted</p>
+                                    <p th:if="${previousView.informedIneligible}" class="govuk-body status-msg msg-progress">Ineligible</p>
+                                    <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
+                                    <p th:if="${previousView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
+                                    <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
+                                </div>
+                            </div>
+                            <div class="action alignright">
+                                <th:block th:if="${previousView.canHideApplication()}">
+                                    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+                                        <th:block th:insert="fragments/modals :: modal-confirm-hide-application (${previousView.applicationNumber})"/>
+                                        <button name="hide-application"
+                                                class="button-clear"
+                                                type="submit"
+                                                th:attr="data-js-modal=${'modal-confirm-hide-application-' + previousView.applicationNumber}"
+                                                th:value="${previousView.applicationNumber}">
+                                            Remove
+                                        </button>
+                                    </form>
+                                </th:block>
+                                <th:block th:if="${previousView.canDeleteApplication()}">
+                                    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+                                        <th:block th:insert="fragments/modals :: modal-confirm-delete-application (${previousView.applicationNumber}, ${previousView.messageTitle}, ${previousView.message})"/>
+                                        <button name="delete-application"
+                                                class="button-clear"
+                                                type="submit"
+                                                th:attr="data-js-modal=${'modal-confirm-delete-application-' + previousView.applicationNumber}"
+                                                th:value="${previousView.applicationNumber}">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </th:block>
                             </div>
                         </li>
                     </ul>
