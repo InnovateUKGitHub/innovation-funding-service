@@ -34,6 +34,8 @@ public class Organisation {
     @Column(nullable = false)
     private boolean isInternational;
 
+    private String internationalCompanyRegistrationNumber;
+
     @OneToMany(mappedBy="organisationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
@@ -130,5 +132,21 @@ public class Organisation {
 
     public void setOrganisationType(OrganisationType organisationType) {
         this.organisationType = organisationType;
+    }
+
+    public boolean isInternational() {
+        return isInternational;
+    }
+
+    public void setInternational(boolean international) {
+        isInternational = international;
+    }
+
+    public String getInternationalCompanyRegistrationNumber() {
+        return internationalCompanyRegistrationNumber;
+    }
+
+    public void setInternationalCompanyRegistrationNumber(String internationalCompanyRegistrationNumber) {
+        this.internationalCompanyRegistrationNumber = internationalCompanyRegistrationNumber;
     }
 }
