@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -32,9 +33,10 @@ public class AssessmentApplicationProgressController {
     @GetMapping
     public String applicationProgress(Model model,
                                       @PathVariable("applicationId") Long applicationId,
-                                      @RequestParam(value = "page", defaultValue = "0") int page,
-                                      @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter) {
-        return doProgressView(model, applicationId, assessorNameFilter, page);
+                                      @RequestParam(value = "page", defaultValue = "1") int page,
+                                      @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter,
+                                      @RequestParam(value = "sort", defaultValue = "ASSESSOR") Sort sort) {
+        return doProgressView(model, applicationId, assessorNameFilter, page - 1, sort);
     }
 
     @PostMapping(path = "/assign/{assessorId}")
@@ -71,8 +73,8 @@ public class AssessmentApplicationProgressController {
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, String assessorNameFilter, int page) {
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, assessorNameFilter, page));
+    private String doProgressView(Model model, Long applicationId, String assessorNameFilter, int page, Sort sort) {
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, assessorNameFilter, page, sort));
 
         return "competition/application-progress";
     }
