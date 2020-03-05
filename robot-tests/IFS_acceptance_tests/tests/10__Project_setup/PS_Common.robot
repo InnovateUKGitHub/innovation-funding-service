@@ -150,12 +150,19 @@ ${PS_NGTC_Application_Title}          Single applicant app
 ${PS_NGTC_Application_No}             ${application_ids["${PS_NGTC_Application_Title}"]}
 ${PS_NGTC_Application_Project_Id}     ${project_ids["${PS_NGTC_Application_Title}"]}
 
+# Competition Connected digital additive manufacturing
+${ConnectedCompName}  Connected digital additive manufacturing
+${ConnectedCompId}    ${competition_ids["${ConnectedCompName}"]}
+${MobileProjectName}  Mobile Phone Data for Logistics Analytics
+${MobileProjectId}    ${project_ids["${MobileProjectName}"]}
+
 *** Keywords ***
 The user adds a new team member
   [Arguments]  ${firstName}  ${email}
   the user enters text to a text field   css = input[name=name]   ${firstName}
   the user enters text to a text field   css = input[name=email]  ${email}
-  the user clicks the button/link        jQuery = button:contains("Invite to project")
+  the user clicks the button/link        jQuery = button:contains("Invite to")
+
 
 internal user generates the GOL
     [Arguments]  ${projectID}

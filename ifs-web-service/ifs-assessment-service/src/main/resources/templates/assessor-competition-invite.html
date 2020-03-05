@@ -72,8 +72,7 @@
                                            th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}" />
                                     <label for="acceptCompetition"
                                            class="govuk-label govuk-radios__label">
-                                        Yes, I am able to assess applications to this competition
-                                        <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
+                                        Yes, I am able to assess applications to this competition<th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
                                     </label>
                                 </div>
                                 <div class="govuk-radios__item" data-target="reject-competition">

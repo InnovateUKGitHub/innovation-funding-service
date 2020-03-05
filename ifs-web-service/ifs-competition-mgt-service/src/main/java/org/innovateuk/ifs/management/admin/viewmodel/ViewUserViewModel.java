@@ -18,14 +18,11 @@ public class ViewUserViewModel {
     private final UserResource user;
     private final UserResource loggedInUser;
     private final List<RoleProfileStatusResource> roleProfiles;
-    private final boolean displayRoleProfileLink;
 
-
-    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles, boolean displayRoleProfileLink) {
+    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles) {
         this.user = user;
         this.loggedInUser = loggedInUser;
         this.roleProfiles = roleProfiles;
-        this.displayRoleProfileLink = displayRoleProfileLink;
     }
 
     public UserResource getUser() {
@@ -38,10 +35,6 @@ public class ViewUserViewModel {
 
     public boolean isSupport() {
         return loggedInUser.hasRole(Role.SUPPORT);
-    }
-
-    public boolean isDisplayRoleProfileLink() {
-        return displayRoleProfileLink;
     }
 
     public boolean isDisplayAssessorTitle() {
@@ -63,7 +56,7 @@ public class ViewUserViewModel {
     }
 
     public String roleDisplay(Role role) {
-        if (displayRoleProfileLink && role.isAssessor()) {
+        if (role.isAssessor()) {
             Optional<RoleProfileStatusResource> maybeProfileStatus = roleProfiles.stream()
                     .filter(status -> status.getProfileRole().equals(ProfileRole.ASSESSOR))
                     .findFirst();
@@ -85,7 +78,6 @@ public class ViewUserViewModel {
         ViewUserViewModel that = (ViewUserViewModel) o;
 
         return new EqualsBuilder()
-                .append(displayRoleProfileLink, that.displayRoleProfileLink)
                 .append(user, that.user)
                 .append(loggedInUser, that.loggedInUser)
                 .append(roleProfiles, that.roleProfiles)
@@ -98,7 +90,6 @@ public class ViewUserViewModel {
                 .append(user)
                 .append(loggedInUser)
                 .append(roleProfiles)
-                .append(displayRoleProfileLink)
                 .toHashCode();
     }
 }

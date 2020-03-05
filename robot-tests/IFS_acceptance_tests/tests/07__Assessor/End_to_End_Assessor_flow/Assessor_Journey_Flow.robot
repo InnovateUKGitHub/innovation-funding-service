@@ -167,8 +167,8 @@ Invited user accept the invitation and navigate to registration form
 
 comp admin allocate application to an assessor
     the user clicks the button/link        jQuery = tr:nth-child(1) a:contains("View progress")
-    the user clicks the button/link        jQuery = a:contains("21")
-    the user clicks the button/link        jQuery = a:contains("41")
+    the user clicks the button/link        jQuery = .pagination-links a:contains("Next")
+    the user clicks the button/link        jQuery = .pagination-links a:contains("Next")
     the user clicks the button/link        jQuery = tr:contains("Tom Fister") button:contains("Assign")
     the user clicks the button/link        jQuery = a:contains("Allocate applications")
     the user clicks the button/link        jQuery = a:contains("Manage assessments")
