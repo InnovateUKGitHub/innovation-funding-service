@@ -31,6 +31,9 @@ public class Organisation {
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
 
+    @Column(nullable = false)
+    private boolean isInternational;
+
     @OneToMany(mappedBy="organisationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 

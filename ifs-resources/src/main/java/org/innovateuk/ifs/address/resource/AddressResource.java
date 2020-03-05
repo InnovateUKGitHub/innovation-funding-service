@@ -22,6 +22,8 @@ public class AddressResource {
     @NotBlank(message = "{validation.standard.town.required}")
     private String town;
     private String county;
+    @NotBlank(message = "{validation.standard.country.required}")
+    private String country;
     @NotBlank(message = "{validation.standard.postcode.required}")
     @Length(max = 9, message = "{validation.standard.postcode.length}")
     private String postcode;
@@ -30,13 +32,14 @@ public class AddressResource {
         // no-arg constructor
     }
 
-    public AddressResource(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
+    public AddressResource(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode, String country) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.addressLine3 = addressLine3;
         this.town = town;
         this.county = county;
         this.postcode = postcode;
+        this.country = country;
     }
 
     public String getAddressLine1() {
@@ -87,6 +90,14 @@ public class AddressResource {
         this.postcode = postcode;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     @JsonIgnore
     public String getCombinedString() {
         String[] location = new String[3];
@@ -119,7 +130,7 @@ public class AddressResource {
 
     @JsonIgnore
     public List<String> getNonEmptyLines() {
-        List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, postcode);
+        List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, postcode, country);
         return simpleFilterNot(lines, StringUtils::isEmpty);
     }
 
@@ -139,6 +150,7 @@ public class AddressResource {
                 .append(town, that.town)
                 .append(county, that.county)
                 .append(postcode, that.postcode)
+                .append(country, that.country)
                 .isEquals();
     }
 
@@ -152,6 +164,7 @@ public class AddressResource {
                 .append(town)
                 .append(county)
                 .append(postcode)
+                .append(country)
                 .toHashCode();
     }
 }

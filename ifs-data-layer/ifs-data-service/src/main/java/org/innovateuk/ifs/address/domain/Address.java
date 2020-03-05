@@ -25,6 +25,7 @@ public class Address {
     
     private String town;
     private String county;
+    private String country;
     
     @Length(max = 9)
     private String postcode;
@@ -33,13 +34,14 @@ public class Address {
         // no-arg constructor
     }
 
-    public Address(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
+    public Address(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode, String country) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.addressLine3 = addressLine3;
         this.town = town;
         this.county = county;
         this.postcode = postcode;
+        this.country = country;
     }
 
     public String getAddressLine1() {
@@ -90,6 +92,14 @@ public class Address {
         this.postcode = postCode;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public Long getId() {
         return id;
     }
@@ -105,6 +115,7 @@ public class Address {
         this.town = other.getTown();
         this.county = other.getCounty();
         this.postcode = other.getPostcode();
+        this.country = other.getCountry();
     }
 
     @Override
@@ -122,6 +133,7 @@ public class Address {
                 .append(town, address.town)
                 .append(county, address.county)
                 .append(postcode, address.postcode)
+                .append(country, address.country)
                 .isEquals();
     }
 
@@ -134,6 +146,7 @@ public class Address {
                 .append(town)
                 .append(county)
                 .append(postcode)
+                .append(country)
                 .toHashCode();
     }
 }

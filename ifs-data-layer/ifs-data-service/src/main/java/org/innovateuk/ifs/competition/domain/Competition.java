@@ -148,6 +148,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private Boolean includeJesForm;
 
+    private Boolean isInternationalApplicationAllowed;
+
     @Enumerated(EnumType.STRING)
     private ApplicationFinanceType applicationFinanceType;
 
@@ -916,6 +918,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setProjectSetupStarted(ZonedDateTime projectSetupStarted) {
         this.projectSetupStarted = projectSetupStarted;
+    }
+
+    public Boolean getInternationalApplicationAllowed() {
+        return isInternationalApplicationAllowed;
+    }
+
+    public void setInternationalApplicationAllowed(Boolean internationalApplicationAllowed) {
+        isInternationalApplicationAllowed = internationalApplicationAllowed;
     }
 
     @Override
