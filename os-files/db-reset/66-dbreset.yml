@@ -86,11 +86,6 @@ items:
                 configMapKeyRef:
                   name: db-config
                   key: DB_PASS
-            - name: ACC_BITBUCKET_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: bitbucket-config
-                  key: ACC_BITBUCKET_URL
             - name: PERFORMANCE_APPLICANT_USERS
               valueFrom:
                 configMapKeyRef:
