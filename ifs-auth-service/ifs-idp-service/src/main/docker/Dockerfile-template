@@ -60,8 +60,7 @@ ENV HTTP_PORT=9080 \
   IDP_LOG_LEVEL=WARN \
 
   JAVA_OPTS="-Xms384M -Xmx768M" \
-  MEMCACHE_ENDPOINT= \
-  SSO_SP=
+  MEMCACHE_ENDPOINT=
 
 # shibboleth configuration files \
 COPY idp/ /idp/
