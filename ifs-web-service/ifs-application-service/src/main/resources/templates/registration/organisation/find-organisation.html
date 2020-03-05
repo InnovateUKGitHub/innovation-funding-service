@@ -40,7 +40,7 @@
             </div>
         </th:block>
 
-        <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" novalidate="novalidate" method="POST">
+        <form th:action="@{/organisation/create/find-organisation}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
 
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
             <label class="govuk-label"
@@ -102,7 +102,7 @@
                         <div class="govuk-details__text" th:attr="aria-hidden=${isOpen} ? 'false' : null">
                             <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
-                            <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
+                            <button type="submit" name="save-organisation-details" id="save-organisation-details-button" class="govuk-button govuk-!-margin-top-6">Continue</button>
                         </div>
                     </details>
                 </th:block>
