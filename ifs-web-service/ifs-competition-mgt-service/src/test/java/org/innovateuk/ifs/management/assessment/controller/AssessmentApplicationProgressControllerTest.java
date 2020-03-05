@@ -2,8 +2,10 @@ package org.innovateuk.ifs.management.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -12,7 +14,7 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.management.assessment.populator.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.*;
 
@@ -22,6 +24,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
+import static org.innovateuk.ifs.application.builder.ApplicationAvailableAssessorResourceBuilder.newApplicationAvailableAssessorResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.*;
@@ -70,18 +73,17 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
         List<ApplicationAssessorResource> assigned = setupAssignedApplicationAssessorResources();
         List<ApplicationAssessorResource> rejected = setupRejectedApplicationAssessorResources();
         List<ApplicationAssessorResource> withdrawn = setupWithdrawnApplicationAssessorResources();
-        ApplicationAssessorPageResource available = setupAvailableApplicationAssessorResources();
+        ApplicationAvailableAssessorPageResource available = setupAvailableApplicationAssessorResources();
 
         List<InnovationSectorResource> innovationSectors = setupInnovationSectors();
 
 
         when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
         when(applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn)));
-        when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, 0, 20, "")).thenReturn(restSuccess(available));
+        when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, 0, 20, "", Sort.ASSESSOR)).thenReturn(restSuccess(available));
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
-        String assessorOrigin = "?page=0&assessorNameFilter=";
 
-        Pagination expectedPaginationModel = new Pagination(available, assessorOrigin);
+        PaginationViewModel expectedPaginationModel = new PaginationViewModel(available);
 
         ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
                 applicationId,
@@ -98,10 +100,11 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 setupExpectedAvailableAssessors(),
                 innovationSectors,
                 "",
+                Sort.ASSESSOR,
                 expectedPaginationModel
         );
 
-        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=0&assessorNameFilter=", competitionId, applicationId))
+        mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=1&assessorNameFilter=&sort=ASSESSOR", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
@@ -109,7 +112,7 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
         InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService, categoryRestServiceMock);
         inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
         inOrder.verify(applicationAssessmentSummaryRestService).getAssignedAssessors(applicationId);
-        inOrder.verify(applicationAssessmentSummaryRestService).getAvailableAssessors(applicationId, 0, 20, "");
+        inOrder.verify(applicationAssessmentSummaryRestService).getAvailableAssessors(applicationId, 0, 20, "", Sort.ASSESSOR);
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }
@@ -333,28 +336,17 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 .build(3);
     }
 
-    private ApplicationAssessorPageResource setupAvailableApplicationAssessorResources() {
-        List<ApplicationAssessorResource> resources = newApplicationAssessorResource()
+    private ApplicationAvailableAssessorPageResource setupAvailableApplicationAssessorResources() {
+        List<ApplicationAvailableAssessorResource> resources = newApplicationAvailableAssessorResource()
                 .withUserId(13L, 14L, 15L)
                 .withFirstName("Christopher", "Jayne", "Narinder")
                 .withLastName("Dockerty", "Gill", "Goddard")
-                .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
-                .withInnovationAreas(newInnovationAreaResource()
-                                .withName("Experimental development", "Infrastructure")
-                                .buildSet(2),
-                        newInnovationAreaResource()
-                                .withName("Electronics, Sensors and photonics", "Digital health")
-                                .buildSet(2),
-                        newInnovationAreaResource()
-                                .withName("Manufacturing Readiness", "Offshore Renewable Energy")
-                                .buildSet(2))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
-                .withAvailable(true)
                 .withTotalApplicationsCount(9L, 4L, 3L)
                 .withAssignedCount(5L, 1L, 1L)
                 .withSubmittedCount(2L, 1L, 0L)
                 .build(3);
-        return new ApplicationAssessorPageResource(3, 1, resources, 0, 20);
+        return new ApplicationAvailableAssessorPageResource(3, 1, resources, 0, 20);
     }
 
     private List<ApplicationAssessmentProgressAssignedRowViewModel> setupExpectedAssignedRows() {

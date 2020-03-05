@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -387,9 +388,9 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         flushAndClearSession();
 
-        Pageable pagination = PageRequest.of(0, 1);
+        Pageable pagination = PageRequest.of(0, 5);
 
-        Page<AssessmentParticipant> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L, "", pagination);
+        Page<ApplicationAvailableAssessorResource> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, 1L, "", pagination);
 
         assertNotNull(retrievedParticipants);
         assertEquals(1, retrievedParticipants.getTotalElements());
