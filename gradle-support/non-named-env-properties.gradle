@@ -126,5 +126,4 @@ ext.RESOURCE_DOMAIN=""
 
 ext.IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED=true
 
-// Temporary adding acc-sysint for testing
 ext.SSO_SP="ACC-SYSINT"
