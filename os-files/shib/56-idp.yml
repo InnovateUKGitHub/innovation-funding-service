@@ -99,8 +99,6 @@ items:
             value: "${GA_TRACKING_ID}"
           - name: RESOURCE_DOMAIN
             value: "${RESOURCE_DOMAIN}"
-          - name: SSO_SP
-            value: "${SSO_SP}"
           ports:
           - containerPort: 9443
           - containerPort: 9080
