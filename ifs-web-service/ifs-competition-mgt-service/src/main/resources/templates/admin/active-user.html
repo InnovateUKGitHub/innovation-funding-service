@@ -68,12 +68,10 @@
             </th:block>
             <dl class="govuk-list">
                 <th:block th:unless="${model.canEditUserDetails}">
-                    <dl class="govuk-list">
-                        <dt>First name</dt>
-                        <dd th:text="${model.user.firstName}">Steve</dd>
-                        <dt>Last name</dt>
-                        <dd th:text="${model.user.lastName}">Smith</dd>
-                    </dl>
+                    <dt>First name</dt>
+                    <dd th:text="${model.user.firstName}">Steve</dd>
+                    <dt>Last name</dt>
+                    <dd th:text="${model.user.lastName}">Smith</dd>
                 </th:block>
                 <th:block th:if="${model.user.phoneNumber != null}">
                     <dt>Phone number</dt>
@@ -135,7 +133,7 @@
                         </thead>
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row" th:each="role : ${model.user.roles}"
-                            th:with="canDisableRole=${role.isAssessor() and model.displayRoleProfileLink}">
+                            th:with="canDisableRole=${role.isAssessor()}">
                             <td class="govuk-table__cell" th:text="${role.displayName}"></td>
                             <td class="govuk-table__cell" th:text="${model.roleDisplay(role)}"></td>
                             <td class="govuk-table__cell alignright">

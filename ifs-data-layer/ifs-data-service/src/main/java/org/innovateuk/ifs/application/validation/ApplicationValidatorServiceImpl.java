@@ -15,9 +15,9 @@ import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.finance.validator.FinanceValidationUtil;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,7 +76,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         }
 
         FormInput formInput = formInputRepository.findById(formInputId).get();
-        if (formInput.getType().equals(FormInputType.APPLICATION_DETAILS)) {
+        if (formInput.getQuestion().getQuestionSetupType().equals(QuestionSetupType.APPLICATION_DETAILS)) {
             Application application = applicationRepository.findById(applicationId).orElse(null);
             results.add(applicationValidationUtil.addValidation(application, new ApplicationDetailsMarkAsCompleteValidator()));
         }

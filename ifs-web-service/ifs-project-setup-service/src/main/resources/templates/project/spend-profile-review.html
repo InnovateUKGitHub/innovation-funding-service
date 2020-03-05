@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Spend profile'}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Spend profile - ${model.projectName}|" />
 </head>
 <body class="govuk-template__body app-overview" th:classappend="${(param.view != null and param.view[0] == 'full' ? 'wide-page' : '')}">
 

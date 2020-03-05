@@ -24,6 +24,7 @@ IFS.core.loadOrder = {
       IFS.core.autoSave.init()
       IFS.core.formValidation.init()
       IFS.core.conditionalForms.init()
+      IFS.core.changeModel.init()
       IFS.core.wordCount.init()
       IFS.core.disableSubmitUntilChecked.init()
       IFS.core.finance.init()

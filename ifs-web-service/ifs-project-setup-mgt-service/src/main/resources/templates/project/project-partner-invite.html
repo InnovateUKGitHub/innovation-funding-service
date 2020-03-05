@@ -58,7 +58,7 @@
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row repeatable-row">
                         <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('userName')}? 'govuk-form-group--error'">
-                            <label th:for="name">
+                            <label th:for="userName">
                                 <span class="govuk-visually-hidden">Applicant name</span>
                             </label>
                             <th:block th:if="${#fields.hasErrors('userName')}">

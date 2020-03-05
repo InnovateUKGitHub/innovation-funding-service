@@ -1,114 +1,93 @@
 package org.innovateuk.ifs.application.forms.questions.applicantdetails.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.populator.ApplicationDetailsViewModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.forminput.ApplicationDetailsPopulator;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
-import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.List;
+import java.time.ZonedDateTime;
 
-import static java.lang.Boolean.TRUE;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertTrue;
+import static java.util.Collections.singleton;
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
-import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
-import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private ApplicationDetailsViewModelPopulator populator;
+
     @Mock
-    private ApplicationNavigationPopulator applicationNavigationPopulator;
+    private QuestionStatusRestService questionStatusRestService;
+
     @Mock
-    private FormInputViewModelGenerator formInputViewModelGenerator;
+    private OrganisationRestService organisationRestService;
+
     @Mock
-    private QuestionService questionService;
+    private CompetitionRestService competitionRestService;
+
     @Mock
-    private ApplicationDetailsPopulator applicationDetailsPopulator;
+    private UserRestService userRestService;
+
 
     @Test
     public void populate() {
+        long questionId = 1L;
 
-        ApplicantQuestionResource question =  newApplicantQuestionResource()
-                .withQuestion(newQuestionResource().build())
-                .withApplicantFormInputs(singletonList(newApplicantFormInputResource().withApplicantResponses(emptyList()).build()))
-                .withApplication(newApplicationResource().withApplicationState(ApplicationState.OPENED).build())
-                .withCurrentApplicant(newApplicantResource()
-                        .withOrganisation(newOrganisationResource().build())
-                        .withProcessRole(newProcessRoleResource().withRole(LEADAPPLICANT).build())
-                        .build())
-                .withCurrentUser(newUserResource().build())
-                .build();
-        ApplicationForm form = mock(ApplicationForm.class);
         CompetitionResource competitionResource = CompetitionResourceBuilder
                 .newCompetitionResource()
                 .withCompetitionStatus(CLOSED)
                 .withFundingType(PROCUREMENT)
+                .withEndDate(ZonedDateTime.now())
+                .withMinProjectDuration(1)
+                .withMaxProjectDuration(30)
                 .build();
-        ApplicationDetailsInputViewModel applicationDetailsInputViewModel = new ApplicationDetailsInputViewModel();
-        applicationDetailsInputViewModel.setCompetition(competitionResource);
-        applicationDetailsInputViewModel.setReadonly(TRUE);
-        QuestionStatusResource questionStatusResource = newQuestionStatusResource().build();
-        List<QuestionStatusResource> notifications = newQuestionStatusResource().build(1);
-        NavigationViewModel navigationViewModel = new NavigationViewModel();
 
-        when(applicationDetailsPopulator.populate(
-                any(AbstractApplicantResource.class),
-                isNull(),
-                any(ApplicantQuestionResource.class),
-                any(ApplicantFormInputResource.class),
-                isNull())).thenReturn(applicationDetailsInputViewModel);
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionResource.getId())
+                .withInnovationArea(newInnovationAreaResource().build())
+                .build();
 
-        when(formInputViewModelGenerator.fromQuestion(question, form)).thenReturn(singletonList(applicationDetailsInputViewModel));
-        when(applicationNavigationPopulator.addNavigation(question.getQuestion(), question.getApplication().getId())).thenReturn(navigationViewModel);
-        when(questionService.getByQuestionIdAndApplicationIdAndOrganisationId(question.getQuestion().getId(), question.getApplication().getId(), question.getCurrentApplicant().getOrganisation().getId())).thenReturn(questionStatusResource);
-        when(questionService.getNotificationsForUser(singletonList(questionStatusResource), question.getCurrentUser().getId())).thenReturn(notifications);
+        UserResource user = newUserResource().build();
 
-        ApplicationDetailsViewModel viewModel = populator.populate(question, competitionResource);
+        ProcessRoleResource leadRole = newProcessRoleResource()
+                .withRole(LEADAPPLICANT)
+                .build();
 
-        assertThat(viewModel.isAllReadOnly(), equalTo(true));
-        assertThat(viewModel.getCurrentApplicant(), equalTo(question.getCurrentApplicant()));
-        assertThat(viewModel.isQuestion(), equalTo(true));
-        assertThat(viewModel.isSection(), equalTo(false));
-        assertThat(viewModel.getNavigation(), equalTo(navigationViewModel));
-        assertThat(viewModel.isLeadApplicant(), equalTo(true));
-        assertTrue(viewModel.getFormInputViewModel().getIsProcurementCompetition());
+        OrganisationResource organisation = newOrganisationResource().build();
 
-        verify(questionService).removeNotifications(notifications);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
+        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(leadRole));
+        when(questionStatusRestService.getMarkedAsComplete(application.getId(), organisation.getId())).thenReturn(completedFuture(singleton(questionId)));
+
+        ApplicationDetailsViewModel viewModel = populator.populate(application, questionId, user);
+
+        assertThat(viewModel.isReadonly(), equalTo(true));
+        assertThat(viewModel.isComplete(), equalTo(true));
+        assertThat(viewModel.isProcurementCompetition(), equalTo(true));
     }
 
 }

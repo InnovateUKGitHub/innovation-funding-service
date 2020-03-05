@@ -52,6 +52,7 @@ import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRolePr
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -224,6 +225,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withLastName("Baldwin", "Morton")
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .withStatus(ACTIVE)
                 .build(2);
         userRepository.saveAll(users);
 
@@ -303,6 +305,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withLastName("Baldwin", "Morton")
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .withStatus(ACTIVE)
                 .build(2);
         userRepository.saveAll(users);
 
@@ -387,6 +390,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withLastName("Baldwin", "Morton")
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .withStatus(ACTIVE)
                 .build(2);
         userRepository.saveAll(users);
 
@@ -466,6 +470,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withLastName("Baldwin", "Morton")
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .withStatus(ACTIVE)
                 .build(2);
         userRepository.saveAll(users);
 
@@ -546,6 +551,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withLastName("Baldwin", "Morton")
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .withStatus(ACTIVE)
                 .build(2);
         userRepository.saveAll(users);
 
@@ -635,6 +641,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .withLastName("Baldwin", "Morton")
                 .withProfileId(profiles.stream().map(Profile::getId).toArray(Long[]::new))
                 .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .withStatus(ACTIVE)
                 .build(2);
         userRepository.saveAll(users);
 
