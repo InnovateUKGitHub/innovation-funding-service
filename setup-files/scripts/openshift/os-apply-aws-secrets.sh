@@ -8,6 +8,7 @@ VERSION=$3
 AWS_PROFILE=$4 # Name of aws profile that identifies credentials and config - required for named environments
 AWS_ACCESS_KEY=$5 # Secret key that allows access to AWS parameter store - required for named environments
 AWS_ACCESS_KEY_ID=$6 # Secret key id that allows access to AWS parameter store - required for named environments
+SSO_SP=$7
 
 # Common functions
 . $(dirname $0)/deploy-functions.sh
@@ -21,6 +22,7 @@ echo "PROJECT="${PROJECT}
 echo "TARGET="${TARGET}
 echo "VERSION="${VERSION}
 echo "AWS_PROFILE="${AWS_PROFILE}
+echo "SSO_SP="${SSO_SP}
 
 if [[ -z ${AWS_PROFILE} || -z ${AWS_ACCESS_KEY} || -z ${AWS_ACCESS_KEY_ID} ]]; then
     echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified"
