@@ -58,10 +58,11 @@ echo "LDAP parameters"
 echo "domain":$domain
 
 wipeLdapUsers() {
-  ldapsearch -H ldapi:/// -b "$domain" -s sub '(objectClass=person)' -x \
-   | grep 'dn: ' \
-   | cut -c4- \
-   | xargs ldapdelete -H ldapi:/// -D "cn=admin,$domain" -w "$ldappass"
+  for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where system_user = 0;")
+  do
+    uid=$(executeMySQLCommand "select uid from user where email='$(escaped $u)';")
+    echo "uid=$uid,$domain"
+  done | ldapdelete -H ldapi:/// -D "cn=admin,$domain" -w "$ldappass"
 }
 
 executeMySQLCommand() {

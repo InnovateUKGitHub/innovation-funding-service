@@ -46,6 +46,7 @@ items:
       LDAP_DOMAIN: "${LDAP_DOMAIN}"
       LDAP_SCHEME: "${LDAP_SCHEME}"
       ONLY_SYNC_LDAP: "${ONLY_SYNC_LDAP}"
+      ONLY_DELETE_IFS_USERS: "${ONLY_DELETE_IFS_USERS}"
   - apiVersion: v1
     kind: Pod
     metadata:
@@ -149,6 +150,11 @@ items:
                 configMapKeyRef:
                   name: ldap-config
                   key: ONLY_SYNC_LDAP
+            - name: ONLY_DELETE_IFS_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: ONLY_DELETE_IFS_USERS
             - name: LDAP_SCHEME
               valueFrom:
                 configMapKeyRef:
