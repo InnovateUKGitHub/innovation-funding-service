@@ -13,4 +13,8 @@
     min-height: 80px;
     padding: govuk-spacing(2);
   }
+
+  small {
+    color: govuk-colour("black")
+  }
 }

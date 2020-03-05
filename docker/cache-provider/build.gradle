@@ -17,6 +17,24 @@ tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/cache-pro
 tagDocker.imageId = "innovateuk/cache-provider:" + redisVersion
 tagDocker.tag = redisVersion
 
+tagDockerLocal.imageId = "innovateuk/cache-provider:" + redisVersion
+tagDockerLocal.tag = redisVersion
+tagDockerLocal {
+    doFirst {
+        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/cache-provider"
+        tag = redisVersion
+    }
+}
+
+osStageLocal.tag = redisVersion
+osStageLocal {
+    doFirst {
+        registryCredentials = getLocalOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/cache-provider"
+    }
+}
+
+
 osStageRemote.onlyIf { !isNamedEnv() }
 osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/cache-provider"
 osStageRemote.tag = redisVersion

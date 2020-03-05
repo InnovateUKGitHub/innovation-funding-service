@@ -114,7 +114,8 @@ comp admin navigate to manage applications
 
 assessor should see the competition terms and conditions
     [Arguments]  ${back_link}
-    Given the user clicks the button/link        link = View award terms and conditions
+    Given the user expands the section           Award terms and conditions
+    When the user clicks the button/link         link = View award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     [Teardown]  the user clicks the button/link  link = ${back_link}
 
@@ -124,3 +125,8 @@ the assessor accept the application
     the user clicks the button/link       jQuery = .progress-list div:contains("${application_name}") ~ div a:contains("Accept or reject")
     the user selects the radio button     reviewAccept  true
     the user clicks the button/link       css = button[type="submit"]  # Confirm
+
+the user adds an assessor to application
+    [Arguments]   ${CheckboxId}
+    the user selects the checkbox     ${CheckboxId}
+    the user clicks the button/link   jQuery = button:contains("Add to application")

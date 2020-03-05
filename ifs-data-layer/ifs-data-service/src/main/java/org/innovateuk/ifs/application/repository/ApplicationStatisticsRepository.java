@@ -122,6 +122,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  assessmentParticipant.role = 'ASSESSOR' AND " +
             "  roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR AND " +
             "  roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE AND " +
+            "  user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
             "CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')" +
             "GROUP BY user ")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetitionAndAssessorNameLike(@Param("compId") long competitionId,
