@@ -51,6 +51,7 @@ ext.LDAP_HOST="ldap"
 ext.LDAP_PASS="default"
 ext.LDAP_DOMAIN="dc=int,dc=g2g3digital,dc=net"
 ext.LDAP_SCHEME="ldaps"
+ext.ONLY_DELETE_IFS_USERS="false"
 
 ext.FLYWAY_TABLE="schema_version"
 ext.FLYWAY_LOCATIONS="db/migration,db/reference,db/setup,db/webtest"
@@ -98,12 +99,6 @@ ext.IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS="innovateuk.ukri.test,innovateuk.test
 ext.GLUSTER_IP_1="10.150.10.10"
 ext.GLUSTER_IP_2="10.150.11.11"
 ext.GLUSTER_IP_3="10.150.12.12"
-
-// For webtest data
-ext.ACC_USERNAME=""
-ext.ACC_PASSWORD=""
-ext.ACC_BITBUCKET_URL=""
-ext.ACC_SUFFIX=""
 
 ext.PERFORMANCE_APPLICANT_USERS=0
 ext.PERFORMANCE_h2020_USERS=0

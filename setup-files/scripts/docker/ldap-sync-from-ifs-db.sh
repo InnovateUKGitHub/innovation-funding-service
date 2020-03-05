@@ -64,17 +64,7 @@ addUserToShibboleth() {
   echo ""
 }
 
-downloadAccUserCsv() {
-#    Download users from repository
-    curl -0 -u ${ACC_USERNAME}:${ACC_PASSWORD} ${ACC_BITBUCKET_URL} -o users.csv
-#    Remove first line of column names
-    tail -n +2 users.csv > tempusers.csv && mv tempusers.csv users.csv
-#    Create new Csv with emails and new generated UUID
-    cat users.csv | awk -v SUFFIX="${ACC_SUFFIX}" -F "\"*,\"*" '("uuidgen" | getline uuid) > 0 {print uuid, $3 SUFFIX} {close("uuidgen")}' | sed 's/\ /,/g' > emailsAndUUids.csv
-}
 # Main
-
-downloadAccUserCsv
 
 IFS=$'\n'
 for u in $(executeMySQLCommand "select uid,email from user where system_user = 0;")
