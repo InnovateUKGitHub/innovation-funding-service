@@ -166,15 +166,15 @@ Invited user accept the invitation and navigate to registration form
     the user should see the element         jQuery = p strong:contains("${Assessor_e2e["email"]}")
 
 comp admin allocate application to an assessor
-    the user clicks the button/link        jQuery = tr:nth-child(1) a:contains("View progress")
-    the user clicks the button/link        jQuery = .pagination-links a:contains("Next")
-    the user clicks the button/link        jQuery = .pagination-links a:contains("Next")
-    the user clicks the button/link        jQuery = tr:contains("Tom Fister") button:contains("Assign")
-    the user clicks the button/link        jQuery = a:contains("Allocate applications")
-    the user clicks the button/link        jQuery = a:contains("Manage assessments")
-    the user clicks the button/link        jQuery = a:contains("Competition")
-    the user clicks the button/link        jQuery = button:contains("Notify assessors")
-    the element should be disabled         jQuery = button:contains("Notify assessors")
+    the user clicks the button/link             jQuery = tr:nth-child(1) a:contains("View progress")
+    the user clicks the button/link             jQuery = .pagination-links a:contains("Next")
+    the user clicks the button/link             jQuery = .pagination-links a:contains("Next")
+    the user adds an assessor to application    assessor-row-4
+    the user clicks the button/link             jQuery = a:contains("Allocate applications")
+    the user clicks the button/link             jQuery = a:contains("Manage assessments")
+    the user clicks the button/link             jQuery = a:contains("Competition")
+    the user clicks the button/link             jQuery = button:contains("Notify assessors")
+    the element should be disabled              jQuery = button:contains("Notify assessors")
 
 Invited user accept the invitation
     the user clicks the button/link          Link = Park living

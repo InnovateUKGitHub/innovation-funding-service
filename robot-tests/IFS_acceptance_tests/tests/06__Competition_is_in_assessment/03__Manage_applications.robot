@@ -156,7 +156,7 @@ Remove an assigned user (Not notified)
 Notify an assigned user
     [Documentation]    INFUND-7050
     [Setup]  the user clicks the button/link   jQuery = .pagination-links a:contains('2')
-    Given the user clicks the button/link      jQuery = tr:contains("Paul Plum") button:contains("Assign")
+    Given the user adds an assessor to application  assessor-row-17
     Then the comp admin notify an assessor
 
 Assessor should see the assigned application
@@ -204,7 +204,7 @@ the application list is correct before changes
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(6):contains("0")
 
 the available assessors information is correct
-    the user should see the element  jQuery = tr:contains("Mabel Robinson") td:contains("2") + td:contains("0") + td:contains("0") + td:contains("Assign")
+    the user should see the element  jQuery = tr:contains("Mabel Robinson") td:contains("2") + td:contains("0") + td:contains("0")
     # TODO Add some skills too IFS-1298
 
 the assigned list is correct before notification
@@ -256,11 +256,11 @@ the user should see details on application progress page
     the user should see the element       jQuery = p:contains("No assessors were previously assigned to this application.")
 
 the user assign application to an assessor
-    the user clicks the button/link   jQuery = tr:contains("Paul Plum") button:contains("Assign")
-    the user should see the element   jQuery = h2:contains("Assigned (1)")
+    the user adds an assessor to application  assessor-row-17
+    the user should see the element           jQuery = h2:contains("Assigned (1)")
     the assigned list is correct before notification
-    the user clicks the button/link    link = Allocate applications
-    the user should see the element   jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
+    the user clicks the button/link           link = Allocate applications
+    the user should see the element           jQuery = td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
 
 the comp admin notify an assessor
     the user clicks the button/link    link = Allocate applications
