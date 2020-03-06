@@ -6,8 +6,10 @@ import org.innovateuk.ifs.application.mapper.ApplicationAssessorMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationAssessorPageMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
@@ -22,8 +24,11 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -47,6 +52,7 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnitTest<ApplicationAssessmentSummaryServiceImpl> {
 
@@ -117,23 +123,20 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build();
 
-        Page<AssessmentParticipant> page = mock(Page.class);
+        Pageable pageable = PageRequest.of(0, 20, new org.springframework.data.domain.Sort(ASC, "user.firstName", "user.lastName"));
+        Page<ApplicationAvailableAssessorResource> result = new PageImpl<ApplicationAvailableAssessorResource>(Collections.emptyList(), pageable, 0);
         String assessorNameFilter = "";
 
-        ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
+        ApplicationAvailableAssessorPageResource expected = new ApplicationAvailableAssessorPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize());
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(assessmentParticipantRepositoryMock.findParticipantsWithoutAssessments(
-                eq(competition.getId()),
-                eq(CompetitionParticipantRole.ASSESSOR),
-                eq(ACCEPTED),
-                eq(application.getId()),
-                eq(assessorNameFilter),
-                any(Pageable.class))).thenReturn(page);
+                competition.getId(),
+                application.getId(),
+                assessorNameFilter,
+                pageable)).thenReturn(result);
 
-        when(applicationAssessorPageMapperMock.mapToResource(page)).thenReturn(expected);
-
-        ApplicationAssessorPageResource found = service.getAvailableAssessors(application.getId(), 0, 20, assessorNameFilter).getSuccess();
+        ApplicationAvailableAssessorPageResource found = service.getAvailableAssessors(application.getId(), 0, 20, assessorNameFilter, Sort.ASSESSOR).getSuccess();
         assertEquals(expected, found);
     }
 

@@ -102,7 +102,7 @@ Application details server side
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
-    [Setup]    The user clicks the button/link            link = Application overview
+    [Setup]    The user clicks the button/link            link = Back to application overview
     Given the user clicks the button/link                 link = Project summary
     When The user enters text to a text field             css = .editor    ${EMPTY}
     When the user clicks the button/link                  id = application-question-complete
@@ -143,9 +143,9 @@ Applicant goes to the application details page of the Robot application
     And the user clicks the button/link     link = Application details
 
 the applicant should not see the validation error of the duration any more
-    Set Focus To Element      css = .app-submit-btn
+    Set Focus To Element      jQuery = button:contains("Save and return to application overview")
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = .editor
-    Set Focus To Element      css = .app-submit-btn
+    Set Focus To Element      jQuery = button:contains("Save and return to application overview")
     wait for autosave
     The user should not see the element   jQuery = .govuk-error-message:contains("Your project should last between 1 and 36 months")

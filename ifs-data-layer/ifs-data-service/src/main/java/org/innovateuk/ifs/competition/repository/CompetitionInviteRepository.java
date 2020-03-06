@@ -20,22 +20,26 @@ import java.util.Set;
 @NoRepositoryBean
 public interface CompetitionInviteRepository<T extends CompetitionInvite> extends InviteRepository<T> {
     String GET_BY_COMPETITION_ID_AND_STATUS_WITHOUT_INACTIVE_ASSESSORS = "SELECT invite FROM #{#entityName} invite " +
-            "LEFT JOIN invite.user.roleProfileStatuses roleStatuses " +
+            "LEFT JOIN invite.user user " +
+            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
             "      invite.status = :status AND " +
-            " (roleStatuses IS NULL OR " +
+            " (user IS NULL OR roleStatuses IS NULL OR " +
             "(" +
-            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "    user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "))";
 
     String COUNT_BY_COMPETITION_ID_AND_STATUSES_IN_WITHOUT_INACTIVE_ASSESSORS = "SELECT COUNT(invite) FROM #{#entityName} invite " +
-            "LEFT JOIN invite.user.roleProfileStatuses roleStatuses " +
+            "LEFT JOIN invite.user user " +
+            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "WHERE invite.competition.id = :competitionId AND " +
             "      invite.status IN :statuses AND " +
-            " (roleStatuses IS NULL OR " +
+            " (user IS NULL OR roleStatuses IS NULL OR " +
             "(" +
-            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "    user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
             "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
             "))";
 
