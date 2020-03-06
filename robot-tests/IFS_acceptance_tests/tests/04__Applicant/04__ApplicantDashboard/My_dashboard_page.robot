@@ -37,7 +37,7 @@ Collaborator is able to remove an application
 Lead still sees application
     [Documentation]  IFS-7088
     Given Log in as a different user       &{lead_applicant_credentials}
-    Then the user should see the element  jQuery = li:contains("${CLOSED_COMPETITION_APPLICATION_NAME}")
+    Then the user should see the element   jQuery = li:contains("${CLOSED_COMPETITION_APPLICATION_NAME}")
 
 Lead is able to delete an application
     [Documentation]  IFS-7088
