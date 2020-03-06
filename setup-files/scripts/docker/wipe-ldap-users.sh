@@ -27,6 +27,11 @@ wipeLdapUsersByDatabase() {
   done | ldapdelete -H ldapi:/// -D "cn=admin,$domain" -w "$ldappass"
 }
 
+# Escape single quote for use in sql where clauses.
+escaped() {
+  echo $1 | sed "s/'/\\\\'/g"
+}
+
 executeMySQLCommand() {
     mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "$1"
 }
