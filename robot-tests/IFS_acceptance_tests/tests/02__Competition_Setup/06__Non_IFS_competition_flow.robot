@@ -80,7 +80,7 @@ Internal user is able to delete a Non-IFS comp
     [Documentation]  IFS-5945
     Given the internal user deletes a Non-IFS competition
     When the user navigates to the Non IFS competitions tab
-    Then the user should not see the element   link = Webtest Non IFS Comp 12
+    Then the user should not see the element   link = Webtest Non IFS Comp 20
     [Teardown]  Logout as user
 
 Guest user can apply to a Non-IFS competition at the FrontDoor
@@ -103,7 +103,7 @@ Guest can see the Dates tab
 
 *** Keywords ***
 the internal user deletes a Non-IFS competition
-    the user clicks the button/link     link = Webtest Non IFS Comp 12
+    the user clicks the button/link     link = Webtest Non IFS Comp 20
     the user clicks the button/link     link = Delete competition
     the user clicks the button/link     jQuery = button:contains("Delete")
 
