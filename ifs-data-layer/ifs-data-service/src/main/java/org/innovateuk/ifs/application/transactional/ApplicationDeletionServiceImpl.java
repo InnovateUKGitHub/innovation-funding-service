@@ -99,6 +99,7 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
     private ServiceResult<Void> sendNotification(Application application, List<ProcessRole> processRoles) {
 
         List<NotificationTarget> notificationTargets = processRoles.stream()
+                .filter(ProcessRole::isCollaborator)
                 .map(ProcessRole::getUser)
                 .map(applicant -> new UserNotificationTarget(applicant.getName(), applicant.getEmail()))
                 .collect(Collectors.toList());

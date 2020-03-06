@@ -169,7 +169,7 @@
                                 <th:block th:if="${previousView.canHideApplication()}">
                                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                                         <th:block th:insert="fragments/modals :: modal-confirm-hide-application (${previousView.applicationNumber})"/>
-                                        <button name="hide-application"
+                                        <button th:name="${'hide-application-' + previousView.applicationNumber}"
                                                 class="button-clear"
                                                 type="submit"
                                                 th:attr="data-js-modal=${'modal-confirm-hide-application-' + previousView.applicationNumber}"
@@ -181,7 +181,7 @@
                                 <th:block th:if="${previousView.canDeleteApplication()}">
                                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                                         <th:block th:insert="fragments/modals :: modal-confirm-delete-application (${previousView.applicationNumber}, ${previousView.messageTitle}, ${previousView.message})"/>
-                                        <button name="delete-application"
+                                        <button th:name="${'delete-application-' + previousView.applicationNumber}"
                                                 class="button-clear"
                                                 type="submit"
                                                 th:attr="data-js-modal=${'modal-confirm-delete-application-' + previousView.applicationNumber}"
