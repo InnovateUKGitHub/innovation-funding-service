@@ -3,8 +3,9 @@ package org.innovateuk.ifs.management.assessment.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class ApplicationAssessmentProgressViewModel {
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned;
     private List<InnovationSectorResource> innovationSectors;
     private String assessorNameFilter;
-    private Pagination pagination;
+    private Sort currentSort;
+    private PaginationViewModel pagination;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
@@ -43,7 +45,8 @@ public class ApplicationAssessmentProgressViewModel {
                                                   List<ApplicationAvailableAssessorsRowViewModel> available,
                                                   List<InnovationSectorResource> innovationSectors,
                                                   String assessorNameFilter,
-                                                  Pagination pagination) {
+                                                  Sort currentSort,
+                                                  PaginationViewModel pagination) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationInnovationArea = applicationInnovationArea;
@@ -58,6 +61,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.available = available;
         this.innovationSectors = innovationSectors;
         this.assessorNameFilter = assessorNameFilter;
+        this.currentSort = currentSort;
         this.pagination = pagination;
     }
 
@@ -117,7 +121,11 @@ public class ApplicationAssessmentProgressViewModel {
         return assessorNameFilter;
     }
 
-    public Pagination getPagination() {
+    public Sort getCurrentSort() {
+        return currentSort;
+    }
+
+    public PaginationViewModel getPagination() {
         return pagination;
     }
 
@@ -144,6 +152,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(previouslyAssigned, that.previouslyAssigned)
                 .append(innovationSectors, that.innovationSectors)
                 .append(assessorNameFilter, that.assessorNameFilter)
+                .append(currentSort, that.currentSort)
                 .append(pagination, that.pagination)
                 .isEquals();
     }
@@ -165,6 +174,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(previouslyAssigned)
                 .append(innovationSectors)
                 .append(assessorNameFilter)
+                .append(currentSort)
                 .append(pagination)
                 .toHashCode();
     }
@@ -186,6 +196,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append("previouslyAssigned", previouslyAssigned)
                 .append("innovationSectors", innovationSectors)
                 .append("assessorNameFilter", assessorNameFilter)
+                .append("currentSort", currentSort)
                 .append("pagination", pagination)
                 .toString();
     }

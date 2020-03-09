@@ -44,7 +44,6 @@ Filtering Assessors in the Assign assessors page
 
 Manage assessor list is correct
     [Documentation]    IFS-17
-    [Tags]
     [Setup]  the user clicks the button/link  link = Manage assessments
     Given the user clicks the button/link     link = Allocate assessors
     Then the assessor list is correct before changes
@@ -88,7 +87,7 @@ Assessor removal
 
 *** Keywords ***
 the assessor list is correct before changes
-    the user should see the element    jQuery = td:contains("Madeleine Martin") ~ td:contains("2") ~ td:contains("2")
+    the user should see the element    jQuery = td:contains("Madeleine Martin") ~ td:contains("0") ~ td:contains("0")
 
 the user navigates to allocate applications page
     the user clicks the button/link      link = ${CLOSED_COMPETITION_NAME}
