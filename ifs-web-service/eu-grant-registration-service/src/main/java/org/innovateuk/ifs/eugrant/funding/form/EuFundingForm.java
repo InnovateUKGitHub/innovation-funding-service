@@ -2,7 +2,7 @@ package org.innovateuk.ifs.eugrant.funding.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import javax.validation.constraints.Range;
+import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
 import javax.validation.constraints.*;
