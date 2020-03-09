@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -104,7 +105,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         notificationArguments.put("leadEmail", user.getEmail());
         NotificationTarget to = new UserNotificationTarget(format("%s %s", firstName, lastName), email);
         Notification notification = new Notification(systemNotificationSource,
-                to,
+                emptyList(),
                 ApplicationDeletionServiceImpl.Notifications.APPLICATION_DELETED,
                 notificationArguments);
 
