@@ -2,14 +2,26 @@ package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.ProjectInvite;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.repository.UserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
+import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
@@ -19,7 +31,9 @@ import org.innovateuk.ifs.user.cache.UserCacheEvict;
 import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.RoleProfileStatusMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
@@ -37,19 +51,22 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.collections.CollectionUtils.intersection;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_EMAIL_UPDATE_EMAIL_ALREADY_EXISTS;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -110,7 +127,25 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private UserOrganisationMapper userOrganisationMapper;
 
     @Autowired
+    private RoleProfileStatusMapper roleProfileStatusMapper;
+
+    @Autowired
     private UserInviteRepository userInviteRepository;
+
+    @Autowired
+    private ApplicationInviteRepository applicationInviteRepository;
+
+    @Autowired
+    private ProjectUserInviteRepository projectUserInviteRepository;
+
+    @Autowired
+    private ProjectPartnerInviteRepository projectPartnerInviteRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
 
     private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
@@ -195,17 +230,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         );
     }
 
-    private ServiceResult<User> updateUserEmail(User existingUser, String emailToUpdate) {
-        userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
-        String oldEmail = existingUser.getEmail();
-        existingUser.setEmail(emailToUpdate);
-        User user = userRepository.save(existingUser);
-        return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
-                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate))
-                .andOnSuccess(() -> notifyEmailChange(oldEmail, emailToUpdate, user))
-                .andOnSuccessReturn(() -> user);
-    }
-
     private ServiceResult<Void> notifyEmailChange(String oldEmail, String newEmail, User user) {
         NotificationSource from = systemNotificationSource;
         NotificationTarget oldEmailTarget = new UserNotificationTarget(user.getName(), oldEmail);
@@ -275,47 +299,71 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActive(String filter, Pageable pageable) {
+    public ServiceResult<ManageUserPageResource> findActive(String filter, Pageable pageable) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.ACTIVE, pageable);
-        List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new ManageUserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), mapUsersToManageUserResource(pagedResult.getContent()), pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActiveExternal(String filter, Pageable pageable) {
-        return findUserPageResource(filter, pageable, ACTIVE, externalApplicantRoles());
+    public ServiceResult<ManageUserPageResource> findActiveExternal(String filter, Pageable pageable) {
+        return findExternalUserPageResource(filter, pageable, ACTIVE);
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactive(String filter, Pageable pageable) {
+    public ServiceResult<ManageUserPageResource> findInactive(String filter, Pageable pageable) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.INACTIVE, pageable);
-        List<UserResource> userResources = pagedResult.getContent().stream().map(userMapper::mapToResource).collect(toList());
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new ManageUserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), mapUsersToManageUserResource(pagedResult.getContent()), pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactiveExternal(String filter, Pageable pageable) {
-        return findUserPageResource(filter, pageable, INACTIVE, externalApplicantRoles());
+    public ServiceResult<ManageUserPageResource> findInactiveExternal(String filter, Pageable pageable) {
+        return findExternalUserPageResource(filter, pageable, INACTIVE);
     }
 
-    private ServiceResult<UserPageResource> findUserPageResource(String filter, Pageable pageable, UserStatus userStatus, Set<Role> roles) {
+    private ServiceResult<ManageUserPageResource> findExternalUserPageResource(String filter, Pageable pageable, UserStatus userStatus) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatusAndRolesIn(
                 filter,
                 userStatus,
-                externalApplicantRoles()
+                externalRoles()
                         .stream()
                         .map(r -> Role.getByName(r.getName()))
                         .collect(toSet()),
                 pageable
         );
-        List<UserResource> userResources = simpleMap(pagedResult.getContent(), userMapper::mapToResource);
-        return serviceSuccess(new UserPageResource(
+        List<ManageUserResource> userResources = pagedResult.getContent()
+                .stream()
+                .map(this::mapUserToManageUserResource)
+                .collect(toList());
+
+        return serviceSuccess(new ManageUserPageResource(
                 pagedResult.getTotalElements(),
                 pagedResult.getTotalPages(),
                 userResources,
                 pagedResult.getNumber(),
                 pagedResult.getSize())
         );
+    }
+
+    private List<ManageUserResource> mapUsersToManageUserResource(List<User> users) {
+        return users.stream()
+                .map(this::mapUserToManageUserResource)
+                .collect(toList());
+    }
+
+    private ManageUserResource mapUserToManageUserResource(User user) {
+        return new ManageUserResource(user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRoles().stream().collect(Collectors.toList()),
+                user.getCreatedOn(),
+                user.getCreatedBy().getName(),
+                mapRoleProfileStatusesToResource(user.getRoleProfileStatuses()));
+    }
+
+    private Set<RoleProfileStatusResource> mapRoleProfileStatusesToResource(Set<RoleProfileStatus> roleProfileStatuses) {
+        return roleProfileStatuses.stream()
+                .map(roleProfileStatusMapper::mapToResource)
+                .collect(toSet());
     }
 
     @Override
@@ -371,8 +419,65 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     public ServiceResult<UserResource> updateEmail(long userId, String email) {
         return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> validateEmailDoesntAlreadyExist(user, email))
+                .andOnSuccess(user -> validateEmailForApplicationTeam(user, email))
+                .andOnSuccess(user -> validateEmailForProjectTeam(user, email))
                 .andOnSuccess(user -> updateUserEmail(user, email))
                 .andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    private ServiceResult<User> validateEmailForApplicationTeam(User user, String email) {
+
+        List<Long> userApplicationIds = processRoleRepository.findByUser(user).stream()
+                .map(ProcessRole::getApplicationId)
+                .collect(toList());
+
+        List<Long> newEmailInviteApplicationIds = applicationInviteRepository.findByEmail(email).stream()
+                .filter(invite -> !OPENED.equals(invite.getStatus()))
+                .map(Invite::getTarget)
+                .map(Application::getId)
+                .collect(toList());
+
+        List<Long> invalidApplications = new ArrayList(intersection(newEmailInviteApplicationIds, userApplicationIds));
+
+        if (!invalidApplications.isEmpty()) {
+            return serviceFailure(new Error(USER_EMAIL_UPDATE_EMAIL_EXISTS_ON_APPLICATION, invalidApplications.get(0)) );
+        }
+
+        return serviceSuccess(user);
+    }
+
+    private ServiceResult<User> validateEmailForProjectTeam(User user, String email) {
+
+        List<Long> userProjectIds = projectUserRepository.findByUserId(user.getId()).stream()
+                .map(ProjectUser::getProject)
+                .map(Project::getId)
+                .collect(toList());
+
+        List<ProjectUserInvite> projectUserInvites = projectUserInviteRepository.findByEmail(email);
+        List<ProjectPartnerInvite> projectPartnerInvites = projectPartnerInviteRepository.findByEmail(email);
+
+        List<Long> newEmailInviteProjectIds = projectUserInvites.stream()
+                .filter(invite -> !OPENED.equals(invite.getStatus()))
+                .map(Invite::getTarget)
+                .map(Project::getId)
+                .collect(toList());
+
+        List<Long> newEmailInvitePartnerProjectIds = projectPartnerInvites.stream()
+                .filter(invite -> !OPENED.equals(invite.getStatus()))
+                .map(Invite::getTarget)
+                .map(Project::getId)
+                .collect(toList());
+
+        List<Long> invalidProjects = new ArrayList(intersection(userProjectIds, combineLists(newEmailInvitePartnerProjectIds, newEmailInviteProjectIds)));
+
+        if (!invalidProjects.isEmpty()) {
+
+          Long applicationId = projectRepository.findById(invalidProjects.get(0)).get().getApplication().getId();
+
+            return serviceFailure(new Error(USER_EMAIL_UPDATE_EMAIL_EXISTS_ON_APPLICATION, applicationId) );
+        }
+
+        return serviceSuccess(user);
     }
 
     private ServiceResult<User> validateEmailDoesntAlreadyExist(User user, String email) {
@@ -382,6 +487,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         }
         return serviceSuccess(user);
     }
+
     private ServiceResult<Void> validateSearchString(String searchString) {
 
         searchString = StringUtils.trim(searchString);
@@ -391,5 +497,16 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         } else {
             return serviceSuccess();
         }
+    }
+
+    private ServiceResult<User> updateUserEmail(User existingUser, String emailToUpdate) {
+        userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
+        String oldEmail = existingUser.getEmail();
+        existingUser.setEmail(emailToUpdate);
+        User user = userRepository.save(existingUser);
+        return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
+                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate))
+                .andOnSuccess(() -> notifyEmailChange(oldEmail, emailToUpdate, user))
+                .andOnSuccessReturn(() -> user);
     }
 }

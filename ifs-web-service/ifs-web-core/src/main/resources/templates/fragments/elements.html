@@ -52,6 +52,12 @@
                     <a href="/management/admin/users/active"
                        class="govuk-header__link">Manage users</a>
                 </li>
+                <li th:if="${showManageAssessorsLink}"
+                    class="govuk-header__navigation-item"
+                    th:classappend="${(#httpServletRequest.requestURI == '/management/admin/assessors/active')} ? 'govuk-header__navigation-item--active'">
+                    <a href="/management/admin/assessors/available"
+                           class="govuk-header__link">Assessor status</a>
+                </li>
                 <li class="govuk-header__navigation-item">
                     <a th:href="${logoutUrl}"
                        class="govuk-header__link">Sign out</a>
@@ -74,13 +80,11 @@
 </th:block>
 
 <!-- =========================== Element: Competition Closing soon? =========================== -->
-<th:block th:fragment="competition-closing-warning (competition) ">
-    <th:block th:if="${competition.isClosingSoon()}">
-        <div class="warning-alert">
-            <p class="govuk-body">Please note that this competition will close shortly. You will not be able to submit
-                after the competition closes and any edits you make will not be saved.</p>
-        </div>
-    </th:block>
+<th:block th:fragment="competition-closing-warning">
+    <div class="warning-alert">
+        <p class="govuk-body">Please note that this competition will close shortly. You will not be able to submit
+            after the competition closes and any edits you make will not be saved.</p>
+    </div>
 </th:block>
 
 <!-- =========================== Element: Progress indicator =========================== -->
@@ -244,7 +248,7 @@
 </th:block>
 
 <th:block th:fragment="pagination(pagination)">
-    <div class="pagination-links" th:if="${pagination.totalPages > 1}">
+    <div class="pagination-links govuk-body" th:if="${pagination.totalPages > 1}">
         <a th:if="${pagination.currentPage != 1}" th:href="${pagination.urlForPage(pagination.currentPage - 1)}">Previous</a>
         <th:block th:if="${pagination.startPage != 1}">
             <a th:href="${pagination.urlForPage(1)}">1</a>

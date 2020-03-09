@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentApplicationAssessorCount;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -105,9 +106,11 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             @Param("allStates") Collection<AssessmentState> allStates
     );
 
-    int countByActivityStateAndTargetCompetitionId(AssessmentState state, Long competitionId);
+    int countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(AssessmentState state, Long competitionId, List<UserStatus> userStatus);
 
-    int countByActivityStateInAndTargetCompetitionId(Collection<AssessmentState> state, Long competitionId);
+    List<Assessment> findByActivityStateInAndParticipantUserId(Collection<AssessmentState> state, Long userId);
+
+    int countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(Collection<AssessmentState> state, Long competitionId, List<UserStatus> userStatus);
 
     @Query(FEEDBACK_COMPLETE)
     boolean isFeedbackComplete(@Param("id") Long id);

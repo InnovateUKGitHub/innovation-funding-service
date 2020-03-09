@@ -21,7 +21,7 @@ public class GrowthTable extends FinancialYearAccounts {
         super(growthTable);
         this.financialYearEnd = growthTable.getFinancialYearEnd();
         this.annualTurnover = growthTable.getAnnualTurnover();
-        this.annualProfits = growthTable.getAnnualExport();
+        this.annualProfits = growthTable.getAnnualProfits();
         this.annualExport = growthTable.getAnnualExport();
         this.researchAndDevelopment = growthTable.getResearchAndDevelopment();
     }

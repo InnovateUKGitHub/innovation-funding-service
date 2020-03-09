@@ -8,6 +8,10 @@ import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.ProfileRole;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +44,18 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
 
             UserResource assessor = retrieveUserByEmail(assessorEmail);
 
+            if (!assessor.hasRole(Role.ASSESSOR)) {
+                doAs(compAdmin(), () -> {
+                    testService.doWithinTransaction(() -> {
+                        User user = userRepository.findByEmail(assessor.getEmail()).get();
+                        if (!user.hasRole(Role.ASSESSOR)) {
+                            user.getRoles().add(Role.ASSESSOR);
+                            userRepository.save(user);
+                            roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+                        }
+                    });
+                });
+            }
             Application application = applicationRepository.findByName(applicationName).get(0);
 
             AssessmentResource assessmentResource = doAs(compAdmin(), () -> assessmentService.createAssessment(
@@ -102,19 +118,28 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                 return;
             }
 
-            Application application = applicationRepository.findByName(applicationName).get(0);
-            UserResource assessor = retrieveUserByEmail(assessorEmail);
-            Optional<Assessment> assessment = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId());
-
-            if (!assessment.isPresent()) {
-                return;
-            }
-
             // We have to forcefully set the SUBMITTED state for the assessment, as the
             // relevant competition is not necessarily IN_ASSESSMENT.
             // This means that the state transition to SUBMITTED through the workflow
             // handler will fail due to the `CompetitionInAssessmentGuard`.
-            assessment.ifPresent(a -> a.setProcessState(AssessmentState.SUBMITTED));
+
+            Application application = applicationRepository.findByName(applicationName).get(0);
+            UserResource assessor = retrieveUserByEmail(assessorEmail);
+            doAs(assessor, () -> {
+                testService.doWithinTransaction(() -> {
+
+                    Optional<Assessment> assessment = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId());
+
+                    if (!assessment.isPresent()) {
+                        return;
+                    }
+
+                    assessment.ifPresent(a -> {
+                        a.setProcessEvent(AssessmentEvent.SUBMIT.getType());
+                        a.setProcessState(AssessmentState.SUBMITTED);
+                    });
+                });
+            });
         });
     }
 

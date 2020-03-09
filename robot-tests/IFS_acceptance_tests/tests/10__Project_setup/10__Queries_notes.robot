@@ -42,7 +42,7 @@ Queries section is linked from viability and this selects viability on the query
     [Tags]  HappyPath
     [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Given the user clicks the button/link    jQuery = table.table-progress th:contains("${Dreambit_Name}") + td a
-    When the user clicks the button/link     jQuery = .button-secondary:contains("Queries")
+    When the user clicks the button/link     jQuery = a:contains("Queries")
     And the user clicks the button/link      jQuery = .govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability     id = section
 
@@ -152,14 +152,9 @@ Applicant - Finance contact can view query
     [Tags]  HappyPath
     Given log in as a different user      &{PublicSector_lead_applicant_credentials}
     When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
-    Then the user should see the element  jQuery = h2:contains("an eligibility query's title")
+    Then The user clicks the button/link  jQuery = h2:contains("an eligibility query's title")
     And the user should see the element   jQuery = h2:contains("a viability query's title")
-
-Applicant - Finance contact can view the project finance user's uploads
-    [Documentation]    INFUND-4843
-    [Tags]
-    Given the user downloads the file  ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup/project/${Queries_Application_Project}/finance-checks/attachment/4  ${DOWNLOAD_FOLDER}/${valid_pdf}
-    Then remove the file from the operating system  ${valid_pdf}
+    And open pdf link                     jQuery = li:nth-child(1):contains("testing") a
 
 Applicant - Response to query validations
     [Documentation]  INFUND-4843 IFS-2746
@@ -269,7 +264,7 @@ Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
     Given the user navigates to the page  ${dreambit_finance_checks}/eligibility
-    And the user clicks the button/link   jQuery = .button-secondary:contains("Notes")
+    And the user clicks the button/link   jQuery = a:contains("Notes")
     Then the user should see the element  jQuery = .govuk-button:contains("Create a new note")
 
 Link to notes from main finance checks summary page
@@ -303,8 +298,8 @@ Project finance can view the file in notes
     [Tags]
     Given the user should see the element  link = ${valid_pdf} (opens in a new window)
     Then the user should see the element   jQuery = button:contains("Save note")
-    And the user downloads the file        ${internal_finance_credentials["email"]}  ${server}/project-setup/project/${Queries_Application_Project}/finance-checks   ${DOWNLOAD_FOLDER}/${valid_pdf}
-    [Teardown]  remove the file from the operating system    ${valid_pdf}
+    And open pdf link        link = ${valid_pdf} (opens in a new window)
+
 
 Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
@@ -515,12 +510,11 @@ the project finance user view the query details
     the user expands the section      an eligibility query's title
     the user should see the element   jQuery = .govuk-heading-s:contains("Becky") + p:contains("This is some response text")
     the user should see the element   jQuery = .panel li:nth-of-type(1) a:contains("${valid_pdf}")
-    the user downloads the file       ${internal_finance_credentials["email"]}  ${server}/project-setup/project/${Queries_Application_Project}/finance-checks   ${DOWNLOAD_FOLDER}/${valid_pdf}
-    [Teardown]  remove the file from the operating system    ${valid_pdf}
+    open pdf link                     jQuery = div:contains("Becky") ~ ul:contains("${valid_pdf}") a
 
 the user navigates to notes section
     the user clicks the button/link   css = table.table-progress tr:nth-child(1) td:nth-child(2)
-    the user clicks the button/link   jQuery = .button-secondary:contains("Notes")
+    the user clicks the button/link   jQuery = a:contains("Notes")
     the user should see the element   jQuery = h2:contains("Review notes")
     the user should see the element   jQuery = .govuk-button:contains("Create a new note")
 
@@ -572,5 +566,5 @@ the user should see the note comments client side validations
 
 the user navigates to queries page
     the user navigates to the page       ${dreambit_finance_checks}/eligibility
-    the user clicks the button/link      jQuery = .button-secondary:contains("Queries")
+    the user clicks the button/link      jQuery = a:contains("Queries")
     the user should see the element      jQuery = h2:contains("Queries")

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -21,13 +22,14 @@ import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.AffiliationType;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -57,12 +60,14 @@ import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
+@Rollback
 public class AssessmentParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentParticipantRepository> {
 
     private Competition competition;
@@ -93,6 +98,9 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
+    
     @Autowired
     private ProfileRepository profileRepository;
 
@@ -350,16 +358,18 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         Application application = applicationRepository.findByCompetitionId(competitions.get(0).getId()).get(0);
 
-        List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
+        List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com");
+        userRepository.saveAll(users);
+
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newAssessmentInviteWithoutId()
-                        .withName("name1", "name2", "name3")
-                        .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
-                        .withUser(users.toArray(new User[0]))
-                        .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
-                        .withCompetition(competitions.get(0), competitions.get(0), competitions.get(0))
+                        .withName("name1", "name2")
+                        .withEmail("test1@test.com", "test2@test.com")
+                        .withUser(users.toArray(new User[users.size()]))
+                        .withHash(generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(0))
                         .withStatus(SENT)
-                        .build(3));
+                        .build(2));
 
         // Now accept all of the invites
         savedParticipants.forEach(
@@ -378,12 +388,12 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         flushAndClearSession();
 
-        Pageable pagination = PageRequest.of(0, 1);
+        Pageable pagination = PageRequest.of(0, 5);
 
-        Page<AssessmentParticipant> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L, "", pagination);
+        Page<ApplicationAvailableAssessorResource> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, 1L, "", pagination);
 
         assertNotNull(retrievedParticipants);
-        assertEquals(2, retrievedParticipants.getTotalElements());
+        assertEquals(1, retrievedParticipants.getTotalElements());
     }
 
     private List<User> findUsersByEmail(String... emails) {
@@ -531,9 +541,18 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 .withFirstName("Anthony")
                 .withLastName("Hale")
                 .withProfileId()
+                .withStatus(UserStatus.ACTIVE)
                 .build();
 
         userRepository.save(acceptedUser);
+
+        RoleProfileStatus roleProfileStatus = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(acceptedUser)
+                .build();
+        roleProfileStatusRepository.save(roleProfileStatus);
+
 
         List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.repository;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -79,6 +77,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             ") " +
             "FROM AssessmentParticipant assessmentParticipant " +
             "JOIN User user ON user.id = assessmentParticipant.user.id " +
+            "JOIN user.roleProfileStatuses roleStatuses " +
             "JOIN Profile profile ON profile.id = user.profileId " +
             // join on all applications for each invited assessor on the system
             "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
@@ -88,6 +87,9 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  assessmentParticipant.competition.id = :compId AND " +
             "  assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  assessmentParticipant.role = 'ASSESSOR' AND " +
+            "  roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR AND " +
+            "  roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE AND " +
+            "  user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
             "CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')" +
             "GROUP BY user ")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetitionAndAssessorNameLike(@Param("compId") long competitionId,

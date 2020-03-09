@@ -64,7 +64,7 @@ The applications can be sorted by lead applicant
 Filter on application number
     [Documentation]    INFUND-8010
     [Tags]
-    Given the user enters text to a text field          id = filterSearch    ${application_ids["Safeguarding pollinators and their values to human well-being"]}
+    Given the user enters text to a text field          id = filterSearch    ${OPEN_COMPETITION_APPLICATION_6_NUMBER}
     When the user clicks the button/link                jQuery = button:contains("Filter")
     Then the user should see the element                jQuery = td:contains("Safeguarding pollinators and their values to human well-being")
     And the user should not see the element             jQuery = td:contains("Climate science the history of Greenland's ice")
@@ -81,7 +81,7 @@ Application has application team details
     [Tags]
     Given the user clicks the button/link          link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should see the element           jQuery = h1 span:contains("${OPEN_COMPETITION_APPLICATION_NAME}")
-    When the user clicks the button/link           id = accordion-questions-heading-1     #Application team
+    When the user clicks the button/link           id = accordion-questions-heading-1-1     #Application team
     Then the user should should see lead and partners details
 
 Comp admin can open the view mode of the application
@@ -262,19 +262,19 @@ The totals in the Key statistics should be correct
     #TODO ADD Check for the beyond 50% counts when we will have test data
 
 the user should should see lead and partners details
-    the user should see the element    jQuery = #accordion-questions-content-1 h2:contains("Empire Ltd")+h3:contains("Organisation type")+p:contains("Business")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("Steve Smith")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("${lead_applicant}")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("46439359578")
-    the user should see the element    jQuery = #accordion-questions-content-1 h2:contains("EGGS")+h3:contains("Organisation type")+p:contains("Research")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("Pete Tom")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("81877706440")
-    the user should see the element    jQuery = #accordion-questions-content-1 h2:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("Ewan Cormack")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("36267829240")
-    the user should see the element    jQuery = #accordion-questions-content-1 h2:contains("${organisationLudlowName}")+h3:contains("Organisation type")+p:contains("Business")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("Jessica Doe")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}")
-    the user should see the element    jQuery = #accordion-questions-content-1 td:contains("15247172589")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("Empire Ltd")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Steve Smith")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${lead_applicant}")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("46439359578")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("EGGS")+h3:contains("Organisation type")+p:contains("Research")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Pete Tom")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("81877706440")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Ewan Cormack")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("36267829240")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("${organisationLudlowName}")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Jessica Doe")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("15247172589")

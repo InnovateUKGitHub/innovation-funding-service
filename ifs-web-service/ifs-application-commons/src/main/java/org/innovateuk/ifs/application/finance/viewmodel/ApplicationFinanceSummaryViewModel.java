@@ -22,7 +22,13 @@ public class ApplicationFinanceSummaryViewModel {
 
     private final Long currentUsersOrganisationId;
 
-    public ApplicationFinanceSummaryViewModel(long applicationId, List<FinanceSummaryTableRow> rows, boolean readOnly, boolean collaborativeProject, CollaborationLevel collaborationLevel, boolean fundingLevelFirst, Long currentUsersOrganisationId) {
+    public ApplicationFinanceSummaryViewModel(long applicationId,
+                                              List<FinanceSummaryTableRow> rows,
+                                              boolean readOnly,
+                                              boolean collaborativeProject,
+                                              CollaborationLevel collaborationLevel,
+                                              boolean fundingLevelFirst,
+                                              Long currentUsersOrganisationId) {
         this.applicationId = applicationId;
         this.rows = rows;
         this.readOnly = readOnly;
@@ -85,10 +91,10 @@ public class ApplicationFinanceSummaryViewModel {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public Integer getClaimPercentage() {
+    public BigDecimal getClaimPercentage() {
         return rows.stream()
                 .map(FinanceSummaryTableRow::getClaimPercentage)
-                .reduce(0, (number, other) -> number + other);
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getFundingSought() {

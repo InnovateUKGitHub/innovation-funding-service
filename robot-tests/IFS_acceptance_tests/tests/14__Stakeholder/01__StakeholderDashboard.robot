@@ -1,5 +1,3 @@
-
-
 *** Settings ***
 Documentation   IFS-4189 Add/Remove Stakeholders
 ...
@@ -142,6 +140,7 @@ The stakeholder is able to view finances
 
 The Stakeholder is able to view application T&C's
     [Documentation]  IFS-6632
+    Given the user expands the section            Award terms and conditions
     When the user clicks the button/link          link = View terms and conditions
     Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user clicks the button/link           jQuery = a:contains("Back to application overview")

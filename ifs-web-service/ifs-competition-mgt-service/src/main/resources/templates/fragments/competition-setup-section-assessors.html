@@ -1,7 +1,7 @@
 
 <!-- =================== Comp setup section - Assessors (6) ============================== -->
 <th:block th:fragment="section-content">
-    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
@@ -50,6 +50,7 @@
                        type="number"
                        min="0"
                        max="99999999"
+                       data-prevent-input-non-number
                        th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
                        data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},

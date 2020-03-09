@@ -20,9 +20,14 @@ items:
           labels:
             deploymentconfig: shib
         spec:
-          containers:
+          volumes:
+          - name: sp-keys-volume
+            secret:
+              secretName: sp-keys-secretscontainers:
             - image: innovateuk/sp-service:${spVersion}
-              name: shib
+              name: shibvolumeMounts:
+            - name: sp-keys-volume
+              mountPath: /var/certs
               livenessProbe:
                 httpGet:
                   path: /Shibboleth.sso/Metadata

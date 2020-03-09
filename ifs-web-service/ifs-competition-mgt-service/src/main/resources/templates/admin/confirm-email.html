@@ -11,11 +11,11 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/edit(userId=${model.user.id})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/active(userId=${model.user.id})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">You are unable to change this email address.</h2>
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">You cannot change this email address.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
@@ -57,11 +57,11 @@
 
                 <div class="govuk-form-group govuk-!-margin-top-6">
                     <button id="confirm-email-change" class="govuk-button">Confirm email address</button>
-                    <a class="button-clear" th:href="@{/admin/user/{userId}/edit(userId=${model.user.id})}">Cancel</a>
+                    <a class="button-clear" th:href="@{/admin/user/{userId}/active(userId=${model.user.id})}">Cancel</a>
                 </div>
 
-                <a th:href="@{/admin/user/{userId}/edit(userId=${model.user.id})}"
-                    class="button-secondary">Return to view user details</a>
+                <a th:href="@{/admin/user/{userId}/active(userId=${model.user.id})}"
+                    class="govuk-button govuk-button--secondary">Return to view user details</a>
             </form>
         </form>
 

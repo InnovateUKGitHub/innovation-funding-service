@@ -172,6 +172,46 @@
     </div>
 </th:block>
 
+<!-- Change user role profile state -->
+<th:block th:fragment="modal-role-profile-active">
+    <div class="modal-role-profile-available" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Change status to 'Available'</h2>
+        <p class="govuk-body">You will be able to assign assessments to this person.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" id="submitRoleProfileState-available" name="submitRoleProfileState-available" type="submit">Confirm change</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="modal-role-profile-unavailable">
+    <div class="modal-role-profile-unavailable warning-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Change status to 'Unavailable'</h2>
+        <p class="govuk-body">You will not be able to assign assessments to this person.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" id="submitRoleProfileState-unavailable" name="submitRoleProfileState-unavailable" type="submit">Confirm change</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="modal-role-profile-disabled">
+    <div class="modal-role-profile-disabled warning-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Change status to 'Disabled'</h2>
+        <p class="govuk-body">You will not be able to assign assessments to this person.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" id="submitRoleProfileState-disabled" name="submitRoleProfileState-disabled" type="submit">Confirm change</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
 <!-- Change bank details as internal user -->
 <th:block th:fragment="modal-partner-change-bank-details">
     <div class="modal-partner-change-bank-details" role="dialog" aria-hidden="true">
@@ -637,8 +677,8 @@
         <div class="modal-content">
             <h2 class="govuk-heading-m">Remove organisation</h2>
             <p class="govuk-body">Removing the organisation from the project will also remove all the people from that organisation.
-            Their finance information will be deleted and any assigned questions will return to you.
-            They will not be notified so you should contact them first. </p>
+                Their finance information will be deleted and any assigned questions will return to you.
+                They will not be notified so you should contact them first. </p>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
@@ -676,6 +716,20 @@
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
             <button data-stay-signed-in="" class="govuk-button js-close" aria-describedby="inactivity-timeout-warning-hint">Stay signed in</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Edit organisation size -->
+<th:block th:fragment="modal-edit-organisation-size (model)">
+    <div class="modal-edit-organisation-size" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Update organisation size</h2>
+        <p class="govuk-body">Changing the organisation size will affect project finances, you will need to review these once this change has been made.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" name="modal-edit-organisation-size">Update organisation size</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>

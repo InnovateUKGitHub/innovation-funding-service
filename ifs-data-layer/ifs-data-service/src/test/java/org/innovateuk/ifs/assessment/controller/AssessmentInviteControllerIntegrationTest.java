@@ -20,11 +20,12 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.FALSE;
@@ -62,10 +64,12 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -100,6 +104,9 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
     @Autowired
     private AgreementRepository agreementRepository;
+
+    @Autowired
+    private RoleProfileStatusRepository roleProfileStatusRepository;
 
     private Competition competition;
 
@@ -981,10 +988,19 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withFirstName("Robert", "Robert", "Alexis", "Alexis")
                 .withLastName("Stark", "Salt", "Kinney", "Colon")
                 .withRoles(singleton(Role.ASSESSOR))
+                .withStatus(ACTIVE)
                 .withProfileId(profileIds)
                 .build(4);
 
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.toArray(new User[users.size()]))
+                .buildSet(users.size());
+        roleProfileStatusRepository.saveAll(roleProfileStates);
+
         flushAndClearSession();
 
         Pageable pageable = PageRequest.of(0, 10, new Sort(ASC, "firstName", "lastName"));
@@ -1038,10 +1054,19 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
                 .withRoles(singleton(Role.ASSESSOR))
+                .withStatus(ACTIVE)
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 
         userRepository.saveAll(users);
+
+        Set<RoleProfileStatus> roleProfileStates = newRoleProfileStatus()
+                .withProfileRole(ProfileRole.ASSESSOR)
+                .withRoleProfileState(RoleProfileState.ACTIVE)
+                .withUser(users.toArray(new User[users.size()]))
+                .buildSet(users.size());
+        roleProfileStatusRepository.saveAll(roleProfileStates);
+
         flushAndClearSession();
     }
 
@@ -1100,8 +1125,8 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         List<AssessmentInvite> createdInvites = newAssessmentInvite()
                 .withId()
-                .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel")
-                .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com")
+                .withName("Angela Merkel", "Bill Gates", "Serena Williams", "Will Smith")
+                .withEmail("angela@email.com", "bill@email.com", "serena@email.com", "will@email.com")
                 .withStatus(CREATED)
                 .withCompetition(competition)
                 .withInnovationArea(innovationArea)

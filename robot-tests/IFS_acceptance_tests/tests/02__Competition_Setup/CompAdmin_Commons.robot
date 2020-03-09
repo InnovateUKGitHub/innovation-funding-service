@@ -81,14 +81,19 @@ the user fills in the CS Initial details
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the user selects procurement Terms and Conditions
-    the user clicks the button/link       link = Terms and conditions
-    the user clicks the button/link       jQuery = label:contains("Procurement")
-    the user clicks the button/link       jQuery = button:contains("Done")
-    then the user should see a field and summary error  Upload a terms and conditions document.
-    the user uploads the file             css = .inputfile  ${valid_pdf}
-    the user clicks the button/link       jQuery = button:contains("Done")
-    the user clicks the button/link       link = Competition setup
-    the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
+    the user clicks the button/link                                     link = Terms and conditions
+    the user clicks the button/link                                     jQuery = label:contains("Procurement")
+    the user performs procurement Terms and Conditions validations
+    the user uploads the file                                           css = .inputfile  ${valid_pdf}
+    the user clicks the button/link                                     jQuery = button:contains("Done")
+    the user clicks the button/link                                     link = Competition setup
+    the user should see the element                                     jQuery = li:contains("Terms and conditions") .task-status-complete
+
+the user performs procurement Terms and Conditions validations
+    the user clicks the button/link                 jQuery = button:contains("Done")
+    the user should see a field and summary error   Upload a terms and conditions document.
+    the user uploads the file                       css = .inputfile  ${ods_file}
+    the user should see the element                 jQuery = :contains("${wrong_filetype_validation_error}")
 
 the user selects the Terms and Conditions
     the user clicks the button/link      link = Terms and conditions
@@ -100,8 +105,6 @@ the user fills in the CS Funding Information
     the user clicks the button/link       link = Funding information
     the user clicks the button/link       jQuery = button:contains("Generate code")
     the user enters text to an autocomplete field  id = funders[0].funder    Aerospace Technology Institute (ATI)
-    the user clicks the button/link       id = funders[0].funder
-    click element                         id = funders[0].funder__option--0
     the user enters text to a text field  id = funders[0].funderBudget  142424242
     the user enters text to a text field  id = pafNumber  2424
     the user enters text to a text field  id = budgetCode  Ch0col@73
@@ -296,7 +299,7 @@ the user fills in the Public content and publishes
     the user clicks the button/link         link = Competition information and search
     the user enters text to a text field    id = shortDescription  Short public description
     the user enters text to a text field    id = projectFundingRange  Up to £1million
-    the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary"]  Summary of eligiblity
+    the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary-label"]  Summary of eligiblity
     the user selects the radio button       publishSetting  public
     the user enters text to a text field    id = keywords  Search, Testing, Robot, ${extraKeyword}
     the user clicks the button/link         jQuery = button:contains("Save and review")

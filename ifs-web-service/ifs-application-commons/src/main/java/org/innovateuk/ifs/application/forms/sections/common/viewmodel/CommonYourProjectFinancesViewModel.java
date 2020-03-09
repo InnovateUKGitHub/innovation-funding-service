@@ -12,9 +12,17 @@ public class CommonYourProjectFinancesViewModel {
     private final boolean open;
     private final boolean complete;
     private final boolean h2020;
+    private final boolean procurementCompetition;
 
 
-    public CommonYourProjectFinancesViewModel(String financesUrl, String applicationName, long applicationId, long sectionId, boolean open, boolean h2020, boolean complete) {
+    public CommonYourProjectFinancesViewModel(String financesUrl,
+                                              String applicationName,
+                                              long applicationId,
+                                              long sectionId,
+                                              boolean open,
+                                              boolean h2020,
+                                              boolean complete,
+                                              boolean procurementCompetition) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.applicationId = applicationId;
@@ -22,6 +30,7 @@ public class CommonYourProjectFinancesViewModel {
         this.open = open;
         this.h2020 = h2020;
         this.complete = complete;
+        this.procurementCompetition = procurementCompetition;
     }
 
     public boolean isReadOnly() {
@@ -53,5 +62,9 @@ public class CommonYourProjectFinancesViewModel {
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
     }
 }

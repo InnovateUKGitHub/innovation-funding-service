@@ -28,6 +28,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     public static final String ASSESSOR_PROFILE_URL = "/assessment/profile/details";
     public static final String USER_PROFILE_URL = "/profile/view";
     public static final String SHOW_MANAGE_USERS_LINK_ATTR = "showManageUsersLink";
+    public static final String SHOW_MANAGE_ASSESSORS_LINK_ATTR = "showManageAssessorsLink";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -48,6 +49,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             addUserProfileLink(request, modelAndView);
             addLogoutLink(modelAndView, logoutUrl);
             addShowManageUsersAttribute(request, modelAndView);
+            addShowManageAssessorsAttribute(request, modelAndView);
             Optional.of(handler)
                     .filter(HandlerMethod.class::isInstance)
                     .map(HandlerMethod.class::cast)
@@ -72,7 +74,6 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             case "/assessment":
                 return Optional.of(ASSESSOR_PROFILE_URL);
             case "":
-                return Optional.of(USER_PROFILE_URL);
             case "/project-setup":
                 return Optional.of(USER_PROFILE_URL);
             default:
@@ -83,6 +84,14 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     private void addShowManageUsersAttribute(HttpServletRequest request, ModelAndView modelAndView) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.SUPPORT));
+    }
+
+    private void addShowManageAssessorsAttribute(HttpServletRequest request, ModelAndView modelAndView) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_ASSESSORS_LINK_ATTR,
+                        user != null &&
+                        !user.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.SUPPORT) &&
+                        user.hasAnyRoles(Role.COMP_ADMIN, Role.PROJECT_FINANCE));
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {

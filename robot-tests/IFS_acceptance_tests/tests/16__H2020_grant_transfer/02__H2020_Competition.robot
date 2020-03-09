@@ -10,10 +10,13 @@ Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../10__Project_setup/PS_Common.robot
 
 *** Variables ***
-${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
-${competitionTitle}  H2020 Grant Transfer
+${CA_UpcomingComp}           ${server}/management/dashboard/upcoming
+${competitionTitle}          H2020 Grant Transfer
+${H2020_Project_Name}        Project name
+${externalUsrProjectPage}    ${server}/project-setup/project/${HProjectID}
 
 *** Test Cases ***
 User can select H2020 Competition Template and complete Initial details
@@ -74,8 +77,112 @@ An internal user is able to progress an H2020 grant transfer to project set up
     Given the internal user is able to progress an application to project set up
     And the user is able to filter on status
     Then the user is able to see that the application is now in project setup
+    [Teardown]  get project id
+
+The user is able to complete Project details section
+    [Documentation]  IFS-5700
+    [Setup]  the user logs-in in new browser     &{collaborator1_credentials}
+    Given the user navigates to the page         ${server}/project-setup/project/${HProjectID}
+    When the user is able to complete project details section
+    Then the user should see the element         css = ul li.complete:nth-child(1)
+
+The user is able to complete Project team section
+    [Documentation]  IFS-5700
+    [Setup]  the user clicks the button/link       link = Project team
+    Given the user completes the project team section
+    Then the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+The user is able to complete the Bank details section
+    [Documentation]  IFS-5700
+    Given the user enters bank details
+    When the user clicks the button/link      link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
+
+The user is able to complete the Documents section
+    [Documentation]  IFS-5700
+    Given the user clicks the button/link     link = Documents
+    When the user uploads the exploitation plan
+    And the user clicks the button/link       link = Set up your project
+    Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
+
+Internal user is able to approve documents
+    [Documentation]  IFS-5700
+    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    Given Internal user is able to approve documents
+    When the user navigates to the page        ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element       css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+
+Internal user is able to assign an MO
+    [Documentation]  IFS-5700
+    [Setup]  the user navigates to the page        ${server}/project-setup-management/project/${HProjectID}/monitoring-officer
+    Given Search for MO                            Orvill  Orville Gibbs
+    When The internal user assign project to MO    ${HApplicationID}  ${H2020_Project_Name}
+    And the user navigates to the page             ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element           css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+
+Finance user approves bank details
+    [Setup]  log in as a different user                      &{internal_finance_credentials}
+    Given the project finance user approves bank details     ${HProjectID}
+    When the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element                     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
+
+Internal user is able to approve Finance checks and generate spend profile
+    [Documentation]  IFS-5700
+    [Setup]  the user navigates to the page        ${server}/project-setup-management/project/${HProjectID}/finance-check
+    Given the user approves h2020 finance checks
+    When the user navigates to the page           ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element           css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    And the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+
+User is able to submit the spend profile
+    [Documentation]  IFS-5700
+    [Setup]  log in as a different user      &{collaborator1_credentials}
+    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review  
+    When the user submits the spend profile
+    Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+
+Internal user is able to approve Spend profile and generates the GOL
+    [Documentation]  IFS-5700
+    Given proj finance approves the spend profiles  ${HProjectID}
+    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And internal user generates the GOL             ${HProjectID}
+
+Applicant is able to upload the GOL
+    [Documentation]  IFS-5700
+    Given log in as a different user         &{collaborator1_credentials}
+    When Applicant uploads the GOL           ${HProjectID}
+    Then the user should see the element     jQUery = .progress-list li:nth-child(8):contains("Awaiting review")
+
+Internal user is able to approve the GOL and the project is now Live
+    [Documentation]  IFS-5700
+    Given the internal user approve the GOL  ${HProjectID}
+    When log in as a different user          &{collaborator1_credentials}
+    And the user navigates to the page       ${server}/project-setup/project/${HProjectID}
+    Then the user should see the element     jQuery = p:contains("The project is live")
 
 *** Keywords ***
+The user approves h2020 finance checks
+    the user should see the element     jQuery = table.table-progress span.viability-0:contains("Auto approved")
+    the user clicks the button/link     jQuery = table.table-progress a.eligibility-0
+    the user approves project costs
+    the user clicks the button/link     link = Return to finance checks
+    the user should see the element     jQuery = table.table-progress a.eligibility-0:contains("Approved")
+    the user clicks the button/link     link = Generate spend profile
+    the user clicks the button/link     css = #generate-spend-profile-modal-button
+    the user should see the element     jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
+
+Internal user is able to approve documents
+    the user navigates to the page         ${server}/project-setup-management/project/${HProjectID}/document/all
+    the user clicks the button/link        link = Exploitation plan
+    internal user approve uploaded documents
+
+Get project id
+    ${HProjectID} =  get project id by name            ${H2020_Project_Name}
+    ${HApplicationID} =  get application id by name    ${H2020_Project_Name}
+    get competitions id and set it as suite variable   ${competitionTitle}
+    Set suite variable           ${HProjectID}
+    Set suite variable           ${HApplicationID}
+
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
@@ -168,7 +275,7 @@ The user fills in the public content competition inforation and search
     the user clicks the button/link         link = Competition information and search
     the user enters text to a text field    id = shortDescription  Horizon 2020 competition
     the user enters text to a text field    id = projectFundingRange  Up to £5million
-    the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary"]  Summary of eligiblity
+    the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary-label"]  Summary of eligiblity
     the user selects the radio button       publishSetting  invite
     the user enters text to a text field    id = keywords  Search, Testing, Robot
     the user clicks the button/link         jQuery = button:contains("Save and review")
@@ -406,10 +513,10 @@ Validate errors on Your project Finances section
 
 Validate the user is unable to submit an incomplete application
     the user clicks the button/link    jQuery = a:contains("Review and submit")
-    Element Should Contain             jQuery = button:contains("Application details")    Incomplete
-    Element Should Contain             jQuery = button:contains("Public description")    Incomplete
-    Element Should Contain             jQuery = button:contains("Horizon 2020 grant agreement")    Incomplete
-    Element Should Contain             jQuery = button:contains("Funding breakdown")  Incomplete
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Application details")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Public description")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Horizon 2020 grant agreement")
+    the user should see the element    jQuery = div:contains(" Incomplete") button:contains("Funding breakdown")
 
 Custom Suite Teardown
     the user closes the browser

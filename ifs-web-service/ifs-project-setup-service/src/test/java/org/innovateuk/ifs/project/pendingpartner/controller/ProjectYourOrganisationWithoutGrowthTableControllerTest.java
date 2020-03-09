@@ -10,7 +10,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTabl
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.pendingpartner.populator.YourOrganisationViewModelPopulator;
-import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectYourOrganisationViewModel;
+import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,7 +88,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
         setupResource();
         setupAsyncExpectations(asyncFuturesGenerator);
         YourOrganisationWithoutGrowthTableForm yourOrganisationWithoutGrowthTableForm = new YourOrganisationWithoutGrowthTableForm();
-        when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(withoutGrowthTableFormPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);
 
@@ -132,7 +132,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
 
     @Test
     public void markAsCompleteWithoutGrowthTable_failure() throws Exception {
-        when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
 
         MvcResult result = mockMvc.perform(post(viewPageUrl())
             .param("mark-as-complete", ""))

@@ -60,7 +60,7 @@ public class FormInputControllerIntegrationTest extends BaseControllerIntegratio
         Long competitionId = 1L;
         List<FormInputResource> formInputs = controller.findByCompetitionIdAndScope(competitionId, APPLICATION).getSuccess();
 
-        assertThat(formInputs, hasSize(18));
+        assertThat(formInputs, hasSize(16));
 
         Optional<FormInputResource> formInput = formInputs.stream().filter(f -> !competitionId.equals(f.getCompetition())).findAny();
         assertFalse(formInput.isPresent());

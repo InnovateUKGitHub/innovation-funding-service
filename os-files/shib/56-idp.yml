@@ -20,9 +20,14 @@ items:
           labels:
             deploymentconfig: idp
         spec:
-          containers:
+          volumes:
+          - name: idp-keys-volume
+            secret:
+              secretName: idp-keys-secretscontainers:
             - image: innovateuk/idp-service:${idpVersion}
-              name: idp
+              name: idpvolumeMounts:
+            - name: idp-keys-volume
+              mountPath: /var/certs
               livenessProbe:
                 httpGet:
                   path: /idp/status

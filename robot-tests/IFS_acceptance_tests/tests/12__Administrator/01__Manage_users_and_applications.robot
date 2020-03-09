@@ -20,11 +20,15 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-1944: Internal - Invite internal user - error field is missing
 ...
 ...               IFS-50 Change an existing unsuccessful application into a successful project in setup
+...
+...               IFS-7160  CSS & Admins cannot amend email addresses if there are pending invites in the service
+...
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+#Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
-
+Resource          ../Applicant_Commons.robot
+Resource          ../10__Project_setup/PS_Common.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
@@ -33,8 +37,10 @@ ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 ${adminChangeEmailOld}    aaron.powell@example.com
 ${adminChangeEmailNew}    aaron.powell2@example.com
-${supportChangeEmailOld}  megan.rowland@gmail.com
-${supportChangeEmailNew}  megan.rowland2@gmail.com
+${supportChangeEmailOld}  jacqueline.white@gmail.com
+${supportChangeEmailNew}  jacqueline.white2@gmail.com
+${newPendingEmail}        gintare@tester.com
+${emailToChange}          steve.smith@empire.com
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -48,10 +54,10 @@ Project finance user cannot navigate to manage users page
 Administrator can navigate to manage users page
     [Documentation]    INFUND-604  SIFS-6377
     [Tags]  HappyPath
-    [Setup]  log in as a different user   &{ifs_admin_user_credentials}
+    [Setup]  log in as a different user       &{ifs_admin_user_credentials}
     Given the user clicks the button/link     link = Manage users
     Then the user should see the element      jQuery = h1:contains("Manage users")
-    And the user should see the element       jQuery = .govuk-tabs__tab--selected:contains("Active")
+    And the user should see the element       jQuery = .govuk-tabs__list-item--selected:contains("Active")
 
 Administrator can search for a user
     [Documentation]  IFS-6374
@@ -61,7 +67,6 @@ Administrator can search for a user
 
 Administrator can see the edit view of internal user profile
     [Documentation]  INFUND-606  IFS-6380
-    [Tags]
     Given the user clicks the button/link                 jQuery = .user-profile:contains("John") a:contains("Edit")
     Then the user should see the internal user details
 
@@ -109,6 +114,39 @@ User can sign in with new email
     Given Logging in and Error Checking    ${adminChangeEmailNew}  ${short_password}
     Then the user should see the element   link = Office Chair for Life
 
+Admin cannot change email to an email which is a pending team member invitation to an organisation in the application
+    [Documentation]   IFS-7160
+    [Setup]  log in as a different user                                 &{lead_applicant_credentials}
+    Given the user adds a pending partner to the organisation           ${server}/application/${OPEN_COMPETITION_APPLICATION_6_NUMBER}/form/question/507/team  Add person to ${EMPIRE_LTD_NAME}
+    When log in as a different user                                     &{ifs_admin_user_credentials}
+    Then the internal user isnt able to update an existing users email with a pending email  ${emailToChange}
+    [Teardown]  the external user removes the pending parter invitation  ${server}/application/${OPEN_COMPETITION_APPLICATION_6_NUMBER}/form/question/507/team
+
+Admin cannot change email to an email which is a pending invitation to an organisation in the application
+    [Documentation]   IFS-7160
+    [Setup]  log in as a different user                                  &{lead_applicant_credentials}
+    Given the user adds a new partner organisation in application        ${server}/application/${OPEN_COMPETITION_APPLICATION_6_NUMBER}/form/question/507/team  Testing Pending Organisation  Name Surname  ${newPendingEmail}
+    When log in as a different user                                      &{ifs_admin_user_credentials}
+    Then the internal user isnt able to update an existing users email with a pending email  ${emailToChange}
+    And log in as a different user                                       &{lead_applicant_credentials}
+    [Teardown]  the user removes the pending organisation invitation     ${server}/application/${OPEN_COMPETITION_APPLICATION_6_NUMBER}/form/question/507/team
+
+Admin cannot change email to an email when there is a pending team member invitation to an organisation in project setup
+    [Documentation]   IFS-7160
+    [Setup]  log in as a different user                        &{lead_applicant_credentials}
+    Given the user adds a pending partner to the organisation  ${server}/project-setup/project/1/team  Add team member
+    When log in as a different user                            &{ifs_admin_user_credentials}
+    Then the internal user isnt able to update an existing users email with a pending email  ${emailToChange}
+    And the external user removes the pending parter invitation  ${server}/project-setup/project/1/team
+
+Admin cannot change email to an email which is a pending invitation to an organisation in the application
+    [Documentation]   IFS-7160
+    [Setup]  log in as a different user                                                      &{ifs_admin_user_credentials}
+    Given the user adds an organisation                                                      ${server}/project-setup-management/competition/${ConnectedCompId}/project/${MobileProjectId}/team
+    Then the internal user isnt able to update an existing users email with a pending email  ${emailToChange}
+    And log in as a different user                                                           &{ifs_admin_user_credentials}
+    [Teardown]  the user removes the pending organisation invitation in projet setup         ${server}/project-setup-management/competition/${ConnectedCompId}/project/${MobileProjectId}/team
+
 Support can change email address
     [Documentation]  IFS-6380  IFS-6928
     Given Log in as a different user           &{support_user_credentials}
@@ -129,7 +167,6 @@ Support cannot see internal users
 
 Server side validation for invite new internal user
     [Documentation]  IFS-27
-    [Tags]
     [Setup]  Log in as a different user                     &{ifs_admin_user_credentials}
     Given the user navigates to the page                    ${server}/management/admin/users/active
     When the user clicks the button/link                    link = Invite a new internal user
@@ -147,7 +184,6 @@ The user must use an Innovate UK email
 
 Client side validations for invite new internal user
     [Documentation]  IFS-27
-    [Tags]
     Given the user navigates to the page       ${server}/management/admin/invite-user
     Then the user enters the text and checks for validation message   firstName  A  ${enter_a_first_name}  Your first name should have at least 2 characters.
     And the user enters the text and checks for validation message    lastName  D  ${enter_a_last_name}  Your last name should have at least 2 characters.
@@ -160,7 +196,7 @@ Administrator can successfully invite a new user
     Then the user cannot see a validation error in the page
     And the user should see the element                     jQuery = h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element                     jQuery = .govuk-tabs__tab--selected:contains("Pending")
+    And the user should see the element                     jQuery = .govuk-tabs__list-item--selected:contains("Pending")
 
 Administrator can successfully finish the rest of the invitation
     [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842
@@ -172,7 +208,6 @@ Administrator can successfully finish the rest of the invitation
 
 Account creation validation checks - Blank
     [Documentation]  IFS-643  IFS-642
-    [Tags]
     Given the user reads his email and clicks the link    ${email}  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
     And the use should see the validation error summary   Password must be at least 8 characters
@@ -182,7 +217,6 @@ Account creation validation checks - Blank
 
 Account creation validation checks - Lowercase password
     [Documentation]  IFS-3554
-    [Tags]
     Given the user enters text to a text field  id = password  PASSWORD123
     When The user clicks the button/link        jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
@@ -190,7 +224,6 @@ Account creation validation checks - Lowercase password
 
 New user account is created and verified
     [Documentation]  IFS-643 IFS-983
-    [Tags]
     Given the user clicks the button/link      jQuery = .govuk-button:contains("Create account")
     Then the user should see the element       jQuery = h1:contains("Your account has been created")
     When the user clicks the button/link       jQuery = .govuk-button:contains("Sign into your account")
@@ -198,26 +231,22 @@ New user account is created and verified
 
 Inviting the same user for the same role again should give an error
     [Documentation]  IFS-27
-    [Tags]
     Given log in as a different user                  &{ifs_admin_user_credentials}
     When the IFS admin send invite to internal user   New  Administrator  IFS Administrator
     Then the user should see a summary error          This email address is already in use.
 
 Inviting the same user for the different role again should also give an error
     [Documentation]  IFS-27
-    [Tags]
     Given the IFS admin send invite to internal user   Project  Finance  Project Finance
     Then the user should see a summary error           This email address is already in use.
 
 Administrator can navigate to edit page to edit the internal user details
     [Documentation]  IFS-18
-    [Tags]
     Given the user navigates to the View internal user details  ${email}  active
     Then the IFS admin should see the user details
 
 Server side validation for edit internal user details
     [Documentation]  IFS-18
-    [Tags]
     Given the user enters text to a text field  id = firstName  ${empty}
     And the user enters text to a text field    id = lastName  ${empty}
     When the user clicks the button/link        jQuery = button:contains("Save and return")
@@ -228,7 +257,6 @@ Server side validation for edit internal user details
 
 Client side validations for edit internal user details
     [Documentation]  IFS-18
-    [Tags]
     Given the user enters the text and checks for validation message    firstName  A  ${enter_a_first_name}  Your first name should have at least 2 characters.
     And the user enters the text and checks for validation message      lastName  D  ${enter_a_last_name}  Your last name should have at least 2 characters.
 
@@ -250,7 +278,6 @@ The internal user can login with his new role and sees no competitions assigned
 
 Administrator is able to disable internal users
     [Documentation]  IFS-644
-    [Tags]
     Given log in as a different user     &{ifs_admin_user_credentials}
     When the user navigates to the View internal user details  ${email}  active
     Then the IFS admin deactivate the user
@@ -276,7 +303,6 @@ Deactivated external user cannot login
 
 Deactivated user cannot login until he is activated
     [Documentation]  IFS-644
-    [Tags]
     [Setup]  the user logs out if they are logged in
     Given the user cannot login with their new details  ${email}  ${short_password}
     When Logging in and Error Checking                  &{ifs_admin_user_credentials}
@@ -287,7 +313,6 @@ Deactivated user cannot login until he is activated
 
 Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50
-    [Tags]
     [Setup]  log in as a different user      &{ifs_admin_user_credentials}
     Given the user navigates to the page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/previous
     Then the user should be allowed to only reinstate Unsuccessful applications
@@ -296,6 +321,62 @@ Administrator is able to mark as successful an unsuccessful application
     Then the user should no longer see the application is capable of being marked as successful
 
 *** Keywords ***
+the user adds a new partner organisation in application
+    [Arguments]  ${navigateTo}  ${partnerOrgName}  ${persFullName}  ${email}
+    the user navigates to the page             ${navigateTo}
+    the user clicks the button/link            link=Add a partner organisation
+    the user enters text to a text field       id = organisationName  ${partnerOrgName}
+    the user enters text to a text field       id = name  ${persFullName}
+    the user enters text to a text field       id = email  ${email}
+    the user clicks the button/link            jQuery = .govuk-button:contains("Invite partner organisation")
+    the user should see the element            jQuery = h2:contains(${partnerOrgName})
+
+the user adds a pending partner to the organisation
+     [Arguments]  ${navigateTo}   ${teamMemberSelector}
+     the user navigates to the page     ${navigateTo}
+     the user clicks the button/link   jQuery = button:contains("${teamMemberSelector}")
+     The user adds a new team member   Tester   ${newPendingEmail}
+     the user should see the element   jQuery = td:contains("Tester (pending for 0 days)") ~ td:contains("${newPendingEmail}")
+
+the user adds an organisation
+     [Arguments]  ${navigateTo}
+     the user navigates to the page             ${navigateTo}
+     the user clicks the button/link            link=Add a partner organisation
+     the user adds a new partner organisation   Testing Pending Organisation  Name Surname  ${newPendingEmail}
+     the user should see the element            jQuery = td:contains("(pending for 0 days)") ~ td:contains("${newPendingEmail}")
+
+the external user removes the pending parter invitation
+    [Arguments]  ${pageToRemoveFrom}
+    log in as a different user          &{lead_applicant_credentials}
+    the user navigates to the page      ${pageToRemoveFrom}
+    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td button:contains("Remove")
+
+the user removes the pending organisation invitation
+    [Arguments]  ${pageToRemoveFrom}
+    the user navigates to the page      ${pageToRemoveFrom}
+    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove organisation")
+    the user clicks the button/link     jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
+
+the user removes the pending organisation invitation in projet setup
+    [Arguments]  ${pageToRemoveFrom}
+    the user navigates to the page      ${pageToRemoveFrom}
+    the user clicks the button/link     jQuery = h2:contains("Testing Pending Organisation")~ button:contains("Remove organisation"):first
+
+the internal user isnt able to update an existing users email with a pending email
+    [Arguments]   ${emailToBeChanged}
+    the user navigates to the page         ${server}/management/admin/users/active
+    the user enters text to a text field   id = filter   ${emailToBeChanged}
+    the user clicks the button/link        css = input[type="submit"]
+    the user clicks the button/link        jQuery = .user-profile:contains("${emailToBeChanged}") a:contains("Edit")
+    the user enters text to a text field   id = email   ${newPendingEmail}
+    the user clicks the button/link        jQuery = button:contains("Save and return")
+    the user confirms email change
+    the user should see a summary error    The new email address has already been used to invite a partner to application
+
+Requesting Project ID of this Project
+    ${ProjectIDs} =  get project id by name    Mobile Phone Data for Logistics Analytics
+    Set suite variable    ${ProjectIDs}
+
 Custom suite setup
     ${today} =  get today
     set suite variable  ${today}
@@ -309,13 +390,13 @@ User cannot see manage users page
 
 the user navigates to the View internal user details
     [Arguments]  ${user}  ${status}
-    the user navigates to the page   ${server}/management/admin/users/${status}
-        the user enters text to a text field   id = filter  ${user}
-        the user clicks the button/link        css = input[type="submit"]
-    the user clicks the button/link  jQuery = .user-profile:contains("${user}") a:contains("Edit")
+    the user navigates to the page         ${server}/management/admin/users/${status}
+    the user enters text to a text field   id = filter  ${user}
+    the user clicks the button/link        css = input[type="submit"]
+    the user clicks the button/link        jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link    css = .button-secondary[type = "submit"]     #Resend invite
+    the user clicks the button/link    jQuery = button:contains("Resend invite")     #Resend invite
     the user clicks the button/link    jQuery = button:contains("Resend")
     the user reads his email           ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
@@ -396,7 +477,7 @@ the IFS admin should see the user details
 
 the IFS admin is redirected to the Manage Users page on Success
     the user should see the element    jQuery = h1:contains("Manage users")
-    the user should see the element    jQuery = .govuk-tabs__tab--selected:contains("Active")
+    the user should see the element    jQuery = .govuk-tabs__list-item--selected:contains("Active")
 
 the IFS admin deactivate the user
     the user should see the element    css = .govuk-form-group input
@@ -427,8 +508,28 @@ the user should no longer see the application is capable of being marked as succ
 the administrator sees the external user details
     the user should see the element      jQuery = h1:contains("View user details")
     the user should see the element      jQuery = dd:contains("Aaron") ~ dd:contains("Powell")
-    the user should see the element      jQuery = dl:contains("Role profile"):contains("Applicant"):contains("Active")
+    the user should see the element      jQuery = td:contains("Applicant") ~ td:contains("Active")
 
 the user confirms email change
     the user selects the checkbox    confirmation
     the user clicks the button/link  id = confirm-email-change
+
+user should see the correct assessor status
+    [Arguments]  ${status}  ${reason}
+    the user should see the element   jQuery = td:contains("Assessor") ~ td:contains("${status}")
+    the user clicks the button/link   link = View role profile
+    the user should see the element   jQuery = dd:contains("${status}") ~ dd:contains("${reason}")
+
+the user searches for an assessor
+    [Arguments]  ${searchTerm}  ${status}
+    the user enters text to a text field    id = filter  ${searchTerm}
+    the user clicks the button/link         css = input[type="submit"]
+    the user should see the element         jQuery = p:contains("${searchTerm}") ~ p:contains("Assessor (${status})")
+    the user clicks the button/link         link = Edit
+
+the finance user searches for an assessor
+    [Arguments]  ${searchTerm}  ${status}
+    the user enters text to a text field    id = filter  ${searchTerm}
+    the user clicks the button/link         css = input[type="submit"]
+    the user should see the element         jQuery = p:contains("${searchTerm}") ~ p:contains("Assessor")
+    the user clicks the button/link         link = View details

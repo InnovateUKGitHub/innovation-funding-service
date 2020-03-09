@@ -25,7 +25,9 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-631 As a comp executive I am able to confirm if an interview stage is required in competition setup
 ...
-...               IFS-4982 Move Funding type selection from front door to Initial details
+...               IFS-4982 Move Funding type selection from front door to Initial detail
+...
+...               IFS-7148 Replace maximum funding level drop down menu with free type field in comp setup
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -127,11 +129,11 @@ Eligibility server-side validations
     And The user should see a field and summary error    Please select a resubmission option
 
 Eligibility funding level validation
-    [Documentation]  IFS-3622
-    [Tags]
+    [Documentation]  IFS-3622  IFS-7148
     Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
     When the user clicks the button/link                jQuery = button:contains("Done")
-    Then The user should see a field and summary error  Please select the maximum funding level that applicants can apply for.
+    Then the user is able to see all validations
+    [Teardown]  the user clicks the button/link         jQuery = button:contains("Done")
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
@@ -225,12 +227,9 @@ Assessor: Server-side validation
 
 Assessor: Client-side validation
     [Documentation]  INFUND-5641
-    When The user enters text to a text field    id = assessorPay  1.1
-    And the user selects the radio button        assessorCount   5
-    Then the user should see a field error       This field can only accept whole numbers
+    Given the user selects the radio button       assessorCount   5
     When The user enters text to a text field    id = assessorPay  120
-    And the user selects the radio button        assessorCount   5
-    Then The user should not see the element     jQuery = .govuk-error-message:contains("This field can only accept whole numbers")
+    Then The user should not see the element     jQuery = .govuk-error-message:contains("Please select an assessment panel option.")
     And the user clicks the button/link          link = Competition setup
 
 Documents in project setup: The competition admin is required to enter a title and guidance message
@@ -252,6 +251,16 @@ Documents in project setup: The competition admin addresses the errors
     Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
 
 *** Keywords ***
+The user is able to see all validations
+    the user should see a field and summary error   Please enter the maximum funding level that applicants can apply for.
+    the user enters text to a text field            id = fundingLevelPercentageOverride  8.9
+    the user should see a field and summary error   This field can only accept whole numbers.
+    the user enters text to a text field            id = fundingLevelPercentageOverride  1993
+    the user should see a field and summary error   The funding level percentage must be 100 or lower.
+    the user enters text to a text field            id = fundingLevelPercentageOverride  0
+    the user should see a field and summary error   The funding level percentage must be 1 or higher.
+    the user clicks the button twice                css = label[for="comp-overrideFundingRules-no"]
+
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${month} =  get tomorrow month

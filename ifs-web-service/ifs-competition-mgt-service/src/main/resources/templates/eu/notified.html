@@ -27,8 +27,8 @@
                 <li class="govuk-tabs__list-item">
                     <a href="/management/eu-invite-non-notified" class="govuk-tabs__tab">Unsent (<span th:text="${model.totalNonNotified}"></span>)</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a href="/management/eu-invite-notified" class="govuk-tabs__tab govuk-tabs__tab--selected">Sent (<span th:text="${model.totalNotified}"></span>)</a>
+                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+                    <a href="/management/eu-invite-notified" class="govuk-tabs__tab">Sent (<span th:text="${model.totalNotified}"></span>)</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">

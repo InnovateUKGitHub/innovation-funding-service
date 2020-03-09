@@ -86,7 +86,7 @@
                                     <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                                 </td>
                                 <td class="govuk-table__cell alignright">
-                                    <a th:if="${assessor.notified}" class="button-secondary govuk-!-margin-0 govuk-link" data-js-modal="remove-assigned-assessor-modal"
+                                    <a th:if="${assessor.notified}" class="govuk-button govuk-button--secondary govuk-!-margin-0 govuk-link" data-js-modal="remove-assigned-assessor-modal"
                                        th:href="${removeActionNonJs}"
                                        th:attr="data-modal-form-action=${removeAction}"
                                        th:with="
@@ -95,7 +95,7 @@
                                        th:unless="${assessor.submitted}">Remove</a>
                                     <form th:unless="${assessor.notified}" method="post"
                                           th:action="@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId})}">
-                                        <button type="submit" class="button-secondary govuk-!-margin-0">Remove</button>
+                                        <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Remove</button>
                                     </form>
                                 </td>
                             </tr>
@@ -170,7 +170,7 @@
                                 <td class="govuk-table__cell">
                                     <form method="post"
                                           th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
-                                        <button type="submit" class="button-secondary govuk-!-margin-0">Reassign</button>
+                                        <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Reassign</button>
                                     </form>
                                 </td>
                             </tr>
@@ -183,8 +183,8 @@
                 </th:block>
                 <h2 class="govuk-heading-m">Available assessors</h2>
 
-                <div class="search-filters govuk-!-margin-top-6">
-                    <form method="GET">
+                <form method="GET">
+                    <div class="govuk-!-margin-top-6">
                         <div class="search-filters govuk-!-margin-top-6">
                             <fieldset class="govuk-fieldset">
                                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
@@ -197,7 +197,7 @@
                                         <input class="govuk-input"
                                                id="assessorNameFilter"
                                                name="assessorNameFilter"
-                                               value="">
+                                               th:value="${model.assessorNameFilter}">
                                     </div>
                                     <div class="govuk-grid-column-one-third">
                                         <button class="govuk-button" >Filter</button>
@@ -208,15 +208,27 @@
                                 <a href="?" class="govuk-link govuk-body">Clear filter</a>
                             </div>
                         </div>
-                    </form>
-                </div>
-
-                <div class="govuk-body govuk-grid-row sorting">
-                    <div class="govuk-grid-column-two-thirds">
-                        <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
-                        <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Assessors</span>
                     </div>
-                </div>
+
+                    <div class="govuk-body govuk-grid-row sorting">
+                        <div class="govuk-grid-column-one-half">
+                            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalElements}">20</span>
+                            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Assessors</span>
+                        </div>
+                        <div class="govuk-grid-column-one-half alignright">
+                            <label for="sort-by" class="govuk-label govuk-!-display-inline">Sort by</label>
+                            <select id="sort-by"
+                                    name="sort"
+                                    class="govuk-select govuk-input--width-20">
+                                <option th:each="sort : ${T(org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort).values()}"
+                                        th:value="${sort}"
+                                        th:selected="${model.currentSort == sort}"
+                                        th:text="${sort.columnName}"></option>
+                            </select>
+                            <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Sort</button>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="table-overflow">
                     <table class="govuk-table assessors-available">
@@ -242,7 +254,7 @@
                                 <td class="govuk-table__cell">
                                     <form method="post"
                                           th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
-                                        <button type="submit" class="button-secondary govuk-!-margin-0">Assign</button>
+                                        <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Assign</button>
                                     </form>
                                 </td>
                             </tr>
@@ -253,7 +265,7 @@
                     </table>
                 </div>
 
-                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                <th:block th:insert="fragments/elements :: pagination(pagination=${model.pagination})" />
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>
         </div>

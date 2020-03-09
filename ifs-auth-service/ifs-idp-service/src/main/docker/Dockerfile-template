@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:jdk8u222-b10
+FROM innovateuk/openjdk
 EXPOSE 9443
 
 ENV IDPVER="3.3.3"
@@ -116,10 +116,6 @@ RUN mkdir /etc/tomcat8/certs && \
 
 # start and other useful scripts
 COPY scripts/* /usr/local/bin/
-
-# copy certs into build
-RUN mkdir -p /var/certs/
-COPY certs/*.* /var/certs/
 
 # custom govuk pages
 COPY pages/ /opt/shibboleth-idp/

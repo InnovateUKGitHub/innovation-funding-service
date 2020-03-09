@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionParticipantRepository;
@@ -33,27 +34,43 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     String PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
-            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
+            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")" +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE ";
 
     String PARTICIPANTS_NOT_ON_INTERVIEW_PANEL = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
-            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")";
+            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")" +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE ";
 
     String BY_COMP_AND_STATUS_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "LEFT JOIN assessmentParticipant.user user " +
+            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
             "AND assessmentParticipant.status IN :status " +
-            "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%')";
+            "AND assessmentParticipant.invite.name LIKE CONCAT('%', :assessorName, '%')" +
+            "AND (user IS NULL OR " +
+            "(user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
+            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "))";
 
     String BY_STATUS_AND_COMPLIANT_AND_NAME = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "LEFT JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +
             "WHERE assessmentParticipant.competition.id = :competitionId " +
             "AND assessmentParticipant.role = 'ASSESSOR' " +
@@ -79,10 +96,17 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "       OR profile.skillsAreas IS NULL " +
             "       OR profile.agreement IS NULL)" +
             "   )" +
-            ")) ";
+            "))" +
+            " AND (roleStatuses IS NULL OR " +
+            "(" +
+            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "))";
 
     String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT assessmentParticipant " +
             "FROM AssessmentParticipant assessmentParticipant " +
+            "JOIN assessmentParticipant.user.roleProfileStatuses roleStatuses " +
             "WHERE assessmentParticipant.competition.id = :compId " +
             "AND assessmentParticipant.role = :role " +
             "AND assessmentParticipant.status = :status " +
@@ -91,6 +115,9 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "   FROM Assessment a " +
             "   WHERE a.participant.user = assessmentParticipant.user " +
             "   AND a.target.id = :appId) " +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND assessmentParticipant.user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "AND CONCAT(assessmentParticipant.user.firstName, ' ', assessmentParticipant.user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')";
 
     String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT assessmentParticipant " +
@@ -150,15 +177,65 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     int countByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
+    @Query("SELECT count(participant) " +
+            "FROM AssessmentParticipant participant " +
+            "LEFT JOIN participant.user user " +
+            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
+            "WHERE participant.role = :role AND " +
+            " participant.competition.id = :competitionId AND" +
+            " participant.status = :status AND" +
+            " (user IS NULL OR " +
+            "(" +
+            "     roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            " AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            " AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "))")
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
-    @Query(PARTICIPANTS_WITHOUT_ASSESSMENTS)
-    Page<AssessmentParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
-                                                                   @Param("role") CompetitionParticipantRole role,
-                                                                   @Param("status") ParticipantStatus status,
-                                                                   @Param("appId") long applicationId,
-                                                                   @Param("assessorNameFilter") String assessorNameFilter,
-                                                                   Pageable pageable);
+
+    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED)";
+
+    String REJECTED_AND_SUBMITTED_STATES_STRING =
+            "(org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED," +
+                    "org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN," +
+                    "org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED)";
+    
+    String totalApplications = "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
+    String assigned = "SUM(CASE WHEN application.id IS NOT NULL AND application.competition.id = :competitionId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
+    String submitted = "SUM(CASE WHEN application.id IS NOT NULL AND application.competition.id = :competitionId AND assessment.activityState IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)";
+
+    @Query( "SELECT NEW org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource(" +
+            "user.id, " +
+            "user.firstName, " +
+            "user.lastName, " +
+            "profile.skillsAreas, " +
+            totalApplications + ", " +
+            assigned + ", " +
+            submitted + ") " +
+            "FROM AssessmentParticipant assessmentParticipant " +
+            "JOIN User user ON user.id = assessmentParticipant.user.id " +
+            "JOIN user.roleProfileStatuses roleStatuses " +
+            "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
+            "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id AND type(assessment) = Assessment " +
+            "LEFT JOIN Application application ON assessment.target = application " +
+            "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +
+            "WHERE assessmentParticipant.competition.id = :competitionId " +
+            "AND assessmentParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR " +
+            "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
+            "AND NOT EXISTS (" +
+            "   SELECT 'found' " +
+            "   FROM Assessment a " +
+            "   WHERE a.participant.user = user " +
+            "   AND a.target.id = :applicationId) " +
+            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%') " +
+            "GROUP BY user"
+    )
+    Page<ApplicationAvailableAssessorResource> findParticipantsWithoutAssessments(long competitionId,
+                                                                                  long applicationId,
+                                                                                  String assessorNameFilter,
+                                                                                  Pageable pageable);
 
     @Query(PARTICIPANTS_WITH_ASSESSMENTS)
     List<AssessmentParticipant> findParticipantsWithAssessments(

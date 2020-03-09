@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.security;
 
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
-
-
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -13,6 +9,10 @@ import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
+
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 /**
  * Defines the permissions for interaction with project finances.
@@ -83,10 +83,19 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ_PROJECT_FINANCE", description = "A stakeholder user can see project finances for organisations")
+    public boolean stakeholderUserCanSeeProjectFinancesForOrganisations(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
+        return user.hasRole(STAKEHOLDER);
+    }
+
     @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project partners can update the project finances of their own project")
-    public boolean projectPartnerCanUpdateProjectFinance(final ProjectFinanceResource financeResource,
-                                                 final UserResource user) {
+    public boolean projectPartnerCanUpdateProjectFinance(final ProjectFinanceResource financeResource, final UserResource user) {
         return isPartner(financeResource.getProject(), user.getId());
+    }
+
+    @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project finance users users can update the project finances of a project")
+    public boolean internalUsersCanUpdateProjectFinance(final ProjectFinanceResource financeResource, final UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
     @PermissionRule(value = "ADD_EMPTY_PROJECT_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
@@ -109,12 +118,12 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value="READ_OVERVIEW", description = "Internal users can see the project finance overview")
+    @PermissionRule(value = "READ_OVERVIEW", description = "Internal users can see the project finance overview")
     public boolean internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return isInternal(user);
     }
 
-    @PermissionRule(value="READ_OVERVIEW", description = "Project partners can see their project finance overview")
+    @PermissionRule(value = "READ_OVERVIEW", description = "Project partners can see their project finance overview")
     public boolean partnersCanSeeTheProjectFinanceOverviewsForTheirProject(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return isPartner(projectCompositeId.id(), user.getId());
     }

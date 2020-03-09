@@ -1,3 +1,4 @@
+
 package org.innovateuk.ifs.util;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;

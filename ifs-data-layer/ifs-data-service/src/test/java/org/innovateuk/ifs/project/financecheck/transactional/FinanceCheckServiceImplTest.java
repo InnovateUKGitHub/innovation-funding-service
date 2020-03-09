@@ -156,7 +156,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Test
-    public void testGetByProjectAndOrganisationNotFound() {
+    public void getByProjectAndOrganisationNotFound() {
         // Set up
         ProjectOrganisationCompositeId compositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         when(financeCheckRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
@@ -168,7 +168,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetByProjectAndOrganisation() {
+    public void getByProjectAndOrganisation() {
         // Set up
         ProjectOrganisationCompositeId compositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         FinanceCheck financeCheck = newFinanceCheck().
@@ -199,7 +199,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
 
     @Test
-    public void testGetFinanceCheckSummary(){
+    public void getFinanceCheckSummary(){
         Competition competition = newCompetition().withMaxResearchRatio(2).build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
@@ -216,7 +216,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
         Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
-        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().withGrantClaimPercentage(20).build(3);
+        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
@@ -291,7 +291,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetFinanceCheckEligibility(){
+    public void getFinanceCheckEligibility(){
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
@@ -319,7 +319,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertEquals((long) eligibility.getDurationInMonths(), 5L);
         assertEquals(projectFinanceResource.getTotal(), eligibility.getTotalCost());
-        assertEquals(BigDecimal.valueOf(projectFinanceResource.getGrantClaimPercentage()), eligibility.getPercentageGrant());
+        assertEquals(projectFinanceResource.getGrantClaimPercentage(), eligibility.getPercentageGrant());
         assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());
         assertEquals(projectFinanceResource.getTotalOtherFunding(), eligibility.getOtherPublicSectorFunding());
         assertEquals(projectFinanceResource.getTotalContribution(), eligibility.getContributionToProject());
@@ -327,7 +327,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetFinanceCheckEligibilityNoProjectFinances(){
+    public void getFinanceCheckEligibilityNoProjectFinances(){
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
@@ -345,7 +345,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testQueryActionRequired() {
+    public void queryActionRequired() {
 
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
@@ -366,7 +366,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testQueryNoActionRequired() {
+    public void queryNoActionRequired() {
 
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
@@ -387,7 +387,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testQueryWithNoProjectFinance() {
+    public void queryWithNoProjectFinance() {
 
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
@@ -408,7 +408,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testQueryWithNoQueries() {
+    public void queryWithNoQueries() {
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
@@ -427,7 +427,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testQueryWithQueriesFailure() {
+    public void queryWithQueriesFailure() {
 
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
@@ -446,7 +446,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testQueryWithNullQueries() {
+    public void queryWithNullQueries() {
 
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
@@ -515,7 +515,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(3.0));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -526,7 +526,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
-        assertEquals(new BigDecimal("30"), overview.getTotalPercentageGrant());
+        assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
         assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
         assertEquals(BigDecimal.valueOf(3.0), overview.getResearchParticipationPercentage());
     }
@@ -593,7 +593,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
-        assertEquals(new BigDecimal("30"), overview.getTotalPercentageGrant());
+        assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
         assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
         assertEquals(BigDecimal.valueOf(0), overview.getResearchParticipationPercentage());
     }
@@ -660,7 +660,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
-        assertEquals(new BigDecimal("30"), overview.getTotalPercentageGrant());
+        assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
         assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
         assertEquals(BigDecimal.valueOf(0), overview.getResearchParticipationPercentage());
     }
@@ -687,7 +687,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                         build(),
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
                         newGrantClaimPercentage().
-                                withGrantClaimPercentage(30).
+                                withGrantClaimPercentage(BigDecimal.valueOf(30)).
                                 build(1)).
                         build(),
                 FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
@@ -699,39 +699,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                         build());
     }
 
-    private void setupFinancialAndNonFinancialTestData(boolean isIncludeGrowthTable, boolean noResponse, boolean noInput) {
-        Long turnoverFormInputId = 678L;
-        Long staffCountFormInputId = 987L;
-        Competition comp = new Competition();
-        comp.setId(competitionId);
-        Application app = new Application();
-        app.setId(applicationId);
-        app.setCompetition(comp);
-        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(app));
-
-        ProcessRole updatedBy = newProcessRole().withApplication(app).withOrganisationId(organisationId).build();
-        FormInputResponse headcount = newFormInputResponse().withValue("1").withUpdatedBy(updatedBy).build();
-        FormInputResponse turnover = newFormInputResponse().withValue("2").withUpdatedBy(updatedBy).build();
-
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(staffCountFormInputId).build();
-        FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).build();
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(noInput ? emptyList() : asList(organisationTurnoverFormInput));
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(staffCountFormInput));
-        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
-        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
-
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withId(turnoverFormInputId).build();
-        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withId(staffCountFormInputId).build();
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(noInput ? emptyList() : asList(financialYearEnd));
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(financialCount));
-        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
-        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
-    }
-
     @Test
-    public void testSaveViabilityWhenViabilityAlreadyApproved() {
+    public void saveViabilityWhenViabilityAlreadyApproved() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -752,7 +721,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityRagStatusIsUnset() {
+    public void saveViabilityWhenViabilityRagStatusIsUnset() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -773,7 +742,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityRagStatusIsUnsetButViabilityAlsoNotApproved() {
+    public void saveViabilityWhenViabilityRagStatusIsUnsetButViabilityAlsoNotApproved() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -791,7 +760,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityRagStatusIsSetButViabilityNotApproved() {
+    public void saveViabilityWhenViabilityRagStatusIsSetButViabilityNotApproved() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -810,7 +779,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityApproved() {
+    public void saveViabilityWhenViabilityApproved() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -857,7 +826,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveEligibilityWhenEligibilityAlreadyApproved() {
+    public void saveEligibilityWhenEligibilityAlreadyApproved() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -881,7 +850,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveEligibilityWhenEligibilityApprovedButStatusIsUnset() {
+    public void saveEligibilityWhenEligibilityApprovedButStatusIsUnset() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -906,7 +875,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveEligibilityWhenEligibilityNotApprovedAndStatusIsUnset() {
+    public void saveEligibilityWhenEligibilityNotApprovedAndStatusIsUnset() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -929,7 +898,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveEligibilityWhenEligibilityNotApprovedAndStatusIsSet() {
+    public void saveEligibilityWhenEligibilityNotApprovedAndStatusIsSet() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -954,7 +923,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveEligibilityWhenEligibilityApprovedAndStatusIsSet() {
+    public void saveEligibilityWhenEligibilityApprovedAndStatusIsSet() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -1000,7 +969,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetCreditReportSuccess() {
+    public void getCreditReportSuccess() {
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setCreditReportConfirmed(true);
@@ -1014,7 +983,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testSaveCreditSuccess() {
+    public void saveCreditSuccess() {
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
@@ -1029,13 +998,13 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        assertEquals(true, projectFinanceInDB.getCreditReportConfirmed());
+        assertTrue(projectFinanceInDB.getCreditReportConfirmed());
         verify(projectFinanceRepository).save(projectFinanceInDB);
 
     }
 
     @Test
-    public void testSaveCreditFailsBecauseViabilityIsAlreadyApproved() {
+    public void saveCreditFailsBecauseViabilityIsAlreadyApproved() {
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
@@ -1050,7 +1019,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetViabilityWhenPartnerOrganisationDoesNotExist() {
+    public void getViabilityWhenPartnerOrganisationDoesNotExist() {
 
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
 
@@ -1064,7 +1033,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetViabilityWhenViabilityStateIsReviewInDB() {
+    public void getViabilityWhenViabilityStateIsReviewInDB() {
 
         setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null);
 
@@ -1080,7 +1049,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetViabilityWhenViabilityStateIsNotApplicableInDB() {
+    public void getViabilityWhenViabilityStateIsNotApplicableInDB() {
 
         setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER, null, null);
 
@@ -1096,7 +1065,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetViabilityWhenViabilityStateIsApproved() {
+    public void getViabilityWhenViabilityStateIsApproved() {
 
         Long userId = 7L;
 
@@ -1153,7 +1122,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetEligibilityWhenPartnerOrganisationDoesNotExist() {
+    public void getEligibilityWhenPartnerOrganisationDoesNotExist() {
 
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
 
@@ -1167,7 +1136,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetEligibilityWhenEligibilityIsReviewInDB() {
+    public void getEligibilityWhenEligibilityIsReviewInDB() {
 
         setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null);
 
@@ -1184,7 +1153,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetEligibilityWhenEligibilityIsNotApplicableInDB() {
+    public void getEligibilityWhenEligibilityIsNotApplicableInDB() {
 
         setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null);
 
@@ -1201,7 +1170,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testGetEligibilityWhenEligibilityIsApprovedInDB() {
+    public void getEligibilityWhenEligibilityIsApprovedInDB() {
 
         Long userId = 7L;
 

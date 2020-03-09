@@ -1,5 +1,5 @@
 .highlight-panel {
-  background: govuk-colour("grey-4");
+  background: govuk-colour("light-grey");
   padding: 20px 0;
 
   &-padded {
@@ -12,5 +12,9 @@
     line-height: 1.1em;
     min-height: 80px;
     padding: govuk-spacing(2);
+  }
+
+  small {
+    color: govuk-colour("black")
   }
 }

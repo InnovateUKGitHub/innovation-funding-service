@@ -212,7 +212,7 @@ the user send funding decision email for all applicant
     the user selects the checkbox            app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     the user clicks the button/link     jQuery = button:contains("Write and send email")
     the user should see the element      css = #subject[value^="<competition name>: Notification regarding your application <application number>: <application title>"]
-    the user clicks the button/link     jQuery = summary:contains("Review list of recipients")[aria-expanded="false"]
+    the user clicks the button/link     jQuery = summary:contains("Review list of recipients"):not([open])
     the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     the user should not see the element  jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
     the user clicks the button/link     css = button[data-js-modal="send-to-all-applicants-modal"]

@@ -14,7 +14,7 @@ ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}    200,903
 ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}    140,632
 ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}    57,803
-${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}    30%
+${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}    30.00%
 ${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}    990
 ${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}    0
 ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}    0%
@@ -64,6 +64,8 @@ ${OPEN_COMPETITION_APPLICATION_4_NAME}    Greenland was nearly ice-free for exte
 ${OPEN_COMPETITION_APPLICATION_4_NUMBER}  ${application_ids['${OPEN_COMPETITION_APPLICATION_4_NAME}']}
 ${OPEN_COMPETITION_APPLICATION_5_NAME}    Evolution of the global phosphorus cycle
 ${OPEN_COMPETITION_APPLICATION_5_NUMBER}  ${application_ids['${OPEN_COMPETITION_APPLICATION_5_NAME}']}
+${OPEN_COMPETITION_APPLICATION_6_NAME}    Safeguarding pollinators and their values to human well-being
+${OPEN_COMPETITION_APPLICATION_6_NUMBER}  ${application_ids['${OPEN_COMPETITION_APPLICATION_6_NAME}']}
 
 ${CLOSED_COMPETITION_APPLICATION_NAME}         A new innovative solution
 ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPETITION_APPLICATION_NAME}']}
@@ -242,11 +244,16 @@ ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables
 ${EMPIRE_LTD_NAME}         Empire Ltd
-${EMPIRE_LTD_ID}           ${organisation_ids["${EMPIRE_LTD_NAME}"]}
-${organisationLudlowName}  Ludlow
-${organisationLudlowId}    ${organisation_ids["${organisationLudlowName}"]}
-${organisationEggsName}    EGGS
-${organisationEggsId}      ${organisation_ids["${organisationEggsName}"]}
+${EMPIRE_LTD_ID}            ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${organisationLudlowName}   Ludlow
+${organisationLudlowId}     ${organisation_ids["${organisationLudlowName}"]}
+${organisationEggsName}     EGGS
+${organisationEggsId}       ${organisation_ids["${organisationEggsName}"]}
+${organisationRedName}      Red Planet
+${organisationRedId}        ${organisation_ids["${organisationRedName}"]}
+${organisationSmithName}    SmithZone
+${organisationSmithId}      ${organisation_ids["${organisationSmithName}"]}
+
 
 # Organisation type ids
 ${BUSINESS_TYPE_ID}       1

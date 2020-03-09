@@ -168,14 +168,14 @@ Lead Partner can see Spend profile summary
 Spend profile: validations
     [Documentation]  INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148 INFUND-6146
     [Tags]  HappyPath
-    Given the user clicks the button/link       jQuery = .button-secondary:contains("Edit spend profile")
+    Given the user clicks the button/link       jQuery = a:contains("Edit spend profile")
     Then the lead partner can edit his spend profile with invalid values and see the error messages
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
     [Tags]  HappyPath
     Given the user navigates to the page       ${external_spendprofile_summary}/review
-    When the user clicks the button/link       jQuery = .button-secondary:contains("Edit spend profile")
+    When the user clicks the button/link       jQuery = a:contains("Edit spend profile")
     Then the user enter valid values and save changes
 
 Project Manager can see Spend Profile in Progress
@@ -257,19 +257,18 @@ Academic partner can see the alternative academic view of the spend profile
 Academic partner spend profile: validations
     [Documentation]    INFUND-5846
     [Tags]
-    Given the user clicks the button/link            jQuery = .button-secondary:contains("Edit spend profile")
-    When the user enters text to a text field        css = .spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
+    Given the user clicks the button/link            jQuery = a:contains("Edit spend profile")
     And the user enters text to a text field         css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
     And Set Focus To Element                         css = .spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
-    Then the user should see the validation messages triggred
+    Then the user should see a summary error         Your total costs are higher than your eligible costs.
     And academic partner enter valid values in spend profile then should'e see validation error messages
 
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
     [Tags]
-    When the user clicks the button/link    jQuery = .button-secondary:contains("Save and return to spend profile overview")
-    Then the user should see the element    jQuery = .button-secondary:contains("Edit spend profile")
+    When the user clicks the button/link    jQuery = button:contains("Save and return to spend profile overview")
+    Then the user should see the element    jQuery = a:contains("Edit spend profile")
     And element should contain              css = .spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
     And element should contain              css = .spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(1)    1
 
@@ -353,7 +352,7 @@ Partner can receive edit rights to his SP
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_Project_Id}
     Then the user should see the element    css = li.require-action:nth-child(7)
     When the user clicks the button/link    link = Spend profile
-    Then the user should see the element    jQuery = .button-secondary:contains("Edit spend profile")
+    Then the user should see the element    jQuery = a:contains("Edit spend profile")
     When the user clicks the button/link    link = Submit to lead partner
     And the user clicks the button/link     jQuery = button.govuk-button:contains("Submit")
 
@@ -459,8 +458,8 @@ Lead partner can edit own spend profile and mark as complete
     [Documentation]    INFUND-6977, INFUNF-7409
     When the user clicks the button/link    link = ${Ooba_Lead_Org_Name}
     And the user should see the element     jQuery = .success-alert:contains("Your spend profile is marked as complete")
-    And the user clicks the button/link     jQuery = .button-secondary:contains("Edit spend profile")
-    And the user clicks the button/link     jQuery = .button-secondary:contains("Save and return to spend profile overview")
+    And the user clicks the button/link     jQuery = a:contains("Edit spend profile")
+    And the user clicks the button/link     jQuery = button:contains("Save and return to spend profile overview")
     And the user clicks the button/link     css = [name = "mark-as-complete"]
 
 Industrial partner receives edit rights and can submit their spend profile
@@ -664,7 +663,6 @@ the lead partner can see calculations in the spend profile table
     the sum of tds equals the total    .spend-profile-table  7  50  1100    # Other costs
 
 the lead partner can edit his spend profile with invalid values and see the error messages
-    the user should see the element         jQuery = th:contains("Labour") + td input
     the user enters text to a text field    jQuery = th:contains("Labour") + td input   520
     Set Focus To Element                    jQuery = th:contains("Overheads") + td input
     the user should see the element         jQuery = .govuk-error-summary:contains("Unable to submit spend profile.")
@@ -672,18 +670,11 @@ the lead partner can edit his spend profile with invalid values and see the erro
     the user should see the element         jQuery = th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue = "3528"]
     # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
     the user should see the element         jQuery = .govuk-main-wrapper table tr:nth-child(1) td:nth-child(2):contains("£13,115")
-    the user clicks the button/link         jQuery = .button-secondary:contains("Save and return to spend profile overview")
+    the user clicks the button/link         jQuery = button:contains("Save and return to spend profile overview")
     the user should see the element         jQuery = .govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
-    the user clicks the button/link         jQuery = .button-secondary:contains("Edit spend profile")
+    the user clicks the button/link         jQuery = a:contains("Edit spend profile")
     the user enters text to a text field    jQuery = th:contains("Labour") + td input  10
     the user should not see the element     jQuery = .govuk-form-group--error th:contains("Labour")
-    the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  -55
-    Set Focus To Element                    jQuery = th:contains("Overheads") ~ td:nth-child(5)
-    the user should see the element         jQuery = .govuk-error-summary__list li:contains("This field should be 0 or higher")
-    the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  35.25
-    Set Focus To Element                    jQuery = th:contains("Overheads") ~ td:nth-child(5)
-    the user should see the element         jQuery = .govuk-error-summary__list li:contains("${only_accept_whole_numbers_message}")
-    the user clicks the button/link         jQuery = .button-secondary:contains("Save and return to spend profile overview")
     the user should not see an error in the page
     the user enters text to a text field    jQuery = th:contains("Overheads") ~ td:nth-child(4) input  0
     Set Focus To Element                    css = .spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
@@ -699,7 +690,7 @@ the user enter valid values and save changes
     Set Focus To Element                    jQuery = th:contains("Subcontracting") ~ td:nth-child(7) input
     the user should see the element         jQuery = th:contains("Subcontracting") ~ td.fix-right input[data-calculation-rawvalue = "90000"]
     the user should not see the element     jQuery = .govuk-error-summary:contains("Unable to save spend profile")
-    the user clicks the button/link         jQuery = .button-secondary:contains("Save and return to spend profile overview")
+    the user clicks the button/link         jQuery = button:contains("Save and return to spend profile overview")
     the user should not see the element     jQuery = .govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
 
 the user marks spend profile as compelete and check status updated
@@ -734,8 +725,7 @@ project Manager doesn't have the option to send spend profiles until all partner
 
 the user should see the validation messages triggred
     the user should see a summary error         Your total costs are higher than your eligible costs.
-    the user clicks the button/link             jQuery = .button-secondary:contains("Save and return to spend profile overview")
-    the user should see a summary error         This field should be 0 or higher.
+    the user clicks the button/link             jQuery = button:contains("Save and return to spend profile overview")
 
 academic partner enter valid values in spend profile then should'e see validation error messages
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    3  # Staff
@@ -744,8 +734,6 @@ academic partner enter valid values in spend profile then should'e see validatio
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    2  # Estates
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(1) input    0  # Other - Directly allocated
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
-    Set Focus To Element                     link = Set up your project
-    the user should not see the element      jQuery = .govuk-error-message:contains("This field should be 0 or higher")
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
     the user enters text to a text field     css = .spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(2) input    0  # Other - Exceptions
@@ -796,13 +784,13 @@ the project finance user should see the spend profile details
     the element should be disabled               css = #accept-profile
     the user selects the checkbox                approvedByLeadTechnologist
     the user should see the element              css = #accept-profile
-    the user should see the element              jQuery = #main-content .button-warning:contains("Reject")
+    the user should see the element              jQuery = #main-content button:contains("Reject")
 
 the comp admin should see the spend profile details
     the element should be disabled       css = #accept-profile
-    the user should see the element      jQuery = #main-content .button-warning:contains("Reject")
+    the user should see the element      jQuery = #main-content button:contains("Reject")
     the user should see the element      jQuery = h2:contains("Innovation Lead") ~ p:contains("Peter Freeman")
-    the user clicks the button/link      jQuery = #main-content .button-warning:contains("Reject")
+    the user clicks the button/link      jQuery = #main-content button:contains("Reject")
     the user should see the element      jQuery = p:contains("You should contact the Project Manager to explain why the spend profile is being returned.")
     the user clicks the button/link      jQuery = .modal-reject-profile button:contains("Cancel")
     the user should not see an error in the page
@@ -835,12 +823,12 @@ the comp admin should see the SP status uodated correctly
     the user should not see the element    css = #table-project-status tr:nth-of-type(6) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 the project finance reject the SP
-    the user should see the element     jQuery = #main-content .button-warning:contains("Reject")
-    the user clicks the button/link     jQuery = #main-content .button-warning:contains("Reject")
+    the user should see the element     jQuery = #main-content button:contains("Reject")
+    the user clicks the button/link     jQuery = #main-content button:contains("Reject")
     the user should see the element     jQUery = p:contains("You should contact the Project Manager to explain why the spend profile is being returned.")
     the user clicks the button/link     jQuery = .modal-reject-profile button:contains("Cancel")
     the user should not see an error in the page
-    the user clicks the button/link     jQuery = #main-content .button-warning:contains("Reject")
+    the user clicks the button/link     jQuery = #main-content button:contains("Reject")
     the user clicks the button/link     jQuery = .modal-reject-profile button:contains('Reject')
 
 the user shouldn't see rejected SP message

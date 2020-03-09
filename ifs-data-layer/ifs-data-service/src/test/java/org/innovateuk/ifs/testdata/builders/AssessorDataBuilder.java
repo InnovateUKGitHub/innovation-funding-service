@@ -5,6 +5,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
+import org.innovateuk.ifs.user.domain.RoleProfileStatus;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
@@ -81,15 +82,15 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     public AssessorDataBuilder addAssessorRole() {
         return with((AssessorData data) -> {
 
-            testService.doWithinTransaction(() -> {
-
-                User user = userRepository.findByEmail(data.getEmail()).get();
-
-                if (!user.getRoles().contains(Role.ASSESSOR)) {
-                    user.getRoles().add(Role.ASSESSOR);
-                }
-
-                userRepository.save(user);
+            doAs(compAdmin(), () -> {
+                testService.doWithinTransaction(() -> {
+                    User user = userRepository.findByEmail(data.getEmail()).get();
+                    if (!user.hasRole(Role.ASSESSOR)) {
+                        user.getRoles().add(Role.ASSESSOR);
+                        userRepository.save(user);
+                        roleProfileStatusRepository.save(new RoleProfileStatus(user, ProfileRole.ASSESSOR));
+                    }
+                });
             });
 
             UserResource userResource = doAs(systemRegistrar(), () -> userService.findByEmail(data.getEmail()).getSuccess());
@@ -188,6 +189,17 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         );
     }
 
+    public AssessorDataBuilder updateRoleProfileState(RoleProfileState roleProfileState) {
+        return with((AssessorData data) ->
+                doAs(projectFinanceUser(), () -> {
+                    roleProfileStatusService.updateUserStatus(data.getUser().getId(),
+                            new RoleProfileStatusResource(data.getUser().getId(), roleProfileState, ProfileRole.ASSESSOR,
+                            roleProfileState.equals(RoleProfileState.DISABLED) ? "The user no longer works as an assessor."
+                                    : "The user is unavailable to work as an assessor until further notice.")).getSuccess();
+                })
+        );
+    }
+
     private List<AffiliationResource> mapAppointments(List<Map<String, String>> appointments) {
         if (appointments.isEmpty()) {
             return singletonList(AffiliationResourceBuilder.createEmptyAppointments());
@@ -255,4 +267,5 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     protected AssessorData createInitial() {
         return new AssessorData();
     }
+
 }
