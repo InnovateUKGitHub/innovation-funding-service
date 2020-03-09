@@ -126,26 +126,26 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
             @PathVariable long assessorId,
             @RequestParam("selectionId") long applicationId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam("filterSearch") String filterSearch,
+            @RequestParam(value = "filterSearch", defaultValue = "") String filter,
             HttpServletRequest request,
             HttpServletResponse response) {
 
         boolean limitExceeded = false;
         try {
-            List<Long> InviteIds = getAllApplicationIds(competitionId, applicationId, filterSearch);
+            List<Long> InviteIds = getAllApplicationIds(competitionId, assessorId, filter);
             ApplicationSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new ApplicationSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedApplications().size() + 1;
                 if(limitIsExceeded(predictedSize)){
                     limitExceeded = true;
                 } else {
-                    selectionForm.getSelectedApplications().add(assessorId);
+                    selectionForm.getSelectedApplications().add(applicationId);
                     if (selectionForm.getSelectedApplications().containsAll(InviteIds)) {
                         selectionForm.setAllSelected(true);
                     }
                 }
             } else {
-                selectionForm.getSelectedApplications().remove(assessorId);
+                selectionForm.getSelectedApplications().remove(applicationId);
                 selectionForm.setAllSelected(false);
             }
             saveFormToCookie(response, competitionId, selectionForm);
@@ -160,14 +160,14 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
     public @ResponseBody JsonNode addAllAssessorsToResendList(@PathVariable long competitionId,
                                                               @PathVariable long assessorId,
                                                               @RequestParam("addAll") boolean addAll,
-                                                              @RequestParam("filterSearch") String filterSearch,
+                                                              @RequestParam(value = "filterSearch", defaultValue = "") String filter,
                                                               HttpServletRequest request,
                                                               HttpServletResponse response) {
         try {
             ApplicationSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new ApplicationSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedApplications(getAllApplicationIds(competitionId, assessorId, filterSearch));
+                selectionForm.setSelectedApplications(getAllApplicationIds(competitionId, assessorId, filter));
                 selectionForm.setAllSelected(true);
             } else {
                 selectionForm.getSelectedApplications().clear();
