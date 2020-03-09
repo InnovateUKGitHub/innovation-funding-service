@@ -56,6 +56,7 @@
                                         th:unless="${model.readOnly}"
                                         th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
                                         th:disabled="${!(model.changesSinceLastNotify > 0)}"
+                                        id="notify-assessors-changes-since-last-notify-button"
                                         class="govuk-button">Notify assessors
                                 </button>
                             </div>
@@ -151,14 +152,14 @@
                                 <button th:unless="${model.readOnly}"
                                         th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}"
                                         type="submit"
-                                        id="notify-assessors"
+                                        id="notify-assessors-button"
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED}"
                                         th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
                                         class="govuk-button">Notify assessors
                                 </button>
                                 <button th:unless="${model.readOnly}"
                                         type="submit"
-                                        id="close-assessment"
+                                        id="close-assessment-button"
                                         th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_DEADLINE}"
                                         th:formaction="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}"
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
@@ -174,7 +175,7 @@
                                 </th:block>
                                 <button th:unless="${model.readOnly}"
                                         type="submit"
-                                        id="release-feedback"
+                                        id="release-feedback-button"
                                         th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).RELEASE_FEEDBACK}"
                                         th:disabled="${!model.keyStatistics.canReleaseFeedback}"
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}"

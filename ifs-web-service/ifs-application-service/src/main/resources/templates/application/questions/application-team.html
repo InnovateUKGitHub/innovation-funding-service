@@ -131,6 +131,7 @@
                                                 th:insert="fragments/modals :: modal-application-team-remove-organisation (${organisation}, ${row})"/>
                                             <a th:attr="data-js-modal=${'modal-application-team-remove-organisation-' + organisation.id}"
                                                href="/"
+                                               th:id="${'remove-organisation-' + organisation.id}"
                                                class="govuk-link">Remove organisation
                                                <span class="govuk-visually-hidden" th:text="${organisation.name}"></span>
                                             </a>
@@ -238,6 +239,7 @@
                 <p class="govuk-body govuk-!-margin-top-5">
                     <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
                        th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                       id="add-a-partner-organisation"
                        class="govuk-link">Add a partner organisation</a>
                 </p>
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
