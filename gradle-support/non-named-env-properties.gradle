@@ -123,5 +123,3 @@ ext.IFS_DATA_SERVICE_CACHE_TTL=18000000
 
 // Used by the idp, location of resources
 ext.RESOURCE_DOMAIN=""
-
-ext.IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED=true
