@@ -23,30 +23,7 @@ echo "port"$port
 echo "LDAP parameters"
 echo "domain":$domain
 
-executeMySQLCommand() {
-    mysql $db -P $port -u $user --password=$pass -h "$host" -N -s -e "$1"
-}
-
-addUserToShibboleth() {
-  uid=$(executeMySQLCommand "select uid from user where email='$(escaped $1)';")
-
-  echo "dn: uid=$uid,$domain"
-  echo "uid: $uid"
-  echo "mail: $1"
-  echo "sn:: IA=="
-  echo "cn:: IA=="
-  echo "objectClass: inetOrgPerson"
-  echo "objectClass: person"
-  echo "objectClass: top"
-  echo "employeeType: active"
-  echo "userPassword:: $password"
-  echo ""
-}
-
-# Escape single quote for use in sql where clauses.
-escaped() {
-  echo $1 | sed "s/'/\\\\'/g"
-}
+. ldap-add-user.sh
 
 # Main
 

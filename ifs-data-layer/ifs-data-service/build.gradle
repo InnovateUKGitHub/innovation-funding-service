@@ -166,14 +166,11 @@ task syncShib(type:Exec) {
 // To run "./gradlew syncUser -Pemail=steve.smith@empire.com"
 task syncUser(type:Exec) {
 
-
     if (project.hasProperty('email')) {
         commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-user.sh', project.getProperty('email')
     } else {
-//            please change this to be a useful message
-        commandLine 'echo', 'Please pass in an email'
+        commandLine 'echo', 'Please enter a valid email. For example, ./gradlew syncUser -Pemail=steve.smith@empire.com'
     }
-
 }
 
 task prepareAnonymisedDB(dependsOn:[":docker:ifs-mysql:ifs-database:updateIfsWebUser", syncShib]) {

@@ -4,10 +4,10 @@
 # Note the following:
 #
 # This script is put on the ldap server as part of the docker build. The ldap server
-# is only present in non named environments and so this script is only present there. 
+# is only present in non named environments and so this script is only present there.
 # For named environments a similar mechanism is present with an indentically named,
-# but slightly different, shell script being put on a stand alone built docker image. 
-# That process could be used instead of this, but it would lengthen build times. 
+# but slightly different, shell script being put on a stand alone built docker image.
+# That process could be used instead of this, but it would lengthen build times.
 #
 # This script does the following:
 # Wipes all users on the ldap
@@ -49,19 +49,28 @@ echo "port"$port
 echo "LDAP parameters"
 echo "domain":$domain
 
-. ldap-add-user.sh
-
-wipeLdapUsers() {
-  ldapsearch -H ldapi:/// -b "$domain" -s sub '(objectClass=person)' -x \
-   | grep 'dn: ' \
-   | cut -c4- \
-   | xargs ldapdelete -H ldapi:/// -D "cn=admin,$domain" -w "$ldappass"
+executeMySQLCommand() {
+    mysql $db -P $port -u $user --password=$pass -h "$host" -N -s -e "$1"
 }
 
-# Main
-wipeLdapUsers
+addUserToShibboleth() {
+  email=$1
+  uid=$(executeMySQLCommand "select uid from user where email='$(escaped $email)';")
 
-for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where system_user = 0;")
-do
-  addUserToShibboleth "$u"
-done | ldapadd -H ldapi:/// -D "cn=admin,$domain" -w "$ldappass"
+  echo "dn: uid=$uid,$domain"
+  echo "uid: $uid"
+  echo "mail: $email"
+  echo "sn:: IA=="
+  echo "cn:: IA=="
+  echo "objectClass: inetOrgPerson"
+  echo "objectClass: person"
+  echo "objectClass: top"
+  echo "employeeType: active"
+  echo "userPassword:: $password"
+  echo ""
+}
+
+# Escape single quote for use in sql where clauses.
+escaped() {
+  echo $1 | sed "s/'/\\\\'/g"
+}
