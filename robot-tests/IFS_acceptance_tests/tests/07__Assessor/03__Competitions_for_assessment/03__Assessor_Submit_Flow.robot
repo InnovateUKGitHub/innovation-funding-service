@@ -51,15 +51,15 @@ Summary:Number of days remaining until assessment submission
 Summary shows questions as incomplete
     [Documentation]    INFUND-550
     [Tags]  HappyPath
-    Given the user should see the text in the element    jQuery = button:contains("Scope")    Incomplete
+    Given the user should see the text in the element    jQuery = .govuk-accordion__section-heading:contains("Scope")    Incomplete
     :FOR  ${ELEMENT}    IN   @{programme_questions}
-     \    the user should see the text in the element   jQuery = button:contains("${ELEMENT}")    Incomplete
+     \    the user should see the text in the element   jQuery = .govuk-accordion__section-heading:contains("${ELEMENT}")    Incomplete
 
 Summary: Questions should show without score
     [Documentation]    INFUND-550
     [Tags]  HappyPath
      :FOR  ${ELEMENT}    IN   @{programme_questions}
-      \   the user should see the text in the element    jQuery = button:contains("${ELEMENT}")    N/A
+      \   the user should see the text in the element    jQuery = .govuk-accordion__section-heading:contains("${ELEMENT}")    N/A
     [Teardown]    The user clicks the button/link        link = Back to your assessment overview
 
 Summary:Questions should show as complete
@@ -69,9 +69,9 @@ Summary:Questions should show as complete
     Given The user clicks the button/link                           link = Intelligent Building
     And the assessor adds score and feedback for every question     11   # 11 is the number of questions to iterate through
     When the user clicks the button/link                            link = Review and complete your assessment
-    Then the user should see the text in the element                jQuery = button:contains("Scope")    Complete
+    Then the user should see the text in the element                jQuery = .govuk-accordion__section-heading:contains("Scope")    Complete
     :FOR  ${ELEMENT}    IN   @{programme_questions}
-     \    the user should see the text in the element               jQuery = button:contains("${ELEMENT}")    Complete
+     \    the user should see the text in the element               jQuery = .govuk-accordion__section-heading:contains("${ELEMENT}")    Complete
 
 Summary:Questions should show the scores
     [Documentation]    INFUND-550
@@ -79,7 +79,7 @@ Summary:Questions should show the scores
     Then The user should see the element        jQuery = p strong:contains("Total: 100/100")
     And The user should see the element         jQuery = p strong:contains("100%")
     :FOR  ${ELEMENT}    IN   @{programme_questions}
-     \    the user should see the text in the element    jQuery = button:contains("${ELEMENT}")    Score 10/10
+     \    the user should see the text in the element    jQuery = .govuk-accordion__section-heading:contains("${ELEMENT}")    Score 10/10
 
 Summary:Feedback should show in each section
     [Documentation]    INFUND-550
@@ -156,7 +156,7 @@ User Saves the Assessment as Not Recommended
 Submit Assessments
     [Documentation]    INFUND-5739  INFUND-3743  INFUND-6358
     [Tags]  HappyPath
-    Given the user should see the element          jQuery = .in-progress li:nth-child(7):contains("Intelligent Building")
+    Given the user should see the element          jQuery = .in-progress li:contains("Intelligent Building")
     And the user should see that the element is disabled    id = submit-assessment-button
     When the user submits the assessment
     Then the user should see correct details after assessment submitted
@@ -206,7 +206,7 @@ the user edit the score and description for an assessed question
     the user clicks the button/link                        jQuery = a:contains("Back to your assessment overview")
     the user clicks the button/link                        jQuery = a:contains("Review and complete your assessment")
     the user should see the element                        jQuery = p:contains("This is a new feedback entry.")
-    the user should see the element                        jQuery = h2 button:contains("1. Business opportunity") .section-score:contains("8")
+    the user should see the element                        jQuery = .govuk-accordion__section-heading:contains("1. Business opportunity") .section-score:contains("8")
 
 the user enter correct word count
     [Arguments]  ${element}
@@ -224,25 +224,24 @@ the user enter text more than maximum word count limit
 the user should see correct details
     the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
     the user should see the element                     jQuery = .status-msg:contains("Assessed")
-    the user should see the element                     css = li:nth-child(7) .positive
-    the user should see the element                     css = li:nth-child(7) input[type = "checkbox"] ~ label
-    the application should have the correct status      css = .progress-list li:nth-child(7)    Assessed
+    the user should see the element                     jQuery = li:contains("Intelligent Building") .positive
+    the user should see the element                     jQuery = li:contains("Intelligent Building") input[type = "checkbox"] ~ label
+    the application should have the correct status      jQuery = li:contains("Intelligent Building")    Assessed
 
 the user should see assessment as not recommended details
-    The user should see the element                      css = li:nth-child(6) .negative
-    the user should see the element                      css = li:nth-child(6) input[type = "checkbox"] ~ label
-    the application should have the correct status       css = .progress-list li:nth-child(6)    Assessed
-    the application should have the correct status       css = .progress-list li:nth-child(7)    Assessed
+    The user should see the element                      jQuery = li:contains("Park living") .negative
+    the user should see the element                      jQuery = li:contains("Park living") input[type = "checkbox"] ~ label
+    the application should have the correct status       jQuery = li:contains("Park living")    Assessed
 
 the user should see correct details after assessment submitted
     the application should have the correct status    css = div.submitted    Submitted assessment
-    the user should see the element                   css = li:nth-child(6) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
+    the user should see the element                   jQuery = li:contains("Park living") input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
     the user should see the element                   jQuery = h4:contains("Intelligent Building")
     the user should see the element                   jQuery = strong:contains("98")
     the user should not see the element               link = Intelligent Building
 
 the user submits the assessment
-    the user clicks the button/link            css = .in-progress li:nth-child(7) input[type = "checkbox"] ~ label
+    the user clicks the button/link            jQuery = .in-progress li:contains("Intelligent Building") input[type = "checkbox"] ~ label
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
     the user clicks the button/link            jQuery = button:contains("Cancel")
     the user clicks the button/link            jQuery = button:contains("Submit assessments")

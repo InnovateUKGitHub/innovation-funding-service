@@ -2,8 +2,9 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.application.transactional.ApplicationAssessmentSummaryService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -48,35 +49,35 @@ public class ApplicationAssessmentSummaryControllerTest extends BaseControllerMo
 
     @Test
     public void getAvailableAssessors() throws Exception {
-        ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
+        ApplicationAvailableAssessorPageResource expected = new ApplicationAvailableAssessorPageResource();
 
         Long applicationId = 1L;
 
-        when(applicationAssessmentSummaryServiceMock.getAvailableAssessors(applicationId, 0, 20, null)).thenReturn(serviceSuccess(expected));
+        when(applicationAssessmentSummaryServiceMock.getAvailableAssessors(applicationId, 0, 20, null, Sort.ASSESSOR)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/application-assessment-summary/{id}/available-assessors", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
-        verify(applicationAssessmentSummaryServiceMock, only()).getAvailableAssessors(applicationId, 0, 20, null);
+        verify(applicationAssessmentSummaryServiceMock, only()).getAvailableAssessors(applicationId, 0, 20, null, Sort.ASSESSOR);
     }
 
     @Test
     public void getAvailableAssessors_WithParams() throws Exception {
-        ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
+        ApplicationAvailableAssessorPageResource expected = new ApplicationAvailableAssessorPageResource();
 
         Long applicationId = 1L;
         int page = 3;
         int size = 6;
         String assessorNameFilter = "";
 
-        when(applicationAssessmentSummaryServiceMock.getAvailableAssessors(applicationId, page, size, assessorNameFilter)).thenReturn(serviceSuccess(expected));
+        when(applicationAssessmentSummaryServiceMock.getAvailableAssessors(applicationId, page, size, assessorNameFilter, Sort.ASSESSOR)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/application-assessment-summary/{id}/available-assessors?page={page}&size={size}&assessorNameFilter={assessorNameFilter}", applicationId, page, size, assessorNameFilter))
+        mockMvc.perform(get("/application-assessment-summary/{id}/available-assessors?page={page}&size={size}&assessorNameFilter={assessorNameFilter}&sort={sort}", applicationId, page, size, assessorNameFilter, Sort.ASSESSOR))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
-        verify(applicationAssessmentSummaryServiceMock, only()).getAvailableAssessors(applicationId, page, size, assessorNameFilter);
+        verify(applicationAssessmentSummaryServiceMock, only()).getAvailableAssessors(applicationId, page, size, assessorNameFilter, Sort.ASSESSOR);
     }
 
     @Test

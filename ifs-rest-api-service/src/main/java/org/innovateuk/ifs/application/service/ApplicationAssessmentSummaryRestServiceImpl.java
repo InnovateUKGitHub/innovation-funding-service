@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -30,9 +31,9 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
     }
 
     @Override
-    public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, String assessorNameFilter) {
-        String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/available-assessors",pageIndex, pageSize, assessorNameFilter, applicationId);
-        return getWithRestResult(uriWithParams, ApplicationAssessorPageResource.class);
+    public RestResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, String assessorNameFilter, Sort sort) {
+        String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/available-assessors",pageIndex, pageSize, assessorNameFilter, sort, applicationId);
+        return getWithRestResult(uriWithParams, ApplicationAvailableAssessorPageResource.class);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
         return getWithRestResult(format("%s/%s", applicationAssessmentSummaryRestURL, applicationId), ApplicationAssessmentSummaryResource.class);
     }
 
-    protected String buildUri(String url, Integer pageNumber, Integer pageSize, String assessorNameFilter, Object... uriParameters) {
+    protected String buildUri(String url, Integer pageNumber, Integer pageSize, String assessorNameFilter, Sort sort, Object... uriParameters) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         if(pageNumber != null) {
             params.put("page", singletonList(pageNumber.toString()));
@@ -50,6 +51,12 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
         }
         if (assessorNameFilter != null) {
             params.put("assessorNameFilter", singletonList(assessorNameFilter));
+        }
+        if (assessorNameFilter != null) {
+            params.put("assessorNameFilter", singletonList(assessorNameFilter));
+        }
+        if (sort != null) {
+            params.put("sort", singletonList(sort.name()));
         }
         return UriComponentsBuilder.fromPath(url).queryParams(params).buildAndExpand(uriParameters).toUriString();
     }

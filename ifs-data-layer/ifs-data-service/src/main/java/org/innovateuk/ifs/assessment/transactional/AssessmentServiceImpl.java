@@ -18,6 +18,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
@@ -130,7 +132,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Integer> countByStateAndCompetition(AssessmentState state, long competitionId) {
-        return serviceSuccess(assessmentRepository.countByActivityStateAndTargetCompetitionId(state, competitionId));
+        return serviceSuccess(assessmentRepository.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(state, competitionId, singletonList(UserStatus.ACTIVE)));
     }
 
     @Override

@@ -45,11 +45,11 @@
                                 </th:block>
                             </div>
                         </div>
-                        <a th:text="${row.applicationNumber}" th:href="${'/management/competition/'+row.competitionId+'/application/'+row.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link"/>
+                        <a th:text="${row.applicationNumber}" th:href="@{~/management/competition/{competitionId}/application/{applicationId}(competitionId=${row.competitionId},applicationId=${row.applicationNumber})}" class="govuk-link"/>
                         <small>
                             <th:block th:text="${row.numberOfPartners > 1 ? row.numberOfPartners+' partners' : row.numberOfPartners+' partner'}" /><br/>
                             <th:block th:text="${'Lead: '+row.projectLeadOrganisationName}" />
-                            <a th:href="@{/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
+                            <a th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
                             class="govuk-link">View activity log</a>
                         </small>
                     </th>

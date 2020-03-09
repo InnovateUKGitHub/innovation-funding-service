@@ -166,25 +166,20 @@
                                  th:classappend="${#fields.hasErrors('fundingLevelPercentageOverride')} ? 'govuk-form-group--error'">
                                 <fieldset class="govuk-fieldset">
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevelsOverride">
-                                        <h2 class="govuk-fieldset__heading">Set the maximum funding level that applicants can apply for.</h2>
+                                        <h2 class="govuk-fieldset__heading">Enter the maximum funding level percentage. Only use whole numbers from 1-100.</h2>
                                     </legend>
                                     <span th:if="${#fields.hasErrors('fundingLevelPercentageOverride')}" class="govuk-error-message"
                                           th:each="err : ${#fields.errors('fundingLevelPercentageOverride')}" th:text="${err}"/>
-                                    <select class="govuk-select govuk-!-width-one-quarter"
-                                            name="fundingLevelPercentageOverride"
-                                            id="fundingLevelPercentageOverride"
-                                            required="required"
-                                            th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required}">
-                                        <option value=""
-                                                disabled="disabled"
-                                                th:selected="${competitionSetupForm.fundingLevelPercentageOverride == null}">Please select &hellip;</option>
-                                        <option th:each="fundingLevel : ${model.fundingLevels}"
-                                                th:text="${fundingLevel.textValue}"
-                                                th:value="${fundingLevel.percentage}"
-                                                th:selected="${competitionSetupForm.fundingLevelPercentageOverride == fundingLevel.percentage}">
-                                            Funding level
-                                        </option>
-                                    </select>
+                                        <input type="number"
+                                               class="govuk-input govuk-input--width-5"
+                                               th:field="*{fundingLevelPercentageOverride}"
+                                               th:errorclass="govuk-input--error"
+                                               placeholder="0"
+                                               required="required"
+                                               data-prevent-input-non-decimal
+                                               min="1"
+                                               max="100"
+                                               th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required},data-min-errormessage=#{validation.eligibilityform.fundingLevel.min},data-max-errormessage=#{validation.eligibilityform.fundingLevel.max}">
                                 </fieldset>
                             </div>
                         </div>

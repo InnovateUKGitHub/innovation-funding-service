@@ -45,8 +45,12 @@ IFS.core.editor = (function () {
       var editorType = el.attr('data-editor')
       if (editorType !== '') {
         var labelledby = ''
-        if (jQuery('[for="' + el.prop('id') + '"]').length) {
-          labelledby = 'aria-labelledby="' + el.prop('id') + '"'
+        var label = jQuery('[for="' + el.prop('id') + '"]')
+        if (label.length) {
+          if (!label.prop('id')) {
+            label.prop('id', el.prop('id') + '-label')
+          }
+          labelledby = 'aria-labelledby="' + label.prop('id') + '"'
         }
 
         if (el.attr('readonly')) {

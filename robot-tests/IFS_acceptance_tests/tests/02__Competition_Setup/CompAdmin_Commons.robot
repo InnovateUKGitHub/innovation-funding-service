@@ -299,7 +299,7 @@ the user fills in the Public content and publishes
     the user clicks the button/link         link = Competition information and search
     the user enters text to a text field    id = shortDescription  Short public description
     the user enters text to a text field    id = projectFundingRange  Up to £1million
-    the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary"]  Summary of eligiblity
+    the user enters text to a text field    css = [aria-labelledby = "eligibilitySummary-label"]  Summary of eligiblity
     the user selects the radio button       publishSetting  public
     the user enters text to a text field    id = keywords  Search, Testing, Robot, ${extraKeyword}
     the user clicks the button/link         jQuery = button:contains("Save and review")

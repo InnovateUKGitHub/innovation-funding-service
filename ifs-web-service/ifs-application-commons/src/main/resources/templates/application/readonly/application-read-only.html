@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
+<th:block th:fragment="print(model)">
+    <th:block th:each="section, sectionIter : ${model.sections}">
+        <section th:classappend="${section.finances ? 'landscape' : 'portrait'}">
+            <h2 th:text="${section.name}"
+                class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
+            <div class="question" th:each="question, questionIter : ${section.questions}">
+                <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
+            </div>
+        </section>
+    </th:block>
+</th:block>
+
 <th:block th:fragment="accordion(model)">
-
-    <th:block th:each="section : ${model.sections}">
-
+    <th:block th:each="section, sectionIter : ${model.sections}">
         <section>
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
             <!--/* Show the accordion sections */-->
-            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-questions">
-                <div class="govuk-accordion__section"  th:each="question, iteration : ${section.questions}">
+            <div class="govuk-accordion" data-module="govuk-accordion" th:id="|accordion-questions-${sectionIter.count}|">
+                <div class="govuk-accordion__section"  th:each="question, questionIter : ${section.questions}">
                     <div class="govuk-accordion__section-header">
                         <h2 class="govuk-accordion__section-heading">
-                            <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${iteration.count}|">
+                            <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
                                 <th:block th:text="${question.name}"></th:block>
                             </span>
                             <th:block th:if="${model.settings.includeStatuses}">
@@ -22,7 +32,7 @@
                             </th:block>
                         </h2>
                     </div>
-                    <div th:id="|accordion-questions-content-${iteration.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${iteration.count}|">
+                    <div th:id="|accordion-questions-content-${sectionIter.count}-${questionIter.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
                         <th:block
                             th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
 
@@ -41,7 +51,7 @@
                                 <button class="govuk-button button-clear"
                                         type="submit"
                                         name="assign"
-                                        th:unless="${question.lead && !question.complete}"
+                                        th:unless="${question.lead || question.complete}"
                                         th:value="${question.questionId}">
                                     Assign to lead for review
                                 </button>
