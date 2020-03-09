@@ -249,7 +249,7 @@
                                 th:unless="${sort.onlyInAssessment && !model.applicationsView.inAssessment}"
                                 th:value="${sort}"
                                 th:selected="${model.applicationsView.currentSort == sort}"
-                                th:text="${sort.columnName}"></option>
+                                th:text="${sort.assessorsColumn && !model.applicationsView.inAssessment ? 'Assigned' : sort.columnName}"></option>
                     </select>
                     <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Sort</button>
                 </div>
