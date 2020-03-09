@@ -21,6 +21,8 @@ public class  OrganisationResource {
     private Long organisationType;
     private String organisationTypeName;
     private String organisationTypeDescription;
+    private boolean isInternational;
+    private String internationalCompanyRegistrationNumber;
 
     public static final Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
@@ -102,6 +104,22 @@ public class  OrganisationResource {
 
     public void setOrganisationTypeDescription(String organisationTypeDescription) {
         this.organisationTypeDescription = organisationTypeDescription;
+    }
+
+    public boolean isInternational() {
+        return isInternational;
+    }
+
+    public void setInternational(boolean international) {
+        isInternational = international;
+    }
+
+    public String getInternationalCompanyRegistrationNumber() {
+        return internationalCompanyRegistrationNumber;
+    }
+
+    public void setInternationalCompanyRegistrationNumber(String internationalCompanyRegistrationNumber) {
+        this.internationalCompanyRegistrationNumber = internationalCompanyRegistrationNumber;
     }
 
     @JsonIgnore
