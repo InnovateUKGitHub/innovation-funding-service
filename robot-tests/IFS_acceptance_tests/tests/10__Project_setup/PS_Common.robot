@@ -197,7 +197,7 @@ the user enters bank details
     the user clicks the button/link                      id = postcode-lookup
     the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
     the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                      id = submit-bank-details
+    the user clicks the button/link                      id = submit-bank-details-button
 
 The user is able to complete project details section
     the user clicks the button/link         link = Project details
@@ -216,14 +216,14 @@ The user completes the project team section
 The user uploads the exploitation plan
     the user clicks the button/link     link = Exploitation plan
     the user uploads the file           css = .inputfile  ${valid_pdf}
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
 
 The user uploads the Test document type
     the user clicks the button/link     link = Test document type
     the user uploads the file           css = .inputfile  ${valid_pdf}
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
 
@@ -296,7 +296,7 @@ partner fills in his bank details
     the user clicks the button/link                  id = postcode-lookup
     the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery = .govuk-button:contains("Submit bank account details")
-    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id = submit-bank-details
+    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id = submit-bank-details-button
 
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}
@@ -412,12 +412,12 @@ project manager submits both documents
     the user navigates to the page      ${server}/project-setup/project/${project}/document/all
     the user clicks the button/link     link = Collaboration agreement
     the user uploads the file           css = .inputfile    ${valid_pdf}
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
     the user clicks the button/link     link = Exploitation plan
     the user uploads the file           css = .inputfile    ${upload_folder}/${valid_pdf}
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
 
 project finance approves both documents
@@ -584,18 +584,18 @@ applicant user enters bank details
     the user clicks the button/link                     jquery = button:contains("Cancel")
     the user should not see the element                 jQUery = p:contains("The bank account details below are being reviewed")
     the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                     id = submit-bank-details
+    the user clicks the button/link                     id = submit-bank-details-button
 
 PM submits both documents
     [Arguments]  ${compName}
     the user clicks the button/link     link = Collaboration agreement
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     jQuery = button:contains("Cancel")
     the user should see the element     name = deleteDocument
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user goes to documents page     Return to documents  Exploitation plan
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user should be redirected to the correct page    ${SERVER}/project-setup/project/${compName}
 
