@@ -69,14 +69,14 @@
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="govuk-button" type="submit" name="hide-application" th:value="${applicationId}">Remove application</button>
+            <button class="govuk-button govuk-!-margin-bottom-0" type="submit" name="hide-application" th:value="${applicationId}">Remove application</button>
             <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
 
 <!-- Confirm delete application modal -->
-<th:block th:fragment="modal-confirm-delete-application (applicationId, message, title) ">
+<th:block th:fragment="modal-confirm-delete-application (applicationId, title, message) ">
     <div class="alignleft warning-modal" th:classappend="${'modal-confirm-delete-application-' + applicationId}" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
@@ -85,7 +85,7 @@
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="govuk-button" type="submit" name="delete-application" th:value="${applicationId}">Delete application</button>
+            <button class="govuk-button govuk-button--warning govuk-!-margin-bottom-0" type="submit" name="delete-application" th:value="${applicationId}">Delete application</button>
             <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>

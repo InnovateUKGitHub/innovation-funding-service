@@ -108,11 +108,11 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         return leadApplicant && !submittedAndFinishedStates.contains(applicationState);
     }
 
-    public String getMessageTitle() {
+    public String getDeleteModalTitle() {
         return collaborationLevelSingle ? SINGLE_TITLE : COLLABORATIVE_TITLE;
     }
 
-    public String getMessage() {
+    public String getDeleteModalMessage() {
         return collaborationLevelSingle ? SINGLE_MESSAGE : COLLABORATIVE_MESSAGE;
     }
 
