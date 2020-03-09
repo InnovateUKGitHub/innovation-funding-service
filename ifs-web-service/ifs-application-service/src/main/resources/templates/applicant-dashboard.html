@@ -155,15 +155,13 @@
                                 </ul>
                             </div>
                             <div class="status-and-action">
-                                <div>
-                                    <p th:if="${previousView.rejected}" class="govuk-body status-msg msg-progress">Unsuccessful</p>
-                                    <p th:if="${previousView.approved}" class="govuk-body status-msg msg-progress">Successful</p>
-                                    <p th:if="${previousView.createdOrOpen}" class="govuk-body status-msg msg-progress not-submitted">Not submitted</p>
-                                    <p th:if="${previousView.informedIneligible}" class="govuk-body status-msg msg-progress">Ineligible</p>
-                                    <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
-                                    <p th:if="${previousView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
-                                    <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
-                                </div>
+                                <p th:if="${previousView.rejected}" class="govuk-body status-msg msg-progress">Unsuccessful</p>
+                                <p th:if="${previousView.approved}" class="govuk-body status-msg msg-progress">Successful</p>
+                                <p th:if="${previousView.createdOrOpen}" class="govuk-body status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${previousView.informedIneligible}" class="govuk-body status-msg msg-progress">Ineligible</p>
+                                <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
+                                <p th:if="${previousView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
+                                <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
                                 <div class="action alignright">
                                     <th:block th:if="${previousView.canHideApplication()}">
                                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
