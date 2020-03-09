@@ -28,12 +28,12 @@ Key statistics of the In Assessment competitions
 *** Keywords ***
 The key statistics counts should be correct
     ${TOTAL_ASSIGNMENT} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Total assignments") .govuk-heading-l
-    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    16  # Total assignments
+    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    36  # Total assignments
     ${AWAITING} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assignments awaiting response") .govuk-heading-l
     Should Be Equal As Integers    ${AWAITING}    7  # Assignments awaiting response
     ${ACCEPTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assignments accepted") .govuk-heading-l
-    Should Be Equal As Integers    ${ACCEPTED}    6  # Assignments accepted
+    Should Be Equal As Integers    ${ACCEPTED}    15  # Assignments accepted
     ${STARTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments started") .govuk-heading-l
     Should Be Equal As Integers    ${STARTED}    3  # Assessments started
     ${SUBMITTED} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Assessments submitted") .govuk-heading-l
-    Should Be Equal As Integers    ${SUBMITTED}    0  # Assessments submitted
+    Should Be Equal As Integers    ${SUBMITTED}    11  # Assessments submitted

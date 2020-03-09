@@ -14,7 +14,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -35,12 +34,11 @@ import java.util.function.Supplier;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 @Controller
 @RequestMapping("/application")
 public class ReviewAndSubmitController {
-    public static final String FORM_ATTR_NAME = "applicationSubmitForm";
+    public static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator;
@@ -67,7 +65,7 @@ public class ReviewAndSubmitController {
     @PreAuthorize("hasAnyAuthority('applicant')")
     @GetMapping("/{applicationId}/review-and-submit")
     @AsyncMethod
-    public String reviewAndSubmit(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationSubmitForm applicationSubmitForm,
+    public String reviewAndSubmit(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationSubmitForm form,
                                   BindingResult bindingResult,
                                   @PathVariable long applicationId,
                                   Model model,
@@ -81,7 +79,7 @@ public class ReviewAndSubmitController {
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/review-and-submit")
     public String submitApplication(@PathVariable long applicationId,
-                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm applicationSubmitForm,
+                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
                                     BindingResult bindingResult,
                                     RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("termsAgreed", true);
@@ -224,16 +222,6 @@ public class ReviewAndSubmitController {
 
     private String handleMarkAsCompleteFailure(long applicationId, long questionId, ProcessRoleResource processRole) {
         questionStatusRestService.markAsInComplete(questionId, applicationId, processRole.getId());
-
-        if (isResearchCategoryQuestion(questionId)) {
-            return "redirect:/application/" + applicationId + "/form/question/" + questionId + "/research-category?mark_as_complete=true";
-        }
-
-        return "redirect:/application/" + applicationId + "/form/question/edit/" + questionId + "?mark_as_complete=true";
-    }
-
-    private boolean isResearchCategoryQuestion(long questionId) {
-        QuestionResource question = questionRestService.findById(questionId).getSuccess();
-        return question.getQuestionSetupType() == RESEARCH_CATEGORY;
+        return "redirect:/application/" + applicationId + "/form/question/edit/" + questionId + "?show-errors=true";
     }
 }

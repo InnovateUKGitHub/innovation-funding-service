@@ -17,8 +17,6 @@ import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCost
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
-import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -114,12 +112,6 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Mock
     private ApplicantRestService applicantRestService;
-
-    @Mock
-    private ApplicationNavigationPopulator navigationPopulator;
-
-    @Mock
-    private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;

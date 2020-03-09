@@ -42,9 +42,6 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private PageHistoryService pageHistoryService;
 
-    @Value("${ifs.assessor.profile.feature.toggle}")
-    private boolean assessorProfileFeatureToggle;
-
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (modelAndView != null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:"))) {
@@ -92,7 +89,6 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     private void addShowManageAssessorsAttribute(HttpServletRequest request, ModelAndView modelAndView) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         modelAndView.getModelMap().addAttribute(SHOW_MANAGE_ASSESSORS_LINK_ATTR,
-                assessorProfileFeatureToggle &&
                         user != null &&
                         !user.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.SUPPORT) &&
                         user.hasAnyRoles(Role.COMP_ADMIN, Role.PROJECT_FINANCE));

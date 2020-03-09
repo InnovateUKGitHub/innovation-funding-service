@@ -1,27 +1,19 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.form;
 
-import javax.validation.constraints.Range;
-import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
+import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
+import org.innovateuk.ifs.application.resource.CompanyAge;
+import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
+import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-import static java.lang.Boolean.TRUE;
-
 /**
  * Form for application details.
  */
-
-@FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
-@FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
-@FieldRequiredIf(required = "innovationAreaName", argument = "validateInnovationArea", predicate = true, message = "{validation.application.innovationarea.category.required}")
-@FieldRequiredIf(required = "competitionReferralSource", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.competitionreferralsource.required}")
-@FieldRequiredIf(required = "companyAge", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.companyage.required}")
-@FieldRequiredIf(required = "companyPrimaryFocus", argument = "isProcurementCompetition", predicate = true, message = "{validation.application.procurement.companyprimaryfocus.required}")
 public class ApplicationDetailsForm {
 
     @NotBlank(message = "{validation.project.name.must.not.be.empty}")
@@ -42,40 +34,24 @@ public class ApplicationDetailsForm {
 
     private String previousApplicationTitle;
 
-    private boolean canSelectInnovationArea;
+    private CompetitionReferralSource competitionReferralSource;
 
-    private boolean validateInnovationArea;
+    private CompanyAge companyAge;
 
-    private String innovationArea;
+    private CompanyPrimaryFocus companyPrimaryFocus;
 
-    private String innovationAreaName;
+    private Object innovationAreaErrorHolder;
 
-    private boolean isProcurementCompetition;
-
-    private String competitionReferralSource;
-
-    private String companyAge;
-
-    private String companyPrimaryFocus;
-
-    public void populateForm(ApplicationDetailsViewModel viewModel) {
-        this.name = viewModel.getApplication().getName();
-        this.durationInMonths = viewModel.getApplication().getDurationInMonths();
-        this.resubmission = viewModel.getApplication().getResubmission();
-        this.previousApplicationNumber = viewModel.getApplication().getPreviousApplicationNumber();
-        this.previousApplicationTitle = viewModel.getApplication().getPreviousApplicationTitle();
-        this.startDate = viewModel.getApplication().getStartDate();
-        this.canSelectInnovationArea = viewModel.getFormInputViewModel().isCanSelectInnovationArea() == TRUE;
-        this.innovationArea = viewModel.getFormInputViewModel().getInnovationAreaText();
-        this.innovationAreaName = viewModel.getFormInputViewModel().getSelectedInnovationAreaName();
-        this.isProcurementCompetition = viewModel.getFormInputViewModel().getIsProcurementCompetition() == TRUE;
-        if (viewModel.getFormInputViewModel().getIsProcurementCompetition()){
-            ApplicationResource application = viewModel.getApplication();
-            this.competitionReferralSource = (null != application.getCompetitionReferralSource()) ?  application.getCompetitionReferralSource().toString() : null;
-            this.companyAge = (null != application.getCompanyAge()) ? application.getCompanyAge().toString() : null;
-            this.companyPrimaryFocus = (null != application.getCompanyPrimaryFocus()) ? application.getCompanyPrimaryFocus().toString() : null;
-        }
-        this.validateInnovationArea = validateInnovationArea(viewModel);
+    public void populateForm(ApplicationResource application) {
+        this.name = application.getName();
+        this.durationInMonths = application.getDurationInMonths();
+        this.resubmission = application.getResubmission();
+        this.previousApplicationNumber = application.getPreviousApplicationNumber();
+        this.previousApplicationTitle = application.getPreviousApplicationTitle();
+        this.startDate = application.getStartDate();
+        this.competitionReferralSource = application.getCompetitionReferralSource();
+        this.companyAge = application.getCompanyAge();
+        this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
     }
 
     public String getName() {
@@ -106,12 +82,12 @@ public class ApplicationDetailsForm {
         return previousApplicationNumber;
     }
 
-    public void setPreviousApplicationNumber(String previousApplicationNumber) {
-        this.previousApplicationNumber = previousApplicationNumber;
-    }
-
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
+    }
+
+    public void setPreviousApplicationNumber(String previousApplicationNumber) {
+        this.previousApplicationNumber = previousApplicationNumber;
     }
 
     public void setPreviousApplicationTitle(String previousApplicationTitle) {
@@ -126,68 +102,35 @@ public class ApplicationDetailsForm {
         this.startDate = startDate;
     }
 
-    public boolean isCanSelectInnovationArea() {
-        return canSelectInnovationArea;
-    }
-
-    public void setCanSelectInnovationArea(boolean canSelectInnovationArea) {
-        this.canSelectInnovationArea = canSelectInnovationArea;
-    }
-
-    public String getInnovationArea() {
-        return innovationArea;
-    }
-
-    public void setInnovationArea(String innovationArea) {
-        this.innovationArea = innovationArea;
-    }
-
-    public String getInnovationAreaName() {
-        return innovationAreaName;
-    }
-
-    public void setInnovationAreaName(String innovationAreaName) {
-        this.innovationAreaName = innovationAreaName;
-    }
-
-    public boolean getIsProcurementCompetition() {
-        return isProcurementCompetition;
-    }
-
-    public void setIsProcurementCompetition(boolean procurementCompetition) {
-        isProcurementCompetition = procurementCompetition;
-    }
-
-    public String getCompetitionReferralSource() {
+    public CompetitionReferralSource getCompetitionReferralSource() {
         return competitionReferralSource;
     }
 
-    public void setCompetitionReferralSource(String competitionReferralSource) {
+    public void setCompetitionReferralSource(CompetitionReferralSource competitionReferralSource) {
         this.competitionReferralSource = competitionReferralSource;
     }
 
-    public String getCompanyAge() {
+    public CompanyAge getCompanyAge() {
         return companyAge;
     }
 
-    public void setCompanyAge(String companyAge) {
+    public void setCompanyAge(CompanyAge companyAge) {
         this.companyAge = companyAge;
     }
 
-    public String getCompanyPrimaryFocus() {
+    public CompanyPrimaryFocus getCompanyPrimaryFocus() {
         return companyPrimaryFocus;
     }
 
-    public void setCompanyPrimaryFocus(String companyPrimaryFocus) {
+    public void setCompanyPrimaryFocus(CompanyPrimaryFocus companyPrimaryFocus) {
         this.companyPrimaryFocus = companyPrimaryFocus;
     }
 
-    public boolean isValidateInnovationArea() {
-        return validateInnovationArea;
+    public Object getInnovationAreaErrorHolder() {
+        return innovationAreaErrorHolder;
     }
 
-    private boolean validateInnovationArea(ApplicationDetailsViewModel viewModel) {
-        return !viewModel.getApplication().getNoInnovationAreaApplicable() && canSelectInnovationArea;
+    public void setInnovationAreaErrorHolder(Object innovationAreaErrorHolder) {
+        this.innovationAreaErrorHolder = innovationAreaErrorHolder;
     }
-
 }
