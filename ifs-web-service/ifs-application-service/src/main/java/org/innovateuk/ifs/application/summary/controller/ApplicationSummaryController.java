@@ -7,24 +7,22 @@ import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
  * This controller will handle all requests that are related to the application summary.
@@ -59,8 +57,7 @@ public class ApplicationSummaryController {
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/summary")
     @AsyncMethod
-    public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
-                                     Model model,
+    public String applicationSummary(Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);

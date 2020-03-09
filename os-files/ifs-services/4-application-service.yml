@@ -73,8 +73,6 @@ items:
             value: "${IFS_LIVE_PROJECTS_LANDING_PAGE_URL}"
           - name: IFS_EARLY_METRICS_URL
             value: "${IFS_EARLY_METRICS_URL}"
-          - name: IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE
-            value: "${IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE}"
           ports:
           - containerPort: 8080
           resources:
