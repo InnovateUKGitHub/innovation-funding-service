@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.application.view.form;
 
-import javax.validation.constraints.Length;
+import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 

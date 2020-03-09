@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.management.competition.setup.projectdocument.form;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import javax.validation.constraints.Length;
-import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * Form to capture the details of the new project document

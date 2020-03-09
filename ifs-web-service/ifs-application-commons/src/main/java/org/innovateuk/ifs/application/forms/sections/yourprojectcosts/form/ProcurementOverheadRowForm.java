@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import javax.validation.constraints.Length;
+import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.ProcurementOverhead;
 

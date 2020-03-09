@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import javax.validation.constraints.Length;
-import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
