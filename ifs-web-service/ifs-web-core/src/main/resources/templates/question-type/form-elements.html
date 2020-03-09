@@ -304,6 +304,7 @@
     <th:block th:unless="${model.closed}">
         <button th:if="${model.complete and !model.summary}"
                 type="submit"
+                id="edit"
                 name="mark_as_incomplete"
                 th:value="${model.questionId}"
                 class="govuk-button button-clear"
