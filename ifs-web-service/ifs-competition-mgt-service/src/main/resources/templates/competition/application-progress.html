@@ -169,7 +169,8 @@
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.assignedCount}">4</td>
                                 <td class="govuk-table__cell">
                                     <form method="post"
-                                          th:action="@{/assessment/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
+                                          th:action="@{/assessment/competition/{cid}/application/{appId}/assessors(cid=${model.competitionId}, appId=${model.applicationId})}">
+                                        <input type="hidden" name="selectedAssessors" th:value="${assessor.id}" />
                                         <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Reassign</button>
                                     </form>
                                 </td>
