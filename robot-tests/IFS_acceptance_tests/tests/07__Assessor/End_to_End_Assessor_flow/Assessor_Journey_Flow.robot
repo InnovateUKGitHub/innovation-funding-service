@@ -169,7 +169,9 @@ comp admin allocate application to an assessor
     the user clicks the button/link             jQuery = tr:nth-child(1) a:contains("View progress")
     the user clicks the button/link             jQuery = .pagination-links a:contains("Next")
     the user clicks the button/link             jQuery = .pagination-links a:contains("Next")
-    the user adds an assessor to application    assessor-row-4
+    the user enters text to a text field        id = assessorNameFilter   Fister
+    the user clicks the button/link             jQuery = .govuk-button:contains("Filter")
+    the user adds an assessor to application    assessor-row-1
     the user clicks the button/link             jQuery = a:contains("Allocate applications")
     the user clicks the button/link             jQuery = a:contains("Manage assessments")
     the user clicks the button/link             jQuery = a:contains("Competition")
