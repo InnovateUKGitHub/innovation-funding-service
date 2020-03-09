@@ -33,9 +33,6 @@
     padding: 15px 0 15px 30px;
     background-color: govuk-colour("white");
     border: 1px solid $govuk-border-colour;
-   }
-
-  .row {
     overflow: auto;
     display: flex; // Using flex as a progressive enhancement for vertical alignment of dashboard elements. Container heights are varaiable depending on length of application titles.
     flex-wrap: wrap;
@@ -43,11 +40,7 @@
     justify-content: flex-end;
   }
 
-  .action {
-    margin-right: 30px;
-  }
-
-  .task{
+  .task {
     @include govuk-font(16);
     @include media-down(tablet) {
       margin-bottom: 15px;
@@ -103,18 +96,16 @@
       width: 50%;
     }
 
-    float: right;
     vertical-align: middle;
     text-align: center;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     margin: 0;
+  }
 
-    .action {
-      align-self: flex-end;
-      margin-right: 30px;
-    }
+  .action {
+    margin-right: 30px;
   }
 
   .status-msg {
@@ -282,7 +273,8 @@
     width: 78%;
   }
 
-  .status{
+  .status,
+  .status-and-action {
     @include media-down(mobile) {
       flex: 1 0 auto;
     }
