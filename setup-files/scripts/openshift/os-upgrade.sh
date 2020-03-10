@@ -70,9 +70,6 @@ function upgradeServices {
     watchSilStubStatus
 
     upgradeSurvey
-
-    upgradeEuGrantRegistration
-
 }
 
 function upgradeSurvey {
@@ -131,8 +128,6 @@ function forceReload {
     watchSilStubStatus
 
     forceReloadSurvey
-
-    forceReloadEuGrantRegistration
 }
 
 function watchSilStubStatus {
