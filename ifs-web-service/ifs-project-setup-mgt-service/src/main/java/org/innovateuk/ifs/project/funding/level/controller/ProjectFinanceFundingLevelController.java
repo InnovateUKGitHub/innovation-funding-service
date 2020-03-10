@@ -104,7 +104,8 @@ public class ProjectFinanceFundingLevelController {
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource lead = projectRestService.getLeadOrganisationByProject(projectId).getSuccess();
-        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead));
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead, competition, getFundingAppliedFor(project)));
         return "project/financecheck/funding-level";
     }
 
