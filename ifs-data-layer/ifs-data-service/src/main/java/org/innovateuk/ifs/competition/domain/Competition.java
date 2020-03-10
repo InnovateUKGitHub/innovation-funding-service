@@ -148,11 +148,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private Boolean includeJesForm;
 
-    @JoinTable(name = "international_application_allowed",
-            joinColumns = @JoinColumn(name = "competition_id"))
-    @Column(name = "competition_organisation_config", nullable = false)
-    private Boolean internationalApplicationAllowed;
-
     @Enumerated(EnumType.STRING)
     private ApplicationFinanceType applicationFinanceType;
 
@@ -921,14 +916,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setProjectSetupStarted(ZonedDateTime projectSetupStarted) {
         this.projectSetupStarted = projectSetupStarted;
-    }
-
-    public Boolean getInternationalApplicationAllowed() {
-        return internationalApplicationAllowed;
-    }
-
-    public void setInternationalApplicationAllowed(Boolean internationalApplicationAllowed) {
-        this.internationalApplicationAllowed = internationalApplicationAllowed;
     }
 
     @Override
