@@ -128,8 +128,6 @@ function forceReload {
     watchSilStubStatus
 
     forceReloadSurvey
-
-    forceReloadEuGrantRegistration
 }
 
 function watchSilStubStatus {
