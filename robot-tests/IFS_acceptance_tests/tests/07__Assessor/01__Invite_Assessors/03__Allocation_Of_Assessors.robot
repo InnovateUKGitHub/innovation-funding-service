@@ -8,7 +8,9 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../Assessor_Commons.robot
 *** Variables ***
 ${assessor_alexis_id}          ${user_ids['alexis.colon@gmail.com']}
-${assessor_benji_id}           ${user_ids['benjamin.nixon@gmail.com']}
+${assessor_camile_id}          ${user_ids['camille.shelton@gmail.com']}
+${Closed_Comp_Title}           Smart monitoring in high-pressure engineering systems
+${Closed_Comp_Id}              ${competition_ids["${Closed_Comp_Title}"]}
 
 *** Test Cases ***
 Competition in Assessment: Application progress page Sort by: Total applications
@@ -89,7 +91,7 @@ Competition in Closed: Assign to application page Sort by: Submitted
 
 Competition in Closed: Assessor progress Sort by: Assigned
     [Documentation]  IFS-7106
-    [Setup]  the user navigates to the page        ${server}/management/assessment/competition/${CLOSED_COMPETITION}/assessors/${assessor_benji_id}
+    [Setup]  the user navigates to the page        ${server}/management/assessment/competition/${Closed_Comp_Id}/assessors/${assessor_camile_id}
     Given the user sorts by                        Assigned
     When The table should be sorted by column      4
 
