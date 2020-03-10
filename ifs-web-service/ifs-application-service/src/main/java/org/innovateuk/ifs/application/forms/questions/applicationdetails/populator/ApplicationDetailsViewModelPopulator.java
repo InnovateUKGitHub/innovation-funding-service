@@ -1,71 +1,52 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.populator;
 
-import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.application.forms.questions.applicationdetails.model.ApplicationDetailsViewModel;
-import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.forminput.ApplicationDetailsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
-import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class ApplicationDetailsViewModelPopulator {
 
     @Autowired
-    private ApplicationNavigationPopulator applicationNavigationPopulator;
+    private QuestionStatusRestService questionStatusRestService;
+
     @Autowired
-    private ApplicationDetailsPopulator applicationDetailsPopulator;
+    private OrganisationRestService organisationRestService;
+
     @Autowired
-    private QuestionService questionService;
+    private CompetitionRestService competitionRestService;
 
-    public ApplicationDetailsViewModel populate(ApplicantQuestionResource question, CompetitionResource competition) {
-        ApplicationDetailsInputViewModel viewModel = getViewModel(question);
-        viewModel.setIsProcurementCompetition(PROCUREMENT.equals(competition.getFundingType()));
+    @Autowired
+    private UserRestService userRestService;
 
-        NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question.getQuestion(), question.getApplication().getId());
-        if (!isApplicationInViewMode(question.getApplication(), question.getCurrentApplicant().getOrganisation())) {
-            removeNotifications(question);
-        }
+    public ApplicationDetailsViewModel populate(ApplicationResource application, long questionId, UserResource user) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
+        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), application.getId()).getSuccess();
 
-        return new ApplicationDetailsViewModel(question, viewModel, navigationViewModel);
+        boolean complete = isComplete(application, organisation, questionId);
+        boolean open = application.isOpen() && competition.isOpen() && role.getRole().isLeadApplicant();
+
+        return new ApplicationDetailsViewModel(application, competition, open, complete);
     }
 
-    private ApplicationDetailsInputViewModel getViewModel(ApplicantQuestionResource question) {
-        return applicationDetailsPopulator.populate(question,
-                    null,
-                    question,
-                    question.getApplicantFormInputs().get(0),
-                    question.getApplicantFormInputs().get(0).responseForApplicant(question.getCurrentApplicant(), question));
-    }
-
-    private void removeNotifications(ApplicantQuestionResource questionResource) {
-        QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(questionResource.getQuestion().getId(), questionResource.getApplication().getId(), questionResource.getCurrentApplicant().getOrganisation().getId());
-        if (questionStatusResource != null) {
-            List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(singletonList(questionStatusResource), questionResource.getCurrentUser().getId());
-            questionService.removeNotifications(notifications);
+    private boolean isComplete(ApplicationResource application, OrganisationResource organisation, long questionId) {
+        try {
+            return questionStatusRestService.getMarkedAsComplete(application.getId(), organisation.getId()).get().contains(questionId);
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IFSRuntimeException(e);
         }
-    }
-
-    private Boolean isApplicationInViewMode(ApplicationResource application, OrganisationResource userOrganisation) {
-        if(null == userOrganisation){
-            return TRUE;
-        }
-        if(!application.isOpen()){
-            return TRUE;
-        }
-        return FALSE;
     }
 }

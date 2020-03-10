@@ -11,36 +11,8 @@
     <div class="hidden">You can print your application by pressing CTRL+P (Windows) or CMD+P (mac)</div>
 </div>
 
-<div th:with="procurementCompetition=${currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
-    <section class="portrait" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
-        <h1 th:text="${section.getName()}" class="govuk-heading-l" />
-        <th:block th:each="question : ${sectionQuestions.get(section.id)}">
-            <div class="govuk-form-group" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
-                 th:if='${formInput.includedInApplicationSummary && formInput.type.displayablePrintType}'
-                 th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})">
+<th:block th:insert="application/readonly/application-read-only :: print (${model})" />
 
-                <th:block th:replace="application/print-elements :: ${formInput.type.nameLower}" />
-
-            </div>
-        </th:block>
-    </section>
-
-    <section class="landscape" th:unless="${financeSection == null or procurementCompetition}">
-        <div>
-            <h1 class="govuk-heading-l">Finances</h1>
-            <p class="govuk-body">This is the overview of the finances provided by all partners in this project.</p>
-            <div th:replace="application/print-elements :: application_finances_summary"></div>
-        </div>
-    </section>
-
-    <section class="landscape" th:if="${fundingFinancesSection}">
-        <div>
-            <h1 th:if="${procurementCompetition}" class="govuk-heading-l">Finances</h1>
-            <h2 class="govuk-heading-m">Funding breakdown</h2>
-            <th:block th:insert="application/print-elements :: financial_summary_table" />
-        </div>
-    </section>
-</div>
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:unless="${param.noprint}">
     <script type="text/javascript">

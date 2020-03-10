@@ -288,7 +288,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/attachment/{attachmentId}")
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAttachment(Long projectId,  @PathVariable long attachmentId) {
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,  @PathVariable long attachmentId) {
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 

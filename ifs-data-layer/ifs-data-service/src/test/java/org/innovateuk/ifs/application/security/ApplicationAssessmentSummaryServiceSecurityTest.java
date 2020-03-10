@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.application.transactional.ApplicationAssessmentSummaryService;
 import org.innovateuk.ifs.application.transactional.ApplicationAssessmentSummaryServiceImpl;
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class ApplicationAssessmentSummaryServiceSecurityTest extends
     @Test
     public void testGetAvailableAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getAvailableAssessors(1L, 0, 20, ""), COMP_ADMIN, PROJECT_FINANCE
+                () -> classUnderTest.getAvailableAssessors(1L, 0, 20, "", Sort.ASSESSOR), COMP_ADMIN, PROJECT_FINANCE
         );
     }
 

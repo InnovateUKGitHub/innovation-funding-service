@@ -43,9 +43,6 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
     @Autowired
     private ApplicationFinanceRowRestService financeRowRestService;
 
-    @Value("${ifs.funding.level.decimal.percentage.enabled}")
-    private boolean fundingLevelPercentageToggle;
-
     @Override
     protected FinanceRowRestService getFinanceRowService() {
         return financeRowRestService;
@@ -67,11 +64,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         try {
             if (field.equals("grantClaimPercentage")) {
                 GrantClaimPercentage grantClaim = (GrantClaimPercentage) finance.getGrantClaim();
-                if (fundingLevelPercentageToggle) {
-                    grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
-                } else {
-                    grantClaim.setPercentage(new BigDecimal(value));
-                }
+                grantClaim.setPercentage(new BigDecimal(value).setScale(MAX_DECIMAL_PLACES, HALF_UP));
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("amount")) {
                 GrantClaimAmount grantClaim = (GrantClaimAmount) finance.getGrantClaim();
