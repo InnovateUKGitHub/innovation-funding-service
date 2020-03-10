@@ -81,7 +81,7 @@ Remove an assigned application (Notified)
     When the user clicks the button/link      jQuery = button:contains("Remove assessor")
     Then the user should not see the element  jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
     And the user should see the element       jQuery = h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
-    And the user clicks the button/link       jQuery = .pagination-label:contains("Next")
+    And the user clicks the button/link       jQuery = .pagination-links a:contains("Next")
 
 Reassign a removed application
     [Documentation]    INFUND-398
@@ -97,7 +97,8 @@ Assign an application to an assessor
     And the user clicks the button/link    jQuery = a:contains("41 to")
     When the user clicks the button/link   jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
     Then the user should see the element   jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
-    When the user clicks the button/link    jQuery = td:contains("36") ~ td button:contains("Assign")
+    When the user selects the checkbox     jQuery = tr:contains("36") :checkbox
+    Then the user clicks the button/link   jQuery = button:contains("Add to assessor")
     Then the user should see the element   jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
 
 Filter by application number on the assessor page
@@ -105,7 +106,7 @@ Filter by application number on the assessor page
     [Tags]
     Given the user enters text to a text field  css = #filterSearch    ${Intelligent_water}
     When the user clicks the button/link        jQuery = button:contains("Filter")
-    Then the user should see the element        jQuery = tr:nth-child(1) td:nth-child(1):contains("${Intelligent_water}")
+    Then the user should see the element        jQuery = tr:nth-child(1) td:contains("${Intelligent_water}")
     And the user should not see the element     jQuery = .pagination-label:contains("Next")
 
 Filtering of the applications
@@ -237,8 +238,8 @@ the user should see details on assessors progress page
     the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Academic")
     the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("5")
     the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
-    the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
-    the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
+    the user should see the element    jQuery = .applications-available td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
+    the user should see the element    jQuery = .applications-available td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
 
 the user filter by application name
     the user enters text to a text field   css = #filterSearch    ${Intelligent_water}

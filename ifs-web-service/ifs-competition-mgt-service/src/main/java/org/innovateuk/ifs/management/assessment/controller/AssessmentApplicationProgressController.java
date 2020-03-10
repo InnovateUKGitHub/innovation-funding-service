@@ -126,7 +126,7 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
             @PathVariable long applicationId,
             @RequestParam("selectionId") long assessorId,
             @RequestParam("isSelected") boolean isSelected,
-            @RequestParam("assessorNameFilter") String assessorNameFilter,
+            @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter,
             HttpServletRequest request,
             HttpServletResponse response) {
 
@@ -160,7 +160,7 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
     public @ResponseBody JsonNode addAllAssessorsToResendList(@PathVariable long competitionId,
                                                               @PathVariable long applicationId,
                                                               @RequestParam("addAll") boolean addAll,
-                                                              @RequestParam("assessorNameFilter") String assessorNameFilter,
+                                                              @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter,
                                                               HttpServletRequest request,
                                                               HttpServletResponse response) {
         try {
