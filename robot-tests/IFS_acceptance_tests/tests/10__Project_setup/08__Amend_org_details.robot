@@ -13,6 +13,11 @@ ${compId}         ${competition_ids["Project Setup Comp 19"]}
 ${applId}         ${application_ids["${projectName}"]}
 
 *** Test Cases ***
+User can see current and applied for values with no changes
+    [Documentation]  IFS-7005
+    Given the user navigates to the page   ${server}/project-setup-management/project/${projectId}/finance-check
+    Then the user should see the correct funding values   £116,596  £116,596
+
 User can view funding level change page
     [Documentation]  IFS-6695
     Given the user navigates to the page   ${server}/project-setup-management/project/${projectId}/finance-check-overview
@@ -36,10 +41,12 @@ Values are updated dynamically as new percentages are added
 
 New funding percentage is canceled if you select cancel
     [Documentation]  IFS-6695
-    Given the user clicks the button/link           link = Cancel and return to finance overview
-    When the user clicks the button/link            link = Change funding level percentages
-    Then the user should see the element            jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£57,803") ~ td:contains("49.58%")
-    And the user should not see the element         jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£37,713") ~ td:contains("39.08%")
+    Given the user clicks the button/link                link = Cancel and return to finance overview
+    And the user navigates to the page                   ${server}/project-setup-management/project/${projectId}/finance-check
+    And the user should see the correct funding values   £116,596  £116,596
+    When the user navigates to the page                  ${server}/project-setup-management/project/${projectId}/funding-level
+    And the user should see the element                  jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£57,803") ~ td:contains("49.58%")
+    Then the user should not see the element             jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£37,713") ~ td:contains("39.08%")
 
 New funding percentage is applied on finance overview
     [Documentation]  IFS-6695
@@ -52,6 +59,7 @@ New funding percentage is applied on finance checks
     [Documentation]  IFS-6695
     Given the user clicks the button/link    link = Finance checks
     Then the user should see the element     jQuery = dt:contains("Total percentage grant") ~ dd:contains("23.96%")
+    And the user should see the correct funding values   £116,596  £96,506
 
 Approving any eligibility removes the link
     [Documentation]  IFS-6712
@@ -73,4 +81,9 @@ Custom suite setup
     Connect to Database    @{database}
     ${orgId} =  get organisation id by name  Ward Ltd
     Set Suite variable  ${orgId}
+
+the user should see the correct funding values
+    [Arguments]  ${applied}  ${current}
+    the user should see the element   jQuery = dt:contains("Funding applied for") + dd:contains("${applied}")
+    the user should see the element   jQuery = dt:contains("Current amount") + dd:contains("${current}")
 
