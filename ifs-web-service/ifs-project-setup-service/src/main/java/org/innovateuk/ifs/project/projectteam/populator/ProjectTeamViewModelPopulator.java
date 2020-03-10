@@ -6,6 +6,7 @@ import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -39,12 +40,15 @@ public class ProjectTeamViewModelPopulator {
     private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
+    @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
-        boolean isMonitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
+        boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);

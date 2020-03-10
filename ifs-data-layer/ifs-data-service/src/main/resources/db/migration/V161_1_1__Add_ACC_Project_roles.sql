@@ -27,8 +27,3 @@ ALTER TABLE invite
                             'ACC_PROJECT_PARTNER',
                             'ACC_PROJECT_MANAGER',
                             'ACC_PROJECT_FINANCE_CONTACT');
-
--- INSERT INTO role (id, name, url) VALUES (22, 'acc_partner', 'applicant/dashboard');
--- INSERT INTO role (id, name, url) VALUES (23, 'acc_project_manager', 'applicant/dashboard');
--- INSERT INTO role (id, name, url) VALUES (24, 'acc_finance_contact', 'applicant/dashboard');
--- INSERT INTO role (id, name, url) VALUES (25, 'acc_monitoring_officer', 'applicant/dashboard');

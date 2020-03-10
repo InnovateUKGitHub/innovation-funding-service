@@ -18,22 +18,12 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 @DiscriminatorValue("ACC_MONITORING_OFFICER")
 public class AccMonitoringOfficer extends BaseMonitoringOfficer {
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "projectId", referencedColumnName = "id")
-    private Project project;
-
     public AccMonitoringOfficer() {
         super(null, ACC_MONITORING_OFFICER);
     }
 
     public AccMonitoringOfficer(User user, Project project) {
-        super(user, ACC_MONITORING_OFFICER);
-        this.project = project;
-    }
-
-    @Override
-    public Project getProcess() {
-        return project;
+        super(user, ACC_MONITORING_OFFICER, project);
     }
 
     @Override
@@ -46,7 +36,6 @@ public class AccMonitoringOfficer extends BaseMonitoringOfficer {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(project, that.project)
                 .isEquals();
     }
 
@@ -54,7 +43,6 @@ public class AccMonitoringOfficer extends BaseMonitoringOfficer {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(project)
                 .toHashCode();
     }
 }

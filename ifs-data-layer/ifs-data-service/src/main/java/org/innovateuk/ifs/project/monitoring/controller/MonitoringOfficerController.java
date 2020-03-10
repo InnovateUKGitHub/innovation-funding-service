@@ -53,4 +53,9 @@ public class MonitoringOfficerController {
         return monitoringOfficerService.findMonitoringOfficerForProject(projectId).toGetResponse();
     }
 
+    @GetMapping("/project/{projectId}/is-monitoring-officer/{userId}")
+    public RestResult<Boolean> isMonitoringOfficerOnProject(@PathVariable final long projectId,  @PathVariable final long userId) {
+        return monitoringOfficerService.isMonitoringOfficerOnProject(projectId, userId).toGetResponse();
+    }
+
 }

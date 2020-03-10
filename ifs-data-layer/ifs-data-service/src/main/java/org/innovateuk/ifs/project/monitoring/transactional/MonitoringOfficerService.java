@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.monitoring.transactional;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
@@ -41,4 +42,7 @@ public interface MonitoringOfficerService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId);
+
+//    add permissions
+    ServiceResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId);
 }

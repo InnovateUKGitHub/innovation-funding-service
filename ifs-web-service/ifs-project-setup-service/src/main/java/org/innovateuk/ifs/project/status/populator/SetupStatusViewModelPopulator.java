@@ -55,10 +55,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private SetupSectionStatus sectionStatus;
 
+    @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
-        boolean monitoringOfficer = loggedInUser.getId().equals(project.getMonitoringOfficerUser());
+        boolean monitoringOfficer = monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();;
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
@@ -70,12 +73,14 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 monitoringOfficer,
                 stages,
                 competition.isLoan(),
-                showApplicationFeedbackLink(project, loggedInUser));
+                showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer));
     }
 
     private boolean showApplicationFeedbackLink(ProjectResource project,
-                                               UserResource loggedInUser){
-        if (loggedInUser.getId().equals(project.getMonitoringOfficerUser())){
+                                               UserResource loggedInUser,
+                                                boolean isMonitoringOfficer){
+
+        if (isMonitoringOfficer){
             return true;
         } else {
             long organisationId = projectService.getOrganisationIdFromUser(project.getId(), loggedInUser);

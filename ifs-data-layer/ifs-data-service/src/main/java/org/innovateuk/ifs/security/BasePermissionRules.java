@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitoring.repository.BaseMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -62,7 +63,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private ProjectProcessRepository projectProcessRepository;
 
     @Autowired
-    private MonitoringOfficerRepository monitoringOfficerRepository;
+    private BaseMonitoringOfficerRepository monitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
