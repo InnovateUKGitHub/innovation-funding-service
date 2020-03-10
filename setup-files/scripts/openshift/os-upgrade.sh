@@ -70,9 +70,6 @@ function upgradeServices {
     watchSilStubStatus
 
     upgradeSurvey
-
-    upgradeEuGrantRegistration
-
 }
 
 function upgradeSurvey {
