@@ -6,7 +6,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.monitoring.domain.BaseMonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.BaseMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;
@@ -39,6 +41,8 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
+    @Autowired
+    private BaseMonitoringOfficerRepository baseMonitoringOfficerRepository;
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
     @Autowired
@@ -97,9 +101,9 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     @Override
     public ServiceResult<List<ProjectResource>> getMonitoringOfficerProjects(long userId) {
-        List<MonitoringOfficer> monitoringOfficers = monitoringOfficerRepository.findByUserId(userId);
+        List<BaseMonitoringOfficer> monitoringOfficers = baseMonitoringOfficerRepository.findByUserId(userId);
         return serviceSuccess(monitoringOfficers.stream()
-                .map(MonitoringOfficer::getProcess)
+                .map(BaseMonitoringOfficer::getProcess)
                 .map(projectMapper::mapToResource)
                 .collect(toList()));
     }

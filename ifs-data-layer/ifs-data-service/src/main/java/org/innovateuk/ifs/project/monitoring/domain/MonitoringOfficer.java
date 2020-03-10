@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONI
  */
 @Entity
 @DiscriminatorValue("PROJECT_MONITORING_OFFICER")
-public class MonitoringOfficer extends ProjectParticipant {
+public class MonitoringOfficer extends BaseMonitoringOfficer {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "projectId", referencedColumnName = "id")

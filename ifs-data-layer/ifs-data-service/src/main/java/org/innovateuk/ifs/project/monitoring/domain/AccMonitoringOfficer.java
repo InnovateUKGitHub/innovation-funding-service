@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.acc;
+package org.innovateuk.ifs.project.monitoring.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -8,14 +8,6 @@ import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
-import org.innovateuk.ifs.user.domain.User;
-
-import javax.persistence.*;
 
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 
@@ -24,7 +16,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
  */
 @Entity
 @DiscriminatorValue("ACC_MONITORING_OFFICER")
-public class AccMonitoringOfficer extends ProjectParticipant {
+public class AccMonitoringOfficer extends BaseMonitoringOfficer {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "projectId", referencedColumnName = "id")
