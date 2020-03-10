@@ -11,6 +11,9 @@ import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,6 +35,7 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -57,6 +61,8 @@ public class ApplicationDashboardServiceImplTest {
             .withEndDate(ZonedDateTime.now().plusDays(1))
             .build();
     private static final long USER_ID = 1L;
+    private User user = newUser().withId(USER_ID).build();
+    private ProcessRole processRole = newProcessRole().withRole(Role.LEADAPPLICANT).withUser(user).build();
 
     @Test
     public void getApplicantDashboard() {
@@ -109,6 +115,7 @@ public class ApplicationDashboardServiceImplTest {
 
     private Application submittedAwaitingDecisionApplication() {
         return newApplication()
+                .withProcessRole(processRole)
                 .withCompetition(closedCompetition)
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .build();
@@ -116,6 +123,7 @@ public class ApplicationDashboardServiceImplTest {
 
     private Application ineligibleApplication() {
         return newApplication()
+                .withProcessRole(processRole)
                 .withCompetition(closedCompetition)
                 .withApplicationState(ApplicationState.INELIGIBLE_INFORMED)
                 .build();
@@ -123,6 +131,7 @@ public class ApplicationDashboardServiceImplTest {
 
     private Application unsuccessfulNotifiedApplication() {
         return newApplication()
+                .withProcessRole(processRole)
                 .withCompetition(closedCompetition)
                 .withApplicationState(ApplicationState.REJECTED)
                 .withFundingDecision(FundingDecisionStatus.UNFUNDED)
@@ -132,6 +141,7 @@ public class ApplicationDashboardServiceImplTest {
 
     private Application onHoldNotifiedApplication() {
         return newApplication()
+                .withProcessRole(processRole)
                 .withCompetition(closedCompetition)
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withFundingDecision(FundingDecisionStatus.ON_HOLD)
@@ -141,6 +151,7 @@ public class ApplicationDashboardServiceImplTest {
 
     private Application inProgressClosedCompApplication() {
         return newApplication()
+                .withProcessRole(processRole)
                 .withApplicationState(ApplicationState.OPENED)
                 .withCompetition(closedCompetition)
                 .build();
@@ -148,6 +159,7 @@ public class ApplicationDashboardServiceImplTest {
 
     private Application inProgressOpenCompApplication() {
         return newApplication()
+                .withProcessRole(processRole)
                 .withCompetition(openCompetition)
                 .withApplicationState(ApplicationState.OPENED)
                 .withCompetition(newCompetition().withSetupComplete(true).withStartDate(ZonedDateTime.now().minusDays(2)).withEndDate(ZonedDateTime.now().plusDays(1)).build())
@@ -156,6 +168,7 @@ public class ApplicationDashboardServiceImplTest {
 
     private Application completedProjectApplication() {
         return newApplication()
+                .withProcessRole(processRole)
                 .withCompetition(closedCompetition)
                 .withApplicationState(ApplicationState.APPROVED)
                 .withProject(newProject().withProjectProcess(newProjectProcess().withActivityState(ProjectState.LIVE).build()).build())

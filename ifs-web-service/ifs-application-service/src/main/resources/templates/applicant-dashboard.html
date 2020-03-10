@@ -6,7 +6,7 @@
 </head>
 
 <body class="govuk-template__body app-dashboard">
-
+    <th:block th:insert="fragments/modals :: modal-overlay" />
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
     <div class="govuk-width-container">
@@ -154,7 +154,7 @@
                                     <li>Competition: <span th:text="${previousView.competitionTitle}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>
-                            <div class="status">
+                            <div class="status-and-action">
                                 <p th:if="${previousView.rejected}" class="govuk-body status-msg msg-progress">Unsuccessful</p>
                                 <p th:if="${previousView.approved}" class="govuk-body status-msg msg-progress">Successful</p>
                                 <p th:if="${previousView.createdOrOpen}" class="govuk-body status-msg msg-progress not-submitted">Not submitted</p>
@@ -162,6 +162,32 @@
                                 <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
                                 <p th:if="${previousView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
                                 <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
+                                <div class="action alignright">
+                                    <th:block th:if="${previousView.canHideApplication()}">
+                                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+                                            <th:block th:insert="fragments/modals :: modal-confirm-hide-application (${previousView.applicationNumber})"/>
+                                            <button th:name="${'hide-application-' + previousView.applicationNumber}"
+                                                    class="button-clear"
+                                                    type="submit"
+                                                    th:attr="data-js-modal=${'modal-confirm-hide-application-' + previousView.applicationNumber}"
+                                                    th:value="${previousView.applicationNumber}">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    </th:block>
+                                    <th:block th:if="${previousView.canDeleteApplication()}">
+                                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+                                            <th:block th:insert="fragments/modals :: modal-confirm-delete-application (${previousView.applicationNumber}, ${previousView.deleteModalTitle}, ${previousView.deleteModalMessage})"/>
+                                            <button th:name="${'delete-application-' + previousView.applicationNumber}"
+                                                    class="button-clear"
+                                                    type="submit"
+                                                    th:attr="data-js-modal=${'modal-confirm-delete-application-' + previousView.applicationNumber}"
+                                                    th:value="${previousView.applicationNumber}">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </th:block>
+                                </div>
                             </div>
                         </li>
                     </ul>

@@ -27,6 +27,30 @@ Hours remaining should show the last 24hours
     Then the user should see the element    jQuery = .status-msg:contains("hours left")
     [Teardown]     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${openCompetitionRTOCloseDate} 00:00:00' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
 
+Collaborator is able to remove an application
+    [Documentation]  IFS-7088
+    [Setup]  Log in as a different user       &{collaborator1_credentials}
+    Given the user clicks the button/link     jQuery = button[name="hide-application-${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}"]
+    When the user clicks the button/link      jQuery = li:contains("innovative") button:contains("Remove application")
+    Then the user should not see the element  jQuery = li:contains("innovative")
+
+Lead still sees application
+    [Documentation]  IFS-7088
+    Given Log in as a different user       &{lead_applicant_credentials}
+    Then the user should see the element   jQuery = li:contains("${CLOSED_COMPETITION_APPLICATION_NAME}")
+
+Lead is able to delete an application
+    [Documentation]  IFS-7088
+    Given the user clicks the button/link     jQuery = button[name="delete-application-${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}"]
+    When the user clicks the button/link      jQuery = li:contains("${CLOSED_COMPETITION_APPLICATION_NAME}") button:contains("Delete application")
+    Then the user should not see the element  jQuery = li:contains("${CLOSED_COMPETITION_APPLICATION_NAME}")
+
+Application is no longer visible to anyone
+    [Documentation]  IFS-7088
+    Given log in as a different user          &{collaborator2_credentials}
+    Then the user should not see the element  jQuery = li:contains("${CLOSED_COMPETITION_APPLICATION_NAME}")
+    And the user reads his email              ${collaborator2_credentials["email"]}  Successful deletion of application  All the application information has been deleted
+
 *** Keywords ***
 Custom setup
     ${TIME}=    Get Current Date    UTC    + 3 hours    exclude_millis=true    # This line gets the current date/time and adds 3 hours
