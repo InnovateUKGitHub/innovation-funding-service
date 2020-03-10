@@ -76,12 +76,11 @@ Accepting the application changes the Accepted column
 
 Remove an assigned application (Notified)
     [Documentation]    INFUND-1079
-    [Tags]
     Given the user clicks the button/link     jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
     When the user clicks the button/link      jQuery = button:contains("Remove assessor")
     Then the user should not see the element  jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
     And the user should see the element       jQuery = h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
-    And the user clicks the button/link       jQuery = .pagination-label:contains("Next")
+    And the user clicks the button/link       link = Next
 
 Reassign a removed application
     [Documentation]    INFUND-398
