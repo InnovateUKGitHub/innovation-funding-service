@@ -15,7 +15,7 @@ ${applId}         ${application_ids["${projectName}"]}
 *** Test Cases ***
 User can see current and applied for values with no changes
     [Documentation]  IFS-7005
-    Given the user navigates to the page   ${server}/project-setup-management/project/${projectId}/finance-check
+    Given the user navigates to the page                  ${server}/project-setup-management/project/${projectId}/finance-check
     Then the user should see the correct funding values   £116,596  £116,596
 
 User can view funding level change page
@@ -57,8 +57,8 @@ New funding percentage is applied on finance overview
 
 New funding percentage is applied on finance checks
     [Documentation]  IFS-6695
-    Given the user clicks the button/link    link = Finance checks
-    Then the user should see the element     jQuery = dt:contains("Total percentage grant") ~ dd:contains("23.96%")
+    Given the user clicks the button/link                link = Finance checks
+    Then the user should see the element                 jQuery = dt:contains("Total percentage grant") ~ dd:contains("23.96%")
     And the user should see the correct funding values   £116,596  £96,506
 
 Approving any eligibility removes the link
