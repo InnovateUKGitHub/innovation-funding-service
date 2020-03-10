@@ -34,6 +34,7 @@ public class Organisation {
     @Column(nullable = false)
     private boolean isInternational;
 
+    @Column(name = "international_company_registration_number")
     private String internationalCompanyRegistrationNumber;
 
     @OneToMany(mappedBy="organisationId")

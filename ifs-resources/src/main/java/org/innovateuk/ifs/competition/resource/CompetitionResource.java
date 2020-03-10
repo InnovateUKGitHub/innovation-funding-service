@@ -109,7 +109,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private FundingType fundingType;
     private Set<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
-    private Boolean isInternationalApplicationAllowed;
+    private Boolean internationalApplicationAllowed;
 
     public CompetitionResource() {
     }
@@ -802,11 +802,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     public Boolean getInternationalApplicationAllowed() {
-        return isInternationalApplicationAllowed;
+        return internationalApplicationAllowed;
     }
 
     public void setInternationalApplicationAllowed(Boolean internationalApplicationAllowed) {
-        isInternationalApplicationAllowed = internationalApplicationAllowed;
+        this.internationalApplicationAllowed = internationalApplicationAllowed;
     }
 
     @Override
@@ -876,7 +876,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(stateAid, that.stateAid)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
-                .append(isInternationalApplicationAllowed, that.isInternationalApplicationAllowed)
+                .append(internationalApplicationAllowed, that.internationalApplicationAllowed)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
@@ -946,7 +946,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(locationPerPartner)
                 .append(stateAid)
                 .append(includeYourOrganisationSection)
-                .append(isInternationalApplicationAllowed)
+                .append(internationalApplicationAllowed)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
                 .append(includeProjectGrowthTable)
