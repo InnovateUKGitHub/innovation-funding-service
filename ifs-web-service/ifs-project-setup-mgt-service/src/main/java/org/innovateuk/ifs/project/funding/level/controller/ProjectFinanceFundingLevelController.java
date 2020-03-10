@@ -45,9 +45,6 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMA
 @PreAuthorize("hasAuthority('project_finance')")
 public class ProjectFinanceFundingLevelController {
 
-    @Value("${ifs.funding.level.decimal.percentage.enabled}")
-    private boolean fundingLevelPercentageToggle;
-
     @Autowired
     private ProjectRestService projectRestService;
 
@@ -106,10 +103,8 @@ public class ProjectFinanceFundingLevelController {
 
     private String viewFunding(long projectId, List<ProjectFinanceResource> finances, Model model) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        OrganisationResource lead = projectRestService.getLeadOrganisationByProject(project.getId()).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-
-        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead, fundingLevelPercentageToggle, competition, getFundingAppliedFor(project)));
+        OrganisationResource lead = projectRestService.getLeadOrganisationByProject(projectId).getSuccess();
+        model.addAttribute("model", new ProjectFinanceFundingLevelViewModel(project, finances, lead));
         return "project/financecheck/funding-level";
     }
 
@@ -148,12 +143,7 @@ public class ProjectFinanceFundingLevelController {
         finances.forEach(finance -> {
             BigDecimal fundingLevel = form.getPartners().get(finance.getOrganisation()).getFundingLevel();
 
-            if (!fundingLevelPercentageToggle && fundingLevel.scale() > 0) {
-                bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
-                        "validation.field.non.decimal.format");
-            }
-
-            if (fundingLevelPercentageToggle && fundingLevel.scale() > MAX_DECIMAL_PLACES) {
+            if (fundingLevel.scale() > MAX_DECIMAL_PLACES) {
                 bindingResult.rejectValue(String.format("partners[%d].fundingLevel", finance.getOrganisation()),
                         "validation.finance.percentage");
             }

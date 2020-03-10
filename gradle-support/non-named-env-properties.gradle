@@ -70,11 +70,6 @@ ext.SURVEY_DB_HOST="ifs-survey-database"
 ext.SURVEY_DB_PORT=3306
 ext.SURVEY_DB_URL='jdbc:mysql://ifs-survey-database:3306/ifs_survey'
 
-ext.GRANT_FLYWAY_LOCATIONS="db/migration,db/reference,db/webtest"
-ext.GRANT_DB_USER="root"
-ext.GRANT_DB_PASS="password"
-ext.GRANT_DB_URL='jdbc:mysql://eu-grant-registration-database:3306/eu_grant_registration'
-
 ext.DB_USER="root"
 ext.DB_PASS="password"
 ext.DB_URL='jdbc:mysql://ifs-database:3306/ifs'
@@ -123,6 +118,3 @@ ext.IFS_DATA_SERVICE_CACHE_TTL=18000000
 
 // Used by the idp, location of resources
 ext.RESOURCE_DOMAIN=""
-
-ext.IFS_ASSESSOR_PROFILE_FEATURE_TOGGLE=true
-ext.IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED=true

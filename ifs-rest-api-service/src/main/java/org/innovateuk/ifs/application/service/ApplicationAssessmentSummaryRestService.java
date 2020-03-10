@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.commons.rest.RestResult;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface ApplicationAssessmentSummaryRestService {
 
     RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId);
 
-    RestResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, String assessorNameFilter);
+    RestResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, String assessorNameFilter, Sort sort);
 }

@@ -7,14 +7,13 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -301,8 +300,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         when(questionRestService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(restSuccess(Arrays.asList
                 (q21Resource, q22Resource, q23Resource)));
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS))
-                .thenReturn(ServiceResult.serviceSuccess(q01Resource));
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(1L, RESEARCH_CATEGORY)).thenReturn
                 (restSuccess(q02Resource));
 

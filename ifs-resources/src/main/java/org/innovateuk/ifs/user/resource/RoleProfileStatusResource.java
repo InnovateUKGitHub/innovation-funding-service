@@ -52,6 +52,13 @@ public class RoleProfileStatusResource {
         this.modifiedOn = modifiedOn;
     }
 
+    public RoleProfileStatusResource(long userId, ProfileRole profileRole, RoleProfileState roleProfileState, String description) {
+        this.userId = userId;
+        this.roleProfileState = roleProfileState;
+        this.profileRole = profileRole;
+        this.description = description;
+    }
+
     public Long getUserId() {
         return userId;
     }

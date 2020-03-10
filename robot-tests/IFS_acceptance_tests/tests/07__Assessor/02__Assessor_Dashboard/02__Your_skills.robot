@@ -14,7 +14,6 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Client-side validations
     [Documentation]  INFUND-5182  INFUND-5432
-    [Tags]
     Given The user should see the element    jQuery = .message-alert a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link     jQuery = a:contains("your skills")
     Then the user checks for client side validations
