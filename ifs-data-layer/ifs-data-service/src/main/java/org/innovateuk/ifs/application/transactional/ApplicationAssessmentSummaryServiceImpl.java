@@ -72,7 +72,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     }
 
     @Override
-    public ServiceResult<List<Long>> getAvailableAssessorIds(Long applicationId, String assessorNameFilter) {
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long applicationId, String assessorNameFilter) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
             assessmentParticipantRepository.findAvailableAssessorIdsForApplication(
                     application.getCompetition().getId(),
@@ -110,7 +110,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     }
 
     @Override
-    public ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId) {
+    public ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
             Competition competition = application.getCompetition();
             return new ApplicationAssessmentSummaryResource(application.getId(),
