@@ -197,7 +197,7 @@ the user enters bank details
     the user clicks the button/link                      id = postcode-lookup
     the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
     the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                      id = submit-bank-details-button
+    the user clicks the button/link                      id = submit-bank-details-model-button
 
 The user is able to complete project details section
     the user clicks the button/link         link = Project details
