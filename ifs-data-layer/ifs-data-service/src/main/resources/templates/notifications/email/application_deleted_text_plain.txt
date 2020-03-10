@@ -1,0 +1,9 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+The application ${applicationName} has been deleted by ${leadUserName}.
+All the application information has been deleted from the Innovation Funding Service and is no longer available to any partner organisation.
+If you have any questions please email ${leadEmail}.
+Yours sincerely,
+<@layout.senderPlainText />
+</@layout.defaultPlainText>
