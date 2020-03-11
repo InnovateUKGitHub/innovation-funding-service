@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.security.NotSecured;
@@ -10,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -33,13 +31,11 @@ public class AssessmentAssessorProgressController {
     @GetMapping("/{assessorId}")
     public String assessorProgress(@PathVariable("competitionId") long competitionId,
                                    @PathVariable("assessorId") long assessorId,
-                                   @RequestParam(value = "page", defaultValue = "0") int page,
-                                   @RequestParam(value = "innovationArea", required = false) Optional<Long> innovationArea,
-                                   @RequestParam(value = "sortField", defaultValue = "") String sortField,
-                                   @RequestParam(value = "filterSearch", required = false) Optional<String> filter,
-                                   @RequestParam MultiValueMap<String, String> params,
+                                   @RequestParam(value = "page", defaultValue = "1") int page,
+                                   @RequestParam(value = "sort", defaultValue = "APPLICATION_NUMBER") Sort sort,
+                                   @RequestParam(value = "filterSearch", defaultValue = "") String filter,
                                    Model model) {
-        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page, innovationArea, sortField, filter.map(String::trim).orElse("")));
+        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page - 1, sort, filter));
 
         return "competition/assessor-progress";
     }

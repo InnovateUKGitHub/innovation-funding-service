@@ -42,15 +42,6 @@ echo ldap port:$LDAP_PORT
 echo ldap domain:$LDAP_DOMAIN
 echo ldap scheme:$LDAP_SCHEME
 
-wipeLdapUsers() {
-  [ -z "$LDAP_PORT" ] && LDAP_PORT=8389
-
-  ldapsearch -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -b $LDAP_DOMAIN -s sub '(objectClass=person)' -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS \
-   | grep 'dn: ' \
-   | cut -c4- \
-   | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
-}
-
 executeMySQLCommand() {
     mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "$1"
 }
@@ -73,18 +64,7 @@ addUserToShibboleth() {
   echo ""
 }
 
-downloadAccUserCsv() {
-#    Download users from repository
-    curl -0 -u ${ACC_USERNAME}:${ACC_PASSWORD} ${ACC_BITBUCKET_URL} -o users.csv
-#    Remove first line of column names
-    tail -n +2 users.csv > tempusers.csv && mv tempusers.csv users.csv
-#    Create new Csv with emails and new generated UUID
-    cat users.csv | awk -v SUFFIX="${ACC_SUFFIX}" -F "\"*,\"*" '("uuidgen" | getline uuid) > 0 {print uuid, $3 SUFFIX} {close("uuidgen")}' | sed 's/\ /,/g' > emailsAndUUids.csv
-}
 # Main
-
-wipeLdapUsers
-downloadAccUserCsv
 
 IFS=$'\n'
 for u in $(executeMySQLCommand "select uid,email from user where system_user = 0;")
