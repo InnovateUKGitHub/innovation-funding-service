@@ -24,12 +24,12 @@ public class ApplicationAssessmentSummaryController {
     private ApplicationAssessmentSummaryService applicationAssessmentSummaryService;
 
     @GetMapping("/{applicationId}/assigned-assessors")
-    public RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(@PathVariable("applicationId") Long applicationId) {
+    public RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(@PathVariable long applicationId) {
         return applicationAssessmentSummaryService.getAssignedAssessors(applicationId).toGetResponse();
     }
 
     @GetMapping("/{applicationId}/available-assessors")
-    public RestResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(@PathVariable("applicationId") Long applicationId,
+    public RestResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(@PathVariable long applicationId,
                                                                                       @RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                                                                       @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                                                                       @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter,
@@ -37,8 +37,14 @@ public class ApplicationAssessmentSummaryController {
         return applicationAssessmentSummaryService.getAvailableAssessors(applicationId, pageIndex, pageSize, assessorNameFilter, sort).toGetResponse();
     }
 
+    @GetMapping("/{applicationId}/available-assessors-ids")
+    public RestResult<List<Long>> getAvailableAssessorIds(@PathVariable long applicationId,
+                                                          @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter) {
+        return applicationAssessmentSummaryService.getAvailableAssessorIds(applicationId, assessorNameFilter).toGetResponse();
+    }
+
     @GetMapping("/{applicationId}")
-    public RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(@PathVariable("applicationId") Long applicationId) {
+    public RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(@PathVariable long applicationId) {
         return applicationAssessmentSummaryService.getApplicationAssessmentSummary(applicationId).toGetResponse();
     }
 }

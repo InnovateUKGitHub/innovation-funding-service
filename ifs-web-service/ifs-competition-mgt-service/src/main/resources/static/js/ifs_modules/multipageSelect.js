@@ -4,6 +4,7 @@ IFS.competitionManagement.multipageSelect = (function () {
   return {
     settings: {
       multipageCheckboxEl: '[data-multipage-select] [type="checkbox"]',
+      multiselectInputs: 'input[data-multipage-select-post]',
       selectAllEl: '[data-multipage-select] [data-select-all]',
       countEl: '[data-multipage-select] [data-count-selected]',
       submitEl: '[data-multipage-select] [data-submit-el]',
@@ -27,11 +28,18 @@ IFS.competitionManagement.multipageSelect = (function () {
       })
     },
     getData: function (checked, value, isSelectAll) {
+      var data = {}
       if (isSelectAll) {
-        return { 'addAll': checked }
+        data = { 'addAll': checked }
       } else {
-        return { 'selectionId': value, 'isSelected': checked }
+        data = { 'selectionId': value, 'isSelected': checked }
       }
+      jQuery(s.multiselectInputs).each(function () {
+        var key = jQuery(this).attr('name')
+        var value = jQuery(this).attr('value')
+        data[key] = value
+      })
+      return data
     },
     processMultipageCheckbox: function (checkbox) {
       return function () {

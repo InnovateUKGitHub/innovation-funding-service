@@ -32,8 +32,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.sort;
@@ -236,6 +235,14 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
                         .andOnSuccess(application ->  createAssessment(assessor, application, ASSESSOR))
                 );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<AssessmentResource>> createAssessments(List<AssessmentCreateResource> assessmentCreateResource) {
+        return aggregate(assessmentCreateResource.stream()
+                .map(this::createAssessment)
+                .collect(toList()));
     }
 
 
