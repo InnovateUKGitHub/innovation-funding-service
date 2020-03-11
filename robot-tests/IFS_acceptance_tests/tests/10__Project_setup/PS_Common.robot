@@ -296,7 +296,7 @@ partner fills in his bank details
     the user clicks the button/link                  id = postcode-lookup
     the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery = .govuk-button:contains("Submit bank account details")
-    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id = submit-bank-details-button
+    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id = submit-bank-details-model-button
 
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}
@@ -584,7 +584,7 @@ applicant user enters bank details
     the user clicks the button/link                     jquery = button:contains("Cancel")
     the user should not see the element                 jQUery = p:contains("The bank account details below are being reviewed")
     the user clicks the button/link                     jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                     id = submit-bank-details-button
+    the user clicks the button/link                     id = submit-bank-details-model-button
 
 PM submits both documents
     [Arguments]  ${compName}
