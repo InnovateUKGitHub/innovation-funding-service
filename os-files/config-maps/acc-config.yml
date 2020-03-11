@@ -1,9 +1,0 @@
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: acc-config
-data:
-  ACC_USERNAME: "${ACC_USERNAME}"
-  ACC_PASSWORD: "${ACC_PASSWORD}"
-  ACC_BITBUCKET_URL: "${ACC_BITBUCKET_URL}"
-  ACC_SUFFIX: "${ACC_SUFFIX}"
