@@ -20,8 +20,8 @@ IFS.core.conditionalToggle = (function () {
     init: function () {
       s = this.settings
       jQuery('body').on('DOMSubtreeModified', '[data-value-change]', function (e) {
-        var firstValue = jQuery(s.leftValue).text()
-        var secondValue = jQuery(s.rightValue).text()
+        var firstValue = IFS.core.conditionalToggle.parseValue(jQuery(s.leftValue).text())
+        var secondValue = IFS.core.conditionalToggle.parseValue(jQuery(s.rightValue).text())
         var operatorValue = jQuery('[data-value-change]').attr('data-operator')
         var target = jQuery('[data-toggle-target]')
         if (IFS.core.conditionalToggle.operation[operatorValue](firstValue, secondValue)) {
@@ -30,6 +30,10 @@ IFS.core.conditionalToggle = (function () {
           target.attr('aria-hidden', 'false')
         }
       })
+    },
+    parseValue: function (value) {
+      var replaced = value.replace(/[£,]+/g, '')
+      return parseInt(replaced)
     }
   }
 })()
