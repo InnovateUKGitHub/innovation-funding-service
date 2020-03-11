@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.shibboleth.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
