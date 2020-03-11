@@ -6,7 +6,10 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,9 +61,11 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
                 .withProcessRoles(
                         newProcessRole()
                                 .withRole(applicantRole, leadApplicationRole)
+                                .withUser(UserBuilder.newUser().build())
                                 .build(2),
                         newProcessRole()
                                 .withRole(leadApplicationRole, applicantRole)
+                                .withUser(UserBuilder.newUser().build())
                                 .build(2)
                 )
                 .build(2);
@@ -83,13 +88,12 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     }
 
     @Test
-    public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() {
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateIn(eq(competitionId), eq(1L), eq(SUBMITTED_STATES) , anyString(), eq(2L), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(page);
-        when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
+    public void getApplicationCountSummariesByCompetitionIdAndAssessorId() {
+        Page<ApplicationCountSummaryResource> pageCount = mock(Page.class);
+        when(applicationStatisticsRepositoryMock.findStatisticsForApplicationsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(pageCount);
 
-        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 1L,0, 20, ofNullable(2L), "", "");
+        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, 1L, 0, 20, Sort.APPLICATION_NUMBER, "asd");
 
         assertTrue(result.isSuccess());
-        assertEquals(resource, result.getSuccess());
     }
 }

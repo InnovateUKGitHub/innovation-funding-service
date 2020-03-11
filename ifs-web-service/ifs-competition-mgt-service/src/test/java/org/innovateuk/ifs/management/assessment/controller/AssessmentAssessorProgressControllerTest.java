@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -14,7 +15,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressViewModel;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -25,7 +26,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.util.Optional.empty;
 import static org.hamcrest.Matchers.hasItems;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationCountSummaryResourceBuilder.newApplicationCountSummaryResource;
@@ -137,7 +137,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(restSuccess(assessorCompetitionSummaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 20, empty(), "", "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
         when(assessmentRestService.createAssessment(isA(AssessmentCreateResource.class))).thenReturn(restSuccess(assessmentResource));
 
 
@@ -217,9 +217,9 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
 
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionResource.getId())).thenReturn(restSuccess(summaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionResource.getId(), assessorId, 1, 20, empty(), "", "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, 1, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
 
-        AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}?page=1", competitionResource.getId(), assessorId))
+        AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}?page=2", competitionResource.getId(), assessorId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/assessor-progress"))
                 .andExpect(model().attributeExists("model"))
@@ -239,13 +239,10 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         assertEquals(2L, model.getApplicationsView().getApplications().get(1).getSubmitted());
         assertEquals("Lead Org 2", model.getApplicationsView().getApplications().get(1).getLeadOrganisation());
 
-        Pagination actualPagination = model.getApplicationsView().getPagination();
-        assertEquals(1, actualPagination.getCurrentPage());
-        assertEquals(20,actualPagination.getPageSize());
+        PaginationViewModel actualPagination = model.getApplicationsView().getPagination();
+        assertEquals(2, actualPagination.getCurrentPage());
+        assertEquals(20,actualPagination.getSize());
         assertEquals(3, actualPagination.getTotalPages());
-        assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
-        assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
-        assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
     }
 
     @Test
