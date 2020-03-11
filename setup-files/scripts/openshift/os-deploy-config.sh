@@ -21,13 +21,11 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 echo "Applying the config maps for $PROJECT Openshift project"
 
 function applyConfigMaps {
-    oc apply -f $(getBuildLocation)/config-maps/acc-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/cache-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/data-service-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/db-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/finance-db-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/flyway-config.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/config-maps/grant-db-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/ldap-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/idp-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/new-relic-config.yml ${SVC_ACCOUNT_CLAUSE}
