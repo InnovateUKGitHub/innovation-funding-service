@@ -838,6 +838,10 @@ public class CsvUtils {
             return true;
         }
 
+        if ("no".equals(s.toLowerCase())) {
+            return false;
+        }
+
         if ("yes".equals(s.toLowerCase())) {
             return true;
         }
