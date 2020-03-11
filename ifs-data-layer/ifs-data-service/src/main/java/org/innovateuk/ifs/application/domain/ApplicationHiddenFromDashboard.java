@@ -31,6 +31,9 @@ public class ApplicationHiddenFromDashboard {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    private ApplicationHiddenFromDashboard() {
+    }
+
     public ApplicationHiddenFromDashboard(Application application, User user) {
         this.application = application;
         this.user = user;

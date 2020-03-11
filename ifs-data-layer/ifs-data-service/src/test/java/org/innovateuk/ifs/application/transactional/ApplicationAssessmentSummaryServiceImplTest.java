@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
@@ -130,7 +131,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         ApplicationAvailableAssessorPageResource expected = new ApplicationAvailableAssessorPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize());
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(assessmentParticipantRepositoryMock.findParticipantsWithoutAssessments(
+        when(assessmentParticipantRepositoryMock.findAvailableAssessorsForApplication(
                 competition.getId(),
                 application.getId(),
                 assessorNameFilter,
@@ -331,5 +332,20 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         inOrder.verify(organisationRepositoryMock).findById(organisations[2].getId());
         inOrder.verify(organisationRepositoryMock).findById(organisations[3].getId());
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getAvailableAssessorIds() {
+        long applicationId = 1L;
+        long competitionId = 2L;
+        String filter = "Filter";
+        List<Long> expectedIds = asList(1L, 2L);
+
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(of(newApplication().withCompetition(newCompetition().withId(competitionId).build()).build()));
+        when(assessmentParticipantRepositoryMock.findAvailableAssessorIdsForApplication(competitionId, applicationId, filter)).thenReturn(expectedIds);
+
+        List<Long> ids = service.getAvailableAssessorIds(applicationId, filter).getSuccess();
+
+        assertEquals(ids, expectedIds);
     }
 }

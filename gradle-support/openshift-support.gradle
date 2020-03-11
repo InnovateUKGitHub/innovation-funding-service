@@ -146,6 +146,10 @@ task setDbResetDefaults {
     if (!project.hasProperty('ONLY_SYNC_LDAP')) {
         project.ext.ONLY_SYNC_LDAP = false
     }
+    
+    if (!project.hasProperty('ONLY_DELETE_IFS_USERS')) {
+        project.ext.ONLY_SYNC_LDAP = false
+    }
 }
 prepareConfigDeployment.mustRunAfter setDbResetDefaults
 

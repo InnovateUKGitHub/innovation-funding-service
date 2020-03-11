@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.commons.rest.RestResult;
-
-import java.util.Optional;
 
 /**
  * Interface for the action of retrieving application statistics
@@ -14,11 +13,9 @@ public interface ApplicationCountSummaryRestService {
                                                                                                 int pageSize,
                                                                                                 String filter);
 
-    RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(long competitionId,
-                                                                                                                 long assessorId,
-                                                                                                                 int pageIndex,
-                                                                                                                 int pageSize,
-                                                                                                                 Optional<Long> innovationArea,
-                                                                                                                 String filter,
-                                                                                                                 String sortField);
+    RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(long competitionId,
+                                                                                                             long assessorId,
+                                                                                                             int page,
+                                                                                                             Sort sort,
+                                                                                                             String filter);
 }

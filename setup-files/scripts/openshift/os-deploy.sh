@@ -28,7 +28,7 @@ function deploy() {
         oc create -f $(getBuildLocation)/mysql/3-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mysql/3-finance-totals-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mysql/survey-mysql.yml ${SVC_ACCOUNT_CLAUSE}
-        oc create -f $(getBuildLocation)/mysql/eu-grant-registration-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/redis/cache-provider.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
@@ -45,8 +45,6 @@ function deploy() {
 
     oc create -f $(getBuildLocation)/ifs-services/ ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/survey/ ${SVC_ACCOUNT_CLAUSE}
-
-    oc create -f $(getBuildLocation)/eu-grant-registration/ ${SVC_ACCOUNT_CLAUSE}
 
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}

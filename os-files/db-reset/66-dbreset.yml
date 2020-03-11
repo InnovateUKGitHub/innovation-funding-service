@@ -49,11 +49,6 @@ items:
                 configMapKeyRef:
                   name: db-config
                   key: DB_PASS
-            - name: ACC_BITBUCKET_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: acc-config
-                  key: ACC_BITBUCKET_URL
             - name: PERFORMANCE_APPLICANT_USERS
               valueFrom:
                 configMapKeyRef:
@@ -64,21 +59,6 @@ items:
                 configMapKeyRef:
                   name: performance-config
                   key: PERFORMANCE_h2020_USERS
-            - name: ACC_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: acc-config
-                  key: ACC_USERNAME
-            - name: ACC_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: acc-config
-                  key: ACC_PASSWORD
-            - name: ACC_SUFFIX
-              valueFrom:
-                configMapKeyRef:
-                  name: acc-config
-                  key: ACC_SUFFIX
             - name: LDAP_HOST
               valueFrom:
                 configMapKeyRef:
@@ -104,6 +84,11 @@ items:
                 configMapKeyRef:
                   name: ldap-config
                   key: ONLY_SYNC_LDAP
+            - name: ONLY_DELETE_IFS_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: ONLY_DELETE_IFS_USERS
             - name: LDAP_SCHEME
               valueFrom:
                 configMapKeyRef:

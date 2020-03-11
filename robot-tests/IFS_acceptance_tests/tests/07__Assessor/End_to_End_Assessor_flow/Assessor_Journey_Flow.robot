@@ -71,8 +71,8 @@ CompAdmin Invites assessor to assess an application
 New assessor has one assessment to accept
     [Documentation]  INFUND-9007
     [Tags]  HappyPath
-    Given Log in as a different user          &{Assessor_e2e}
-    When The user navigates to the page       ${ASSESSOR_DASHBOARD_URL}
+    Given Log in as a different user           &{Assessor_e2e}
+    When The user navigates to the page        ${ASSESSOR_DASHBOARD_URL}
     Then the user should see the element      jQuery = .action-required:contains("1 applications awaiting acceptance")
 
 Assessor is notified by Email
@@ -128,7 +128,7 @@ click the link assessor
 
 The user fills and submits the registration form
     the user enters text to a text field   id = firstName    Tom
-    the user enters text to a text field   id = lastName    Fister
+    the user enters text to a text field   id = lastName     Fister
     the user enters text to a text field   id = phoneNumber    1234567891011
     the user enters text to a text field   id = addressForm.postcodeInput    BS14NT
     the user clicks the button/link        id = postcode-lookup
@@ -166,15 +166,15 @@ Invited user accept the invitation and navigate to registration form
     the user should see the element         jQuery = p strong:contains("${Assessor_e2e["email"]}")
 
 comp admin allocate application to an assessor
-    the user clicks the button/link        jQuery = tr:nth-child(1) a:contains("View progress")
-    the user clicks the button/link        jQuery = .pagination-links a:contains("Next")
-    the user clicks the button/link        jQuery = .pagination-links a:contains("Next")
-    the user clicks the button/link        jQuery = tr:contains("Tom Fister") button:contains("Assign")
-    the user clicks the button/link        jQuery = a:contains("Allocate applications")
-    the user clicks the button/link        jQuery = a:contains("Manage assessments")
-    the user clicks the button/link        jQuery = a:contains("Competition")
-    the user clicks the button/link        jQuery = button:contains("Notify assessors")
-    the element should be disabled         jQuery = button:contains("Notify assessors")
+    the user clicks the button/link             jQuery = tr:nth-child(1) a:contains("View progress")
+    the user enters text to a text field        id = assessorNameFilter   Tom Fister
+    the user clicks the button/link             jQuery = .govuk-button:contains("Filter")
+    the user adds an assessor to application    assessor-row-1
+    the user clicks the button/link             jQuery = a:contains("Allocate applications")
+    the user clicks the button/link             jQuery = a:contains("Manage assessments")
+    the user clicks the button/link             jQuery = a:contains("Competition")
+    the user clicks the button/link             jQuery = button:contains("Notify assessors")
+    the element should be disabled              jQuery = button:contains("Notify assessors")
 
 Invited user accept the invitation
     the user clicks the button/link          Link = Park living

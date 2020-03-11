@@ -8,4 +8,6 @@ if [ ${PERFORMANCE_APPLICANT_USERS} > 0 ] || [ ${PERFORMANCE_h2020_USERS} > 0 ] 
 . /add-performance-users.sh
 fi
 
+. /wipe-ldap-users.sh
+
 . /ldap-sync-from-ifs-db.sh
