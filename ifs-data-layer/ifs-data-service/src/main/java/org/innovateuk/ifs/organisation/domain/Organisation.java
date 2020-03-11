@@ -34,8 +34,8 @@ public class Organisation {
     @Column(nullable = false)
     private boolean isInternational;
 
-    @Column(name = "international_company_registration_number")
-    private String internationalCompanyRegistrationNumber;
+    @Column(name = "international_registration_number")
+    private String internationalRegistrationNumber;
 
     @OneToMany(mappedBy="organisationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
@@ -143,11 +143,11 @@ public class Organisation {
         isInternational = international;
     }
 
-    public String getInternationalCompanyRegistrationNumber() {
-        return internationalCompanyRegistrationNumber;
+    public String getInternationalRegistrationNumber() {
+        return internationalRegistrationNumber;
     }
 
-    public void setInternationalCompanyRegistrationNumber(String internationalCompanyRegistrationNumber) {
-        this.internationalCompanyRegistrationNumber = internationalCompanyRegistrationNumber;
+    public void setInternationalRegistrationNumber(String internationalRegistrationNumber) {
+        this.internationalRegistrationNumber = internationalRegistrationNumber;
     }
 }

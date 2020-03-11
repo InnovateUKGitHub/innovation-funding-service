@@ -614,6 +614,8 @@ public class CsvUtils {
         public String county;
         public List<OrganisationAddressType> addressType;
         public String companyRegistrationNumber;
+        public Boolean isInternational;
+        public String internationalRegistrationNumber;
 
         private OrganisationLine(List<String> line) {
 
@@ -631,6 +633,8 @@ public class CsvUtils {
                     simpleMap(asList(addressTypeLine.split(",")), OrganisationAddressType::valueOf) :
                 emptyList();
             companyRegistrationNumber = nullable(line.get(i++));
+            isInternational = nullableBoolean(line.get(i++));
+            internationalRegistrationNumber = nullable(line.get(i++));
         }
     }
 

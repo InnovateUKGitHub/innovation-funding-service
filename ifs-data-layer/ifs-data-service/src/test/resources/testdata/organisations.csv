@@ -1,116 +1,119 @@
-Organisation name,Organisation type,Organisation address line 1,Line 2,Line3,Town or city,Postcode,County,Address Type,Company registration number
-HIVE IT LIMITED,Business,"Electric Works, Sheffield Digital Campus",Concourse Way,,Sheffield,S1 2BJ,South Yorkshire,"OPERATING,REGISTERED",88339838
-HIVE LIMITED,Business,46 Butterton Road,Rhyl,,Prestatyn,LL18 1RF,Denbighshire,"OPERATING,REGISTERED",74454966
-HIVE 1 LTD,Business,Ground Floor,"Elizabeth House, 54/58 High Street",,Edgware,HA8 7EJ,Middlesex,"OPERATING,REGISTERED",98052851
-The Best Juggling Company,Business,1,Juggle Street,,Bath,BA1 5LR,Bath,"OPERATING,REGISTERED",77675066
-Juggle Ltd,Business,2,Juggle Road,,Bristol,BS1 5LR,Bristol,"OPERATING,REGISTERED",87432452
-Jugglez Ltd,Business,3,Juggle Avenue,,Cardiff,CF1 5LR,Cardiff,"OPERATING,REGISTERED",93670350
-Juggling Balls Ltd,Business,4,Juggle Crescent,,Norwich,NW1 5LR,Norwich,"OPERATING,REGISTERED",86997537
-Infinite Juggling Ltd,Business,5,Juggle Way,,London,E1 5LR,London,"OPERATING,REGISTERED",95711637
-Everyday Im Juggling Ltd,Business,6,Juggle Close,,Sheffield,LS1 5LR,Sheffield,"OPERATING,REGISTERED",20978868
-Mo Juggling Mo Problems Ltd,Business,7,Juggle Grove,,Leeds,LS2 5LR,Leeds,"OPERATING,REGISTERED",66392909
-Empire Ltd,Business,1,Empire Road,,Sheffield,S1 2ED,South Yorkshire,"OPERATING,REGISTERED",60674010
-The Best Cheese Company,Business,2 Cheese Road,,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",67579052
-We Do Cheese,Business,3 Cheese Lane,,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",79496575
-Cheesemongers Associates,Business,4 Cheese Avenue,,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",95877026
-Cheddar Is Best Ltd,Business,5 Cheese Way,,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",53398177
-Electric Sounds Ltd,Business,1,Theremin Road,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",96983929
-Radiowaves Ltd,Business,1,Theremin Avenue,,Bristol,BA1 5LR,Avon,"OPERATING,REGISTERED",81268144
-Theremins Rock Ltd,Business,1,Theremin Street,,Cardiff,BA1 5LR,Avon,"OPERATING,REGISTERED",51216830
-Epic Riffs Ltd,Business,1,Rock Street,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",95730827
-Insane Drumming Ltd,Business,1,Metal Street,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",45782085
-Guitar Gods Ltd,Business,1,Groove Street,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",72989329
-Big Riffs And Insane Solos Ltd,Business,1,Shred Street,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",91403537
-Listen To Metal Ltd,Business,1,Solo Road,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",74401153
-University of Bath,Research,Claverton Down Road,,,Bath,BA2 7AY,Somerset,"OPERATING,REGISTERED",21998860
-Cardiff University,Research,Cardiff University,,,Cardiff,CF10 3XQ,South Glamorgan,"OPERATING,REGISTERED",36425444
-Aberystwyth University,Research,Penglais Campus,,,Aberystwyth,SY23 3FL,Ceredigion,"OPERATING,REGISTERED",71899241
-Ludlow,Business,20,Fallow Lane,,Cardiff,CF9 7TY,South Glamorgan,"OPERATING,REGISTERED",53532322
-EGGS,Research,43,Deer Rise,,Reading,RG4 8TY,Berkshire,"OPERATING,REGISTERED",63404345
-British Juggling Ltd,Business,369,Juggle Grove,,Northampton,NN1 4EU,Northamptonshire,"OPERATING,REGISTERED",50222727
-Innovate UK,Business,Polaris House,North Star Avenue,,Swindon,SN2 1FL,Wiltshire,"OPERATING,REGISTERED",10164163
-Ntag,Business,39357 Fisk Drive,,,London,E17 5LR,London,"OPERATING,REGISTERED",18451018
-Jetpulse,Business,75 Lawn Lane,,,London,E17 5LR,London,"OPERATING,REGISTERED",50453940
-Wikivu,Research,624 Fairview Drive,,,London,E17 5LR,London,"OPERATING,REGISTERED",68031762
-Vitruvius Stonework Limited,Business,3722 Corben Point,,,London,E17 5LR,London,"OPERATING,REGISTERED",60674010
-A B Cad Services,Business,3065 Bluestem Court,,,London,E17 5LR,London,"OPERATING,REGISTERED",6624503
-Armstrong & Butler Ltd,Research,3536 Talmadge Way,,,London,E17 5LR,London,"OPERATING,REGISTERED",57012850
-Katz,Business,1 Anhalt Drive,,,London,E17 5LR,London,"OPERATING,REGISTERED",14312286
-Meembee,Business,046 Pleasure Center,,,London,E17 5LR,London,"OPERATING,REGISTERED",84747918
-Zooveo,Research,71705 Kropf Alley,,,London,E17 5LR,London,"OPERATING,REGISTERED",2912275
-Ooba,Business,2 Main Plaza,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586802
-Wordpedia,Business,33752 Autumn Leaf Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",44032232
-Jabbertype,Research,9 Waywood Crossing,,,London,E17 5LR,London,"OPERATING,REGISTERED",42174663
-Gabtype,Business,290 Parkside Circle,,,London,E17 5LR,London,"OPERATING,REGISTERED",14935204
-Kazio,Business,94 Amoth Park,,,London,E17 5LR,London,"OPERATING,REGISTERED",23616061
-Cogilith,Research,38572 Brentwood Trail,,,London,E17 5LR,London,"OPERATING,REGISTERED",18671269
-Abbydale Optics,Business,2 Central Square,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586100
-Quantum Electronics,Business,3 Main Place,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586101
-Floating Point,Business,23 The Docks,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586102
-Express Coordinates,Business,11 Manchester Road,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586103
-Enterprise Engineering,Business,28 Regent Lane,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586104
-Solid State Machines,Business,12a Major Plaza,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586105
-Adaptive Optics,Business,14 The Mount,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586106
-Universal Registry,Business,21 Community Hub,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586107
-Liquid Dynamics,Business,The Workstation,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586108
-Piezo Electrics,Business,1 Turnstyle Road,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586109
-Thermal Designs,Business,142 Doctors Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586110
-Active Liquids,Business,3b The Harbour,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586111
-Engine Equations,Business,78 The Green,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586112
-Relativistic Solutions,Business,42 Sheffield Road,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586113
-Neural Industries,Business,37 Victoria Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586114
-Cobalt,Business,93 Greenwich Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586115
-ATC Solutions,Business,12 Regent Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586116
-Ocean Haulage,Business,21 Old Kent Road,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586117
-Ace Architects,Business,10 Piccadilly Circus,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586118
-Green Activity,Business,21 Alpine Rd,,,London,E10 5GP,London,"OPERATING,REGISTERED",72910032
-Clean Air,Business,44 Summerfield St,,,London,SE12 0NQ,London,"OPERATING,REGISTERED",37943977
-Forest Universe,Business,191 Silver St,,,London,N18 1PL,London,"OPERATING,REGISTERED",82014429
-Connected Conveyors,Business,40 Gold Road,,,London,NW1 6AQ,London,"OPERATING,REGISTERED",98724398
-Green dreams,Business,1 Oak Way,,,London,SE3 7JT,London,"OPERATING,REGISTERED",63575935
-NetWorks,Business,12 Granville Road,London,,,NE12 1AA,London,"OPERATING,REGISTERED",75936269
-Caneplus,Business,7 Colonial Place,London,,,SW3 5DT,London,"OPERATING,REGISTERED",53419141
-Tripplezap,Business,2 Gorddinog Crescent,London,,,SW15 1HA,London,"OPERATING,REGISTERED",57242647
-Rancone,Business,118 Hickman Road,London,,,SW9 9ET,London,"OPERATING,REGISTERED",53823162
-Moveis,Business,2 The Coppice,London,,,SW11 5BW,London,"OPERATING,REGISTERED",48696518
-Quadware,Business,128 Monnow Court,London,,,SW18 3HP,London,"OPERATING,REGISTERED",38335996
-Latline,Business,148 Manor Hall Road,London,,,SW11 3BX,London,"OPERATING,REGISTERED",32584047
-Tondrill,Business,1 Bath Road,London,,,SW16 6WG,London,"OPERATING,REGISTERED",55319611
-Gravefan,Business,6 Carr Fields,London,,,SW7 5FE,London,"OPERATING,REGISTERED",89834629
-Duoelectronics,Business,2 Rydal,London,,,SW12 0LF,London,"OPERATING,REGISTERED",51497229
-Bigway,Business,5 High Street,London,,,SE7 8AE,London,"OPERATING,REGISTERED",35583032
-Qvotechnology,Business,2 Eye Road,London,,,SE4 1JF,London,"OPERATING,REGISTERED",69028642
-Hayhigh,Business,3 Newton Park,London,,,SE5 9PS,London,"OPERATING,REGISTERED",20187237
-Siltone,Business,45 Thompson Street,London,,,SE18 5DD,London,"OPERATING,REGISTERED",32563492
-Inis,Business,2 Wellington Close,London,,,SE11 5AY,London,"OPERATING,REGISTERED",24097005
-Tamsancore,Business,1 Peddars Rise,London,,,SE18 6XD,London,"OPERATING,REGISTERED",42843679
-Vaialamdex,Business,19 Calder Road,London,,,SE25 4AQ,London,"OPERATING,REGISTERED",31251420
-D-dex,Business,1 Darnford Gardens,London,,,SE1P 4LR,London,"OPERATING,REGISTERED",21102465
-Saolux,Business,Providence Street,London,,,NE48 3BJ,London,"OPERATING,REGISTERED",73205026
-Singletechi,Business,28 Elizabeth Road,London,,,NE34 6NA,London,"OPERATING,REGISTERED",90033792
-Zunfind,Business,25B Uley Road,London,,,NE8 1YL,London,"OPERATING,REGISTERED",73375079
-Zootechnology,Business,14 Tomkins Close,London,,,NE61 5LT,London,"OPERATING,REGISTERED",97669847
-Freshway,Business,12 Westfield Road,London,,,NE6 1QS,London,"OPERATING,REGISTERED",16330257
-Conzois,Business,88 Lakenheath,London,,,NE5 2SA,London,"OPERATING,REGISTERED",36442764
-Xx-zunla,Business,9 School Lane,London,,,NE46 3SW,London,"OPERATING,REGISTERED",83174420
-Zuntex,Business,1 Briars Close,London,,,NE46 4DZ,London,"OPERATING,REGISTERED",12872679
-Duotaxon,Business,22B Upper Parliament Street,London,,,NE65 9EP,London,"OPERATING,REGISTERED",81293028
-Joylex,Business,9 Keswick Close,London,,,NW8 8SF,London,"OPERATING,REGISTERED",78888289
-Ice-zoom,Business,Grotto Passage,London,,,NW1 2BE,London,"OPERATING,REGISTERED",17620904
-Villacon,Business,73 Keats Road,London,,,NW5 4PQ,London,"OPERATING,REGISTERED",45574889
-Codeholding,Business,73 Southwood Road,London,,,NW1W 7DW,London,"OPERATING,REGISTERED",97877757
-Trusttech,Business,1 Pound Cottages,London,,,NW3 7JR,London,"OPERATING,REGISTERED",20041414
-Zummacity,Business,47 Wellfield Road South,London,,,NW1W 9UL,London,"OPERATING,REGISTERED",61611843
-Tanzone,Business,13 Caughley Close,London,,,NW3 5DA,London,"OPERATING,REGISTERED",96071455
-Via-electrics,Business,7 Claddens Place,London,,,NW1 3RA,London,"OPERATING,REGISTERED",53046818
-Crystalrover,Rto,249 New Road,,,Dagenham,RM10 9ND,Essex,"OPERATING,REGISTERED",6706432
-Dreambit,Public sector or Charity,74 Parkhead Road,,,Sheffield,S11 9RB,South Yorkshire,"OPERATING,REGISTERED",7682878
-Ward Ltd ,Business,12 North Star Avenue,,,Swindon,SN2 1EU,Wiltshire,"OPERATING,REGISTERED",55522234
-SmithZone,Business,31 South Road,,,Swindon,SN3 1BL,Wiltshire,"OPERATING,REGISTERED",89082442
-Red Planet,Research,52 Station Road,,,Swindon,SN1 1GL,Wiltshire,"OPERATING,REGISTERED",78320724
-University of Bristol,Research,Beacon House,,,Bristol,BS8 1QU,Bristol,"OPERATING,REGISTERED",25320731
-Curious Minds,Research,Polaris House,,,Swindon,SN2 1EU,Wiltshire,"OPERATING,REGISTERED",52340821
-Ice Valley Ltd,Business,North Star Avenue,,,Swindon,SN2 1EU,Wiltshire,"OPERATING,REGISTERED",62840123
-Green Hat Ltd,Business,24 Bridgemead Road,,,Swindon,SN5 8HB,Wiltshire,"OPERATING,REGISTERED",62381536
-Golden Valley Research Ltd,Research,78 Purple Road,,,Swindon,SN3 4GB,Wiltshire,"OPERATING,REGISTERED",72484532
-Better Life Research,Research,92 High Street,,,Bristol,BS1 8BT,Bristol,"OPERATING,REGISTERED",392747591
+Organisation name,Organisation type,Organisation address line 1,Line 2,Line3,Town or city,Postcode,County,Address Type,Company registration number, Is international, International registration number
+HIVE IT LIMITED,Business,"Electric Works, Sheffield Digital Campus",Concourse Way,,Sheffield,S1 2BJ,South Yorkshire,"OPERATING,REGISTERED",88339838,false,
+HIVE LIMITED,Business,46 Butterton Road,Rhyl,,Prestatyn,LL18 1RF,Denbighshire,"OPERATING,REGISTERED",74454966,false,
+HIVE 1 LTD,Business,Ground Floor,"Elizabeth House, 54/58 High Street",,Edgware,HA8 7EJ,Middlesex,"OPERATING,REGISTERED",98052851,false,
+The Best Juggling Company,Business,1,Juggle Street,,Bath,BA1 5LR,Bath,"OPERATING,REGISTERED",77675066,false,
+Juggle Ltd,Business,2,Juggle Road,,Bristol,BS1 5LR,Bristol,"OPERATING,REGISTERED",87432452,false,
+Jugglez Ltd,Business,3,Juggle Avenue,,Cardiff,CF1 5LR,Cardiff,"OPERATING,REGISTERED",93670350,false,
+Juggling Balls Ltd,Business,4,Juggle Crescent,,Norwich,NW1 5LR,Norwich,"OPERATING,REGISTERED",86997537,false,
+Infinite Juggling Ltd,Business,5,Juggle Way,,London,E1 5LR,London,"OPERATING,REGISTERED",95711637,false,
+Everyday Im Juggling Ltd,Business,6,Juggle Close,,Sheffield,LS1 5LR,Sheffield,"OPERATING,REGISTERED",20978868,false,
+Mo Juggling Mo Problems Ltd,Business,7,Juggle Grove,,Leeds,LS2 5LR,Leeds,"OPERATING,REGISTERED",66392909,false,
+Empire Ltd,Business,1,Empire Road,,Sheffield,S1 2ED,South Yorkshire,"OPERATING,REGISTERED",60674010,false,
+The Best Cheese Company,Business,2 Cheese Road,,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",67579052,false,
+We Do Cheese,Business,3 Cheese Lane,,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",79496575,false,
+Cheesemongers Associates,Business,4 Cheese Avenue,,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",95877026,false,
+Cheddar Is Best Ltd,Business,5 Cheese Way,,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",53398177,false,
+Electric Sounds Ltd,Business,1,Theremin Road,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",96983929,false,
+Radiowaves Ltd,Business,1,Theremin Avenue,,Bristol,BA1 5LR,Avon,"OPERATING,REGISTERED",81268144,false,
+Theremins Rock Ltd,Business,1,Theremin Street,,Cardiff,BA1 5LR,Avon,"OPERATING,REGISTERED",51216830,false,
+Epic Riffs Ltd,Business,1,Rock Street,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",95730827,false,
+Insane Drumming Ltd,Business,1,Metal Street,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",45782085,false,
+Guitar Gods Ltd,Business,1,Groove Street,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",72989329,false,
+Big Riffs And Insane Solos Ltd,Business,1,Shred Street,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",91403537,false,
+Listen To Metal Ltd,Business,1,Solo Road,,Bath,BA1 5LR,Avon,"OPERATING,REGISTERED",74401153,false,
+University of Bath,Research,Claverton Down Road,,,Bath,BA2 7AY,Somerset,"OPERATING,REGISTERED",21998860,false,
+Cardiff University,Research,Cardiff University,,,Cardiff,CF10 3XQ,South Glamorgan,"OPERATING,REGISTERED",36425444,false,
+Aberystwyth University,Research,Penglais Campus,,,Aberystwyth,SY23 3FL,Ceredigion,"OPERATING,REGISTERED",71899241,false,
+Ludlow,Business,20,Fallow Lane,,Cardiff,CF9 7TY,South Glamorgan,"OPERATING,REGISTERED",53532322,false,
+EGGS,Research,43,Deer Rise,,Reading,RG4 8TY,Berkshire,"OPERATING,REGISTERED",63404345,false,
+British Juggling Ltd,Business,369,Juggle Grove,,Northampton,NN1 4EU,Northamptonshire,"OPERATING,REGISTERED",50222727,false,
+Innovate UK,Business,Polaris House,North Star Avenue,,Swindon,SN2 1FL,Wiltshire,"OPERATING,REGISTERED",10164163,false,
+Ntag,Business,39357 Fisk Drive,,,London,E17 5LR,London,"OPERATING,REGISTERED",18451018,false,
+Jetpulse,Business,75 Lawn Lane,,,London,E17 5LR,London,"OPERATING,REGISTERED",50453940,false,
+Wikivu,Research,624 Fairview Drive,,,London,E17 5LR,London,"OPERATING,REGISTERED",68031762,false,
+Vitruvius Stonework Limited,Business,3722 Corben Point,,,London,E17 5LR,London,"OPERATING,REGISTERED",60674010,false,
+A B Cad Services,Business,3065 Bluestem Court,,,London,E17 5LR,London,"OPERATING,REGISTERED",6624503,false,
+Armstrong & Butler Ltd,Research,3536 Talmadge Way,,,London,E17 5LR,London,"OPERATING,REGISTERED",57012850,false,
+Katz,Business,1 Anhalt Drive,,,London,E17 5LR,London,"OPERATING,REGISTERED",14312286,false,
+Meembee,Business,046 Pleasure Center,,,London,E17 5LR,London,"OPERATING,REGISTERED",84747918,false,
+Zooveo,Research,71705 Kropf Alley,,,London,E17 5LR,London,"OPERATING,REGISTERED",2912275,false,
+Ooba,Business,2 Main Plaza,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586802,false,
+Wordpedia,Business,33752 Autumn Leaf Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",44032232,false,
+Jabbertype,Research,9 Waywood Crossing,,,London,E17 5LR,London,"OPERATING,REGISTERED",42174663,false,
+Gabtype,Business,290 Parkside Circle,,,London,E17 5LR,London,"OPERATING,REGISTERED",14935204,false,
+Kazio,Business,94 Amoth Park,,,London,E17 5LR,London,"OPERATING,REGISTERED",23616061,false,
+Cogilith,Research,38572 Brentwood Trail,,,London,E17 5LR,London,"OPERATING,REGISTERED",18671269,false,
+Abbydale Optics,Business,2 Central Square,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586100,false,
+Quantum Electronics,Business,3 Main Place,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586101,false,
+Floating Point,Business,23 The Docks,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586102,false,
+Express Coordinates,Business,11 Manchester Road,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586103,false,
+Enterprise Engineering,Business,28 Regent Lane,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586104,false,
+Solid State Machines,Business,12a Major Plaza,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586105,false,
+Adaptive Optics,Business,14 The Mount,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586106,false,
+Universal Registry,Business,21 Community Hub,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586107,false,
+Liquid Dynamics,Business,The Workstation,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586108,false,
+Piezo Electrics,Business,1 Turnstyle Road,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586109,false,
+Thermal Designs,Business,142 Doctors Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586110,false,
+Active Liquids,Business,3b The Harbour,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586111,false,
+Engine Equations,Business,78 The Green,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586112,false,
+Relativistic Solutions,Business,42 Sheffield Road,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586113,false,
+Neural Industries,Business,37 Victoria Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586114,false,
+Cobalt,Business,93 Greenwich Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586115,false,
+ATC Solutions,Business,12 Regent Street,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586116,false,
+Ocean Haulage,Business,21 Old Kent Road,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586117,false,
+Ace Architects,Business,10 Piccadilly Circus,,,London,E17 5LR,London,"OPERATING,REGISTERED",43586118,false,
+Green Activity,Business,21 Alpine Rd,,,London,E10 5GP,London,"OPERATING,REGISTERED",72910032,false,
+Clean Air,Business,44 Summerfield St,,,London,SE12 0NQ,London,"OPERATING,REGISTERED",37943977,false,
+Forest Universe,Business,191 Silver St,,,London,N18 1PL,London,"OPERATING,REGISTERED",82014429,false,
+Connected Conveyors,Business,40 Gold Road,,,London,NW1 6AQ,London,"OPERATING,REGISTERED",98724398,false,
+Green dreams,Business,1 Oak Way,,,London,SE3 7JT,London,"OPERATING,REGISTERED",63575935,false,
+NetWorks,Business,12 Granville Road,London,,,NE12 1AA,London,"OPERATING,REGISTERED",75936269,false,
+Caneplus,Business,7 Colonial Place,London,,,SW3 5DT,London,"OPERATING,REGISTERED",53419141,false,
+Tripplezap,Business,2 Gorddinog Crescent,London,,,SW15 1HA,London,"OPERATING,REGISTERED",57242647,false,
+Rancone,Business,118 Hickman Road,London,,,SW9 9ET,London,"OPERATING,REGISTERED",53823162,false,
+Moveis,Business,2 The Coppice,London,,,SW11 5BW,London,"OPERATING,REGISTERED",48696518,false,
+Quadware,Business,128 Monnow Court,London,,,SW18 3HP,London,"OPERATING,REGISTERED",38335996,false,
+Latline,Business,148 Manor Hall Road,London,,,SW11 3BX,London,"OPERATING,REGISTERED",32584047,false,
+Tondrill,Business,1 Bath Road,London,,,SW16 6WG,London,"OPERATING,REGISTERED",55319611,false,
+Gravefan,Business,6 Carr Fields,London,,,SW7 5FE,London,"OPERATING,REGISTERED",89834629,false,
+Duoelectronics,Business,2 Rydal,London,,,SW12 0LF,London,"OPERATING,REGISTERED",51497229,false,
+Bigway,Business,5 High Street,London,,,SE7 8AE,London,"OPERATING,REGISTERED",35583032,false,
+Qvotechnology,Business,2 Eye Road,London,,,SE4 1JF,London,"OPERATING,REGISTERED",69028642,false,
+Hayhigh,Business,3 Newton Park,London,,,SE5 9PS,London,"OPERATING,REGISTERED",20187237,false,
+Siltone,Business,45 Thompson Street,London,,,SE18 5DD,London,"OPERATING,REGISTERED",32563492,false,
+Inis,Business,2 Wellington Close,London,,,SE11 5AY,London,"OPERATING,REGISTERED",24097005,false,
+Tamsancore,Business,1 Peddars Rise,London,,,SE18 6XD,London,"OPERATING,REGISTERED",42843679,false,
+Vaialamdex,Business,19 Calder Road,London,,,SE25 4AQ,London,"OPERATING,REGISTERED",31251420,false,
+D-dex,Business,1 Darnford Gardens,London,,,SE1P 4LR,London,"OPERATING,REGISTERED",21102465,false,
+Saolux,Business,Providence Street,London,,,NE48 3BJ,London,"OPERATING,REGISTERED",73205026,false,
+Singletechi,Business,28 Elizabeth Road,London,,,NE34 6NA,London,"OPERATING,REGISTERED",90033792,false,
+Zunfind,Business,25B Uley Road,London,,,NE8 1YL,London,"OPERATING,REGISTERED",73375079,false,
+Zootechnology,Business,14 Tomkins Close,London,,,NE61 5LT,London,"OPERATING,REGISTERED",97669847,false,
+Freshway,Business,12 Westfield Road,London,,,NE6 1QS,London,"OPERATING,REGISTERED",16330257,false,
+Conzois,Business,88 Lakenheath,London,,,NE5 2SA,London,"OPERATING,REGISTERED",36442764,false,
+Xx-zunla,Business,9 School Lane,London,,,NE46 3SW,London,"OPERATING,REGISTERED",83174420,false,
+Zuntex,Business,1 Briars Close,London,,,NE46 4DZ,London,"OPERATING,REGISTERED",12872679,false,
+Duotaxon,Business,22B Upper Parliament Street,London,,,NE65 9EP,London,"OPERATING,REGISTERED",81293028,false,
+Joylex,Business,9 Keswick Close,London,,,NW8 8SF,London,"OPERATING,REGISTERED",78888289,false,
+Ice-zoom,Business,Grotto Passage,London,,,NW1 2BE,London,"OPERATING,REGISTERED",17620904,false,
+Villacon,Business,73 Keats Road,London,,,NW5 4PQ,London,"OPERATING,REGISTERED",45574889,false,
+Codeholding,Business,73 Southwood Road,London,,,NW1W 7DW,London,"OPERATING,REGISTERED",97877757,false,
+Trusttech,Business,1 Pound Cottages,London,,,NW3 7JR,London,"OPERATING,REGISTERED",20041414,false,
+Zummacity,Business,47 Wellfield Road South,London,,,NW1W 9UL,London,"OPERATING,REGISTERED",61611843,false,
+Tanzone,Business,13 Caughley Close,London,,,NW3 5DA,London,"OPERATING,REGISTERED",96071455,false,
+Via-electrics,Business,7 Claddens Place,London,,,NW1 3RA,London,"OPERATING,REGISTERED",53046818,false,
+Crystalrover,Rto,249 New Road,,,Dagenham,RM10 9ND,Essex,"OPERATING,REGISTERED",6706432,false,
+Dreambit,Public sector or Charity,74 Parkhead Road,,,Sheffield,S11 9RB,South Yorkshire,"OPERATING,REGISTERED",7682878,false,
+Ward Ltd ,Business,12 North Star Avenue,,,Swindon,SN2 1EU,Wiltshire,"OPERATING,REGISTERED",55522234,false,
+SmithZone,Business,31 South Road,,,Swindon,SN3 1BL,Wiltshire,"OPERATING,REGISTERED",89082442,false,
+Red Planet,Research,52 Station Road,,,Swindon,SN1 1GL,Wiltshire,"OPERATING,REGISTERED",78320724,false,
+University of Bristol,Research,Beacon House,,,Bristol,BS8 1QU,Bristol,"OPERATING,REGISTERED",25320731,false,
+Curious Minds,Research,Polaris House,,,Swindon,SN2 1EU,Wiltshire,"OPERATING,REGISTERED",52340821,false,
+Ice Valley Ltd,Business,North Star Avenue,,,Swindon,SN2 1EU,Wiltshire,"OPERATING,REGISTERED",62840123,false,
+Green Hat Ltd,Business,24 Bridgemead Road,,,Swindon,SN5 8HB,Wiltshire,"OPERATING,REGISTERED",62381536,false,
+Golden Valley Research Ltd,Research,78 Purple Road,,,Swindon,SN3 4GB,Wiltshire,"OPERATING,REGISTERED",72484532,false,
+Better Life Research,Research,92 High Street,,,Bristol,BS1 8BT,Bristol,"OPERATING,REGISTERED",392747591,false,
+Barcelona Motors,Business,45 Calle Alvaro,,,28045,Madrid,Spain,"OPERATING,REGISTERED",,true,B45897531
+Enterprise de France,Business,30 Avenue de Wagram,,,75017,Paris,France,"OPERATING,REGISTERED",,true,759430561
+German Electronics Service,Business,8 Windparks Road,,,28217,Bremen,Germany,"OPERATING,REGISTERED",,true,4214226

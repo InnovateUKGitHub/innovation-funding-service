@@ -22,7 +22,7 @@ public class  OrganisationResource {
     private String organisationTypeName;
     private String organisationTypeDescription;
     private boolean isInternational;
-    private String internationalCompanyRegistrationNumber;
+    private String internationalRegistrationNumber;
 
     public static final Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
@@ -114,12 +114,12 @@ public class  OrganisationResource {
         isInternational = international;
     }
 
-    public String getInternationalCompanyRegistrationNumber() {
-        return internationalCompanyRegistrationNumber;
+    public String getInternationalRegistrationNumber() {
+        return internationalRegistrationNumber;
     }
 
-    public void setInternationalCompanyRegistrationNumber(String internationalCompanyRegistrationNumber) {
-        this.internationalCompanyRegistrationNumber = internationalCompanyRegistrationNumber;
+    public void setInternationalRegistrationNumber(String internationalRegistrationNumber) {
+        this.internationalRegistrationNumber = internationalRegistrationNumber;
     }
 
     @JsonIgnore

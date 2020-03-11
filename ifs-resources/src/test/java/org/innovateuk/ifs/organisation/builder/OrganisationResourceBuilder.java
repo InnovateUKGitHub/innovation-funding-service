@@ -66,4 +66,12 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
     public OrganisationResourceBuilder withOrganisationTypeName(String... organisationTypeNames) {
         return withArray((organisationTypeName, organisation) -> setField("organisationTypeName", organisationTypeName, organisation), organisationTypeNames);
     }
+
+    public OrganisationResourceBuilder withIsInternational(Boolean... isInternationals) {
+        return withArray((isInternational, organisation) -> setField("isInternational", isInternational, organisation), isInternationals);
+    }
+
+    public OrganisationResourceBuilder withInternationalRegistrationNumber(String... internationalRegistrationNumbers) {
+        return withArray((internationalRegistrationNumber, organisation) -> setField("internationalRegistrationNumber", internationalRegistrationNumber, organisation), internationalRegistrationNumbers);
+    }
 }
