@@ -18,4 +18,6 @@ public interface ApplicationAssessmentSummaryRestService {
     RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId);
 
     RestResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, String assessorNameFilter, Sort sort);
+
+    RestResult<List<Long>> getAvailableAssessorsIds(long applicationId, String assessorName);
 }
