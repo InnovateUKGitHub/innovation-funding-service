@@ -94,4 +94,9 @@ public class AssessmentController {
     public RestResult<AssessmentResource> createAssessment(@RequestBody @Valid AssessmentCreateResource assessmentCreateResource) {
         return assessmentService.createAssessment(assessmentCreateResource).toPostCreateResponse();
     }
+
+    @PostMapping("/bulk")
+    public RestResult<List<AssessmentResource>> createAssessments(@RequestBody @Valid List<AssessmentCreateResource> assessmentCreateResource) {
+        return assessmentService.createAssessments(assessmentCreateResource).toPostCreateResponse();
+    }
 }

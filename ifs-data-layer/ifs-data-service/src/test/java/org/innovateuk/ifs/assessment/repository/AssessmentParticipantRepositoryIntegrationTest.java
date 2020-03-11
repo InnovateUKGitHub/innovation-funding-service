@@ -390,7 +390,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         Pageable pagination = PageRequest.of(0, 5);
 
-        Page<ApplicationAvailableAssessorResource> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, 1L, "", pagination);
+        Page<ApplicationAvailableAssessorResource> retrievedParticipants = repository.findAvailableAssessorsForApplication(1L, 1L, "", pagination);
 
         assertNotNull(retrievedParticipants);
         assertEquals(1, retrievedParticipants.getTotalElements());

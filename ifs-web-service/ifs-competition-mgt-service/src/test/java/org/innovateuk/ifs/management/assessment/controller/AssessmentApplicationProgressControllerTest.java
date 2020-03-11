@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.JsonTestUtil;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
@@ -12,9 +13,12 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.management.assessment.form.AvailableAssessorForm;
 import org.innovateuk.ifs.management.assessment.populator.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
+import org.innovateuk.ifs.util.CompressedCookieService;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 
@@ -22,6 +26,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAvailableAssessorResourceBuilder.newApplicationAvailableAssessorResource;
@@ -38,6 +43,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSES
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupCompressedCookieService;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,9 +64,18 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
     @Mock
     private AssessmentRestService assessmentRestService;
 
+    @Mock
+    private CompressedCookieService compressedCookieService;
+
     @Override
     protected AssessmentApplicationProgressController supplyControllerUnderTest() {
         return new AssessmentApplicationProgressController();
+    }
+
+
+    @Before
+    public void setUpCookies() {
+        setupCompressedCookieService(compressedCookieService);
     }
 
     @Test
@@ -101,7 +116,8 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 innovationSectors,
                 "",
                 Sort.ASSESSOR,
-                expectedPaginationModel
+                expectedPaginationModel,
+                false
         );
 
         mockMvc.perform(get("/assessment/competition/{competitionId}/application/{applicationId}/assessors?page=1&assessorNameFilter=&sort=ASSESSOR", competitionId, applicationId))
@@ -130,37 +146,16 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
 
         AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
 
-        when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
+        AvailableAssessorForm form = new AvailableAssessorForm();
+        form.setSelectedAssessors(singletonList(assessorId));
+        when(assessmentRestService.createAssessments(singletonList(expectedAssessmentCreateResource))).thenReturn(restSuccess(singletonList(expectedAssessmentResource)));
+        when(compressedCookieService.getCookieValue(any(), eq("availableAssessorsSelectionForm_comp_1"))).thenReturn(JsonTestUtil.toJson(form));
 
-        mockMvc.perform(post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
+        mockMvc.perform(post("/assessment/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors", competitionId, applicationId)));
 
-        verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
-        verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
-    }
-
-    @Test
-    public void assignAssessor_preservesQueryParams() throws Exception {
-        Long competitionId = 1L;
-        Long applicationId = 2L;
-        Long assessorId = 3L;
-
-        AssessmentCreateResource expectedAssessmentCreateResource = newAssessmentCreateResource()
-                .withApplicationId(applicationId)
-                .withAssessorId(assessorId)
-                .build();
-
-        AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
-
-        when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
-
-        mockMvc.perform(post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId)
-                .param("sortField", TOTAL_APPLICATIONS.name()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
-
-        verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
+        verify(assessmentRestService, only()).createAssessments(singletonList(expectedAssessmentCreateResource));
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
     }
 
@@ -175,7 +170,7 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
         mockMvc.perform(
                 post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors", competitionId, applicationId)));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
@@ -194,7 +189,7 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
                 post("/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId)
                         .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/application/%s/assessors", competitionId, applicationId)));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
