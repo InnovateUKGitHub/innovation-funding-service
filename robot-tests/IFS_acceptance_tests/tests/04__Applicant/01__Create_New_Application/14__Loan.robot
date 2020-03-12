@@ -280,8 +280,8 @@ the applicant should see the project setup complete stage enabled
     Log in as a different user       &{internal_finance_credentials}
 
 the applicant checks for project status
-    the user should see the element   jQuery = li:contains("${loan_PS_application1}") .status:contains("Live project")
-    the user should see the element   jQuery = li:contains("${loan_PS_application2}") .status:contains("Unsuccessful")
+    the user should see the element   jQuery = li:contains("${loan_PS_application1}") .status-and-action:contains("Live project")
+    the user should see the element   jQuery = li:contains("${loan_PS_application2}") .status-and-action:contains("Unsuccessful")
     the user navigates to the page    ${loan_PS}
     the user should see the element   jQuery = .progress-list li:nth-child(6):contains("Completed")
     the user clicks the button/link   link = Project setup complete

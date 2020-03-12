@@ -22,6 +22,7 @@ public class FinanceCheckSummaryResource {
     private int durationInMonths;
     private BigDecimal totalProjectCost;
     private BigDecimal grantAppliedFor;
+    private BigDecimal fundingAppliedFor;
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal totalPercentageGrant;
     private boolean spendProfilesGenerated;
@@ -50,6 +51,7 @@ public class FinanceCheckSummaryResource {
         this.durationInMonths = overviewResource.getDurationInMonths();
         this.totalProjectCost = overviewResource.getTotalProjectCost();
         this.grantAppliedFor = overviewResource.getGrantAppliedFor();
+        this.fundingAppliedFor = overviewResource.getFundingAppliedFor();
         this.otherPublicSectorFunding = overviewResource.getOtherPublicSectorFunding();
         this.totalPercentageGrant = overviewResource.getTotalPercentageGrant();
         this.spendProfilesGenerated = spendProfilesGenerated;
@@ -248,6 +250,14 @@ public class FinanceCheckSummaryResource {
     public Long getApplicationId() { return applicationId; }
 
     public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
+
+    public BigDecimal getFundingAppliedFor() {
+        return fundingAppliedFor;
+    }
+
+    public void setFundingAppliedFor(BigDecimal fundingAppliedFor) {
+        this.fundingAppliedFor = fundingAppliedFor;
+    }
 
     @JsonIgnore
     public boolean isLoan() {

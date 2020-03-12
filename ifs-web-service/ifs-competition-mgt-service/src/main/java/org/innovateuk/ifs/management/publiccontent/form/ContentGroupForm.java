@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.publiccontent.form;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

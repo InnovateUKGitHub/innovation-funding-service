@@ -1,28 +1,25 @@
 package org.innovateuk.ifs.management.assessment.viewmodel;
 
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 
 import java.util.List;
-import java.util.Optional;
 
 public class AssessorAssessmentProgressApplicationsViewModel {
     private List<AssessorAssessmentProgressApplicationRowViewModel> applications;
     private boolean inAssessment;
-    private Optional<Long> innovationArea;
-    private String sortField;
-    private Pagination pagination;
+    private Sort currentSort;
+    private PaginationViewModel pagination;
     private long totalApplications;
 
     public AssessorAssessmentProgressApplicationsViewModel(List<AssessorAssessmentProgressApplicationRowViewModel> applications,
                                                            boolean inAssessment,
-                                                           Optional<Long> innovationArea,
-                                                           String sortField,
-                                                           Pagination pagination,
+                                                           Sort currentSort,
+                                                           PaginationViewModel pagination,
                                                            long totalApplications) {
         this.applications = applications;
         this.inAssessment = inAssessment;
-        this.innovationArea = innovationArea;
-        this.sortField = sortField;
+        this.currentSort = currentSort;
         this.pagination = pagination;
         this.totalApplications = totalApplications;
     }
@@ -39,11 +36,7 @@ public class AssessorAssessmentProgressApplicationsViewModel {
         return inAssessment;
     }
 
-    public Optional<Long> getInnovationArea() {
-        return innovationArea;
-    }
-
-    public Pagination getPagination() {
+    public PaginationViewModel getPagination() {
         return pagination;
     }
 
@@ -51,7 +44,7 @@ public class AssessorAssessmentProgressApplicationsViewModel {
         return totalApplications;
     }
 
-    public String getSortField() {
-        return sortField;
+    public Sort getCurrentSort() {
+        return currentSort;
     }
 }
