@@ -87,7 +87,7 @@ docker build --tag="ssm-access-image" docker/aws-cli
 
 if [[ "$USE_IAM" = "false" ]]; then
     # Use the local developer AWS credentials as the mount point for this container
-    docker run -id --rm -e AWS_PROFILE=${LOCAL_AWS_PROFILE}-v ~/.aws:/root/.aws --name ssm-access-container ssm-access-image
+    docker run -id --rm -e AWS_PROFILE=${LOCAL_AWS_PROFILE} -v ~/.aws:/root/.aws --name ssm-access-container ssm-access-image
 else
     # Authentication delegated to IAM. Will only work on AWS containers
     docker run -id --rm --name ssm-access-container ssm-access-image
